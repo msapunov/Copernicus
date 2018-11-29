@@ -13,13 +13,12 @@
     <script src="{{ url_for('static', filename='js/jquery-1.12.4.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/uikit.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/notify.js') }}"></script>
-
-      <script type="text/javascript">
-        function mail(){
-            var addr = "mesocentre-tekuniv-amu.fr";
-            location.href = "mailto:"+addr.replace(/tek/g,"tech@");
-        }
-      </script>
+    <script type="text/javascript">
+      function mail(){
+        var addr = "mesocentre-tekuniv-amu.fr";
+        location.href = "mailto:"+addr.replace(/tek/g,"tech@");
+      }
+    </script>
 
     {% block head %}
     {% endblock %}
