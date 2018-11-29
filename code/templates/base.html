@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Copernicus</title>
+
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/uikit.gradient.min.css') }}" />
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/notify.gradient.min.css') }}" />
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/progress.gradient.min.css') }}" />
+
+        <script src="{{ url_for('static', filename='js/jquery-1.12.4.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/uikit.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/notify.js') }}"></script>
+
+        {% block head %}
+        {% endblock %}
+    </head>
+    <body>
+
+    {% if g %}
+        <nav class="uk-navbar uk-navbar-attached uk-margin-bottom">
+            <div class="uk-navbar-content uk-hidden-small">
+                Login: {{g.name}}, Last update: {{timestamp}}
+            </div>
+            {% if menu != False %}
+                {% set item = self | menu_item %}
+                <ul class="uk-navbar-nav uk-hidden-small">
+                    <li {% if item == 'user.html' %}class="uk-active"{% endif %}><a href="user.html">User</a></li>
+                    {% if menu.responsible == True %}
+                        <li {% if item == 'project.html' %}class="uk-active"{% endif %}><a href="project.html">Project</a></li>
+                    {% endif %}
+                    {% if menu.committee == True %}
+                        <li {% if item == 'board.html' %}class="uk-active"{% endif %}><a href="board.html">Board</a></li>
+                    {% endif %}
+                    {% if menu.admin == True %}
+                        <li {% if item == 'admin.html' %}class="uk-active"{% endif %}><a href="admin.html">Admin</a></li>
+                    {% endif %}
+                </ul>
+                <a href="#mobile_menu" class="uk-navbar-toggle uk-visible-small" data-uk-offcanvas></a>
+            {% endif %}
+            <div class="uk-navbar-flip">
+                <ul class="uk-navbar-nav">
+                    <li>
+                        <a href="logout">
+                            <span class="uk-icon-sign-out"></span>Logout
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    {% endif %}
+
+    {% block body %}
+    {% endblock %}
+
+        <div id="mobile_menu" class="uk-offcanvas">
+            <div class="uk-offcanvas-bar">
+            {% if menu != False %}
+                {% set item = self | menu_item %}
+                <ul class="uk-nav uk-nav-offcanvas">
+                    <li {% if item == 'user.html' %}class="uk-active"{% endif %}><a href="user.html">User</a></li>
+                {% if menu.responsible == True %}
+                    <li {% if item == 'project.html' %}class="uk-active"{% endif %}><a href="project.html">Project</a></li>
+                {% endif %}
+                {% if menu.committee == True %}
+                    <li {% if item == 'board.html' %}class="uk-active"{% endif %}><a href="board.html">Board</a></li>
+                {% endif %}
+                {% if menu.admin == True %}
+                    <li {% if item == 'admin.html' %}class="uk-active"{% endif %}><a href="admin.html">Admin</a></li>
+                {% endif %}
+                </ul>
+            {% endif %}
+            </div>
+        </div>
+
+    </body>
+</html>
