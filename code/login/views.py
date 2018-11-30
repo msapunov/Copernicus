@@ -1,15 +1,12 @@
-from flask import render_template, Blueprint, request, redirect, url_for
+from flask import render_template, request, redirect, url_for
 from flask import session
 from flask_wtf import Form
 from wtforms import StringField, PasswordField
 from wtforms.validators import DataRequired
 from paramiko import SSHClient, AutoAddPolicy, AuthenticationException
-
+from code.login import bp
 
 from logging import warning
-
-
-login_blueprint = Blueprint("login", __name__, template_folder="templates")
 
 
 class LoginForm(Form):
@@ -34,7 +31,7 @@ def ssh_login(login, password):
     return auth
 
 
-@login_blueprint.route("/login.html", methods=["GET", "POST"])
+@bp.route("/login.html", methods=["GET", "POST"])
 def index():
     form = LoginForm(request.form)
     if request.method == "GET":
