@@ -1,5 +1,7 @@
 <!DOCTYPE html>
+{% block html %}
 <html lang="en">
+{% endblock %}
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -17,15 +19,18 @@
         {% block head %}
         {% endblock %}
     </head>
-    <body>
 
-    {% if g %}
+    {% block body_replace %}
+    <body>
+    {% endblock %}
+
+    {% if g.name %}
         <nav class="uk-navbar uk-navbar-attached uk-margin-bottom">
             <div class="uk-navbar-content uk-hidden-small">
                 Login: {{g.name}}, Last update: {{timestamp}}
             </div>
             {% if menu != False %}
-                {% set item = self | menu_item %}
+                {# set item = self | menu_item #}
                 <ul class="uk-navbar-nav uk-hidden-small">
                     <li {% if item == 'user.html' %}class="uk-active"{% endif %}><a href="user.html">User</a></li>
                     {% if menu.responsible == True %}
@@ -55,10 +60,11 @@
     {% block body %}
     {% endblock %}
 
+    {% if g.name %}
         <div id="mobile_menu" class="uk-offcanvas">
             <div class="uk-offcanvas-bar">
             {% if menu != False %}
-                {% set item = self | menu_item %}
+                {# set item = self | menu_item #}
                 <ul class="uk-nav uk-nav-offcanvas">
                     <li {% if item == 'user.html' %}class="uk-active"{% endif %}><a href="user.html">User</a></li>
                 {% if menu.responsible == True %}
@@ -74,6 +80,7 @@
             {% endif %}
             </div>
         </div>
+    {% endif %}
 
     </body>
 </html>
