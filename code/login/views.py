@@ -1,5 +1,6 @@
 from flask import render_template, request, redirect, url_for
 from flask import session
+from flask_login import current_user, login_user, logout_user
 from flask_wtf import Form
 from wtforms import StringField, PasswordField
 from wtforms.validators import DataRequired
@@ -33,6 +34,8 @@ def ssh_login(login, password):
 
 @bp.route("/login.html", methods=["GET", "POST"])
 def index():
+    if current_user.is_authenticated:
+        return redirect(url_for("index"))
     form = LoginForm(request.form)
     if request.method == "GET":
         return render_template("login.html", form=form)
@@ -44,3 +47,9 @@ def index():
     session["login"] = login
     warning("RENDERING THE PAGE!")
     return "True"
+
+
+@bp.route("/logout")
+def logout():
+    logout_user()
+    return redirect(url_for("project.index"))
