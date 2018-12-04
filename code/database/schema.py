@@ -29,4 +29,4 @@ class User(UserMixin, db.Model):
 
 @login.user_loader
 def load_user(userid):
-    return User.query.filter(User.id==userid).first()
+    return User.query.filter(User.id == userid).first()
