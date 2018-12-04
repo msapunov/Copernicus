@@ -21,7 +21,7 @@ class ACLDB(db.Model):
 class User(UserMixin, db.Model):
 
     __tablename__ = "users"
-    __bind_key__ = "management"
+#    __bind_key__ = "management"
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(128))
@@ -33,7 +33,7 @@ class User(UserMixin, db.Model):
     login = db.Column(db.String(128), unique=True)
     acl_id = db.Column(db.Integer, db.ForeignKey("acl.id"))
     acl = db.relationship("ACLDB", uselist=False, backref="users")
-    projects = db.relationship("ProjectDB", secondary="user_project")
+#    projects = db.relationship("ProjectDB", secondary="user_project")
     active = db.Column(db.Boolean, default=False)
     comment = db.Column(db.Text)
     modified = db.Column(db.DateTime(True))
