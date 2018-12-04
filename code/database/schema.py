@@ -2,6 +2,22 @@ from flask_login import UserMixin
 from code import db, login
 
 
+class ACLDB(db.Model):
+
+    __tablename__ = "acl"
+    __bind_key__ = "management"
+
+    id = db.Column(db.Integer, primary_key=True)
+    is_user = db.Column(db.Boolean, default=True)
+    is_responsible = db.Column(db.Boolean, default=False)
+    is_manager = db.Column(db.Boolean, default=False)
+    is_tech = db.Column(db.Boolean, default=False)
+    is_committee = db.Column(db.Boolean, default=False)
+    is_admin = db.Column(db.Boolean, default=False)
+    modified = db.Column(db.DateTime(True))
+    created = db.Column(db.DateTime(True))
+
+
 class User(UserMixin, db.Model):
 
     __tablename__ = "users"
