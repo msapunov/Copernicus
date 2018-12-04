@@ -23,6 +23,9 @@ class User(UserMixin, db.Model):
     modified = db.Column(db.DateTime(True))
     created = db.Column(db.DateTime(True))
 
+    def __repr__(self):
+        return '<User {}>'.format(self.login)
+
 
 @login.user_loader
 def load_user(userid):
