@@ -41,8 +41,3 @@ class User(UserMixin, db.Model):
 
     def __repr__(self):
         return '<User {}>'.format(self.login)
-
-
-@login.user_loader
-def load_user(userid):
-    return User.query.filter(User.id == userid).first()
