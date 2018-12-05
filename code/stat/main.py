@@ -8,4 +8,4 @@ from code.stat import bp
 @login_required
 def index():
     text = "There will be dragons here!"
-    return render_template("index.html", body = text)
+    return render_template("stat.html", body = text)
