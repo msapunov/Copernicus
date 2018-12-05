@@ -29,22 +29,20 @@
             <div class="uk-navbar-content uk-hidden-small">
                 Login: {{g.name}}, Last update: {{timestamp}}
             </div>
-            {% if menu != False %}
-                {# set item = self | menu_item #}
+
+
                 <ul class="uk-navbar-nav uk-hidden-small">
                     <li {% if item == 'user.html' %}class="uk-active"{% endif %}><a href="user.html">User</a></li>
-                    {% if menu.responsible == True %}
+
                         <li {% if item == 'project.html' %}class="uk-active"{% endif %}><a href="project.html">Project</a></li>
-                    {% endif %}
-                    {% if menu.committee == True %}
+
                         <li {% if item == 'board.html' %}class="uk-active"{% endif %}><a href="board.html">Board</a></li>
-                    {% endif %}
-                    {% if menu.admin == True %}
+
                         <li {% if item == 'admin.html' %}class="uk-active"{% endif %}><a href="admin.html">Admin</a></li>
-                    {% endif %}
+
                 </ul>
                 <a href="#mobile_menu" class="uk-navbar-toggle uk-visible-small" data-uk-offcanvas></a>
-            {% endif %}
+
             <div class="uk-navbar-flip">
                 <ul class="uk-navbar-nav">
                     <li>
@@ -63,21 +61,19 @@
     {% if g.name %}
         <div id="mobile_menu" class="uk-offcanvas">
             <div class="uk-offcanvas-bar">
-            {% if menu != False %}
-                {# set item = self | menu_item #}
+
+
                 <ul class="uk-nav uk-nav-offcanvas">
                     <li {% if item == 'user.html' %}class="uk-active"{% endif %}><a href="user.html">User</a></li>
-                {% if menu.responsible == True %}
+
                     <li {% if item == 'project.html' %}class="uk-active"{% endif %}><a href="project.html">Project</a></li>
-                {% endif %}
-                {% if menu.committee == True %}
+
                     <li {% if item == 'board.html' %}class="uk-active"{% endif %}><a href="board.html">Board</a></li>
-                {% endif %}
-                {% if menu.admin == True %}
+
                     <li {% if item == 'admin.html' %}class="uk-active"{% endif %}><a href="admin.html">Admin</a></li>
-                {% endif %}
+
                 </ul>
-            {% endif %}
+
             </div>
         </div>
     {% endif %}
