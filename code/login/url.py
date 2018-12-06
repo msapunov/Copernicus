@@ -1,4 +1,4 @@
-from flask import render_template, request, redirect, url_for, g
+from flask import render_template, request, redirect, url_for, g, flash
 from flask_login import current_user, login_user, logout_user, login_required
 from code.login.magic import ssh_login
 from code.login.form import LoginForm
@@ -28,6 +28,7 @@ def login():
     username = form.login.data
     password = form.passw.data
     if not ssh_login(username, password):
+        flash("Invalid username or password")
         return redirect(url_for("login.login"))
 
     user = User.query.filter_by(login=username).first()
