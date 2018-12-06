@@ -40,6 +40,27 @@ class User(UserMixin, db.Model):
     def __repr__(self):
         return '<User {}>'.format(self.login)
 
+    def full_name(self):
+        return "%s %s" % (self.name.capitalize(), self.surname.capitalize())
+
+
+
+    def permissions(self):
+        perm = []
+        if self.acl.is_user:
+            perm.append("user")
+        if self.acl.is_responsible:
+            perm.append("responsible")
+        if self.acl.is_manager:
+            perm.append("manager")
+        if self.acl.is_tech:
+            perm.append("tech")
+        if self.acl.is_committee:
+            perm.append("committee")
+        if self.acl.is_admin:
+            perm.append("admin")
+        return perm
+
     def to_dict(self):
         return {
             "id": self.id,
