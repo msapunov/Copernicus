@@ -3,6 +3,7 @@ from flask_login import current_user, login_user, logout_user, login_required
 from code.login.magic import ssh_login
 from code.login.form import LoginForm
 from code.login import bp
+from datetime import datetime as dt
 
 from logging import warning
 
@@ -10,7 +11,9 @@ from logging import warning
 @bp.before_app_request
 def before_request():
     if current_user.is_authenticated:
-        g.name = current_user
+        g.user = current_user
+    tmp = "%s" % dt.now()
+    g.timestamp = tmp.split(".")[0]
 
 
 @bp.route("/login.html", methods=["GET", "POST"])
