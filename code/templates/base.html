@@ -24,22 +24,24 @@
     <body>
     {% endblock %}
 
-    {% if g.name %}
+    {% if g.user %}
         <nav class="uk-navbar uk-navbar-attached uk-margin-bottom">
             <div class="uk-navbar-content uk-hidden-small">
-                Login: {{g.name.login}}, Last update: {{timestamp}}
+                Login: {{g.user.login}}, Last update: {{g.timestamp}}
             </div>
-
-
                 <ul class="uk-navbar-nav uk-hidden-small">
-                    <li {% if item == 'user.html' %}class="uk-active"{% endif %}><a href="user.html">User</a></li>
-
+                    {% if "user" in g.user.permissions() %}
+                        <li {% if item == 'user.html' %}class="uk-active"{% endif %}><a href="user.html">User</a></li>
+                    {% endif %}
+                    {% if "responsible" in g.user.permissions() %}
                         <li {% if item == 'project.html' %}class="uk-active"{% endif %}><a href="project.html">Project</a></li>
-
+                    {% endif %}
+                    {% if "committee" in g.user.permissions() %}
                         <li {% if item == 'board.html' %}class="uk-active"{% endif %}><a href="board.html">Board</a></li>
-
+                    {% endif %}
+                    {% if "admin" in g.user.permissions() %}
                         <li {% if item == 'admin.html' %}class="uk-active"{% endif %}><a href="admin.html">Admin</a></li>
-
+                    {% endif %}
                 </ul>
                 <a href="#mobile_menu" class="uk-navbar-toggle uk-visible-small" data-uk-offcanvas></a>
 
@@ -58,20 +60,22 @@
     {% block body %}
     {% endblock %}
 
-    {% if g.name %}
+    {% if g.user %}
         <div id="mobile_menu" class="uk-offcanvas">
             <div class="uk-offcanvas-bar">
-
-
                 <ul class="uk-nav uk-nav-offcanvas">
-                    <li {% if item == 'user.html' %}class="uk-active"{% endif %}><a href="user.html">User</a></li>
-
-                    <li {% if item == 'project.html' %}class="uk-active"{% endif %}><a href="project.html">Project</a></li>
-
-                    <li {% if item == 'board.html' %}class="uk-active"{% endif %}><a href="board.html">Board</a></li>
-
-                    <li {% if item == 'admin.html' %}class="uk-active"{% endif %}><a href="admin.html">Admin</a></li>
-
+                    {% if "user" in g.user.permissions() %}
+                        <li {% if item == 'user.html' %}class="uk-active"{% endif %}><a href="user.html">User</a></li>
+                    {% endif %}
+                    {% if "responsible" in g.user.permissions() %}
+                        <li {% if item == 'project.html' %}class="uk-active"{% endif %}><a href="project.html">Project</a></li>
+                    {% endif %}
+                    {% if "committee" in g.user.permissions() %}
+                        <li {% if item == 'board.html' %}class="uk-active"{% endif %}><a href="board.html">Board</a></li>
+                    {% endif %}
+                    {% if "admin" in g.user.permissions() %}
+                        <li {% if item == 'admin.html' %}class="uk-active"{% endif %}><a href="admin.html">Admin</a></li>
+                    {% endif %}
                 </ul>
 
             </div>
