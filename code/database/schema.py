@@ -5,7 +5,6 @@ from code import db, login
 class ACLDB(db.Model):
 
     __tablename__ = "acl"
-    __bind_key__ = "management"
 
     id = db.Column(db.Integer, primary_key=True)
     is_user = db.Column(db.Boolean, default=True)
@@ -21,7 +20,6 @@ class ACLDB(db.Model):
 class User(UserMixin, db.Model):
 
     __tablename__ = "users"
-#    __bind_key__ = "management"
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(128))
