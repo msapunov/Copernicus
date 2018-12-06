@@ -1,10 +1,11 @@
 from paramiko import SSHClient, AutoAddPolicy, AuthenticationException
-from logging import warning
+from logging import warning, debug
 
 
 def ssh_login(login, password):
     auth = False
     for host in ["login.ccamu.u-3mrs.fr", "login.mesocentre.univ-amu.fr"]:
+        debug("Trying the host: %s" % host)
         client = SSHClient()
         try:
             client.set_missing_host_key_policy(AutoAddPolicy())
