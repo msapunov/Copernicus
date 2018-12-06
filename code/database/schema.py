@@ -43,8 +43,6 @@ class User(UserMixin, db.Model):
     def full_name(self):
         return "%s %s" % (self.name.capitalize(), self.surname.capitalize())
 
-
-
     def permissions(self):
         perm = []
         if self.acl.is_user:
