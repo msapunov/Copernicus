@@ -41,3 +41,20 @@ class User(UserMixin, db.Model):
 
     def __repr__(self):
         return '<User {}>'.format(self.login)
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "login": self.login,
+            "name": self.name,
+            "surname": self.surname,
+            "email": self.email,
+            "phone": self.phone,
+            "lab": self.lab,
+            "position": self.position,
+            "active": self.active,
+            "comment": self.comment,
+#            "last_seen": self.last_seen.isoformat() + 'Z'
+            "modified": self.modified,
+            "created": self.created
+        }
