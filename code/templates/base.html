@@ -24,27 +24,27 @@
     <body>
     {% endblock %}
 
-    {% if g.user %}
+    {% if current_user %}
         <nav class="uk-navbar uk-navbar-attached uk-margin-bottom">
             <div class="uk-navbar-content uk-hidden-small">
-                Login: {{g.user.login}}, Last update: {{g.timestamp}}
+                Login: {{current_user.login}}, Last update: {{g.timestamp}}
             </div>
                 <ul class="uk-navbar-nav uk-hidden-small">
-                    {% if "user" in g.user.permissions() %}
+                    {% if "user" in current_user.permissions() %}
                         <li {% if item == 'user.html' %}class="uk-active"{% endif %}><a href="user.html">User</a></li>
                     {% endif %}
-                    {% if "responsible" in g.user.permissions() %}
+                    {% if "responsible" in current_user.permissions() %}
                         <li {% if item == 'project.html' %}class="uk-active"{% endif %}><a href="project.html">Project</a></li>
                     {% endif %}
-                    {% if "committee" in g.user.permissions() %}
+                    {% if "committee" in current_user.permissions() %}
                         <li {% if item == 'board.html' %}class="uk-active"{% endif %}><a href="board.html">Board</a></li>
                     {% endif %}
-                    {% if "admin" in g.user.permissions() %}
+                    {% if "admin" in current_user.permissions() %}
                         <li {% if item == 'admin.html' %}class="uk-active"{% endif %}><a href="admin.html">Admin</a></li>
                     {% endif %}
                 </ul>
-                <a href="#mobile_menu" class="uk-navbar-toggle uk-visible-small" data-uk-offcanvas></a>
 
+                <a href="#mobile_menu" class="uk-navbar-toggle uk-visible-small" data-uk-offcanvas></a>
             <div class="uk-navbar-flip">
                 <ul class="uk-navbar-nav">
                     <li>
@@ -54,26 +54,36 @@
                     </li>
                 </ul>
             </div>
+            {% if "admin" in current_user.permissions() and g.user_list %}
+                <form class="uk-form uk-navbar-center uk-navbar-content" action="admin/user_change" method="POST">
+                    Select user:
+                    <select name="user" onchange="this.form.submit()">
+                        {% for user in g.user_list %}
+                            <option value="{{ user }}" {%if user == current_user.login%}selected="selected"{%endif%}>{{ user }}</option>
+                        {% endfor %}
+                    </select>
+                </form>
+            {% endif %}
         </nav>
     {% endif %}
 
     {% block body %}
     {% endblock %}
 
-    {% if g.user %}
+    {% if current_user %}
         <div id="mobile_menu" class="uk-offcanvas">
             <div class="uk-offcanvas-bar">
                 <ul class="uk-nav uk-nav-offcanvas">
-                    {% if "user" in g.user.permissions() %}
+                    {% if "user" in current_user.permissions() %}
                         <li {% if item == 'user.html' %}class="uk-active"{% endif %}><a href="user.html">User</a></li>
                     {% endif %}
-                    {% if "responsible" in g.user.permissions() %}
+                    {% if "responsible" in current_user.permissions() %}
                         <li {% if item == 'project.html' %}class="uk-active"{% endif %}><a href="project.html">Project</a></li>
                     {% endif %}
-                    {% if "committee" in g.user.permissions() %}
+                    {% if "committee" in current_user.permissions() %}
                         <li {% if item == 'board.html' %}class="uk-active"{% endif %}><a href="board.html">Board</a></li>
                     {% endif %}
-                    {% if "admin" in g.user.permissions() %}
+                    {% if "admin" in current_user.permissions() %}
                         <li {% if item == 'admin.html' %}class="uk-active"{% endif %}><a href="admin.html">Admin</a></li>
                     {% endif %}
                 </ul>
