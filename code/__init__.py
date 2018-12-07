@@ -1,9 +1,9 @@
 from flask import Flask
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
-from code.login import bp as blueprint_login
-from code.project import bp as blueprint_project
-from code.stat import bp as blueprint_stat
+from code.pages.login import bp as blueprint_login
+from code.pages.project import bp as blueprint_project
+from code.pages.stat import bp as blueprint_stat
 
 
 app = Flask(__name__, instance_relative_config=True)
