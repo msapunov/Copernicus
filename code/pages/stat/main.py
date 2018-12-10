@@ -1,6 +1,6 @@
 from flask import g, render_template
 from flask_login import login_required
-from code.stat import bp
+from code.pages.stat import bp
 
 
 @bp.route('/', methods=["GET", "POST"])
