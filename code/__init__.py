@@ -4,6 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from code.pages.login import bp as blueprint_login
 from code.pages.project import bp as blueprint_project
 from code.pages.stat import bp as blueprint_stat
+from code.pages.admin import bp as blueprint_admin
 
 
 app = Flask(__name__, instance_relative_config=True)
@@ -24,3 +25,4 @@ def load_user(userid):
 app.register_blueprint(blueprint_login)
 app.register_blueprint(blueprint_project)
 app.register_blueprint(blueprint_stat)
+app.register_blueprint(blueprint_admin)#, url_prefix="/admin")
