@@ -45,6 +45,30 @@
                 </ul>
 
                 <a href="#mobile_menu" class="uk-navbar-toggle uk-visible-small" data-uk-offcanvas></a>
+
+            {% if "admin" in current_user.permissions() and g.user_list %}
+                <div class="uk-navbar-center">
+                    <form class="uk-search uk-navbar-content" data-uk-search="{source:'my-results.json'}">
+                        <input class="uk-search-field" type="search" placeholder="Enter username">
+                        <div class="uk-dropdown uk-dropdown-search">
+                            {% for user in g.user_list %}
+                                <ul class="uk-nav uk-nav-search">{{ user }}</ul>
+                            {% endfor %}
+                        </div>
+                    </form>
+                    <!--
+                <form class="uk-form uk-navbar-center uk-navbar-content" action="admin/user_change" method="POST">
+                    Select user:
+                    <select name="user" onchange="this.form.submit()">
+                        {% for user in g.user_list %}
+                            <option value="{{ user }}" {%if user == current_user.login%}selected="selected"{%endif%}>{{ user }}</option>
+                        {% endfor %}
+                    </select>
+                </form>
+                -->
+                </div>
+            {% endif %}
+
             <div class="uk-navbar-flip">
                 <ul class="uk-navbar-nav">
                     <li>
@@ -54,16 +78,6 @@
                     </li>
                 </ul>
             </div>
-            {% if "admin" in current_user.permissions() and g.user_list %}
-                <form class="uk-form uk-navbar-center uk-navbar-content" action="admin/user_change" method="POST">
-                    Select user:
-                    <select name="user" onchange="this.form.submit()">
-                        {% for user in g.user_list %}
-                            <option value="{{ user }}" {%if user == current_user.login%}selected="selected"{%endif%}>{{ user }}</option>
-                        {% endfor %}
-                    </select>
-                </form>
-            {% endif %}
         </nav>
     {% endif %}
 
