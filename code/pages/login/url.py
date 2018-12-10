@@ -1,9 +1,8 @@
 from flask import render_template, request, redirect, url_for, g, flash
 from flask_login import current_user, login_user, logout_user, login_required
-from code.login.magic import ssh_login
-from code.login.form import LoginForm
-from code.login import bp
-from datetime import datetime as dt
+from code.pages.login.magic import ssh_login
+from code.pages.login.form import LoginForm
+from code.pages.login import bp
 
 from logging import warning
 

@@ -6,6 +6,7 @@ from code.pages.login import bp as blueprint_login
 from code.pages.project import bp as blueprint_project
 from code.pages.stat import bp as blueprint_stat
 #from code.pages.admin import bp as blueprint_admin
+from datetime import datetime as dt
 
 
 app = Flask(__name__, instance_relative_config=True)
@@ -34,6 +35,8 @@ def first_request():
         user_list = sorted(list(users))
         cache.set("user_list", user_list, 600)
     g.user_list = user_list
+    tmp = "%s" % dt.now()
+    g.timestamp = tmp.split(".")[0]
 
 
 app.register_blueprint(blueprint_login)

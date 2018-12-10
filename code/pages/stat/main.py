@@ -1,4 +1,4 @@
-from flask import g, render_template
+from flask import render_template
 from flask_login import login_required
 from code.pages.stat import bp
 
