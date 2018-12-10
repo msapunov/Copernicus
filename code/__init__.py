@@ -33,7 +33,6 @@ def first_request():
         users = map(lambda x: x.login, users_obj)
         user_list = sorted(list(users))
         cache.set("user_list", user_list, 600)
-        print("*" * 80)
     g.user_list = user_list
 
 
