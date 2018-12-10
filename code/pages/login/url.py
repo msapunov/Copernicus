@@ -8,22 +8,6 @@ from datetime import datetime as dt
 from logging import warning
 
 
-@bp.before_app_request
-def before_request():
-    if current_user.is_authenticated:
-        g.user = current_user
-    tmp = "%s" % dt.now()
-    g.timestamp = tmp.split(".")[0]
-
-
-@bp.before_app_first_request
-def before_first_request():
-    from code.database.schema import User
-    users_obj = User.query.all()
-    users = map(lambda x: x.login, users_obj)
-    g.user_list = sorted(list(users))
-
-
 @bp.route("/login.html", methods=["GET", "POST"])
 def login():
 
