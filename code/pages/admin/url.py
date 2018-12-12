@@ -9,10 +9,7 @@ def web_switch_user():
     username = request.form.get("switch_user")
     if not username in g.user_list:
         flash("Invalid username: '%s'" % username)
-        flash(request.referrer)
-        print(request.referrer)
-        print(app)
-        if request.referrer:
+        if request.referrer and (request.referrer in g.url_list):
             return redirect(request.referrer)
         else:
             return redirect(url_for("stat.index"))
