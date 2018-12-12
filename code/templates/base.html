@@ -41,7 +41,7 @@
             </div>
                 <ul class="uk-navbar-nav uk-hidden-small">
                     {% if "user" in current_user.permissions() %}
-                        <li {% if item == 'user.html' %}class="uk-active"{% endif %}><a href="user.html">User</a></li>
+                        <li {% if item == 'user.html' or item == '/' or index=='index' %}class="uk-active"{% endif %}><a href="user.html">User</a></li>
                     {% endif %}
                     {% if "responsible" in current_user.permissions() %}
                         <li {% if item == 'project.html' %}class="uk-active"{% endif %}><a href="project.html">Project</a></li>
