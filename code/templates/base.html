@@ -34,8 +34,7 @@
     {% block body_replace %}
     <body>
     {% endblock %}
-
-    {% if current_user %}
+    {% if current_user.login %}
         <nav class="uk-navbar uk-navbar-attached uk-margin-bottom">
             <div class="uk-navbar-content uk-hidden-small">
                 Login: {{current_user.login}}, Last update: {{g.timestamp}}
@@ -84,7 +83,7 @@
     {% block body %}
     {% endblock %}
 
-    {% if current_user %}
+    {% if current_user.login %}
         <div id="mobile_menu" class="uk-offcanvas">
             <div class="uk-offcanvas-bar">
                 <ul class="uk-nav uk-nav-offcanvas">
