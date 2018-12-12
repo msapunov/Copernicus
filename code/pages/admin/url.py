@@ -1,4 +1,4 @@
-from flask import g, flash, request, redirect, url_for, app
+from flask import g, flash, request, redirect, url_for
 from code.pages.admin import bp
 from flask_login import login_required, login_user
 
@@ -7,7 +7,6 @@ from flask_login import login_required, login_user
 @login_required
 def web_switch_user():
     username = request.form.get("switch_user")
-
     if not username in g.user_list:
         flash("Invalid username: '%s'" % username)
         flash(request.referrer)
@@ -21,7 +20,6 @@ def web_switch_user():
     from code.database.schema import User
 
     user = User.query.filter_by(login=username).first()
-    print(user)
     login_user(user, True)
     flash("Username: '%s'" % username)
     return redirect(url_for("stat.index"))
