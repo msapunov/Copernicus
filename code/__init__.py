@@ -5,7 +5,7 @@ from werkzeug.contrib.cache import SimpleCache
 from code.pages.login import bp as blueprint_login
 from code.pages.project import bp as blueprint_project
 from code.pages.stat import bp as blueprint_stat
-#from code.pages.admin import bp as blueprint_admin
+from code.pages.admin import bp as blueprint_admin
 from datetime import datetime as dt
 
 
@@ -42,4 +42,4 @@ def first_request():
 app.register_blueprint(blueprint_login)
 app.register_blueprint(blueprint_project)
 app.register_blueprint(blueprint_stat)
-#app.register_blueprint(blueprint_admin)#, url_prefix="/admin")
+app.register_blueprint(blueprint_admin, url_prefix="/admin")
