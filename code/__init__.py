@@ -38,6 +38,11 @@ def first_request():
     tmp = "%s" % dt.now()
     g.timestamp = tmp.split(".")[0]
 
+    url_list = cache.get("url_list")
+    if not url_list:
+        url_list = ["%s" % rule for rule in app.url_map.iter_rules()]
+        cache.set("url_list", url_list, 600)
+    g.url_list = url_list
 
 app.register_blueprint(blueprint_login)
 app.register_blueprint(blueprint_project)
