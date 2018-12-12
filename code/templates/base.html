@@ -59,9 +59,9 @@
             {% if "admin" in current_user.permissions() and g.user_list %}
                 <div class="uk-navbar-center">
                     <form class="uk-search uk-navbar-content" action="admin/user_change" method="POST">
-                        <select class="js-example-basic-single" name="state">
+                        <select class="js-example-basic-single" name="switch_user" data-placeholder="Select a user" onchange="this.form.submit()">
                             {% for user in g.user_list %}
-                                <option value="{{user}}">{{user}}</option>
+                                <option value="{{user}}" {%if user==current_user.login%}selected{%endif%}>{{user}}</option>
                             {% endfor %}
                         </select>
                     </form>
