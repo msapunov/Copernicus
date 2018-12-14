@@ -29,9 +29,11 @@ def get_scratch():
             "used_label": bytes2human(used), "free_label": bytes2human(free)}
 
 def get_jobs():
+    start = accounting_start()
+    end = dt.now().strftime("%m/%d/%y-%H:%M")
     cmd = ["sacct", "-nPX",
            "--format=JobID,State,Start,Account,JobName,CPUTime,Partition",
-           "--start=02/15/18-00:00", "--end=12/13/18-15:35", "-u",
+           "--start=%s" % start, "--end=%s" % end, "-u",
            current_user.login]
     run = " ".join(cmd)
 
