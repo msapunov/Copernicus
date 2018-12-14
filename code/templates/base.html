@@ -85,8 +85,11 @@
         {{message}}
     </div>
     {% endfor %}
+
+    <div class="uk-container uk-container-center uk-grid">
     {% block body %}
     {% endblock %}
+    </div>
 
     {% if current_user.login %}
         <div id="mobile_menu" class="uk-offcanvas">
