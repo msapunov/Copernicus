@@ -18,7 +18,6 @@ def ssh_wrapper(cmd):
     except AuthenticationException:
         error("Failed to connect to %s under using %s with key '%s'"
               % (host, login, key_file))
-    finally:
         client.close()
 
     stdin, stdout, stderr = client.exec_command(cmd)
