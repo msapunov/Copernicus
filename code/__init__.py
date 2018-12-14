@@ -22,9 +22,12 @@ login.login_view = "login.login"
 login.session_protection = "strong"
 
 from code.database.schema import User
+
+
 @login.user_loader
 def load_user(userid):
     return User.query.filter(User.id == userid).first()
+
 
 @app.before_request
 def first_request():
@@ -43,6 +46,7 @@ def first_request():
         url_list = ["%s" % rule for rule in app.url_map.iter_rules()]
         cache.set("url_list", url_list, 600)
     g.url_list = url_list
+
 
 app.register_blueprint(blueprint_login)
 app.register_blueprint(blueprint_project)
