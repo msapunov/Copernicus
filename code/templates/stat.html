@@ -1,10 +1,30 @@
 {% extends "base.html" %}
+    {% block head %}
+        <script src="{{ url_for('static', filename='js/canvasjs.min.js') }}"></script>
+        <script type="text/javascript">
+        function plotChart(id, title, dt){
+            CanvasJS.addColorSet("amu",["#73c9e3", "#f0ad4e"]);
+            var chart = new CanvasJS.Chart(id,{
+                colorSet: "amu",
+                title: {text: title},
+                legend: {
+                    verticalAlign: "bottom",
+                    horizontalAlign: "center"
+                },
+            showInLegend: true,
+            data: [{
+                type: "doughnut",
+                showInLegend: true,
+                dataPoints: dt
+            }]
+            });
+            chart.render();
+        }
+        </script>
+    {% endblock %}
     {% block body %}
-        <div class="uk-panel uk-width-1-1 uk-panel-divider">
-            <h3 class="uk-panel-title">Recent jobs</h3>
-        </div>
         {% if data and data.jobs %}
-            <div class="uk-panel uk-width-1-1">
+            <div class="uk-panel uk-width-1-1 uk-panel-space">
                 <table class="uk-table uk-table-hover uk-table-striped uk-table-condensed">
                     <thead>
                     <tr>
@@ -31,6 +51,26 @@
                 {% endfor %}
                 </tbody>
                 </table>
+            </div>
+        {% endif %}
+        {% if data and data.scratch %}
+            <div class="uk-panel uk-width-1-1 uk-panel-space">
+                <div id="canvas_for_scratch">
+                <script type="text/javascript">
+                    var data = [{
+                        y: {{data.scratch.used}},
+                        indexLabel: "Used",
+                        legendText: "Used {{data.scratch.used_label}}"
+                    },{
+                        y: {{data.scratch.free}},
+                        indexLabel: "Free",
+                        legendText: "Available {{data.scratch.free_label}}"
+                    }];
+                    var id = "canvas_for_scratch";
+                    var title = "Scratch usage: {{data.scratch.usage}}";
+                    plotChart(id, title, data);
+                </script>
+                </div>
             </div>
         {% endif %}
     {% endblock %}

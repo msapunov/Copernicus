@@ -41,16 +41,16 @@
             </div>
                 <ul class="uk-navbar-nav uk-hidden-small">
                     {% if "user" in current_user.permissions() %}
-                        <li {% if item == 'user.html' or item == '/' or index=='index' %}class="uk-active"{% endif %}><a href="user.html">User</a></li>
+                        <li {% if item == 'user' %}class="uk-active"{% endif %}><a href="user.html">User</a></li>
                     {% endif %}
                     {% if "responsible" in current_user.permissions() %}
-                        <li {% if item == 'project.html' %}class="uk-active"{% endif %}><a href="project.html">Project</a></li>
+                        <li {% if item == 'project' %}class="uk-active"{% endif %}><a href="project.html">Project</a></li>
                     {% endif %}
                     {% if "committee" in current_user.permissions() %}
-                        <li {% if item == 'board.html' %}class="uk-active"{% endif %}><a href="board.html">Board</a></li>
+                        <li {% if item == 'board' %}class="uk-active"{% endif %}><a href="board.html">Board</a></li>
                     {% endif %}
                     {% if "admin" in current_user.permissions() %}
-                        <li {% if item == 'admin.html' %}class="uk-active"{% endif %}><a href="admin.html">Admin</a></li>
+                        <li {% if item == 'admin' %}class="uk-active"{% endif %}><a href="admin.html">Admin</a></li>
                     {% endif %}
                 </ul>
 

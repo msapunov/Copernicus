@@ -2,6 +2,8 @@ from flask import render_template, flash
 from flask_login import login_required, current_user
 from code.pages.stat import bp
 from code.pages.stat.magic import ssh_wrapper
+from code.utils import bytes2human, accounting_start
+from datetime import datetime as dt
 
 
 @bp.route('/', methods=["GET", "POST"])
@@ -9,8 +11,22 @@ from code.pages.stat.magic import ssh_wrapper
 @login_required
 def index():
     jobs = get_jobs()
-    data = {"jobs": jobs}
+    scratch = get_scratch()
+    data = {"jobs": jobs, "scratch": scratch}
     return render_template("stat.html", data=data)
+
+def get_scratch():
+    cmd = "beegfs-ctl --getquota --csv --uid %s" % current_user.login
+    result, err = ssh_wrapper(cmd)
+    if not result:
+        flash("No scratch space info found")
+
+    info = result[1]
+    name, uid, used, total, files, hard = info.split(",")
+    usage = "{0:.1%}".format(float(used) / float(total))
+    free = float(total) - float(used)
+    return {"usage": usage, "total": total, "used": used, "free": free,
+            "used_label": bytes2human(used), "free_label": bytes2human(free)}
 
 def get_jobs():
     cmd = ["sacct", "-nPX",
