@@ -57,16 +57,16 @@
             {% for project in data.projects|sort(attribute='name') %}
                 {% if project.max > 0 %}
                     {% if project.use > project.max %}
-                        {% set color = "#d9534f" %}
+                        {% set color = "#da314b" %}
                         {% set style = "uk-progress-danger" %}
                     {% elif project.use > 60 %}
-                        {% set color = "#73c9e3" %}
+                        {% set color = "#faa732" %}
                         {% set style = "uk-progress-warning" %}
                     {% elif project.use < 10 %}
-                        {% set color = "#73c9e3" %}
+                        {% set color = "#8cc14c" %}
                         {% set style = "uk-progress-success" %}
                     {% else %}
-                        {% set color = "#73c9e3" %}
+                        {% set color = "#00a8e6" %}
                         {% set style = "uk-progress-info" %}
                     {% endif %}
                 {% endif %}
@@ -95,8 +95,8 @@
                     <div class="uk-progress uk-progress-mini uk-progress-striped {{style}}">
                         <div class="uk-progress-bar" style="width: {{project.use}}%;"></div>
                     </div>
-                    <p><span class="glyphicon glyphicon-unchecked" aria-hidden="true" style="color:{{color}}"></span> Overall consumption: {{project.consumed}} CPU hours {{project_percent}}</p>
-                    <p><span class="glyphicon glyphicon-unchecked" aria-hidden="true" style="color:#f0ad4e"></span> Personal consumption: {{project.private}} CPU hours {{private_percent}}</p>
+                    <p><span class="uk-icon-star" aria-hidden="true" style="color:{{color}}"></span> Overall consumption: {{project.consumed}} CPU hours {{project_percent}}</p>
+                    <p><span class="uk-icon-star-o" aria-hidden="true" style="color:{{color}}"></span> Personal consumption: {{project.private}} CPU hours {{private_percent}}</p>
                 </div>
             </div>
             {% endfor%}
