@@ -10,10 +10,69 @@ from datetime import datetime as dt
 @bp.route('/index', methods=["GET", "POST"])
 @login_required
 def index():
-    jobs = get_jobs()
+    start = accounting_start()
+    end = dt.now().strftime("%m/%d/%y-%H:%M")
+    jobs = get_jobs(start, end)
     scratch = get_scratch()
-    data = {"jobs": jobs, "scratch": scratch}
+    projects = get_project_info(start, end)
+    print(projects)
+    data = {"jobs": jobs, "scratch": scratch, "projects": projects}
     return render_template("stat.html", data=data)
+
+
+def get_project_info(start, end):
+
+    from code.database.schema import Project
+
+    p_ids = current_user.project_ids()
+    tmp = {}
+    for pid in p_ids:
+        project = Project().query.filter_by(id=pid).first()
+        name = project.get_name()
+        if name not in tmp:
+            tmp[name] = {}
+        tmp[name]["max"] = project.resources.cpu
+        tmp[name]["start"] = project.created
+        tmp[name]["end"] = project.modified
+    projects = get_project_consumption(tmp, start, end)
+    result = []
+    for key in projects.keys():
+        projects[key]["name"] = key
+        used = projects[key]["consumed"]
+        total = projects[key]["max"]
+        if total > 0:
+            usage = "{0:.1%}".format(float(used) / float(total))
+            projects[key]["use"] = float(usage.replace("%", ""))
+        else:
+            projects[key]["use"] = 0
+        result.append(projects[key])
+    return result
+
+
+def get_project_consumption(projects, start, end):
+    name = ",".join(projects.keys())
+    cmd = ["sreport", "cluster", "AccountUtilizationByUser", "-t", "hours"]
+    cmd += ["-nP", "format=Account,Login,Used", "Accounts=%s" % name]
+    cmd += ["start=%s" % start, "end=%s" % end]
+    run = " ".join(cmd)
+    result, err = ssh_wrapper(run)
+    if not result:
+        flash("No project consumption information found")
+
+    login = current_user.login
+    for item in result:
+        item = item.strip()
+        project, user, conso = item.split("|")
+        if "private" not in projects[project]:
+            projects[project]["private"] = 0
+        if not user:
+            projects[project]["consumed"] = int(conso)
+            continue
+        if user == login:
+            projects[project]["private"] = int(conso)
+            continue
+    return projects
+
 
 def get_scratch():
     cmd = "beegfs-ctl --getquota --csv --uid %s" % current_user.login
@@ -28,9 +87,8 @@ def get_scratch():
     return {"usage": usage, "total": total, "used": used, "free": free,
             "used_label": bytes2human(used), "free_label": bytes2human(free)}
 
-def get_jobs():
-    start = accounting_start()
-    end = dt.now().strftime("%m/%d/%y-%H:%M")
+
+def get_jobs(start, end):
     cmd = ["sacct", "-nPX",
            "--format=JobID,State,Start,Account,JobName,CPUTime,Partition",
            "--start=%s" % start, "--end=%s" % end, "-u",
@@ -45,7 +103,7 @@ def get_jobs():
     for job in result:
         tmp = {}
         job = job.strip().split("|")
-        tmp["id"] = int(job[0])
+        tmp["id"] = job[0]
         tmp["project"] = job[3]
         tmp["state"] = job[1]
         tmp["partition"] = job[6]
