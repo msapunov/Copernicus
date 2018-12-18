@@ -38,6 +38,8 @@ def get_project_info(start, end):
     result = []
     for key in projects.keys():
         projects[key]["name"] = key
+        if ("consumed" not in projects[key]) or ("private" not in projects[key]):
+            continue
         used = projects[key]["consumed"]
         total = projects[key]["max"]
         if total > 0:
