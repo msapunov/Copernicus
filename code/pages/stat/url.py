@@ -32,8 +32,8 @@ def get_project_info(start, end):
         if name not in tmp:
             tmp[name] = {}
         tmp[name]["max"] = project.resources.cpu
-        tmp[name]["start"] = project.created
-        tmp[name]["end"] = project.modified
+        tmp[name]["start"] = project.created.strftime("%Y-%m-%d")
+        tmp[name]["end"] = project.created.strftime("%Y-%m-%d")
     projects = get_project_consumption(tmp, start, end)
     result = []
     for key in projects.keys():
