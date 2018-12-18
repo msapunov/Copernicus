@@ -56,13 +56,13 @@
         {% if data and data.projects %}
             {% for project in data.projects|sort(attribute='name') %}
                 {% if project.max > 0 %}
-                    {% if project.use > project.max %}
+                    {% if project.consumed_use > project.max %}
                         {% set color = "#da314b" %}
                         {% set style = "uk-progress-danger" %}
-                    {% elif project.use > 60 %}
+                    {% elif project.consumed_use > 60 %}
                         {% set color = "#faa732" %}
                         {% set style = "uk-progress-warning" %}
-                    {% elif project.use < 10 %}
+                    {% elif project.consumed_use < 10 %}
                         {% set color = "#8cc14c" %}
                         {% set style = "uk-progress-success" %}
                     {% else %}
@@ -70,13 +70,13 @@
                         {% set style = "uk-progress-info" %}
                     {% endif %}
                 {% endif %}
-                {% if project.private %}
-                    {% set private_percent = "(" + project.private|string + ")" %}
+                {% if project.private_use %}
+                    {% set private_percent = "(" + project.private_use|string + "%)" %}
                 {% else %}
                     {% set private_percent = "" %}
                 {% endif %}
-                {% if project.use %}
-                    {% set project_percent = "(" + project.use|string + "%)" %}
+                {% if project.consumed_use %}
+                    {% set project_percent = "(" + project.consumed_use|string + "%)" %}
                 {% else %}
                     {% set project_percent = "" %}
                 {% endif %}
