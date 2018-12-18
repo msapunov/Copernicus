@@ -1,5 +1,6 @@
 from flask_login import UserMixin
 from code import db, login
+from datetime import datetime as dt
 
 
 class ACLDB(db.Model):
@@ -17,6 +18,155 @@ class ACLDB(db.Model):
     created = db.Column(db.DateTime(True))
 
 
+class MethodDB(db.Model):
+
+    __tablename__ = "methods"
+
+    id = db.Column(db.Integer, primary_key=True)
+    endpoint = db.Column(db.String(512), unique=True)
+    acl_id = db.Column(db.Integer, db.ForeignKey("acl.id"))
+    acl = db.relationship("ACLDB", uselist=False, backref="methods")
+    comment = db.Column(db.Text)
+    modified = db.Column(db.DateTime(True))
+    created = db.Column(db.DateTime(True))
+    author = db.Column(db.String(64))
+
+
+class UserProjectLink(db.Model):
+
+    __tablename__ = "user_project"
+
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), primary_key=True)
+    project_id = db.Column(db.Integer, db.ForeignKey("projects.id"),
+                           primary_key=True)
+
+
+class Project(db.Model):
+
+    __tablename__ = "projects"
+
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(256))
+    description = db.Column(db.String)
+    scientific_fields = db.Column(db.String(256))
+    genci_committee = db.Column(db.String(256))
+    numerical_methods = db.Column(db.String)
+    computing_resources = db.Column(db.String)
+    project_management = db.Column(db.String)
+    project_motivation = db.Column(db.String)
+    active = db.Column(db.Boolean, default=False)
+    modified = db.Column(db.DateTime(True))
+    created = db.Column(db.DateTime(True))
+    comment = db.Column(db.Text)
+    gid = db.Column(db.Integer)
+    privileged = db.Column(db.Boolean, default=False)
+    name = db.Column(db.String(128))
+    type = db.Column(db.String(1),
+                     db.CheckConstraint("type IN ('a', 'b', 'c', 'h')"))
+
+    responsible_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+    responsible = db.relationship("User", backref="responsible",
+                                  uselist=False, foreign_keys=responsible_id)
+
+    files = db.relationship("FileDB", back_populates="project")
+    articles = db.relationship("ArticleDB", back_populates="project")
+    users = db.relationship("User", secondary="user_project")
+
+    approve_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+    approve = db.relationship("User", foreign_keys=approve_id)
+
+    resources_id = db.Column(db.Integer, db.ForeignKey("project_resources.id"))
+    resources = db.relationship("ProjectResourcesDB", foreign_keys=resources_id)
+
+    ref_id = db.Column(db.Integer, db.ForeignKey("register.id"))
+    ref = db.relationship("RegisterDB", foreign_keys=ref_id)
+
+    def get_name(self):
+        if self.name:
+            return self.name
+        pid = self.id
+        genre = self.type
+        return "%s%s" % (genre, str(pid).zfill(3))
+
+
+class ExtendDB(db.Model):
+
+    __tablename__ = "project_extension"
+
+    id = db.Column(db.Integer, primary_key=True)
+    reason = db.Column(db.Text)
+    hours = db.Column(db.Integer, db.CheckConstraint("cpu>=0"))
+    created = db.Column(db.DateTime(True))
+    modified = db.Column(db.DateTime(True))
+    accepted = db.Column(db.Boolean)
+    processed = db.Column(db.Boolean, default=False)
+    decision = db.Column(db.Text)
+    allocation = db.Column(db.Boolean, default=False)
+    present_usage = db.Column(db.Integer)
+    present_use = db.Column(db.Integer)
+    present_total = db.Column(db.Integer)
+
+    doc_id = db.Column(db.Integer, db.ForeignKey("project_files.id"))
+    project_id = db.Column(db.Integer, db.ForeignKey("projects.id"))
+    approve_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+
+    doc = db.relationship("FileDB", foreign_keys=[doc_id])
+    project = db.relationship("Project", foreign_keys=project_id)
+    approve = db.relationship("User", foreign_keys=approve_id)
+
+
+class ArticleDB(db.Model):
+
+    __tablename__ = "project_articles"
+
+    id = db.Column(db.Integer, primary_key=True)
+    info = db.Column(db.Text)
+    created = db.Column(db.DateTime(True), default=dt.utcnow)
+
+    project_id = db.Column(db.Integer, db.ForeignKey("projects.id"))
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+
+    project = db.relationship("Project", back_populates="articles")
+    user = db.relationship("User", foreign_keys=user_id)
+
+
+class FileDB(db.Model):
+
+    __tablename__ = "project_files"
+
+    id = db.Column(db.Integer, primary_key=True)
+    path = db.Column(db.Text)
+    size = db.Column(db.Integer)
+    comment = db.Column(db.Text)
+    created = db.Column(db.DateTime(True), default=dt.utcnow)
+
+    project_id = db.Column(db.Integer, db.ForeignKey("projects.id"))
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+
+    project = db.relationship("Project", back_populates="files")
+    user = db.relationship("User", foreign_keys=user_id)
+
+
+class ProjectResourcesDB(db.Model):
+
+    __tablename__ = "project_resources"
+
+    id = db.Column(db.Integer, primary_key=True)
+    approve_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+    approve = db.relationship("User", foreign_keys=approve_id)
+
+    valid = db.Column(db.Boolean, default=False)
+    cpu = db.Column(db.Integer, db.CheckConstraint("cpu>=0"))
+    type = db.Column(db.String(1),
+                     db.CheckConstraint("type IN ('a', 'b', 'c', 'h')"))
+    smp = db.Column(db.Boolean, default=False)
+    gpu = db.Column(db.Boolean, default=False)
+    phi = db.Column(db.Boolean, default=False)
+    comment = db.Column(db.Text)
+    created = db.Column(db.DateTime(True))
+    modified = db.Column(db.DateTime(True))
+
+
 class User(UserMixin, db.Model):
 
     __tablename__ = "users"
@@ -31,7 +181,7 @@ class User(UserMixin, db.Model):
     login = db.Column(db.String(128), unique=True)
     acl_id = db.Column(db.Integer, db.ForeignKey("acl.id"))
     acl = db.relationship("ACLDB", uselist=False, backref="users")
-#    projects = db.relationship("ProjectDB", secondary="user_project")
+    project = db.relationship("Project", secondary="user_project")
     active = db.Column(db.Boolean, default=False)
     comment = db.Column(db.Text)
     modified = db.Column(db.DateTime(True))
@@ -71,7 +221,69 @@ class User(UserMixin, db.Model):
             "position": self.position,
             "active": self.active,
             "comment": self.comment,
-#            "last_seen": self.last_seen.isoformat() + 'Z'
+#            "last_seen": self.last_seen.isoformat() + 'Z',
             "modified": self.modified,
             "created": self.created
         }
+
+
+class RegisterDB(db.Model):
+
+    __tablename__ = "register"
+
+    id = db.Column(db.Integer, primary_key=True)
+    ts = db.Column(db.DateTime(True))
+    title = db.Column(db.String(256))
+    responsible_first_name = db.Column(db.String(128))
+    responsible_last_name = db.Column(db.String(128))
+    responsible_position = db.Column(db.String(128))
+    responsible_lab = db.Column(db.String(128))
+    responsible_email = db.Column(db.String(128))
+    responsible_phone = db.Column(db.String(10))
+    description = db.Column(db.String)
+    scientific_fields = db.Column(db.String(256))
+    genci_cometee = db.Column(db.String(128))
+    numerical_methods = db.Column(db.String)
+    computing_resources = db.Column(db.String)
+    type_a = db.Column(db.Boolean, default=True)
+    type_b = db.Column(db.Boolean, default=False)
+    type_c = db.Column(db.Boolean, default=False)
+    cpu = db.Column(db.Integer, db.CheckConstraint("cpu_cluster>=0"))
+    smp = db.Column(db.Boolean, default=False)
+    visu = db.Column(db.Boolean, default=False)
+    gpu = db.Column(db.Boolean, default=False)
+    phi = db.Column(db.Boolean, default=False)
+    article_1 = db.Column(db.String)
+    article_2 = db.Column(db.String)
+    article_3 = db.Column(db.String)
+    article_4 = db.Column(db.String)
+    article_5 = db.Column(db.String)
+    users = db.Column(db.String)
+    project_management = db.Column(db.String)
+    project_motivation = db.Column(db.String)
+    processed = db.Column(db.Boolean)
+    processed_ts = db.Column(db.DateTime(True))
+    accepted = db.Column(db.Boolean)
+    accepted_ts = db.Column(db.DateTime(True))
+    comment = db.Column(db.String)
+    created = db.Column(db.Boolean)
+    created_ts = db.Column(db.DateTime(True))
+
+
+class LogDB(db.Model):
+
+    __tablename__ = "project_logs"
+
+    id = db.Column(db.Integer, primary_key=True)
+
+    created = db.Column(db.DateTime(True), default=dt.utcnow)
+    event = db.Column(db.Text, nullable=False)
+
+    author_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    project_id = db.Column(db.Integer, db.ForeignKey("projects.id"),
+                           nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+    articles_id = db.Column(db.Integer, db.ForeignKey("project_articles.id"))
+    extension_id = db.Column(db.Integer, db.ForeignKey("project_extension.id"))
+    files_id = db.Column(db.Integer, db.ForeignKey("project_files.id"))
+    resources_id = db.Column(db.Integer, db.ForeignKey("project_resources.id"))
