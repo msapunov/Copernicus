@@ -56,13 +56,13 @@
         {% if data and data.projects %}
             {% for project in data.projects|sort(attribute='name') %}
                 {% if project.max > 0 %}
-                    {% if project.consumed > project.max %}
+                    {% if project.use > project.max %}
                         {% set color = "#d9534f" %}
                         {% set style = "uk-progress-danger" %}
-                    {% elif project.consumed > 60 %}
+                    {% elif project.use > 60 %}
                         {% set color = "#73c9e3" %}
                         {% set style = "uk-progress-warning" %}
-                    {% elif project.consumed < 10 %}
+                    {% elif project.use < 10 %}
                         {% set color = "#73c9e3" %}
                         {% set style = "uk-progress-success" %}
                     {% else %}
@@ -70,18 +70,18 @@
                         {% set style = "uk-progress-info" %}
                     {% endif %}
                 {% endif %}
-                {% if project.private_use %}
-                    {% set private_percent = "(" + project.private_use|string + ")" %}
+                {% if project.private %}
+                    {% set private_percent = "(" + project.private|string + ")" %}
                 {% else %}
                     {% set private_percent = "" %}
                 {% endif %}
-                {% if project.total_use %}
-                    {% set project_percent = "(" + project.total_use|string + ")" %}
+                {% if project.use %}
+                    {% set project_percent = "(" + project.use|string + "%)" %}
                 {% else %}
                     {% set project_percent = "" %}
                 {% endif %}
-            <div class="uk-grid uk-panel uk-panel-space">
-                <h3 class="uk-panel-title">Project {{project.name}}</h3>
+            <div class="uk-grid uk-panel uk-panel-space uk-width-1-1">
+                <h3 class="uk-panel-title uk-width-1-1">Project {{project.name}}</h3>
                 <div class="uk-width-small-1-2">
                     <p>Start: {{project.start}}</p>
                     <p>End: {{project.end}}</p>
@@ -92,11 +92,11 @@
                     {% endif %}
                 </div>
                 <div class="uk-width-small-1-2">
-                    <div class="uk-progress uk-progress-striped {{style}}">
-                        <div class="uk-progress-bar" style="width: {{project.project_use}};">{{project.project_use}}</div>
+                    <div class="uk-progress uk-progress-mini uk-progress-striped {{style}}">
+                        <div class="uk-progress-bar" style="width: {{project.use}}%;"></div>
                     </div>
-                    <p><span class="glyphicon glyphicon-unchecked" aria-hidden="true" style="color:#f0ad4e"></span> Personal consumption: {{project.private}} CPU hours {{private_percent}}</p>
                     <p><span class="glyphicon glyphicon-unchecked" aria-hidden="true" style="color:{{color}}"></span> Overall consumption: {{project.consumed}} CPU hours {{project_percent}}</p>
+                    <p><span class="glyphicon glyphicon-unchecked" aria-hidden="true" style="color:#f0ad4e"></span> Personal consumption: {{project.private}} CPU hours {{private_percent}}</p>
                 </div>
             </div>
             {% endfor%}
