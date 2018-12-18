@@ -80,23 +80,25 @@
                 {% else %}
                     {% set project_percent = "" %}
                 {% endif %}
-            <div class="uk-grid uk-panel uk-panel-space uk-width-1-1">
-                <h3 class="uk-panel-title uk-width-1-1">Project {{project.name}}</h3>
-                <div class="uk-width-small-1-2">
-                    <p>Start: {{project.start}}</p>
-                    <p>End: {{project.end}}</p>
-                    {% if project.max == 0 %}
-                        <p>No limit for CPU hours</p>
-                    {% else %}
-                        <p>Assigned resources: {{project.max}} CPU hours</p>
-                    {% endif %}
-                </div>
-                <div class="uk-width-small-1-2">
-                    <div class="uk-progress uk-progress-mini uk-progress-striped {{style}}">
-                        <div class="uk-progress-bar" style="width: {{project.use}}%;"></div>
+            <div class="uk-panel uk-width-1-1 uk-panel-space">
+                <h3 class="uk-panel-title">Project {{project.name}}</h3>
+                <div class="uk-grid">
+                    <div class="uk-width-small-1-1 uk-width-medium-1-2">
+                        <p>Start: {{project.start}}</p>
+                        <p>End: {{project.end}}</p>
+                        {% if project.max == 0 %}
+                            <p>No limit for CPU hours</p>
+                        {% else %}
+                            <p>Assigned resources: {{project.max}} CPU hours</p>
+                        {% endif %}
                     </div>
-                    <p><span class="uk-icon-star" aria-hidden="true" style="color:{{color}}"></span> Overall consumption: {{project.consumed}} CPU hours {{project_percent}}</p>
-                    <p><span class="uk-icon-star-o" aria-hidden="true" style="color:{{color}}"></span> Personal consumption: {{project.private}} CPU hours {{private_percent}}</p>
+                    <div class="uk-width-small-1-1 uk-width-medium-1-2">
+                        <div class="uk-progress uk-progress-mini uk-progress-striped {{style}}">
+                            <div class="uk-progress-bar" style="width: {{project.use}}%;"></div>
+                        </div>
+                        <p><span class="uk-icon-star" aria-hidden="true" style="color:{{color}}"></span> Overall consumption: {{project.consumed}} CPU hours {{project_percent}}</p>
+                        <p><span class="uk-icon-star-o" aria-hidden="true" style="color:{{color}}"></span> Personal consumption: {{project.private}} CPU hours {{private_percent}}</p>
+                    </div>
                 </div>
             </div>
             {% endfor%}
