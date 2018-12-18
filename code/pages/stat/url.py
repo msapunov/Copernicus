@@ -40,13 +40,16 @@ def get_project_info(start, end):
         projects[key]["name"] = key
         if ("consumed" not in projects[key]) or ("private" not in projects[key]):
             continue
-        used = projects[key]["consumed"]
-        total = projects[key]["max"]
-        if total > 0:
-            usage = "{0:.1%}".format(float(used) / float(total))
-            projects[key]["use"] = float(usage.replace("%", ""))
+        max = projects[key]["max"]
+        if max > 0:
+            for i in ["consumed", "private"]:
+                val = projects[key][i]
+                tmp_usage = "{0:.1%}".format(float(val) / float(max))
+                projects[key]["%s_use" % i] = float(tmp_usage.replace("%", ""))
         else:
-            projects[key]["use"] = 0
+            projects[key]["consumed_use"] = 0
+            projects[key]["private_use"] = 0
+        print(projects[key])
         result.append(projects[key])
     return result
 
