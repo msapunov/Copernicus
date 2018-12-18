@@ -209,6 +209,11 @@ class User(UserMixin, db.Model):
             perm.append("admin")
         return perm
 
+    def project_ids(self):
+        projects = list(self.project)
+        ids = map(lambda x: x.id, projects)
+        return list(ids)
+
     def to_dict(self):
         return {
             "id": self.id,
