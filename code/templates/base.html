@@ -89,9 +89,9 @@
         </div>
     {% endfor %}
 
-    {% block body %}
-    {% endblock %}
-    </div>
+            {% block main %}
+            {% endblock %}
+        </div>
 
     {% if current_user.login %}
         <div id="mobile_menu" class="uk-offcanvas">
