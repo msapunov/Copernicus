@@ -88,6 +88,28 @@ class Project(db.Model):
         genre = self.type
         return "%s%s" % (genre, str(pid).zfill(3))
 
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "title": self.title,
+            "description": self.description,
+            "scientific_fields": self.scientific_fields,
+            "genci_committee": self.genci_committee,
+            "numerical_methods": self.numerical_methods,
+            "computing_resources": self.computing_resources,
+            "project_management": self.project_management,
+            "project_motivation": self.project_motivation,
+            "active": self.active,
+            "modified": self.modified,
+            "created": self.created,
+            "comment": self.comment,
+            "gid": self.gid,
+            "privileged": self.privileged,
+            "name": self.name,
+            "type": self.type,
+            "responsible": self.responsible.to_dict()
+        }
+
 
 class ExtendDB(db.Model):
 
