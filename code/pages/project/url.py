@@ -11,12 +11,10 @@ from datetime import datetime as dt
 def project_index():
     start = accounting_start()
     end = dt.now().strftime("%m/%d/%y-%H:%M")
-    jobs = get_jobs(start, end)
-    scratch = get_scratch()
     projects = get_project_info(start, end)
     print(projects)
-    data = {"jobs": jobs, "scratch": scratch, "projects": projects}
-    return render_template("user.html", data=data)
+    data = {"projects": projects}
+    return render_template("project.html", data=data)
 
 
 def get_project_info(start, end):
@@ -26,14 +24,8 @@ def get_project_info(start, end):
     tmp = {}
     for pid in p_ids:
         project = Project().query.filter_by(id=pid).first()
-        if not project.active:
-            continue
         name = project.get_name()
-        if name not in tmp:
-            tmp[name] = {}
-        tmp[name]["max"] = project.resources.cpu
-        tmp[name]["start"] = project.created.strftime("%Y-%m-%d")
-        tmp[name]["end"] = project.created.strftime("%Y-%m-%d")
+        print(project.to_dict())
 
     if not tmp:
         return flash("No active projects found for user '%s'" %
