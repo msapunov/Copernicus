@@ -48,6 +48,13 @@ def first_request():
     g.url_list = url_list
 
 
+@app.template_filter("menu_item")
+def menu_item(obj):
+    line = str(obj)
+    line = line.replace("<TemplateReference '", "")
+    line = line.replace(".html'>", "")
+    return line
+
 app.register_blueprint(blueprint_login)
 app.register_blueprint(blueprint_project)
 app.register_blueprint(blueprint_stat)
