@@ -34,86 +34,125 @@
     {% block body_replace %}
     <body>
     {% endblock %}
-    {% if current_user.login %}
-        <nav class="uk-navbar uk-navbar-attached uk-margin-bottom">
-            <div class="uk-navbar-content uk-hidden-small">
-                Login: {{current_user.login}}, Last update: {{g.timestamp}}
-            </div>
+
+    {% block body %}
+
+        {% if current_user.login %}
+            {% set menu = True %}
+            {% set roles = current_user.permissions() %}
+            {% if ["user"] == roles %}
+                {% set user = False %}
+                {% set responsible = False %}
+                {% set committee = False %}
+                {% set admin = False %}
+            {% else %}
+                {% if "user" in roles %}
+                    {% set user = True %}
+                {% endif %}
+                {% if "responsible" in roles %}
+                    {% set responsible = True %}
+                {% endif %}
+                {% if "committee" in roles %}
+                    {% set committee = True %}
+                {% endif %}
+                {% if "admin" in roles %}
+                    {% set admin = True %}
+                {% endif %}
+            {% endif %}
+        {% endif %}
+
+        {% if menu %}
+            <nav class="uk-navbar uk-navbar-attached uk-margin-bottom">
+                <div class="uk-navbar-content uk-display-inline">
+                    <p class="uk-display-inline uk-hidden-small">Login: {{current_user.login}}</p>
+                    <p class="uk-display-inline uk-margin-small-left uk-hidden-medium uk-hidden-small">Last update: {{g.timestamp}}</p>
+                </div>
                 <ul class="uk-navbar-nav uk-hidden-small">
-                    {% if "user" in current_user.permissions() %}
+                    {% if user %}
                         <li {% if item == 'user' %}class="uk-active"{% endif %}><a href="user.html">User</a></li>
                     {% endif %}
-                    {% if "responsible" in current_user.permissions() %}
+                    {% if responsible %}
                         <li {% if item == 'project' %}class="uk-active"{% endif %}><a href="project.html">Project</a></li>
                     {% endif %}
-                    {% if "committee" in current_user.permissions() %}
+                    {% if committee %}
                         <li {% if item == 'board' %}class="uk-active"{% endif %}><a href="board.html">Board</a></li>
                     {% endif %}
-                    {% if "admin" in current_user.permissions() %}
+                    {% if admin %}
                         <li {% if item == 'admin' %}class="uk-active"{% endif %}><a href="admin.html">Admin</a></li>
                     {% endif %}
                 </ul>
 
                 <a href="#mobile_menu" class="uk-navbar-toggle uk-visible-small" data-uk-offcanvas></a>
 
-            {% if "admin" in current_user.permissions() and g.user_list %}
-                <div class="uk-navbar-center">
-                    <form class="uk-search uk-navbar-content" action="admin/switch_user" method="POST">
-                        <select class="js-example-basic-single" name="switch_user" data-placeholder="Select a user" onchange="this.form.submit()">
-                            {% for user in g.user_list %}
-                                <option value="{{user}}" {%if user==current_user.login%}selected{%endif%}>{{user}}</option>
-                            {% endfor %}
-                        </select>
-                    </form>
+                <div class="uk-navbar-flip">
+                    {% if admin  and g.user_list %}
+                        <form class="uk-search uk-navbar-content uk-hidden-small" action="admin/switch_user" method="POST">
+                            <select class="js-example-basic-single" name="switch_user" data-placeholder="Select a user" onchange="this.form.submit()">
+                                {% for user in g.user_list %}
+                                    <option value="{{user}}" {%if user==current_user.login%}selected{%endif%}>{{user}}</option>
+                                {% endfor %}
+                            </select>
+                        </form>
+                    {% endif %}
+                    <ul class="uk-navbar-nav">
+                        <li>
+                            <a href="logout">
+                                <span class="uk-icon-sign-out"></span>Logout
+                            </a>
+                        </li>
+                    </ul>
                 </div>
-            {% endif %}
+            </nav>
+        {% endif %}
 
-            <div class="uk-navbar-flip">
-                <ul class="uk-navbar-nav">
-                    <li>
-                        <a href="logout">
-                            <span class="uk-icon-sign-out"></span>Logout
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </nav>
-    {% endif %}
+        <div class="uk-container uk-container-center uk-grid">
 
-    <div class="uk-container uk-container-center uk-grid">
-
-    {% for message in get_flashed_messages() %}
-        <div class="uk-alert uk-alert-danger uk-width-1-1" data-uk-alert>
-            <a href="" class="uk-alert-close uk-close"></a>
-            {{message}}
-        </div>
-    {% endfor %}
+            {% for message in get_flashed_messages() %}
+                <div class="uk-alert uk-alert-danger uk-width-1-1" data-uk-alert>
+                    <a href="" class="uk-alert-close uk-close"></a>
+                    {{message}}
+                </div>
+            {% endfor %}
 
             {% block main %}
             {% endblock %}
         </div>
 
-    {% if current_user.login %}
-        <div id="mobile_menu" class="uk-offcanvas">
-            <div class="uk-offcanvas-bar">
-                <ul class="uk-nav uk-nav-offcanvas">
-                    {% if "user" in current_user.permissions() %}
-                        <li {% if item == 'user.html' %}class="uk-active"{% endif %}><a href="user.html">User</a></li>
-                    {% endif %}
-                    {% if "responsible" in current_user.permissions() %}
-                        <li {% if item == 'project.html' %}class="uk-active"{% endif %}><a href="project.html">Project</a></li>
-                    {% endif %}
-                    {% if "committee" in current_user.permissions() %}
-                        <li {% if item == 'board.html' %}class="uk-active"{% endif %}><a href="board.html">Board</a></li>
-                    {% endif %}
-                    {% if "admin" in current_user.permissions() %}
-                        <li {% if item == 'admin.html' %}class="uk-active"{% endif %}><a href="admin.html">Admin</a></li>
-                    {% endif %}
-                </ul>
-
+        {% if menu %}
+            <div id="mobile_menu" class="uk-offcanvas">
+                <div class="uk-offcanvas-bar">
+                    <div class="uk-panel">Login: {{current_user.login}}</div>
+                    <div class="uk-panel">Last update: {{g.timestamp}}</div>
+                    <ul class="uk-nav uk-nav-offcanvas">
+                        {% if user %}
+                            <li {% if item == 'user.html' %}class="uk-active"{% endif %}><a href="user.html">User</a></li>
+                        {% endif %}
+                        {% if responsible %}
+                            <li {% if item == 'project.html' %}class="uk-active"{% endif %}><a href="project.html">Project</a></li>
+                        {% endif %}
+                        {% if committee %}
+                            <li {% if item == 'board.html' %}class="uk-active"{% endif %}><a href="board.html">Board</a></li>
+                        {% endif %}
+                        {% if admin %}
+                            <li {% if item == 'admin.html' %}class="uk-active"{% endif %}><a href="admin.html">Admin</a></li>
+                        {% endif %}
+                    </ul>
+                    <div class="uk-panel">
+                        {% if admin  and g.user_list %}
+                            <form action="admin/switch_user" method="POST">
+                                <select class="js-example-basic-single" name="switch_user" data-placeholder="Select a user" onchange="this.form.submit()">
+                                    {% for user in g.user_list %}
+                                        <option value="{{user}}" {%if user==current_user.login%}selected{%endif%}>{{user}}</option>
+                                    {% endfor %}
+                                </select>
+                            </form>
+                        {% endif %}
+                    </div>
+                </div>
             </div>
-        </div>
-    {% endif %}
+        {% endif %}
+
+    {% endblock %}
 
     </body>
 </html>
