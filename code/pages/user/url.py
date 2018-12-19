@@ -4,6 +4,7 @@ from code.pages.user import bp
 from code.pages.user.magic import ssh_wrapper
 from code.utils import bytes2human, accounting_start
 from datetime import datetime as dt
+from logging import debug
 
 
 @bp.route('/', methods=["GET"])
@@ -16,7 +17,7 @@ def user_index():
     jobs = get_jobs(start, end)
     scratch = get_scratch()
     projects = get_project_info(start, end)
-    print(projects)
+    debug(projects)
     data = {"jobs": jobs, "scratch": scratch, "projects": projects}
     return render_template("user.html", data=data)
 
@@ -57,7 +58,7 @@ def get_project_info(start, end):
         else:
             projects[key]["consumed_use"] = 0
             projects[key]["private_use"] = 0
-        print(projects[key])
+        debug(projects[key])
         result.append(projects[key])
     return result
 
