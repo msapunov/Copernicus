@@ -29,7 +29,7 @@ def login():
     warning(user)
     login_user(user, True)
     g.name = username
-    return redirect(url_for("stat.index"))
+    return redirect(url_for("user.index"))
 
 
 @bp.route("/logout")
