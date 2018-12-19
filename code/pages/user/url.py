@@ -1,15 +1,16 @@
 from flask import render_template, flash
 from flask_login import login_required, current_user
-from code.pages.stat import bp
-from code.pages.stat.magic import ssh_wrapper
+from code.pages.user import bp
+from code.pages.user.magic import ssh_wrapper
 from code.utils import bytes2human, accounting_start
 from datetime import datetime as dt
 
 
-@bp.route('/', methods=["GET", "POST"])
-@bp.route('/index', methods=["GET", "POST"])
+@bp.route('/', methods=["GET"])
+@bp.route('/index', methods=["GET"])
+@bp.route('/user.html', methods=["GET"])
 @login_required
-def index():
+def user_index():
     start = accounting_start()
     end = dt.now().strftime("%m/%d/%y-%H:%M")
     jobs = get_jobs(start, end)
