@@ -28,23 +28,30 @@ def get_project_info(start, end):
     tmp = {}
     for pid in p_ids:
         project = Project().query.filter_by(id=pid).first()
+        if not project.active:
+            continue
         name = project.get_name()
         if name not in tmp:
             tmp[name] = {}
         tmp[name]["max"] = project.resources.cpu
         tmp[name]["start"] = project.created.strftime("%Y-%m-%d")
         tmp[name]["end"] = project.created.strftime("%Y-%m-%d")
+
+    if not tmp:
+        return flash("No active projects found for user '%s'" %
+                     current_user.login)
+
     projects = get_project_consumption(tmp, start, end)
     result = []
     for key in projects.keys():
         projects[key]["name"] = key
-        if ("consumed" not in projects[key]) or ("private" not in projects[key]):
+        if ("consumed" not in projects[key])or("private" not in projects[key]):
             continue
-        max = projects[key]["max"]
-        if max > 0:
+        total = projects[key]["max"]
+        if total > 0:
             for i in ["consumed", "private"]:
                 val = projects[key][i]
-                tmp_usage = "{0:.1%}".format(float(val) / float(max))
+                tmp_usage = "{0:.1%}".format(float(val) / float(total))
                 projects[key]["%s_use" % i] = float(tmp_usage.replace("%", ""))
         else:
             projects[key]["consumed_use"] = 0
@@ -62,7 +69,7 @@ def get_project_consumption(projects, start, end):
     run = " ".join(cmd)
     result, err = ssh_wrapper(run)
     if not result:
-        flash("No project consumption information found")
+        return flash("No project consumption information found")
 
     login = current_user.login
     for item in result:
@@ -83,7 +90,7 @@ def get_scratch():
     cmd = "beegfs-ctl --getquota --csv --uid %s" % current_user.login
     result, err = ssh_wrapper(cmd)
     if not result:
-        flash("No scratch space info found")
+        return flash("No scratch space info found")
 
     info = result[1]
     name, uid, used, total, files, hard = info.split(",")
@@ -103,7 +110,7 @@ def get_jobs(start, end):
     result, err = ssh_wrapper(run)
 
     if not result:
-        flash("No jobs found")
+        return flash("No jobs found")
     jobs = []
     for job in result:
         tmp = {}
