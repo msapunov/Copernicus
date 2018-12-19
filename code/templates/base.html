@@ -36,7 +36,7 @@
     {% endblock %}
 
     {% block body %}
-
+        {% set item = self | menu_item %}
         {% if current_user.login %}
             {% set menu = True %}
             {% set roles = current_user.permissions() %}
@@ -63,10 +63,8 @@
 
         {% if menu %}
             <nav class="uk-navbar uk-navbar-attached uk-margin-bottom">
-                <div class="uk-navbar-content uk-display-inline">
-                    <p class="uk-display-inline uk-hidden-small">Login: {{current_user.login}}</p>
-                    <p class="uk-display-inline uk-margin-small-left uk-hidden-medium uk-hidden-small">Last update: {{g.timestamp}}</p>
-                </div>
+                <div class="uk-navbar-content uk-display-inline uk-hidden-small">Login: {{current_user.login}}</div>
+                <div class="uk-navbar-content uk-display-inline uk-margin-small-left uk-hidden-medium uk-hidden-small">Last update: {{g.timestamp}}</div>
                 <ul class="uk-navbar-nav uk-hidden-small">
                     {% if user %}
                         <li {% if item == 'user' %}class="uk-active"{% endif %}><a href="user.html">User</a></li>
@@ -125,7 +123,7 @@
                     <div class="uk-panel">Last update: {{g.timestamp}}</div>
                     <ul class="uk-nav uk-nav-offcanvas">
                         {% if user %}
-                            <li {% if item == 'user.html' %}class="uk-active"{% endif %}><a href="user.html">User</a></li>
+                            <li {% if item == 'user' or item == 'index' %}class="uk-active"{% endif %}><a href="user.html">User</a></li>
                         {% endif %}
                         {% if responsible %}
                             <li {% if item == 'project.html' %}class="uk-active"{% endif %}><a href="project.html">Project</a></li>

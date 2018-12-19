@@ -17,7 +17,7 @@ def index():
     projects = get_project_info(start, end)
     print(projects)
     data = {"jobs": jobs, "scratch": scratch, "projects": projects}
-    return render_template("stat.html", data=data)
+    return render_template("user.html", data=data)
 
 
 def get_project_info(start, end):
