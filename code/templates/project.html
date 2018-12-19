@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block head %}
+    <script defer type="text/javascript" src="../lib/moment-with-locales.js"></script>
+    <script defer type="text/javascript" src="../lib/project_new.js"></script>
+    <script type="text/javascript" src="../lib/jquery-1.12.3.min.js"></script>
+{% endblock %}
+{% block main %}
+    {% if data.projects %}
+        <div class="uk-container uk-container-center uk-grid">
+        {% for project in data.projects|sort(attribute='name') %}
+            <div class="uk-panel uk-width-1-1 uk-panel-divider">
+                <h3 class="uk-panel-title">{{project.title}}</h3>
+            </div>
+            <div class="uk-width-medium-4-5">
+                <div class="uk-panel uk-margin-top uk-margin-bottom">
+                    <div>Name: <b>{{project.name}}</b></div>
+                    <div>Status: <b>{% if project.active %}Active{% else %}Postponed{% endif %}</b></div>
+                </div>
+            </div>
+            <div class="uk-width-1-5">
+                <div class="uk-panel uk-margin-top uk-margin-bottom">
+                    {% if project.active %}
+                        {% if project.type=='a' %}
+                            <button class="uk-button uk-width-1-1 extend uk-margin-small-bottom" data-project='{{project.id}}' data-name='{{project.name}}' type="button">Transform</button>
+                        {% else %}
+                            <button class="uk-button uk-width-1-1 extend uk-margin-small-bottom" data-project='{{project.id}}' data-name='{{project.name}}' type="button">Extend&nbsp;project</button>
+                        {% endif %}
+                        <button class="uk-button uk-width-1-1 history uk-margin-small-bottom" data-project='{{project.id}}' data-name='{{project.name}}' type="button">History</button>
+                    {% else %}
+                        <button class="uk-button uk-width-1-1 react uk-margin-small-bottom" data-project='{{project.id}}' data-name='{{project.name}}' type="button">Activate project</button>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="uk-panel uk-width-1-1">
+                <ul class="uk-subnav uk-subnav-pill" data-uk-switcher="{connect:'#{{project.name}}-additional-info'}">
+                    <li class="uk-active"><a href="">Description</a></li>
+                    <li><a href="">Scientific fields</a></li>
+                    <li><a href="">Genci</a></li>
+                    <li><a href="">Methods</a></li>
+                    <li><a href="">Resources</a></li>
+                    <li><a href="">Management</a></li>
+                    <li><a href="">Motivation</a></li>
+                </ul>
+                <ul id="{{project.name}}-additional-info" class="uk-switcher">
+                    <li><article>{{project.description}}</article></li>
+                    <li><article>{{project.scientific_fields}}</article></li>
+                    <li><article>{{project.genci_committee}}</article></li>
+                    <li><article>{{project.numerical_methods}}</article></li>
+                    <li><article>{{project.computing_resources}}</article></li>
+                    <li><article>{{project.project_management}}</article></li>
+                    <li><article>{{project.project_motivation}}</article></li>
+                </ul>
+            </div>
+        {% endfor %}
+        </div>
+    {% else %}
+        <div class="uk-container uk-container-center">
+            <h1>There is no project associated with username '{{current_user.login}}'</h1>
+        </div>
+    {% endif %}
+{% endblock %}
