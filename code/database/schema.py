@@ -81,6 +81,9 @@ class Project(db.Model):
     ref_id = db.Column(db.Integer, db.ForeignKey("register.id"))
     ref = db.relationship("RegisterDB", foreign_keys=ref_id)
 
+    def get_responsible(self):
+        return self.responsible
+
     def get_name(self):
         if self.name:
             return self.name
@@ -110,7 +113,7 @@ class Project(db.Model):
             "responsible": self.responsible.to_dict(),
             "files": self.files,
             "articles": self.articles,
-            "users": self.users,
+            "users": list(map(lambda x: x.to_dict(), self.users)),
             "approve": self.approve.to_dict(),
             "resources": self.resources.to_dict(),
             "ref": self.ref.id
