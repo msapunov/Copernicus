@@ -32,6 +32,22 @@ def get_project_info(start, end):
         return flash("No active projects found for user '%s'" %
                      current_user.login)
 
+    tmp_project = list(map(lambda x: x["name"], tmp))
+    conso = get_project_consumption(tmp_project, start, end)
+
+    for project in tmp:
+        name = project["name"]
+        if name in conso:
+            project["consumption"] = conso[name]
+            project["usage"] = "{0:.1%}".format(
+                float(conso[name])/float(project["resources"]["cpu"]))
+        else:
+            project["consumption"] = 0
+            project["usage"] = 0
+    print(tmp)
+    result = []
+
+    """
     projects = get_project_consumption(tmp, start, end)
     result = []
     for key in projects.keys():
