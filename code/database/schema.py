@@ -105,9 +105,15 @@ class Project(db.Model):
             "comment": self.comment,
             "gid": self.gid,
             "privileged": self.privileged,
-            "name": self.name,
+            "name": self.get_name(),
             "type": self.type,
-            "responsible": self.responsible.to_dict()
+            "responsible": self.responsible.to_dict(),
+            "files": self.files,
+            "articles": self.articles,
+            "users": self.users,
+            "approve": self.approve.to_dict(),
+            "resources": self.resources.to_dict(),
+            "ref": self.ref.id
         }
 
 
@@ -187,6 +193,21 @@ class ProjectResourcesDB(db.Model):
     comment = db.Column(db.Text)
     created = db.Column(db.DateTime(True))
     modified = db.Column(db.DateTime(True))
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "approve": self.approve.to_dict(),
+            "valid": self.valid,
+            "cpu": self.cpu,
+            "type": self.type,
+            "smp": self.smp,
+            "gpu": self.gpu,
+            "phi": self.phi,
+            "comment": self.comment,
+            "created": self.created,
+            "modified": self.modified
+        }
 
 
 class User(UserMixin, db.Model):
