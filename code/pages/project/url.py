@@ -21,12 +21,12 @@ def get_project_info(start, end):
     from code.database.schema import Project
 
     p_ids = current_user.project_ids()
-    tmp = {}
+    tmp = []
     for pid in p_ids:
         project = Project().query.filter_by(id=pid).first()
-        name = project.get_name()
-        print(project.to_dict())
-
+        if current_user != project.get_responsible():
+            continue
+        tmp.append(project.to_dict())
     if not tmp:
         return flash("No active projects found for user '%s'" %
                      current_user.login)
@@ -49,7 +49,8 @@ def get_project_info(start, end):
             projects[key]["private_use"] = 0
         print(projects[key])
         result.append(projects[key])
-    return result
+    """
+    return tmp
 
 
 def get_project_consumption(projects, start, end):
