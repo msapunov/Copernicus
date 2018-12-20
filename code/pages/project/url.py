@@ -13,6 +13,7 @@ def project_index():
     end = dt.now().strftime("%m/%d/%y-%H:%M")
     projects = get_project_info(start, end)
     print(projects)
+
     data = {"projects": projects}
     return render_template("project.html", data=data)
 
@@ -54,7 +55,7 @@ def get_project_info(start, end):
 
 
 def get_project_consumption(projects, start, end):
-    name = ",".join(projects.keys())
+    name = ",".join(projects)
     cmd = ["sreport", "cluster", "AccountUtilizationByUser", "-t", "hours"]
     cmd += ["-nP", "format=Account,Login,Used", "Accounts=%s" % name]
     cmd += ["start=%s" % start, "end=%s" % end]
@@ -63,19 +64,14 @@ def get_project_consumption(projects, start, end):
     if not result:
         return flash("No project consumption information found")
 
-    login = current_user.login
+    tmp = {}
     for item in result:
         item = item.strip()
         project, user, conso = item.split("|")
-        if "private" not in projects[project]:
-            projects[project]["private"] = 0
         if not user:
-            projects[project]["consumed"] = int(conso)
+            tmp[project] = int(conso)
             continue
-        if user == login:
-            projects[project]["private"] = int(conso)
-            continue
-    return projects
+    return tmp
 
 
 def get_scratch():
