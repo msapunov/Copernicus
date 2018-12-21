@@ -45,7 +45,6 @@ def get_project_info(start, end):
             project["consumption"] = 0
             project["usage"] = 0
     print(tmp)
-    result = []
 
     """
     projects = get_project_consumption(tmp, start, end)
