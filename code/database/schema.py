@@ -265,6 +265,7 @@ class User(UserMixin, db.Model):
             "id": self.id,
             "login": self.login,
             "name": self.name,
+            "fullname": self.full_name(),
             "surname": self.surname,
             "email": self.email,
             "phone": self.phone,
