@@ -7,13 +7,14 @@ from code.pages.login import bp
 from logging import warning
 
 
+@bp.route("/login", methods=["GET", "POST"])
 @bp.route("/login.html", methods=["GET", "POST"])
 def login():
 
     from code.database.schema import User
 
     if current_user.is_authenticated:
-        return redirect(url_for("stat.index"))
+        return redirect(url_for("user.user_index"))
     form = LoginForm(request.form)
     if request.method == "GET":
         return render_template("login.html", form=form)
@@ -29,7 +30,7 @@ def login():
     warning(user)
     login_user(user, True)
     g.name = username
-    return redirect(url_for("user.index"))
+    return redirect(url_for("user.user_index"))
 
 
 @bp.route("/logout")
