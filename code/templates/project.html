@@ -6,7 +6,6 @@
 {% endblock %}
 {% block main %}
     {% if data.projects %}
-        <div class="uk-container uk-container-center uk-grid">
         {% for project in data.projects|sort(attribute='name') %}
             <div class="uk-panel uk-width-1-1 uk-panel-divider">
                 <h3 class="uk-panel-title">{{project.title}}</h3>
@@ -99,6 +98,5 @@
                 </ul>
             </div>
         {% endfor %}
-        </div>
     {% endif %}
 {% endblock %}
