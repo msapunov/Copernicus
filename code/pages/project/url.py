@@ -38,9 +38,10 @@ def get_project_info(start, end):
     for project in tmp:
         name = project["name"]
         if name in conso:
-            project["consumption"] = conso[name]
+            total = conso[name]["total"]
+            project["consumption"] = total
             project["usage"] = "{0:.1%}".format(
-                float(conso[name])/float(project["resources"]["cpu"]))
+                float(total)/float(project["resources"]["cpu"]))
         else:
             project["consumption"] = 0
             project["usage"] = 0
@@ -83,9 +84,13 @@ def get_project_consumption(projects, start, end):
     for item in result:
         item = item.strip()
         project, user, conso = item.split("|")
+        if project not in tmp:
+            tmp[project] = {}
         if not user:
-            tmp[project] = int(conso)
-            continue
+            tmp[project]["total"] = int(conso)
+        else:
+            tmp[project][user] = int(conso)
+    print(tmp)
     return tmp
 
 
