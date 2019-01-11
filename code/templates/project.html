@@ -1,8 +1,6 @@
 {% extends "base.html" %}
 {% block head %}
-<!--
-    <script defer type="text/javascript" src="../lib/moment-with-locales.js"></script>
-    -->
+    <script src="{{ url_for('static', filename='js/moment-with-locales.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/project.js') }}"></script>
 {% endblock %}
 {% block main %}
