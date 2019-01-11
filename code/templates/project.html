@@ -1,8 +1,9 @@
 {% extends "base.html" %}
 {% block head %}
+<!--
     <script defer type="text/javascript" src="../lib/moment-with-locales.js"></script>
-    <script defer type="text/javascript" src="../lib/project_new.js"></script>
-    <script type="text/javascript" src="../lib/jquery-1.12.3.min.js"></script>
+    -->
+    <script src="{{ url_for('static', filename='js/project.js') }}"></script>
 {% endblock %}
 {% block main %}
     {% if data.projects %}
@@ -71,7 +72,11 @@
                         {% if project.type=='a' %}
                             <button class="uk-button uk-width-1-1 extend uk-margin-small-bottom" data-project='{{project.id}}' data-name='{{project.name}}' type="button">Transform</button>
                         {% else %}
-                            <button class="uk-button uk-width-1-1 extend uk-margin-small-bottom" data-project='{{project.id}}' data-name='{{project.name}}' type="button">Extend&nbsp;project</button>
+                            {% if data.renew %}
+                                <button class="uk-button uk-width-1-1 renew uk-margin-small-bottom" data-project='{{project.id}}' data-name='{{project.name}}' type="button">Renew&nbsp;project&nbsp;for&nbsp;{{data.renew}}</button>
+                            {% else %}
+                                <button class="uk-button uk-width-1-1 extend uk-margin-small-bottom" data-project='{{project.id}}' data-name='{{project.name}}' type="button">Extend&nbsp;project</button>
+                            {% endif %}
                         {% endif %}
                         <button class="uk-button uk-width-1-1 history uk-margin-small-bottom" data-project='{{project.id}}' data-name='{{project.name}}' type="button">History</button>
                     {% else %}
