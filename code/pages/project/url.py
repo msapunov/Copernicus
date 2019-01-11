@@ -12,7 +12,12 @@ def project_index():
     start = accounting_start()
     end = dt.now().strftime("%m/%d/%y-%H:%M")
     projects = get_project_info(start, end)
-    data = {"projects": projects}
+    now = dt.now()
+    if now.month != 1:
+        renew = False
+    else:
+        renew = now.year
+    data = {"projects": projects, "renew": renew}
     return render_template("project.html", data=data)
 
 
