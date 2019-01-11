@@ -1,4 +1,4 @@
-from flask import render_template, flash
+from flask import render_template, flash, request, json, jsonify
 from flask_login import login_required, current_user
 from code.pages.user import bp
 from code.pages.user.magic import ssh_wrapper
@@ -6,7 +6,27 @@ from code.utils import bytes2human, accounting_start
 from datetime import datetime as dt
 
 
-@bp.route('/project.html', methods=["GET"])
+@bp.route("/project/history", methods=["POST"])
+@login_required
+def web_project_history():
+    from code.database.schema import LogDB
+
+    data = request.get_json()
+    if not data:
+        return flash("Expecting application/json requests")
+    raw_pid = data["project"]
+    try:
+        pid = int(raw_pid)
+    except Exception as e:
+        return render_template("500.html", error = str(e))
+        #return jsonify("Failed to parse project id: %s" % e)
+    recs = LogDB().query.filter(LogDB.project_id == pid).all()
+    result = map(lambda x: x.to_dict(), recs)
+    print(list(result))
+    return jsonify(list(result))
+
+
+@bp.route("/project.html", methods=["GET"])
 @login_required
 def project_index():
     start = accounting_start()
