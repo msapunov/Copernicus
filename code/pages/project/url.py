@@ -71,7 +71,6 @@ def get_project_consumption(projects, start, end):
     result, err = ssh_wrapper(run)
     if not result:
         return flash("No project consumption information found")
-    print(result)
 
     tmp = {}
     for item in result:
@@ -83,5 +82,4 @@ def get_project_consumption(projects, start, end):
             tmp[project]["total"] = int(conso)
         else:
             tmp[project][user] = int(conso)
-    print(tmp)
     return tmp
