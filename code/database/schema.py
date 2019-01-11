@@ -339,3 +339,6 @@ class LogDB(db.Model):
     extension_id = db.Column(db.Integer, db.ForeignKey("project_extension.id"))
     files_id = db.Column(db.Integer, db.ForeignKey("project_files.id"))
     resources_id = db.Column(db.Integer, db.ForeignKey("project_resources.id"))
+
+    def __repr__(self):
+        return "<Log event for project id {}>".format(self.project_id)
