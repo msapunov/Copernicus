@@ -342,3 +342,22 @@ class LogDB(db.Model):
 
     def __repr__(self):
         return "<Log event for project id {}>".format(self.project_id)
+
+    def to_dict(self):
+        event = self.event[0].upper() + self.event[1:]
+        author = self.author_id.fullname
+        if self.user_id:
+            msg = "%s %s <%s> by %s" % (event, self.user_id.fullname,
+                                        self.user_id.email, author)
+        elif self.resources_id:
+            cpu = self.resources_id.cpu
+            msg = "%s: %s hours by %s" % (event, cpu, author)
+        elif self.extension_id:
+            cpu = self.extension_id.hours
+            msg = "%s for %s hours by %s" % (event, cpu, author)
+        else:
+            msg = "%s by %s" % (event, author)
+        return {
+            "date": self.created,
+            "message": msg
+        }
