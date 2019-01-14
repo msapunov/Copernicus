@@ -138,11 +138,12 @@ class ExtendDB(db.Model):
     present_total = db.Column(db.Integer)
 
     doc_id = db.Column(db.Integer, db.ForeignKey("project_files.id"))
-    project_id = db.Column(db.Integer, db.ForeignKey("projects.id"))
-    approve_id = db.Column(db.Integer, db.ForeignKey("users.id"))
-
     doc = db.relationship("FileDB", foreign_keys=[doc_id])
+
+    project_id = db.Column(db.Integer, db.ForeignKey("projects.id"))
     project = db.relationship("Project", foreign_keys=project_id)
+
+    approve_id = db.Column(db.Integer, db.ForeignKey("users.id"))
     approve = db.relationship("User", foreign_keys=approve_id)
 
 

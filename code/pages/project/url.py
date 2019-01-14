@@ -6,6 +6,39 @@ from code.utils import bytes2human, accounting_start
 from datetime import datetime as dt
 
 
+@bp.route("/project/extend", methods=["POST"])
+@login_required
+def web_project_extend():
+
+    data = request.get_json()
+    if not data:
+        return flash("Expecting application/json requests")
+
+    raw_pid = data["project"]
+    try:
+        pid = int(raw_pid)
+    except Exception as e:
+        return render_template("500.html", error = str(e))
+        #return jsonify("Failed to parse project id: %s" % e)
+
+    raw_cpu = data["cpu"]
+    try:
+        cpu = int(raw_cpu)
+    except Exception as e:
+        return render_template("500.html", error = str(e))
+        #return jsonify("Failed to parse project id: %s" % e)
+
+    raw_note = data["note"]
+    try:
+        note = str(raw_note)
+    except Exception as e:
+        return render_template("500.html", error = str(e))
+
+    recs = LogDB().query.filter(LogDB.project_id == pid).all()
+    result = list(map(lambda x: x.to_dict(), recs))
+    return jsonify(result)
+
+
 @bp.route("/project/history", methods=["POST"])
 @login_required
 def web_project_history():
