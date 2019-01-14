@@ -81,6 +81,9 @@ class Project(db.Model):
     ref_id = db.Column(db.Integer, db.ForeignKey("register.id"))
     ref = db.relationship("RegisterDB", foreign_keys=ref_id)
 
+    def __repr__(self):
+        return '<Project {}>'.format(self.get_name())
+
     def get_responsible(self):
         return self.responsible
 
