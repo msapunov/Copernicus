@@ -58,13 +58,12 @@ def web_project_history():
 
     data = request.get_json()
     if not data:
-        return flash("Expecting application/json requests")
+        return jsonify(message="Expecting application/json requests")
     raw_pid = data["project"]
     try:
         pid = int(raw_pid)
     except Exception as e:
-        return render_template("500.html", error = str(e))
-        #return jsonify("Failed to parse project id: %s" % e)
+        return jsonify(message="Failed to parse project id: %s" % e)
     recs = LogDB().query.filter(LogDB.project_id == pid).all()
     result = list(map(lambda x: x.to_dict(), recs))
     return jsonify(result)
@@ -92,6 +91,8 @@ def get_project_info(start, end):
     tmp = []
     for pid in p_ids:
         project = Project().query.filter_by(id=pid).first()
+        if not project:
+            continue
         if current_user != project.get_responsible():
             continue
         tmp.append(project.to_dict())
