@@ -332,13 +332,27 @@ class LogDB(db.Model):
     event = db.Column(db.Text, nullable=False)
 
     author_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    author = db.relationship("User", foreign_keys=author_id)
+
     project_id = db.Column(db.Integer, db.ForeignKey("projects.id"),
                            nullable=False)
+    project = db.relationship("Project", foreign_keys=project_id)
+
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+    user = db.relationship("User", foreign_keys=user_id)
+
     articles_id = db.Column(db.Integer, db.ForeignKey("project_articles.id"))
+    articles = db.relationship("ArticleDB", foreign_keys=articles_id)
+
     extension_id = db.Column(db.Integer, db.ForeignKey("project_extension.id"))
+    extension = db.relationship("ExtendDB", foreign_keys=extension_id)
+
     files_id = db.Column(db.Integer, db.ForeignKey("project_files.id"))
+    files = db.relationship("FileDB", foreign_keys=files_id)
+
     resources_id = db.Column(db.Integer, db.ForeignKey("project_resources.id"))
+    resources = db.relationship("ProjectResourcesDB", foreign_keys=resources_id)
+
 
     def __repr__(self):
         return "<Log event for project id {}>".format(self.project_id)
