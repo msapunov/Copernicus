@@ -10,7 +10,7 @@ from datetime import datetime as dt
 @login_required
 def web_project_extend():
     from code import db
-    from code.database.schema import ExtendDB
+    from code.database.schema import ExtendDB, Project
 
     data = request.get_json()
     if not data:
@@ -38,13 +38,16 @@ def web_project_extend():
     except Exception as e:
         return jsonify(message="Failure processing motivation field: %s" % e)
 
-    project = ExtendDB().query.filter(ExtendDB.project == pid).one()
+    project = Project().query.filter_by(id=pid).first()
     if not project:
-        project = ExtendDB(project_id=pid)
-    project.demand = cpu
-    project.reason = note
+        return jsonify(message="Failed to find a project with id: %s" % pid)
+    extend = ExtendDB().query.filter(ExtendDB.project == project).one()
+    if not extend:
+        extend = ExtendDB(project=project)
+    extend.demand = cpu
+    extend.reason = note
     db.session.commit()
-
+    send_extend_mail(project, extend)
     return jsonify(message="Project extension has been registered successfully")
 
 
