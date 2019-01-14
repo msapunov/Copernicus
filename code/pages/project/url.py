@@ -21,9 +21,8 @@ def web_project_history():
         return render_template("500.html", error = str(e))
         #return jsonify("Failed to parse project id: %s" % e)
     recs = LogDB().query.filter(LogDB.project_id == pid).all()
-    result = map(lambda x: x.to_dict(), recs)
-    print(list(result))
-    return jsonify(list(result))
+    result = list(map(lambda x: x.to_dict(), recs))
+    return jsonify(result)
 
 
 @bp.route("/project.html", methods=["GET"])
