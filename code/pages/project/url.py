@@ -1,4 +1,4 @@
-from flask import render_template, flash, request, json, jsonify
+from flask import render_template, flash, request, jsonify
 from flask_login import login_required, current_user
 from code.pages.user import bp
 from code.pages.user.magic import ssh_wrapper
@@ -9,6 +9,8 @@ from datetime import datetime as dt
 @bp.route("/project/extend", methods=["POST"])
 @login_required
 def web_project_extend():
+    from code import db
+    from code.database.schema import ExtendDB
 
     data = request.get_json()
     if not data:
@@ -18,25 +20,32 @@ def web_project_extend():
     try:
         pid = int(raw_pid)
     except Exception as e:
-        return render_template("500.html", error = str(e))
-        #return jsonify("Failed to parse project id: %s" % e)
+        return jsonify( message = "Failed to parse project id: %s" % e)
+    if (not pid) or (pid < 1):
+        return jsonify(message="Project id must be a positive number: %s" % pid)
 
     raw_cpu = data["cpu"]
     try:
         cpu = int(raw_cpu)
     except Exception as e:
-        return render_template("500.html", error = str(e))
-        #return jsonify("Failed to parse project id: %s" % e)
+        return jsonify(message="CPU hours is not integer: %s" % e)
+    if (not cpu) or (cpu < 1):
+        return jsonify(message="CPU hours must be a positive number: %s" % cpu)
 
     raw_note = data["note"]
     try:
         note = str(raw_note)
     except Exception as e:
-        return render_template("500.html", error = str(e))
+        return jsonify(message="Failure processing motivation field: %s" % e)
 
-    recs = LogDB().query.filter(LogDB.project_id == pid).all()
-    result = list(map(lambda x: x.to_dict(), recs))
-    return jsonify(result)
+    project = ExtendDB().query.filter(ExtendDB.project == pid).one()
+    if not project:
+        project = ExtendDB(project_id=pid)
+    project.demand = cpu
+    project.reason = note
+    db.session.commit()
+
+    return jsonify(message="Project extension has been registered successfully")
 
 
 @bp.route("/project/history", methods=["POST"])
