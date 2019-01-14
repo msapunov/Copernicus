@@ -1,9 +1,35 @@
-from flask import render_template, flash, request, jsonify
+from flask import render_template, flash, request, jsonify, current_app
 from flask_login import login_required, current_user
 from code.pages.user import bp
 from code.pages.user.magic import ssh_wrapper
 from code.utils import bytes2human, accounting_start
 from datetime import datetime as dt
+from flask_mail import Message
+
+
+def send_extend_mail(project, extend):
+    subj = "Request extend project %s" % project.name
+    msg = """
+    Dear %s
+    You have requested to extend your project %s with %s hours
+    Extension reason is:
+      %s
+    Your request will be examined shortly
+    """ % (project.responsible.full_name(), project.name, extend.demand,
+           extend.reason)
+    project_email(subj, project.responsible.email, msg)
+
+
+def project_email(subject, recipients, text_body):
+    from code import mail
+
+    sender = current_app.config["EMAIL_PROJECT"]
+    tech = current_app.config["EMAIL_TECH"]
+    msg = Message(subject, sender=sender, recipients=recipients)
+    postfix = "If this email has been sent to you by mistake, please report " \
+              "to: %s" % tech
+    msg.body = text_body + postfix
+    mail.send(msg)
 
 
 @bp.route("/project/extend", methods=["POST"])
