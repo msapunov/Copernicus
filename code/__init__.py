@@ -7,10 +7,13 @@ from code.pages.project import bp as blueprint_project
 from code.pages.user import bp as blueprint_user
 from code.pages.admin import bp as blueprint_admin
 from datetime import datetime as dt
+from flask_mail import Mail
 
 
 app = Flask(__name__, instance_relative_config=True)
 app.config.from_pyfile("copernicus.cfg")
+
+mail = Mail(app)
 
 cache = SimpleCache()
 
