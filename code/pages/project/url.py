@@ -15,7 +15,7 @@ def send_extend_mail(project, extend):
     Extension reason is:
       %s
     Your request will be examined shortly
-    """ % (project.responsible.full_name(), project.name, extend.demand,
+    """ % (project.responsible.full_name(), project.name, extend.hours,
            extend.reason)
     project_email(subj, project.responsible.email, msg)
 
@@ -67,10 +67,9 @@ def web_project_extend():
     project = Project().query.filter_by(id=pid).first()
     if not project:
         return jsonify(message="Failed to find a project with id: %s" % pid)
-    extend = ExtendDB().query.filter(ExtendDB.project == project).one()
-    if not extend:
-        extend = ExtendDB(project=project)
-    extend.demand = cpu
+
+    extend = ExtendDB(project=project)
+    extend.hours = cpu
     extend.reason = note
     db.session.commit()
     send_extend_mail(project, extend)
