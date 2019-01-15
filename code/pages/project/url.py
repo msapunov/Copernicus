@@ -17,15 +17,15 @@ def send_extend_mail(project, extend):
     Your request will be examined shortly
     """ % (project.responsible.full_name(), project.name, extend.hours,
            extend.reason)
-    project_email(subj, project.responsible.email, msg)
+    project_email(subj, [project.responsible.email], msg)
 
 
 def project_email(subject, recipients, text_body):
     from code import mail
 
     sender = current_app.config["EMAIL_PROJECT"]
-    tech = current_app.config["EMAIL_TECH"]
-    msg = Message(subject, sender=sender, recipients=recipients)
+    tech = [current_app.config["EMAIL_TECH"]]
+    msg = Message(subject, sender=sender, recipients=recipients, cc=tech)
     postfix = "If this email has been sent to you by mistake, please report " \
               "to: %s" % tech
     msg.body = text_body + postfix
