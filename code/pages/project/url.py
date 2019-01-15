@@ -71,6 +71,7 @@ def web_project_extend():
     extend = ExtendDB(project=project)
     extend.hours = cpu
     extend.reason = note
+    db.session.add(extend)
     db.session.commit()
     send_extend_mail(project, extend)
     return jsonify(message="Project extension has been registered successfully")
