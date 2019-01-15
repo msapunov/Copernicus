@@ -46,7 +46,7 @@ def web_project_extend():
     try:
         pid = int(raw_pid)
     except Exception as e:
-        return jsonify( message = "Failed to parse project id: %s" % e)
+        return jsonify(message="Failed to parse project id: %s" % e)
     if (not pid) or (pid < 1):
         return jsonify(message="Project id must be a positive number: %s" % pid)
 
