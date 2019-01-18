@@ -32,6 +32,40 @@ def project_email(subject, recipients, text_body):
     mail.send(msg)
 
 
+def check_pid(data):
+    raw_pid = data["project"]
+    try:
+        pid = int(raw_pid)
+    except Exception as e:
+        return jsonify(message="Failed to parse project id: %s" % e)
+    if (not pid) or (pid < 1):
+        return jsonify(message="Project id must be a positive number: %s" % pid)
+    return pid
+
+
+def check_cpu(data):
+    raw_cpu = data["cpu"]
+    try:
+        cpu = int(raw_cpu)
+    except Exception as e:
+        return jsonify(message="CPU hours is not integer: %s" % e)
+    if (not cpu) or (cpu < 1):
+        return jsonify(message="CPU hours must be a positive number: %s" % cpu)
+    return cpu
+
+
+def check_motivation(data):
+    raw_note = data["note"]
+    try:
+        note = str(raw_note)
+    except Exception as e:
+        return jsonify(message="Failure processing motivation field: %s" % e)
+    if not note:
+        return jsonify(message="Motivation field can't be empty")
+    return note
+
+
+
 @bp.route("/project/extend", methods=["POST"])
 @login_required
 def web_project_extend():
