@@ -65,6 +65,26 @@ def check_motivation(data):
     return note
 
 
+@bp.route("/project/reactivate", methods=["POST"])
+@login_required
+def web_project_reactivate():
+    from code import db
+    from code.database.schema import ExtendDB, Project
+
+    data = request.get_json()
+    if not data:
+        return flash("Expecting application/json requests")
+
+    pid = check_pid(data)
+    note = check_motivation(data)
+
+    project = Project().query.filter_by(id=pid).first()
+    if not project:
+        return jsonify(message="Failed to find a project with id: %s" % pid)
+    if project.active:
+        return jsonify(message="Failed to re-activate already active project")
+
+
 
 @bp.route("/project/extend", methods=["POST"])
 @login_required
