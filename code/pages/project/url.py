@@ -84,6 +84,19 @@ def web_project_reactivate():
     if project.active:
         return jsonify(message="Failed to re-activate already active project")
 
+    p_name = project.get_name()
+    p_info = get_project_consumption([p_name])
+    extend = ExtendDB(project=project, hours=0, reason=note,
+                      present_use=p_info[p_name]["total"],
+                      present_total = project.resources.cpu, activate=True)
+
+    db.session.add(extend)
+    ProjectLog(project).activate(extend)
+    db.session.commit()
+    send_activate_mail(project, extend)
+    return jsonify(message="Project activation request has been registered"
+                           " successfully")
+
 
 @bp.route("/project/extend", methods=["POST"])
 @login_required
@@ -103,16 +116,12 @@ def web_project_extend():
     if not project:
         return jsonify(message="Failed to find a project with id: %s" % pid)
 
-    start = accounting_start()
-    end = dt.now().strftime("%m/%d/%y-%H:%M")
     p_name = project.get_name()
-    p_info = get_project_consumption([p_name], start, end)
+    p_info = get_project_consumption([p_name])
 
-    extend = ExtendDB(project=project)
-    extend.hours = cpu
-    extend.reason = note
-    extend.present_use = p_info[p_name]["total"]
-    extend.present_total = project.resources.cpu
+    extend = ExtendDB(project=project, hours=cpu, reason=note,
+                      present_use=p_info[p_name]["total"],
+                      present_total = project.resources.cpu)
 
     db.session.add(extend)
     ProjectLog(project).extend(extend)
@@ -142,9 +151,7 @@ def web_project_history():
 @bp.route("/project.html", methods=["GET"])
 @login_required
 def web_project_index():
-    start = accounting_start()
-    end = dt.now().strftime("%m/%d/%y-%H:%M")
-    projects = get_project_info(start, end)
+    projects = get_project_info()
     now = dt.now()
     if now.month != 1:
         renew = False
@@ -154,7 +161,7 @@ def web_project_index():
     return render_template("project.html", data=data)
 
 
-def get_project_info(start, end):
+def get_project_info(start=None, end=None):
     from code.database.schema import Project
 
     p_ids = current_user.project_ids()
@@ -197,7 +204,12 @@ def get_project_info(start, end):
     return tmp
 
 
-def get_project_consumption(projects, start, end):
+def get_project_consumption(projects, start=None, end=None):
+    if not start:
+        start = accounting_start()
+    if not end:
+        end = dt.now().strftime("%m/%d/%y-%H:%M")
+
     name = ",".join(projects)
     cmd = ["sreport", "cluster", "AccountUtilizationByUser", "-t", "hours"]
     cmd += ["-nP", "format=Account,Login,Used", "Accounts=%s" % name]
@@ -227,6 +239,11 @@ class ProjectLog():
 
     def extend(self, extension):
         self.log.event = "extension request"
+        self.log.extension = extension
+        self._commit()
+
+    def activate(self, extension):
+        self.log.event = "activation request"
         self.log.extension = extension
         self._commit()
 
