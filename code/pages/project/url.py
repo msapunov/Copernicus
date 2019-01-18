@@ -107,8 +107,7 @@ def web_project_extend():
     end = dt.now().strftime("%m/%d/%y-%H:%M")
     p_name = project.get_name()
     p_info = get_project_consumption([p_name], start, end)
-    print(p_info)
-    print(p_info[p_name]["total"])
+
     extend = ExtendDB(project=project)
     extend.hours = cpu
     extend.reason = note
@@ -116,6 +115,7 @@ def web_project_extend():
     extend.present_total = project.resources.cpu
 
     db.session.add(extend)
+    ProjectLog(project).extend(extend)
     db.session.commit()
     send_extend_mail(project, extend)
     return jsonify(message="Project extension has been registered successfully")
