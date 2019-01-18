@@ -138,6 +138,8 @@ class ExtendDB(db.Model):
     allocation = db.Column(db.Boolean, default=False)
     present_use = db.Column(db.Integer)
     present_total = db.Column(db.Integer)
+    activate = db.Column(db.Boolean, default=False)
+    convert = db.Column(db.Boolean, default=False)
 
     doc_id = db.Column(db.Integer, db.ForeignKey("project_files.id"))
     doc = db.relationship("FileDB", foreign_keys=[doc_id])
