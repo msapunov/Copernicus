@@ -13,22 +13,27 @@
                 <div class="uk-panel uk-margin-top uk-margin-bottom">
                     <div>Name: <b>{{project.name}}</b></div>
                     <div>Status: <b>{% if project.active %}Active{% else %}Postponed{% endif %}</b></div>
-                    <div>CPU consumed: {{project.consumption}} out of {{project.resources.cpu}} ({{project.usage}})
-                        {% set usage = project.usage[0:-1]|int %}
-                        {% set total = project.resources.cpu %}
-                        {% if total > 0 %}
-                            {% if usage > total %}
-                                {% set color = "#da314b" %}
-                                {% set style = "uk-progress-danger" %}
-                            {% elif usage > 60 %}
-                                {% set color = "#faa732" %}
-                                {% set style = "uk-progress-warning" %}
-                            {% elif usage < 10 %}
-                                {% set color = "#8cc14c" %}
-                                {% set style = "uk-progress-success" %}
-                            {% else %}
-                                {% set color = "#00a8e6" %}
-                                {% set style = "uk-progress-info" %}
+                    <div>
+                        {% if project.consumption and project.usage %}
+                            CPU consumed: {{project.consumption}} out of {{project.resources.cpu}} ({{project.usage}})
+                        {% endif %}
+                        {% if project.usage %}
+                            {% set usage = project.usage[0:-1]|int %}
+                            {% set total = project.resources.cpu %}
+                            {% if total > 0 %}
+                                {% if usage > total %}
+                                    {% set color = "#da314b" %}
+                                    {% set style = "uk-progress-danger" %}
+                                {% elif usage > 60 %}
+                                    {% set color = "#faa732" %}
+                                    {% set style = "uk-progress-warning" %}
+                                {% elif usage < 10 %}
+                                    {% set color = "#8cc14c" %}
+                                    {% set style = "uk-progress-success" %}
+                                {% else %}
+                                    {% set color = "#00a8e6" %}
+                                    {% set style = "uk-progress-info" %}
+                                {% endif %}
                             {% endif %}
                         {% endif %}
                         <div class="uk-width-small-1-1 uk-progress uk-progress-mini uk-progress-striped {{style}} uk-margin-small-top">
