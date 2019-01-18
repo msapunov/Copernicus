@@ -42,27 +42,9 @@ def web_project_extend():
     if not data:
         return flash("Expecting application/json requests")
 
-    raw_pid = data["project"]
-    try:
-        pid = int(raw_pid)
-    except Exception as e:
-        return jsonify(message="Failed to parse project id: %s" % e)
-    if (not pid) or (pid < 1):
-        return jsonify(message="Project id must be a positive number: %s" % pid)
-
-    raw_cpu = data["cpu"]
-    try:
-        cpu = int(raw_cpu)
-    except Exception as e:
-        return jsonify(message="CPU hours is not integer: %s" % e)
-    if (not cpu) or (cpu < 1):
-        return jsonify(message="CPU hours must be a positive number: %s" % cpu)
-
-    raw_note = data["note"]
-    try:
-        note = str(raw_note)
-    except Exception as e:
-        return jsonify(message="Failure processing motivation field: %s" % e)
+    pid = check_pid(data)
+    cpu = check_cpu(data)
+    note = check_motivation(data)
 
     project = Project().query.filter_by(id=pid).first()
     if not project:
