@@ -20,6 +20,18 @@ def send_extend_mail(project, extend):
     project_email(subj, [project.responsible.email], msg)
 
 
+def send_activate_mail(project, extend):
+    subj = "Request to activate project %s" % project.name
+    msg = """
+    Dear %s
+    You have requested to activate your suspended project %s
+    The reason for activation is:
+      %s
+    Your request will be examined shortly
+    """ % (project.responsible.full_name(), project.name, extend.reason)
+    project_email(subj, [project.responsible.email], msg)
+
+
 def project_email(subject, recipients, text_body):
     from code import mail
 
