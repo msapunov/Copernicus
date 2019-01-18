@@ -191,6 +191,8 @@ def get_project_info(start=None, end=None):
 
     tmp_project = list(map(lambda x: x["name"], tmp))
     conso = get_project_consumption(tmp_project, start, end)
+    if not conso:
+        return tmp
 
     for project in tmp:
         name = project["name"]
