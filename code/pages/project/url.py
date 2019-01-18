@@ -306,6 +306,11 @@ class ProjectLog():
         self.log.extension = extension
         self._commit()
 
+    def transform(self, extension):
+        self.log.event = "transformation request"
+        self.log.extension = extension
+        self._commit()
+
     def _commit(self):
         from code import db
         db.session.add(self.log)
