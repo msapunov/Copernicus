@@ -85,7 +85,6 @@ def web_project_reactivate():
         return jsonify(message="Failed to re-activate already active project")
 
 
-
 @bp.route("/project/extend", methods=["POST"])
 @login_required
 def web_project_extend():
@@ -104,9 +103,14 @@ def web_project_extend():
     if not project:
         return jsonify(message="Failed to find a project with id: %s" % pid)
 
+    start = accounting_start()
+    end = dt.now().strftime("%m/%d/%y-%H:%M")
+    p_info = get_project_consumption([project.get_name()], start, end)
     extend = ExtendDB(project=project)
     extend.hours = cpu
     extend.reason = note
+    extend.present_use = p_info["total"]
+    extend.present_total = project.resources.cpu
     db.session.add(extend)
     db.session.commit()
     send_extend_mail(project, extend)
