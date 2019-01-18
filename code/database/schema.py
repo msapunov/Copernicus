@@ -136,7 +136,6 @@ class ExtendDB(db.Model):
     processed = db.Column(db.Boolean, default=False)
     decision = db.Column(db.Text)
     allocation = db.Column(db.Boolean, default=False)
-    present_usage = db.Column(db.Integer)
     present_use = db.Column(db.Integer)
     present_total = db.Column(db.Integer)
 
