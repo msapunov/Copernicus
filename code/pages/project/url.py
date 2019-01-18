@@ -133,7 +133,7 @@ def web_project_history():
 
 @bp.route("/project.html", methods=["GET"])
 @login_required
-def project_index():
+def web_project_index():
     start = accounting_start()
     end = dt.now().strftime("%m/%d/%y-%H:%M")
     projects = get_project_info(start, end)
