@@ -218,3 +218,19 @@ def get_project_consumption(projects, start, end):
         else:
             tmp[project][user] = int(conso)
     return tmp
+
+class ProjectLog():
+
+    def __init__(self, project):
+        from code.database.schema import LogDB
+        self.log = LogDB(author = current_user, project=project)
+
+    def extend(self, extension):
+        self.log.event = "extension request"
+        self.log.extension = extension
+        self._commit()
+
+    def _commit(self):
+        from code import db
+        db.session.add(self.log)
+#        db.session.commit()
