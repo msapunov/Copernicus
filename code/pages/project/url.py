@@ -105,12 +105,16 @@ def web_project_extend():
 
     start = accounting_start()
     end = dt.now().strftime("%m/%d/%y-%H:%M")
-    p_info = get_project_consumption([project.get_name()], start, end)
+    p_name = project.get_name()
+    p_info = get_project_consumption([p_name], start, end)
+    print(p_info)
+    print(p_info[p_name]["total"])
     extend = ExtendDB(project=project)
     extend.hours = cpu
     extend.reason = note
-    extend.present_use = p_info["total"]
+    extend.present_use = p_info[p_name]["total"]
     extend.present_total = project.resources.cpu
+
     db.session.add(extend)
     db.session.commit()
     send_extend_mail(project, extend)
