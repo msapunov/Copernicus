@@ -32,6 +32,18 @@ def send_activate_mail(project, extend):
     project_email(subj, [project.responsible.email], msg)
 
 
+def send_transform_mail(project, extend):
+    subj = "Request to transform project %s" % project.name
+    msg = """
+    Dear %s
+    You have requested to transform your project %s of type A to type B
+    The reason for transformation is:
+      %s
+    Your request will be examined shortly
+    """ % (project.responsible.full_name(), project.name, extend.reason)
+    project_email(subj, [project.responsible.email], msg)
+
+
 def project_email(subject, recipients, text_body):
     from code import mail
 
