@@ -77,6 +77,39 @@ def check_motivation(data):
     return note
 
 
+@bp.route("/project/transform", methods=["POST"])
+@login_required
+def web_project_transform():
+    from code import db
+    from code.database.schema import ExtendDB, Project
+    data = request.get_json()
+    if not data:
+        return flash("Expecting application/json requests")
+
+    pid = check_pid(data)
+    note = check_motivation(data)
+
+    project = Project().query.filter_by(id=pid).first()
+    if not project:
+        return jsonify(message="Failed to find a project with id: %s" % pid)
+    if project.type == "b":
+        return jsonify(message="This project is already type B project")
+
+    p_name = project.get_name()
+    p_info = get_project_consumption([p_name])
+    #TODO: TypeError: 'NoneType' object is not subscriptable
+    extend = ExtendDB(project=project, hours=0, reason=note,
+                      present_use=p_info[p_name]["total"],
+                      present_total = project.resources.cpu, transform=True)
+
+    db.session.add(extend)
+    ProjectLog(project).transform(extend)
+    db.session.commit()
+    send_transform_mail(project, extend)
+    return jsonify(message="Project transformation request has been registered"
+                           " successfully")
+
+
 @bp.route("/project/reactivate", methods=["POST"])
 @login_required
 def web_project_reactivate():
