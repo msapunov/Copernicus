@@ -151,7 +151,7 @@ class Extend(db.Model):
     approve = db.relationship("User", foreign_keys=approve_id)
 
     def __repr__(self):
-        return "<Extension for project id {}>".format(self.project.get_name())
+        return "<Extension for project {}>".format(self.project.get_name())
 
 
 class ArticleDB(db.Model):
@@ -363,7 +363,7 @@ class LogDB(db.Model):
 
 
     def __repr__(self):
-        return "<Log event for project {}>".format(self.project_id)
+        return "<Log event for project {}>".format(self.project.get_name())
 
     def to_dict(self):
         event = self.event[0].upper() + self.event[1:]
