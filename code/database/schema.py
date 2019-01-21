@@ -363,7 +363,7 @@ class LogDB(db.Model):
 
 
     def __repr__(self):
-        return "<Log event for project id {}>".format(self.project_id)
+        return "<Log event for project {}>".format(self.project_id)
 
     def to_dict(self):
         event = self.event[0].upper() + self.event[1:]

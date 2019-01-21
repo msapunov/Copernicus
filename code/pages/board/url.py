@@ -3,6 +3,14 @@ from flask_login import current_user, login_user, logout_user, login_required
 from code.pages.board import bp
 
 
+@bp.route("/board/list", methods=["POST"])
+def web_board_list():
+    from code.database.schema import Extend
+
+    ext_list = Extend().query.all()
+    for ext in ext_list:
+        print(ext)
+
 @bp.route("/board", methods=["GET", "POST"])
 @bp.route("/board.html", methods=["GET", "POST"])
 @login_required
