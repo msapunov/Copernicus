@@ -5,6 +5,7 @@ from werkzeug.contrib.cache import SimpleCache
 from code.pages.login import bp as blueprint_login
 from code.pages.project import bp as blueprint_project
 from code.pages.user import bp as blueprint_user
+from code.pages.board import bp as blueprint_board
 from code.pages.admin import bp as blueprint_admin
 from datetime import datetime as dt
 from flask_mail import Mail
@@ -61,4 +62,5 @@ def menu_item(obj):
 app.register_blueprint(blueprint_login)
 app.register_blueprint(blueprint_project)
 app.register_blueprint(blueprint_user)
+app.register_blueprint(blueprint_board)
 app.register_blueprint(blueprint_admin, url_prefix="/admin")
