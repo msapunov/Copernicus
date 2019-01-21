@@ -109,9 +109,11 @@ def web_project_transform():
 
     p_name = project.get_name()
     p_info = get_project_consumption([p_name])
-    #TODO: TypeError: 'NoneType' object is not subscriptable
-    extend = ExtendDB(project=project, hours=0, reason=note,
-                      present_use=p_info[p_name]["total"],
+    if not p_info:
+        use = 0
+    else:
+        use = p_info[p_name]["total"]
+    extend = ExtendDB(project=project, hours=0, reason=note, present_use=use,
                       present_total = project.resources.cpu, transform=True)
 
     db.session.add(extend)
@@ -143,8 +145,11 @@ def web_project_reactivate():
 
     p_name = project.get_name()
     p_info = get_project_consumption([p_name])
-    extend = ExtendDB(project=project, hours=0, reason=note,
-                      present_use=p_info[p_name]["total"],
+    if not p_info:
+        use = 0
+    else:
+        use = p_info[p_name]["total"]
+    extend = ExtendDB(project=project, hours=0, reason=note, present_use=use,
                       present_total = project.resources.cpu, activate=True)
 
     db.session.add(extend)
@@ -175,9 +180,11 @@ def web_project_extend():
 
     p_name = project.get_name()
     p_info = get_project_consumption([p_name])
-
-    extend = ExtendDB(project=project, hours=cpu, reason=note,
-                      present_use=p_info[p_name]["total"],
+    if not p_info:
+        use = 0
+    else:
+        use = p_info[p_name]["total"]
+    extend = ExtendDB(project=project, hours=cpu, reason=note, present_use=use,
                       present_total = project.resources.cpu)
 
     db.session.add(extend)
