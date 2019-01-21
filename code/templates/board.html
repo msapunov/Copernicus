@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block head %}
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/jquery.dataTables.min.css') }}"/>
+
+    <script src="{{ url_for('static', filename='js/moment-with-locales.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/board.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/jquery.dataTables.min.js') }}"></script>
+    <style>
+        .ext_info{
+            background-color: #ddd !important;
+        }
+        .glyphicon-plus {
+            cursor: pointer !important;
+        }
+        .glyphicon-minus {
+            cursor: pointer !important;
+        }
+    </style>
+{% endblock %}
+{% block main %}
+    <div class="container" role="main">
+        <table id="ext_result_table" class="table table-striped" width="100%">
+            <thead>
+            <tr>
+                <th data-priority="1"></th>
+                <th data-priority="1">Project</th>
+                <th data-priority="7">Responsible</th>
+                <th data-priority="6">Present</th>
+                <th data-priority="5">Use</th>
+                <th data-priority="4">Extension</th>
+                <th data-priority="2">Processed</th>
+                <th>Processed data</th>
+                <th data-priority="2">Accepted</th>
+                <th>Accepted data</th>
+                <th data-priority="3">Date</th>
+                <th data-priority="8">Reason</th>
+            </tr>
+            </thead>
+            <tfoot>
+            <tr>
+                <th></th>
+                <th>Project</th>
+                <th>Responsible</th>
+                <th>Present</th>
+                <th>Use</th>
+                <th>Extension</th>
+                <th>Processed</th>
+                <th>Processed data</th>
+                <th>Accepted</th>
+                <th>Accepted data</th>
+                <th>Date</th>
+                <th>Reason</th>
+            </tr>
+            </tfoot>
+            <tbody id="ext_result_records">
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
