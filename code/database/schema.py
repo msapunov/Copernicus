@@ -123,7 +123,7 @@ class Project(db.Model):
         }
 
 
-class ExtendDB(db.Model):
+class Extend(db.Model):
 
     __tablename__ = "project_extension"
 
@@ -149,6 +149,9 @@ class ExtendDB(db.Model):
 
     approve_id = db.Column(db.Integer, db.ForeignKey("users.id"))
     approve = db.relationship("User", foreign_keys=approve_id)
+
+    def __repr__(self):
+        return "<Extension for project id {}>".format(self.project.get_name())
 
 
 class ArticleDB(db.Model):
@@ -350,7 +353,7 @@ class LogDB(db.Model):
     articles = db.relationship("ArticleDB", foreign_keys=articles_id)
 
     extension_id = db.Column(db.Integer, db.ForeignKey("project_extension.id"))
-    extension = db.relationship("ExtendDB", foreign_keys=extension_id)
+    extension = db.relationship("Extend", foreign_keys=extension_id)
 
     files_id = db.Column(db.Integer, db.ForeignKey("project_files.id"))
     files = db.relationship("FileDB", foreign_keys=files_id)
