@@ -2,7 +2,7 @@ from flask import render_template, flash, request, jsonify, current_app
 from flask_login import login_required, current_user
 from code.pages.user import bp
 from code.pages.user.magic import ssh_wrapper
-from code.utils import bytes2human, accounting_start
+from code.utils import accounting_start
 from datetime import datetime as dt
 from flask_mail import Message
 
@@ -93,7 +93,7 @@ def check_motivation(data):
 @login_required
 def web_project_transform():
     from code import db
-    from code.database.schema import ExtendDB, Project
+    from code.database.schema import Extend, Project
     data = request.get_json()
     if not data:
         return flash("Expecting application/json requests")
@@ -113,8 +113,8 @@ def web_project_transform():
         use = 0
     else:
         use = p_info[p_name]["total"]
-    extend = ExtendDB(project=project, hours=0, reason=note, present_use=use,
-                      present_total = project.resources.cpu, transform=True)
+    extend = Extend(project=project, hours=0, reason=note, present_use=use,
+                    present_total=project.resources.cpu, transform=True)
 
     db.session.add(extend)
     ProjectLog(project).transform(extend)
@@ -128,7 +128,7 @@ def web_project_transform():
 @login_required
 def web_project_reactivate():
     from code import db
-    from code.database.schema import ExtendDB, Project
+    from code.database.schema import Extend, Project
 
     data = request.get_json()
     if not data:
@@ -149,8 +149,8 @@ def web_project_reactivate():
         use = 0
     else:
         use = p_info[p_name]["total"]
-    extend = ExtendDB(project=project, hours=0, reason=note, present_use=use,
-                      present_total = project.resources.cpu, activate=True)
+    extend = Extend(project=project, hours=0, reason=note, present_use=use,
+                    present_total=project.resources.cpu, activate=True)
 
     db.session.add(extend)
     ProjectLog(project).activate(extend)
@@ -164,7 +164,7 @@ def web_project_reactivate():
 @login_required
 def web_project_extend():
     from code import db
-    from code.database.schema import ExtendDB, Project
+    from code.database.schema import Extend, Project
 
     data = request.get_json()
     if not data:
@@ -184,8 +184,8 @@ def web_project_extend():
         use = 0
     else:
         use = p_info[p_name]["total"]
-    extend = ExtendDB(project=project, hours=cpu, reason=note, present_use=use,
-                      present_total = project.resources.cpu)
+    extend = Extend(project=project, hours=cpu, reason=note, present_use=use,
+                    present_total=project.resources.cpu)
 
     db.session.add(extend)
     ProjectLog(project).extend(extend)
@@ -297,11 +297,12 @@ def get_project_consumption(projects, start=None, end=None):
             tmp[project][user] = int(conso)
     return tmp
 
-class ProjectLog():
+
+class ProjectLog:
 
     def __init__(self, project):
         from code.database.schema import LogDB
-        self.log = LogDB(author = current_user, project=project)
+        self.log = LogDB(author=current_user, project=project)
 
     def extend(self, extension):
         self.log.event = "extension request"
