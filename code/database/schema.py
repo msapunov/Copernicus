@@ -153,6 +153,29 @@ class Extend(db.Model):
     def __repr__(self):
         return "<Extension for project {}>".format(self.project.get_name())
 
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "reason": self.reason,
+            "hours": self.hours,
+            "created": self.created,
+            "modified": self.modified,
+            "accepted": self.accepted,
+            "processed": self.processed,
+            "decision": self.decision,
+            "allocation": self.allocation,
+            "present_use": self.present_use,
+            "present_total": self.present_total,
+            "activate": self.activate,
+            "transform": self.transform,
+            "project": self.project.id,
+            "total": self.present_total,
+            "use": self.present_use,
+            "project_name": self.project.get_name(),
+#            "approve": self.approve.full_name(),
+            "responsible": self.project.responsible.full_name()
+        }
+
 
 class ArticleDB(db.Model):
 
