@@ -1,4 +1,4 @@
-from flask import render_template, request, redirect, url_for, g, flash
+from flask import render_template, request, redirect, url_for, g, flash, jsonify
 from flask_login import current_user, login_user, logout_user, login_required
 from code.pages.board import bp
 
@@ -8,8 +8,9 @@ def web_board_list():
     from code.database.schema import Extend
 
     ext_list = Extend().query.all()
-    for ext in ext_list:
-        print(ext)
+    result = list(map(lambda x: x.to_dict(), ext_list))
+    print(result)
+    return jsonify({"data":result})
 
 @bp.route("/board", methods=["GET", "POST"])
 @bp.route("/board.html", methods=["GET", "POST"])
