@@ -9,8 +9,8 @@ def web_board_list():
 
     ext_list = Extend().query.all()
     result = list(map(lambda x: x.to_dict(), ext_list))
-    print(result)
-    return jsonify({"data":result})
+    return jsonify({"data": result})
+
 
 @bp.route("/board", methods=["GET", "POST"])
 @bp.route("/board.html", methods=["GET", "POST"])
