@@ -3,17 +3,15 @@ from flask_login import current_user, login_user, logout_user, login_required
 from code.pages.board import bp
 
 
-@bp.route("/board/list", methods=["POST"])
-def web_board_list():
-    from code.database.schema import Extend
-
-    ext_list = Extend().query.all()
-    result = list(map(lambda x: x.to_dict(), ext_list))
-    return jsonify({"data": result})
-
-
 @bp.route("/board", methods=["GET", "POST"])
 @bp.route("/board.html", methods=["GET", "POST"])
 @login_required
 def web_board():
-    return render_template("board.html")
+    from code.database.schema import Extend
+
+    ext_list = Extend().query.filter(Extend.processed == False).all()
+    if not ext_list:
+        err = "No new project related requests found! Nothing to do"
+        return render_template("board.html", error=err)
+    result = list(map(lambda x: x.to_dict(), ext_list))
+    return render_template("board.html", data=result)
