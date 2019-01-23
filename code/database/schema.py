@@ -158,7 +158,7 @@ class Extend(db.Model):
             "id": self.id,
             "reason": self.reason,
             "hours": self.hours,
-            "created": self.created,
+            "created": self.created.timestamp(),
             "modified": self.modified,
             "accepted": self.accepted,
             "processed": self.processed,
