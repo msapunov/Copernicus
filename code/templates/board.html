@@ -18,6 +18,9 @@
     </style>
 {% endblock %}
 {% block main %}
+    {% if error %}
+        <h1>{{ error }}</h1>
+    {% else %}
     <div class="container" role="main">
         <table id="ext_result_table" class="table table-striped" width="100%">
             <thead>
@@ -56,4 +59,5 @@
             </tbody>
         </table>
     </div>
+    {% endif %}
 {% endblock %}
