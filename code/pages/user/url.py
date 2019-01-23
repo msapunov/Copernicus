@@ -44,6 +44,8 @@ def get_project_info(start, end):
                      current_user.login)
 
     projects = get_project_consumption(tmp, start, end)
+    if not projects:
+        return []
     result = []
     for key in projects.keys():
         projects[key]["name"] = key
