@@ -6,7 +6,6 @@ from code.pages.board import bp
 
 
 @bp.route("/board", methods=["GET", "POST"])
-@bp.route("/board/board", methods=["GET", "POST"])
 @bp.route("/board.html", methods=["GET", "POST"])
 @login_required
 def web_board():
@@ -20,7 +19,7 @@ def web_board():
     return render_template("board.html", data=result)
 
 
-@bp.route("/accept", methods=["POST"])
+@bp.route("/board/accept", methods=["POST"])
 @login_required
 def web_board_accept():
     from code import db
@@ -31,7 +30,7 @@ def web_board_accept():
     return jsonify({"update": record})
 
 
-@bp.route("/reject", methods=["POST"])
+@bp.route("/board/reject", methods=["POST"])
 @login_required
 def web_board_reject():
     from code import db
