@@ -9,7 +9,7 @@ def check_int(raw_int):
     return number
 
 
-def check_string(raw_note):
+def check_str(raw_note):
     note = str(raw_note)
     if (not note) or (len(note) < 1):
         raise ValueError("Provided string can't be empty")
