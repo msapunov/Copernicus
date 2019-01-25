@@ -61,34 +61,13 @@ def project_email(subject, recipients, text_body):
 @login_required
 def web_project_transform():
     from code import db
-    from code.database.schema import Extend, Project
 
-    data = request.get_json()
-    if not data:
-        return flash("Expecting application/json requests")
-
-    pid = check_int(data["project"])
-    note = check_str(data["note"])
-
-    project = Project().query.filter_by(id=pid).first()
-    if not project:
-        raise ValueError("Failed to find a project with id: %s" % pid)
-    if project.type == "b":
-        raise ValueError("This project is already type B project")
-
-    p_name = project.get_name()
-    p_info = get_project_consumption([p_name])
-    if not p_info:
-        use = 0
-    else:
-        use = p_info[p_name]["total"]
-    extend = Extend(project=project, hours=0, reason=note, present_use=use,
-                    present_total=project.resources.cpu, transform=True)
-
-    db.session.add(extend)
-    ProjectLog(project).transform(extend)
+    record = extend_update()
+    record.transform = True
+    db.session.add(record)
+    ProjectLog(record.project).transform(record)
     db.session.commit()
-    send_transform_mail(project, extend)
+    send_transform_mail(record.project, record)
     return jsonify(message="Project transformation request has been registered"
                            " successfully")
 
@@ -97,51 +76,49 @@ def web_project_transform():
 @login_required
 def web_project_reactivate():
     from code import db
-    from code.database.schema import Extend, Project
 
-    data = request.get_json()
-    if not data:
-        return flash("Expecting application/json requests")
-
-    pid = check_int(data["project"])
-    note = check_str(data["note"])
-
-    project = Project().query.filter_by(id=pid).first()
-    if not project:
-        raise ValueError("Failed to find a project with id: %s" % pid)
-    if project.active:
-        raise ValueError("Failed to re-activate already active project")
-
-    p_name = project.get_name()
-    p_info = get_project_consumption([p_name])
-    if not p_info:
-        use = 0
-    else:
-        use = p_info[p_name]["total"]
-    extend = Extend(project=project, hours=0, reason=note, present_use=use,
-                    present_total=project.resources.cpu, activate=True)
-
-    db.session.add(extend)
-    ProjectLog(project).activate(extend)
+    record = extend_update()
+    record.activate = True
+    db.session.add(record)
+    ProjectLog(record.project).activate(record)
     db.session.commit()
-    send_activate_mail(project, extend)
-    return jsonify(message="Project activation request has been registered"
-                           " successfully")
+    send_activate_mail(record.project, record)
+    return jsonify(message="Project activation has been registered "
+                           "successfully")
 
 
 @bp.route("/project/extend", methods=["POST"])
 @login_required
 def web_project_extend():
     from code import db
+
+    record = extend_update()
+    db.session.add(record)
+    ProjectLog(record.project).extend(record)
+    db.session.commit()
+    send_extend_mail(record.project, record)
+    return jsonify(message="Project extension has been registered successfully")
+
+
+def extend_update():
     from code.database.schema import Extend, Project
 
     data = request.get_json()
     if not data:
-        return flash("Expecting application/json requests")
+        raise ValueError("Expecting application/json requests")
 
-    pid = check_int(data["project"])
-    cpu = check_int(data["cpu"])
-    note = check_str(data["note"])
+    if "project" in data:
+        pid = check_int(data["project"])
+    else:
+        raise ValueError("Project ID is missing")
+    if "cpu" in data:
+        cpu = check_int(data["cpu"])
+    else:
+        cpu = 0
+    if "note" in data:
+        note = check_str(data["note"])
+    else:
+        raise ValueError("Comment is absent")
 
     project = Project().query.filter_by(id=pid).first()
     if not project:
@@ -153,14 +130,13 @@ def web_project_extend():
         use = 0
     else:
         use = p_info[p_name]["total"]
-    extend = Extend(project=project, hours=cpu, reason=note, present_use=use,
-                    present_total=project.resources.cpu)
-
-    db.session.add(extend)
-    ProjectLog(project).extend(extend)
-    db.session.commit()
-    send_extend_mail(project, extend)
-    return jsonify(message="Project extension has been registered successfully")
+    maximum = project.resources.cpu
+    if not use:
+        usage = 0
+    else:
+        usage = "{0:.1%}".format(float(use)/float(maximum))
+    return Extend(project=project, hours=cpu, reason=note, present_use=use,
+                  usage_percent=usage, present_total=maximum)
 
 
 @bp.route("/project/history", methods=["POST"])
