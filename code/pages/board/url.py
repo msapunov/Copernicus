@@ -1,6 +1,6 @@
 from flask import render_template, request, jsonify
 from flask_login import login_required
-from code.pages import ProjectLog, check_int, check_string
+from code.pages import ProjectLog, check_int, check_str
 from code.pages.board import bp
 
 
@@ -50,7 +50,7 @@ def board_action():
     if not data:
         raise ValueError("Expecting application/json requests")
     eid = check_int(data["eid"])
-    note = check_string(data["comment"])
+    note = check_str(data["comment"])
 
     extend = Extend().query.filter(Extend.id == eid).one()
     if not extend:
