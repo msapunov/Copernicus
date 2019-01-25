@@ -55,6 +55,8 @@ def board_action():
     extend = Extend().query.filter(Extend.id == eid).one()
     if not extend:
         raise ValueError("No extension with id '%s' found" % eid)
+    if extend.processed:
+        raise ValueError("This request has been already processed")
     extend.processed = True
     extend.decision = note
     return extend
