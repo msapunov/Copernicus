@@ -17,10 +17,10 @@ def check_string(raw_note):
     try:
         note = str(raw_note)
     except Exception as e:
-        return jsonify(message="Failure processing object: %s" % e)
+        return False, jsonify(message="Failure processing object: %s" % e)
     if (not note) or (len(note) < 1):
-        return jsonify(message="Provided string can't be empty")
-    return note
+        return False, jsonify(message="Provided string can't be empty")
+    return True, note
 
 
 class ProjectLog:

@@ -23,22 +23,24 @@ def web_board():
 @login_required
 def web_board_accept():
     from code import db
+
     record = board_action()
     record.accepted = True
     db.session.commit()
     ProjectLog(record.project).accept(record)
-    return jsonify({"update": record})
+    return jsonify({"update": record.to_dict()})
 
 
 @bp.route("/board/reject", methods=["POST"])
 @login_required
 def web_board_reject():
     from code import db
+
     record = board_action()
     record.accepted = False
     db.session.commit()
     ProjectLog(record.project).reject(record)
-    return jsonify({"update": record})
+    return jsonify({"update": record.to_dict()})
 
 
 def board_action():
