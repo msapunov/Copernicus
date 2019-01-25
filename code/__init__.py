@@ -1,4 +1,4 @@
-from flask import Flask, g
+from flask import Flask, g, jsonify
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.contrib.cache import SimpleCache
@@ -9,10 +9,19 @@ from code.pages.board import bp as blueprint_board
 from code.pages.admin import bp as blueprint_admin
 from datetime import datetime as dt
 from flask_mail import Mail
-
+from werkzeug.exceptions import HTTPException
 
 app = Flask(__name__, instance_relative_config=True)
 app.config.from_pyfile("copernicus.cfg")
+
+
+@app.errorhandler(Exception)
+def handle_error(e):
+    code = 500
+    if isinstance(e, HTTPException):
+        code = e.code
+    return jsonify(error=str(e)), code
+
 
 mail = Mail(app)
 
