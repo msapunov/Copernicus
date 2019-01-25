@@ -38,6 +38,7 @@
                 <th data-priority="3">Date</th>
                 <th data-priority="8">Reason</th>
                 <th>Extend id</th>
+                <th>Project id</th>
             </tr>
             </thead>
             <tfoot>
@@ -55,6 +56,7 @@
                 <th>Date</th>
                 <th>Reason</th>
                 <th>Extend id</th>
+                <th>Project id</th>
             </tr>
             </tfoot>
             <tbody id="ext_result_records">
@@ -75,6 +77,7 @@
                         <td>{{ record.created }}</td>
                         <td>{{ record.reason }}</td>
                         <td>{{ record.id }}</td>
+                        <td>{{ record.project }}</td>
                     </tr>
                 {% endfor %}
             {% endif %}
