@@ -72,9 +72,9 @@ def web_project_transform():
 
     project = Project().query.filter_by(id=pid).first()
     if not project:
-        return jsonify(message="Failed to find a project with id: %s" % pid)
+        raise ValueError("Failed to find a project with id: %s" % pid)
     if project.type == "b":
-        return jsonify(message="This project is already type B project")
+        raise ValueError("This project is already type B project")
 
     p_name = project.get_name()
     p_info = get_project_consumption([p_name])
@@ -108,9 +108,9 @@ def web_project_reactivate():
 
     project = Project().query.filter_by(id=pid).first()
     if not project:
-        return jsonify(message="Failed to find a project with id: %s" % pid)
+        raise ValueError("Failed to find a project with id: %s" % pid)
     if project.active:
-        return jsonify(message="Failed to re-activate already active project")
+        raise ValueError("Failed to re-activate already active project")
 
     p_name = project.get_name()
     p_info = get_project_consumption([p_name])
@@ -145,7 +145,7 @@ def web_project_extend():
 
     project = Project().query.filter_by(id=pid).first()
     if not project:
-        return jsonify(message="Failed to find a project with id: %s" % pid)
+        raise ValueError("Failed to find a project with id: %s" % pid)
 
     p_name = project.get_name()
     p_info = get_project_consumption([p_name])
@@ -170,7 +170,7 @@ def web_project_history():
 
     data = request.get_json()
     if not data:
-        return jsonify(message="Expecting application/json requests")
+        raise ValueError("Expecting application/json requests")
     pid = check_int(data["project"])
     recs = LogDB().query.filter(LogDB.project_id == pid).all()
     result = list(map(lambda x: x.to_dict(), recs))
