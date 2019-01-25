@@ -24,7 +24,6 @@ def handle_error(e):
         code = e.code
     error(str(e))
     return str(e), code
-#    return jsonify(error=str(e)), code
 
 
 mail = Mail(app)
