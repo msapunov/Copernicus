@@ -399,9 +399,9 @@ class LogDB(db.Model):
             msg = "%s: %s hours by %s" % (event, cpu, creator)
         elif self.extension_id:
             if self.extension.activate:
-                msg = "%s by %s" % (event, creator)
+                msg = "%s for activation by %s" % (event, creator)
             elif self.extension.transform:
-                msg = "%s by %s" % (event, creator)
+                msg = "%s for transformation by %s" % (event, creator)
             else:
                 cpu = self.extension.hours
                 msg = "%s for %s hours by %s" % (event, cpu, creator)
