@@ -1,5 +1,5 @@
-from flask import render_template, request, redirect, url_for, g, flash, jsonify
-from flask_login import current_user, login_user, logout_user, login_required
+from flask import render_template, request, jsonify
+from flask_login import login_required
 from code.pages import ProjectLog
 from code.pages import check_int, check_string
 from code.pages.board import bp
