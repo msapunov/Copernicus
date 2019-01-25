@@ -27,7 +27,7 @@ def web_board_accept():
     record.accepted = True
     db.session.commit()
     ProjectLog(record.project).accept(record)
-    return jsonify({"update": record.to_dict()})
+    return jsonify(record.to_dict())
 
 
 @bp.route("/board/reject", methods=["POST"])
