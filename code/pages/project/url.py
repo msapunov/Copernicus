@@ -1,6 +1,6 @@
 from flask import render_template, flash, request, jsonify, current_app
 from flask_login import login_required, current_user
-from code.pages import ProjectLog, check_int, check_string
+from code.pages import ProjectLog, check_int, check_str
 from code.pages.user import bp
 from code.pages.user.magic import ssh_wrapper
 from code.utils import accounting_start
@@ -57,36 +57,6 @@ def project_email(subject, recipients, text_body):
     mail.send(msg)
 
 
-def check_pid(data):
-    raw_pid = data["project"]
-    status, result = check_int(raw_pid)
-    if not status:
-        return False, jsonify(message="Failed to parse project id: %s" % raw_pid)
-    return True, result
-
-
-def check_cpu(data):
-    raw_cpu = data["cpu"]
-    try:
-        cpu = int(raw_cpu)
-    except Exception as e:
-        return jsonify(message="CPU hours is not integer: %s" % e)
-    if (not cpu) or (cpu < 1):
-        return jsonify(message="CPU hours must be a positive number: %s" % cpu)
-    return cpu
-
-
-def check_motivation(data):
-    raw_note = data["note"]
-    try:
-        note = str(raw_note)
-    except Exception as e:
-        return jsonify(message="Failure processing motivation field: %s" % e)
-    if not note:
-        return jsonify(message="Motivation field can't be empty")
-    return note
-
-
 @bp.route("/project/transform", methods=["POST"])
 @login_required
 def web_project_transform():
@@ -97,8 +67,8 @@ def web_project_transform():
     if not data:
         return flash("Expecting application/json requests")
 
-    pid = check_pid(data)
-    note = check_motivation(data)
+    pid = check_int(data["project"])
+    note = check_str(data["note"])
 
     project = Project().query.filter_by(id=pid).first()
     if not project:
@@ -133,8 +103,8 @@ def web_project_reactivate():
     if not data:
         return flash("Expecting application/json requests")
 
-    pid = check_pid(data)
-    note = check_motivation(data)
+    pid = check_int(data["project"])
+    note = check_str(data["note"])
 
     project = Project().query.filter_by(id=pid).first()
     if not project:
@@ -169,9 +139,9 @@ def web_project_extend():
     if not data:
         return flash("Expecting application/json requests")
 
-    pid = check_pid(data)
-    cpu = check_cpu(data)
-    note = check_motivation(data)
+    pid = check_int(data["project"])
+    cpu = check_int(data["cpu"])
+    note = check_str(data["note"])
 
     project = Project().query.filter_by(id=pid).first()
     if not project:
@@ -201,11 +171,7 @@ def web_project_history():
     data = request.get_json()
     if not data:
         return jsonify(message="Expecting application/json requests")
-    raw_pid = data["project"]
-    try:
-        pid = int(raw_pid)
-    except Exception as e:
-        return jsonify(message="Failed to parse project id: %s" % e)
+    pid = check_int(data["project"])
     recs = LogDB().query.filter(LogDB.project_id == pid).all()
     result = list(map(lambda x: x.to_dict(), recs))
     return jsonify(result)
@@ -295,30 +261,3 @@ def get_project_consumption(projects, start=None, end=None):
         else:
             tmp[project][user] = int(conso)
     return tmp
-
-
-class ProjectLog:
-
-    def __init__(self, project):
-        from code.database.schema import LogDB
-        self.log = LogDB(author=current_user, project=project)
-
-    def extend(self, extension):
-        self.log.event = "extension request"
-        self.log.extension = extension
-        self._commit()
-
-    def activate(self, extension):
-        self.log.event = "activation request"
-        self.log.extension = extension
-        self._commit()
-
-    def transform(self, extension):
-        self.log.event = "transformation request"
-        self.log.extension = extension
-        self._commit()
-
-    def _commit(self):
-        from code import db
-        db.session.add(self.log)
-#        db.session.commit()
