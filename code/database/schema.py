@@ -138,6 +138,7 @@ class Extend(db.Model):
     allocation = db.Column(db.Boolean, default=False)
     present_use = db.Column(db.Integer)
     present_total = db.Column(db.Integer)
+    usage_percent = db.Column(db.Integer)
     activate = db.Column(db.Boolean, default=False)
     transform = db.Column(db.Boolean, default=False)
 
@@ -171,6 +172,7 @@ class Extend(db.Model):
             "project": self.project.id,
             "total": self.present_total,
             "use": self.present_use,
+            "usage": self.usage_percent,
             "project_name": self.project.get_name(),
 #            "approve": self.approve.full_name(),
             "responsible": self.project.responsible.full_name()
