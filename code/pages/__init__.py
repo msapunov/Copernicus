@@ -3,24 +3,17 @@ from flask_login import current_user
 
 
 def check_int(raw_int):
-    try:
-        number = int(raw_int)
-    except Exception as e:
-        return False, jsonify(message="Provided object is not integer: %s" % e)
+    number = int(raw_int)
     if (not number) or (number < 1):
-        return False, jsonify(message="Integer must be a positive number: %s"
-                                      % number)
-    return True, number
+        raise ValueError("Integer must be a positive number: %s" % number)
+    return number
 
 
 def check_string(raw_note):
-    try:
-        note = str(raw_note)
-    except Exception as e:
-        return False, jsonify(message="Failure processing object: %s" % e)
+    note = str(raw_note)
     if (not note) or (len(note) < 1):
-        return False, jsonify(message="Provided string can't be empty")
-    return True, note
+        raise ValueError("Provided string can't be empty")
+    return note
 
 
 class ProjectLog:

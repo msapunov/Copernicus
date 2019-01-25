@@ -1,7 +1,6 @@
 from flask import render_template, request, jsonify
 from flask_login import login_required
-from code.pages import ProjectLog
-from code.pages import check_int, check_string
+from code.pages import ProjectLog, check_int, check_string
 from code.pages.board import bp
 
 
@@ -49,20 +48,13 @@ def board_action():
 
     data = request.get_json()
     if not data:
-        return jsonify(message="Expecting application/json requests")
-    status, result = check_int(data["eid"])
-    if not status:
-        return result
-    eid = result
-
-    status, result = check_string(data["comment"])
-    if not status:
-        return result
-    note = result
+        raise ValueError("Expecting application/json requests")
+    eid = check_int(data["eid"])
+    note = check_string(data["comment"])
 
     extend = Extend().query.filter(Extend.id == eid).one()
     if not extend:
-        return jsonify(message="No extension with id '%s' found" % eid)
+        raise ValueError("No extension with id '%s' found" % eid)
     extend.processed = True
     extend.decision = note
     return extend

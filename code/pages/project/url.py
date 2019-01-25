@@ -1,5 +1,6 @@
 from flask import render_template, flash, request, jsonify, current_app
 from flask_login import login_required, current_user
+from code.pages import ProjectLog, check_int, check_string
 from code.pages.user import bp
 from code.pages.user.magic import ssh_wrapper
 from code.utils import accounting_start
@@ -58,13 +59,10 @@ def project_email(subject, recipients, text_body):
 
 def check_pid(data):
     raw_pid = data["project"]
-    try:
-        pid = int(raw_pid)
-    except Exception as e:
-        return jsonify(message="Failed to parse project id: %s" % e)
-    if (not pid) or (pid < 1):
-        return jsonify(message="Project id must be a positive number: %s" % pid)
-    return pid
+    status, result = check_int(raw_pid)
+    if not status:
+        return False, jsonify(message="Failed to parse project id: %s" % raw_pid)
+    return True, result
 
 
 def check_cpu(data):
@@ -94,6 +92,7 @@ def check_motivation(data):
 def web_project_transform():
     from code import db
     from code.database.schema import Extend, Project
+
     data = request.get_json()
     if not data:
         return flash("Expecting application/json requests")
