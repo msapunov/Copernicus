@@ -10,6 +10,8 @@ from code.pages.admin import bp as blueprint_admin
 from datetime import datetime as dt
 from flask_mail import Mail
 from werkzeug.exceptions import HTTPException
+from logging import error
+
 
 app = Flask(__name__, instance_relative_config=True)
 app.config.from_pyfile("copernicus.cfg")
@@ -20,6 +22,7 @@ def handle_error(e):
     code = 500
     if isinstance(e, HTTPException):
         code = e.code
+    error(str(e))
     return str(e), code
 #    return jsonify(error=str(e)), code
 
