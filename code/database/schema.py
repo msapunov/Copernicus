@@ -138,7 +138,7 @@ class Extend(db.Model):
     allocation = db.Column(db.Boolean, default=False)
     present_use = db.Column(db.Integer)
     present_total = db.Column(db.Integer)
-    usage_percent = db.Column(db.Integer)
+    usage_percent = db.Column(db.String(4))
     activate = db.Column(db.Boolean, default=False)
     transform = db.Column(db.Boolean, default=False)
 
