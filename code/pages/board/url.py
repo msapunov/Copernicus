@@ -6,6 +6,7 @@ from code.pages.board import bp
 
 
 @bp.route("/board", methods=["GET", "POST"])
+@bp.route("/board/board", methods=["GET", "POST"])
 @bp.route("/board.html", methods=["GET", "POST"])
 @login_required
 def web_board():
