@@ -39,7 +39,7 @@ def web_board_reject():
     record.accepted = False
     db.session.commit()
     ProjectLog(record.project).reject(record)
-    return jsonify({"update": record.to_dict()})
+    return jsonify(record.to_dict())
 
 
 def board_action():
