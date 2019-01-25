@@ -386,7 +386,6 @@ class LogDB(db.Model):
     resources_id = db.Column(db.Integer, db.ForeignKey("project_resources.id"))
     resources = db.relationship("ProjectResourcesDB", foreign_keys=resources_id)
 
-
     def __repr__(self):
         return "<Log event for project {}>".format(self.project.get_name())
 
