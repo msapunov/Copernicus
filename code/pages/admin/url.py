@@ -7,7 +7,7 @@ from flask_login import login_required, login_user
 @login_required
 def web_switch_user():
     username = request.form.get("switch_user")
-    if not username in g.user_list:
+    if username not in g.user_list:
         flash("Invalid username: '%s'" % username)
         if request.referrer and (request.referrer in g.url_list):
             return redirect(request.referrer)

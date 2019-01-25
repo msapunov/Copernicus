@@ -1,10 +1,16 @@
 {% extends "base.html" %}
 {% block head %}
+<!--
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/jquery.dataTables.min.css') }}"/>
+    -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/datatables.min.css') }}"/>
 
     <script src="{{ url_for('static', filename='js/moment-with-locales.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/board.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/datatables.min.js') }}"></script>
+<!--
     <script src="{{ url_for('static', filename='js/jquery.dataTables.min.js') }}"></script>
+    -->
     <style>
         .ext_info{
             background-color: #ddd !important;
@@ -22,7 +28,7 @@
         <h1>{{ error }}</h1>
     {% else %}
     <div class="container" role="main">
-        <table id="ext_result_table" class="table table-striped" width="100%">
+        <table id="ext_result_table" class="table table-striped dt-responsive" width="100%">
             <thead>
             <tr>
                 <th data-priority="1"></th>
@@ -37,9 +43,9 @@
                 <th>Transform data</th>
                 <th data-priority="3">Date</th>
                 <th data-priority="8">Reason</th>
-                <th>Extend id</th>
-                <th>Project id</th>
-                <th>CPU Consumed</th>
+                <th data-priority="9">Extend id</th>
+                <th data-priority="9">Project id</th>
+                <th data-priority="9">CPU Consumed</th>
             </tr>
             </thead>
             <tfoot>
