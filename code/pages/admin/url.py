@@ -1,7 +1,73 @@
 from flask import g, flash, request, redirect, url_for, render_template, jsonify
+from flask import current_app
 from flask_login import login_required, login_user
 from code.pages.admin import bp
 from code.pages import ssh_wrapper
+from logging import debug, error
+
+
+def get_uptime(server):
+    tmp = {}
+    result, err = ssh_wrapper("uptime", host=server)
+    if not result:
+        error("Error getting 'uptime' information: %s" % err)
+        return tmp
+
+    tmp["server"] = server
+    for up in result:
+        output = up.split(",")
+        for i in output:
+            if "users" in i:
+                users = i.replace("users", "")
+                users = users.strip()
+                try:
+                    users = int(users)
+                except Exception as err:
+                    error("Failed to convert to int: %s" % err)
+                    continue
+                tmp["users"] = users
+            if "load average" in i:
+                idx = output.index(i)
+                i = "|".join(output[idx:])
+                load = i.replace("load average: ", "")
+                load = load.strip()
+                loads = load.split("|")
+                tmp["load_1"] = loads[0]
+                tmp["load_5"] = loads[1]
+                tmp["load_15"] = loads[2]
+    return tmp
+
+
+def get_mem(server):
+    tmp = {}
+    result, err = ssh_wrapper("free -m", host=server)
+    if not result:
+        error("Error getting 'free' information: %s" % err)
+        return tmp
+
+    tmp["server"] = server
+    for up in result:
+        output = up.split(",")
+        for i in output:
+            if "users" in i:
+                users = i.replace("users", "")
+                users = users.strip()
+                try:
+                    users = int(users)
+                except Exception as err:
+                    error("Failed to convert to int: %s" % err)
+                    continue
+                tmp["users"] = users
+            if "load average" in i:
+                idx = output.index(i)
+                i = "|".join(output[idx:])
+                load = i.replace("load average: ", "")
+                load = load.strip()
+                loads = load.split("|")
+                tmp["load_1"] = loads[0]
+                tmp["load_5"] = loads[1]
+                tmp["load_15"] = loads[2]
+    return tmp
 
 
 @bp.route("/switch_user", methods=["POST"])
@@ -59,6 +125,16 @@ def web_admin_user_info():
 
         users.append({"username": login, "from": host, "process": cmd})
     return jsonify(data=users)
+
+
+@bp.route("/admin/sys/info", methods=["POST"])
+@login_required
+def web_admin_sys_info():
+    servers = current_app.config["ADMIN_SERVER"]
+    uptime = []
+    for server in servers:
+        uptime.append({"uptime": get_uptime(server), "mem": get_mem(server)})
+    return jsonify(data=uptime)
 
 
 @bp.route("/admin", methods=["GET", "POST"])
