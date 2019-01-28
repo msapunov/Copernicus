@@ -13,7 +13,6 @@ def get_uptime(server):
         error("Error getting 'uptime' information: %s" % err)
         return tmp
 
-    tmp["server"] = server
     for up in result:
         output = up.split(",")
         for i in output:
@@ -45,28 +44,25 @@ def get_mem(server):
         error("Error getting 'free' information: %s" % err)
         return tmp
 
-    tmp["server"] = server
-    for up in result:
-        output = up.split(",")
+    for mem in result:
+        output = mem.split(",")
         for i in output:
-            if "users" in i:
-                users = i.replace("users", "")
-                users = users.strip()
-                try:
-                    users = int(users)
-                except Exception as err:
-                    error("Failed to convert to int: %s" % err)
-                    continue
-                tmp["users"] = users
-            if "load average" in i:
-                idx = output.index(i)
-                i = "|".join(output[idx:])
-                load = i.replace("load average: ", "")
-                load = load.strip()
-                loads = load.split("|")
-                tmp["load_1"] = loads[0]
-                tmp["load_5"] = loads[1]
-                tmp["load_15"] = loads[2]
+            if "total" in i:
+                continue
+            if "Mem" in i:
+                memory = i.split()
+                mem_total = int(memory[1].strip())
+                mem_available = int(memory[6].strip())
+                tmp["mem_total"] = mem_total
+                tmp["mem_avail"] = mem_available
+                tmp["mem_used"] = mem_total - mem_available
+            if "Swap" in i:
+                swap = i.split()
+                swap_total = int(swap[1].strip())
+                swap_available = int(swap[3].strip())
+                tmp["swap_total"] = swap_total
+                tmp["swap_avail"] = swap_available
+                tmp["swap_used"] = swap_total - swap_available
     return tmp
 
 
@@ -133,7 +129,8 @@ def web_admin_sys_info():
     servers = current_app.config["ADMIN_SERVER"]
     uptime = []
     for server in servers:
-        uptime.append({"uptime": get_uptime(server), "mem": get_mem(server)})
+        uptime.append({"server": server, "uptime": get_uptime(server),
+                       "mem": get_mem(server)})
     return jsonify(data=uptime)
 
 
