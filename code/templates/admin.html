@@ -15,29 +15,59 @@
 <div class="uk-panel uk-width-1-1 uk-panel-space uk-overflow-container">
     <div class="uk-accordion" data-uk-accordion id="accordion">
         <h3 class="uk-accordion-title">General information</h3>
-        <div class="uk-accordion-content">
-            <table id="overview" class="table table-striped" width="100%">
-                <thead>
-                    <tr>
-                        <th data-priority="1">Partition</th>
-                        <th data-priority="2">Allocated</th>
-                        <th data-priority="3">Idle</th>
-                        <th data-priority="4">Other</th>
-                        <th data-priority="5">Total</th>
-                    </tr>
-                </thead>
-                <tfoot>
-                    <tr>
-                        <th>Partition</th>
-                        <th>Allocated</th>
-                        <th>Idle</th>
-                        <th>Other</th>
-                        <th>Total</th>
-                    </tr>
-                </tfoot>
-                <tbody id="overview_records">
-                </tbody>
-            </table>
+        <div class="uk-grid uk-accordion-content uk-width-1-1">
+            <div class="uk-width-1-2">
+                <table id="overview" class="table table-striped" width="100%">
+
+                    <thead>
+                        <tr>
+                            <th data-priority="1">Partition</th>
+                            <th data-priority="2">Allocated</th>
+                            <th data-priority="3">Idle</th>
+                            <th data-priority="4">Other</th>
+                            <th data-priority="5">Total</th>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            <th>Partition</th>
+                            <th>Allocated</th>
+                            <th>Idle</th>
+                            <th>Other</th>
+                            <th>Total</th>
+                        </tr>
+                    </tfoot>
+                    <tbody id="overview_records">
+                    </tbody>
+                </table>
+                <button class="uk-button uk-width-1-1 uk-margin-small-bottom"><span class="uk-icon-refresh"></span>&nbsp;Reload</button>
+            </div>
+            <div class="uk-width-1-2">
+                <table id="w" class="table table-striped" width="100%">
+
+                    <thead>
+                        <tr>
+                            <th data-priority="1"></th>
+                            <th data-priority="2">Username</th>
+                            <th data-priority="3">From</th>
+                            <th data-priority="4">Process</th>
+                            <th data-priority="5">Machine</th>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            <th></th>
+                            <th>Username</th>
+                            <th>From</th>
+                            <th>Process</th>
+                            <th>Machine</th>
+                        </tr>
+                    </tfoot>
+                    <tbody id="w_records">
+                    </tbody>
+                </table>
+                <button class="uk-button uk-width-1-1 uk-margin-small-bottom"><span class="uk-icon-refresh"></span>&nbsp;Reload</button>
+            </div>
         </div>
 
         <h3 class="uk-accordion-title">Pending projects</h3>
