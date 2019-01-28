@@ -4,9 +4,10 @@ from flask import current_app
 from logging import debug, error
 
 
-def ssh_wrapper(cmd):
+def ssh_wrapper(cmd, host=None):
     debug("ssh_wrapper(%s)" % cmd)
-    host = current_app.config["SSH_SERVER"]
+    if not host:
+        host = current_app.config["SSH_SERVER"]
     login = current_app.config["SSH_USERNAME"]
     key_file = current_app.config["SSH_KEY"]
     key = RSAKey.from_private_key_file(key_file)
