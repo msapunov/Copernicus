@@ -27,6 +27,7 @@
     {% if error %}
         <h1>{{ error }}</h1>
     {% else %}
+<div class="uk-panel uk-width-1-1 uk-panel-space uk-overflow-container">
     <div class="container" role="main">
         <table id="ext_result_table" class="table table-striped dt-responsive" width="100%">
             <thead>
@@ -93,5 +94,6 @@
             </tbody>
         </table>
     </div>
+</div>
     {% endif %}
 {% endblock %}
