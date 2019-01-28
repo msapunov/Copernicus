@@ -99,7 +99,7 @@ def web_admin_partition_info():
         name, avail, time, nodes, nodelist = record.split()
         name = name.strip()
         nodes = nodes.strip()
-        allocated,idle,other,total = nodes.split("/")
+        allocated, idle, other, total = nodes.split("/")
         partition.append({"partition": name, "allocated": allocated,
                           "idle": idle, "other": other, "total": total})
     return jsonify(data=partition)
