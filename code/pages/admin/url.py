@@ -1,4 +1,4 @@
-from flask import g, flash, request, redirect, url_for
+from flask import g, flash, request, redirect, url_for, render_template
 from code.pages.admin import bp
 from flask_login import login_required, login_user
 
@@ -20,3 +20,11 @@ def web_switch_user():
     login_user(user, True)
     flash("Username: '%s'" % username)
     return redirect(url_for("user.user_index"))
+
+
+@bp.route("/admin", methods=["GET", "POST"])
+@bp.route("/admin.html", methods=["GET", "POST"])
+@login_required
+def web_admin():
+    result = {}
+    return render_template("admin.html", data=result)
