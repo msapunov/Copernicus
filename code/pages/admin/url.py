@@ -53,16 +53,23 @@ def get_mem(server):
                 memory = i.split()
                 mem_total = int(memory[1].strip())
                 mem_available = int(memory[6].strip())
+                mem_used = mem_total - mem_available
+                mem_usage = "{0:.1%}".format(float(mem_used) / float(mem_total))
                 tmp["mem_total"] = mem_total
                 tmp["mem_avail"] = mem_available
-                tmp["mem_used"] = mem_total - mem_available
+                tmp["mem_used"] = mem_used
+                tmp["mem_usage"] = mem_usage
             if "Swap" in i:
                 swap = i.split()
                 swap_total = int(swap[1].strip())
                 swap_available = int(swap[3].strip())
+                swap_used = swap_total - swap_available
+                swap_usage = "{0:.1%}".format(float(swap_used) /
+                                              float(swap_total))
                 tmp["swap_total"] = swap_total
                 tmp["swap_avail"] = swap_available
-                tmp["swap_used"] = swap_total - swap_available
+                tmp["swap_used"] = swap_used
+                tmp["swap_usage"] = swap_usage
     return tmp
 
 
