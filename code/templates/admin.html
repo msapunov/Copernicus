@@ -14,118 +14,83 @@
 {% block main %}
 <div class="uk-panel uk-width-1-1 uk-panel-space uk-overflow-container">
     <div class="uk-accordion" data-uk-accordion id="accordion">
+
         <h3 class="uk-accordion-title">General information</h3>
-        <div class="uk-grid uk-accordion-content uk-width-1-1">
-            <div class="uk-width-1-2">
-                <table id="overview" class="table table-striped" width="100%">
+        <div class="uk-accordion-content">
 
-                    <thead>
-                        <tr>
-                            <th data-priority="1">Partition</th>
-                            <th data-priority="2">Allocated</th>
-                            <th data-priority="3">Idle</th>
-                            <th data-priority="4">Other</th>
-                            <th data-priority="5">Total</th>
-                        </tr>
-                    </thead>
-                    <tfoot>
-                        <tr>
-                            <th>Partition</th>
-                            <th>Allocated</th>
-                            <th>Idle</th>
-                            <th>Other</th>
-                            <th>Total</th>
-                        </tr>
-                    </tfoot>
-                    <tbody id="overview_records">
-                    </tbody>
-                </table>
-                <button class="uk-button uk-width-1-1 uk-margin-small-bottom"><span class="uk-icon-refresh"></span>&nbsp;Reload</button>
-            </div>
-            <div class="uk-width-1-2">
-                <table id="w" class="table table-striped" width="100%">
+            <div class="uk-panel uk-width-1-1 uk-panel-space">
+                <div class="uk-grid">
+                    <div class="uk-width-small-1-1 uk-width-medium-1-2">
+                        <table id="overview" class="table table-striped" width="100%">
+                            <thead>
+                                <tr>
+                                    <th data-priority="1">Partition</th>
+                                    <th data-priority="2">Allocated</th>
+                                    <th data-priority="3">Idle</th>
+                                    <th data-priority="4">Other</th>
+                                    <th data-priority="5">Total</th>
+                                </tr>
+                            </thead>
+                            <tfoot>
+                                <tr>
+                                    <th>Partition</th>
+                                    <th>Allocated</th>
+                                    <th>Idle</th>
+                                    <th>Other</th>
+                                    <th>Total</th>
+                                </tr>
+                            </tfoot>
+                            <tbody id="overview_records">
+                            </tbody>
+                        </table>
+                        <button class="uk-button uk-width-1-1 uk-margin-small-bottom"><span class="uk-icon-refresh"></span>&nbsp;Reload</button>
+                    </div>
+                    <div class="uk-margin-top uk-width-small-1-1 uk-hidden-medium uk-hidden-large">
+                    </div>
+                    <div class="uk-width-small-1-1 uk-width-medium-1-2">
+                        <div class="uk-panel uk-width-1-1 uk-panel-box uk-clearfix">
+                            <button class="uk-button uk-button-mini uk-float-right"><span class="uk-icon-refresh"></span>&nbsp;Reload</button>
+                            <h3 class="uk-panel-title">System information</h3>
+                            <div id="system_body">
 
-                    <thead>
-                        <tr>
-                            <th data-priority="1"></th>
-                            <th data-priority="2">Username</th>
-                            <th data-priority="3">From</th>
-                            <th data-priority="4">Process</th>
-                            <th data-priority="5">Machine</th>
-                        </tr>
-                    </thead>
-                    <tfoot>
-                        <tr>
-                            <th></th>
-                            <th>Username</th>
-                            <th>From</th>
-                            <th>Process</th>
-                            <th>Machine</th>
-                        </tr>
-                    </tfoot>
-                    <tbody id="w_records">
-                    </tbody>
-                </table>
-                <button class="uk-button uk-width-1-1 uk-margin-small-bottom"><span class="uk-icon-refresh"></span>&nbsp;Reload</button>
+                            </div>
+                        </div>
+                        <!--
+                        <div class="uk-grid uk-grid-small">
+                            <div class="uk-panel uk-width-1-1 uk-panel-box">
+                                <h3 class="uk-panel-title" id="log_1_title">login01</h3>
+                                <div id="log_1_body">
+                                Some strange text
+                                </div>
+                                <button class="uk-button uk-button-mini"><span class="uk-icon-refresh"></span>&nbsp;Reload</button>
+                            </div>
+                            <div class="uk-margin-top"></div>
+                            <div class="uk-panel uk-width-1-1 uk-panel-box">
+                                <h3 class="uk-panel-title" id="log_2_title">login02</h3>
+                                <div id="log_2_body">
+                                    Some strange text
+                                </div>
+                                <button class="uk-button uk-button-mini"><span class="uk-icon-refresh"></span>&nbsp;Reload</button>
+                            </div>
+                        </div>
+                        -->
+                    </div>
+
+                </div>
             </div>
+
+            <div class="uk-width-1-2">
+
+            </div>
+
         </div>
 
         <h3 class="uk-accordion-title">Pending projects</h3>
         <div class="uk-accordion-content" id="pending_content">
-            <table id="pending_table" class="table table-striped" width="100%">
-                <thead>
-                    <tr>
-                        <th data-priority="1"></th>
-                        <th data-priority="2">Title</th>
-                        <th data-priority="4">Name</th>
-                        <th data-priority="5">CPU</th>
-                        <th data-priority="3">Date</th>
-                    </tr>
-                </thead>
-                <tfoot>
-                    <tr>
-                        <th></th>
-                        <th>Title</th>
-                        <th>Name</th>
-                        <th>CPU</th>
-                        <th>Date</th>
-                    </tr>
-                </tfoot>
-                <tbody id="pending_records">
-                </tbody>
-            </table>
         </div>
 
         <h3 class="uk-accordion-title">Endpoint Access Control List</h3>
         <div class="uk-accordion-content">
-            <table id="end_table" class="table table-striped" width="100%">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>User</th>
-                        <th>Responsible</th>
-                        <th>Manager</th>
-                        <th>Tech</th>
-                        <th>Committee</th>
-                        <th>Admin</th>
-                        <th>Modified</th>
-                    </tr>
-                </thead>
-                <tfoot>
-                    <tr>
-                        <th>Name</th>
-                        <th>User</th>
-                        <th>Responsible</th>
-                        <th>Manager</th>
-                        <th>Tech</th>
-                        <th>Committee</th>
-                        <th>Admin</th>
-                        <th>Modified</th>
-                    </tr>
-                </tfoot>
-                <tbody id="end_records">
-                </tbody>
-            </table>
         </div>
 
     </div>
