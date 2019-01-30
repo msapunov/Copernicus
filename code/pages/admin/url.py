@@ -2,7 +2,7 @@ from flask import g, flash, request, redirect, url_for, render_template, jsonify
 from flask import current_app
 from flask_login import login_required, login_user
 from code.pages.admin import bp
-from code.pages import ssh_wrapper
+from code.pages import ssh_wrapper, check_str
 from logging import debug, error
 
 
@@ -115,7 +115,11 @@ def web_admin_partition_info():
 @bp.route("/admin/user/info", methods=["POST"])
 @login_required
 def web_admin_user_info():
-    result, err = ssh_wrapper("PROCPS_USERLEN=32 PROCPS_FROMLEN=90 w -s -h")
+
+    server_raw = request.form.get("server")
+    server = check_str(server_raw)
+    result, err = ssh_wrapper("PROCPS_USERLEN=32 PROCPS_FROMLEN=90 w -s -h",
+                              host=server)
     if not result:
         raise ValueError("Error getting partition information: %s" % err)
 
