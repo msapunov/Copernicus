@@ -21,6 +21,7 @@
             <div class="uk-panel uk-width-1-1 uk-panel-space">
                 <div class="uk-grid">
                     <div class="uk-width-small-1-1 uk-width-medium-1-2">
+                        <!--
                         <table id="overview" class="table table-striped" width="100%">
                             <thead>
                                 <tr>
@@ -43,13 +44,36 @@
                             <tbody id="overview_records">
                             </tbody>
                         </table>
-                        <button class="uk-button uk-width-1-1 uk-margin-small-bottom"><span class="uk-icon-refresh"></span>&nbsp;Reload</button>
+                        -->
+                        <table id="overvieww" class="uk-table uk-table-hover uk-table-striped uk-table-condensed">
+                            <thead>
+                                <tr>
+                                    <th data-priority="1">Partition</th>
+                                    <th data-priority="2">Allocated</th>
+                                    <th data-priority="3">Idle</th>
+                                    <th data-priority="4">Other</th>
+                                    <th data-priority="5">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody id="overvieww_records">
+                                {% for part in data.partition|sort(attribute='total', reverse=True) %}
+                                <tr>
+                                    <td>{{part.name}}</td>
+                                    <td>{{part.allocated}}</td>
+                                    <td>{{part.idle}}</td>
+                                    <td>{{part.other}}</td>
+                                    <td>{{part.total}}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        <button class="uk-button uk-width-1-1 uk-margin-small-bottom over_reload"><span class="uk-icon-refresh"></span>&nbsp;Reload</button>
                     </div>
                     <div class="uk-margin-top uk-width-small-1-1 uk-hidden-medium uk-hidden-large">
                     </div>
                     <div class="uk-width-small-1-1 uk-width-medium-1-2">
                         <div class="uk-panel uk-width-1-1 uk-panel-box uk-clearfix">
-                            <button class="uk-button uk-button-mini uk-float-right"><span class="uk-icon-refresh">&nbsp;</span>Reload</button>
+                            <button class="uk-button uk-button-mini uk-float-right system_reload"><span class="uk-icon-refresh">&nbsp;</span>Reload</button>
                             <div id="system_body">
                             </div>
                         </div>
