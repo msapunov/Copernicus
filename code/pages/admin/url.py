@@ -73,6 +73,24 @@ def get_mem(server):
     return tmp
 
 
+def slurm_partition_info():
+    result, err = ssh_wrapper("sinfo -s")
+    if not result:
+        raise ValueError("Error getting partition information: %s" % err)
+
+    partition = []
+    for record in result:
+        if "PARTITION" in record:
+            continue
+        name, avail, time, nodes, nodelist = record.split()
+        name = name.strip()
+        nodes = nodes.strip()
+        allocated, idle, other, total = nodes.split("/")
+        partition.append({"name": name, "allocated": allocated, "idle": idle,
+                          "other": other, "total": int(total)})
+    return partition
+
+
 @bp.route("/switch_user", methods=["POST"])
 @login_required
 def web_switch_user():
@@ -95,21 +113,7 @@ def web_switch_user():
 @bp.route("/admin/partition/info", methods=["POST"])
 @login_required
 def web_admin_partition_info():
-    result, err = ssh_wrapper("sinfo -s")
-    if not result:
-        raise ValueError("Error getting partition information: %s" % err)
-
-    partition = []
-    for record in result:
-        if "PARTITION" in record:
-            continue
-        name, avail, time, nodes, nodelist = record.split()
-        name = name.strip()
-        nodes = nodes.strip()
-        allocated, idle, other, total = nodes.split("/")
-        partition.append({"partition": name, "allocated": allocated,
-                          "idle": idle, "other": other, "total": total})
-    return jsonify(data=partition)
+    return jsonify(data=slurm_partition_info())
 
 
 @bp.route("/admin/user/info", methods=["POST"])
@@ -150,4 +154,5 @@ def web_admin_sys_info():
 @login_required
 def web_admin():
     result = {}
+    result["partition"] = slurm_partition_info()
     return render_template("admin.html", data=result)
