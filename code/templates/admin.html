@@ -21,30 +21,6 @@
             <div class="uk-panel uk-width-1-1 uk-panel-space">
                 <div class="uk-grid">
                     <div class="uk-width-small-1-1 uk-width-medium-1-2">
-                        <!--
-                        <table id="overview" class="table table-striped" width="100%">
-                            <thead>
-                                <tr>
-                                    <th data-priority="1">Partition</th>
-                                    <th data-priority="2">Allocated</th>
-                                    <th data-priority="3">Idle</th>
-                                    <th data-priority="4">Other</th>
-                                    <th data-priority="5">Total</th>
-                                </tr>
-                            </thead>
-                            <tfoot>
-                                <tr>
-                                    <th>Partition</th>
-                                    <th>Allocated</th>
-                                    <th>Idle</th>
-                                    <th>Other</th>
-                                    <th>Total</th>
-                                </tr>
-                            </tfoot>
-                            <tbody id="overview_records">
-                            </tbody>
-                        </table>
-                        -->
                         <table id="overvieww" class="uk-table uk-table-hover uk-table-striped uk-table-condensed">
                             <thead>
                                 <tr>
@@ -77,27 +53,7 @@
                             <div id="system_body">
                             </div>
                         </div>
-                        <!--
-                        <div class="uk-grid uk-grid-small">
-                            <div class="uk-panel uk-width-1-1 uk-panel-box">
-                                <h3 class="uk-panel-title" id="log_1_title">login01</h3>
-                                <div id="log_1_body">
-                                Some strange text
-                                </div>
-                                <button class="uk-button uk-button-mini"><span class="uk-icon-refresh"></span>&nbsp;Reload</button>
-                            </div>
-                            <div class="uk-margin-top"></div>
-                            <div class="uk-panel uk-width-1-1 uk-panel-box">
-                                <h3 class="uk-panel-title" id="log_2_title">login02</h3>
-                                <div id="log_2_body">
-                                    Some strange text
-                                </div>
-                                <button class="uk-button uk-button-mini"><span class="uk-icon-refresh"></span>&nbsp;Reload</button>
-                            </div>
-                        </div>
-                        -->
                     </div>
-
                 </div>
             </div>
 
@@ -107,9 +63,75 @@
 
         </div>
 
+        {% if data.extension %}
         <h3 class="uk-accordion-title">Pending projects</h3>
         <div class="uk-accordion-content" id="pending_content">
+            <table id="ext_result_table" class="table table-striped dt-responsive" width="100%">
+                <thead>
+                <tr>
+                    <th data-priority="1"></th>
+                    <th data-priority="1">Project</th>
+                    <th data-priority="7">Responsible</th>
+                    <th data-priority="6">Present</th>
+                    <th data-priority="5">Use</th>
+                    <th data-priority="4">Extension</th>
+                    <th data-priority="2">Activate</th>
+                    <th>Activate data</th>
+                    <th data-priority="2">Transform</th>
+                    <th>Transform data</th>
+                    <th data-priority="3">Date</th>
+                    <th data-priority="8">Reason</th>
+                    <th data-priority="9">Extend id</th>
+                    <th data-priority="9">Project id</th>
+                    <th data-priority="9">CPU Consumed</th>
+                </tr>
+                </thead>
+                <tfoot>
+                <tr>
+                    <th></th>
+                    <th>Project</th>
+                    <th>Responsible</th>
+                    <th>Present</th>
+                    <th>Use</th>
+                    <th>Extension</th>
+                    <th>Activate</th>
+                    <th>Activate data</th>
+                    <th>Transform</th>
+                    <th>Transform data</th>
+                    <th>Date</th>
+                    <th>Reason</th>
+                    <th>Extend id</th>
+                    <th>Project id</th>
+                    <th>CPU Consumed</th>
+                </tr>
+                </tfoot>
+                <tbody id="ext_result_records">
+                {% if data %}
+
+                    {% for record in data|sort(attribute='created') %}
+                        <tr id="{{ record.id }}">
+                            <td></td>
+                            <td>{{ record.project_name }}</td>
+                            <td>{{ record.responsible }}</td>
+                            <td>{{ record.total }}</td>
+                            <td>{{ record.usage }}</td>
+                            <td>{{ record.hours }}</td>
+                            <td>{{ record.activate }}</td>
+                            <td>{{ record.activate }}</td>
+                            <td>{{ record.transform }}</td>
+                            <td>{{ record.transform }}</td>
+                            <td>{{ record.created }}</td>
+                            <td>{{ record.reason }}</td>
+                            <td>{{ record.id }}</td>
+                            <td>{{ record.project }}</td>
+                            <td>{{ record.use}}</td>
+                        </tr>
+                    {% endfor %}
+                {% endif %}
+                </tbody>
+            </table>
         </div>
+        {% endif %}
 
         <h3 class="uk-accordion-title">Endpoint Access Control List</h3>
         <div class="uk-accordion-content">
