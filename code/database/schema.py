@@ -79,7 +79,7 @@ class Project(db.Model):
     resources = db.relationship("ProjectResourcesDB", foreign_keys=resources_id)
 
     ref_id = db.Column(db.Integer, db.ForeignKey("register.id"))
-    ref = db.relationship("RegisterDB", foreign_keys=ref_id)
+    ref = db.relationship("Register", foreign_keys=ref_id)
 
     def __repr__(self):
         return '<Project {}>'.format(self.get_name())
@@ -312,7 +312,7 @@ class User(UserMixin, db.Model):
         }
 
 
-class RegisterDB(db.Model):
+class Register(db.Model):
 
     __tablename__ = "register"
 
@@ -354,6 +354,49 @@ class RegisterDB(db.Model):
     created = db.Column(db.Boolean)
     created_ts = db.Column(db.DateTime(True))
 
+    def __repr__(self):
+        return "<Registration request {}>".format(self.id)
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "ts": self.ts,
+            "title": self.title,
+            "responsible_first_name": self.responsible_first_name,
+            "responsible_last_name": self.responsible_last_name,
+            "responsible_position": self.responsible_position,
+            "responsible_lab": self.responsible_lab,
+            "responsible_email": self.responsible_email,
+            "responsible_phone": self.responsible_phone,
+            "description": self.description,
+            "scientific_fields": self.scientific_fields,
+            "genci_cometee": self.genci_cometee,
+            "numerical_methods": self.numerical_methods,
+            "computing_resources": self.computing_resources,
+            "type_a": self.type_a,
+            "type_b": self.type_b,
+            "type_c": self.type_c,
+            "cpu": self.cpu,
+            "smp": self.smp,
+            "visu": self.visu,
+            "gpu": self.gpu,
+            "phi": self.phi,
+            "article_1": self.article_1,
+            "article_2": self.article_2,
+            "article_3": self.article_3,
+            "article_4": self.article_4,
+            "article_5": self.article_5,
+            "users": self.users,
+            "project_management": self.project_management,
+            "project_motivation": self.project_motivation,
+            "processed": self.processed,
+            "processed_ts": self.processed_ts,
+            "accepted": self.accepted,
+            "accepted_ts": self.accepted_ts,
+            "comment": self.comment,
+            "created": self.created,
+            "created_ts": self.created_ts
+        }
 
 class LogDB(db.Model):
 
