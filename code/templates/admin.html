@@ -70,7 +70,7 @@
 
         {% if data.extension %}
         <h3 class="uk-accordion-title">Pending projects</h3>
-        <div class="uk-accordion-content" id="pending_content">
+        <div class="uk-accordion-content uk-overflow-container" id="pending_content">
             <table id="new_projects_table" class="uk-table uk-table-striped uk-table-condensed">
                 <tbody id="ext_result_records">
                     {% for record in data.extension|sort(attribute='id', reverse=True) %}
@@ -168,8 +168,13 @@
                                         </tr>
                                     </tbody>
                                 </table>
-                                <button class="uk-button" type="button" data-id='{{record.id}}-info'><span class="uk-icon-thumbs-o-up uk-margin-right"></span>Accept</button>
-                                <button class="uk-button uk-button-danger" type="button" data-id='{{record.id}}-info'><span class="uk-icon-thumbs-o-down uk-margin-right"></span>Decline</button>
+                                <div class="uk-button-group uk-float-right">
+                                    <button class="uk-button" type="button" data-id='{{record.id}}-info'><span class="uk-icon-thumbs-up uk-margin-right"></span>Accept</button>
+                                    <button class="uk-button uk-button-danger" type="button" data-id='{{record.id}}-info'><span class="uk-icon-thumbs-down uk-margin-right"></span>Reject</button>
+                                </div>
+                                <div class="uk-button-group uk-float-left">
+                                    <button class="uk-button" type="button" data-id='{{record.id}}-send'><span class="uk-icon-send uk-margin-right"></span>Contact</button>
+                                </div>
                             </td>
                         </tr>
                     {% endfor %}
