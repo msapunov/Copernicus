@@ -7,8 +7,13 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/datatables.min.css') }}"/>
 
 
-  <script defer type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.2/js/components/accordion.min.js"></script>
-  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.2/css/components/accordion.gradient.min.css" />
+    <script defer type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.2/js/components/accordion.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.2/css/components/accordion.gradient.min.css" />
+    <style>
+        .ext_info{
+          background-color: #ddd !important;
+        }
+    </style>
 
 {% endblock %}
 {% block main %}
@@ -66,15 +71,70 @@
         {% if data.extension %}
         <h3 class="uk-accordion-title">Pending projects</h3>
         <div class="uk-accordion-content" id="pending_content">
-            <table id="new_projects_table" class="uk-table uk-table-hover uk-table-striped uk-table-condensed">
+            <table id="new_projects_table" class="uk-table uk-table-striped uk-table-condensed">
                 <tbody id="ext_result_records">
                     {% for record in data.extension|sort(attribute='id', reverse=True) %}
-                        <tr id="{{ record.id }}">
-                            <td><button class="uk-button uk-button-mini new_project" type="button"><span class="uk-icon-plus"></span></button></td>
-                            <td>{{ record.title }}</td>
-                            <td>{{ record.responsible_first_name }}&nbsp;{{ record.responsible_last_name }}</td>
-                            <td>{{ record.cpu }}</td>
-                            <td>{{ record.ts }}</td>
+                        <tr id="{{record.id}}">
+                            <td class="uk-width-1-10"><button class="uk-button uk-button-mini new_project" type="button" data-id='{{record.id}}-info'><span class="uk-icon-plus"></span></button></td>
+                            <td class="uk-width-4-10">{{record.title}}</td>
+                            <td class="uk-width-2-10">{{record.responsible_first_name}}&nbsp;{{record.responsible_last_name}}</td>
+                            <td class="uk-width-1-10">{{record.cpu}}</td>
+                            <td class="uk-width-2-10">{{record.ts}}</td>
+                        </tr>
+                        <tr id="{{record.id}}-info" class="ext_info uk-hidden">
+                            <td colspan="5">
+                                <table id="info_table" class="uk-table">
+                                    <tbody>
+                                        <tr class="ext_info">
+                                            <td class="uk-width-1-10 uk-text-right">Description:</td>
+                                            <td class="uk-width-9-10">{{record.description}}</td>
+                                        </tr><tr class="ext_info">
+                                            <td class="uk-width-1-10 uk-text-right">Scientific&nbsp;fields:</td>
+                                            <td class="uk-width-9-10">{{record.scientific_fields}}</td>
+                                        </tr><tr class="ext_info">
+                                            <td class="uk-width-1-10 uk-text-right">Genci:</td>
+                                            <td class="uk-width-9-10">{{record.genci_committee}}</td>
+                                        </tr><tr class="ext_info">
+                                            <td class="uk-width-1-10 uk-text-right">Methods:</td>
+                                            <td class="uk-width-9-10">{{record.numerical_methods}}</td>
+                                        </tr><tr class="ext_info">
+                                            <td class="uk-width-1-10 uk-text-right">Resources:</td>
+                                            <td class="uk-width-9-10">{{record.computing_resources}}</td>
+                                        </tr><tr class="ext_info">
+                                            <td class="uk-width-1-10 uk-text-right">Management:</td>
+                                            <td class="uk-width-9-10">{{record.project_management}}</td>
+                                        </tr><tr class="ext_info">
+                                            <td class="uk-width-1-10 uk-text-right">Motivation:</td>
+                                            <td class="uk-width-9-10">{{record.project_motivation}}</td>
+                                        </tr><tr class="ext_info">
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <!--
+                                <div class="uk-panel">
+                                    <ul class="uk-subnav uk-subnav-pill" data-uk-switcher="{connect:'#{{record.id}}-additional-info'}">
+                                        <li class="uk-active"><a href="">Description</a></li>
+                                        <li><a href="">Scientific fields</a></li>
+                                        <li><a href="">Genci</a></li>
+                                        <li><a href="">Methods</a></li>
+                                        <li><a href="">Resources</a></li>
+                                        <li><a href="">Management</a></li>
+                                        <li><a href="">Motivation</a></li>
+                                    </ul>
+                                    <ul id="{{record.id}}-additional-info" class="uk-switcher">
+                                        <li><article>{{record.description}}</article></li>
+                                        <li><article>{{record.scientific_fields}}</article></li>
+                                        <li><article>{{record.genci_committee}}</article></li>
+                                        <li><article>{{record.numerical_methods}}</article></li>
+                                        <li><article>{{record.computing_resources}}</article></li>
+                                        <li><article>{{record.project_management}}</article></li>
+                                        <li><article>{{record.project_motivation}}</article></li>
+                                    </ul>
+                                </div>
+                                -->
+                            </td>
                         </tr>
                     {% endfor %}
                 </tbody>
