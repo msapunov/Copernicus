@@ -327,7 +327,7 @@ class Register(db.Model):
     responsible_phone = db.Column(db.String(10))
     description = db.Column(db.String)
     scientific_fields = db.Column(db.String(256))
-    genci_cometee = db.Column(db.String(128))
+    genci_committee = db.Column(db.String(128))
     numerical_methods = db.Column(db.String)
     computing_resources = db.Column(db.String)
     type_a = db.Column(db.Boolean, default=True)
@@ -356,6 +356,25 @@ class Register(db.Model):
 
     def __repr__(self):
         return "<Registration request {}>".format(self.id)
+
+    def get_users(self):
+        users = self.users.split("\n")
+        result = []
+        for user in users:
+            tmp = {}
+            info = user.split(";")
+            for i in info:
+                j = i.split(":")
+                if "First Name" in j[0]:
+                    tmp["name"] = j[1].strip()
+                elif "Last Name" in j[0]:
+                    tmp["last"] = j[1].strip()
+                elif "E-mail" in j[0]:
+                    tmp["mail"] = j[1].strip()
+                else:
+                    tmp["login"] = j[1].strip()
+            result.append(tmp)
+        return result
 
     def to_dict(self):
         return {
@@ -386,7 +405,7 @@ class Register(db.Model):
             "article_3": self.article_3,
             "article_4": self.article_4,
             "article_5": self.article_5,
-            "users": self.users,
+            "users": self.get_users(),
             "project_management": self.project_management,
             "project_motivation": self.project_motivation,
             "processed": self.processed,
