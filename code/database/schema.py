@@ -389,7 +389,7 @@ class Register(db.Model):
             "responsible_phone": self.responsible_phone,
             "description": self.description,
             "scientific_fields": self.scientific_fields,
-            "genci_cometee": self.genci_cometee,
+            "genci_committee": self.genci_committee,
             "numerical_methods": self.numerical_methods,
             "computing_resources": self.computing_resources,
             "type_a": self.type_a,
