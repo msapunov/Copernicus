@@ -81,59 +81,95 @@
                             <td class="uk-width-1-10">{{record.cpu}}</td>
                             <td class="uk-width-2-10">{{record.ts}}</td>
                         </tr>
-                        <tr id="{{record.id}}-info" class="ext_info uk-hidden">
+                        <tr id="{{record.id}}-info" class="ext_info uk-hidden uk-text-center">
                             <td colspan="5">
                                 <table id="info_table" class="uk-table">
                                     <tbody>
                                         <tr class="ext_info">
+                                            <td class="uk-width-1-10 uk-text-right">Project type:</td>
+                                            <td class="uk-width-9-10 uk-text-left">
+                                                {% if record.type_a %}
+                                                    <strong>A</strong>
+                                                {% elif record.type_b %}
+                                                    <strong>B</strong>
+                                                {% elif record.type_c%}
+                                                    <strong>C</strong>
+                                                {% elif record.type_e%}
+                                                    <strong>E</strong>
+                                                {% elif record.type_h%}
+                                                    <strong>H</strong>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                        <tr class="ext_info">
+                                            <td class="uk-width-1-10 uk-text-right">CPU:</td>
+                                            <td class="uk-width-9-10 uk-text-left">{{record.cpu}}</td>
+                                        </tr>
+                                        <tr class="ext_info">
+                                            <td class="uk-width-1-10 uk-text-right">Responsible:</td>
+                                            <td class="uk-width-9-10 uk-text-left">
+                                                <ul>
+                                                    {% if record.responsible_first_name and record.responsible_last_name %}
+                                                        <li>{{record.responsible_first_name}} {{record.responsible_last_name}}</li>
+                                                    {% endif %}
+                                                    {% for i in [record.responsible_position, record.responsible_lab, record.responsible_email, record.responsible_phone] %}
+                                                        {% if i %}
+                                                            <li>{{i}}</li>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                </ul>
+                                            </td>
+                                        </tr><tr class="ext_info">
+                                            <td class="uk-width-1-10 uk-text-right">Users:</td>
+                                            <td class="uk-width-9-10 uk-text-left">
+                                                <ul>
+                                                {% for user in record.users %}
+                                                    <li>
+                                                        {{user["name"]}} {{user["last"]}} &lt;{{user["mail"]}}&gt;
+                                                        {% if user["login"] %}
+                                                        [{{user["login"]}}]
+                                                        {% endif %}
+                                                    </li>
+                                                {% endfor %}
+                                                </ul>
+                                            </td>
+                                        </tr><tr class="ext_info">
                                             <td class="uk-width-1-10 uk-text-right">Description:</td>
-                                            <td class="uk-width-9-10">{{record.description}}</td>
+                                            <td class="uk-width-9-10 uk-text-left">{{record.description}}</td>
                                         </tr><tr class="ext_info">
                                             <td class="uk-width-1-10 uk-text-right">Scientific&nbsp;fields:</td>
-                                            <td class="uk-width-9-10">{{record.scientific_fields}}</td>
+                                            <td class="uk-width-9-10 uk-text-left">{{record.scientific_fields}}</td>
                                         </tr><tr class="ext_info">
                                             <td class="uk-width-1-10 uk-text-right">Genci:</td>
-                                            <td class="uk-width-9-10">{{record.genci_committee}}</td>
+                                            <td class="uk-width-9-10 uk-text-left">{{record.genci_committee}}</td>
                                         </tr><tr class="ext_info">
                                             <td class="uk-width-1-10 uk-text-right">Methods:</td>
-                                            <td class="uk-width-9-10">{{record.numerical_methods}}</td>
+                                            <td class="uk-width-9-10 uk-text-left">{{record.numerical_methods}}</td>
                                         </tr><tr class="ext_info">
                                             <td class="uk-width-1-10 uk-text-right">Resources:</td>
-                                            <td class="uk-width-9-10">{{record.computing_resources}}</td>
+                                            <td class="uk-width-9-10 uk-text-left">{{record.computing_resources}}</td>
                                         </tr><tr class="ext_info">
                                             <td class="uk-width-1-10 uk-text-right">Management:</td>
-                                            <td class="uk-width-9-10">{{record.project_management}}</td>
+                                            <td class="uk-width-9-10 uk-text-left">{{record.project_management}}</td>
                                         </tr><tr class="ext_info">
                                             <td class="uk-width-1-10 uk-text-right">Motivation:</td>
-                                            <td class="uk-width-9-10">{{record.project_motivation}}</td>
+                                            <td class="uk-width-9-10 uk-text-left">{{record.project_motivation}}</td>
                                         </tr><tr class="ext_info">
-                                            <td></td>
-                                            <td></td>
+                                            <td class="uk-width-1-10 uk-text-right">Articles:</td>
+                                            <td class="uk-width-9-10 uk-text-left">
+                                                <ul>
+                                                {% for i in [record.article_1, record.article_2, record.article_3, record.article_4, record.article_5]%}
+                                                    {% if i %}
+                                                        <li>{{i}}</li>
+                                                    {% endif %}
+                                                {% endfor %}
+                                                </ul>
+                                            </td>
                                         </tr>
                                     </tbody>
                                 </table>
-                                <!--
-                                <div class="uk-panel">
-                                    <ul class="uk-subnav uk-subnav-pill" data-uk-switcher="{connect:'#{{record.id}}-additional-info'}">
-                                        <li class="uk-active"><a href="">Description</a></li>
-                                        <li><a href="">Scientific fields</a></li>
-                                        <li><a href="">Genci</a></li>
-                                        <li><a href="">Methods</a></li>
-                                        <li><a href="">Resources</a></li>
-                                        <li><a href="">Management</a></li>
-                                        <li><a href="">Motivation</a></li>
-                                    </ul>
-                                    <ul id="{{record.id}}-additional-info" class="uk-switcher">
-                                        <li><article>{{record.description}}</article></li>
-                                        <li><article>{{record.scientific_fields}}</article></li>
-                                        <li><article>{{record.genci_committee}}</article></li>
-                                        <li><article>{{record.numerical_methods}}</article></li>
-                                        <li><article>{{record.computing_resources}}</article></li>
-                                        <li><article>{{record.project_management}}</article></li>
-                                        <li><article>{{record.project_motivation}}</article></li>
-                                    </ul>
-                                </div>
-                                -->
+                                <button class="uk-button" type="button" data-id='{{record.id}}-info'><span class="uk-icon-thumbs-o-up uk-margin-right"></span>Accept</button>
+                                <button class="uk-button uk-button-danger" type="button" data-id='{{record.id}}-info'><span class="uk-icon-thumbs-o-down uk-margin-right"></span>Decline</button>
                             </td>
                         </tr>
                     {% endfor %}
