@@ -2,6 +2,27 @@ from flask_login import current_user
 from paramiko import SSHClient, AutoAddPolicy, AuthenticationException, RSAKey
 from flask import current_app
 from logging import debug, error
+from flask_mail import Message
+
+
+def send_message(to_who, by_who=None, cc=None, title=None, message=None):
+    if not by_who:
+        by_who = current_app.config["EMAIL_TECH"]
+    if not title:
+        title = "Mesocentre reporting"
+    if not cc:
+        cc = []
+    if not message:
+        return "Message body is empty"
+    from code import mail
+
+    to_who = "matvey.sapunov@univ-amu.fr"
+    tech = [current_app.config["EMAIL_TECH"]]
+    msg = Message(title, sender=by_who, recipients=to_who, cc=cc)
+    postfix = "If this email has been sent to you by mistake, please report " \
+              "to: %s" % tech
+    msg.body = message + postfix
+    mail.send(msg)
 
 
 def ssh_wrapper(cmd, host=None):
