@@ -13,7 +13,7 @@ def send_message(to_who, by_who=None, cc=None, title=None, message=None):
     if not cc:
         cc = []
     if not message:
-        return "Message body is empty"
+        raise ValueError("Message body is empty")
     from code import mail
 
     to_who = "matvey.sapunov@univ-amu.fr"
