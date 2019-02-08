@@ -123,16 +123,13 @@ def web_admin_message():
 
     register = Register.query.filter_by(id=pid).first()
     if not register:
-        return jsonify(error="Project with id %s not found" % pid)
+        raise ValueError("Project with id %s not found" % pid)
     to = register.responsible_email
     by_who = current_app.config["EMAIL_PROJECT"]
     cc = current_app.config["EMAIL_PROJECT"]
     title = "Concerning your project"
-    result = send_message(to, by_who, cc, title, note)
-    if not result:
+    if not send_message(to, by_who, cc, title, note):
         return jsonify(data="Message was sent to %s successfully" % to)
-    else:
-        return jsonify(error="Failed to send message to %s: %s" % (to, result))
 
 
 @bp.route("/admin/partition/info", methods=["POST"])
