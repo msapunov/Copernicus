@@ -169,12 +169,14 @@
                                     </tbody>
                                 </table>
                                 <div class="uk-button-group uk-float-right">
-                                    <button class="uk-button" type="button" data-id='{{record.id}}-info'><span class="uk-icon-thumbs-up uk-margin-right"></span>Accept</button>
-                                    <button class="uk-button uk-button-danger" type="button" data-id='{{record.id}}-info'><span class="uk-icon-thumbs-down uk-margin-right"></span>Reject</button>
+                                    <button class="uk-button new_accept" type="button" data-id='{{record.id}}'><span class="uk-icon-thumbs-up uk-margin-right"></span>Accept</button>
+                                    <button class="uk-button new_reject uk-button-danger" type="button" data-id='{{record.id}}'><span class="uk-icon-thumbs-down uk-margin-right"></span>Reject</button>
                                 </div>
+                                {% if record.responsible_email %}
                                 <div class="uk-button-group uk-float-left">
-                                    <button class="uk-button" type="button" data-id='{{record.id}}-send'><span class="uk-icon-send uk-margin-right"></span>Contact</button>
+                                    <button class="uk-button message" type="button" data-id='{{record.id}}' data-addr='{{record.responsible_email}}'><span class="uk-icon-send uk-margin-right"></span>Contact</button>
                                 </div>
+                                {% endif %}
                             </td>
                         </tr>
                     {% endfor %}
