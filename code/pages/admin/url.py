@@ -2,7 +2,7 @@ from flask import g, flash, request, redirect, url_for, render_template, jsonify
 from flask import current_app
 from flask_login import login_required, login_user
 from code.pages.admin import bp
-from code.pages import ssh_wrapper, check_str
+from code.pages import ssh_wrapper, check_str, send_message, check_int
 from logging import debug, error
 
 
@@ -108,6 +108,31 @@ def web_switch_user():
     login_user(user, True)
     flash("Username: '%s'" % username)
     return redirect(url_for("user.user_index"))
+
+
+@bp.route("/admin/message/register", methods=["POST"])
+@login_required
+def web_admin_message():
+    data = request.get_json()
+    if not data:
+        raise ValueError("Expecting application/json requests")
+    pid = check_int(data["project"])
+    note = check_str(data["note"])
+
+    from code.database.schema import Register
+
+    register = Register.query.filter_by(id=pid).first()
+    if not register:
+        return jsonify(error="Project with id %s not found" % pid)
+    to = register.responsible_email
+    by_who = current_app.config["EMAIL_PROJECT"]
+    cc = current_app.config["EMAIL_PROJECT"]
+    title = "Concerning your project"
+    result = send_message(to, by_who, cc, title, note)
+    if not result:
+        return jsonify(data="Message was sent to %s successfully" % to)
+    else:
+        return jsonify(error="Failed to send message to %s: %s" % (to, result))
 
 
 @bp.route("/admin/partition/info", methods=["POST"])
