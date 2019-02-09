@@ -417,6 +417,7 @@ class Register(db.Model):
             "created_ts": self.created_ts
         }
 
+
 class LogDB(db.Model):
 
     __tablename__ = "project_logs"
