@@ -3,7 +3,7 @@ from flask import current_app
 from flask_login import login_required, login_user
 from code.pages.admin import bp
 from code.pages import ssh_wrapper, check_str, send_message, check_int
-from logging import debug, error
+from logging import debug, error, info
 
 
 def get_uptime(server):
@@ -110,26 +110,106 @@ def web_switch_user():
     return redirect(url_for("user.user_index"))
 
 
-@bp.route("/admin/message/register", methods=["POST"])
-@login_required
-def web_admin_message():
+def project_creation_magic(register):
+    from code.database.schema import Project
+    from code import db
+
+    Project()
+    pass
+
+
+def get_pid_notes():
     data = request.get_json()
     if not data:
         raise ValueError("Expecting application/json requests")
     pid = check_int(data["project"])
     note = check_str(data["note"])
+    return pid, note
 
+
+def accept_message(project, msg):
+    to = project.responsible_email
+    name = project.responsible_first_name
+    surname = project.responsible_last_name
+    pid = project.id
+    title = "Your project request with id '%s' has been accepted" % pid
+    prefix = "Dear %s %s,\nYour project request '%s' has been accepted by" \
+             " scientific committee" % (name, surname, pid)
+    if msg:
+        msg = prefix + " with following comment:\n" + msg
+    else:
+        msg = prefix
+    return msg(to, msg, title)
+
+
+def reject_message(project, msg):
+    to = project.responsible_email
+    name = project.responsible_first_name
+    surname = project.responsible_last_name
+    pid = project.id
+    title = "Rejection of your project request with id: %s" % pid
+    prefix = "Dear %s %s,\nYour project request '%s' has been rejected with" \
+             " following comment:\n\n" % (name, surname, pid)
+    msg = prefix + msg
+    return msg(to, msg, title)
+
+
+def message(to, msg, title=None):
+    by_who = current_app.config["EMAIL_PROJECT"]
+    cc = current_app.config["EMAIL_PROJECT"]
+    if not title:
+        title = "Concerning your project"
+    if not send_message(to, by_who, cc, title, msg):
+        return "Message was sent to %s successfully" % to
+
+
+@bp.route("/admin/registration/accept", methods=["POST"])
+@login_required
+def web_admin_registration_accept():
     from code.database.schema import Register
+    from code import db
 
+    pid, note = get_pid_notes()
     register = Register.query.filter_by(id=pid).first()
     if not register:
         raise ValueError("Project with id %s not found" % pid)
-    to = register.responsible_email
-    by_who = current_app.config["EMAIL_PROJECT"]
-    cc = current_app.config["EMAIL_PROJECT"]
-    title = "Concerning your project"
-    if not send_message(to, by_who, cc, title, note):
-        return jsonify(data="Message was sent to %s successfully" % to)
+    info("Perform project creation")
+    project_creation_magic(register)
+    info("Updating registration request DB")
+    register.accepted = True
+    register.processed = True
+    register.comment = note
+    db.session.commit()
+    return jsonify(data=accept_message(register, note))
+
+
+@bp.route("/admin/registration/reject", methods=["POST"])
+@login_required
+def web_admin_registration_reject():
+    from code.database.schema import Register
+    from code import db
+
+    pid, note = get_pid_notes()
+    register = Register.query.filter_by(id=pid).first()
+    if not register:
+        raise ValueError("Project with id %s not found" % pid)
+    register.accepted = False
+    register.processed = True
+    register.comment = note
+    db.session.commit()
+    return jsonify(data=reject_message(register, note))
+
+
+@bp.route("/admin/message/register", methods=["POST"])
+@login_required
+def web_admin_message():
+    from code.database.schema import Register
+
+    pid, note = get_pid_notes()
+    register = Register.query.filter_by(id=pid).first()
+    if not register:
+        raise ValueError("Project with id %s not found" % pid)
+    return jsonify(data=message(register.responsible_email, note))
 
 
 @bp.route("/admin/partition/info", methods=["POST"])
@@ -178,7 +258,7 @@ def web_admin():
     from code.database.schema import Register
 
     result = {"partition": slurm_partition_info()}
-    reg_list = Register().query.filter(Register.processed == False).all()
+    reg_list = Register().query.filter(Register.processed is False).all()
     if not reg_list:
         result["extension"] = False
     else:
