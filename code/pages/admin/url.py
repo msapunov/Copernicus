@@ -111,11 +111,34 @@ def web_switch_user():
 
 
 def project_creation_magic(register):
-    from code.database.schema import Project
+    from code.database.schema import Project, User
     from code import db
 
-    Project()
-    pass
+    approve = User.query.filter_by(login=login_user).first()
+    if not approve:
+        raise ValueError("Can't find user %s in database!" % login_user)
+
+    Project(
+        title=register.title,
+        description = register.description,
+        scientific_fields = register.scientific_fields,
+        genci_committee = register.genci_committee,
+        numerical_methods = register.numerical_methods,
+        computing_resources = register.computing_resources,
+        project_management = register.project_management,
+        project_motivation = register.project_motivation,
+        active = True,
+        #comment = db.Column(db.Text),
+        #gid = db.Column(db.Integer)
+        #privileged = db.Column(db.Boolean, default=False),
+        #name = db.Column(db.String(128))
+        #type = db.Column(db.String(1),
+        #responsible_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+        #responsible = db.relationship("User", backref="responsible",
+        approve = approve,
+        ref = register
+    )
+    return
 
 
 def get_pid_notes():
