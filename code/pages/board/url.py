@@ -10,7 +10,7 @@ from code.pages.board import bp
 def web_board():
     from code.database.schema import Extend
 
-    ext_list = Extend().query.filter(Extend.processed == False).all()
+    ext_list = Extend().query.filter(Extend.processed is False).all()
     if not ext_list:
         err = "No new project related requests found! Nothing to do"
         return render_template("board.html", error=err)
