@@ -76,7 +76,7 @@ class Project(db.Model):
     approve = db.relationship("User", foreign_keys=approve_id)
 
     resources_id = db.Column(db.Integer, db.ForeignKey("project_resources.id"))
-    resources = db.relationship("ProjectResourcesDB", foreign_keys=resources_id)
+    resources = db.relationship("Resources", foreign_keys=resources_id)
 
     ref_id = db.Column(db.Integer, db.ForeignKey("register.id"))
     ref = db.relationship("Register", foreign_keys=ref_id)
@@ -211,7 +211,7 @@ class FileDB(db.Model):
     user = db.relationship("User", foreign_keys=user_id)
 
 
-class ProjectResourcesDB(db.Model):
+class Resources(db.Model):
 
     __tablename__ = "project_resources"
 
@@ -268,7 +268,17 @@ class User(UserMixin, db.Model):
 
     def __repr__(self):
         return '<User {}>'.format(self.login)
-
+    """
+    def is_exists(self, username=None, name=None, surname=None):
+        if (not username) or (not (name and surname)):
+            raise ValueError("Please provide user login or name and last name")
+        if username and (self.login.lower() is username.lower()):
+            return True
+        if (self.name.lower() is name.lower()) and \
+                (self.surname.lower() is surname.lower()):
+            return True
+        return False
+    """
     def full_name(self):
         return "%s %s" % (self.name.capitalize(), self.surname.capitalize())
 
@@ -447,7 +457,7 @@ class LogDB(db.Model):
     files = db.relationship("FileDB", foreign_keys=files_id)
 
     resources_id = db.Column(db.Integer, db.ForeignKey("project_resources.id"))
-    resources = db.relationship("ProjectResourcesDB", foreign_keys=resources_id)
+    resources = db.relationship("Resources", foreign_keys=resources_id)
 
     def __repr__(self):
         return "<Log event for project {}>".format(self.project.get_name())
