@@ -2,8 +2,10 @@ from flask import g, flash, request, redirect, url_for, render_template, jsonify
 from flask import current_app
 from flask_login import login_required, login_user
 from code.pages.admin import bp
+from code.pages.admin.magic import remote_project_creation_magic, get_users
+from code.pages.admin.magic import get_responsible
 from code.pages import ssh_wrapper, check_str, send_message, check_int
-from logging import debug, error, info
+from logging import error, info, debug
 
 
 def get_uptime(server):
@@ -110,46 +112,6 @@ def web_switch_user():
     return redirect(url_for("user.user_index"))
 
 
-def project_creation_magic(register):
-    from code.database.schema import Project, User
-    from code import db
-
-    approve = User.query.filter_by(login=login_user).first()
-    if not approve:
-        raise ValueError("Can't find user %s in database!" % login_user)
-
-    Project(
-        title=register.title,
-        description = register.description,
-        scientific_fields = register.scientific_fields,
-        genci_committee = register.genci_committee,
-        numerical_methods = register.numerical_methods,
-        computing_resources = register.computing_resources,
-        project_management = register.project_management,
-        project_motivation = register.project_motivation,
-        active = True,
-        #comment = db.Column(db.Text),
-        #gid = db.Column(db.Integer)
-        #privileged = db.Column(db.Boolean, default=False),
-        #name = db.Column(db.String(128))
-        #type = db.Column(db.String(1),
-        #responsible_id = db.Column(db.Integer, db.ForeignKey("users.id"))
-        #responsible = db.relationship("User", backref="responsible",
-        approve = approve,
-        ref = register
-    )
-    return
-
-
-def get_pid_notes():
-    data = request.get_json()
-    if not data:
-        raise ValueError("Expecting application/json requests")
-    pid = check_int(data["project"])
-    note = check_str(data["note"])
-    return pid, note
-
-
 def accept_message(project, msg):
     to = project.responsible_email
     name = project.responsible_first_name
@@ -186,23 +148,95 @@ def message(to, msg, title=None):
         return "Message was sent to %s successfully" % to
 
 
+def project_type(register):
+    if register.type_a:
+        return "a"
+    elif register.type_b:
+        return "b"
+    elif register.type_c:
+        return "c"
+    else:
+        raise ValueError("Failed to determine project's type")
+
+
+def project_assign_resources(register, approve):
+    from code.database.schema import Resources
+    resource = Resources(
+        approve=approve,
+        valid=True,
+        cpu=register.cpu,
+        type=project_type(register),
+        smp=register.smp,
+        gpu=register.gpu,
+        phi=register.phi
+    )
+    return resource
+
+
+def project_creation_magic(register, users, approve):
+    from code.database.schema import Project
+
+    project = Project(
+        title=register.title,
+        description=register.description,
+        scientific_fields=register.scientific_fields,
+        genci_committee=register.genci_committee,
+        numerical_methods=register.numerical_methods,
+        computing_resources=register.computing_resources,
+        project_management=register.project_management,
+        project_motivation=register.project_motivation,
+        active=True,
+        type=project_type(register),
+        approve=approve,
+        ref=register,
+        privileged=True if project_type is "h" else False,
+        responsible=users["responsible"],
+        users=users["users"]
+    )
+    return project
+
+
+def get_pid_notes(data):
+    pid = check_int(data["project"])
+    note = check_str(data["note"])
+    return pid, note
+
+
 @bp.route("/admin/registration/accept", methods=["POST"])
 @login_required
 def web_admin_registration_accept():
-    from code.database.schema import Register
+    from code.database.schema import Register, User
     from code import db
 
-    pid, note = get_pid_notes()
+    approve = User.query.filter_by(login=login_user).first()
+    if not approve:
+        raise ValueError("Can't find user %s in database!" % login_user)
+    data = request.get_json()
+    if not data:
+        raise ValueError("Expecting application/json requests")
+    pid, note = get_pid_notes(data)
+    responsible = get_responsible(data)
+    users = {"responsible": responsible, "users": get_users(data)}
     register = Register.query.filter_by(id=pid).first()
     if not register:
         raise ValueError("Project with id %s not found" % pid)
-    info("Perform project creation")
-    project_creation_magic(register)
-    info("Updating registration request DB")
+    debug("Perform project creation")
+    project = project_creation_magic(register, users, approve)
+    db.session.add(project)
+    db.session.commit()  # get the id of the record which becomes the project's name
+    debug("Updating registration request DB")
     register.accepted = True
     register.processed = True
     register.comment = note
+    p_resources = project_assign_resources(register, approve)
+    db.session.add(p_resources)
+    project_name = project.get_name()
+    gid = remote_project_creation_magic(project_name, users)
+    project.resources = p_resources
+    project.gid = gid
+    project.name = project_name
     db.session.commit()
+    info("Project has been created successfully")
     return jsonify(data=accept_message(register, note))
 
 
@@ -212,7 +246,10 @@ def web_admin_registration_reject():
     from code.database.schema import Register
     from code import db
 
-    pid, note = get_pid_notes()
+    data = request.get_json()
+    if not data:
+        raise ValueError("Expecting application/json requests")
+    pid, note = get_pid_notes(data)
     register = Register.query.filter_by(id=pid).first()
     if not register:
         raise ValueError("Project with id %s not found" % pid)
@@ -228,7 +265,10 @@ def web_admin_registration_reject():
 def web_admin_message():
     from code.database.schema import Register
 
-    pid, note = get_pid_notes()
+    data = request.get_json()
+    if not data:
+        raise ValueError("Expecting application/json requests")
+    pid, note = get_pid_notes(data)
     register = Register.query.filter_by(id=pid).first()
     if not register:
         raise ValueError("Project with id %s not found" % pid)
