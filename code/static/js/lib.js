@@ -66,7 +66,8 @@ dialog=function(content, onconfirm, oncancel){
             modal.element.find('.js-modal-confirm').focus();
         }, 50);
     });
-    return modal.show();
+    modal.show();
+    return modal
 };
 
 show_error = function(req){
@@ -98,4 +99,11 @@ json_send = function(url, data){
     }).always(function() {
         modal.hide();
     });
+}
+trigger_modal = function(modal){
+    if( modal.isActive() ){
+        modal.hide();
+    }else{
+        modal.show();
+    }
 }
