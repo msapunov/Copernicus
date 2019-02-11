@@ -343,6 +343,7 @@ class Register(db.Model):
     type_a = db.Column(db.Boolean, default=True)
     type_b = db.Column(db.Boolean, default=False)
     type_c = db.Column(db.Boolean, default=False)
+    type_h = db.Column(db.Boolean, default=False)
     cpu = db.Column(db.Integer, db.CheckConstraint("cpu_cluster>=0"))
     smp = db.Column(db.Boolean, default=False)
     visu = db.Column(db.Boolean, default=False)
