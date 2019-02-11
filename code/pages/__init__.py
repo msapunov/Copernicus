@@ -24,7 +24,7 @@ def send_message(to_who, by_who=None, cc=None, title=None, message=None):
     postfix = "If this email has been sent to you by mistake, please report " \
               "to: %s" % tech
     msg.body = message + "\n" + postfix
-    mail.send(msg)
+#    mail.send(msg)
 
 
 def ssh_wrapper(cmd, host=None):

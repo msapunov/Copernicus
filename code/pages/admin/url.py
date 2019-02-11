@@ -112,31 +112,31 @@ def web_switch_user():
     return redirect(url_for("user.user_index"))
 
 
-def accept_message(project, msg):
-    to = project.responsible_email
-    name = project.responsible_first_name
-    surname = project.responsible_last_name
-    pid = project.id
-    title = "Your project request with id '%s' has been accepted" % pid
+def accept_message(register, msg):
+    to = register.responsible_email
+    name = register.responsible_first_name
+    surname = register.responsible_last_name
+    mid = register.project_id()
+    title = "Your project request '%s' has been accepted" % mid
     prefix = "Dear %s %s,\nYour project request '%s' has been accepted by" \
-             " scientific committee" % (name, surname, pid)
+             " scientific committee" % (name, surname, mid)
     if msg:
         msg = prefix + " with following comment:\n" + msg
     else:
         msg = prefix
-    return msg(to, msg, title)
+    return message(to, msg, title)
 
 
-def reject_message(project, msg):
-    to = project.responsible_email
-    name = project.responsible_first_name
-    surname = project.responsible_last_name
-    pid = project.id
-    title = "Rejection of your project request with id: %s" % pid
+def reject_message(register, msg):
+    to = register.responsible_email
+    name = register.responsible_first_name
+    surname = register.responsible_last_name
+    mid = register.project_id()
+    title = "Your project request '%s' has been rejected" % mid
     prefix = "Dear %s %s,\nYour project request '%s' has been rejected with" \
-             " following comment:\n\n" % (name, surname, pid)
+             " following comment:\n\n" % (name, surname, mid)
     msg = prefix + msg
-    return msg(to, msg, title)
+    return message(to, msg, title)
 
 
 def message(to, msg, title=None):

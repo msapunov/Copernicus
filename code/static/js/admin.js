@@ -6,8 +6,8 @@
         info: "admin/partition/info",
         user: "admin/user/info",
         system: "admin/sys/info",
-        accept: "admin/accept",
-        reject: "admin/reject",
+        accept: "admin/registration/accept",
+        reject: "admin/registration/reject",
         history: "admin/history",
         message: "admin/message/register"
     };
@@ -150,6 +150,37 @@
             });
         });
     }
+
+    window.render.new_reject=function(){
+        var id = $.trim( $(this).data("id") );
+        var mid = $.trim( $(this).data("meso") );
+        var project_title = $.trim( $(this).data("title") );
+        var title = "Rejecting project {0}".f(mid);
+        var text = "Enter a reason for rejecting project '{0}' ({1})".f(project_title, mid);
+        var motiv = $("<textarea/>").html(text).addClass("uk-width-1-1").attr({
+            "rows": "4",
+            "name": "note"
+        });
+        var form = $("<form/>").addClass("uk-form").append(
+            $("<legend/>").text(title)
+        ).append(
+            $("<div/>").addClass("uk-form-row").append(motiv)
+        );
+        UIkit.modal.confirm(form.prop("outerHTML"), function(){
+            var comment = $("textarea[name=note]").val();
+            json_send(window.admin.url.reject, {
+                "pid": id,
+                "note": comment
+            }).done(function(reply){
+                if(reply.data){
+                    UIkit.notify(reply.data, {timeout: 2000, status:"success"});
+                }
+                $("#"+id).remove();
+                $("#"+id+"-info").remove();
+            });
+        });
+    }
+
 
     $(document).on("ready", function(){
         window.admin.sys();
