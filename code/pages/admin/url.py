@@ -197,8 +197,9 @@ def project_creation_magic(register, users, approve):
 
 
 def get_pid_notes(data):
-    pid = check_int(data["project"])
+    pid = check_int(data["pid"])
     note = check_str(data["note"])
+    debug("Got pid: %s and note: %s" % (pid, note))
     return pid, note
 
 
