@@ -368,6 +368,20 @@ class Register(db.Model):
     def __repr__(self):
         return "<Registration request {}>".format(self.id)
 
+    def project_type(self):
+        if self.type_a:
+            return "A"
+        if self.type_b:
+            return "B"
+        if self.type_c:
+            return "C"
+        if self.type_h:
+            return "H"
+
+    def project_id(self):
+        year = dt.now().year
+        return "meso-%s-%s-%s" % (year, self.id, self.project_type())
+
     def get_users(self):
         users = self.users.split("\n")
         result = []
@@ -425,7 +439,8 @@ class Register(db.Model):
             "accepted_ts": self.accepted_ts,
             "comment": self.comment,
             "created": self.created,
-            "created_ts": self.created_ts
+            "created_ts": self.created_ts,
+            "meso_id": self.project_id()
         }
 
 
