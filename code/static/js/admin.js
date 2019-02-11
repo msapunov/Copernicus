@@ -137,7 +137,7 @@
         ).append(
             $("<div/>").addClass("uk-form-row").append(motiv)
         );
-        dialog(form.prop("outerHTML"), function(){
+        var popup = dialog(form.prop("outerHTML"), function(){
             var data = {
                 "note": $("textarea[name=note]").val(),
                 "project": id
@@ -146,7 +146,7 @@
                 if(reply.data){
                     UIkit.notify(reply.data, {timeout: 2000, status:"success"});
                 }
-                UIkit.modal(".uk-modal").hide();
+                popup.hide();
             });
         });
     }
