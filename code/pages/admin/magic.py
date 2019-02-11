@@ -1,9 +1,14 @@
+from flask import current_app
 from code.pages import check_int
 from logging import error
 
 
 def remote_project_creation_magic(name, users):
-    pass
+    task_file = current_app.config["TASKS_FILE"]
+    task = {"project": name, "users": users}
+    with open(task_file, "w") as fd:
+        fd.write(task)
+    return True
 
 
 def get_responsible(data):
