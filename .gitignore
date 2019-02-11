@@ -13,7 +13,7 @@ __pycache__/
 /code/tests
 
 # Static folder
-/code/static
+#/code/static
 
 # Venv folder
 /venv
