@@ -6,22 +6,24 @@ from flask_mail import Message
 
 
 def send_message(to_who, by_who=None, cc=None, title=None, message=None):
+    if isinstance(to_who, str):
+        to_who = ["matvey.sapunov@univ-amu.fr"]  #to_who.split(";")
     if not by_who:
         by_who = current_app.config["EMAIL_TECH"]
     if not title:
         title = "Mesocentre reporting"
     if not cc:
         cc = []
+    if isinstance(cc, str):
+        cc = cc.split(";")
     if not message:
         raise ValueError("Message body is empty")
     from code import mail
-
-    to_who = "matvey.sapunov@univ-amu.fr"
-    tech = [current_app.config["EMAIL_TECH"]]
+    tech = current_app.config["EMAIL_TECH"]
     msg = Message(title, sender=by_who, recipients=to_who, cc=cc)
     postfix = "If this email has been sent to you by mistake, please report " \
               "to: %s" % tech
-    msg.body = message + postfix
+    msg.body = message + "\n" + postfix
     mail.send(msg)
 
 
