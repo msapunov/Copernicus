@@ -127,7 +127,7 @@ def web_admin_message():
     to = register.responsible_email
     by_who = current_app.config["EMAIL_PROJECT"]
     cc = current_app.config["EMAIL_PROJECT"]
-    title = "Concerning your project"
+    title = "Concerning your request for a project in mesocentre AMU"
     if not send_message(to, by_who, cc, title, note):
         return jsonify(data="Message was sent to %s successfully" % to)
 
