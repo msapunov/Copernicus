@@ -1,4 +1,4 @@
-from flask import render_template, flash
+from flask import render_template, flash, request, jsonify
 from flask_login import login_required, current_user
 from code.pages.user import bp
 from code.pages.user.magic import ssh_wrapper
@@ -7,9 +7,35 @@ from datetime import datetime as dt
 from logging import debug
 
 
-@bp.route('/', methods=["GET"])
-@bp.route('/index', methods=["GET"])
-@bp.route('/user.html', methods=["GET"])
+@bp.route("/user/edit/info", methods=["POST"])
+@login_required
+def user_edit_info():
+    data = request.get_json()
+    if not data:
+        raise ValueError("Expecting application/json requests")
+
+    user = get_user_rec(data["login"])
+    old = {"name": user.name, "surname": user.surname, "email": user.email,
+           "login": user.login}
+
+    if old == data:
+        return jsonify(data="No changes in user's information found")
+
+    from code import db
+    from code.pages import TaskQueue
+
+    user.email = data["email"].lower()
+    user.name = data["name"].lower()
+    user.surname = data["surname"].lower()
+    TaskQueue().user_change(user)
+    # db.session.commit()
+    return jsonify(data="You request for user information change has been"
+                        " registered")
+
+
+@bp.route("/", methods=["GET"])
+@bp.route("/index", methods=["GET"])
+@bp.route("/user.html", methods=["GET"])
 @login_required
 def user_index():
     start = accounting_start()
@@ -25,18 +51,15 @@ def user_index():
                                               "projects": projects})
 
 
-def get_user_info():
+def get_user_rec(login=None):
     from code.database.schema import User
 
-    login = current_user.login
+    if not login:
+        login = current_user.login
     user = User.query.filter_by(login=login).first()
     if not user:
         raise ValueError("Failed to find user with login '%s'" % login)
-    return {"full": user.full_name(),
-            "name": user.name,
-            "surname": user.surname,
-            "email": user.email,
-            "login": login}
+    return user
 
 
 def get_project_info(start, end):
