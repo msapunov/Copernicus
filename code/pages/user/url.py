@@ -14,12 +14,29 @@ from logging import debug
 def user_index():
     start = accounting_start()
     end = dt.now().strftime("%m/%d/%y-%H:%M")
+    user = get_user_info()
     jobs = get_jobs(start, end)
     scratch = get_scratch()
     projects = get_project_info(start, end)
     debug(projects)
-    data = {"jobs": jobs, "scratch": scratch, "projects": projects}
-    return render_template("user.html", data=data)
+    return render_template("user.html", data={"user": user,
+                                              "jobs": jobs,
+                                              "scratch": scratch,
+                                              "projects": projects})
+
+
+def get_user_info():
+    from code.database.schema import User
+
+    login = current_user.login
+    user = User.query.filter_by(login=login).first()
+    if not user:
+        raise ValueError("Failed to find user with login '%s'" % login)
+    return {"full": user.full_name(),
+            "name": user.name,
+            "surname": user.surname,
+            "email": user.email,
+            "login": login}
 
 
 def get_project_info(start, end):
