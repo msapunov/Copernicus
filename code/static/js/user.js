@@ -44,7 +44,7 @@
                 "login": login
             };
             if( ! data_check(data) ){
-
+                $("#psa").text("Please, complete the field(s) highlighted in red!").addClass("uk-alert-danger");
                 return false;
             }
             //window.proj.send("add", data);
