@@ -14,7 +14,7 @@ def user_edit_info():
     if not data:
         raise ValueError("Expecting application/json requests")
 
-    user = get_user_rec(data["login"])
+    user = get_user_record(data["login"])
     old = {"name": user.name, "surname": user.surname, "email": user.email,
            "login": user.login}
 
@@ -40,7 +40,12 @@ def user_edit_info():
 def user_index():
     start = accounting_start()
     end = dt.now().strftime("%m/%d/%y-%H:%M")
-    user = get_user_info()
+    user_record = get_user_record()
+    user = {"full": user_record.full_name(),
+            "name": user_record.name,
+            "surname": user_record.surname,
+            "email": user_record.email,
+            "login": user_record.login}
     jobs = get_jobs(start, end)
     scratch = get_scratch()
     projects = get_project_info(start, end)
