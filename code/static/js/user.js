@@ -34,7 +34,7 @@
         ).append(
           $("<div/>").addClass("uk-form-row").append(e_field)
         ).append(
-          $("<div/>")."Please double check if provided data are correct").addClass("uk-form-row uk-alert")
+          $("<div/>").text("Please double check if provided data are correct").attr({"id":"psa"}).addClass("uk-form-row uk-alert")
         );
         var popup = dialog(form.prop("outerHTML"), function(){
             var data = {
@@ -50,20 +50,6 @@
             //window.proj.send("add", data);
             popup.hide();
         });
-        /*
-        var popup = dialog(form.prop("outerHTML"), function(){
-            var data = {
-                "note": $("textarea[name=note]").val(),
-                "project": id
-            };
-            json_send(window.admin.url.message, data).done(function(reply){
-                if(reply.data){
-                    UIkit.notify(reply.data, {timeout: 2000, status:"success"});
-                }
-                popup.hide();
-            });
-        });
-        */
     }
 
     $(document).on("click", ".edit", window.user.edit);
