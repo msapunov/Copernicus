@@ -100,10 +100,22 @@ json_send = function(url, data){
         modal.hide();
     });
 }
+
 trigger_modal = function(modal){
     if( modal.isActive() ){
         modal.hide();
     }else{
         modal.show();
     }
+}
+
+data_check = function(data){
+    var result = true;
+    $.each(data, function(key, value){
+        if(value.length < 1){
+            $("[name={0}]".f(key)).addClass("uk-form-danger");
+            result = false;
+        }
+    });
+    return result
 }
