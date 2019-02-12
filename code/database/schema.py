@@ -404,7 +404,7 @@ class Register(db.Model):
     def to_dict(self):
         return {
             "id": self.id,
-            "ts": self.ts,
+            "ts": self.ts.strftime("%Y-%m-%d %X %Z"),
             "title": self.title,
             "responsible_first_name": self.responsible_first_name,
             "responsible_last_name": self.responsible_last_name,
@@ -498,6 +498,6 @@ class LogDB(db.Model):
         else:
             msg = "%s by %s" % (event, creator)
         return {
-            "date": self.created,
+            "date": self.created.strftime("%Y-%m-%d %X %Z"),
             "message": msg
         }
