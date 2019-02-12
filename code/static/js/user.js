@@ -47,8 +47,12 @@
                 $("#psa").text("Please, complete the field(s) highlighted in red!").addClass("uk-alert-danger");
                 return false;
             }
-            //window.proj.send("add", data);
-            popup.hide();
+            json_send(window.user.url, data).done(function(reply){
+                if(reply.data){
+                    UIkit.notify(reply.data, {timeout: 2000, status:"success"});
+                }
+                popup.hide();
+            });
         });
     }
 
