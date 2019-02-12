@@ -67,6 +67,34 @@ def check_str(raw_note):
     return note
 
 
+class TaskQueue:
+
+    def __init__(self):
+        from code.database.schema import Tasks
+        self.task = Tasks(author=current_user, processed=False, approved=False,
+                          accepted="pending")
+
+    def user_add(self, user):
+        self.task.user = user
+        self.action = "create"
+        self._commit()
+
+    def user_change(self, user):
+        self.task.user = user
+        self.action = "update"
+        self._commit()
+
+    def user_delete(self, user):
+        self.task.user = user
+        self.action = "delete"
+        self._commit()
+
+    def _commit(self):
+        from code import db
+        db.session.add(self.task)
+        db.session.commit()
+
+
 class ProjectLog:
 
     def __init__(self, project):
