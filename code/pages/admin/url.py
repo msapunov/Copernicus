@@ -196,11 +196,68 @@ def project_creation_magic(register, users, approve):
     return project
 
 
+def get_registration_record(pid):
+    from code.database.schema import Register
+
+    register = Register.query.filter_by(id=pid).first()
+    if not register:
+        raise ValueError("Project registration request with id %s not found"
+                         % pid)
+    return register
+
+
 def get_pid_notes(data):
     pid = check_int(data["pid"])
     note = check_str(data["note"])
     debug("Got pid: %s and note: %s" % (pid, note))
     return pid, note
+
+
+def is_user_exists(record):
+    from code.database.schema import User
+
+    name = record["name"] if "name" in record else False
+    surname = record["surname"] if "surname" in record else False
+    email = record["email"] if "email" in record else False
+    login = record["login"] if "login" in record else False
+
+    if login:
+        result = User.query.filter_by(login=login).first()
+    elif email:
+        result = User.query.filter_by(email=email).first()
+    elif name and surname:
+        result = User.query.filter_by(name=name, surname=surname).first()
+    else:
+        result = User.query.filter_by(login=login, email=email, name=name,
+                                      surname=surname).first()
+
+    print(result)
+    if result:
+        print(result.id)
+        record["exists"] = True
+    else:
+        record["exists"] = False
+    return record
+
+
+@bp.route("/admin/registration/users", methods=["POST"])
+@login_required
+def web_admin_registration_users():
+
+    print(request.form)
+    pid = check_int(request.form.get("pid"))
+    print(pid)
+
+    register = get_registration_record(pid)
+    tmp_responsible = {
+        "name": register.responsible_first_name,
+        "surname":register.responsible_last_name,
+        "email": register.responsible_email
+    }
+    responsible = is_user_exists(tmp_responsible)
+    users = []
+    return jsonify(data={"responsible": responsible, "users": users})
+
 
 
 @bp.route("/admin/registration/accept", methods=["POST"])
