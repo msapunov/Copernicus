@@ -51,7 +51,7 @@ def user_index():
                                               "projects": projects})
 
 
-def get_user_rec(login=None):
+def get_user_record(login=None):
     from code.database.schema import User
 
     if not login:
