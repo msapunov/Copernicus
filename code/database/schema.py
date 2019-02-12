@@ -501,3 +501,50 @@ class LogDB(db.Model):
             "date": self.created.strftime("%Y-%m-%d %X %Z"),
             "message": msg
         }
+
+
+class Tasks(db.Model):
+
+    __tablename__ = "tasks"
+
+    id = db.Column(db.Integer, primary_key=True)
+
+    created = db.Column(db.DateTime(True), default=dt.utcnow)
+    act = db.Column(db.Text,
+                    db.CheckConstraint("act IN ('create', 'update', 'delete')"),
+                    nullable=False)
+
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+    user = db.relationship("User", foreign_keys=user_id)
+
+    project_id = db.Column(db.Integer, db.ForeignKey("projects.id"))
+    project = db.relationship("Project", foreign_keys=project_id)
+
+    author_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    author = db.relationship("User", foreign_keys=author_id)
+
+    approve_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    approve = db.relationship("User", foreign_keys=approve_id)
+
+    accepted = db.Column(db.Text, db.CheckConstraint("accepted IN ('pending',"
+                                                     "'done', 'in progress')"))
+    approved = db.Column(db.Boolean)
+    processed = db.Column(db.Boolean)
+
+    def __repr__(self):
+        return "<Task queue record {}>".format(self.id)
+
+    def to_dict(self):
+        act = self.act[0].upper() + self.act[1:]
+        accepted = self.accepted[0].upper() + self.accepted[1:].upper()
+        author = self.author.full_name()
+        created = self.created.strftime("%Y-%m-%d %X %Z")
+        return {
+            "act": act,
+            "accepted": accepted,
+            "author": author,
+            "user": self.user.login if self.user else "",
+            "approve": self.approve.full_name() if self.approve else "",
+            "project": self.project.get_name() if self.project else "",
+            "created": created
+        }
