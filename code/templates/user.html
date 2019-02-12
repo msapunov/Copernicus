@@ -24,6 +24,13 @@
         </script>
     {% endblock %}
     {% block main %}
+        {% if data and data.user %}
+            <div class="uk-panel uk-width-1-1 uk-panel-space">
+                    <button class="uk-button-mini uk-button uk-button-success uk-margin-right edit" type="button" data-login='{{data.user.login}}' data-name='{{data.user.name}}' data-surname='{{data.user.surname}}' data-email='{{data.user.email}}'><span class="uk-icon-edit"></span></button>
+                    <h1 class="">{{data.user.full}}</h1>
+                    <h1 class="">&lt;{{data.user.email}}&gt;</h1>
+            </div>
+        {% endif %}
         {% if data and data.jobs %}
             <div class="uk-panel uk-width-1-1 uk-panel-space uk-overflow-container">
                 <table class="uk-table uk-table-hover uk-table-striped uk-table-condensed">
