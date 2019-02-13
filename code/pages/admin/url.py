@@ -251,13 +251,12 @@ def web_admin_registration_users():
     register = get_registration_record(pid)
     tmp_responsible = {
         "name": register.responsible_first_name,
-        "surname":register.responsible_last_name,
+        "surname": register.responsible_last_name,
         "email": register.responsible_email
     }
     responsible = is_user_exists(tmp_responsible)
     users = []
     return jsonify(data={"responsible": responsible, "users": users})
-
 
 
 @bp.route("/admin/registration/accept", methods=["POST"])
