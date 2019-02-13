@@ -375,7 +375,7 @@ def web_admin_sys_info():
 @bp.route("/admin.html", methods=["GET", "POST"])
 @login_required
 def web_admin():
-    from code.database.schema import Register
+    from code.database.schema import Register, Tasks
 
     result = {"partition": slurm_partition_info()}
     reg_list = Register().query.filter(Register.processed == False).all()
@@ -383,4 +383,9 @@ def web_admin():
         result["extension"] = False
     else:
         result["extension"] = list(map(lambda x: x.to_dict(), reg_list))
+    tasks = Tasks().query.filter(Tasks.processed == False).all()
+    if not tasks:
+        result["tasks"] = 0
+    else:
+        result["tasks"] = list(map(lambda x: x.to_dict(), tasks))
     return render_template("admin.html", data=result)
