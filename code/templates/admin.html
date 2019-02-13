@@ -22,62 +22,55 @@
 
         <h3 class="uk-accordion-title">General information</h3>
         <div class="uk-accordion-content">
-
-            <div class="uk-panel uk-width-1-1 uk-panel-space">
-                <div class="uk-grid">
-                    {% if data.tasks %}
-                    <div class="uk-width-1-1 uk-panel-box uk-margin-bottom uk-clearfix">
-                        <button class="uk-button uk-float-right system_reload"><span class="uk-icon-refresh">&nbsp;</span>Reload</button>
-                        <button class="uk-button uk-float-right system_reload"><span class="uk-icon-refresh">&nbsp;</span>History</button>
-                        {% if data.tasks|length > 0 %}
-                            <h1 class="">Pending tasks: {{data.tasks|length}}</h1>
-                        {% else %}
-                            <h1 class="">No pending tasks found</h1>
-                        {% endif %}
-
-                    </div>
-                    {% endif %}
-                    <div class="uk-width-small-1-1 uk-width-medium-1-2 ">
-                        <table id="overvieww" class="uk-table uk-table-hover uk-table-striped uk-table-condensed">
-                            <thead>
-                                <tr>
-                                    <th data-priority="1">Partition</th>
-                                    <th data-priority="2">Allocated</th>
-                                    <th data-priority="3">Idle</th>
-                                    <th data-priority="4">Other</th>
-                                    <th data-priority="5">Total</th>
-                                </tr>
-                            </thead>
-                            <tbody id="slurm">
-                                {% for part in data.partition|sort(attribute='total', reverse=True) %}
-                                <tr>
-                                    <td>{{part.name}}</td>
-                                    <td>{{part.allocated}}</td>
-                                    <td>{{part.idle}}</td>
-                                    <td>{{part.other}}</td>
-                                    <td>{{part.total}}</td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                        <button class="uk-button uk-width-1-1 uk-margin-small-bottom slurm_reload"><span class="uk-icon-refresh"></span>&nbsp;Reload</button>
-                    </div>
-                    <div class="uk-margin-top uk-width-small-1-1 uk-hidden-medium uk-hidden-large">
-                    </div>
-                    <div class="uk-width-small-1-1 uk-width-medium-1-2">
-                        <div class="uk-panel uk-width-1-1 uk-panel-box uk-clearfix">
-                            <button class="uk-button uk-button-mini uk-float-right system_reload"><span class="uk-icon-refresh">&nbsp;</span>Reload</button>
-                            <div id="system_body">
-                            </div>
+            {% if data.tasks %}
+            <div class="uk-panel uk-width-1-1 uk-panel-space uk-text-center uk-panel-hover uk-margin-bottom" style="height: 120px;" id="tasks_info">
+                {% if data.tasks|length > 0 %}
+                    <p class="uk-h2 uk-text-nowrap">Pending tasks: {{data.tasks|length}}</p>
+                {% else %}
+                    <p class="uk-h2 uk-text-nowrap">No pending tasks found</p>
+                {% endif %}
+                <div class="uk-button-group uk-hidden" id="task_btn_group">
+                        <button class="uk-button task_history uk-button-small"><span class="uk-icon-history uk-margin-small-right"></span>History</button>
+                        <button class="uk-button task_reload uk-button-small"><span class="uk-icon-refresh uk-margin-small-right"></span>Reload</button>
+                </div>
+            </div>
+            {% endif %}
+            <div class="uk-grid">
+                <div class="uk-width-small-1-1 uk-width-medium-1-2 ">
+                    <table id="overvieww" class="uk-table uk-table-hover uk-table-striped uk-table-condensed">
+                        <thead>
+                            <tr>
+                                <th data-priority="1">Partition</th>
+                                <th data-priority="2">Allocated</th>
+                                <th data-priority="3">Idle</th>
+                                <th data-priority="4">Other</th>
+                                <th data-priority="5">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody id="slurm">
+                            {% for part in data.partition|sort(attribute='total', reverse=True) %}
+                            <tr>
+                                <td>{{part.name}}</td>
+                                <td>{{part.allocated}}</td>
+                                <td>{{part.idle}}</td>
+                                <td>{{part.other}}</td>
+                                <td>{{part.total}}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <button class="uk-button uk-width-1-1 uk-button-small uk-margin-small-bottom slurm_reload"><span class="uk-icon-refresh uk-margin-small-right"></span>&nbsp;Reload</button>
+                </div>
+                <div class="uk-margin-top uk-width-small-1-1 uk-hidden-medium uk-hidden-large">
+                </div>
+                <div class="uk-width-small-1-1 uk-width-medium-1-2">
+                    <div class="uk-panel uk-width-1-1 uk-panel-box uk-clearfix">
+                        <button class="uk-button uk-button-small uk-float-right system_reload"><span class="uk-icon-refresh uk-margin-small-right"></span>Reload</button>
+                        <div id="system_body">
                         </div>
                     </div>
                 </div>
             </div>
-
-            <div class="uk-width-1-2">
-
-            </div>
-
         </div>
 
         {% if data.extension %}
@@ -181,12 +174,12 @@
                                     </tbody>
                                 </table>
                                 <div class="uk-button-group uk-float-right">
-                                    <button class="uk-button new_accept" type="button" data-id='{{record.id}}' data-meso='{{record.meso_id}}' data-title='{{record.title}}'><span class="uk-icon-thumbs-up uk-margin-right"></span>Accept</button>
-                                    <button class="uk-button new_reject uk-button-danger" type="button" data-id='{{record.id}}' data-meso='{{record.meso_id}}' data-title='{{record.title}}'><span class="uk-icon-thumbs-down uk-margin-right"></span>Reject</button>
+                                    <button class="uk-button new_accept" type="button" data-id='{{record.id}}' data-meso='{{record.meso_id}}' data-title='{{record.title}}'><span class="uk-icon-thumbs-up uk-margin-small-right"></span>Accept</button>
+                                    <button class="uk-button new_reject uk-button-danger" type="button" data-id='{{record.id}}' data-meso='{{record.meso_id}}' data-title='{{record.title}}'><span class="uk-icon-thumbs-down uk-margin-small-right"></span>Reject</button>
                                 </div>
                                 {% if record.responsible_email %}
                                 <div class="uk-button-group uk-float-left">
-                                    <button class="uk-button message" type="button" data-id='{{record.id}}' data-addr='{{record.responsible_email}}'><span class="uk-icon-send uk-margin-right"></span>Contact</button>
+                                    <button class="uk-button message" type="button" data-id='{{record.id}}' data-addr='{{record.responsible_email}}'><span class="uk-icon-send uk-margin-small-right"></span>Contact</button>
                                 </div>
                                 {% endif %}
                             </td>
