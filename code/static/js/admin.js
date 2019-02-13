@@ -240,4 +240,14 @@
     $(document).on("click", ".new_reject", window.render.new_reject);
     $(document).on("click", ".message", window.render.message);
 
+    $(document).on({
+        mouseenter: function () {
+            $("#task_btn_group").toggleClass("uk-hidden");
+        },
+        mouseleave: function () {
+            $("#task_btn_group").toggleClass("uk-hidden");
+        }
+    }, "#tasks_info");
+
+
 })(window, document, jQuery);
