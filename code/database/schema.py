@@ -514,7 +514,7 @@ class Tasks(db.Model):
     status = db.Column(db.Text, db.CheckConstraint("status IN ('pending',"
                                                    " 'done', 'approved',"
                                                    " 'in progress')"))
-    task = db.Colum(db.Text, nullable=False)
+    task = db.Column(db.Text, nullable=False)
     author_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     author = db.relationship("User", foreign_keys=author_id)
 
