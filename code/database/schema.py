@@ -508,12 +508,12 @@ class Tasks(db.Model):
     __tablename__ = "tasks"
 
     id = db.Column(db.Integer, primary_key=True)
-
-    created = db.Column(db.DateTime(True), default=dt.utcnow)
     action = db.Column(db.Text, db.CheckConstraint("action IN ('create', "
                                                    "'update', 'delete')"),
                        nullable=False)
-
+    status = db.Column(db.Text, db.CheckConstraint("status IN ('pending',"
+                                                   " 'done', 'approved',"
+                                                   " 'in progress')"))
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
     user = db.relationship("User", foreign_keys=user_id)
 
@@ -526,11 +526,11 @@ class Tasks(db.Model):
     approve_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     approve = db.relationship("User", foreign_keys=approve_id)
 
-    status = db.Column(db.Text, db.CheckConstraint("status IN ('pending',"
-                                                   " 'done', 'approved',"
-                                                   " 'in progress')"))
     approved = db.Column(db.Boolean)
     processed = db.Column(db.Boolean)
+
+    created = db.Column(db.DateTime(True), default=dt.utcnow)
+    modified = db.Column(db.DateTime(True))
 
     def __repr__(self):
         return "<Task queue record {}>".format(self.id)
