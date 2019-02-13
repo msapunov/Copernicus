@@ -74,18 +74,18 @@ class TaskQueue:
         self.task = Tasks(author=current_user, processed=False, approved=False,
                           status="pending")
 
-    def user_add(self, user):
-        self.task.user = user
+    def user_add(self, data):
+        self.task.task = data
         self.task.action = "create"
         self._commit()
 
-    def user_change(self, user):
-        self.task.user = user
+    def user_change(self, data):
+        self.task.task = data
         self.task.action = "update"
         self._commit()
 
-    def user_delete(self, user):
-        self.task.user = user
+    def user_delete(self, data):
+        self.task.task = data
         self.task.action = "delete"
         self._commit()
 
