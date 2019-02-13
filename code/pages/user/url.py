@@ -1,4 +1,5 @@
 from flask import render_template, flash, request, jsonify
+from flask.json import dumps
 from flask_login import login_required, current_user
 from code.pages.user import bp
 from code.pages.user.magic import ssh_wrapper
@@ -18,17 +19,22 @@ def user_edit_info():
     old = {"name": user.name, "surname": user.surname, "email": user.email,
            "login": user.login}
 
-    if old == data:
+    changes = {}
+    for key in ["name", "surname", "email", "login"]:
+        old_value = old[key].lower()
+        new_value = data[key].lower()
+        if old_value == new_value:
+            continue
+        changes[key] = new_value
+
+    if not changes:
         return jsonify(data="No changes in user's information found")
 
-    from code import db
-    from code.pages import TaskQueue
+    changes["entity"] = "user"
+    changes = dumps(changes)
 
-    user.email = data["email"].lower()
-    user.name = data["name"].lower()
-    user.surname = data["surname"].lower()
-    TaskQueue().user_change(user)
-    # db.session.commit()
+    from code.pages import TaskQueue
+    TaskQueue().user_change(changes)
     return jsonify(data="You request for user information change has been"
                         " registered")
 
