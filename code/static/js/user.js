@@ -28,13 +28,13 @@
         var form = $("<form/>").addClass("uk-form").append(
             $("<legend/>").text(title)
         ).append(
-          $("<div/>").addClass("uk-form-row").append(n_field)
+            $("<div/>").addClass("uk-form-row").append(n_field)
         ).append(
-          $("<div/>").addClass("uk-form-row").append(s_field)
+            $("<div/>").addClass("uk-form-row").append(s_field)
         ).append(
-          $("<div/>").addClass("uk-form-row").append(e_field)
+            $("<div/>").addClass("uk-form-row").append(e_field)
         ).append(
-          $("<div/>").text("Please double check if provided data are correct").attr({"id":"psa"}).addClass("uk-form-row uk-alert")
+            $("<div/>").text("Please double check if provided data are correct").attr({"id":"psa"}).addClass("uk-form-row uk-alert")
         );
         var popup = dialog(form.prop("outerHTML"), function(){
             var data = {
