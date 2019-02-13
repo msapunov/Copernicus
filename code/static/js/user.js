@@ -56,6 +56,14 @@
         });
     }
 
-    $(document).on("click", ".edit", window.user.edit);
+    $(document).on("click", ".user_info_edit", window.user.edit);
+    $(document).on({
+        mouseenter: function () {
+            $(".user_info_edit").toggleClass("uk-hidden");
+        },
+        mouseleave: function () {
+            $(".user_info_edit").toggleClass("uk-hidden");
+        }
+    }, ".user_info");
 
 })(window, document, jQuery);
