@@ -531,6 +531,10 @@ class Tasks(db.Model):
         return "<Task queue record {}>".format(self.id)
 
     def to_dict(self):
+        if self.modified:
+            modified = self.modified.strftime("%Y-%m-%d %X %Z")
+        else:
+            modified = ""
         return {
             "id": self.id,
             "action": self.action[0].upper() + self.action[1:],
@@ -541,5 +545,5 @@ class Tasks(db.Model):
             "approved": self.approved,
             "processed": self.processed,
             "created": self.created.strftime("%Y-%m-%d %X %Z"),
-            "modified": self.modified.strftime("%Y-%m-%d %X %Z")
+            "modified": modified
         }
