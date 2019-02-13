@@ -514,14 +514,14 @@ class Tasks(db.Model):
     status = db.Column(db.Text, db.CheckConstraint("status IN ('pending',"
                                                    " 'done', 'approved',"
                                                    " 'in progress')"))
+    author_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    author = db.relationship("User", foreign_keys=author_id)
+
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
     user = db.relationship("User", foreign_keys=user_id)
 
     project_id = db.Column(db.Integer, db.ForeignKey("projects.id"))
     project = db.relationship("Project", foreign_keys=project_id)
-
-    author_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
-    author = db.relationship("User", foreign_keys=author_id)
 
     approve_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     approve = db.relationship("User", foreign_keys=approve_id)
