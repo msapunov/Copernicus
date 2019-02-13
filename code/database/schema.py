@@ -514,14 +514,9 @@ class Tasks(db.Model):
     status = db.Column(db.Text, db.CheckConstraint("status IN ('pending',"
                                                    " 'done', 'approved',"
                                                    " 'in progress')"))
+    task = db.Colum(db.Text, nullable=False)
     author_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     author = db.relationship("User", foreign_keys=author_id)
-
-    user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
-    user = db.relationship("User", foreign_keys=user_id)
-
-    project_id = db.Column(db.Integer, db.ForeignKey("projects.id"))
-    project = db.relationship("Project", foreign_keys=project_id)
 
     approve_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     approve = db.relationship("User", foreign_keys=approve_id)
@@ -540,9 +535,8 @@ class Tasks(db.Model):
             "id": self.id,
             "action": self.action[0].upper() + self.action[1:],
             "status": self.status,
+            "task": self.task,
             "author": self.author.login,
-            "user": self.user.login if self.user else "",
-            "project": self.project.get_name() if self.project else "",
             "approve": self.approve.full_name() if self.approve else "",
             "approved": self.approved,
             "processed": self.processed,
