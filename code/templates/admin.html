@@ -25,7 +25,19 @@
 
             <div class="uk-panel uk-width-1-1 uk-panel-space">
                 <div class="uk-grid">
-                    <div class="uk-width-small-1-1 uk-width-medium-1-2">
+                    {% if data.tasks %}
+                    <div class="uk-width-1-1 uk-panel-box uk-margin-bottom uk-clearfix">
+                        <button class="uk-button uk-float-right system_reload"><span class="uk-icon-refresh">&nbsp;</span>Reload</button>
+                        <button class="uk-button uk-float-right system_reload"><span class="uk-icon-refresh">&nbsp;</span>History</button>
+                        {% if data.tasks|length > 0 %}
+                            <h1 class="">Pending tasks: {{data.tasks|length}}</h1>
+                        {% else %}
+                            <h1 class="">No pending tasks found</h1>
+                        {% endif %}
+
+                    </div>
+                    {% endif %}
+                    <div class="uk-width-small-1-1 uk-width-medium-1-2 ">
                         <table id="overvieww" class="uk-table uk-table-hover uk-table-striped uk-table-condensed">
                             <thead>
                                 <tr>
