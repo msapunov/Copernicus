@@ -224,13 +224,13 @@ function end_warning(){
     var form = $("<form/>").addClass("uk-form").append(
             $("<legend/>").text(title)
         ).append(
-          $("<div/>").addClass("uk-form-row").append(name)
+            $("<div/>").addClass("uk-form-row").append(name)
         ).append(
-          $("<div/>").addClass("uk-form-row").append(surname)
+            $("<div/>").addClass("uk-form-row").append(surname)
         ).append(
-          $("<div/>").addClass("uk-form-row").append(mail)
+            $("<div/>").addClass("uk-form-row").append(mail)
         ).append(
-          $("<div>Please double check if indicated e-mail is correct</div>").addClass("uk-form-row uk-alert")
+            $("<div>Please double check if indicated e-mail is correct</div>").addClass("uk-form-row uk-alert")
         );
     dialog(form.prop("outerHTML"), function(){
       var data = {
