@@ -536,17 +536,16 @@ class Tasks(db.Model):
         return "<Task queue record {}>".format(self.id)
 
     def to_dict(self):
-        action = self.action[0].upper() + self.action[1:]
-        accepted = self.accepted[0].upper() + self.accepted[1:].upper()
-        author = self.author.full_name()
-        created = self.created.strftime("%Y-%m-%d %X %Z")
         return {
-            "action": action,
+            "id": self.id,
+            "action": self.action[0].upper() + self.action[1:],
             "status": self.status,
-            "accepted": accepted,
-            "author": author,
+            "author": self.author.login,
             "user": self.user.login if self.user else "",
-            "approve": self.approve.full_name() if self.approve else "",
             "project": self.project.get_name() if self.project else "",
-            "created": created
+            "approve": self.approve.full_name() if self.approve else "",
+            "approved": self.approved,
+            "processed": self.processed,
+            "created": self.created.strftime("%Y-%m-%d %X %Z"),
+            "modified": self.modified.strftime("%Y-%m-%d %X %Z")
         }
