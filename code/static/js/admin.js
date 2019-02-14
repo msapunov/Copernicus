@@ -243,6 +243,7 @@
     $(document).on("click", ".new_accept", window.render.new_accept);
     $(document).on("click", ".new_reject", window.render.new_reject);
     $(document).on("click", ".message", window.render.message);
+    $(document).on("click", ".task_show", window.render.tasks);
 
     $(document).on({
         mouseenter: function () {
