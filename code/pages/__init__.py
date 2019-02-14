@@ -19,6 +19,7 @@ def send_message(to_who, by_who=None, cc=None, title=None, message=None):
     if not message:
         raise ValueError("Message body is empty")
     from code import mail
+    title = "[TEST MODE] "+title
     tech = current_app.config["EMAIL_TECH"]
     msg = Message(title, sender=by_who, recipients=to_who, cc=cc)
     postfix = "If this email has been sent to you by mistake, please report " \
