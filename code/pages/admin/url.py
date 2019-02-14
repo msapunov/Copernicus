@@ -108,7 +108,6 @@ def web_switch_user():
 
     user = User.query.filter_by(login=username).first()
     login_user(user, True)
-    flash("Username: '%s'" % username)
     return redirect(url_for("user.user_index"))
 
 
