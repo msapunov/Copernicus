@@ -5,7 +5,7 @@ from logging import error
 
 def remote_project_creation_magic(name, users):
     task_file = current_app.config["TASKS_FILE"]
-    task = {"project": name, "users": users}
+    task = str({"project": name, "users": users})
     with open(task_file, "w") as fd:
         fd.write(task)
     return True
