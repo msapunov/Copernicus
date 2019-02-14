@@ -13,7 +13,7 @@ def send_message(to_who, by_who=None, cc=None, title=None, message=None):
     if not title:
         title = "Mesocentre reporting"
     if not cc:
-        cc = []
+        cc = [current_app.config["EMAIL_TECH"]]
     if isinstance(cc, str):
         cc = cc.split(";")
     if not message:
