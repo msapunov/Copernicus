@@ -3,14 +3,18 @@
     window.contact = "mesocentre-techn@univ-amu.fr";
     window.admin = {};
     window.admin.url = {
-        info: "admin/partition/info",
-        user: "admin/user/info",
-        system: "admin/sys/info",
-        new_users: "admin/registration/users",
         accept: "admin/registration/accept",
-        reject: "admin/registration/reject",
+        info: "admin/partition/info",
         history: "admin/history",
-        message: "admin/message/register"
+        message: "admin/message/register",
+        new_users: "admin/registration/users",
+        reject: "admin/registration/reject",
+        system: "admin/sys/info",
+        tasks: "admin/tasks/list",
+        tasks_accept: "admin/tasks/accept",
+        tasks_ignore: "admin/tasks/ignore",
+        tasks_reject: "admin/tasks/reject",
+        user: "admin/user/info"
     };
 
     window.admin.sys = function(){
