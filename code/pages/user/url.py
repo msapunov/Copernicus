@@ -35,8 +35,8 @@ def user_edit_info():
 
     from code.pages import TaskQueue
     TaskQueue().user_change(changes)
-    title = "User information change request"
-    msg = "Your request for user information change (%s) has been " \
+    title = "User's information change request"
+    msg = "Your request for personal information change (%s) has been " \
           "registered"% changes_to_string(c_dict)
     send_message(user.email, title=title, message=msg)
     return jsonify(data=msg)
