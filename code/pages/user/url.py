@@ -1,8 +1,8 @@
 from flask import render_template, flash, request, jsonify
 from flask.json import dumps
 from flask_login import login_required, current_user
+from code.pages import ssh_wrapper, check_str, send_message
 from code.pages.user import bp
-from code.pages.user.magic import ssh_wrapper
 from code.utils import bytes2human, accounting_start
 from datetime import datetime as dt
 from logging import debug
