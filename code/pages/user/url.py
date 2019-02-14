@@ -35,8 +35,11 @@ def user_edit_info():
 
     from code.pages import TaskQueue
     TaskQueue().user_change(changes)
-    return jsonify(data="You request for user information change has been"
-                        " registered")
+    title = "User information change request"
+    msg = "Your request for user information change (%s) has been " \
+          "registered"% changes_to_string(c_dict)
+    send_message(user.email, title=title, message=msg)
+    return jsonify(data=msg)
 
 
 @bp.route("/", methods=["GET"])
