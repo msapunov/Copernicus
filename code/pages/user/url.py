@@ -19,19 +19,19 @@ def user_edit_info():
     old = {"name": user.name, "surname": user.surname, "email": user.email,
            "login": user.login}
 
-    changes = {}
+    c_dict = {}
     for key in ["name", "surname", "email", "login"]:
         old_value = old[key].lower()
-        new_value = data[key].lower()
+        new_value = check_str(data[key]).lower()
         if old_value == new_value:
             continue
-        changes[key] = new_value
+        c_dict[key] = new_value
 
-    if not changes:
+    if not c_dict:
         return jsonify(data="No changes in user's information found")
 
-    changes["entity"] = "user"
-    changes = dumps(changes)
+    c_dict["entity"] = "user"
+    changes = dumps(c_dict)
 
     from code.pages import TaskQueue
     TaskQueue().user_change(changes)
@@ -60,6 +60,14 @@ def user_index():
                                               "jobs": jobs,
                                               "scratch": scratch,
                                               "projects": projects})
+
+
+def changes_to_string(c_dict):
+    if "entity" in c_dict:
+        del c_dict["entity"]
+    c_pairs = list(zip(c_dict.keys(), c_dict.values()))
+    c_list = list(map(lambda x: "new %s: %s" % (x[0], x[1]), c_pairs))
+    return ", ".join(c_list)
 
 
 def get_user_record(login=None):
