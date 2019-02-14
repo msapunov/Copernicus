@@ -4,7 +4,6 @@ from datetime import datetime as dt
 
 
 class ACLDB(db.Model):
-
     __tablename__ = "acl"
 
     id = db.Column(db.Integer, primary_key=True)
@@ -19,7 +18,6 @@ class ACLDB(db.Model):
 
 
 class MethodDB(db.Model):
-
     __tablename__ = "methods"
 
     id = db.Column(db.Integer, primary_key=True)
@@ -33,7 +31,6 @@ class MethodDB(db.Model):
 
 
 class UserProjectLink(db.Model):
-
     __tablename__ = "user_project"
 
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), primary_key=True)
@@ -42,7 +39,6 @@ class UserProjectLink(db.Model):
 
 
 class Project(db.Model):
-
     __tablename__ = "projects"
 
     id = db.Column(db.Integer, primary_key=True)
@@ -124,7 +120,6 @@ class Project(db.Model):
 
 
 class Extend(db.Model):
-
     __tablename__ = "project_extension"
 
     id = db.Column(db.Integer, primary_key=True)
@@ -174,13 +169,12 @@ class Extend(db.Model):
             "use": self.present_use,
             "usage": self.usage_percent,
             "project_name": self.project.get_name(),
-#            "approve": self.approve.full_name(),
+            #            "approve": self.approve.full_name(),
             "responsible": self.project.responsible.full_name()
         }
 
 
 class ArticleDB(db.Model):
-
     __tablename__ = "project_articles"
 
     id = db.Column(db.Integer, primary_key=True)
@@ -195,7 +189,6 @@ class ArticleDB(db.Model):
 
 
 class FileDB(db.Model):
-
     __tablename__ = "project_files"
 
     id = db.Column(db.Integer, primary_key=True)
@@ -212,7 +205,6 @@ class FileDB(db.Model):
 
 
 class Resources(db.Model):
-
     __tablename__ = "project_resources"
 
     id = db.Column(db.Integer, primary_key=True)
@@ -247,7 +239,6 @@ class Resources(db.Model):
 
 
 class User(UserMixin, db.Model):
-
     __tablename__ = "users"
 
     id = db.Column(db.Integer, primary_key=True)
@@ -268,17 +259,7 @@ class User(UserMixin, db.Model):
 
     def __repr__(self):
         return '<User {}>'.format(self.login)
-    """
-    def is_exists(self, username=None, name=None, surname=None):
-        if (not username) or (not (name and surname)):
-            raise ValueError("Please provide user login or name and last name")
-        if username and (self.login.lower() is username.lower()):
-            return True
-        if (self.name.lower() is name.lower()) and \
-                (self.surname.lower() is surname.lower()):
-            return True
-        return False
-    """
+
     def full_name(self):
         return "%s %s" % (self.name.capitalize(), self.surname.capitalize())
 
@@ -316,14 +297,13 @@ class User(UserMixin, db.Model):
             "position": self.position,
             "active": self.active,
             "comment": self.comment,
-#            "last_seen": self.last_seen.isoformat() + 'Z',
+            #            "last_seen": self.last_seen.isoformat() + 'Z',
             "modified": self.modified,
             "created": self.created
         }
 
 
 class Register(db.Model):
-
     __tablename__ = "register"
 
     id = db.Column(db.Integer, primary_key=True)
@@ -445,7 +425,6 @@ class Register(db.Model):
 
 
 class LogDB(db.Model):
-
     __tablename__ = "project_logs"
 
     id = db.Column(db.Integer, primary_key=True)
@@ -504,7 +483,6 @@ class LogDB(db.Model):
 
 
 class Tasks(db.Model):
-
     __tablename__ = "tasks"
 
     id = db.Column(db.Integer, primary_key=True)
@@ -518,7 +496,8 @@ class Tasks(db.Model):
     author_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     author = db.relationship("User", foreign_keys=author_id)
 
-    approve_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    approve_id = db.Column(db.Integer, db.ForeignKey("users.id"),
+                           nullable=False)
     approve = db.relationship("User", foreign_keys=approve_id)
 
     approved = db.Column(db.Boolean)
