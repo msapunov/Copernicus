@@ -88,7 +88,8 @@ def get_project_info(start, end):
             tmp[name] = {}
         tmp[name]["max"] = project.resources.cpu
         tmp[name]["start"] = project.created.strftime("%Y-%m-%d")
-        tmp[name]["end"] = project.created.strftime("%Y-%m-%d")
+        project_end = dt.strptime(end, "%m/%d/%y-%H:%M").strftime("%Y-%m-%d")
+        tmp[name]["end"] = project_end
 
     if not tmp:
         return flash("No active projects found for user '%s'" %
