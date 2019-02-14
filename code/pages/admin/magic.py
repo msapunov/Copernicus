@@ -1,6 +1,15 @@
 from flask import current_app
-from code.pages import check_int
-from logging import error
+from code.pages import check_int, ssh_wrapper, send_message, check_str
+from logging import error, debug
+
+
+def tasks_list():
+    from code.database.schema import Tasks
+
+    tasks = Tasks().query.filter(Tasks.processed == False).all()
+    if not tasks:
+        return []
+    return list(map(lambda x: x.to_dict(), tasks))
 
 
 def remote_project_creation_magic(name, users):
