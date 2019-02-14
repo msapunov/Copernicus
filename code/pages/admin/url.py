@@ -38,7 +38,7 @@ def web_admin_tasks_list():
     tasks = Tasks().query.filter(Tasks.processed == False).all()
     if not tasks:
         return 0
-    return list(map(lambda x: x.to_dict(), tasks))
+    return jsonify(data=list(map(lambda x: x.to_dict(), tasks)))
 
 
 @bp.route("/admin/registration/users", methods=["POST"])
