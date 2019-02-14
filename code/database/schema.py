@@ -486,12 +486,13 @@ class Tasks(db.Model):
     __tablename__ = "tasks"
 
     id = db.Column(db.Integer, primary_key=True)
-    action = db.Column(db.Text, db.CheckConstraint("action IN ('create', "
-                                                   "'update', 'delete')"),
-                       nullable=False)
-    status = db.Column(db.Text, db.CheckConstraint("status IN ('pending',"
-                                                   " 'done', 'approved',"
-                                                   " 'in progress')"))
+    action = db.Column(db.String(6),
+                       db.CheckConstraint("action IN ('create', 'update',"
+                                          " 'delete')"), nullable=False)
+    entity = db.Column(db.String(128), nullable=False)
+    status = db.Column(db.String(11), db.CheckConstraint("status IN ('pending',"
+                                                         " 'done', 'approved',"
+                                                         " 'in progress')"))
     task = db.Column(db.Text, nullable=False)
     author_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     author = db.relationship("User", foreign_keys=author_id)
@@ -500,7 +501,9 @@ class Tasks(db.Model):
                            nullable=False)
     approve = db.relationship("User", foreign_keys=approve_id)
 
-    approved = db.Column(db.Boolean)
+    decision = db.Column(db.String(6),
+                         db.CheckConstraint("decision IN ('accept', 'reject',"
+                                            " 'ignore')"))
     processed = db.Column(db.Boolean)
 
     created = db.Column(db.DateTime(True), default=dt.utcnow)
