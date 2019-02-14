@@ -93,7 +93,7 @@ def slurm_partition_info():
     return partition
 
 
-@bp.route("/switch_user", methods=["POST"])
+@bp.route("/admin/switch_user", methods=["POST"])
 @login_required
 def web_switch_user():
     username = request.form.get("switch_user")
