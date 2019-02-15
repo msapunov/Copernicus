@@ -170,7 +170,8 @@ class Extend(db.Model):
             "usage": self.usage_percent,
             "project_name": self.project.get_name(),
             #            "approve": self.approve.full_name(),
-            "responsible": self.project.responsible.full_name()
+            "responsible": self.project.responsible.full_name(),
+            "responsible_login": self.project.responsible.login
         }
 
 
