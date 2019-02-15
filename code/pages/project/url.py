@@ -17,7 +17,7 @@ def send_extend_mail(project, extend):
     Your request will be examined shortly
     """ % (project.responsible.full_name(), project.name, extend.hours,
            extend.reason)
-    project_email(subj, [project.responsible.email], msg)
+    project_email(project.responsible.email, subj, msg)
 
 
 def send_activate_mail(project, extend):
@@ -29,7 +29,7 @@ def send_activate_mail(project, extend):
       %s
     Your request will be examined shortly
     """ % (project.responsible.full_name(), project.name, extend.reason)
-    project_email(subj, [project.responsible.email], msg)
+    project_email(project.responsible.email, subj, msg)
 
 
 def send_transform_mail(project, extend):
@@ -41,7 +41,7 @@ def send_transform_mail(project, extend):
       %s
     Your request will be examined shortly
     """ % (project.responsible.full_name(), project.name, extend.reason)
-    project_email(subj, [project.responsible.email], msg)
+    project_email(project.responsible.email, subj, msg)
 
 
 def project_email(to, title, msg):
