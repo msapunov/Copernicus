@@ -82,8 +82,7 @@ def message(to, msg, title=None):
     cc = current_app.config["EMAIL_PROJECT"]
     if not title:
         title = "Concerning your project"
-    if not send_message(to, by_who, cc, title, msg):
-        return "Message was sent to %s successfully" % to
+    return send_message(to, by_who, cc, title, msg)
 
 
 def project_type(register):
