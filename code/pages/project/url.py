@@ -2,10 +2,8 @@ from flask import render_template, flash, request, jsonify, current_app
 from flask_login import login_required, current_user
 from code.pages import ProjectLog, check_int, check_str
 from code.pages.user import bp
-from code.pages.user.magic import ssh_wrapper
 from code.utils import accounting_start
 from datetime import datetime as dt
-from flask_mail import Message
 
 
 def send_extend_mail(project, extend):
