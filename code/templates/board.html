@@ -66,13 +66,14 @@
                 <th>Extend id</th>
                 <th>Project id</th>
                 <th>CPU Consumed</th>
+                <th>Login data</th>
             </tr>
             </tfoot>
             <tbody id="ext_result_records">
             {% if data %}
 
                 {% for record in data|sort(attribute='created') %}
-                    <tr id="{{ record.id }}" data-login="{{record.responsible_login}}">
+                    <tr id="{{ record.id }}">
                         <td></td>
                         <td>{{ record.project_name }}</td>
                         <td>{{ record.responsible }}</td>
@@ -88,6 +89,7 @@
                         <td>{{ record.id }}</td>
                         <td>{{ record.project }}</td>
                         <td>{{ record.use}}</td>
+                        <td>{{ record.responsible_login}}</td>
                     </tr>
                 {% endfor %}
             {% endif %}
