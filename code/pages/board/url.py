@@ -1,7 +1,8 @@
-from flask import render_template, request, jsonify
+from flask import render_template, jsonify
 from flask_login import login_required
-from code.pages import ProjectLog, check_int, check_str
+from code.pages import ProjectLog
 from code.pages.board import bp
+from code.pages.board.magic import board_action
 
 
 @bp.route("/board", methods=["GET", "POST"])
