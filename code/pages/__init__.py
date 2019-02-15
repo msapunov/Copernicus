@@ -26,6 +26,7 @@ def send_message(to_who, by_who=None, cc=None, title=None, message=None):
               "to: %s" % tech
     msg.body = message + "\n" + postfix
 #    mail.send(msg)
+    return "Message was sent to %s successfully" % ", ".join(to_who)
 
 
 def ssh_wrapper(cmd, host=None):
