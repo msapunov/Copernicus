@@ -481,6 +481,12 @@ if(!String.prototype.hashCode){
         }
     }
 
+    window.board.message = function(){
+        var data = $(this).data("data");
+        var login = $.trim(data.responsible_login);
+        message_window([login]);
+    }
+
     $(document).on("ready", window.board.init);
     $(document).on("click", ".ext_row", window.render.expand);
     $(document).on("click", ".history", window.board.history);
