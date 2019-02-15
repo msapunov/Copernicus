@@ -69,6 +69,7 @@ if(!String.prototype.hashCode){
         {data: "id"},
         {data: "pid"},
         {data: "used"},
+        {data: "responsible_login"},
     ];
     window.board.def = [{
         className: "ctrl",
@@ -78,7 +79,7 @@ if(!String.prototype.hashCode){
             return window.render.button("plus").data("data", data).prop("outerHTML");
         }
     },{
-        "visible": false,  "targets": [7, 9, 11, 12, 13, 14]
+        "visible": false,  "targets": [7, 9, 11, 12, 13, 14, 15]
     },{
         targets: 5,
         render: function(data, type, full, meta){
