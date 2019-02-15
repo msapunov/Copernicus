@@ -44,16 +44,10 @@ def send_transform_mail(project, extend):
     project_email(subj, [project.responsible.email], msg)
 
 
-def project_email(subject, recipients, text_body):
-    from code import mail
-
-    sender = current_app.config["EMAIL_PROJECT"]
-    tech = [current_app.config["EMAIL_TECH"]]
-    msg = Message(subject, sender=sender, recipients=recipients, cc=tech)
-    postfix = "If this email has been sent to you by mistake, please report " \
-              "to: %s" % tech
-    msg.body = text_body + postfix
-    mail.send(msg)
+def project_email(to, title, msg):
+    by_who = current_app.config["EMAIL_PROJECT"]
+    return jsonify(data=send_message(to, by_who=by_who, title=title,
+                                     message=msg))
 
 
 @bp.route("/project/transform", methods=["POST"])
