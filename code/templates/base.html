@@ -21,16 +21,9 @@
         <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
         <script>
-            var message_popup = function(){
-                var users = $(".main_user_selector").select2("data");
-                if(user.length > 0){
-                    alert("Please, select a user to send him a message!");
-                    return false;
-                }
-                var login = [];
-                $.each(users, function(idx, value){ login.push(value.text) });
-                var plural = login.length > 1 ? "s" : "";
-                var win_title = "Send a message to user{0} {1}?".f(plural, login.join(", "));
+            var message_window = function(users){
+                var plural = users.length > 1 ? "s" : "";
+                var win_title = "Send a message to user{0} {1}?".f(plural, users.join(", "));
                 var title = $("<input/>").addClass("uk-width-1-1").attr({
                     "name": "global_title",
                     "type": "text",
@@ -52,7 +45,7 @@
                     var data = {
                         "title": $("input[name=global_title]").val(),
                         "message": $("textarea[name=global_message]").val(),
-                        "user": login
+                        "user": users
                     };
                     json_send("/admin/message/send", data).done(function(reply){
                         if(reply.data){
@@ -61,6 +54,16 @@
                         popup.hide();
                     });
                 });
+            }
+            var message_popup = function(){
+                var users = $(".main_user_selector").select2("data");
+                if(users.length < 1){
+                    alert("Please, select a user to send him a message!");
+                    return false;
+                }
+                var login = [];
+                $.each(users, function(idx, value){ login.push(value.text) });
+                message_window(login);
             }
             $(document).ready(function() {
                 $('.switch_user_selector').select2();
