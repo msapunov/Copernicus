@@ -21,8 +21,50 @@
         <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
         <script>
+            var message_popup = function(){
+                var users = $(".main_user_selector").select2("data");
+                if(user.length > 0){
+                    alert("Please, select a user to send him a message!");
+                    return false;
+                }
+                var login = [];
+                $.each(users, function(idx, value){ login.push(value.text) });
+                var plural = login.length > 1 ? "s" : "";
+                var win_title = "Send a message to user{0} {1}?".f(plural, login.join(", "));
+                var title = $("<input/>").addClass("uk-width-1-1").attr({
+                    "name": "global_title",
+                    "type": "text",
+                    "placeholder": "Default title"
+                });
+                var message_body = $("<textarea/>").addClass("uk-width-1-1").attr({
+                    "rows": "4",
+                    "name": "global_message",
+                    "placeholder": "Message body can't be empty!"
+                  })
+                var form = $("<form/>").addClass("uk-form").append(
+                        $("<legend/>").text(win_title)
+                    ).append(
+                        $("<div/>").addClass("uk-form-row").append(title)
+                    ).append(
+                        $("<div/>").addClass("uk-form-row").append(message_body)
+                    );
+                var popup = dialog(form.prop("outerHTML"), function(){
+                    var data = {
+                        "title": $("textarea[name=global_title]").val(),
+                        "message": $("textarea[name=global_message]").val(),
+                        "user": login
+                    };
+                    json_send("/admin/message/send", data).done(function(reply){
+                        if(reply.data){
+                            UIkit.notify(reply.data, {timeout: 2000, status:"success"});
+                        }
+                        popup.hide();
+                    });
+                });
+            }
             $(document).ready(function() {
-                $('.js-example-basic-single').select2();
+                $('.switch_user_selector').select2();
+                $(document).on("click", ".message_in_a_bottle", message_popup);
             });
         </script>
         {% endif %}
@@ -86,11 +128,20 @@
                 <div class="uk-navbar-flip">
                     {% if admin  and g.user_list %}
                         <form class="uk-search uk-navbar-content uk-hidden-small" action="admin/switch_user" method="POST">
-                            <select class="js-example-basic-single" name="switch_user" data-placeholder="Select a user" onchange="this.form.submit()">
-                                {% for user in g.user_list %}
-                                    <option value="{{user}}" {%if user==current_user.login%}selected{%endif%}>{{user}}</option>
-                                {% endfor %}
-                            </select>
+                            <div class="uk-navbar-content uk-hidden-small">
+                                <!--
+                                <select class="js-example-basic-single" name="switch_user" data-placeholder="Select a user" onchange="this.form.submit()">
+                                -->
+                                <select class="switch_user_selector main_user_selector" name="switch_user" data-placeholder="Select a user">
+                                    {% for user in g.user_list %}
+                                        <option value="{{user}}" {%if user==current_user.login%}selected{%endif%}>{{user}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="uk-navbar-content uk-hidden-small">
+                                <button class="uk-button wide_open" title="Login as different user" type="submit"><span class="uk-icon-sign-in"></span></button>
+                                <button class="uk-button message_in_a_bottle" title="Send a message to a user" type="button"><span class="uk-icon-envelope-o"></span></button>
+                            </div>
                         </form>
                     {% endif %}
                     <ul class="uk-navbar-nav">
@@ -139,7 +190,7 @@
                     <div class="uk-panel">
                         {% if admin  and g.user_list %}
                             <form action="admin/switch_user" method="POST">
-                                <select class="js-example-basic-single" name="switch_user" data-placeholder="Select a user" onchange="this.form.submit()">
+                                <select class="switch_user_selector" name="switch_user" data-placeholder="Select a user" onchange="this.form.submit()">
                                     {% for user in g.user_list %}
                                         <option value="{{user}}" {%if user==current_user.login%}selected{%endif%}>{{user}}</option>
                                     {% endfor %}
