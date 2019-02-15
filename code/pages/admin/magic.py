@@ -144,6 +144,14 @@ def get_registration_record(pid):
     return register
 
 
+def get_ltm(data):
+    user_tmp = data["user"]
+    users = map(lambda x: check_str(x), user_tmp)
+    title = check_str(data["title"])
+    msg = check_str(data["message"])
+    return users, title, msg
+
+
 def get_pid_notes(data):
     pid = check_int(data["pid"])
     note = check_str(data["note"])
