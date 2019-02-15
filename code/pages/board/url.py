@@ -31,6 +31,18 @@ def web_board_accept():
     return jsonify(record.to_dict())
 
 
+@bp.route("/board/ignore", methods=["POST"])
+@login_required
+def web_board_ignore():
+    from code import db
+
+    record = board_action()
+    record.accepted = False
+    db.session.commit()
+    ProjectLog(record.project).ignore(record)
+    return jsonify(record.to_dict())
+
+
 @bp.route("/board/reject", methods=["POST"])
 @login_required
 def web_board_reject():
