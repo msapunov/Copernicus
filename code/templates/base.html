@@ -50,7 +50,7 @@
                     );
                 var popup = dialog(form.prop("outerHTML"), function(){
                     var data = {
-                        "title": $("textarea[name=global_title]").val(),
+                        "title": $("input[name=global_title]").val(),
                         "message": $("textarea[name=global_message]").val(),
                         "user": login
                     };
