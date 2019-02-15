@@ -72,7 +72,7 @@
             {% if data %}
 
                 {% for record in data|sort(attribute='created') %}
-                    <tr id="{{ record.id }}">
+                    <tr id="{{ record.id }}" data-login="{{record.responsible_login}}">
                         <td></td>
                         <td>{{ record.project_name }}</td>
                         <td>{{ record.responsible }}</td>
