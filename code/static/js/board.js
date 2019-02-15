@@ -48,6 +48,7 @@ if(!String.prototype.hashCode){
     list: "board/list",
     accept: "board/accept",
     reject: "board/reject",
+    ignore: "board/ignore",
     history: "project/history"
   };
   window.board.id = "#ext_result_table";
@@ -310,8 +311,15 @@ if(!String.prototype.hashCode){
     });
   }
 
-  window.board.reject = function(){
-    var data = $(this).data("data");
+    window.board.ignore = function(){
+        var me = this;
+        window.board.reject("ignore", me)
+    }
+
+  window.board.reject = function(url_name, me){
+    if (typeof(url_name)==="undefined") url_name="reject";
+    if (typeof(me)==="undefined") me=this;
+    var data = $(me).data("data");
     var id = $.trim(data.id);
     var project = $.trim(data.project_name);
     if(data.activate=="True"){
@@ -321,9 +329,14 @@ if(!String.prototype.hashCode){
     }else{
         var action = "extension";
     }
-    var title = "Rejecting {0} of project {1}".f(action, project);
-    var text = "Enter a reason for rejecting {0} of project {1}"
-      .f(action, project);
+    if(url_name=="ignore"){
+        var verb = "ignoring";
+    }else{
+        var verb = "rejecting";
+    }
+    var title = "{0} {1} of project {2}".f(verb.capitalize(), action, project);
+    var text = "Enter a reason for {0} {1} of project {2}"
+      .f(verb, action, project);
     var motiv = $("<textarea/>").html(text).addClass("uk-width-1-1").attr({
       "rows": "4",
       "name": "note"
@@ -335,7 +348,7 @@ if(!String.prototype.hashCode){
         );
     UIkit.modal.confirm(form.prop("outerHTML"), function(){
       var comment = $("textarea[name=note]").val();
-      window.board.send("reject", {
+      window.board.send(url_name, {
         "eid": id,
         "comment": comment
       }).done(function(reply){
