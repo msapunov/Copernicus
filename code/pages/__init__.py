@@ -123,6 +123,11 @@ class ProjectLog:
         self.log.extension = extension
         self._commit()
 
+    def ignore(self, extension):
+        self.log.event = "ignore request"
+        self.log.extension = extension
+        self._commit()
+
     def reject(self, extension):
         self.log.event = "reject request"
         self.log.extension = extension
