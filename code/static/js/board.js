@@ -312,7 +312,11 @@ if(!String.prototype.hashCode){
         window.board.reject("ignore", me)
     }
 
-  window.board.reject = function(url_name, me){
+    window.board.reject = function(){
+        var me = this;
+        window.board.kill("reject", me)
+    }
+  window.board.kill = function(url_name, me){
     if (typeof(url_name)==="undefined") url_name="reject";
     if (typeof(me)==="undefined") me=this;
     var data = $(me).data("data");
