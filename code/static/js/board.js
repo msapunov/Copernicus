@@ -198,7 +198,7 @@ if(!String.prototype.hashCode){
       icon = "plus";
       button.addClass("ext_row uk-button-mini");
     }else if(mode == "contact"){
-      icon = "send";
+      icon = "commenting";
       button.addClass("contact");
     }else if(mode == "history"){
       icon = "history";
