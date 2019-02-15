@@ -486,6 +486,7 @@ if(!String.prototype.hashCode){
     $(document).on("click", ".accept", window.board.accept);
     $(document).on("click", ".reject", window.board.reject);
     $(document).on("click", ".ignore", window.board.ignore);
+    $(document).on("click", ".contact", window.board.message);
 
     $(window.board.id).on("responsive-resize.dt", window.render.redraw);
 
