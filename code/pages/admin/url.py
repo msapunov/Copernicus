@@ -31,6 +31,23 @@ def web_switch_user():
     return redirect(url_for("user.user_index"))
 
 
+@bp.route("/admin/message/send", methods=["POST"])
+@login_required
+def web_admin_message_send():
+    data = request.get_json()
+    if not data:
+        raise ValueError("Expecting application/json requests")
+    logins, title, msg = get_ltm(data)
+
+    from code.database.schema import User
+
+    emails = []
+    for login in logins:
+        user = User.query.filter_by(login=login).first()
+        emails.append(user.email)
+    return jsonify(data=send_message(emails, message=msg, title=title))
+
+
 @bp.route("/admin/tasks/list", methods=["POST"])
 @login_required
 def web_admin_tasks_list():
