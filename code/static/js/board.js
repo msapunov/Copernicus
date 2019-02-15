@@ -309,7 +309,7 @@ if(!String.prototype.hashCode){
 
     window.board.ignore = function(){
         var me = this;
-        window.board.reject("ignore", me)
+        window.board.kill("ignore", me)
     }
 
     window.board.reject = function(){
