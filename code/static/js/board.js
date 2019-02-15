@@ -191,10 +191,6 @@ if(!String.prototype.hashCode){
     }else if(mode == "reject"){
       icon = "thumbs-down";
       button.addClass("uk-button-danger reject");
-      button.send = function(){
-        var tt;
-        tt += 1;
-      }
     }else if(mode == "ignore"){
       icon = "thumbs-o-down";
       button.addClass("ignore");
