@@ -25,7 +25,7 @@
             {% if data.tasks %}
             <div class="uk-panel uk-width-1-1 uk-panel-space uk-text-center uk-panel-hover uk-margin-bottom" style="height: 120px;" id="tasks_info">
                 {% if data.tasks|length > 0 %}
-                <p class="uk-h2 uk-text-nowrap">Pending tasks: <a class="task_show">{{data.tasks|length}}</a></p>
+                <p class="uk-h2 uk-text-nowrap">Pending tasks: <a class="task_show" id="taks_queue_length">{{data.tasks|length}}</a></p>
                 {% else %}
                     <p class="uk-h2 uk-text-nowrap">No pending tasks found</p>
                 {% endif %}
