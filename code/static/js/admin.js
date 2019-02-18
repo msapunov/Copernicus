@@ -117,19 +117,19 @@
                 //data.data.sort(window.sort_by("created", false, function(a){return a.toUpperCase()}));
                 $.each(data.data, function(idx, val){
                 // type="button" data-id='{{record.id}}-info'>
-                    var btn = $("<td/>").append($("<button/>").attr({"data-id": "task-"+val.id}).addClass("uk-button uk-button-mini task_info").append($("<span/>").addClass("uk-icon-plus")));
+                    var btn = $("<td/>").append($("<button/>").attr({"data-id": "task-"+val.id+"-child"}).addClass("uk-button uk-button-mini task_info").append($("<span/>").addClass("uk-icon-plus")));
                     var act = $("<td/>").addClass("uk-text-nowrap").text("{0} {1}".f(val.action, val.entity));
                     var task= $("<td/>").text(val.task);
                     var user = $("<td/>").text(val.author);
                     var status = $("<td/>").text(val.status);
                     var data = $("<td/>").addClass("uk-text-nowrap").text(val.created);
-                    $("<tr/>").append(btn).append(act).append(user).append(status).append(data).appendTo(table);
+                    $("<tr/>").attr({"id": "task-"+val.id+"-parent"}).append(btn).append(act).append(user).append(status).append(data).appendTo(table);
                     var btn_grp = $("<div/>").addClass("uk-button-group uk-float-right uk-margin-top");
-                    var btn_accept = $("<button/>").data("id", val.id).addClass("uk-button task_accept").append($("<span/>").addClass("uk-icon-thumbs-up uk-margin-small-right").text("Accept")).appendTo(btn_grp);
-                    var btn_ignore = $("<button/>").data("id", val.id).addClass("uk-button task_ignore").append($("<span/>").addClass("uk-icon-thumbs-o-down uk-margin-small-right").text("Ignore")).appendTo(btn_grp);
-                    var btn_reject = $("<button/>").data("id", val.id).addClass("uk-button task_reject uk-button-danger").append($("<span/>").addClass("uk-icon-thumbs-down uk-margin-small-right").text("Reject")).appendTo(btn_grp);
+                    var btn_accept = $("<button/>").attr({"data-id": val.id}).addClass("uk-button task_accept").append($("<span/>").addClass("uk-icon-thumbs-up uk-margin-small-right").text("Accept")).appendTo(btn_grp);
+                    var btn_ignore = $("<button/>").attr({"data-id": val.id}).addClass("uk-button task_ignore").append($("<span/>").addClass("uk-icon-thumbs-o-down uk-margin-small-right").text("Ignore")).appendTo(btn_grp);
+                    var btn_reject = $("<button/>").attr({"data-id": val.id}).addClass("uk-button task_reject uk-button-danger").append($("<span/>").addClass("uk-icon-thumbs-down uk-margin-small-right").text("Reject")).appendTo(btn_grp);
 
-                    $("<tr/>").attr({"id": "task-"+val.id}).addClass("ext_info uk-hidden").append( $("<td/>").text("Task: " + val.task).attr({"colspan": 5}).append(btn_grp) ).appendTo(table);
+                    $("<tr/>").attr({"id": "task-"+val.id+"-child"}).addClass("ext_info uk-hidden").append( $("<td/>").text(val.human.capitalize()).attr({"colspan": 5}).append(btn_grp) ).appendTo(table);
                 });
                 $("#modal_body").html(table.prop("outerHTML"));
                 var modal = UIkit.modal("#modal");
@@ -315,6 +315,16 @@
     }
 
     window.render.tasks_reload=function(){
+        json_send(window.admin.url.tasks).done(function(data){
+            var tasks = 0;
+            if(data.data.length < 1){
+                UIkit.notify("No pending tasks found!", {timeout: 2000, status:"primary"});
+            }else{
+                tasks = data.data.length;
+            }
+            $("#taks_queue_length").text(tasks);
+        });
+        /*
         $.ajax({
             url: window.admin.url.tasks,
             type: "POST",
@@ -328,17 +338,27 @@
             }
             $("#taks_queue_length").text(tasks);
         });
+        */
     }
     window.render.tasks_accept=function(){
-        var id = $(this).data("id");
+        var btn = this;
+        var id = $(btn).data("id");
+        json_send(window.admin.url.tasks_accept, {task: id}).done(function(data){
+            var tr = $(btn).closest("tr").eq(0);
+            var ccc = tr.id;
+            tr.remove();
+            var tt = 0;
+        });
+        /*
         $.ajax({
             url: window.admin.url.tasks_accept,
             data: {task: id},
             type: "POST",
             cache: false
         }).done(function(data){
-
+            $(this).closest("tr").eq(0).remove();
         });
+        */
     }
     window.render.tasks_ignore=function(){
 

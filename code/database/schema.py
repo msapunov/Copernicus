@@ -517,6 +517,10 @@ class Tasks(db.Model):
             modified = self.modified.strftime("%Y-%m-%d %X %Z")
         else:
             modified = ""
+        t_dict = eval(self.task)
+        task = "".join(list(map(lambda x: "%s: %s" % (x[0], x[1]),
+                 list(zip(t_dict.keys(), t_dict.values())))))
+        human = "%s %s with new value: '%s'" % (self.action, self.entity, task)
         return {
             "id": self.id,
             "action": self.action,
@@ -528,5 +532,6 @@ class Tasks(db.Model):
             "decision": self.decision,
             "processed": self.processed,
             "created": self.created.strftime("%Y-%m-%d %X %Z"),
-            "modified": modified
+            "modified": modified,
+            "human": human
         }
