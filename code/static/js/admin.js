@@ -67,8 +67,9 @@
                 var head_status = $("<th/>").text("Status");
                 var head_approved = $("<th/>").text("Approved");
                 var head_processed = $("<th/>").text("Processed");
+                var head_decision = $("<th/>").text("Decision");
                 var head_created = $("<th/>").text("Created");
-                $("<thead/>").append($("<th/>")).append(head_act).append(head_author).append(head_status).append(head_approved).append(head_processed).append(head_created).appendTo(table);
+                $("<thead/>").append($("<th/>")).append(head_act).append(head_author).append(head_status).append(head_approved).append(head_processed).append(head_decision).append(head_created).appendTo(table);
 
                 //data.data.sort(window.sort_by("created", false, function(a){return a.toUpperCase()}));
                 $.each(data.data, function(idx, val){
@@ -79,8 +80,9 @@
                     var status = $("<td/>").text(val.status);
                     var approved = $("<td/>").text(val.approved);
                     var processed = $("<td/>").text(val.processed);
+                    var decision = $("<td/>").text(val.decision);
                     var data = $("<td/>").addClass("uk-text-nowrap").text(val.created);
-                    $("<tr/>").append(btn).append(act).append(user).append(status).append(approved).append(processed).append(data).appendTo(table);
+                    $("<tr/>").append(btn).append(act).append(user).append(status).append(approved).append(processed).append(decision).append(data).appendTo(table);
                     $("<tr/>").attr({"id": "task-"+val.id}).addClass("ext_info uk-hidden").append( $("<td/>").text("Task: " + val.task).attr({"colspan": 7})).appendTo(table);
                 });
                 $("#modal_body").html(table.prop("outerHTML"));
