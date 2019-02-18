@@ -491,9 +491,8 @@ class Tasks(db.Model):
                        db.CheckConstraint("action IN ('create', 'update',"
                                           " 'delete')"), nullable=False)
     entity = db.Column(db.String(128), nullable=False)
-    status = db.Column(db.String(11), db.CheckConstraint("status IN ('pending',"
-                                                         " 'done', 'approved',"
-                                                         " 'in progress')"))
+    status = db.Column(db.String(11), db.CheckConstraint(
+        "status IN ('pending', 'done', 'in progress')"))
     task = db.Column(db.Text, nullable=False)
     author_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     author = db.relationship("User", foreign_keys=author_id)
