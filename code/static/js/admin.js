@@ -341,30 +341,13 @@
         */
     }
     window.render.tasks_accept=function(){
-        var btn = this;
-        var id = $(btn).data("id");
-        json_send(window.admin.url.tasks_accept, {task: id}).done(function(data){
-            var tr = $(btn).closest("tr").eq(0);
-            var ccc = tr.id;
-            tr.remove();
-            var tt = 0;
-        });
-        /*
-        $.ajax({
-            url: window.admin.url.tasks_accept,
-            data: {task: id},
-            type: "POST",
-            cache: false
-        }).done(function(data){
-            $(this).closest("tr").eq(0).remove();
-        });
-        */
+        window.render.tasks_act("accept", this);
     }
     window.render.tasks_ignore=function(){
-
+        window.render.tasks_act("ignore", this);
     }
     window.render.tasks_reject=function(){
-
+        window.render.tasks_act("reject", this);
     }
 
     $(document).on("ready", function(){
