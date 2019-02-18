@@ -276,6 +276,7 @@
     $(document).on("click", ".message", window.render.message);
     $(document).on("click", ".task_show", window.render.tasks);
     $(document).on("click", ".task_info", window.render.new_project);
+    $(document).on("click", ".task_history", window.render.tasks_history);
 
     $(document).on({
         mouseenter: function () {
