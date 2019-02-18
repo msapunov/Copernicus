@@ -48,6 +48,17 @@ def web_admin_message_send():
     return jsonify(data=send_message(emails, message=msg, title=title))
 
 
+@bp.route("/admin/tasks/history", methods=["POST"])
+@login_required
+def web_admin_tasks_history():
+    from code.database.schema import Tasks
+
+    tasks = Tasks().query.all()
+    if not tasks:
+        return 0
+    return jsonify(data=list(map(lambda x: x.to_dict(), tasks)))
+
+
 @bp.route("/admin/tasks/list", methods=["POST"])
 @login_required
 def web_admin_tasks_list():
