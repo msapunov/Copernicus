@@ -91,7 +91,7 @@ def web_admin_tasks_list():
 
     tasks = Tasks().query.filter(Tasks.processed == False).all()
     if not tasks:
-        return jsonify(error="No new tasks found")
+        return jsonify(data=[])
     return jsonify(data=list(map(lambda x: x.to_dict(), tasks)))
 
 
