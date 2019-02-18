@@ -73,7 +73,7 @@ class TaskQueue:
 
     def __init__(self):
         from code.database.schema import Tasks
-        self.task = Tasks(author=current_user, processed=False, approved=False,
+        self.task = Tasks(author=current_user, processed=False,
                           status="pending")
 
     def user_add(self, data):
