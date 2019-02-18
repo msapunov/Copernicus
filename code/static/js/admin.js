@@ -138,6 +138,10 @@
                 } else {
                     modal.show();
                 }
+                modal.on({'hide.uk.modal': function(){
+                    window.render.tasks_reload();
+                    modal.off('hide.uk.modal');
+                }});
             }
         });
     }
