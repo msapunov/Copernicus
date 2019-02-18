@@ -63,7 +63,7 @@ def web_admin_tasks_history():
 
     tasks = Tasks().query.all()
     if not tasks:
-        return 0
+        return jsonify(error="No tasks found!")
     return jsonify(data=list(map(lambda x: x.to_dict(), tasks)))
 
 
@@ -74,7 +74,7 @@ def web_admin_tasks_list():
 
     tasks = Tasks().query.filter(Tasks.processed == False).all()
     if not tasks:
-        return 0
+        return jsonify(error="No new tasks found")
     return jsonify(data=list(map(lambda x: x.to_dict(), tasks)))
 
 
