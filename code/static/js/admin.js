@@ -1,6 +1,5 @@
 (function(window, document, $, undefined){
     "use strict";
-    window.contact = "mesocentre-techn@univ-amu.fr";
     window.admin = {};
     window.admin.url = {
         accept: "admin/registration/accept",
