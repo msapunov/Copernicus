@@ -9,7 +9,7 @@ from code.pages.admin.magic import is_user_exists, get_pid_notes, get_uptime
 from code.pages.admin.magic import slurm_partition_info, project_creation_magic
 from code.pages.admin.magic import project_assign_resources, get_mem, message
 from code.pages.admin.magic import accept_message, reject_message, tasks_list
-from code.pages.admin.magic import get_ltm, task_action
+from code.pages.admin.magic import get_ltm, task_action, task_mail
 from logging import info, debug
 
 
