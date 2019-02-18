@@ -50,6 +50,50 @@
         }
     }
 
+    window.render.tasks_history = function(){
+        $.ajax({
+            url: window.admin.url.tasks_history,
+            type: "POST",
+            cache: false
+        }).done(function(data){
+            if(data.data.length < 1){
+                UIkit.notify("No historic tasks found!", {timeout: 2000, status:"primary"});
+            }else{
+
+                var table = $("<table/>").addClass("uk-table uk-table-hover uk-table-condensed");
+
+                var head_act = $("<th/>").text("Action");
+                var head_author = $("<th/>").text("Author");
+                var head_status = $("<th/>").text("Status");
+                var head_approved = $("<th/>").text("Approved");
+                var head_processed = $("<th/>").text("Processed");
+                var head_created = $("<th/>").text("Created");
+                $("<thead/>").append($("<th/>")).append(head_act).append(head_author).append(head_status).append(head_approved).append(head_processed).append(head_created).appendTo(table);
+
+                //data.data.sort(window.sort_by("created", false, function(a){return a.toUpperCase()}));
+                $.each(data.data, function(idx, val){
+                    var btn = $("<td/>").append($("<button/>").attr({"data-id": "task-"+val.id}).addClass("uk-button uk-button-mini task_info").append($("<span/>").addClass("uk-icon-plus")));
+                    var act = $("<td/>").addClass("uk-text-nowrap").text("{0} {1}".f(val.action, val.entity));
+                    var task= $("<td/>").text(val.task);
+                    var user = $("<td/>").text(val.author);
+                    var status = $("<td/>").text(val.status);
+                    var approved = $("<td/>").text(val.approved);
+                    var processed = $("<td/>").text(val.processed);
+                    var data = $("<td/>").addClass("uk-text-nowrap").text(val.created);
+                    $("<tr/>").append(btn).append(act).append(user).append(status).append(approved).append(processed).append(data).appendTo(table);
+                    $("<tr/>").attr({"id": "task-"+val.id}).addClass("ext_info uk-hidden").append( $("<td/>").text("Task: " + val.task).attr({"colspan": 7})).appendTo(table);
+                });
+                $("#modal_body").html(table.prop("outerHTML"));
+                var modal = UIkit.modal("#modal");
+                if ( modal.isActive() ) {
+                    modal.hide();
+                } else {
+                    modal.show();
+                }
+            }
+        });
+    }
+
     window.render.tasks = function(){
         $.ajax({
             url: window.admin.url.tasks,
