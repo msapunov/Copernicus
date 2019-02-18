@@ -68,8 +68,8 @@ def web_admin_tasks_reject():
 @bp.route("/admin/tasks/accept", methods=["POST"])
 @login_required
 def web_admin_tasks_accept():
-    task_action("accept")
-
+    task = task_action("accept")
+    task_mail("accept", task)
     return web_admin_tasks_list()
 
 
