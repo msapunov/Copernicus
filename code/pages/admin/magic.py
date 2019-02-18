@@ -1,6 +1,36 @@
-from flask import current_app
+from flask import current_app, request
+from flask_login import current_user
 from code.pages import check_int, ssh_wrapper, send_message, check_str
 from logging import error, debug
+
+
+def task_action(action):
+    if action not in ["accept", "reject", "ignore"]:
+        raise ValueError("Action %s is unknown" % action)
+    task = get_task()
+    task.processed = True
+    task.decision = action
+    task.approve = current_user
+
+    from code import db
+    db.session.commit()
+    return task
+
+
+def get_task():
+    data = request.get_json()
+    if not data:
+        raise ValueError("Expecting application/json requests")
+    tid = check_int(data["task"])
+
+    from code.database.schema import Tasks
+
+    task = Tasks().query.filter_by(id=tid).first()
+    if not task:
+        raise ValueError("No task with id %s found" % tid)
+    if task.processed == True:
+        raise ValueError("Task with id %s has been already processed" % tid)
+    return task
 
 
 def tasks_list():
