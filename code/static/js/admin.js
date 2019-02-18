@@ -339,6 +339,22 @@
         });
         */
     }
+    window.render.tasks_act=function(action, btn){
+        var id = $(btn).data("id");
+        var url = window.admin.url.tasks_ignore;
+        if(action=="accept"){
+            url = window.admin.url.tasks_accept;
+        }else if(action=="reject"){
+            url = window.admin.url.tasks_reject;
+        }
+        json_send(url, {task: id}).done(function(data){
+            var tr = $(btn).closest("tr").eq(0);
+            var el_id = tr.attr('id');
+            var del_id = el_id.replace("child", "parent")
+            tr.remove();
+            $("#"+del_id).remove();
+        });
+    }
     window.render.tasks_accept=function(){
         window.render.tasks_act("accept", this);
     }
