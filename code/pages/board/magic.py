@@ -1,5 +1,5 @@
-from flask import request
-from code.pages import check_int, check_str
+from flask import request, current_app
+from code.pages import check_int, check_str, send_message
 
 
 def board_action():
@@ -20,3 +20,38 @@ def board_action():
     extend.processed = True
     extend.decision = note
     return extend
+
+
+def accept_message(extension):
+    to = extension.project.responsible.email
+    full = extension.project.responsible.full_name()
+    name = extension.project.get_name()
+    cpu = extension.hours
+    ts = extension.created.strftime("%Y-%m-%d %X %Z"),
+    comment = extension.decision
+    title = "Project extension accepted"
+    msg_body = "Dear %s\nThe extension of your project %s for %s hours made " \
+               "%s has been accepted:\n%s" % (full, name, cpu, ts, comment)
+    return message(to, msg_body, title)
+
+
+def reject_message(extension):
+    to = extension.project.responsible.email
+    full = extension.project.responsible.full_name()
+    name = extension.project.get_name()
+    cpu = extension.hours
+    ts = extension.created.strftime("%Y-%m-%d %X %Z"),
+    comment = extension.decision
+    title = "Project extension rejected"
+    msg_body = "Dear %s\nThe extension of your project %s for %s hours made " \
+               "%s has been rejected:\n%s" % (full, name, cpu, ts, comment)
+    return message(to, msg_body, title)
+
+
+def message(to, msg, title=None):
+    by_who = current_app.config["EMAIL_PROJECT"]
+    #cc = current_app.config["EMAIL_PROJECT"]
+    cc = "matvey.sapunov@univ-amu.fr"
+    if not title:
+        title = "Concerning your project"
+    return send_message(to, by_who, cc, title, msg)
