@@ -327,6 +327,10 @@
     $(document).on("click", ".task_show", window.render.tasks);
     $(document).on("click", ".task_info", window.render.new_project);
     $(document).on("click", ".task_history", window.render.tasks_history);
+    $(document).on("click", ".task_reload", window.render.tasks_reload);
+    $(document).on("click", ".task_accept", window.render.tasks_accept);
+    $(document).on("click", ".task_ignore", window.render.tasks_ignore);
+    $(document).on("click", ".task_reject", window.render.tasks_reject);
 
     $(document).on({
         mouseenter: function () {
