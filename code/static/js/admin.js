@@ -12,6 +12,7 @@
         system: "admin/sys/info",
         tasks: "admin/tasks/list",
         tasks_accept: "admin/tasks/accept",
+        tasks_history: "admin/tasks/history",
         tasks_ignore: "admin/tasks/ignore",
         tasks_reject: "admin/tasks/reject",
         user: "admin/user/info"
@@ -261,21 +262,6 @@
         ).append(
             $("<div/>").addClass("uk-form-row").append(motiv)
         );
-        /*
-        UIkit.modal.confirm(form.prop("outerHTML"), function(){
-            var comment = $("textarea[name=note]").val();
-            json_send(window.admin.url.reject, {
-                "pid": id,
-                "note": comment
-            }).done(function(reply){
-                if(reply.data){
-                    UIkit.notify(reply.data, {timeout: 2000, status:"success"});
-                }
-                $("#"+id).remove();
-                $("#"+id+"-info").remove();
-            });
-        });
-        */
     }
 
     $(document).on("ready", function(){
