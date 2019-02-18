@@ -48,6 +48,23 @@ def web_admin_message_send():
     return jsonify(data=send_message(emails, message=msg, title=title))
 
 
+@bp.route("/admin/tasks/ignore", methods=["POST"])
+@login_required
+def web_admin_tasks_ignore():
+    task_action("ignore")
+    return web_admin_tasks_list()
+
+
+@bp.route("/admin/tasks/reject", methods=["POST"])
+@login_required
+def web_admin_tasks_reject():
+    task = task_action("reject")
+    print("sdfs")
+    task_mail("reject", task)
+    print("sdfaas")
+    return web_admin_tasks_list()
+
+
 @bp.route("/admin/tasks/accept", methods=["POST"])
 @login_required
 def web_admin_tasks_accept():
