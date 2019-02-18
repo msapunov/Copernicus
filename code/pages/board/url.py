@@ -28,6 +28,7 @@ def web_board_accept():
     record.accepted = True
     db.session.commit()
     ProjectLog(record.project).accept(record)
+    accept_message(record)
     return jsonify(record.to_dict())
 
 
@@ -52,4 +53,5 @@ def web_board_reject():
     record.accepted = False
     db.session.commit()
     ProjectLog(record.project).reject(record)
+    reject_message(record)
     return jsonify(record.to_dict())
