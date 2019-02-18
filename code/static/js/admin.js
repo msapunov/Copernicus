@@ -353,6 +353,9 @@
             var del_id = el_id.replace("child", "parent")
             tr.remove();
             $("#"+del_id).remove();
+            if(data.data.length < 1){
+                UIkit.modal("#modal").hide();
+            }
         });
     }
     window.render.tasks_accept=function(){
