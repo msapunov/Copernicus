@@ -42,6 +42,18 @@ def tasks_list():
     return list(map(lambda x: x.to_dict(), tasks))
 
 
+def task_mail(action, task):
+    human = task.to_dict()["human"]
+    print(task.to_dict())
+    tid = task.id
+    print(tid)
+    to = current_app.config["EMAIL_TECH"]
+    title = "Task id '%s' has been %s" % (tid, action)
+    msg = "Task '%s' with id '%s' has been %s" % (human, tid, action)
+    print(msg)
+    return message(to, msg, title)
+
+
 def remote_project_creation_magic(name, users):
     task_file = current_app.config["TASKS_FILE"]
     task = str({"project": name, "users": users})
