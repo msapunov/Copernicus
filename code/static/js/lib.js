@@ -1,3 +1,4 @@
+var contact = "mesocentre-techn@univ-amu.fr";
 if(!String.prototype.f){
     // SOURCE: http://stackoverflow.com/questions/610406/javascript-equivalent-to-printf-string-format
     String.prototype.f = function(){
@@ -79,7 +80,7 @@ show_error = function(req){
     }else{
         var msg = "Server return {0}: {1}\n".f(status, statText);
     }
-    msg += "Please contact technical team: {0}".f(window.contact);
+    msg += "Please contact technical team: {0}".f(contact);
     alert(msg);
 };
 
