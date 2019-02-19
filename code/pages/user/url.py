@@ -177,7 +177,7 @@ def get_jobs(start, end):
     result, err = ssh_wrapper(run)
 
     if not result:
-        return flash("No jobs found")
+        return flash("No jobs found from %s to %s" % (start, end))
     jobs = []
     for job in result:
         tmp = {}
