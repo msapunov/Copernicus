@@ -92,6 +92,18 @@ class Project(db.Model):
         return "%s%s" % (genre, str(pid).zfill(3))
 
     def to_dict(self):
+        if self.created:
+            created = self.created.strftime("%Y-%m-%d %X %Z")
+        else:
+            created = ""
+        if self.modified:
+            modified = self.modified.strftime("%Y-%m-%d %X %Z")
+        else:
+            modified = ""
+        if self.allocation_end:
+            allocation = self.allocation_end.strftime("%Y-%m-%d %X %Z")
+        else:
+            allocation = ""
         return {
             "id": self.id,
             "title": self.title,
@@ -103,8 +115,8 @@ class Project(db.Model):
             "project_management": self.project_management,
             "project_motivation": self.project_motivation,
             "active": self.active,
-            "modified": self.modified,
-            "created": self.created,
+            "modified": modified,
+            "created": created,
             "comment": self.comment,
             "gid": self.gid,
             "privileged": self.privileged,
@@ -116,6 +128,7 @@ class Project(db.Model):
             "users": list(map(lambda x: x.to_dict(), self.users)),
             "approve": self.approve.to_dict(),
             "resources": self.resources.to_dict(),
+            "allocation_end": allocation,
             "ref": self.ref.id
         }
 
