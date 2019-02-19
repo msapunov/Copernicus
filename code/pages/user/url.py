@@ -167,7 +167,7 @@ def get_scratch():
             "used_label": bytes2human(used), "free_label": bytes2human(free)}
 
 
-def get_jobs(start, end):
+def get_jobs(start, end, last=10):
     cmd = ["sacct", "-nPX",
            "--format=JobID,State,Start,Account,JobName,CPUTime,Partition",
            "--start=%s" % start, "--end=%s" % end, "-u",
@@ -191,5 +191,5 @@ def get_jobs(start, end):
         tmp["duration"] = job[5]
         jobs.append(tmp)
     jobs = sorted(jobs, key=lambda x: x["id"], reverse=True)
-    result = jobs[0:10]
+    result = jobs[0:last]
     return result
