@@ -78,20 +78,22 @@ class TaskQueue:
 
     def user_add(self, data):
         self.task.task = data
-        self.task.entity = "user"
         self.task.action = "create"
-        self._commit()
+        self._user_action()
 
     def user_change(self, data):
         self.task.task = data
-        self.task.entity = "user"
         self.task.action = "update"
-        self._commit()
+        self._user_action()
 
     def user_delete(self, data):
         self.task.task = data
-        self.task.entity = "user"
         self.task.action = "delete"
+        self._user_action()
+
+    def _user_action(self):
+        self.task.entity = "user"
+        self.task.status = "in progress"
         self._commit()
 
     def _commit(self):
