@@ -59,9 +59,7 @@ def web_admin_tasks_ignore():
 @login_required
 def web_admin_tasks_reject():
     task = task_action("reject")
-    print("sdfs")
     task_mail("reject", task)
-    print("sdfaas")
     return web_admin_tasks_list()
 
 
@@ -76,23 +74,13 @@ def web_admin_tasks_accept():
 @bp.route("/admin/tasks/history", methods=["POST"])
 @login_required
 def web_admin_tasks_history():
-    from code.database.schema import Tasks
-
-    tasks = Tasks().query.all()
-    if not tasks:
-        return jsonify(error="No tasks found!")
-    return jsonify(data=list(map(lambda x: x.to_dict(), tasks)))
+    return jsonify(data=tasks_list(True))
 
 
 @bp.route("/admin/tasks/list", methods=["POST"])
 @login_required
 def web_admin_tasks_list():
-    from code.database.schema import Tasks
-
-    tasks = Tasks().query.filter(Tasks.processed == False).all()
-    if not tasks:
-        return jsonify(data=[])
-    return jsonify(data=list(map(lambda x: x.to_dict(), tasks)))
+    return jsonify(data=tasks_list())
 
 
 @bp.route("/admin/registration/users", methods=["POST"])
