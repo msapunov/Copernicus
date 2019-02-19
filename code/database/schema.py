@@ -518,7 +518,7 @@ class Tasks(db.Model):
         else:
             modified = ""
         t_dict = eval(self.task)
-        task = "".join(list(map(lambda x: "%s: %s" % (x[0], x[1]),
+        task = " ".join(list(map(lambda x: "%s: %s" % (x[0], x[1]),
                  list(zip(t_dict.keys(), t_dict.values())))))
         human = "%s %s with new value: '%s'" % (self.action, self.entity, task)
         return {
