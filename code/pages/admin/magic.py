@@ -33,10 +33,13 @@ def get_task():
     return task
 
 
-def tasks_list():
+def tasks_list(all=False):
     from code.database.schema import Tasks
 
-    tasks = Tasks().query.filter(Tasks.processed == False).all()
+    if all:
+        tasks = Tasks().query.all()
+    else:
+        tasks = Tasks().query.filter(Tasks.processed == False).all()
     if not tasks:
         return []
     return list(map(lambda x: x.to_dict(), tasks))
