@@ -53,6 +53,7 @@ class Project(db.Model):
     active = db.Column(db.Boolean, default=False)
     modified = db.Column(db.DateTime(True))
     created = db.Column(db.DateTime(True))
+    allocation_end = db.Column(db.DateTime(True))
     comment = db.Column(db.Text)
     gid = db.Column(db.Integer)
     privileged = db.Column(db.Boolean, default=False)
