@@ -123,6 +123,7 @@ class Project(db.Model):
             "name": self.get_name(),
             "type": self.type,
             "responsible": self.responsible.to_dict(),
+            "responsible_login": self.responsible.login,
             "files": self.files,
             "articles": self.articles,
             "users": list(map(lambda x: x.to_dict(), self.users)),
