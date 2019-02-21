@@ -13,7 +13,9 @@
                 <div class="uk-panel uk-margin-top uk-margin-bottom">
                     <div>Name: <b>{{project.name}}</b></div>
                     <div>Status: <b>{% if project.active %}Active{% else %}Postponed{% endif %}</b></div>
-                    <div>
+                    <div>Created: <b>{% if project.created %}{{project.created}}{% endif %}</b></div>
+                    <div>End of CPU allocation: <b>{% if project.allocation_end %}{{project.allocation_end}}{% endif %}</b></div>
+                    <div class="uk-margin-top">
                         {% if project.consumption and project.usage %}
                             CPU consumed: {{project.consumption}} out of {{project.resources.cpu}} ({{project.usage}})
                         {% endif %}
@@ -35,10 +37,14 @@
                                     {% set style = "uk-progress-info" %}
                                 {% endif %}
                             {% endif %}
-                        {% endif %}
                         <div class="uk-width-small-1-1 uk-progress uk-progress-mini uk-progress-striped {{style}} uk-margin-small-top">
                             <div class="uk-progress-bar" style="width: {{usage}}%;"></div>
                         </div>
+                        {% else %}
+                            {% if project.resources.cpu %}
+                                <span class="uk-icon-exclamation-circle uk-margin-small-right uk-text-danger"></span>No CPU consumed out of {{project.resources.cpu}}
+                            {% endif %}
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -46,7 +52,6 @@
                 <div class="uk-panel uk-margin-top uk-margin-bottom" id="project_users">
                 {% for user in project.users|sort(attribute='fullname')%}
                     <div class="uk-panel" id="{{project.name}}_{{user.login}}">
-                        <!--
                     {% if user.login != project.responsible_login %}
                         <button class="uk-button uk-button-mini uk-button-link uk-text-danger remove uk-icon-justify"
                         type="button" data-pid='{{project.id}}'
@@ -55,13 +60,15 @@
                         <span class="uk-icon-close"></span>
                         </button>
                     {% else %}
-                        <button class="uk-button uk-button-mini uk-button-link uk-icon-justify"
+                        <button class="uk-button uk-button-mini uk-button-link uk-text-warning uk-icon-justify"
                         type="button" data-pid='{{project.id}}'
                         data-name='{{user.fullname}}' data-login='{{user.login}}'
                         data-project='{{project.name}}' disabled>
+                            <!--
+                        <span class="uk-icon-star-o"></span>
+                        -->
                         </button>
                     {% endif %}
-                    -->
                     <span class="uk-margin-small-left">
                     {{user.fullname}}: {{user.consumption}}
                     </span>
@@ -72,6 +79,7 @@
             <div class="uk-width-medium-1-5 uk-width-small-1-1">
                 <div class="uk-panel uk-margin-top uk-margin-bottom">
                     {% if project.active %}
+                        <button class="uk-button uk-width-1-1 new_responsible uk-margin-small-bottom" data-project='{{project.id}}' data-name='{{project.name}}' type="button">Assign responsible</button>
                         {% if project.type=='a' %}
                             <button class="uk-button uk-width-1-1 trans uk-margin-small-bottom" data-project='{{project.id}}' data-name='{{project.name}}' type="button">Transform</button>
                         {% else %}
@@ -107,6 +115,7 @@
                     <li><article>{{project.project_motivation}}</article></li>
                 </ul>
             </div>
+            <div class="uk-margin-large-bottom"></div>
         {% endfor %}
     {% endif %}
 
