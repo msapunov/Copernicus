@@ -135,7 +135,7 @@ function end_warning(){
     add: "user/new",
     assign: "user/assign",
     extend: "project/extend",
-    remove: "project/remove/user",
+    delete: "project/delete/user",
     history: "project/history",
     activate: "project/reactivate",
     transform: "project/transform"
@@ -378,7 +378,7 @@ function end_warning(){
     var txt = "Are you sure you want to remove {0} from the project {1}?".f(full, name);
     var data = {"project": id, "login": login};
     UIkit.modal.confirm(txt, function(){
-      window.proj.send("remove", data).done(function(reply){
+      window.proj.send("delete", data).done(function(reply){
         window.render.user_reshuffle(reply.data, name, id);
       });
     });
