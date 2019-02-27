@@ -1,4 +1,4 @@
-from flask import Flask, g, jsonify
+from flask import Flask, g
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.contrib.cache import SimpleCache
@@ -70,6 +70,7 @@ def menu_item(obj):
     line = line.replace("<TemplateReference '", "")
     line = line.replace(".html'>", "")
     return line
+
 
 app.register_blueprint(blueprint_login)
 app.register_blueprint(blueprint_project)
