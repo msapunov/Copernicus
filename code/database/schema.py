@@ -579,7 +579,7 @@ class LimboProject(db.Model):
     ref = db.relationship("Register", foreign_keys=ref_id)
 
     def __repr__(self):
-        return '<Temporary copy of Project {}>'.format(self.get_name())
+        return '<Limbo Project {}>'.format(self.get_name())
 
     def get_name(self):
         if self.name:
@@ -629,3 +629,26 @@ class LimboProject(db.Model):
             "allocation_end": allocation,
             "ref": self.ref.id
         }
+
+
+class LimboUser(UserMixin, db.Model):
+    __tablename__ = "limbo_users"
+
+    id = db.Column(db.Integer)
+    name = db.Column(db.String(128))
+    surname = db.Column(db.String(128))
+    email = db.Column(db.String(128))
+    phone = db.Column(db.String(10))
+    lab = db.Column(db.String(128))
+    position = db.Column(db.String(128))
+    login = db.Column(db.String(128), unique=True)
+    acl_id = db.Column(db.Integer, db.ForeignKey("acl.id"))
+    acl = db.relationship("ACLDB", uselist=False, backref="users")
+    project = db.relationship("Project", secondary="user_project")
+    active = db.Column(db.Boolean, default=False)
+    comment = db.Column(db.Text)
+    modified = db.Column(db.DateTime(True))
+    created = db.Column(db.DateTime(True))
+
+    def __repr__(self):
+        return '<Limbo User {}>'.format(self.login)
