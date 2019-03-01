@@ -231,9 +231,6 @@ class Resources(db.Model):
     cpu = db.Column(db.Integer, db.CheckConstraint("cpu>=0"))
     type = db.Column(db.String(1),
                      db.CheckConstraint("type IN ('a', 'b', 'c', 'h')"))
-    smp = db.Column(db.Boolean, default=False)
-    gpu = db.Column(db.Boolean, default=False)
-    phi = db.Column(db.Boolean, default=False)
     comment = db.Column(db.Text)
     created = db.Column(db.DateTime(True))
     modified = db.Column(db.DateTime(True))
@@ -245,9 +242,6 @@ class Resources(db.Model):
             "valid": self.valid,
             "cpu": self.cpu,
             "type": self.type,
-            "smp": self.smp,
-            "gpu": self.gpu,
-            "phi": self.phi,
             "comment": self.comment,
             "created": self.created,
             "modified": self.modified
@@ -341,10 +335,6 @@ class Register(db.Model):
     type_c = db.Column(db.Boolean, default=False)
     type_h = db.Column(db.Boolean, default=False)
     cpu = db.Column(db.Integer, db.CheckConstraint("cpu_cluster>=0"))
-    smp = db.Column(db.Boolean, default=False)
-    visu = db.Column(db.Boolean, default=False)
-    gpu = db.Column(db.Boolean, default=False)
-    phi = db.Column(db.Boolean, default=False)
     article_1 = db.Column(db.String)
     article_2 = db.Column(db.String)
     article_3 = db.Column(db.String)
@@ -417,10 +407,6 @@ class Register(db.Model):
             "type_b": self.type_b,
             "type_c": self.type_c,
             "cpu": self.cpu,
-            "smp": self.smp,
-            "visu": self.visu,
-            "gpu": self.gpu,
-            "phi": self.phi,
             "article_1": self.article_1,
             "article_2": self.article_2,
             "article_3": self.article_3,
