@@ -536,3 +536,96 @@ class Tasks(db.Model):
             "modified": modified,
             "human": human
         }
+
+
+class PurgatoryProject(db.Model):
+    __tablename__ = "purgatory_projects"
+
+    id = db.Column(db.Integer)
+    title = db.Column(db.String(256))
+    description = db.Column(db.String)
+    scientific_fields = db.Column(db.String(256))
+    genci_committee = db.Column(db.String(256))
+    numerical_methods = db.Column(db.String)
+    computing_resources = db.Column(db.String)
+    project_management = db.Column(db.String)
+    project_motivation = db.Column(db.String)
+    active = db.Column(db.Boolean, default=False)
+    modified = db.Column(db.DateTime(True))
+    created = db.Column(db.DateTime(True))
+    allocation_end = db.Column(db.DateTime(True))
+    comment = db.Column(db.Text)
+    gid = db.Column(db.Integer)
+    privileged = db.Column(db.Boolean, default=False)
+    name = db.Column(db.String(128))
+    type = db.Column(db.String(1),
+                     db.CheckConstraint("type IN ('a', 'b', 'c', 'h')"))
+
+    responsible_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+    responsible = db.relationship("User", backref="responsible",
+                                  uselist=False, foreign_keys=responsible_id)
+
+    files = db.relationship("FileDB", back_populates="project")
+    articles = db.relationship("ArticleDB", back_populates="project")
+    users = db.relationship("User", secondary="user_project")
+
+    approve_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+    approve = db.relationship("User", foreign_keys=approve_id)
+
+    resources_id = db.Column(db.Integer, db.ForeignKey("project_resources.id"))
+    resources = db.relationship("Resources", foreign_keys=resources_id)
+
+    ref_id = db.Column(db.Integer, db.ForeignKey("register.id"))
+    ref = db.relationship("Register", foreign_keys=ref_id)
+
+    def __repr__(self):
+        return '<Temporary copy of Project {}>'.format(self.get_name())
+
+    def get_name(self):
+        if self.name:
+            return self.name
+        pid = self.id
+        genre = self.type
+        return "%s%s" % (genre, str(pid).zfill(3))
+
+    def to_dict(self):
+        if self.created:
+            created = self.created.strftime("%Y-%m-%d %X %Z")
+        else:
+            created = ""
+        if self.modified:
+            modified = self.modified.strftime("%Y-%m-%d %X %Z")
+        else:
+            modified = ""
+        if self.allocation_end:
+            allocation = self.allocation_end.strftime("%Y-%m-%d %X %Z")
+        else:
+            allocation = ""
+        return {
+            "id": self.id,
+            "title": self.title,
+            "description": self.description,
+            "scientific_fields": self.scientific_fields,
+            "genci_committee": self.genci_committee,
+            "numerical_methods": self.numerical_methods,
+            "computing_resources": self.computing_resources,
+            "project_management": self.project_management,
+            "project_motivation": self.project_motivation,
+            "active": self.active,
+            "modified": modified,
+            "created": created,
+            "comment": self.comment,
+            "gid": self.gid,
+            "privileged": self.privileged,
+            "name": self.get_name(),
+            "type": self.type,
+            "responsible": self.responsible.to_dict(),
+            "responsible_login": self.responsible.login,
+            "files": self.files,
+            "articles": self.articles,
+            "users": list(map(lambda x: x.to_dict(), self.users)),
+            "approve": self.approve.to_dict(),
+            "resources": self.resources.to_dict(),
+            "allocation_end": allocation,
+            "ref": self.ref.id
+        }
