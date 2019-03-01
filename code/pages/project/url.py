@@ -1,11 +1,33 @@
 from flask import render_template, request, jsonify
 from flask_login import login_required
-from code.pages import ProjectLog, check_int
+from code.pages import ProjectLog, check_int, check_str, TaskQueue
 from code.pages.user import bp
-from code.pages.project.magic import get_project_info
+from code.pages.project.magic import get_project_info, get_project_record
 from code.pages.project.magic import send_activate_mail, send_transform_mail
 from code.pages.project.magic import send_extend_mail, extend_update
+from code.pages.user.url import get_user_record
 from datetime import datetime as dt
+
+
+@bp.route("/project/delete/user", methods=["POST"])
+@login_required
+def web_project_delete_user():
+    data = request.get_json()
+    if not data:
+        raise ValueError("Expecting application/json requests")
+    pid = check_int(data["project"])
+    login = check_str(data["login"])
+    project = get_project_record(pid)
+    users = list(map(lambda x: x.login, project.users))
+    if login not in users:
+        raise ValueError("User '%s' seems not to be registered in project '%s'"
+                         % (login, project.get_name()))
+    user = get_user_record(login)
+    TaskQueue().user_delete(user)
+#    ProjectLog(project).user_del(user)
+
+    return jsonify(message="Delete user request has been registered"
+                           " successfully")
 
 
 @bp.route("/project/transform", methods=["POST"])
