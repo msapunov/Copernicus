@@ -538,8 +538,8 @@ class Tasks(db.Model):
         }
 
 
-class PurgatoryProject(db.Model):
-    __tablename__ = "purgatory_projects"
+class LimboProject(db.Model):
+    __tablename__ = "limbo_projects"
 
     id = db.Column(db.Integer)
     title = db.Column(db.String(256))
