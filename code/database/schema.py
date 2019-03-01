@@ -520,7 +520,7 @@ class Tasks(db.Model):
             modified = ""
         t_dict = eval(self.task)
         task = " ".join(list(map(lambda x: "%s: %s" % (x[0], x[1]),
-                 list(zip(t_dict.keys(), t_dict.values())))))
+                                 list(zip(t_dict.keys(), t_dict.values())))))
         human = "%s %s with new value: '%s'" % (self.action, self.entity, task)
         return {
             "id": self.id,
