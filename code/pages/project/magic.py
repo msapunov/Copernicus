@@ -6,6 +6,15 @@ from datetime import datetime as dt
 from code.pages import send_message
 
 
+def get_project_record(pid):
+    from code.database.schema import Project
+
+    project = Project.query.filter_by(id=pid).first()
+    if not project:
+        raise ValueError("Failed to find project with id '%s'" % pid)
+    return project
+
+
 def extend_update():
     from code.database.schema import Extend, Project
 
