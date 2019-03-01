@@ -108,6 +108,16 @@ class ProjectLog:
         from code.database.schema import LogDB
         self.log = LogDB(author=current_user, project=project)
 
+    def user_add(self, user):
+        self.log.event = "add user"
+        self.log.user = user
+        self._commit()
+
+    def user_del(self, user):
+        self.log.event = "delete user"
+        self.log.user = user
+        self._commit()
+
     def extend(self, extension):
         self.log.event = "extension request"
         self.log.extension = extension
