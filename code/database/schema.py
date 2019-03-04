@@ -635,6 +635,8 @@ class LimboUser(db.Model):
     comment = db.Column(db.Text)
     modified = db.Column(db.DateTime(True))
     created = db.Column(db.DateTime(True))
+    ref_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+    reference = db.relationship("User", foreign_keys=ref_id)
 
     def __repr__(self):
         return '<Limbo User {}>'.format(self.login)
