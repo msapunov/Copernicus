@@ -92,8 +92,7 @@ class TaskQueue:
         self._user_action()
 
     def _user_action(self):
-        self.task.entity = "user"
-        self.task.status = "in progress"
+        self.task.status = "pending"
         self._commit()
 
     def _commit(self):
