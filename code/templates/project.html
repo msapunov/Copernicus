@@ -52,7 +52,7 @@
                 <div class="uk-panel uk-margin-top uk-margin-bottom" id="project_users">
                 {% for user in project.users|sort(attribute='fullname')%}
                     <div class="uk-panel" id="{{project.name}}_{{user.login}}">
-                    {% if user.login != project.responsible_login %}
+                    {% if user.login != project.responsible_login and user.active == True %}
                         <button class="uk-button uk-button-mini uk-button-link uk-text-danger remove uk-icon-justify"
                         type="button" data-pid='{{project.id}}'
                         data-name='{{user.fullname}}' data-login='{{user.login}}'
@@ -69,9 +69,15 @@
                         -->
                         </button>
                     {% endif %}
-                    <span class="uk-margin-small-left">
-                    {{user.fullname}}: {{user.consumption}}
-                    </span>
+                    {% if user.active == 'Suspended' %}
+                        <span class="uk-margin-small-left uk-text-muted">
+                        {{user.fullname}}: {{user.consumption}}
+                        </span>
+                    {% else %}
+                        <span class="uk-margin-small-left">
+                        {{user.fullname}}: {{user.consumption}}
+                        </span>
+                    {% endif %}
                     </div>
                 {% endfor %}
                 </div>
