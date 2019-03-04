@@ -76,8 +76,8 @@ class TaskQueue:
         self.task = Tasks(author=current_user, processed=False,
                           status="pending")
 
-    def user_add(self, data):
-        self.task.task = data
+    def user_add(self, user):
+        self.task.limbo_user = user
         self.task.action = "create"
         self._user_action()
 
