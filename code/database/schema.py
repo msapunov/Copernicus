@@ -614,7 +614,7 @@ class LimboProject(db.Model):
         }
 
 
-class LimboUser(UserMixin, db.Model):
+class LimboUser(db.Model):
     __tablename__ = "limbo_users"
 
     id = db.Column(db.Integer, primary_key=True)
