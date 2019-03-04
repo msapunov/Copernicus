@@ -529,9 +529,7 @@ class Tasks(db.Model):
         return {
             "id": self.id,
             "action": self.action,
-            "entity": self.entity,
             "status": self.status,
-            "task": self.task,
             "author": self.author.login,
             "approve": self.approve.full_name() if self.approve else "",
             "decision": self.decision,
