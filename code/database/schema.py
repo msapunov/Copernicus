@@ -508,6 +508,12 @@ class Tasks(db.Model):
     created = db.Column(db.DateTime(True), default=dt.utcnow)
     modified = db.Column(db.DateTime(True))
 
+    limbo_uid = db.Column(db.Integer, db.ForeignKey("limbo_users.id"))
+    limbo_user = db.relationship("LimboUser", foreign_keys=limbo_uid)
+
+    limbo_pid = db.Column(db.Integer, db.ForeignKey("limbo_projects.id"))
+    limbo_project = db.relationship("LimboProject", foreign_keys=limbo_pid)
+
     def __repr__(self):
         return "<Task queue record {}>".format(self.id)
 
