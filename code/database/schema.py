@@ -539,7 +539,7 @@ class Tasks(db.Model):
 class LimboProject(db.Model):
     __tablename__ = "limbo_projects"
 
-    id = db.Column(db.Integer)
+    id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(256))
     description = db.Column(db.String)
     scientific_fields = db.Column(db.String(256))
@@ -617,7 +617,7 @@ class LimboProject(db.Model):
 class LimboUser(UserMixin, db.Model):
     __tablename__ = "limbo_users"
 
-    id = db.Column(db.Integer)
+    id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(128))
     surname = db.Column(db.String(128))
     email = db.Column(db.String(128))
