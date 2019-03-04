@@ -522,10 +522,13 @@ class Tasks(db.Model):
             modified = self.modified.strftime("%Y-%m-%d %X %Z")
         else:
             modified = ""
-        t_dict = eval(self.task)
-        task = " ".join(list(map(lambda x: "%s: %s" % (x[0], x[1]),
-                                 list(zip(t_dict.keys(), t_dict.values())))))
-        human = "%s %s with new value: '%s'" % (self.action, self.entity, task)
+        if self.limbo_user and self.limbo_project:
+            human = "%s %s in %s" % (self.action, self.limbo_user.login,
+                                     self.limbo_project.get_name())
+        elif self.limbo_user:
+            human = "%s %s" % (self.action, self.limbo_user.login)
+        elif self.limbo_project:
+            human = "%s %s" % (self.action, self.limbo_project.title)
         return {
             "id": self.id,
             "action": self.action,
