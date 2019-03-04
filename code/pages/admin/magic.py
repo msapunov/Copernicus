@@ -34,10 +34,10 @@ def get_task():
     return task
 
 
-def tasks_list(all=False):
+def tasks_list(every=False):
     from code.database.schema import Tasks
 
-    if all:
+    if every:
         tasks = Tasks().query.all()
     else:
         tasks = Tasks().query.filter(Tasks.processed == False).all()
