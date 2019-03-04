@@ -86,8 +86,10 @@ class TaskQueue:
         self.task.action = "update"
         self._user_action()
 
-    def user_delete(self, data):
-        self.task.task = data
+    def user_delete(self, user, project=None):
+        self.task.limbo_user = self._copy_user(user)
+        if project:
+            self.task.limbo_project = self._copy_project(project)
         self.task.action = "delete"
         self._user_action()
 
