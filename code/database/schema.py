@@ -491,10 +491,8 @@ class Tasks(db.Model):
     action = db.Column(db.String(6),
                        db.CheckConstraint("action IN ('create', 'update',"
                                           " 'delete')"), nullable=False)
-    entity = db.Column(db.String(128), nullable=False)
     status = db.Column(db.String(11), db.CheckConstraint(
         "status IN ('pending', 'done', 'in progress')"))
-    task = db.Column(db.Text, nullable=False)
     author_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     author = db.relationship("User", foreign_keys=author_id)
 
@@ -560,23 +558,8 @@ class LimboProject(db.Model):
     name = db.Column(db.String(128))
     type = db.Column(db.String(1),
                      db.CheckConstraint("type IN ('a', 'b', 'c', 'h')"))
-
-    responsible_id = db.Column(db.Integer, db.ForeignKey("users.id"))
-    responsible = db.relationship("User", backref="responsible",
-                                  uselist=False, foreign_keys=responsible_id)
-
-    files = db.relationship("FileDB", back_populates="project")
-    articles = db.relationship("ArticleDB", back_populates="project")
-    users = db.relationship("User", secondary="user_project")
-
-    approve_id = db.Column(db.Integer, db.ForeignKey("users.id"))
-    approve = db.relationship("User", foreign_keys=approve_id)
-
-    resources_id = db.Column(db.Integer, db.ForeignKey("project_resources.id"))
-    resources = db.relationship("Resources", foreign_keys=resources_id)
-
-    ref_id = db.Column(db.Integer, db.ForeignKey("register.id"))
-    ref = db.relationship("Register", foreign_keys=ref_id)
+    ref_id = db.Column(db.Integer, db.ForeignKey("projects.id"))
+    reference = db.relationship("Project", foreign_keys=ref_id)
 
     def __repr__(self):
         return '<Limbo Project {}>'.format(self.get_name())
@@ -642,9 +625,6 @@ class LimboUser(UserMixin, db.Model):
     lab = db.Column(db.String(128))
     position = db.Column(db.String(128))
     login = db.Column(db.String(128), unique=True)
-    acl_id = db.Column(db.Integer, db.ForeignKey("acl.id"))
-    acl = db.relationship("ACLDB", uselist=False, backref="users")
-    project = db.relationship("Project", secondary="user_project")
     active = db.Column(db.Boolean, default=False)
     comment = db.Column(db.Text)
     modified = db.Column(db.DateTime(True))
