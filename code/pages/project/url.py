@@ -24,8 +24,7 @@ def web_project_delete_user():
                          % (login, project.get_name()))
     user = get_user_record(login)
     TaskQueue().user_delete(user, project)
-#    ProjectLog(project).user_del(user)
-
+    ProjectLog(project).user_del(user)
     return jsonify(message="Delete user request has been registered"
                            " successfully")
 
