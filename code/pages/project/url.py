@@ -23,7 +23,7 @@ def web_project_delete_user():
         raise ValueError("User '%s' seems not to be registered in project '%s'"
                          % (login, project.get_name()))
     user = get_user_record(login)
-    TaskQueue().user_delete(user)
+    TaskQueue().user_delete(user, project)
 #    ProjectLog(project).user_del(user)
 
     return jsonify(message="Delete user request has been registered"
