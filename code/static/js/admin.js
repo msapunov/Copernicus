@@ -117,7 +117,7 @@
                 $.each(data.data, function(idx, val){
                 // type="button" data-id='{{record.id}}-info'>
                     var btn = $("<td/>").append($("<button/>").attr({"data-id": "task-"+val.id+"-child"}).addClass("uk-button uk-button-mini task_info").append($("<span/>").addClass("uk-icon-plus")));
-                    var act = $("<td/>").addClass("uk-text-nowrap").text("{0} {1}".f(val.action, val.entity));
+                    var act = $("<td/>").addClass("uk-text-nowrap").text(val.action);
                     var task= $("<td/>").text(val.task);
                     var user = $("<td/>").text(val.author);
                     var status = $("<td/>").text(val.status);
