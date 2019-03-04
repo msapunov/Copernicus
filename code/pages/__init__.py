@@ -91,6 +91,49 @@ class TaskQueue:
         self.task.action = "delete"
         self._user_action()
 
+    @staticmethod
+    def _copy_project(project):
+        from code import db
+        from code.database.schema import LimboProject
+        limbo = LimboProject(
+            title=project.title,
+            description=project.description,
+            scientific_fields=project.scientific_fields,
+            genci_committee=project.genci_committee,
+            numerical_methods=project.numerical_methods,
+            computing_resources=project.computing_resources,
+            project_management=project.project_management,
+            project_motivation=project.project_motivation,
+            allocation_end=project.allocation_end,
+            comment=project.comment,
+            gid=project.gid,
+            privileged=project.privileged,
+            name=project.name,
+            type=project.type,
+            reference=project
+        )
+        db.session.add(limbo)
+        return limbo
+
+    @staticmethod
+    def _copy_user(user):
+        from code import db
+        from code.database.schema import LimboUser
+        limbo = LimboUser(
+            name=user.name,
+            surname=user.surname,
+            email=user.email,
+            phone=user.phone,
+            lab=user.lab,
+            position=user.position,
+            login=user.login,
+            active=user.active,
+            comment=user.comment,
+            reference=user
+        )
+        db.session.add(limbo)
+        return limbo
+
     def _user_action(self):
         self.task.status = "pending"
         self._commit()
