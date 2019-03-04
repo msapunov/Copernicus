@@ -6,6 +6,29 @@ from datetime import datetime as dt
 from code.pages import send_message
 
 
+def get_deleting_users(projects):
+    from code.database.schema import Tasks, LimboProject, LimboUser
+
+    for project in projects:
+        pid = project["id"]
+        l_projects = LimboProject.query.filter_by(ref_id=pid).all()
+        if not l_projects:
+            continue
+        for user in project["users"]:
+            uid = user["id"]
+            l_users = LimboUser.query.filter_by(ref_id=uid).all()
+            if not l_users:
+                continue
+            users = list(map(lambda x: x.id, l_users))
+            projets = list(map(lambda x: x.id, l_projects))
+            limbo = Tasks.query.filter(Tasks.limbo_uid.in_(users),
+                                       Tasks.limbo_pid.in_(projets)).all()
+            if not limbo:
+                continue
+            user["active"]="Suspended"
+    return projects
+
+
 def get_project_record(pid):
     from code.database.schema import Project
 
@@ -16,7 +39,7 @@ def get_project_record(pid):
 
 
 def extend_update():
-    from code.database.schema import Extend, Project
+    from code.database.schema import Extend
 
     data = request.get_json()
     if not data:
@@ -35,10 +58,7 @@ def extend_update():
     else:
         raise ValueError("Comment is absent")
 
-    project = Project().query.filter_by(id=pid).first()
-    if not project:
-        raise ValueError("Failed to find a project with id: %s" % pid)
-
+    project = get_project_record(pid)
     p_name = project.get_name()
     p_info = get_project_consumption([p_name])
     if not p_info:
