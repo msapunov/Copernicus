@@ -52,6 +52,9 @@ def web_admin_message_send():
 @login_required
 def web_admin_tasks_ignore():
     task_action("ignore")
+
+    from code import db
+    db.session.commit()
     return web_admin_tasks_list()
 
 
@@ -60,6 +63,9 @@ def web_admin_tasks_ignore():
 def web_admin_tasks_reject():
     task = task_action("reject")
     task_mail("reject", task)
+
+    from code import db
+    db.session.commit()
     return web_admin_tasks_list()
 
 
