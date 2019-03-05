@@ -21,11 +21,10 @@ def delete_user(task):
     if not task.limbo_project:
         raise ValueError("")
     project = get_project_record(task.limbo_project.ref_id)
-    print(project.users)
     user = get_user_record(task.limbo_user.login)
-    project.users.pop(user)
-    print(project.users)
-    print(user, project)
+    project.users.remove(user)
+    task.status = "done"
+    return task
 
 
 def task_action(action):
