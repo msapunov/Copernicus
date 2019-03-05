@@ -572,11 +572,7 @@ class LimboProject(db.Model):
         return '<Limbo Project {}>'.format(self.get_name())
 
     def get_name(self):
-        if self.name:
-            return self.name
-        pid = self.id
-        genre = self.type
-        return "%s%s" % (genre, str(pid).zfill(3))
+        return self.reference.get_name()
 
     def to_dict(self):
         if self.created:
