@@ -69,6 +69,9 @@ def web_admin_tasks_accept():
     task = task_action("accept")
     execute_task(task)
     task_mail("accept", task)
+
+    from code import db
+    db.session.commit()
     return web_admin_tasks_list()
 
 
