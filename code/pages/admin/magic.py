@@ -6,6 +6,15 @@ from code.pages.user.magic import get_user_record
 from logging import error, debug
 
 
+def execute_task(task):
+    if task.status != "pending" and task.decision != "accept":
+        raise ValueError("Task '%s' seems to be processed already" % task.id)
+    if task.action not in ["create", "update", "delete"]:
+        raise ValueError("Inconsistency in the DB for task id: %s" % task.id)
+    if task.action == "delete":
+        delete_user(task)
+
+
 def delete_user(task):
     if not task.limbo_user:
         raise ValueError("")
