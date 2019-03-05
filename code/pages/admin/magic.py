@@ -34,10 +34,8 @@ def task_action(action):
     task.processed = True
     task.decision = action
     task.approve = current_user
-    task.status = "done"
-
-    from code import db
-    db.session.commit()
+    if action in ["reject", "ignore"]:
+        task.status = "done"
     return task
 
 
