@@ -21,8 +21,10 @@ def get_deleting_users(projects):
                 continue
             users = list(map(lambda x: x.id, l_users))
             projets = list(map(lambda x: x.id, l_projects))
-            limbo = Tasks.query.filter(Tasks.limbo_uid.in_(users),
-                                       Tasks.limbo_pid.in_(projets)).all()
+            limbo = Tasks.query.filter( Tasks.processed==False,
+                                        Tasks.action == "delete",
+                                        Tasks.limbo_uid.in_(users),
+                                        Tasks.limbo_pid.in_(projets)).all()
             if not limbo:
                 continue
             user["active"]="Suspended"
