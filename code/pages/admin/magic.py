@@ -1,7 +1,22 @@
 from flask import current_app, request
 from flask_login import current_user
 from code.pages import check_int, ssh_wrapper, send_message, check_str
+from code.pages.project.magic import get_project_record
+from code.pages.user.magic import get_user_record
 from logging import error, debug
+
+
+def delete_user(task):
+    if not task.limbo_user:
+        raise ValueError("")
+    if not task.limbo_project:
+        raise ValueError("")
+    project = get_project_record(task.limbo_project.ref_id)
+    print(project.users)
+    user = get_user_record(task.limbo_user.login)
+    project.users.pop(user)
+    print(project.users)
+    print(user, project)
 
 
 def task_action(action):
