@@ -379,7 +379,9 @@ function end_warning(){
     var data = {"project": id, "login": login};
     UIkit.modal.confirm(txt, function(){
       window.proj.send("delete", data).done(function(reply){
-        window.render.user_reshuffle(reply.data, name, id);
+        var uid = "{0}_{1}".f(name, login);
+        var btn = $("#"+uid).find("button").css("visibility", "hidden");
+        $("#"+uid).find(".uk-margin-small-left").addClass("uk-text-muted");
       });
     });
   }
@@ -430,7 +432,7 @@ function end_warning(){
     }
     return btn
   }
-  window.render.user_reshuffle = function(users, proj_name, proj_id){
+  window.render.user_reshuffle = function(uid){
     $("#project_users").empty();
     users.sort(function(a,b){
       if(a.fullname < b.fullname)
