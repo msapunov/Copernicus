@@ -192,11 +192,7 @@
     }
 
     window.render.partition=function(){
-        $.ajax({
-            url: window.admin.url.info,
-            type: "POST",
-            cache: false
-        }).done(function(data){
+        json_send(window.admin.url.info).done(function(data){
             var tbody = $("<tbody/>").attr({"id": "slurm"});
             data.data.sort(window.sort_by("total", true, parseInt));
             $.each(data.data, function(idx, val){
