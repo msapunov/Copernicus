@@ -85,7 +85,8 @@ show_error = function(req){
 };
 
 json_send = function(url, data){
-    var modal = UIkit.modal.blockUI("Sending data...");
+    var modal = UIkit.modal("#ajax_call")
+    modal.show();
     return $.ajax({
         contentType: "application/json",
         data: JSON.stringify(data),
