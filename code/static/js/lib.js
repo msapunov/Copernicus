@@ -93,8 +93,6 @@ json_send = function(url, data){
         timeout: 5000,
         type: "POST",
         url: url
-    }).done(function(resp){
-        UIkit.notify("Data exchange finished successfully", {timeout: 2000, status:"success"});
     }).fail(function(request){
         show_error(request);
     }).always(function() {
