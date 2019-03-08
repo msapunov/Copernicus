@@ -46,11 +46,7 @@
     }
 
     window.render.tasks_history = function(){
-        $.ajax({
-            url: window.admin.url.tasks_history,
-            type: "POST",
-            cache: false
-        }).done(function(data){
+        json_send(window.admin.url.tasks_history).done(function(data){
             if(data.data.length < 1){
                 UIkit.notify("No historic tasks found!", {timeout: 2000, status:"primary"});
             }else{
@@ -92,11 +88,7 @@
     }
 
     window.render.tasks = function(){
-        $.ajax({
-            url: window.admin.url.tasks,
-            type: "POST",
-            cache: false
-        }).done(function(data){
+        json_send(window.admin.url.tasks).done(function(data){
             if(data.data.length < 1){
                 UIkit.notify("No pending tasks found!", {timeout: 2000, status:"primary"});
             }else{
@@ -165,12 +157,7 @@
 
     window.render.user=function(){
         var data = $(this).data("data");
-        $.ajax({
-            url: window.admin.url.user,
-            data: {server: data},
-            type: "POST",
-            cache: false
-        }).done(function(data){
+        json_send(window.admin.url.user, {server: data}).done(function(data){
             var table = $("<table>").addClass("uk-table uk-table-hover uk-table-striped uk-table-condensed");
             data.data.sort(window.sort_by("username", false, function(a){return a.toUpperCase()}));
             $.each(data.data, function(idx, val){
@@ -274,12 +261,7 @@
     }
 
     window.render.new_accept_users=function(id){
-        $.ajax({
-            url: window.admin.url.new_users,
-            data: JSON.stringify({"pid": id}),
-            type: "POST",
-            cache: false
-        }).done(function(data){
+        json_send(window.admin.url.new_users, JSON.stringify({"pid": id})).done(function(data){
             var responsible = data.responsible;
             var users = data.users;
             var i = 0;
