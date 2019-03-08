@@ -64,20 +64,13 @@
                         type="button" data-pid='{{project.id}}'
                         data-name='{{user.fullname}}' data-login='{{user.login}}'
                         data-project='{{project.name}}' disabled>
-                            <!--
-                        <span class="uk-icon-star-o"></span>
-                        -->
                         </button>
                     {% endif %}
-                    {% if user.active == 'Suspended' %}
-                        <span class="uk-margin-small-left uk-text-muted">
+
+                        <span class={% if user.active == 'Suspended' %}"uk-margin-small-left uk-text-muted"{% else %}"uk-margin-small-left"{% endif %}>
                         {{user.fullname}}: {{user.consumption}}
                         </span>
-                    {% else %}
-                        <span class="uk-margin-small-left">
-                        {{user.fullname}}: {{user.consumption}}
-                        </span>
-                    {% endif %}
+
                     </div>
                 {% endfor %}
                 </div>
