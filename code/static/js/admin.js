@@ -18,11 +18,7 @@
     };
 
     window.admin.sys = function(){
-        $.ajax({
-            url: window.admin.url.system,
-            type: "POST",
-            cache: false
-        }).done(function(data){
+        json_send(window.admin.url.system).done(function(data){
             if(!data){
                 alert("No data placeholder")
             }
