@@ -495,7 +495,9 @@ function end_warning(){
   }
 
   $(document).on("click", ".new", window.render.new_user);
-  $(document).on("click", ".assign", window.render.assign_user);
+  $(document).on("click", ".user_ass", window.render.assign_user);
+  $(document).on("click", ".user_add", window.render.assign_user);
+  $(document).on("click", ".responsible_ass", window.render.assign_user);
   $(document).on("click", ".extend", window.render.extend);
   $(document).on("click", ".renew", window.render.extend);
   $(document).on("click", ".history", window.render.project_history);
