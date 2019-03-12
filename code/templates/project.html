@@ -68,7 +68,7 @@
                     {% endif %}
 
                         <span class={% if user.active == 'Suspended' %}"uk-margin-small-left uk-text-muted"{% else %}"uk-margin-small-left"{% endif %}>
-                        {{user.fullname}}: {{user.consumption}}
+                        {{user.fullname}}: {{user.consumption}} hours
                         </span>
 
                     </div>
@@ -78,7 +78,7 @@
             <div class="uk-width-medium-1-5 uk-width-small-1-1">
                 <div class="uk-panel uk-margin-top uk-margin-bottom">
                     {% if project.active %}
-                        <button class="uk-button uk-width-1-1 new_responsible uk-margin-small-bottom" data-project='{{project.id}}' data-name='{{project.name}}' type="button">Assign responsible</button>
+                        <button class="uk-button uk-width-1-1 responsible_ass uk-button-danger uk-margin-small-bottom" data-project='{{project.id}}' data-name='{{project.name}}' type="button">Assign responsible</button>
                         {% if project.type=='a' %}
                             <button class="uk-button uk-width-1-1 trans uk-margin-small-bottom" data-project='{{project.id}}' data-name='{{project.name}}' type="button">Transform</button>
                         {% else %}
@@ -88,6 +88,8 @@
                                 <button class="uk-button uk-width-1-1 extend uk-margin-small-bottom" data-project='{{project.id}}' data-name='{{project.name}}' type="button">Extend&nbsp;project</button>
                             {% endif %}
                         {% endif %}
+                        <button class="uk-button uk-width-1-1 user_add uk-margin-small-bottom" data-project='{{project.id}}' data-name='{{project.name}}' type="button">Add user</button>
+                        <button class="uk-button uk-width-1-1 user_ass uk-margin-small-bottom" data-project='{{project.id}}' data-name='{{project.name}}' type="button">Assign user</button>
                         <button class="uk-button uk-width-1-1 history uk-margin-small-bottom" data-project='{{project.id}}' data-name='{{project.name}}' type="button">History</button>
                     {% else %}
                         <button class="uk-button uk-width-1-1 react uk-margin-small-bottom" data-project='{{project.id}}' data-name='{{project.name}}' type="button">Activate project</button>
