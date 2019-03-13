@@ -311,15 +311,8 @@ function end_warning(){
 
             return true;
         });
-
-    /*
-      window.proj.send("assign", data).done(function(reply){
-        window.render.user_reshuffle(reply.data, name, id);
-      });
-      return true;
-    });
-    */
     }
+
     window.render.del_button = function(project, user){
         var btn = $("<button/>").attr({
                 "type": "button",
