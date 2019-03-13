@@ -310,6 +310,8 @@ function end_warning(){
             if(select.length < 1){
                 return true;
             }
+            var full = $(select).find(":selected").text();
+
             var data = {
                 "login": select.val(),
                 "project": id
