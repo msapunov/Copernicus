@@ -364,25 +364,24 @@ function end_warning(){
             return new Date(b.date) - new Date(a.date);
         });
         data.forEach(function(user){
-        var tr = $("<tr>");
-        ["date", "message"].forEach(function(attr){
-            var txt = user[attr];
-            txt = txt.replace(/</g, "&lt;");
-            txt = txt.replace(/>/g, "&gt;");
-            tr.append("<td>" + txt + "</td>");
+            var tr = $("<tr>");
+            ["date", "message"].forEach(function(attr){
+                var txt = user[attr];
+                txt = txt.replace(/</g, "&lt;");
+                txt = txt.replace(/>/g, "&gt;");
+                tr.append("<td>" + txt + "</td>");
+            });
+            info.append(tr);
         });
-        info.append(tr);
-    });
 
-    $("#modal_body").html(info.prop("outerHTML"));
+        $("#modal_body").html(info.prop("outerHTML"));
 
-    var modal = UIkit.modal("#modal");
-    if ( modal.isActive() ) {
-        modal.hide();
-    } else {
-        modal.show();
-    }
-
+        var modal = UIkit.modal("#modal");
+        if ( modal.isActive() ) {
+            modal.hide();
+        } else {
+            modal.show();
+        }
     }
     window.render.project_history = function(e){
         var name = $(this).data("name");
