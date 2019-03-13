@@ -293,7 +293,9 @@ function end_warning(){
         });
     }
 
-    window.render.assign_user = function(e){
+
+
+    window.render.assign_responsible = function(e){
         var name = $(this).data("name");
         var id = $(this).data("project");
         var list_id = "#"+id+"_assign_list";
@@ -392,8 +394,8 @@ function end_warning(){
 
     $(document).on("click", ".new", window.render.new_user);
     $(document).on("click", ".user_ass", window.render.assign_user);
-    $(document).on("click", ".user_add", window.render.assign_user);
-    $(document).on("click", ".responsible_ass", window.render.assign_user);
+    $(document).on("click", ".user_add", window.render.add_user);
+    $(document).on("click", ".responsible_ass", window.render.assign_responsible);
     $(document).on("click", ".extend", window.render.extend);
     $(document).on("click", ".renew", window.render.extend);
     $(document).on("click", ".history", window.render.project_history);
