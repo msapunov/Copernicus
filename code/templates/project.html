@@ -119,7 +119,7 @@
             <div class="uk-margin-large-bottom"></div>
 
             {% if project.users|length > 1 %}
-                <div id="{{project.id}}_assign_list" style="display: none;">
+                <div id="{{project.id}}_assign_list" class="uk-width-1-1" style="display: none;">
                     <select class="admin_assign_select uk-width-1-1" data-placeholder="Select a user">
                         {% for user in project.users|sort(attribute='fullname')%}
                             {% if user.login != project.responsible_login and user.active == True %}
