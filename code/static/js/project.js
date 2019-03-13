@@ -316,7 +316,9 @@ function end_warning(){
                 "login": select.val(),
                 "project": id
             };
-            json_send(window.proj.url.new_resp, data);
+            var text = "You are about to assign {0} as the responsible person for the project {1}. Are you sure?".f(full, name);
+            window.render.user_confirmation(window.proj.url.new_resp, data, text);
+            return true;
         });
     }
 
