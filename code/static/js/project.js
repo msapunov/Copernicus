@@ -293,7 +293,10 @@ function end_warning(){
         });
     }
 
-
+    window.render.assign_user = function(e){
+        var name = $(this).data("name");
+        var id = $(this).data("project");
+    }
 
     window.render.assign_responsible = function(e){
         var name = $(this).data("name");
