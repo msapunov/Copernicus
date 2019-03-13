@@ -301,6 +301,9 @@ function end_warning(){
         var rnd = list_id.hashCode();
         dialog(div.addClass(rnd).show().prop("outerHTML"), function(){
             var select = $("."+rnd).children(".admin_assign_select");
+            if(select){
+                return true;
+            }
             var data = {
                 "login": select.val(),
                 "project": id
