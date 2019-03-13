@@ -306,7 +306,7 @@ function end_warning(){
                 "project": id
             };
 
-          return true;
+            return true;
         });
 
     /*
