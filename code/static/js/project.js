@@ -37,6 +37,7 @@ function end_warning(){
     window.proj.url = {
         add: "user/new",
         assign: "user/assign",
+        new_resp: "project/responsible/assign",
         extend: "project/extend",
         delete: "project/delete/user",
         history: "project/history",
@@ -308,8 +309,7 @@ function end_warning(){
                 "login": select.val(),
                 "project": id
             };
-
-            return true;
+            json_send(window.proj.url.new_resp, data);
         });
     }
 
