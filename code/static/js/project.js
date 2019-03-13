@@ -322,6 +322,13 @@ function end_warning(){
         });
     }
 
+    window.render.user_confirmation = function(url, data, text){
+        var div = $("<h3/>").text(text);
+        dialog(div.prop("outerHTML"), function(){
+            json_send(url, data);
+        });
+    }
+
     window.render.del_button = function(project, user){
         var btn = $("<button/>").attr({
                 "type": "button",
