@@ -7,6 +7,32 @@ from code.pages.user.magic import get_user_record, changes_to_string, get_jobs
 from code.pages.user.magic import get_scratch, get_project_info
 from code.utils import accounting_start
 from datetime import datetime as dt
+from operator import attrgetter
+
+
+@bp.route("/user/list", methods=["GET"])
+@login_required
+def user_list():
+    from code.database.schema import User
+
+    term = request.args.get("term")
+    if term:
+        term = "%%%s%%" % term
+        print(term)
+        users_obj = User.query.filter(User.active==True)\
+            .filter(User.surname.like(term) | User.name.like(term)
+                    | User.login.like(term)).all()
+    else:
+        users_obj = User.query.filter(User.active==True)\
+            .filter(User.surname!="").all()
+    print(users_obj)
+    users_obj = sorted(users_obj, key=attrgetter("login"))
+
+    users = map(lambda x: {"id": x.id, "login": x.login,
+                           "text": "%s <%s>" % (x.full_name(), x.login)},
+                users_obj)
+    user_list = list(users)
+    return jsonify(results=user_list)
 
 
 @bp.route("/user/edit/info", methods=["POST"])
