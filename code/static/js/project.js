@@ -29,6 +29,14 @@ function end_warning(){
     return prefix + " resources must be used before <b>the end of February {0}</b>.".f(year);
 }
 
+function reduce_to_names(initial, object){
+    if(initial.length > 0){
+        return initial + ", " + object.text;
+    }else{
+        return object.text;
+    }
+}
+
 
 (function(window, document, $, undefined){
     "use strict";
