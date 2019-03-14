@@ -298,6 +298,33 @@ function end_warning(){
     window.render.assign_user = function(e){
         var name = $(this).data("name");
         var id = $(this).data("project");
+        var sid = name.hashCode();
+
+        var select = $("<select/>").addClass("uk-width-1-1").attr("id",sid);
+        dialog(select.prop("outerHTML"), function(){
+            var select_data = $("#"+sid).select2("data");
+            var fulls = select_data.reduce(reduce_to_names, "");
+            var users = $.map(select_data, function(el, idx){
+                return el.login
+            });
+            var data = {
+                "users": users,
+                "project": id
+            }
+            var text = "You are about to add {0} to the project {1}. Are you sure?".f(fulls, name);
+            window.render.user_confirmation(window.proj.url.user_assign, data, text);
+            return true;
+        })
+        $("#"+sid).select2({
+            ajax: {
+                delay: 250,
+                url: window.proj.url.user_list,
+
+                dataType: "json"
+            },
+            name: "users[]",
+            multiple: "multiple"
+        });
     }
 
     window.render.assign_responsible = function(e){
