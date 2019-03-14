@@ -38,6 +38,8 @@ function end_warning(){
         add: "user/new",
         assign: "user/assign",
         new_resp: "project/responsible/assign",
+        user_assign: "project/users/assign",
+        user_list: "user/list",
         extend: "project/extend",
         delete: "project/delete/user",
         history: "project/history",
