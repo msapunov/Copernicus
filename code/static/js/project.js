@@ -99,11 +99,15 @@ function reduce_to_names(initial, object){
         return true;
     }
     window.render.paint_red = function(data){
+        var regex = new RegExp("^[\\s\\0\\n\\r\\t\\v]+$");
+        var result = true;
         $.each(data, function(key, value){
-            if(value.length < 1){
+            if( (!value) || (value.length < 1) || (regex.test(value)) ){
                 $("[name={0}]".f(key)).addClass("uk-form-danger");
+                result = false;
             }
         });
+        return result
     }
     window.render.new_user = function(e){
         var name = $(this).data("name");
@@ -142,8 +146,7 @@ function reduce_to_names(initial, object){
                 "email": $("input[name=email]").val(),
                 "project": id
             };
-            window.render.paint_red(data);
-            if(!window.render.check_data(data)){
+            if(!window.render.paint_red(data)){
                 return false;
             }
             window.proj.send("add", data);
@@ -189,8 +192,7 @@ function reduce_to_names(initial, object){
                 "note": $("textarea[name=note]").val(),
                 "project": id
             };
-            window.render.paint_red(data);
-            if(!window.render.check_data(data)){
+            if(!window.render.paint_red(data)){
                 return false;
             }
             if(!window.render.check_positive(data["cpu"], "CPU hours")){
@@ -221,8 +223,7 @@ function reduce_to_names(initial, object){
                 "note": $("textarea[name=note]").val(),
                 "project": id
             };
-            window.render.paint_red(data);
-            if(!window.render.check_data(data)){
+            if(!window.render.paint_red(data)){
                 return false;
             }
             window.proj.send("transform", data).done(function(){
@@ -253,8 +254,7 @@ function reduce_to_names(initial, object){
                 "note": $("textarea[name=note]").val(),
                 "project": id
             };
-            window.render.paint_red(data);
-            if(!window.render.check_data(data)){
+            if(!window.render.paint_red(data)){
                 return false;
             }
             window.proj.send("activate", data).done(function(){
