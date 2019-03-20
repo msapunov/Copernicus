@@ -195,8 +195,13 @@ def web_admin_partition_info():
 @login_required
 def web_admin_user_info():
 
-    server_raw = request.form.get("server")
-    server = check_str(server_raw)
+    data = request.get_json()
+    if not data:
+        raise ValueError("Expecting application/json requests")
+
+    server = check_str(data["server"])
+    if not server:
+        raise ValueError("Server is not defined")
     result, err = ssh_wrapper("PROCPS_USERLEN=32 PROCPS_FROMLEN=90 w -s -h",
                               host=server)
     if not result:
