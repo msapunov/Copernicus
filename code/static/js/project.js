@@ -90,17 +90,6 @@ function reduce_to_names(initial, object){
         $(this).val().length < 1 ? $(this).addClass("uk-form-danger") : $(this).removeClass("uk-form-danger");
     };
 
-    window.render.check_data = function(data){
-        var result = true;
-        $.each(data, function(key, value){
-            if(value.length < 1){
-                result = false;
-                return false;
-            }
-        });
-        return result
-    };
-
     window.render.check_positive = function(is_num, message){
         var msg = "{0} must be a positive number".f(message)
         if(!/^\d+$/.test(is_num)){
