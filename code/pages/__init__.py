@@ -164,6 +164,11 @@ class ProjectLog:
         self.log.user = user
         self._commit()
 
+    def user_assign(self, user):
+        self.log.event = "assign user"
+        self.log.user = user
+        self._commit()
+
     def user_del(self, user):
         self.log.event = "delete user"
         self.log.user = user
