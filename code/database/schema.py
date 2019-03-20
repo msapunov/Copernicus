@@ -489,8 +489,9 @@ class Tasks(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     action = db.Column(db.String(6),
-                       db.CheckConstraint("action IN ('create', 'update',"
-                                          " 'delete')"), nullable=False)
+                       db.CheckConstraint(
+                           "action IN ('create', 'update', 'assign,' 'delete')"
+                       ), nullable=False)
     status = db.Column(db.String(11), db.CheckConstraint(
         "status IN ('pending', 'done', 'in progress')"))
     author_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
