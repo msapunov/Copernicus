@@ -98,6 +98,7 @@ function reduce_to_names(initial, object){
         }
         return true;
     }
+
     window.render.paint_red = function(data){
         var regex = new RegExp("^[\\s\\0\\n\\r\\t\\v]+$");
         var result = true;
@@ -109,6 +110,7 @@ function reduce_to_names(initial, object){
         });
         return result
     }
+
     window.render.new_user = function(e){
         var name = $(this).data("name");
         var id = $(this).data("project");
