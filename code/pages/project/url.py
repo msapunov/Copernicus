@@ -6,7 +6,7 @@ from code.pages.project.magic import get_project_info, get_project_record
 from code.pages.project.magic import send_activate_mail, send_transform_mail
 from code.pages.project.magic import send_extend_mail, extend_update
 from code.pages.project.magic import get_deleting_users
-from code.pages.user.url import get_user_record
+from code.pages.user.magic import get_user_record
 from datetime import datetime as dt
 
 
