@@ -114,7 +114,7 @@ function reduce_to_names(initial, object){
     window.render.new_user = function(e){
         var name = $(this).data("name");
         var id = $(this).data("project");
-        var title = "Create new user for the project {0}?".f(name);
+        var title = "Add a new user to the project {0}?".f(name);
         var name = $("<input/>").addClass("uk-width-1-1").attr({
             "name": "name",
             "type": "text",
