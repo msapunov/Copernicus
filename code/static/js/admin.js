@@ -322,6 +322,7 @@
             url = window.admin.url.tasks_reject;
         }
         json_send(url, {task: id}).done(function(data){
+            $("#taks_queue_length").text(data.data.length);
             var tr = $(btn).closest("tr").eq(0);
             var el_id = tr.attr('id');
             var del_id = el_id.replace("child", "parent")
