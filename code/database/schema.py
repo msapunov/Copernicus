@@ -509,8 +509,14 @@ class Tasks(db.Model):
     created = db.Column(db.DateTime(True), default=dt.utcnow)
     modified = db.Column(db.DateTime(True))
 
+    uid = db.Column(db.Integer, db.ForeignKey("users.id"))
+    user = db.relationship("User", foreign_keys=uid)
+
     limbo_uid = db.Column(db.Integer, db.ForeignKey("limbo_users.id"))
     limbo_user = db.relationship("LimboUser", foreign_keys=limbo_uid)
+
+    pid = db.Column(db.Integer, db.ForeignKey("projects.id"))
+    project = db.relationship("Project", foreign_keys=pid)
 
     limbo_pid = db.Column(db.Integer, db.ForeignKey("limbo_projects.id"))
     limbo_project = db.relationship("LimboProject", foreign_keys=limbo_pid)
