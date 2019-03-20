@@ -45,8 +45,8 @@ function reduce_to_names(initial, object){
     window.proj.url = {
         add: "user/new",
         assign: "user/assign",
-        new_resp: "project/responsible/assign",
-        user_assign: "project/users/assign",
+        new_resp: "project/assign/responsible",
+        user_assign: "/project/assign/user",
         user_list: "user/list",
         extend: "project/extend",
         delete: "project/delete/user",
