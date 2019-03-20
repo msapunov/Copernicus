@@ -10,6 +10,21 @@ from code.pages.user.magic import get_user_record
 from datetime import datetime as dt
 
 
+@bp.route("/project/assign/user", methods=["POST"])
+@login_required
+def web_project_assign_user():
+    data = request.get_json()
+    if not data:
+        raise ValueError("Expecting application/json requests")
+    pid = check_int(data["project"])
+    project = get_project_record(pid)
+    login = list(map(lambda x: check_str(x), data["users"]))
+    users = list(map(lambda x: get_user_record(x), login))
+    list(map(lambda x: TaskQueue().user_assign(x, project), users))
+    list(map(lambda x: ProjectLog(project).user_assign(x), users))
+    raise ValueError("Not ready yet!")
+
+
 @bp.route("/project/delete/user", methods=["POST"])
 @login_required
 def web_project_delete_user():
