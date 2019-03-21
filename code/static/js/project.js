@@ -141,7 +141,7 @@ function reduce_to_names(initial, object){
         ).append(
             $("<div>Please double check if indicated e-mail is correct</div>").addClass("uk-form-row uk-alert")
         );
-        dialog(form.prop("outerHTML"), function(){
+        var add = dialog(form.prop("outerHTML"), function(){
             var data = {
                 "name": $("input[name=name]").val(),
                 "surname": $("input[name=surname]").val(),
@@ -151,8 +151,9 @@ function reduce_to_names(initial, object){
             if(!window.render.paint_red(data)){
                 return false;
             }
-            window.proj.send("add", data);
-            return true
+            window.proj.send("add", data).done(function(){
+                add.hide();
+            });
         });
     }
 
