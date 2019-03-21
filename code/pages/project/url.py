@@ -22,7 +22,8 @@ def web_project_assign_user():
     users = list(map(lambda x: get_user_record(x), login))
     list(map(lambda x: TaskQueue().user_assign(x, project), users))
     list(map(lambda x: ProjectLog(project).user_assign(x), users))
-    raise ValueError("Not ready yet!")
+    return jsonify(message="Assign user request has been registered"
+                           " successfully")
 
 
 @bp.route("/project/delete/user", methods=["POST"])
