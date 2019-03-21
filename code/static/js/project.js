@@ -54,23 +54,6 @@ function reduce_to_names(initial, object){
         activate: "project/reactivate",
         transform: "project/transform"
     };
-    window.proj.send = function(url, data){
-        var modal = UIkit.modal.blockUI("Sending data...");
-        return $.ajax({
-            contentType: "application/json",
-            data: JSON.stringify(data),
-            dataType: "json",
-            timeout: 5000,
-            type: "POST",
-            url: window.proj.url[url]
-        }).done(function(resp){
-            UIkit.notify("Data exchange finished successfully", {timeout: 2000, status:"success"});
-        }).fail(function(request){
-            window.error(request);
-        }).always(function() {
-            modal.hide();
-        });
-    }
 
     window.error = function(req){
         var text = $.trim(req.responseText);
@@ -141,7 +124,7 @@ function reduce_to_names(initial, object){
         ).append(
             $("<div>Please double check if indicated e-mail is correct</div>").addClass("uk-form-row uk-alert")
         );
-        var add = dialog(form.prop("outerHTML"), function(){
+        var pop = dialog(form.prop("outerHTML"), function(){
             var data = {
                 "name": $("input[name=name]").val(),
                 "surname": $("input[name=surname]").val(),
@@ -151,8 +134,11 @@ function reduce_to_names(initial, object){
             if(!window.render.paint_red(data)){
                 return false;
             }
-            window.proj.send("add", data).done(function(){
-                add.hide();
+            json_send(window.proj.url["add"], data).done(function(reply){
+                if(reply.message){
+                    UIkit.notify(reply.message, {timeout: 2000, status:"success"});
+                }
+                pop.hide();
             });
         });
     }
@@ -189,7 +175,7 @@ function reduce_to_names(initial, object){
         ).append(
             $("<div>{0}</div>".f(warn)).addClass("uk-form-row uk-alert")
         );
-        dialog(form.prop("outerHTML"), function(){
+        var pop = dialog(form.prop("outerHTML"), function(){
             var data = {
                 "cpu": $("input[name=cpu]").val(),
                 "note": $("textarea[name=note]").val(),
@@ -201,8 +187,12 @@ function reduce_to_names(initial, object){
             if(!window.render.check_positive(data["cpu"], "CPU hours")){
                 return false;
             }
-            window.proj.send("extend", data);
-            return true;
+            json_send(window.proj.url["extend"], data).done(function(reply){
+                if(reply.message){
+                    UIkit.notify(reply.message, {timeout: 2000, status:"success"});
+                }
+                pop.hide();
+            });
         });
     }
 
@@ -221,7 +211,7 @@ function reduce_to_names(initial, object){
         ).append(
             $("<div/>").addClass("uk-form-row").append(motiv)
         );
-        dialog(form.prop("outerHTML"), function(){
+        var pop = dialog(form.prop("outerHTML"), function(){
             var data = {
                 "note": $("textarea[name=note]").val(),
                 "project": id
@@ -229,11 +219,13 @@ function reduce_to_names(initial, object){
             if(!window.render.paint_red(data)){
                 return false;
             }
-            window.proj.send("transform", data).done(function(){
+            json_send(window.proj.url["transform"], data).done(function(reply){
                 $(".trans").attr("disabled", true);
-                Cookie.Create("project_transform", true, 30);
+                if(reply.message){
+                    UIkit.notify(reply.message, {timeout: 2000, status:"success"});
+                }
+                pop.hide();
             });
-            return true;
         });
     }
 
@@ -252,7 +244,7 @@ function reduce_to_names(initial, object){
         ).append(
             $("<div/>").addClass("uk-form-row").append(motiv)
         );
-        dialog(form.prop("outerHTML"), function(){
+        var pop = dialog(form.prop("outerHTML"), function(){
             var data = {
                 "note": $("textarea[name=note]").val(),
                 "project": id
@@ -260,11 +252,13 @@ function reduce_to_names(initial, object){
             if(!window.render.paint_red(data)){
                 return false;
             }
-            window.proj.send("activate", data).done(function(){
+            json_send(window.proj.url["activate"], data).done(function(reply){
                 $(".react").attr("disabled", true);
-                Cookie.Create("project_active", true, 30);
+                if(reply.message){
+                    UIkit.notify(reply.message, {timeout: 2000, status:"success"});
+                }
+                pop.hide();
             });
-            return true;
         });
     }
 
@@ -287,7 +281,7 @@ function reduce_to_names(initial, object){
         var txt = "Are you sure you want to remove {0} from the project {1}?".f(full, name);
         var data = {"project": id, "login": login};
         UIkit.modal.confirm(txt, function(){
-            window.proj.send("delete", data).done(function(reply){
+            json_send(window.proj.url["history"], data).done(function(reply){
                 var uid = "{0}_{1}".f(name, login);
                 var btn = $("#"+uid).find("button").css("visibility", "hidden");
                 $("#"+uid).find(".uk-margin-small-left").addClass("uk-text-muted");
@@ -426,13 +420,13 @@ function reduce_to_names(initial, object){
         var id = $(this).data("project");
         var title = "History for project {0}".f(name);
         var data = {"project": id};
-        window.proj.send("history", data).done(function(reply){
+        json_send(window.proj.url["history"], data).done(function(reply){
             if(reply.length > 0){
                 window.render.history(reply, title);
             }else{
                 UIkit.modal.alert("No history found for project {0}".f(name));
             }
-        })
+        });
     }
 
     $(document).on("click", ".user_ass", window.render.assign_user);
