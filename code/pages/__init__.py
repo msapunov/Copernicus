@@ -56,6 +56,13 @@ def ssh_wrapper(cmd, host=None):
     return output, errors
 
 
+def check_mail(raw_mail):
+    EMAIL_REGEX = compile("[^@]+@[^@]+\.[^@]+")
+    if not EMAIL_REGEX.match(raw_mail):
+        raise ValueError("Provided e-mail seems not valid")
+    return str(raw_mail)
+
+
 def check_int(raw_int):
     number = int(raw_int)
     if (not number) or (number < 1):
