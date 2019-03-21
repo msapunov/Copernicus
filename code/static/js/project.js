@@ -435,7 +435,6 @@ function reduce_to_names(initial, object){
         })
     }
 
-    $(document).on("click", ".new", window.render.new_user);
     $(document).on("click", ".user_ass", window.render.assign_user);
     $(document).on("click", ".user_add", window.render.new_user);
     $(document).on("click", ".responsible_ass", window.render.assign_responsible);
