@@ -3,7 +3,23 @@ from flask import current_app
 from flask_login import current_user
 from flask_mail import Message
 from logging import debug, error
-from re import match, compile
+from re import compile
+
+
+def generate_login(name, surname):
+    from code.database.schema import User
+    users = User.query.all()
+    logins = list(map(lambda x: x.login, users))
+
+    i = 1
+    guess = None
+    while i < len(name):
+        guess = name[0:i] + surname
+        if guess not in logins:
+            return guess
+        i += 1
+    raise ValueError("Seems that user with login '%s' has been already"
+                     " registered in our database" % guess)
 
 
 def send_message(to_who, by_who=None, cc=None, title=None, message=None):
