@@ -4,6 +4,13 @@ from flask_login import current_user
 from flask_mail import Message
 from logging import debug, error
 from re import compile
+from unicodedata import normalize
+
+
+def normalize_word(word):
+    word = word.replace("'", "")
+    word = normalize("NFKD", word).encode("ascii", "ignore").decode("ascii")
+    return word
 
 
 def generate_login(name, surname):
