@@ -18,6 +18,13 @@ def generate_login(name, surname):
     users = User.query.all()
     logins = list(map(lambda x: x.login, users))
 
+    name = name.split(" ")[0]
+    name = name.split("-")[0]
+    surname = surname.split(" ")[0]
+    surname = surname.split("-")[0]
+    name = normalize_word(name)
+    surname = normalize_word(surname)
+
     i = 1
     guess = None
     while i < len(name):
