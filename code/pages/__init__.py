@@ -203,6 +203,7 @@ class ProjectLog:
 
     def __init__(self, project):
         from code.database.schema import LogDB
+        self.project = project
         self.log = LogDB(author=current_user, project=project)
 
     def user_add(self, user):
