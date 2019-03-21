@@ -1,6 +1,7 @@
 from flask import render_template, request, jsonify
 from flask_login import login_required
-from code.pages import ProjectLog, check_int, check_str, TaskQueue
+from code.pages import ProjectLog, check_int, check_str, check_mail, TaskQueue
+from code.pages import generate_login
 from code.pages.user import bp
 from code.pages.project.magic import get_project_info, get_project_record
 from code.pages.project.magic import send_activate_mail, send_transform_mail
