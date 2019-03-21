@@ -43,8 +43,8 @@ function reduce_to_names(initial, object){
     window.contact = "mesocentre-techn@univ-amu.fr";
     window.proj = {};
     window.proj.url = {
-        add: "project/user/new",
-        assign: "project/user/assign",
+        add: "project/add/user",
+        assign: "project/assign/user",
         new_resp: "project/assign/responsible",
         user_assign: "/project/assign/user",
         user_list: "user/list",
