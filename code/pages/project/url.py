@@ -10,6 +10,29 @@ from code.pages.user.magic import get_user_record
 from datetime import datetime as dt
 
 
+@bp.route("/project/add/user", methods=["POST"])
+@login_required
+def web_project_add_user():
+    data = request.get_json()
+    if not data:
+        raise ValueError("Expecting application/json requests")
+    name = check_str(data["name"]).strip().lower()
+    surname = check_str(data["surname"]).strip().lower()
+    auto = generate_login(name, surname)
+
+    email = check_mail(data["email"]).strip().lower()
+    pid = check_int(data["project"])
+    project = get_project_record(pid)
+
+    from code import db
+    from code.database.schema import LimboUser
+
+    user = LimboUser(name=name, surname=surname, email=email, login=auto)
+    db.session.commit()
+    TaskQueue().project(project).user_add(user)
+    return jsonify(message="Add user request has been registered successfully")
+
+
 @bp.route("/project/assign/user", methods=["POST"])
 @login_required
 def web_project_assign_user():
