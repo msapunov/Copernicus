@@ -1,8 +1,9 @@
-from flask_login import current_user
 from paramiko import SSHClient, AutoAddPolicy, AuthenticationException, RSAKey
 from flask import current_app
-from logging import debug, error
+from flask_login import current_user
 from flask_mail import Message
+from logging import debug, error
+from re import match, compile
 
 
 def send_message(to_who, by_who=None, cc=None, title=None, message=None):
@@ -75,6 +76,14 @@ class TaskQueue:
         from code.database.schema import Tasks
         self.task = Tasks(author=current_user, processed=False,
                           status="pending")
+
+    def user(self, u_name):
+        self.task.user = u_name
+        return self
+
+    def project(self, p_name):
+        self.task.project = p_name
+        return self
 
     def user_add(self, user):
         self.task.limbo_user = user
