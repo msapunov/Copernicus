@@ -349,12 +349,12 @@ function reduce_to_names(initial, object){
                 "data-login": user.login,
                 "data-project": project.name
             });
-        if(!user.responsible){
-            btn.addClass("uk-button uk-button-mini uk-button-link uk-text-danger remove uk-icon-justify");
-            btn.append($("<span/>").addClass("uk-icon-close"));
-        }else{
+        if( user.responsible || disable==true){
             btn.addClass("uk-button uk-button-mini uk-button-link uk-icon-justify");
             btn.prop("disabled",true);
+        }else{
+            btn.addClass("uk-button uk-button-mini uk-button-link uk-text-warning uk-icon-justify");
+            btn.append($("<span/>").addClass("uk-icon-close"));
         }
         return btn
     }
@@ -384,6 +384,7 @@ function reduce_to_names(initial, object){
             modal.show();
         }
     }
+
     window.render.project_history = function(e){
         var name = $(this).data("name");
         var id = $(this).data("project");
