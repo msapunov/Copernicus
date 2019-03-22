@@ -47,7 +47,7 @@ def web_project_assign_user():
     project = get_project_record(pid)
     login = list(map(lambda x: check_str(x), data["users"]))
     users = list(map(lambda x: get_user_record(x), login))
-    list(map(lambda x: TaskQueue().user_assign(x, project), users))
+    list(map(lambda x: TaskQueue().project(project).user_assign(x), users))
     logs = list(map(lambda x: ProjectLog(project).user_assign(x), users))
     return jsonify(message="<br>".join(logs))
 
@@ -66,7 +66,7 @@ def web_project_delete_user():
         raise ValueError("User '%s' seems not to be registered in project '%s'"
                          % (login, project.get_name()))
     user = get_user_record(login)
-    TaskQueue().user_delete(user, project)
+    TaskQueue().project(project).user_delete(user)
     return jsonify(message=ProjectLog(project).user_del(user))
 
 
