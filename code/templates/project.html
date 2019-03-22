@@ -53,7 +53,7 @@
                 </div>
             </div>
             <div class="uk-width-medium-2-5 uk-width-small-1-1">
-                <div class="uk-panel uk-margin-top uk-margin-bottom" id="project_users">
+                <div class="uk-panel uk-margin-top uk-margin-bottom" id="{{project.name}}_project_users">
                 {% for user in project.users|sort(attribute='fullname')%}
                     <div class="uk-panel" id="{{project.name}}_{{user.login}}">
                     {% if user.login != project.responsible_login and user.active == True %}
