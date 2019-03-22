@@ -206,23 +206,18 @@ class ProjectLog:
         self.project = project
         self.log = LogDB(author=current_user, project=project)
 
-    def user_add(self, user):
-        self.log.event = "add user"
-        self.log.user = user
-        self._commit()
-
     def user_assign(self, user):
-        self.log.event = "assign user"
+        self.log.event = "Request to assign user %s" % user.full_name()
         self.log.user = user
-        self._commit()
+        return self._commit()
 
     def user_del(self, user):
-        self.log.event = "delete user"
+        self.log.event = "Request to delete user %s" % user.full_name()
         self.log.user = user
         self._commit()
 
     def extend(self, extension):
-        self.log.event = "extension request"
+        self.log.event = "Request to extend by %s hours" % extension.hours
         self.log.extension = extension
         self._commit()
 
@@ -232,32 +227,33 @@ class ProjectLog:
         self._commit()
 
     def transform(self, extension):
-        self.log.event = "transformation request"
+        self.log.event = "Request to transform from type A to type B"
         self.log.extension = extension
         self._commit()
 
     def accept(self, extension):
-        self.log.event = "accept request"
+        self.log.event = "accept extend request for %s hours" % extension.hours
         self.log.extension = extension
         self._commit()
 
     def ignore(self, extension):
-        self.log.event = "ignore request"
+        self.log.event = "ignore extend request for %s hours" % extension.hours
         self.log.extension = extension
         self._commit()
 
     def reject(self, extension):
-        self.log.event = "reject request"
+        self.log.event = "reject extend request for %s hours" % extension.hours
         self.log.extension = extension
         self._commit()
 
     def event(self, message):
-        self.log.event = message
-        send_message(self.project.responsible.email, message=message)
+        self.log.event = message.lower()
         self._commit()
-        return message
 
     def _commit(self):
         from code import db
         db.session.add(self.log)
         db.session.commit()
+        message = "%s: %s" % (self.project.get_name(), self.log.event)
+        send_message(self.project.responsible.email, message=message)
+        return message
