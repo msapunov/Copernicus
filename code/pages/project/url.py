@@ -26,8 +26,12 @@ def web_project_add_user():
     project = get_project_record(pid)
 
     from code import db
-    from code.database.schema import LimboUser
+    from code.database.schema import LimboUser, User
 
+    print(User.query.filter(User.email==email).first())
+    if User.query.filter(User.email==email).first():
+        raise ValueError("User with e-mail %s has been registered already"
+                         % email)
     user = LimboUser(name=name, surname=surname, email=email, login=auto)
     db.session.commit()
     TaskQueue().project(project).user_add(user)
