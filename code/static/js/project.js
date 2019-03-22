@@ -336,8 +336,13 @@ function reduce_to_names(initial, object){
 
     window.render.user_confirmation = function(url, data, text){
         var div = $("<h3/>").text(text);
-        dialog(div.prop("outerHTML"), function(){
-            json_send(url, data);
+        var pop = dialog(div.prop("outerHTML"), function(){
+            json_send(url, data).done(function(reply){
+                if(reply.message){
+                    UIkit.notify(reply.message, {timeout: 2000, status:"success"});
+                }
+                pop.hide();
+            });
         });
     }
 
