@@ -6,28 +6,30 @@ from datetime import datetime as dt
 from code.pages import send_message
 
 
-def get_deleting_users(projects):
-    from code.database.schema import Tasks, LimboProject, LimboUser
+def get_limbo_users(projects):
+    from code.database.schema import Tasks
 
     for project in projects:
         pid = project["id"]
-        l_projects = LimboProject.query.filter_by(ref_id=pid).all()
-        if not l_projects:
+        tasks = Tasks.query.filter(
+            Tasks.processed == False, Tasks.pid == pid, Tasks.limbo_uid > 0
+        ).all()
+        if not tasks:
             continue
+        limbos = list(map(lambda x: x.limbo_user.login, tasks))
+
         for user in project["users"]:
-            uid = user["id"]
-            l_users = LimboUser.query.filter_by(ref_id=uid).all()
-            if not l_users:
-                continue
-            users = list(map(lambda x: x.id, l_users))
-            projets = list(map(lambda x: x.id, l_projects))
-            limbo = Tasks.query.filter( Tasks.processed==False,
-                                        Tasks.action == "delete",
-                                        Tasks.limbo_uid.in_(users),
-                                        Tasks.limbo_pid.in_(projets)).all()
-            if not limbo:
-                continue
-            user["active"]="Suspended"
+            login = user["login"]
+            if login in limbos:
+                user["active"] = "Suspended"
+                limbos = [x for x in limbos if x != login]
+
+        if len(limbos) > 0:
+            add = list(filter(lambda x: x.limbo_user.login in limbos, tasks))
+            new_users = list(map(lambda x: x.limbo_user.to_dict(), add))
+            for user in new_users:
+                user["active"] = "Suspended"
+            project["users"].extend(new_users)
     return projects
 
 
