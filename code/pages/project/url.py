@@ -4,9 +4,7 @@ from code.pages import ProjectLog, check_int, check_str, check_mail, TaskQueue
 from code.pages import generate_login
 from code.pages.user import bp
 from code.pages.project.magic import get_project_info, get_project_record
-from code.pages.project.magic import send_activate_mail, send_transform_mail
-from code.pages.project.magic import send_extend_mail, extend_update
-from code.pages.project.magic import get_deleting_users
+from code.pages.project.magic import extend_update, get_limbo_users
 from code.pages.user.magic import get_user_record
 from datetime import datetime as dt
 
@@ -130,6 +128,6 @@ def web_project_index():
         renew = False
     else:
         renew = now.year
-    get_deleting_users(projects)
+    get_limbo_users(projects)
     data = {"projects": projects, "renew": renew}
     return render_template("project.html", data=data)
