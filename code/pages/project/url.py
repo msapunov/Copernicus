@@ -26,7 +26,6 @@ def web_project_add_user():
     from code import db
     from code.database.schema import LimboUser, User
 
-    print(User.query.filter(User.email==email).first())
     if User.query.filter(User.email==email).first():
         raise ValueError("User with e-mail %s has been registered already"
                          % email)
