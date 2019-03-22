@@ -341,7 +341,7 @@ function reduce_to_names(initial, object){
         });
     }
 
-    window.render.del_button = function(project, user){
+    window.render.del_button = function(project, user, disable){
         var btn = $("<button/>").attr({
                 "type": "button",
                 "data-pid": project.id,
