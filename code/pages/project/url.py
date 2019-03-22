@@ -35,7 +35,8 @@ def web_project_add_user():
     user = LimboUser(name=name, surname=surname, email=email, login=auto)
     db.session.commit()
     TaskQueue().project(project).user_add(user)
-    return jsonify(message="Add user request has been registered successfully")
+    msg = "Request to add a new user: %s %s <%s>" % (name, surname, email)
+    return jsonify(message=ProjectLog(project).event(msg), data=user.to_dict())
 
 
 @bp.route("/project/assign/user", methods=["POST"])
@@ -49,9 +50,8 @@ def web_project_assign_user():
     login = list(map(lambda x: check_str(x), data["users"]))
     users = list(map(lambda x: get_user_record(x), login))
     list(map(lambda x: TaskQueue().user_assign(x, project), users))
-    list(map(lambda x: ProjectLog(project).user_assign(x), users))
-    return jsonify(message="Assign user request has been registered"
-                           " successfully")
+    logs = list(map(lambda x: ProjectLog(project).user_assign(x), users))
+    return jsonify(message="<br>".join(logs))
 
 
 @bp.route("/project/delete/user", methods=["POST"])
@@ -69,9 +69,7 @@ def web_project_delete_user():
                          % (login, project.get_name()))
     user = get_user_record(login)
     TaskQueue().user_delete(user, project)
-    ProjectLog(project).user_del(user)
-    return jsonify(message="Delete user request has been registered"
-                           " successfully")
+    return jsonify(message=ProjectLog(project).user_del(user))
 
 
 @bp.route("/project/transform", methods=["POST"])
@@ -82,11 +80,8 @@ def web_project_transform():
     record = extend_update()
     record.transform = True
     db.session.add(record)
-    ProjectLog(record.project).transform(record)
     db.session.commit()
-    send_transform_mail(record.project, record)
-    return jsonify(message="Project transformation request has been registered"
-                           " successfully")
+    return jsonify(message=ProjectLog(record.project).transform(record))
 
 
 @bp.route("/project/reactivate", methods=["POST"])
@@ -97,11 +92,8 @@ def web_project_reactivate():
     record = extend_update()
     record.activate = True
     db.session.add(record)
-    ProjectLog(record.project).activate(record)
     db.session.commit()
-    send_activate_mail(record.project, record)
-    return jsonify(message="Project activation has been registered "
-                           "successfully")
+    return jsonify(message=ProjectLog(record.project).activate(record))
 
 
 @bp.route("/project/extend", methods=["POST"])
@@ -111,10 +103,8 @@ def web_project_extend():
 
     record = extend_update()
     db.session.add(record)
-    ProjectLog(record.project).extend(record)
     db.session.commit()
-    send_extend_mail(record.project, record)
-    return jsonify(message="Project extension has been registered successfully")
+    return jsonify(message=ProjectLog(record.project).extend(record))
 
 
 @bp.route("/project/history", methods=["POST"])
