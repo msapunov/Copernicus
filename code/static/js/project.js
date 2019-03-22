@@ -288,7 +288,7 @@ function reduce_to_names(initial, object){
         var txt = "Are you sure you want to remove {0} from the project {1}?".f(full, name);
         var data = {"project": id, "login": login};
         UIkit.modal.confirm(txt, function(){
-            json_send(window.proj.url["history"], data).done(function(reply){
+            json_send(window.proj.url["delete"], data).done(function(reply){
                 var uid = "{0}_{1}".f(name, login);
                 var btn = $("#"+uid).find("button").css("visibility", "hidden");
                 $("#"+uid).find(".uk-margin-small-left").addClass("uk-text-muted");
