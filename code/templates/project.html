@@ -72,7 +72,7 @@
                     {% endif %}
 
                         <span class={% if user.active == 'Suspended' %}"uk-margin-small-left uk-text-muted"{% else %}"uk-margin-small-left"{% endif %} title="{{user.email}}">
-                        {{user.fullname}}: {{user.consumption}} hours
+                        {{user.fullname}}{% if user.consumption %} : {{user.consumption}} hours {% endif %}
                         </span>
 
                     </div>
