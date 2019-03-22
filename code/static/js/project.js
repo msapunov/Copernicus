@@ -139,6 +139,24 @@ function reduce_to_names(initial, object){
                     UIkit.notify(reply.message, {timeout: 2000, status:"success"});
                 }
                 pop.hide();
+
+                var value = reply.data;
+                var btn = window.render.del_button({id: id, name: p_name}, value, true);
+                //btn.prop("disabled",true);
+                var id = "{0}_{1}".f(p_name, value.login);
+                var info = "{0}".f(value.fullname);
+                var div = $("<div/>").addClass("uk-panel").attr({"id": id}).append(
+                    btn
+                ).append(
+                    $("<span/>").addClass(
+                        "uk-margin-small-left uk-text-muted"
+                    ).attr({"title": value.email}).text(info)
+                );
+                $("#"+p_name+"_project_users").append(div);
+
+
+
+
             });
         });
     }
