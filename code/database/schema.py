@@ -644,3 +644,23 @@ class LimboUser(db.Model):
 
     def __repr__(self):
         return '<Limbo User {}>'.format(self.login)
+
+    def full_name(self):
+        if self.name and self.surname:
+            return "%s %s" % (self.name.capitalize(), self.surname.capitalize())
+        return "Not available"
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "login": self.login if self.login else "",
+            "name": self.name if self.name else "",
+            "fullname": self.full_name(),
+            "surname": self.surname if self.surname else "",
+            "email": self.email if self.email else "",
+            "phone": self.phone if self.phone else "",
+            "lab": self.lab if self.lab else "",
+            "position": self.position if self.position else "",
+            "active": self.active if self.active else "",
+            "comment": self.comment if self.comment else "",
+        }
