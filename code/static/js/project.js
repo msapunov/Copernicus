@@ -262,17 +262,6 @@ function reduce_to_names(initial, object){
         });
     }
 
-    window.render.btn_reshuffle = function(proj, login){
-        var id = "#{0}_{1}".f(proj, login);
-        var prnt = $(id).parent("div");
-        $(id).remove();
-
-        var btns = prnt.find("button");
-        if(btns.length == 1){
-            btns[0].remove();
-        }
-    }
-
     window.render.remove_user = function(e){
         var id = $(this).data("pid");
         var full = $(this).data("name");
@@ -369,27 +358,7 @@ function reduce_to_names(initial, object){
         }
         return btn
     }
-    window.render.user_reshuffle = function(uid){
-        $("#project_users").empty();
-        users.sort(function(a,b){
-            if(a.fullname < b.fullname)
-                return -1;
-            if(a.fullname > b.fullname)
-                return 1;
-            return 0;
-        });
-        $.each(users, function(idx, value){
-            var btn = window.render.del_button({id: proj_id, name: proj_name}, value)
-            var id = "{0}_{1}".f(proj_name, value.login);
-            var info = "{0}: {1}".f(value.fullname, value.consumption);
-            var div = $("<div/>").addClass("uk-panel").attr({"id": id}).append(
-                btn
-            ).append(
-                $("<span/>").addClass("uk-margin-small-left").text(info)
-            );
-            $("#project_users").append(div);
-        });
-    }
+
     window.render.history = function(data, title){
         var info = $("<table/>").addClass("uk-table uk-table-striped uk-table-condensed");
         data.sort(function(a,b){
@@ -426,6 +395,39 @@ function reduce_to_names(initial, object){
             }else{
                 UIkit.modal.alert("No history found for project {0}".f(name));
             }
+        });
+    }
+
+    window.render.btn_reshuffle = function(proj, login){
+        var id = "#{0}_{1}".f(proj, login);
+        var prnt = $(id).parent("div");
+        $(id).remove();
+
+        var btns = prnt.find("button");
+        if(btns.length == 1){
+            btns[0].remove();
+        }
+    }
+
+    window.render.user_reshuffle = function(uid){
+        $("#project_users").empty();
+        users.sort(function(a,b){
+            if(a.fullname < b.fullname)
+                return -1;
+            if(a.fullname > b.fullname)
+                return 1;
+            return 0;
+        });
+        $.each(users, function(idx, value){
+            var btn = window.render.del_button({id: proj_id, name: proj_name}, value)
+            var id = "{0}_{1}".f(proj_name, value.login);
+            var info = "{0}: {1}".f(value.fullname, value.consumption);
+            var div = $("<div/>").addClass("uk-panel").attr({"id": id}).append(
+                btn
+            ).append(
+                $("<span/>").addClass("uk-margin-small-left").text(info)
+            );
+            $("#project_users").append(div);
         });
     }
 
