@@ -17,11 +17,11 @@ def web_project_add_user():
     data = request.get_json()
     if not data:
         raise ValueError("Expecting application/json requests")
-    name = check_str(data["name"]).strip().lower()
-    surname = check_str(data["surname"]).strip().lower()
+    name = check_str(data["name"].strip().lower())
+    surname = check_str(data["surname"].strip().lower())
     auto = generate_login(name, surname)
 
-    email = check_mail(data["email"]).strip().lower()
+    email = check_mail(data["email"].strip().lower())
     pid = check_int(data["project"])
     project = get_project_record(pid)
 
