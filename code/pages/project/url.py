@@ -30,7 +30,8 @@ def web_project_add_user():
     if User.query.filter(User.email==email).first():
         raise ValueError("User with e-mail %s has been registered already"
                          % email)
-    user = LimboUser(name=name, surname=surname, email=email, login=auto)
+    user = LimboUser(name=name, surname=surname, email=email, login=auto,
+                     active=False)
     db.session.commit()
     TaskQueue().project(project).user_add(user)
     msg = "Request to add a new user: %s %s <%s>" % (name, surname, email)
