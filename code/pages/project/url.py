@@ -55,7 +55,8 @@ def web_project_assign_user():
             ))
     list(map(lambda x: TaskQueue().project(project).user_assign(x), users))
     logs = list(map(lambda x: ProjectLog(project).user_assign(x), users))
-    return jsonify(message="<br>".join(logs))
+    return jsonify(message="<br>".join(logs),
+                   data=list(map(lambda x: x.to_dict(), users)))
 
 
 @bp.route("/project/delete/user", methods=["POST"])
