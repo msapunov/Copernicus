@@ -431,8 +431,8 @@ function reduce_to_names(initial, object){
             return 0;
         });
         $.each(users, function(idx, value){
-            if(! value.active){
-                continue
+            if(!value.active){
+                return true;
             }
             var btn_rndr = (value.active == "Suspended") ? true : false;
             var btn = window.render.del_button({id: pid, name: name}, value, btn_rndr)
