@@ -139,24 +139,7 @@ function reduce_to_names(initial, object){
                     UIkit.notify(reply.message, {timeout: 2000, status:"success"});
                 }
                 pop.hide();
-
-                var value = reply.data;
-                var btn = window.render.del_button({id: id, name: p_name}, value, true);
-                //btn.prop("disabled",true);
-                var id = "{0}_{1}".f(p_name, value.login);
-                var info = "{0}".f(value.fullname);
-                var div = $("<div/>").addClass("uk-panel").attr({"id": id}).append(
-                    btn
-                ).append(
-                    $("<span/>").addClass(
-                        "uk-margin-small-left uk-text-muted"
-                    ).attr({"title": value.email}).text(info)
-                );
-                $("#"+p_name+"_project_users").append(div);
-
-
-
-
+                window.render.user_reshuffle(reply, {"name": p_name, "id": id})
             });
         });
     }
@@ -313,7 +296,7 @@ function reduce_to_names(initial, object){
                 "project": id
             }
             var text = "You are about to add {0} to the project {1}. Are you sure?".f(fulls, name);
-            window.render.user_confirmation(window.proj.url.user_assign, data, text);
+            window.render.user_confirmation(window.proj.url.user_assign, data, text, {"name": name, "id": id});
             return true;
         })
         $("#"+sid).select2({
@@ -347,12 +330,12 @@ function reduce_to_names(initial, object){
                 "project": id
             };
             var text = "You are about to assign {0} as the responsible person for the project {1}. Are you sure?".f(full, name);
-            window.render.user_confirmation(window.proj.url.new_resp, data, text);
+            window.render.user_confirmation(window.proj.url.new_resp, data, text, {"name": name, "id": id});
             return true;
         });
     }
 
-    window.render.user_confirmation = function(url, data, text){
+    window.render.user_confirmation = function(url, data, text, p_object){
         var div = $("<h3/>").text(text);
         var pop = dialog(div.prop("outerHTML"), function(){
             json_send(url, data).done(function(reply){
@@ -360,6 +343,7 @@ function reduce_to_names(initial, object){
                     UIkit.notify(reply.message, {timeout: 2000, status:"success"});
                 }
                 pop.hide();
+                window.render.user_reshuffle(reply, p_object)
             });
         });
     }
@@ -433,8 +417,12 @@ function reduce_to_names(initial, object){
         }
     }
 
-    window.render.user_reshuffle = function(uid){
-        $("#project_users").empty();
+    window.render.user_reshuffle = function(reply, p_object){
+        var name = p_object.name;
+        var pid = p_object.id;
+        var users_div = "#"+name+"_project_users";
+        $(users_div).empty();
+        var users = reply.data;
         users.sort(function(a,b){
             if(a.fullname < b.fullname)
                 return -1;
@@ -443,15 +431,27 @@ function reduce_to_names(initial, object){
             return 0;
         });
         $.each(users, function(idx, value){
-            var btn = window.render.del_button({id: proj_id, name: proj_name}, value)
-            var id = "{0}_{1}".f(proj_name, value.login);
-            var info = "{0}: {1}".f(value.fullname, value.consumption);
+            if(! value.active){
+                continue
+            }
+            var btn_rndr = (value.active == "Suspended") ? true : false;
+            var btn = window.render.del_button({id: pid, name: name}, value, btn_rndr)
+            var id = "{0}_{1}".f(name, value.login);
+            if(value.consumption){
+                var info = "{0}: {1}".f(value.fullname, value.consumption);
+            }else{
+                var info = "{0}".f(value.fullname);
+            }
+            var txt = $("<span/>").addClass("uk-margin-small-left").text(info);
+            if(btn_rndr){
+                txt.addClass("uk-text-muted");
+            }
             var div = $("<div/>").addClass("uk-panel").attr({"id": id}).append(
                 btn
             ).append(
-                $("<span/>").addClass("uk-margin-small-left").text(info)
+                txt
             );
-            $("#project_users").append(div);
+            $(users_div).append(div);
         });
     }
 
