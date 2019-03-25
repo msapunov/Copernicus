@@ -4,7 +4,7 @@ from code.pages import ProjectLog, check_int, check_str, check_mail, TaskQueue
 from code.pages import generate_login
 from code.pages.user import bp
 from code.pages.project.magic import get_project_info, get_project_record
-from code.pages.project.magic import extend_update, get_limbo_users
+from code.pages.project.magic import extend_update, get_limbo_users, get_users
 from code.pages.user.magic import get_user_record
 from datetime import datetime as dt
 
@@ -34,7 +34,7 @@ def web_project_add_user():
     db.session.commit()
     TaskQueue().project(project).user_add(user)
     msg = "Request to add a new user: %s %s <%s>" % (name, surname, email)
-    return jsonify(message=ProjectLog(project).event(msg), data=user.to_dict())
+    return jsonify(message=ProjectLog(project).event(msg), data=get_users(pid))
 
 
 @bp.route("/project/assign/user", methods=["POST"])
@@ -55,8 +55,7 @@ def web_project_assign_user():
             ))
     list(map(lambda x: TaskQueue().project(project).user_assign(x), users))
     logs = list(map(lambda x: ProjectLog(project).user_assign(x), users))
-    return jsonify(message="<br>".join(logs),
-                   data=list(map(lambda x: x.to_dict(), users)))
+    return jsonify(message="<br>".join(logs), data=get_users(pid))
 
 
 @bp.route("/project/delete/user", methods=["POST"])
