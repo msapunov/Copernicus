@@ -490,7 +490,7 @@ class Tasks(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     action = db.Column(db.String(6),
                        db.CheckConstraint(
-                           "action IN ('create', 'update', 'assign', 'promote',"
+                           "action IN ('create', 'update', 'assign', 'boost',"
                            " 'delete')"
                        ), nullable=False)
     status = db.Column(db.String(11), db.CheckConstraint(
