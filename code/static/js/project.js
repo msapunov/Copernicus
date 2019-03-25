@@ -360,7 +360,7 @@ function reduce_to_names(initial, object){
             btn.addClass("uk-button uk-button-mini uk-button-link uk-icon-justify");
             btn.prop("disabled",true);
         }else{
-            btn.addClass("uk-button uk-button-mini uk-button-link uk-text-danger uk-icon-justify");
+            btn.addClass("uk-button uk-button-mini uk-button-link uk-text-danger remove uk-icon-justify");
             btn.append($("<span/>").addClass("uk-icon-close"));
         }
         return btn
