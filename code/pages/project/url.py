@@ -71,8 +71,8 @@ def web_project_assign_responsible():
     if user == project.responsible:
         raise ValueError("User %s is already responsible for the project %s" %
                          (user.full_name(), project.get_name()))
-    TaskQueue().project(project).user_assign(user)
-    return jsonify(message=ProjectLog(project).user_assign(user))
+    TaskQueue().project(project).responsible_assign(user)
+    return jsonify(message=ProjectLog(project).responsible_assign(user))
 
 
 @bp.route("/project/delete/user", methods=["POST"])
