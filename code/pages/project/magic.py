@@ -128,10 +128,11 @@ def project_email(to, title, msg):
                                      message=msg))
 
 
-def get_project_info(start=None, end=None):
+def get_project_info(start=None, end=None, p_ids=None):
     from code.database.schema import Project
 
-    p_ids = current_user.project_ids()
+    if not p_ids:
+        p_ids = current_user.project_ids()
     tmp = []
     for pid in p_ids:
         project = Project().query.filter_by(id=pid).first()
