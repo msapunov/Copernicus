@@ -94,17 +94,15 @@ def check_mail(raw_mail):
 
 
 def check_int(raw_int):
-    number = int(raw_int)
-    if (not number) or (number < 1):
-        raise ValueError("Integer must be a positive number: %s" % number)
-    return number
+    if not str(raw_int).isdigit():
+        raise ValueError("Number expected: %s" % raw_int)
+    return str(raw_int)
 
 
 def check_str(raw_note):
-    note = str(raw_note)
-    if (not note) or (len(note) < 1):
-        raise ValueError("Provided string can't be empty")
-    return note
+    if not str(raw_note).isalpha():
+        raise ValueError("String expected: %s" % raw_note)
+    return str(raw_note)
 
 
 class TaskQueue:
