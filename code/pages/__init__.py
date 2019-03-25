@@ -87,8 +87,8 @@ def ssh_wrapper(cmd, host=None):
 
 
 def check_mail(raw_mail):
-    EMAIL_REGEX = compile("[^@]+@[^@]+\.[^@]+")
-    if not EMAIL_REGEX.match(raw_mail):
+    email_regex = compile("[^@]+@[^@]+\.[^@]+")
+    if not email_regex.match(raw_mail):
         raise ValueError("Provided e-mail '%s' seems invalid" % raw_mail)
     return str(raw_mail)
 
@@ -138,6 +138,14 @@ class TaskQueue:
             raise ValueError("Can't assign a user to none existent project")
         self.task.limbo_user = self._copy_user(user)
         self.task.action = "assign"
+        self._user_action()
+
+    def responsible_assign(self, user):
+        if not self.project:
+            raise ValueError("Can't assign a new responsible to none existent"
+                             " project")
+        self.task.limbo_user = self._copy_user(user)
+        self.task.action = "promote"
         self._user_action()
 
     def user_change(self, data):
@@ -213,6 +221,12 @@ class ProjectLog:
         from code.database.schema import LogDB
         self.project = project
         self.log = LogDB(author=current_user, project=project)
+
+    def responsible_assign(self, user):
+        self.log.event = "Request to assign new responsible %s"\
+                         % user.full_name()
+        self.log.user = user
+        return self._commit()
 
     def user_assign(self, user):
         self.log.event = "Request to assign user %s" % user.full_name()
