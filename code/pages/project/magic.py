@@ -10,7 +10,11 @@ def get_users(pid):
 
     projects = get_project_info(p_ids=[pid])
     get_limbo_users(projects)
-    return projects[0]["users"]
+    users = projects[0]["users"]
+    for user in users:
+        if user["login"] == projects[0]["responsible"]["login"]:
+            user["responsible"] = True
+    return users
 
 
 def get_limbo_users(projects):
