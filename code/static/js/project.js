@@ -442,7 +442,7 @@ function reduce_to_names(initial, object){
             }else{
                 var info = "{0}".f(value.fullname);
             }
-            var txt = $("<span/>").addClass("uk-margin-small-left").text(info);
+            var txt = $("<span/>").addClass("uk-margin-small-left").attr("title", value.email).text(info);
             if(btn_rndr){
                 txt.addClass("uk-text-muted");
             }
