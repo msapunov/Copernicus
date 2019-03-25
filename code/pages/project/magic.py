@@ -6,6 +6,13 @@ from datetime import datetime as dt
 from code.pages import send_message
 
 
+def get_users(pid):
+
+    projects = get_project_info(p_ids=[pid])
+    get_limbo_users(projects)
+    return projects[0]["users"]
+
+
 def get_limbo_users(projects):
     from code.database.schema import Tasks
 
