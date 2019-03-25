@@ -1,7 +1,7 @@
 from flask import g, flash, request, redirect, url_for, render_template, jsonify
 from flask import current_app
 from flask_login import login_required, login_user
-from code.pages import ssh_wrapper, check_str, check_int, send_message
+from code.pages import ssh_wrapper, check_int, send_message
 from code.pages.admin import bp
 from code.pages.admin.magic import remote_project_creation_magic, get_users
 from code.pages.admin.magic import get_responsible, get_registration_record
@@ -199,7 +199,7 @@ def web_admin_user_info():
     if not data:
         raise ValueError("Expecting application/json requests")
 
-    server = check_str(data["server"])
+    server = str(data["server"]).strip()
     if not server:
         raise ValueError("Server is not defined")
     result, err = ssh_wrapper("PROCPS_USERLEN=32 PROCPS_FROMLEN=90 w -s -h",
