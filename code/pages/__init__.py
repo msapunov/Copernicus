@@ -105,6 +105,12 @@ def check_str(raw_note):
     return str(raw_note)
 
 
+def check_alnum(raw_note):
+    if not str(raw_note).isalnum():
+        raise ValueError("Alphanumeric characters expected: %s" % raw_note)
+    return str(raw_note)
+
+
 class TaskQueue:
 
     def __init__(self):
