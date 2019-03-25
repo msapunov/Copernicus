@@ -145,7 +145,7 @@ class TaskQueue:
             raise ValueError("Can't assign a new responsible to none existent"
                              " project")
         self.task.limbo_user = self._copy_user(user)
-        self.task.action = "promote"
+        self.task.action = "boost"
         self._user_action()
 
     def user_change(self, data):
