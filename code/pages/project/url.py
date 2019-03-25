@@ -58,6 +58,23 @@ def web_project_assign_user():
     return jsonify(message="<br>".join(logs), data=get_users(pid))
 
 
+@bp.route("/project/assign/responsible", methods=["POST"])
+@login_required
+def web_project_assign_responsible():
+    data = request.get_json()
+    if not data:
+        raise ValueError("Expecting application/json requests")
+    pid = check_int(data["project"])
+    login = check_str(data["login"])
+    project = get_project_record(pid)
+    user = get_user_record(login)
+    if user == project.responsible:
+        raise ValueError("User %s is already responsible for the project %s" %
+                         (user.full_name(), project.get_name()))
+    TaskQueue().project(project).user_assign(user)
+    return jsonify(message=ProjectLog(project).user_assign(user))
+
+
 @bp.route("/project/delete/user", methods=["POST"])
 @login_required
 def web_project_delete_user():
