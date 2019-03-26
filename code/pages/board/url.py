@@ -28,7 +28,7 @@ def web_board_accept():
     record.accepted = True
     db.session.commit()
     ProjectLog(record.project).accept(record)
-    accept_message(record)
+    #accept_message(record)
     return jsonify(record.to_dict())
 
 

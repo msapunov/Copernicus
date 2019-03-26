@@ -11,6 +11,7 @@ def board_action():
         raise ValueError("Expecting application/json requests")
     eid = check_int(data["eid"])
     note = check_str(data["comment"])
+    cpu = check_int(data["cpu"])
 
     extend = Extend().query.filter(Extend.id == eid).one()
     if not extend:
