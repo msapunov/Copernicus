@@ -100,9 +100,16 @@ def check_int(raw_int):
 
 
 def check_str(raw_note):
-    if not str(raw_note).isalpha():
-        raise ValueError("String expected: %s" % raw_note)
-    return str(raw_note)
+    note = str(raw_note).strip()
+    if len(note) < 1:
+        raise ValueError("Non empty string expected: %s" % raw_note)
+    return note
+
+
+def check_word(raw_input):
+    if not str(raw_input).isalpha():
+        raise ValueError("String expected: %s" % raw_input)
+    return str(raw_input)
 
 
 def check_alnum(raw_note):
