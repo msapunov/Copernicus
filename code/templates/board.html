@@ -27,75 +27,75 @@
     {% if error %}
         <h1>{{ error }}</h1>
     {% else %}
-<div class="uk-panel uk-width-1-1 uk-panel-space uk-overflow-container">
-    <div class="container" role="main">
-        <table id="ext_result_table" class="table table-striped dt-responsive" width="100%">
-            <thead>
-            <tr>
-                <th data-priority="1"></th>
-                <th data-priority="1">Project</th>
-                <th data-priority="7">Responsible</th>
-                <th data-priority="6">Present</th>
-                <th data-priority="5">Use</th>
-                <th data-priority="4">Extension</th>
-                <th data-priority="2">Activate</th>
-                <th>Activate data</th>
-                <th data-priority="2">Transform</th>
-                <th>Transform data</th>
-                <th data-priority="3">Date</th>
-                <th data-priority="8">Reason</th>
-                <th data-priority="9">Extend id</th>
-                <th data-priority="9">Project id</th>
-                <th data-priority="9">CPU Consumed</th>
-            </tr>
-            </thead>
-            <tfoot>
-            <tr>
-                <th></th>
-                <th>Project</th>
-                <th>Responsible</th>
-                <th>Present</th>
-                <th>Use</th>
-                <th>Extension</th>
-                <th>Activate</th>
-                <th>Activate data</th>
-                <th>Transform</th>
-                <th>Transform data</th>
-                <th>Date</th>
-                <th>Reason</th>
-                <th>Extend id</th>
-                <th>Project id</th>
-                <th>CPU Consumed</th>
-                <th>Login data</th>
-            </tr>
-            </tfoot>
-            <tbody id="ext_result_records">
-            {% if data %}
-
-                {% for record in data|sort(attribute='created') %}
-                    <tr id="{{ record.id }}">
-                        <td></td>
-                        <td>{{ record.project_name }}</td>
-                        <td>{{ record.responsible }}</td>
-                        <td>{{ record.total }}</td>
-                        <td>{{ record.usage }}</td>
-                        <td>{{ record.hours }}</td>
-                        <td>{{ record.activate }}</td>
-                        <td>{{ record.activate }}</td>
-                        <td>{{ record.transform }}</td>
-                        <td>{{ record.transform }}</td>
-                        <td>{{ record.created }}</td>
-                        <td>{{ record.reason }}</td>
-                        <td>{{ record.id }}</td>
-                        <td>{{ record.project }}</td>
-                        <td>{{ record.use}}</td>
-                        <td>{{ record.responsible_login}}</td>
+        <div class="uk-panel uk-width-1-1 uk-panel-space uk-overflow-container">
+            <div class="container" role="main">
+                <table id="ext_result_table" class="table table-striped dt-responsive" width="100%">
+                    <thead>
+                    <tr>
+                        <th data-priority="1"></th>
+                        <th data-priority="1">Project</th>
+                        <th data-priority="7">Responsible</th>
+                        <th data-priority="6">Present</th>
+                        <th data-priority="5">Use</th>
+                        <th data-priority="4">Extension</th>
+                        <th data-priority="2">Activate</th>
+                        <th>Activate data</th>
+                        <th data-priority="2">Transform</th>
+                        <th>Transform data</th>
+                        <th data-priority="3">Date</th>
+                        <th data-priority="8">Reason</th>
+                        <th data-priority="9">Extend id</th>
+                        <th data-priority="9">Project id</th>
+                        <th data-priority="9">CPU Consumed</th>
                     </tr>
-                {% endfor %}
-            {% endif %}
-            </tbody>
-        </table>
-    </div>
-</div>
+                    </thead>
+                    <tfoot>
+                    <tr>
+                        <th></th>
+                        <th>Project</th>
+                        <th>Responsible</th>
+                        <th>Present</th>
+                        <th>Use</th>
+                        <th>Extension</th>
+                        <th>Activate</th>
+                        <th>Activate data</th>
+                        <th>Transform</th>
+                        <th>Transform data</th>
+                        <th>Date</th>
+                        <th>Reason</th>
+                        <th>Extend id</th>
+                        <th>Project id</th>
+                        <th>CPU Consumed</th>
+                        <th>Login data</th>
+                    </tr>
+                    </tfoot>
+                    <tbody id="ext_result_records">
+                    {% if data %}
+
+                        {% for record in data|sort(attribute='created') %}
+                            <tr id="{{ record.id }}">
+                                <td></td>
+                                <td>{{ record.project_name }}</td>
+                                <td>{{ record.responsible }}</td>
+                                <td>{{ record.total }}</td>
+                                <td>{{ record.usage }}</td>
+                                <td>{{ record.hours }}</td>
+                                <td>{{ record.activate }}</td>
+                                <td>{{ record.activate }}</td>
+                                <td>{{ record.transform }}</td>
+                                <td>{{ record.transform }}</td>
+                                <td>{{ record.created }}</td>
+                                <td>{{ record.reason }}</td>
+                                <td>{{ record.id }}</td>
+                                <td>{{ record.project }}</td>
+                                <td>{{ record.use}}</td>
+                                <td>{{ record.responsible_login}}</td>
+                            </tr>
+                        {% endfor %}
+                    {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
     {% endif %}
 {% endblock %}
