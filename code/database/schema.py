@@ -234,8 +234,12 @@ class Resources(db.Model):
     comment = db.Column(db.Text)
     created = db.Column(db.DateTime(True))
     modified = db.Column(db.DateTime(True))
+    ttl = db.Column(db.DateTime(True))
 
     def to_dict(self):
+        start = self.created.strftime("%Y-%m-%d %X %Z") if self.created else ""
+        chng = self.modified.strftime("%Y-%m-%d %X %Z") if self.modified else ""
+        ttl = self.ttl.strftime("%Y-%m-%d %X %Z") if self.ttl else ""
         return {
             "id": self.id,
             "approve": self.approve.to_dict(),
@@ -243,8 +247,9 @@ class Resources(db.Model):
             "cpu": self.cpu,
             "type": self.type,
             "comment": self.comment,
-            "created": self.created,
-            "modified": self.modified
+            "created": start,
+            "modified": chng,
+            "finish": ttl
         }
 
 
