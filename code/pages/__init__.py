@@ -96,7 +96,7 @@ def check_mail(raw_mail):
 def check_int(raw_int):
     if not str(raw_int).isdigit():
         raise ValueError("Number expected: %s" % raw_int)
-    return str(raw_int)
+    return int(raw_int)
 
 
 def check_str(raw_note):
