@@ -7,6 +7,7 @@ from code.pages.project.magic import get_project_info, get_project_record
 from code.pages.project.magic import extend_update, get_limbo_users, get_users
 from code.pages.user.magic import get_user_record
 from datetime import datetime as dt
+from operator import attrgetter
 
 
 @bp.route("/project/add/user", methods=["POST"])
@@ -139,7 +140,9 @@ def web_project_history():
         raise ValueError("Expecting application/json requests")
     pid = check_int(data["project"])
     recs = LogDB().query.filter(LogDB.project_id == pid).all()
-    result = list(map(lambda x: x.to_dict(), recs))
+
+    sorted_recs = sorted(recs, key=attrgetter("created"), reverse=True)
+    result = list(map(lambda x: x.to_dict(), sorted_recs))
     return jsonify(result)
 
 
