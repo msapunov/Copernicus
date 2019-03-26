@@ -58,8 +58,7 @@ class Project(db.Model):
     gid = db.Column(db.Integer)
     privileged = db.Column(db.Boolean, default=False)
     name = db.Column(db.String(128))
-    type = db.Column(db.String(1),
-                     db.CheckConstraint("type IN ('a', 'b', 'c', 'h')"))
+    type = db.Column(db.String(1))
 
     responsible_id = db.Column(db.Integer, db.ForeignKey("users.id"))
     responsible = db.relationship("User", backref="responsible",
