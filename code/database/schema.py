@@ -238,7 +238,7 @@ class Resources(db.Model):
 
     def to_dict(self):
         start = self.created.strftime("%Y-%m-%d %X %Z") if self.created else ""
-        chng = self.modified.strftime("%Y-%m-%d %X %Z") if self.modified else ""
+        mod = self.modified.strftime("%Y-%m-%d %X %Z") if self.modified else ""
         ttl = self.ttl.strftime("%Y-%m-%d %X %Z") if self.ttl else ""
         return {
             "id": self.id,
@@ -248,7 +248,7 @@ class Resources(db.Model):
             "type": self.type,
             "comment": self.comment,
             "created": start,
-            "modified": chng,
+            "modified": mod,
             "finish": ttl
         }
 
