@@ -99,7 +99,6 @@ def web_admin_registration_users():
 
     print(request.form)
     pid = check_int(request.form.get("pid"))
-    print(pid)
 
     register = get_registration_record(pid)
     tmp_responsible = {
