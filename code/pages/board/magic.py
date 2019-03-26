@@ -1,56 +1,19 @@
-from flask import request, current_app
-from flask_login import current_user
-from code.pages import check_int, check_str, send_message
-from code.pages.project.magic import get_project_record
-from datetime import datetime as dt
-from dateutil.relativedelta import relativedelta
+from flask import current_app
+from code.pages import check_int, check_str, send_message, check_json
 
 
 def board_action():
 
     from code.database.schema import Extend
 
-    data = request.get_json()
-    if not data:
-        raise ValueError("Expecting application/json requests")
+    data = check_json()
     eid = check_int(data["eid"])
     note = check_str(data["comment"])
-    cpu = check_int(data["cpu"])
-
     extend = Extend().query.filter(Extend.id == eid).one()
     if not extend:
         raise ValueError("No extension with id '%s' found" % eid)
     if extend.processed:
         raise ValueError("This request has been already processed")
-    if (not cpu) or (cpu <= 0):
-        cpu = extend.hours
-
-    project = get_project_record(extend.project.id)
-    from code.database.schema import Resources
-    from code import db
-
-    now = dt.now()
-    if project.type == "a":
-        month = int(current_app.config["ACC_TYPE_A"])
-        ttl = now + relativedelta(month=+month)
-    elif project.type == "h":
-        month = int(current_app.config["ACC_TYPE_H"])
-        ttl = now + relativedelta(month=+month)
-    else:  # For project type B
-        day = int(current_app.config["ACC_START_DAY"])
-        month = int(current_app.config["ACC_START_MONTH"])
-        year = now.year + 1
-        ttl = dt(year, month, day)
-
-    resource = Resources(
-        approve=current_user,
-        valid=True,
-        cpu=cpu,
-        type=project.type,
-        ttl=ttl
-    )
-    db.session.add(resource)
-    project.resources = resource
     extend.processed = True
     extend.decision = note
     return extend
