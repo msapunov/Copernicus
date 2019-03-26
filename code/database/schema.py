@@ -228,8 +228,7 @@ class Resources(db.Model):
 
     valid = db.Column(db.Boolean, default=False)
     cpu = db.Column(db.Integer, db.CheckConstraint("cpu>=0"))
-    type = db.Column(db.String(1),
-                     db.CheckConstraint("type IN ('a', 'b', 'c', 'h')"))
+    type = db.Column(db.String(1))
     comment = db.Column(db.Text)
     created = db.Column(db.DateTime(True))
     modified = db.Column(db.DateTime(True))
@@ -575,8 +574,7 @@ class LimboProject(db.Model):
     gid = db.Column(db.Integer)
     privileged = db.Column(db.Boolean, default=False)
     name = db.Column(db.String(128))
-    type = db.Column(db.String(1),
-                     db.CheckConstraint("type IN ('a', 'b', 'c', 'h')"))
+    type = db.Column(db.String(1))
     ref_id = db.Column(db.Integer, db.ForeignKey("projects.id"))
     reference = db.relationship("Project", foreign_keys=ref_id)
 
