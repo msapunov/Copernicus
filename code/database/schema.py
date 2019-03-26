@@ -164,12 +164,14 @@ class Extend(db.Model):
         return "<Extension for project {}>".format(self.project.get_name())
 
     def to_dict(self):
+        start = self.created.strftime("%Y-%m-%d %X %Z") if self.created else ""
+        mod = self.modified.strftime("%Y-%m-%d %X %Z") if self.modified else ""
         return {
             "id": self.id,
             "reason": self.reason,
             "hours": self.hours,
-            "created": self.created.timestamp(),
-            "modified": self.modified,
+            "created": start,
+            "modified": mod,
             "accepted": self.accepted,
             "processed": self.processed,
             "decision": self.decision,
