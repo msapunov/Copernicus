@@ -18,6 +18,35 @@ def board_action():
         raise ValueError("No extension with id '%s' found" % eid)
     if extend.processed:
         raise ValueError("This request has been already processed")
+    if (not cpu) or (cpu <= 0):
+        cpu = extend.hours
+
+    project = get_project_record(extend.project.id)
+    from code.database.schema import Resources
+    from code import db
+
+    now = dt.now()
+    if project.type == "a":
+        month = int(current_app.config["ACC_TYPE_A"])
+        ttl = now + relativedelta(month=+month)
+    elif project.type == "h":
+        month = int(current_app.config["ACC_TYPE_H"])
+        ttl = now + relativedelta(month=+month)
+    else:  # For project type B
+        day = int(current_app.config["ACC_START_DAY"])
+        month = int(current_app.config["ACC_START_MONTH"])
+        year = now.year + 1
+        ttl = dt(year, month, day)
+
+    resource = Resources(
+        approve=current_user,
+        valid=True,
+        cpu=cpu,
+        type=project.type,
+        ttl=ttl
+    )
+    db.session.add(resource)
+    project.resources = resource
     extend.processed = True
     extend.decision = note
     return extend
