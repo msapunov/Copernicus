@@ -228,6 +228,7 @@ class ProjectLog:
         from code.database.schema import LogDB
         self.project = project
         self.log = LogDB(author=current_user, project=project)
+        self.send = True
 
     def responsible_assign(self, user):
         self.log.event = "Request to assign new responsible %s"\
@@ -271,6 +272,7 @@ class ProjectLog:
         self.log.event = "Extend request for %s hours is ignored"\
                          % extension.hours
         self.log.extension = extension
+        self.send = False
         return self._commit()
 
     def reject(self, extension):
@@ -288,5 +290,6 @@ class ProjectLog:
         db.session.add(self.log)
         db.session.commit()
         message = "%s: %s" % (self.project.get_name(), self.log.event)
-        send_message(self.project.responsible.email, message=message)
+        if self.send:
+            send_message(self.project.responsible.email, message=message)
         return message
