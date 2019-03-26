@@ -170,9 +170,6 @@ def project_assign_resources(register, approve):
         valid=True,
         cpu=register.cpu,
         type=project_type(register),
-        smp=register.smp,
-        gpu=register.gpu,
-        phi=register.phi
     )
     return resource
 
