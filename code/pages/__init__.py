@@ -243,41 +243,45 @@ class ProjectLog:
     def user_del(self, user):
         self.log.event = "Request to delete user %s" % user.full_name()
         self.log.user = user
-        self._commit()
+        return self._commit()
 
     def extend(self, extension):
-        self.log.event = "Request to extend by %s hours" % extension.hours
+        self.log.event = "Request to extend project for %s hours"\
+                         % extension.hours
         self.log.extension = extension
-        self._commit()
+        return self._commit()
 
     def activate(self, extension):
         self.log.event = "activation request"
         self.log.extension = extension
-        self._commit()
+        return self._commit()
 
     def transform(self, extension):
         self.log.event = "Request to transform from type A to type B"
         self.log.extension = extension
-        self._commit()
+        return self._commit()
 
     def accept(self, extension):
-        self.log.event = "accept extend request for %s hours" % extension.hours
+        self.log.event = "Extend request for %s hours is accepted"\
+                         % extension.hours
         self.log.extension = extension
-        self._commit()
+        return self._commit()
 
     def ignore(self, extension):
-        self.log.event = "ignore extend request for %s hours" % extension.hours
+        self.log.event = "Extend request for %s hours is ignored"\
+                         % extension.hours
         self.log.extension = extension
-        self._commit()
+        return self._commit()
 
     def reject(self, extension):
-        self.log.event = "reject extend request for %s hours" % extension.hours
+        self.log.event = "Extend request for %s hours is rejected"\
+                         % extension.hours
         self.log.extension = extension
-        self._commit()
+        return self._commit()
 
     def event(self, message):
         self.log.event = message.lower()
-        self._commit()
+        return self._commit()
 
     def _commit(self):
         from code import db
