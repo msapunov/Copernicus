@@ -1,5 +1,5 @@
 from paramiko import SSHClient, AutoAddPolicy, AuthenticationException, RSAKey
-from flask import current_app
+from flask import current_app, request
 from flask_login import current_user
 from flask_mail import Message
 from logging import debug, error
@@ -84,6 +84,13 @@ def ssh_wrapper(cmd, host=None):
     client.close()
 
     return output, errors
+
+
+def check_json():
+    data = request.get_json()
+    if not data:
+        raise ValueError("Expecting application/json requests")
+    return data
 
 
 def check_mail(raw_mail):
