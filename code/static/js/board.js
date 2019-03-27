@@ -179,6 +179,17 @@
         });
     }
 
+    window.board.global_history = function(){
+        var title = "Project requests history";
+        json_send(window.board.url.global_history).done(function(reply){
+            if(reply.data && reply.data.length > 0){
+                window.render.global_history(reply.data, title);
+            }else{
+                UIkit.modal.alert("No project requests history found");
+            }
+        });
+    }
+
     window.process = function(record){
         if(record.message){
             UIkit.notify(record.message, {timeout: 2000, status:"success"});
@@ -194,6 +205,55 @@
         if(recs.length < 1){
             $("#ext_projects_table").remove();
             $(".treated").toggleClass("uk-hidden");
+        }
+    }
+
+    window.render.global_history = function(data, title){
+        var info = $("<table/>").addClass(
+            "uk-table uk-table-striped uk-table-condensed");
+        var tr = $("<tr/>");
+        $("<th/>").text("Project").appendTo(tr);
+        $("<th/>").text("CPU").appendTo(tr);
+        $("<th/>").addClass("uk-text-nowrap").text("Approved by").appendTo(tr);
+        $("<th/>").text("Accepted").appendTo(tr);
+        $("<th/>").text("Processed").appendTo(tr);
+        $("<th/>").text("Created").appendTo(tr);
+        info.append($("<thead/>").append(tr));
+        data.sort(function(a,b){
+            return new Date(b.created) - new Date(a.created);
+        });
+        var tbody = $("<tbody/>");
+        data.forEach(function(rec){
+            var tr = $("<tr>");
+            ["project_name", "hours", "approve", "accepted", "processed", "modified"].forEach(function(attr){
+                if(attr=="accepted" || attr=="processed"){
+                    if(attr=="accepted" && rec[attr]){
+                        tr.append("<td><span class='uk-icon-thumbs-up'></span></td>");
+                    }else if(attr=="accepted" && !rec[attr]){
+                        tr.append("<td><span class='uk-icon-thumbs-o-down'></span></td>");
+                    }else if(attr=="processed" && rec[attr]){
+                        tr.append("<td><span class='uk-icon-check'></span></td>");
+                    }else{
+                        tr.append("<td></td>");
+                    }
+                }else{
+                    if(attr=="approve" || attr=="modified"){
+                        tr.append("<td class='uk-text-nowrap'>" + rec[attr] + "</td>");
+                    }else{
+                        tr.append("<td>" + rec[attr] + "</td>");
+                    }
+                }
+            });
+            tbody.append(tr);
+        });
+        info.append(tbody);
+        $("#modal_body").html(info.prop("outerHTML"));
+
+        var modal = UIkit.modal("#modal");
+        if ( modal.isActive() ) {
+            modal.hide();
+        } else {
+            modal.show();
         }
     }
 
