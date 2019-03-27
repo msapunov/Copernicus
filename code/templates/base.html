@@ -23,7 +23,7 @@
         <script>
             var message_window = function(users){
                 var plural = users.length > 1 ? "s" : "";
-                var win_title = "Send a message to user{0} {1}?".f(plural, users.join(", "));
+                var win_title = "Send a message to the user{0} {1}?".f(plural, users.join(", "));
                 var title = $("<input/>").addClass("uk-width-1-1").attr({
                     "name": "global_title",
                     "type": "text",
