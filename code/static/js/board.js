@@ -332,14 +332,16 @@
     }
 
     window.process = function(record){
-        if(!record.id){
+        if(record.message){
+            UIkit.notify(record.message, {timeout: 2000, status:"success"});
+        }
+        if(!record.data.id){
             alert("Returned record has no ID");
         };
-        if(!record.processed){
-            return
-        }
-        var rid = "#" + record.id;
-        var row = window.board.table.row(rid).remove().draw();
+        var rid = "#" + record.data.id;
+        var rid_info = rid+"-info";
+        $(rid).empty();
+        $(rid_info).empty();
     }
 
     window.render.history = function(data, title){
