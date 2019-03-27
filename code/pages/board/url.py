@@ -22,6 +22,19 @@ def web_board():
     return render_template("board.html", data=result)
 
 
+@bp.route("/board/history", methods=["POST"])
+@login_required
+def web_board_history():
+    from code.database.schema import Extend
+
+    ext_list = Extend().query.all()
+    if not ext_list:
+        err = "No new project related requests found! Nothing to do"
+        return jsonify(message=err)
+    result = list(map(lambda x: x.to_dict(), ext_list))
+    return jsonify(data=result)
+
+
 @bp.route("/board/accept", methods=["POST"])
 @login_required
 def web_board_accept():
