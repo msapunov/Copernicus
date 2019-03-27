@@ -268,12 +268,12 @@
 
     window.board.ignore = function(){
         var me = this;
-        window.board.kill("ignore", me)
+        window.board.kill(window.board.url.ignore, me)
     }
 
     window.board.reject = function(){
         var me = this;
-        window.board.kill("reject", me)
+        window.board.kill(window.board.url.reject, me)
     }
     window.board.kill = function(url_name, me){
         if (typeof(url_name)==="undefined") url_name="reject";
