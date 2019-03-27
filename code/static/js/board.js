@@ -256,7 +256,7 @@
         UIkit.modal.confirm(form.prop("outerHTML"), function(){
             var comment = $("textarea[name=note]").val();
             var cpu_hours = $("input[name=cpu]").val();
-            window.board.send("accept", {
+            json_send(window.board.url.accept, {
                 "eid": id,
                 "comment": comment,
                 "cpu": cpu_hours
@@ -309,7 +309,7 @@
             );
         UIkit.modal.confirm(form.prop("outerHTML"), function(){
             var comment = $("textarea[name=note]").val();
-            window.board.send(url_name, {
+            json_send(url_name, {
                 "eid": id,
                 "comment": comment
             }).done(function(reply){
@@ -322,7 +322,7 @@
         var id = $(this).data("id");
         var name = $(this).data("name");
         var title = "History for project {0}".f(name);
-        window.board.send("history", {"project": id}).done(function(reply){
+        json_send(window.board.url.history, {"project": id}).done(function(reply){
             if(reply.length > 0){
                 window.render.history(reply, title);
             }else{
