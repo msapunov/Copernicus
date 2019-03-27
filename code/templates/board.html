@@ -114,7 +114,7 @@
                 <tbody id="ext_result_records">
                     {% for record in data|sort(attribute='created', reverse=True) %}
                         <tr id="{{record.id}}">
-                            <td class="uk-width-1-10"><button class="uk-button uk-button-mini new_req" type="button" data-id='{{record.id}}-info'><span class="uk-icon-plus"></span></button></td>
+                            <td class="uk-width-1-10"><button class="uk-button uk-button-mini new_ext" type="button" data-id='{{record.id}}-info'><span class="uk-icon-plus"></span></button></td>
                             <td class="uk-width-1-10">{{ record.project_name }}</td>
                             <td class="uk-width-1-10 uk-text-nowrap">{{ record.responsible }}</td>
                             <td class="uk-width-1-10">{{ record.total }}</td>
@@ -163,23 +163,23 @@
                                         <tr>
                                             <td>
                                                 <div class="uk-button-group uk-margin-top">
-                                                    <button class="uk-button history">
+                                                    <button class="uk-button history"  data-id="{{record.project}}" data-name="{{record.project_name}}">
                                                         <span class="uk-icon-history uk-margin-small-right"></span>History
                                                     </button>
-                                                    <button class="uk-button contact">
+                                                    <button class="uk-button contact" data-login="{{record.responsible_login}}">
                                                         <span class="uk-icon-commenting uk-margin-small-right"></span>Contact
                                                     </button>
                                                 </div>
                                             </td>
                                             <td>
                                                 <div class="uk-button-group uk-float-right uk-margin-top">
-                                                    <button class="uk-button accept">
+                                                    <button class="uk-button accept" data-id="{{record.project}}" data-name="{{record.project_name}}" data-act="{{record.activate}}" data-trans="{{record.transform}}" data-cpu="{{record.hours}}">
                                                         <span class="uk-icon-thumbs-up uk-margin-small-right"></span>Accept
                                                     </button>
-                                                    <button class="uk-button ignore">
+                                                    <button class="uk-button ignore" data-id="{{record.project}}" data-name="{{record.project_name}}" data-act="{{record.activate}}" data-trans="{{record.transform}}">
                                                         <span class="uk-icon-thumbs-o-down uk-margin-small-right"></span>Ignore
                                                     </button>
-                                                    <button class="uk-button uk-button-danger reject">
+                                                    <button class="uk-button uk-button-danger reject" data-id="{{record.project}}" data-name="{{record.project_name}}" data-act="{{record.activate}}" data-trans="{{record.transform}}">
                                                         <span class="uk-icon-thumbs-down uk-margin-small-right"></span>Reject
                                                     </button>
                                                 </div>
@@ -188,25 +188,6 @@
                                     </tbody>
                                 </table>
                             </td>
-
-             <!--
-                                         <td>{{ record.reason }}</td>
-                            <td>{{ record.id }}</td>
-                            <td>{{ record.project }}</td>
-                            <td>{{ record.use}}</td>
-                            <td>{{ record.responsible_login}}</td>
-                                <div class="uk-button-group uk-float-right">
-                                    <button class="uk-button new_accept" type="button" data-id='{{record.id}}' data-meso='{{record.meso_id}}' data-title='{{record.title}}'><span class="uk-icon-thumbs-up uk-margin-small-right"></span>Accept</button>
-                                    <button class="uk-button new_reject uk-button-danger" type="button" data-id='{{record.id}}' data-meso='{{record.meso_id}}' data-title='{{record.title}}'><span class="uk-icon-thumbs-down uk-margin-small-right"></span>Reject</button>
-                                </div>
-                                {% if record.responsible_email %}
-                                <div class="uk-button-group uk-float-left">
-                                    <button class="uk-button message" type="button" data-id='{{record.id}}' data-addr='{{record.responsible_email}}'><span class="uk-icon-send uk-margin-small-right"></span>Contact</button>
-                                </div>
-                                {% endif %}
-                            </td>
-                        </tr>
--->
                         </tr>
                     {% endfor %}
                 </tbody>
