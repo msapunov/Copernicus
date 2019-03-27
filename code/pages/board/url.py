@@ -62,7 +62,8 @@ def web_board_accept():
     db.session.add(resource)
     project.resources = resource
     db.session.commit()
-    return jsonify(message=ProjectLog(record.project).accept(record))
+    return jsonify(message=ProjectLog(record.project).accept(record),
+                   data={"id": record.id})
 
 
 @bp.route("/board/ignore", methods=["POST"])
@@ -73,7 +74,8 @@ def web_board_ignore():
     record = board_action()
     record.accepted = False
     db.session.commit()
-    return jsonify(message=ProjectLog(record.project).ignore(record))
+    return jsonify(message=ProjectLog(record.project).ignore(record),
+                   data={"id": record.id})
 
 
 @bp.route("/board/reject", methods=["POST"])
@@ -84,4 +86,5 @@ def web_board_reject():
     record = board_action()
     record.accepted = False
     db.session.commit()
-    return jsonify(message=ProjectLog(record.project).reject(record))
+    return jsonify(message=ProjectLog(record.project).reject(record),
+                   data={"id": record.id})
