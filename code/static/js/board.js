@@ -49,6 +49,8 @@ if(!String.prototype.hashCode){
         accept: "board/accept",
         reject: "board/reject",
         ignore: "board/ignore",
+        activate: "board/activate",
+        transform: "board/transform",
         history: "project/history"
     };
     window.board.id = "#ext_result_table";
@@ -237,7 +239,7 @@ if(!String.prototype.hashCode){
             );
         UIkit.modal.confirm(form.prop("outerHTML"), function(){
             var comment = $("textarea[name=note]").val();
-            window.board.send("accept", {
+            json_send(window.board.url.transform, {
                 "eid": id,
                 "comment": comment
             }).done(function(reply){
@@ -262,7 +264,7 @@ if(!String.prototype.hashCode){
             );
         UIkit.modal.confirm(form.prop("outerHTML"), function(){
             var comment = $("textarea[name=note]").val();
-            window.board.send("accept", {
+            json_send(window.board.url.activate, {
                 "eid": id,
                 "comment": comment
             }).done(function(reply){
