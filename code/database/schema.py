@@ -166,6 +166,7 @@ class Extend(db.Model):
     def to_dict(self):
         start = self.created.strftime("%Y-%m-%d %X %Z") if self.created else ""
         mod = self.modified.strftime("%Y-%m-%d %X %Z") if self.modified else ""
+        approve = self.approve.full_name() if self.approve else ""
         return {
             "id": self.id,
             "reason": self.reason,
@@ -185,7 +186,7 @@ class Extend(db.Model):
             "use": self.present_use,
             "usage": self.usage_percent,
             "project_name": self.project.get_name(),
-            "approve": self.approve.full_name(),
+            "approve": approve,
             "responsible": self.project.responsible.full_name(),
             "responsible_login": self.project.responsible.login
         }
