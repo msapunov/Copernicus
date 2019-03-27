@@ -25,8 +25,19 @@
 {% endblock %}
 {% block main %}
     {% if error %}
-        <h1>{{ error }}</h1>
+        <div class="uk-panel uk-width-1-1 uk-panel-space">
+            <h1 class="uk-text-center">{{ error }}</h1>
+            <button class="uk-button global_history uk-align-center">
+                <span class="uk-icon-history uk-margin-small-right"></span>Project requests history
+            </button>
+        </div>
     {% else %}
+        <div class="uk-panel uk-width-1-1 uk-panel-space treated uk-hidden">
+            <h1 class="uk-text-center">All new project requests are treated!</h1>
+            <button class="uk-button global_history uk-align-center">
+                <span class="uk-icon-history uk-margin-small-right"></span>Project requests history
+            </button>
+        </div>
         <div class="uk-panel uk-width-1-1 uk-panel-space uk-overflow-container">
             <div class="container" role="main">
                 <table id="ext_projects_table" class="uk-table uk-table-striped uk-table-condensed">
