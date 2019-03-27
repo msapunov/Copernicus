@@ -190,8 +190,13 @@
         };
         var rid = "#" + record.data.id;
         var rid_info = rid+"-info";
-        $(rid).empty();
-        $(rid_info).empty();
+        $(rid).remove();
+        $(rid_info).remove();
+        var recs = $("#ext_result_records").find("tr");
+        if(recs.length < 1){
+            $("#ext_projects_table").remove();
+            $(".treated").toggleClass("uk-hidden");
+        }
     }
 
     window.render.history = function(data, title){
