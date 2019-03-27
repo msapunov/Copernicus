@@ -8,7 +8,8 @@
         ignore: "board/ignore",
         activate: "board/activate",
         transform: "board/transform",
-        history: "project/history"
+        history: "project/history",
+        global_history: "project/history/global"
     };
 
     window.board.init = function(){
@@ -244,5 +245,6 @@
     $(document).on("click", ".reject", window.board.reject);
     $(document).on("click", ".ignore", window.board.ignore);
     $(document).on("click", ".contact", window.board.message);
+    $(document).on("click", ".global_history", window.board.global_history);
 
 })(window, document, jQuery);
