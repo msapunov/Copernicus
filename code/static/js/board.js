@@ -319,7 +319,7 @@
     }
 
     window.board.history = function(){
-        var id = $(this).data("id");
+        var id = $(this).data("pid");
         var name = $(this).data("name");
         var title = "History for project {0}".f(name);
         json_send(window.board.url.history, {"project": id}).done(function(reply){
