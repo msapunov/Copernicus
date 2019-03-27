@@ -207,19 +207,23 @@ if(!String.prototype.hashCode){
     }
 
     window.board.accept = function(e){
-        var data = $(this).data("data");
-        if(data.transform=="True"){
-            return window.board.transform(data)
-        }else if(data.activate=="True"){
-            return window.board.activate(data)
+        var me = this;
+        var id = $(me).data("id");
+        var project = $(me).data("name");
+        var act = $(me).data("act");
+        var trans = $(me).data("trans");
+        if(trans=="True"){
+            return window.board.transform(me)
+        }else if(act=="True"){
+            return window.board.activate(me)
         }else{
-            return window.board.extend(data)
+            return window.board.extend(me)
         }
     }
 
-    window.board.transform = function(data){
-        var id = $.trim(data.id);
-        var project = $.trim(data.project_name);
+    window.board.transform = function(me){
+        var id = $(me).data("id");
+        var project = $(me).data("name");
         var title = "Accept transformation of project {0} to type B?".f(project);
         var text = "Transformation accepted by scientific committee";
         var motiv = $("<textarea/>").html(text).addClass("uk-width-1-1").attr({
@@ -242,9 +246,9 @@ if(!String.prototype.hashCode){
         });
     }
 
-    window.board.activate = function(data){
-        var id = $.trim(data.id);
-        var project = $.trim(data.project_name);
+    window.board.activate = function(me){
+        var id = $(me).data("id");
+        var project = $(me).data("name");
         var title = "Accept activation of project {0}?".f(project);
         var text = "Activation accepted by scientific committee";
         var motiv = $("<textarea/>").html(text).addClass("uk-width-1-1").attr({
@@ -267,10 +271,10 @@ if(!String.prototype.hashCode){
         });
     }
 
-    window.board.extend = function(data){
-        var id = $.trim(data.id);
-        var project = $.trim(data.project_name);
-        var hours = $.trim(data.hours);
+    window.board.extend = function(me){
+        var id = $(me).data("id");
+        var project = $(me).data("name");
+        var hours = $(me).data("cpu");
         var title = "Accept extension of project {0} by {1} hours?".f(project, hours);
         var text = "Extension accepted by scientific committee";
         var cpu = $("<input/>").addClass("uk-width-1-1").attr({
@@ -314,12 +318,15 @@ if(!String.prototype.hashCode){
     window.board.kill = function(url_name, me){
         if (typeof(url_name)==="undefined") url_name="reject";
         if (typeof(me)==="undefined") me=this;
-        var data = $(me).data("data");
-        var id = $.trim(data.id);
-        var project = $.trim(data.project_name);
-        if(data.activate=="True"){
+
+        var id = $(me).data("id");
+        var project = $(me).data("name");
+        var act = $(me).data("act");
+        var trans = $(me).data("trans");
+
+        if(act=="True"){
             var action = "activation";
-        }else if(data.transform=="True"){
+        }else if(trans=="True"){
             var action = "transformation";
         }else{
             var action = "extension";
@@ -352,9 +359,8 @@ if(!String.prototype.hashCode){
     }
 
     window.board.history = function(){
-        var data = $(this).data("data");
-        var id = $.trim(data.pid);
-        var project = $.trim(data.project_name);
+        var id = $(this).data("id");
+        var name = $(this).data("name");
         var title = "History for project {0}".f(name);
         window.board.send("history", {"project": id}).done(function(reply){
             if(reply.length > 0){
@@ -482,13 +488,14 @@ if(!String.prototype.hashCode){
     }
 
     window.board.message = function(){
-        var data = $(this).data("data");
-        var login = $.trim(data.responsible_login);
+        //var data = $(this).data("data");
+        var login = $(this).data("login");
         message_window([login]);
     }
 
     $(document).on("ready", window.board.init);
-    $(document).on("click", ".ext_row", window.render.expand);
+    //$(document).on("click", ".ext_row", window.render.expand);
+    $(document).on("click", ".new_ext", window.render.new_extension);
     $(document).on("click", ".history", window.board.history);
     $(document).on("click", ".accept", window.board.accept);
     $(document).on("click", ".reject", window.board.reject);
