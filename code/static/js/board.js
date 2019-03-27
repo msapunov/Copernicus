@@ -1,45 +1,3 @@
-if(!String.prototype.f){
-  // SOURCE: http://stackoverflow.com/questions/610406/javascript-equivalent-to-printf-string-format
-  String.prototype.f = function(){
-    var str = this.toString();
-    if(!arguments.length)
-      return str;
-    var args = typeof arguments[0],
-      args = (("string" == args || "number" == args) ? arguments : arguments[0]);
-    for(arg in args)
-      str = str.replace(RegExp("\\{" + arg + "\\}", "gi"), args[arg]);
-    return str;
-  }
-}
-if(!String.prototype.capitalize){
-  String.prototype.capitalize = function() {
-    return this.charAt(0).toUpperCase() + this.slice(1);
-  }
-}
-if(!String.prototype.idfy){
-  String.prototype.idfy = function(){
-    if(this.charAt(0) != "#"){
-      return "#" + this;
-    }else{
-      return this;
-    }
-  }
-}
-if(!String.prototype.hashCode){
-  // SOURCE: http://stackoverflow.com/questions/7616461/generate-a-hash-from-string-in-javascript-jquery
-  String.prototype.hashCode = function(){
-    var hash = 0, i, chr, len;
-      if (this.length === 0) return hash;
-      for (i = 0, len = this.length; i < len; i++) {
-        chr   = this.charCodeAt(i);
-        hash  = ((hash << 5) - hash) + chr;
-        hash |= 0; // Convert to 32bit integer
-      }
-    return "R"+hash;
-  };
-}
-
-
 (function(window, document, $, undefined){
     "use strict";
     window.contact = "mesocentre-techn@univ-amu.fr";
@@ -490,7 +448,6 @@ if(!String.prototype.hashCode){
     }
 
     window.board.message = function(){
-        //var data = $(this).data("data");
         var login = $(this).data("login");
         message_window([login]);
     }
@@ -503,7 +460,6 @@ if(!String.prototype.hashCode){
     }
 
     $(document).on("ready", window.board.init);
-    //$(document).on("click", ".ext_row", window.render.expand);
     $(document).on("click", ".new_ext", window.render.new_extension);
     $(document).on("click", ".history", window.board.history);
     $(document).on("click", ".accept", window.board.accept);
