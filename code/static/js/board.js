@@ -493,6 +493,13 @@ if(!String.prototype.hashCode){
         message_window([login]);
     }
 
+    window.render.new_extension = function(){
+        var data = $(this).data("id");
+        $("#"+data).toggleClass("uk-hidden");
+        $(this).closest("tr").eq(0).toggleClass("ext_info");
+        $(this).find("span").eq(0).toggleClass("uk-icon-plus uk-icon-minus");
+    }
+
     $(document).on("ready", window.board.init);
     //$(document).on("click", ".ext_row", window.render.expand);
     $(document).on("click", ".new_ext", window.render.new_extension);
