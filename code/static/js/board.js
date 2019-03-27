@@ -9,10 +9,7 @@
         activate: "board/activate",
         transform: "board/transform",
         history: "project/history",
-        global_history: "project/history/global"
-    };
-
-    window.board.init = function(){
+        global_history: "board/history"
     };
 
     window.render = {};
