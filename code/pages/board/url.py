@@ -6,6 +6,7 @@ from code.pages.board.magic import board_action
 from code.pages.project.magic import get_project_record
 from datetime import datetime as dt
 from dateutil.relativedelta import relativedelta as rd
+from operator import attrgetter
 
 
 @bp.route("/board", methods=["GET", "POST"])
@@ -31,7 +32,8 @@ def web_board_history():
     if not ext_list:
         err = "No new project related requests found! Nothing to do"
         return jsonify(message=err)
-    result = list(map(lambda x: x.to_dict(), ext_list))
+    sorted_recs = sorted(ext_list, key=attrgetter("created"), reverse=True)
+    result = list(map(lambda x: x.to_dict(), sorted_recs))
     return jsonify(data=result)
 
 
