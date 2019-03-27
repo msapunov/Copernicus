@@ -163,7 +163,7 @@
                                         <tr>
                                             <td>
                                                 <div class="uk-button-group uk-margin-top">
-                                                    <button class="uk-button history"  data-id="{{record.project}}" data-name="{{record.project_name}}">
+                                                    <button class="uk-button history"  data-pid="{{record.project}}" data-name="{{record.project_name}}">
                                                         <span class="uk-icon-history uk-margin-small-right"></span>History
                                                     </button>
                                                     <button class="uk-button contact" data-login="{{record.responsible_login}}">
@@ -173,13 +173,13 @@
                                             </td>
                                             <td>
                                                 <div class="uk-button-group uk-float-right uk-margin-top">
-                                                    <button class="uk-button accept" data-id="{{record.project}}" data-name="{{record.project_name}}" data-act="{{record.activate}}" data-trans="{{record.transform}}" data-cpu="{{record.hours}}">
+                                                    <button class="uk-button accept" data-id="{{record.id}}" data-pid="{{record.project}}" data-name="{{record.project_name}}" data-act="{{record.activate}}" data-trans="{{record.transform}}" data-cpu="{{record.hours}}">
                                                         <span class="uk-icon-thumbs-up uk-margin-small-right"></span>Accept
                                                     </button>
-                                                    <button class="uk-button ignore" data-id="{{record.project}}" data-name="{{record.project_name}}" data-act="{{record.activate}}" data-trans="{{record.transform}}">
+                                                    <button class="uk-button ignore" data-id="{{record.id}}" data-pid="{{record.project}}" data-name="{{record.project_name}}" data-act="{{record.activate}}" data-trans="{{record.transform}}">
                                                         <span class="uk-icon-thumbs-o-down uk-margin-small-right"></span>Ignore
                                                     </button>
-                                                    <button class="uk-button uk-button-danger reject" data-id="{{record.project}}" data-name="{{record.project_name}}" data-act="{{record.activate}}" data-trans="{{record.transform}}">
+                                                    <button class="uk-button uk-button-danger reject" data-id="{{record.id}}" data-pid="{{record.project}}" data-name="{{record.project_name}}" data-act="{{record.activate}}" data-trans="{{record.transform}}">
                                                         <span class="uk-icon-thumbs-down uk-margin-small-right"></span>Reject
                                                     </button>
                                                 </div>
