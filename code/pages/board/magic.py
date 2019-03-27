@@ -1,4 +1,5 @@
 from flask import current_app
+from flask_login import current_user
 from code.pages import check_int, check_str, send_message, check_json
 
 
@@ -16,6 +17,7 @@ def board_action():
         raise ValueError("This request has been already processed")
     extend.processed = True
     extend.decision = note
+    extend.approve = current_user
     return extend
 
 
