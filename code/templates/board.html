@@ -29,6 +29,7 @@
     {% else %}
         <div class="uk-panel uk-width-1-1 uk-panel-space uk-overflow-container">
             <div class="container" role="main">
+                <!--
                 <table id="ext_result_table" class="table table-striped dt-responsive" width="100%">
                     <thead>
                     <tr>
@@ -95,6 +96,121 @@
                     {% endif %}
                     </tbody>
                 </table>
+                -->
+                <table id="ext_projects_table" class="uk-table uk-table-striped uk-table-condensed">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Project</th>
+                            <th>Responsible</th>
+                            <th>Present</th>
+                            <th>Use</th>
+                            <th>Extension</th>
+                            <th>Activate</th>
+                            <th>Transform</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                <tbody id="ext_result_records">
+                    {% for record in data|sort(attribute='created', reverse=True) %}
+                        <tr id="{{record.id}}">
+                            <td class="uk-width-1-10"><button class="uk-button uk-button-mini new_req" type="button" data-id='{{record.id}}-info'><span class="uk-icon-plus"></span></button></td>
+                            <td class="uk-width-1-10">{{ record.project_name }}</td>
+                            <td class="uk-width-1-10 uk-text-nowrap">{{ record.responsible }}</td>
+                            <td class="uk-width-1-10">{{ record.total }}</td>
+                            <td class="uk-width-1-10">{{ record.usage }}</td>
+                            <td class="uk-width-1-10">{{ record.hours }}</td>
+                            <td class="uk-width-1-10">
+                                {% if record.activate %}
+                                    <span class="uk-icon-plus"></span>
+                                {% else %}
+                                    &nbsp;
+                                {% endif %}
+                            </td>
+                            <td class="uk-width-1-10">
+                                {% if record.transform %}
+                                    <span class="uk-icon-plus"></span>
+                                {% else %}
+                                    &nbsp;
+                                {% endif %}
+                            </td>
+                            <td class="uk-width-2-10">{{ record.created }}</td>
+                        </tr>
+                        <tr id="{{record.id}}-info" class="ext_info uk-hidden"> <!-- uk-text-center uk-hidden -->
+                            <td colspan="9">
+                                <table id="info_table" class="uk-table">
+                                    <tbody>
+                                        <tr class="ext_info">
+                                            <td class="uk-width-1-10 uk-text-right uk-text-bold uk-text-nowrap">CPU total:</td>
+                                            <td class="uk-width-9-10">{{ record.total }}</td>
+                                        </tr>
+                                        <tr class="ext_info">
+                                            <td class="uk-width-1-10 uk-text-right uk-text-bold uk-text-nowrap">CPU used:</td>
+                                            <td class="uk-width-9-10">{{ record.present_use }}</td>
+                                        </tr>
+                                        <tr class="ext_info">
+                                            <td class="uk-width-1-10 uk-text-right uk-text-bold uk-text-nowrap">CPU usage:</td>
+                                            <td class="uk-width-9-10">{{ record.usage }}</td>
+                                        </tr>
+                                        <tr class="ext_info">
+                                            <td class="uk-width-1-10 uk-text-right uk-text-bold uk-text-nowrap">CPU extension:</td>
+                                            <td class="uk-width-9-10">{{ record.hours }}</td>
+                                        </tr>
+                                        <tr class="ext_info">
+                                            <td class="uk-width-1-10 uk-text-right uk-text-bold uk-text-nowrap">Comments:</td>
+                                            <td class="uk-width-9-10">{{ record.reason }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div class="uk-button-group uk-margin-top">
+                                                    <button class="uk-button history">
+                                                        <span class="uk-icon-history uk-margin-small-right"></span>History
+                                                    </button>
+                                                    <button class="uk-button contact">
+                                                        <span class="uk-icon-commenting uk-margin-small-right"></span>Contact
+                                                    </button>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="uk-button-group uk-float-right uk-margin-top">
+                                                    <button class="uk-button accept">
+                                                        <span class="uk-icon-thumbs-up uk-margin-small-right"></span>Accept
+                                                    </button>
+                                                    <button class="uk-button ignore">
+                                                        <span class="uk-icon-thumbs-o-down uk-margin-small-right"></span>Ignore
+                                                    </button>
+                                                    <button class="uk-button uk-button-danger reject">
+                                                        <span class="uk-icon-thumbs-down uk-margin-small-right"></span>Reject
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+
+             <!--
+                                         <td>{{ record.reason }}</td>
+                            <td>{{ record.id }}</td>
+                            <td>{{ record.project }}</td>
+                            <td>{{ record.use}}</td>
+                            <td>{{ record.responsible_login}}</td>
+                                <div class="uk-button-group uk-float-right">
+                                    <button class="uk-button new_accept" type="button" data-id='{{record.id}}' data-meso='{{record.meso_id}}' data-title='{{record.title}}'><span class="uk-icon-thumbs-up uk-margin-small-right"></span>Accept</button>
+                                    <button class="uk-button new_reject uk-button-danger" type="button" data-id='{{record.id}}' data-meso='{{record.meso_id}}' data-title='{{record.title}}'><span class="uk-icon-thumbs-down uk-margin-small-right"></span>Reject</button>
+                                </div>
+                                {% if record.responsible_email %}
+                                <div class="uk-button-group uk-float-left">
+                                    <button class="uk-button message" type="button" data-id='{{record.id}}' data-addr='{{record.responsible_email}}'><span class="uk-icon-send uk-margin-small-right"></span>Contact</button>
+                                </div>
+                                {% endif %}
+                            </td>
+                        </tr>
+-->
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
             </div>
         </div>
     {% endif %}
