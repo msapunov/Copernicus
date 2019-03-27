@@ -211,36 +211,33 @@
     window.render.global_history = function(data, title){
         var info = $("<table/>").addClass(
             "uk-table uk-table-striped uk-table-condensed");
-        var tr = $("<tr/>");
-        $("<th/>").text("Project").appendTo(tr);
-        $("<th/>").text("CPU").appendTo(tr);
-        $("<th/>").addClass("uk-text-nowrap").text("Approved by").appendTo(tr);
-        $("<th/>").text("Accepted").appendTo(tr);
-        $("<th/>").text("Processed").appendTo(tr);
-        $("<th/>").text("Created").appendTo(tr);
+        var tr = $("<tr/>").addClass("uk-text-small");
+        $("<th/>").addClass("uk-width-1-10").text("Project").appendTo(tr);
+        $("<th/>").addClass("uk-width-1-10").text("CPU").appendTo(tr);
+        $("<th/>").addClass("uk-width-3-10 uk-text-nowrap").text("Approved by").appendTo(tr);
+        $("<th/>").addClass("uk-width-1-10").text("Accepted").appendTo(tr);
+        $("<th/>").addClass("uk-width-1-10").text("Processed").appendTo(tr);
+        $("<th/>").addClass("uk-width-3-10").text("Created").appendTo(tr);
         info.append($("<thead/>").append(tr));
-        data.sort(function(a,b){
-            return new Date(b.created) - new Date(a.created);
-        });
         var tbody = $("<tbody/>");
         data.forEach(function(rec){
-            var tr = $("<tr>");
-            ["project_name", "hours", "approve", "accepted", "processed", "modified"].forEach(function(attr){
+            var tr = $("<tr>").addClass("uk-text-small");
+            ["project_name", "hours", "approve", "accepted", "processed", "created"].forEach(function(attr){
                 if(attr=="accepted" || attr=="processed"){
                     if(attr=="accepted" && rec[attr]){
-                        tr.append("<td><span class='uk-icon-thumbs-up'></span></td>");
+                        tr.append("<td class='uk-width-1-10'><span class='uk-icon-thumbs-up'></span></td>");
                     }else if(attr=="accepted" && !rec[attr]){
-                        tr.append("<td><span class='uk-icon-thumbs-o-down'></span></td>");
+                        tr.append("<td class='uk-width-1-10'><span class='uk-icon-thumbs-o-down'></span></td>");
                     }else if(attr=="processed" && rec[attr]){
-                        tr.append("<td><span class='uk-icon-check'></span></td>");
+                        tr.append("<td class='uk-width-1-10'><span class='uk-icon-check'></span></td>");
                     }else{
-                        tr.append("<td></td>");
+                        tr.append("<td class='uk-width-1-10'></td>");
                     }
                 }else{
-                    if(attr=="approve" || attr=="modified"){
-                        tr.append("<td class='uk-text-nowrap'>" + rec[attr] + "</td>");
+                    if(attr=="approve" || attr=="created"){
+                        tr.append("<td class='uk-text-nowrap uk-width-3-10'>" + rec[attr] + "</td>");
                     }else{
-                        tr.append("<td>" + rec[attr] + "</td>");
+                        tr.append("<td class='uk-width-1-10'>" + rec[attr] + "</td>");
                     }
                 }
             });
