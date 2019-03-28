@@ -676,3 +676,22 @@ class LimboUser(db.Model):
             "active": self.active if self.active else "",
             "comment": self.comment if self.comment else "",
         }
+
+class Commands(db.Model):
+    __tablename__ = "commands"
+
+    id = db.Column(db.Integer, primary_key=True)
+    exec = db.Column(db.Text)
+    done = db.Column(db.Boolean)
+    date = db.Column(db.DateTime(True))
+
+    def __repr__(self):
+        return '<Command {}>'.format(self.exec)
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "exec": self.exec,
+            "done": self.done,
+            "date": self.date
+        }
