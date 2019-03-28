@@ -108,6 +108,13 @@ class Watchdog:
 
 
 def run():
+
+    if not master():
+        log.critical("Running on not master instance. Terminating")
+        return
+    log.debug("Running on a master instance")
+
+
     config = Config()
     config.read(cfg_file)
 
