@@ -4,6 +4,8 @@
 
 import logging as log
 
+from paramiko import SSHClient, AutoAddPolicy, AuthenticationException, RSAKey
+from subprocess import Popen, PIPE
 from threading import Timer
 from optparse import OptionParser
 from os.path import exists
@@ -78,12 +80,30 @@ def execute(argz):
     return out, err
 
 
+def remote_cmd(ssh):
+    host = ssh["hostname"]
+    login = ssh["username"]
+    key = ssh["key"]
+    cmd = ssh["cmd"]
+
+    client = SSHClient()
+    client.set_missing_host_key_policy(AutoAddPolicy())
+    try:
+        client.connect(host, username=login, password="", key_filename=key)
+        stdin, stdout, stderr = client.exec_command(cmd)
+        stdout.readlines()
+    except AuthenticationException:
+        log.error("Can't connect to server %s" % host)
+    finally:
+        client.close()
+
+
 def master():
     cmd = ["systemctl", "status", "slurmctld.service"]
     stdout, stderr = execute(cmd)
     print(stdout)
     print(stderr)
-    if "active (running)" not in stdout:
+    if b"active (running)" not in stdout:
         return False
     return True
 
@@ -110,10 +130,9 @@ class Watchdog:
 def run():
 
     if not master():
-        log.critical("Running on not master instance. Terminating")
+        log.critical("Running not on master instance. Terminating")
         return
-    log.debug("Running on a master instance")
-
+    log.debug("Running on master instance. All good")
 
     config = Config()
     config.read(cfg_file)
@@ -123,13 +142,19 @@ def run():
         log.critical("Expect to have section %s in config file" % section)
         return
 
-    db_type = config.get(section, "type").strip().lower()
-    db_user = config.get(section, "user").strip().lower()
-    db_host = config.get(section, "host").strip().lower()
-    db_name = config.get(section, "name").strip().lower()
-    db_url = "%s://%s@%s/%s" % (db_type, db_user, db_host, db_name)
-    log.debug("URL for the database: %s" % db_url)
+    hostname = config.get(section, "hostname").strip().lower()
+    username = config.get(section, "username").strip().lower()
+    key = config.get(section, "key").strip().lower()
+    cmd = config.get(section, "command").strip().lower()
+    log.debug("hostname: %s, username: %s, key: %s, command: %s" %
+              (hostname, username, key, cmd))
+
+    remote_cmd({"hostname": hostname, "username": username, "key": key,
+                "cmd": cmd})
 
 
-task = Watchdog(cycle_seconds, run)
-task.start()
+
+
+run()
+#task = Watchdog(cycle_seconds, run)
+#task.start()
