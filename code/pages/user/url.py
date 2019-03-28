@@ -10,6 +10,10 @@ from datetime import datetime as dt
 from operator import attrgetter
 
 
+__author__ = "Matvey Sapunov"
+__copyright__ = "Aix Marseille University"
+
+
 @bp.route("/user/list", methods=["GET"])
 @login_required
 def user_list():

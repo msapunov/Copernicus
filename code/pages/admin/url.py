@@ -13,6 +13,10 @@ from code.pages.admin.magic import get_ltm, task_action, task_mail, execute_task
 from logging import info, debug
 
 
+__author__ = "Matvey Sapunov"
+__copyright__ = "Aix Marseille University"
+
+
 @bp.route("/admin/switch_user", methods=["POST"])
 @login_required
 def web_switch_user():

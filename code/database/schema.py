@@ -3,6 +3,10 @@ from code import db
 from datetime import datetime as dt
 
 
+__author__ = "Matvey Sapunov"
+__copyright__ = "Aix Marseille University"
+
+
 class ACLDB(db.Model):
     __tablename__ = "acl"
 

@@ -10,6 +10,10 @@ from datetime import datetime as dt
 from operator import attrgetter
 
 
+__author__ = "Matvey Sapunov"
+__copyright__ = "Aix Marseille University"
+
+
 @bp.route("/project/add/user", methods=["POST"])
 @login_required
 def web_project_add_user():

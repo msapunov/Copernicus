@@ -3,6 +3,10 @@ from flask_login import current_user
 from code.pages import check_int, check_str, send_message, check_json
 
 
+__author__ = "Matvey Sapunov"
+__copyright__ = "Aix Marseille University"
+
+
 def board_action():
 
     from code.database.schema import Extend

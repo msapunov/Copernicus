@@ -6,6 +6,10 @@ from code.pages.user.magic import get_user_record
 from logging import error, debug
 
 
+__author__ = "Matvey Sapunov"
+__copyright__ = "Aix Marseille University"
+
+
 def execute_task(task):
     if task.status != "pending" and task.decision != "accept":
         raise ValueError("Task '%s' seems to be processed already" % task.id)

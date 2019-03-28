@@ -2,6 +2,10 @@ from paramiko import SSHClient, AutoAddPolicy, AuthenticationException
 from logging import warning, debug
 
 
+__author__ = "Matvey Sapunov"
+__copyright__ = "Aix Marseille University"
+
+
 def ssh_login(login, password):
     auth = False
     for host in ["login.ccamu.u-3mrs.fr", "login.mesocentre.univ-amu.fr"]:

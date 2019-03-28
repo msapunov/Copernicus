@@ -7,6 +7,10 @@ from code.pages.login import bp
 from logging import warning
 
 
+__author__ = "Matvey Sapunov"
+__copyright__ = "Aix Marseille University"
+
+
 @bp.route("/login", methods=["GET", "POST"])
 @bp.route("/login.html", methods=["GET", "POST"])
 def login():

@@ -9,6 +9,10 @@ from dateutil.relativedelta import relativedelta as rd
 from operator import attrgetter
 
 
+__author__ = "Matvey Sapunov"
+__copyright__ = "Aix Marseille University"
+
+
 @bp.route("/board", methods=["GET", "POST"])
 @bp.route("/board.html", methods=["GET", "POST"])
 @login_required

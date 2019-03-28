@@ -6,6 +6,10 @@ from datetime import datetime as dt
 from code.pages import send_message
 
 
+__author__ = "Matvey Sapunov"
+__copyright__ = "Aix Marseille University"
+
+
 def get_users(pid):
 
     projects = get_project_info(p_ids=[pid])

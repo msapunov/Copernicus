@@ -4,6 +4,10 @@ from code.pages import ssh_wrapper
 from datetime import datetime as dt
 
 
+__author__ = "Matvey Sapunov"
+__copyright__ = "Aix Marseille University"
+
+
 def get_user_record(login=None):
     from code.database.schema import User
 
