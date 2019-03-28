@@ -129,8 +129,7 @@ class TaskQueue:
 
     def __init__(self):
         from code.database.schema import Tasks
-        self.task = Tasks(author=current_user, processed=False,
-                          status="pending")
+        self.task = Tasks(author=current_user, processed=False, done=False)
 
     def user(self, u_name):
         self.task.user = u_name
@@ -220,7 +219,7 @@ class TaskQueue:
         return limbo
 
     def _user_action(self):
-        self.task.status = "pending"
+        self.task.pending = True
         self._commit()
 
     def _commit(self):
