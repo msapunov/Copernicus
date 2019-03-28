@@ -503,8 +503,7 @@ class Tasks(db.Model):
                            "action IN ('create', 'update', 'assign', 'boost',"
                            " 'delete')"
                        ), nullable=False)
-    status = db.Column(db.String(11), db.CheckConstraint(
-        "status IN ('pending', 'done', 'in progress')"))
+
     author_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     author = db.relationship("User", foreign_keys=author_id)
 
@@ -516,6 +515,8 @@ class Tasks(db.Model):
                          db.CheckConstraint("decision IN ('accept', 'reject',"
                                             " 'ignore')"))
     processed = db.Column(db.Boolean)
+    pending = db.Column(db.Boolean)
+    done = db.Column(db.Boolean)
 
     created = db.Column(db.DateTime(True), default=dt.utcnow)
     modified = db.Column(db.DateTime(True))
