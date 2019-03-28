@@ -498,11 +498,7 @@ class Tasks(db.Model):
     __tablename__ = "tasks"
 
     id = db.Column(db.Integer, primary_key=True)
-    action = db.Column(db.String(6),
-                       db.CheckConstraint(
-                           "action IN ('create', 'update', 'assign', 'boost',"
-                           " 'delete')"
-                       ), nullable=False)
+    action = db.Column(db.Text, nullable=False)
 
     author_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     author = db.relationship("User", foreign_keys=author_id)
