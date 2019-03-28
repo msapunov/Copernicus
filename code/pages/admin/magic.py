@@ -11,7 +11,7 @@ __copyright__ = "Aix Marseille University"
 
 
 def execute_task(task):
-    if task.status != "pending" and task.decision != "accept":
+    if task.done:
         raise ValueError("Task '%s' seems to be processed already" % task.id)
     if task.action not in ["create", "update", "delete"]:
         raise ValueError("Inconsistency in the DB for task id: %s" % task.id)
@@ -27,7 +27,7 @@ def delete_user(task):
     project = get_project_record(task.limbo_project.ref_id)
     user = get_user_record(task.limbo_user.login)
     project.users.remove(user)
-    task.status = "done"
+    task.done = True
     return task
 
 
@@ -39,7 +39,7 @@ def task_action(action):
     task.decision = action
     task.approve = current_user
     if action in ["reject", "ignore"]:
-        task.status = "done"
+        task.done = True
     return task
 
 
@@ -73,13 +73,10 @@ def tasks_list(every=False):
 
 def task_mail(action, task):
     human = task.to_dict()["human"]
-    print(task.to_dict())
     tid = task.id
-    print(tid)
     to = current_app.config["EMAIL_TECH"]
     title = "Task id '%s' has been %s" % (tid, action)
     msg = "Task '%s' with id '%s' has been %s" % (human, tid, action)
-    print(msg)
     return message(to, msg, title)
 
 
