@@ -533,17 +533,7 @@ class Tasks(db.Model):
         return "<Task queue record {}>".format(self.id)
 
     def to_dict(self):
-        if self.modified:
-            modified = self.modified.strftime("%Y-%m-%d %X %Z")
-        else:
-            modified = ""
-        if self.limbo_user and self.limbo_project:
-            human = "%s %s in %s" % (self.action, self.limbo_user.login,
-                                     self.limbo_project.get_name())
-        elif self.limbo_user:
-            human = "%s %s" % (self.action, self.limbo_user.login)
-        elif self.limbo_project:
-            human = "%s %s" % (self.action, self.limbo_project.title)
+        mod = self.modified.strftime("%Y-%m-%d %X %Z") if self.modified else ""
         return {
             "id": self.id,
             "action": self.action,
@@ -554,8 +544,7 @@ class Tasks(db.Model):
             "decision": self.decision,
             "processed": self.processed,
             "created": self.created.strftime("%Y-%m-%d %X %Z"),
-            "modified": modified,
-            "human": human
+            "modified": mod
         }
 
 
