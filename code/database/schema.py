@@ -551,7 +551,8 @@ class Tasks(db.Model):
         return {
             "id": self.id,
             "action": self.action,
-            "status": self.status,
+            "pending": self.pending,
+            "done": self.done,
             "author": self.author.login,
             "approve": self.approve.full_name() if self.approve else "",
             "decision": self.decision,
