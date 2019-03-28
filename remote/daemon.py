@@ -60,6 +60,34 @@ log.debug("Cycle interval set to '%s' seconds" % cycle_seconds)
 log.debug("Reading configuration file '%s'" % cfg_file)
 
 
+def execute(argz):
+    log.debug("Executing command: %s" % " ".join(argz))
+    command = Popen(argz, stderr=PIPE, stdout=PIPE)
+    (out, err) = command.communicate()
+
+    out = out.strip()
+    log.debug("Command's output: %s" % str(out))
+    err = err.strip()
+    log.debug("Command's output: %s" % str(err))
+
+    if not command.returncode == 0:
+        if err:
+            log.error(err)
+        else:
+            log.error("Command '%s' exit code is not null" % " ".join(argz))
+    return out, err
+
+
+def master():
+    cmd = ["systemctl", "status", "slurmctld.service"]
+    stdout, stderr = execute(cmd)
+    print(stdout)
+    print(stderr)
+    if "active (running)" not in stdout:
+        return False
+    return True
+
+
 class Watchdog:
 
     def __init__(self, seconds, function):
