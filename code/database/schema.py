@@ -237,9 +237,11 @@ class Resources(db.Model):
     cpu = db.Column(db.Integer, db.CheckConstraint("cpu>=0"))
     type = db.Column(db.String(1))
     comment = db.Column(db.Text)
-    created = db.Column(db.DateTime(True))
     modified = db.Column(db.DateTime(True))
+    created = db.Column(db.DateTime(True))
     ttl = db.Column(db.DateTime(True))
+    project = db.Column(db.String)
+    treated = db.Column(db.Boolean, default=False)
 
     def to_dict(self):
         start = self.created.strftime("%Y-%m-%d %X %Z") if self.created else ""
