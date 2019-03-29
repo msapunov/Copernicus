@@ -143,14 +143,18 @@ class TaskQueue:
         if not self.project:
             raise ValueError("Can't add a user to none existent project")
         self.task.limbo_user = user
-        self.task.action = "create"
+        self.task.action = "Add a user %s to the project %s" %\
+                           (self.task.limbo_user.login,
+                            self.task.project.get_name())
         self._user_action()
 
     def user_assign(self, user):
         if not self.project:
             raise ValueError("Can't assign a user to none existent project")
         self.task.limbo_user = self._copy_user(user)
-        self.task.action = "assign"
+        self.task.action = "Assign a user %s to the project %s" %\
+                           (self.task.limbo_user.login,
+                            self.task.project.get_name())
         self._user_action()
 
     def responsible_assign(self, user):
@@ -158,12 +162,13 @@ class TaskQueue:
             raise ValueError("Can't assign a new responsible to none existent"
                              " project")
         self.task.limbo_user = self._copy_user(user)
-        self.task.action = "boost"
+        self.task.action = "Assign new responsible %s to the project %s" %\
+                           (self.task.limbo_user.login,
+                            self.task.project.get_name())
         self._user_action()
 
     def user_change(self, data):
-        if not self.project:
-            raise ValueError("Can't change user's info if project is not set")
+        # TODO: update user information... email? name or surname?
         self.task.task = data
         self.task.action = "update"
         self._user_action()
@@ -172,7 +177,9 @@ class TaskQueue:
         if not self.project:
             raise ValueError("Can't delete a user from none existent project")
         self.task.limbo_user = self._copy_user(user)
-        self.task.action = "delete"
+        self.task.action = "Delete a user %s from the project %s" %\
+                           (self.task.limbo_user.login,
+                            self.task.project.get_name())
         self._user_action()
 
     @staticmethod
