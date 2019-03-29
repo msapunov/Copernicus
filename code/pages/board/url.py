@@ -76,9 +76,12 @@ def web_board_accept():
         valid=True,
         cpu=cpu,
         type=project.type,
-        ttl=ttl
+        project=project.get_name(),
+        ttl=ttl,
+        treated=False
     )
     db.session.add(resource)
+    project.resources.valid = False
     project.resources = resource
     db.session.commit()
     return jsonify(message=ProjectLog(record.project).accept(record),
