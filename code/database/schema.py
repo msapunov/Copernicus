@@ -474,22 +474,7 @@ class LogDB(db.Model):
     def to_dict(self):
         event = self.event[0].upper() + self.event[1:]
         creator = self.author.full_name()
-        if self.user_id:
-            msg = "%s %s <%s> by %s" % (event, self.user.full_name(),
-                                        self.user.email, creator)
-        elif self.resources_id:
-            cpu = self.resources.cpu
-            msg = "%s: %s hours by %s" % (event, cpu, creator)
-        elif self.extension_id:
-            if self.extension.activate:
-                msg = "%s for activation by %s" % (event, creator)
-            elif self.extension.transform:
-                msg = "%s for transformation by %s" % (event, creator)
-            else:
-                cpu = self.extension.hours
-                msg = "%s for %s hours by %s" % (event, cpu, creator)
-        else:
-            msg = "%s by %s" % (event, creator)
+        msg = "%s by %s" % (event, creator)
         return {
             "date": self.created.strftime("%Y-%m-%d %X %Z"),
             "message": msg
