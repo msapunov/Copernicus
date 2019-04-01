@@ -244,34 +244,35 @@ class ProjectLog:
         self.send = True
 
     def responsible_assign(self, user):
-        self.log.event = "Request to assign new responsible %s"\
+        self.log.event = "Made a request to assign new responsible %s"\
                          % user.full_name()
         self.log.user = user
         return self._commit()
 
     def user_assign(self, user):
-        self.log.event = "Request to assign user %s" % user.full_name()
+        self.log.event = "Made a request to assign a new user %s"\
+                         % user.full_name()
         self.log.user = user
         return self._commit()
 
     def user_del(self, user):
-        self.log.event = "Request to delete user %s" % user.full_name()
+        self.log.event = "Made a request to delete user %s" % user.full_name()
         self.log.user = user
         return self._commit()
 
     def extend(self, extension):
-        self.log.event = "Request to extend project for %s hours"\
+        self.log.event = "Made a request to extend project for %s hour(s)"\
                          % extension.hours
         self.log.extension = extension
         return self._commit()
 
     def activate(self, extension):
-        self.log.event = "activation request"
+        self.log.event = "Made an activation request"
         self.log.extension = extension
         return self._commit()
 
     def transform(self, extension):
-        self.log.event = "Request to transform from type A to type B"
+        self.log.event = "Made a request to transform from type A to type B"
         self.log.extension = extension
         return self._commit()
 
