@@ -102,10 +102,15 @@ class Project(db.Model):
             modified = self.modified.strftime("%Y-%m-%d %X %Z")
         else:
             modified = ""
-        if self.allocation_end:
-            allocation = self.allocation_end.strftime("%Y-%m-%d %X %Z")
+
+        if self.resources.created:
+            start = self.resources.created.strftime("%Y-%m-%d %X %Z")
         else:
-            allocation = ""
+            start = ""
+        if self.resources.ttl:
+            end = self.resources.ttl.strftime("%Y-%m-%d %X %Z")
+        else:
+            end = ""
         return {
             "id": self.id,
             "title": self.title,
