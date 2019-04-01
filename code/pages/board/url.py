@@ -6,6 +6,7 @@ from code.pages.board.magic import board_action
 from code.pages.project.magic import get_project_record
 from datetime import datetime as dt
 from dateutil.relativedelta import relativedelta as rd
+from calendar import monthrange
 from operator import attrgetter
 
 
@@ -63,10 +64,13 @@ def web_board_accept():
         month = int(current_app.config["ACC_TYPE_H"])
         ttl = now + rd(month=+month)
     else:  # For project type B
-        day = int(current_app.config["ACC_START_DAY"])
-        month = int(current_app.config["ACC_START_MONTH"])
         year = now.year + 1
-        ttl = dt(year, month, day)
+        month = int(current_app.config["ACC_START_MONTH"])
+        if "ACC_START_DAY" in current_app.config:
+            day = int(current_app.config["ACC_START_DAY"])
+        else:
+            day = monthrange(year, month)[1]
+        ttl = dt(year, month, day, 23, 59, 59)
 
     from code.database.schema import Resources
     from code import db
