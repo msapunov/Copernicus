@@ -4,18 +4,20 @@
 
 import logging as log
 
-from paramiko import SSHClient, AutoAddPolicy, AuthenticationException, RSAKey
+from paramiko import SSHClient, AutoAddPolicy, AuthenticationException
 from subprocess import Popen, PIPE
 from threading import Timer
 from optparse import OptionParser
 from os.path import exists
 from configparser import ConfigParser as Config
+from warnings import filterwarnings
 
 
 __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
 
 
+filterwarnings(action='ignore', module='.*paramiko.*')
 parser = OptionParser()
 parser.add_option("-c", "--config",
                   action="store",
@@ -46,7 +48,7 @@ elif "critical" == level:
     log.basicConfig(level=log.CRITICAL, format=formatter)
 else:
     log.basicConfig(level=log.WARNING, format=formatter)
-log.info("Checking if the system users are in sync with UserDB")
+log.info("Temp")
 
 cfg_file = options.config
 if not cfg_file:
@@ -61,6 +63,9 @@ cycle_seconds = options.interval * 60
 log.debug("Cycle interval set to '%s' seconds" % cycle_seconds)
 log.debug("Reading configuration file '%s'" % cfg_file)
 
+CONFIG = Config()
+CONFIG.read(cfg_file)
+
 
 def execute(argz):
     log.debug("Executing command: %s" % " ".join(argz))
@@ -70,7 +75,7 @@ def execute(argz):
     out = out.strip()
     log.debug("Command's output: %s" % str(out))
     err = err.strip()
-    log.debug("Command's output: %s" % str(err))
+    log.debug("Command's error: %s" % str(err))
 
     if not command.returncode == 0:
         if err:
@@ -88,24 +93,162 @@ def remote_cmd(ssh):
 
     client = SSHClient()
     client.set_missing_host_key_policy(AutoAddPolicy())
+    log.debug("Executing remote command: %s" % cmd)
+    out = ""
+    err = ""
     try:
         client.connect(host, username=login, password="", key_filename=key)
         stdin, stdout, stderr = client.exec_command(cmd)
-        stdout.readlines()
+        out = stdout.readlines()
+        log.debug("StdOut: %s" % out)
+        err = stderr.readlines()
+        log.debug("StdErr: %s" % err)
     except AuthenticationException:
         log.error("Can't connect to server %s" % host)
     finally:
         client.close()
+    if err:
+        log.error("Error while executing remote code: %s" % err)
+        return False
+    return out
 
 
-def master():
+def is_master():
     cmd = ["systemctl", "status", "slurmctld.service"]
+    log.debug("Command: %s" % " ".join(cmd))
     stdout, stderr = execute(cmd)
-    print(stdout)
-    print(stderr)
+    log.debug("StdOut: %s" % stdout)
+    log.debug("StdErr: %s" % stderr)
     if b"active (running)" not in stdout:
         return False
     return True
+
+
+def get_consumption(name):
+    cmd = ["sreport", "-nP", "cluster", "AccountUtilizationByUser"]
+    cmd += ["Start=2018-01-01", "account=%s" % name]
+    stdout, stderr = execute(cmd)
+    if not stdout:
+        return False
+    output = stdout.decode("utf-8")
+    log.debug("Convert bytes to utf-8 string: %s" % output)
+    recs = output.split("\n")
+    log.debug("Split to strings: %s" % recs)
+    rec = list(filter(lambda x: "|||", recs))[0]  # must be a list of one element
+    log.debug("Raw line of project's consumption: %s" % rec)
+    conso_str = rec.split("|")[4]
+    log.debug("Consumption as a string: %s" % conso_str)
+    try:
+        return int(conso_str)
+    except Exception as err:
+        log.error("failed to convert value %s to int: %s" % (conso_str, err))
+        return False
+
+
+def extract_ext_data(rec):
+    try:
+        rid, hours, project = rec.split("|")
+    except Exception as err:
+        log.error("Failed to extract data from record %s: %s" % (rec, err))
+        return None
+    project = project.strip()
+    rid = rid.strip()
+    try:
+        hours = int(hours)
+    except Exception as err:
+        log.error("Failed to convert %s to int: %s" % (hours, err))
+        return None
+    return {"limit": hours * 60, "id": rid, "name": project}
+
+
+def new_ext_limit(rec):
+    project = rec["name"]
+    limit = rec["limit"]
+    conso = get_consumption(project)
+    if not conso:
+        log.error("Failed to get project's consumption!")
+        return None
+    log.debug("Consumption in minutes: %s" % conso)
+    rec["new"] = conso + limit
+    log.debug("New limit in minutes: %s" % rec["new"])
+    return rec
+
+
+def enforce_limit(rec):
+    name = rec["name"]
+    new = rec["new"]
+    log.info("Enforcing new limit of %s minutes for project %s" % (new, name))
+    cmd1 = ["sacctmgr", "-i", "modify", "qos", name]
+    cmd1 += ["set", "GrpCPUMins=", new]
+    cmd2 = ["sacctmgr", "-i", "modify", "qos", name]
+    cmd2 += ["set", "GrpSubmitJobs=-1"]
+    """
+    stdout, stderr = execute(cmd1)
+    if not stdout:
+        return False
+    stdout, stderr = execute(cmd2)
+    if not stdout:
+        return False
+    """
+    return rec
+
+
+def update_ext_db(ssh, rec):
+    if not rec:
+        return False
+    rid = rec["id"]
+    host = ssh["hostname"]
+    user = ssh["username"]
+    key = ssh["key"]
+    cmd = ssh["cmd"] % rid
+    log.debug("Updating remote DB record with the id: %s" % rid)
+    remote_cmd({"hostname": host, "username": user, "key": key, "cmd": cmd})
+    return True
+
+
+def extension():
+    log.info("Processing project extensions")
+    init = get_config("Extension")
+    hostname = init.get("hostname")
+    username = init.get("username")
+    key = init.get("key")
+    cmd = init.get("command")
+    log.debug("hostname: %s, username: %s, key: %s, command: %s" %
+              (hostname, username, key, cmd))
+
+    dirty = remote_cmd({"hostname": hostname, "username": username, "key": key,
+                        "cmd": cmd})
+
+    data_dirty = list(map(lambda x: x.strip(), dirty))
+    log.debug("Stripped data: %s" % data_dirty)
+    data = list(filter(lambda x: len(x) > 0, data_dirty))
+    log.debug("Positive length data: %s" % data)
+    recs = list(filter(lambda x: x.split()[0].isdigit(), data))
+    if not recs:
+        log.info("No project extensions found")
+        return
+    log.debug("Meaningful data: %s" % recs)
+    todo_dirty = list(map(lambda x: extract_ext_data(x), recs))
+    log.debug("Extracted dirty data: %s" % todo_dirty)
+    todo = list(filter(lambda x: x, todo_dirty))
+    log.debug("Extracted clean data: %s" % todo)
+    new_dirty = list(map(lambda x: new_ext_limit(x), todo))
+    log.debug("Dirty new limits: %s" % new_dirty)
+    new = list(filter(lambda x: x, new_dirty))
+    log.debug("Clean  new limits: %s" % new)
+    result = list(map(lambda x: enforce_limit(x), new))
+    cmd = init.get("update")
+    ssh = {"hostname": hostname, "username": username, "key": key, "cmd": cmd}
+    list(map(lambda x: update_ext_db(ssh, x), result))
+    log.info("Done with project extension processing")
+    return
+
+
+def get_config(section):
+    if not CONFIG.has_section(section):
+        log.critical("Expect to have section %s in config file" % section)
+        return
+    return dict(CONFIG.items(section))
 
 
 class Watchdog:
@@ -129,30 +272,12 @@ class Watchdog:
 
 def run():
 
-    if not master():
-        log.critical("Running not on master instance. Terminating")
+    if not is_master():
+        log.critical("Running on not master instance. Terminating")
         return
-    log.debug("Running on master instance. All good")
+    log.debug("Running on a master instance")
 
-    config = Config()
-    config.read(cfg_file)
-
-    section = "Management"
-    if not config.has_section(section):
-        log.critical("Expect to have section %s in config file" % section)
-        return
-
-    hostname = config.get(section, "hostname").strip().lower()
-    username = config.get(section, "username").strip().lower()
-    key = config.get(section, "key").strip().lower()
-    cmd = config.get(section, "command").strip().lower()
-    log.debug("hostname: %s, username: %s, key: %s, command: %s" %
-              (hostname, username, key, cmd))
-
-    remote_cmd({"hostname": hostname, "username": username, "key": key,
-                "cmd": cmd})
-
-
+    extension()
 
 
 run()
