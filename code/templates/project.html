@@ -17,8 +17,15 @@
                 <div class="uk-panel uk-margin-top uk-margin-bottom">
                     <div>Name: <b>{{project.name}}</b></div>
                     <div>Status: <b>{% if project.active %}Active{% else %}Postponed{% endif %}</b></div>
-                    <div>Created: <b>{% if project.created %}{{project.created}}{% endif %}</b></div>
-                    <div>End of CPU allocation: <b>{% if project.allocation_end %}{{project.allocation_end}}{% endif %}</b></div>
+                    {% if project.created %}
+                        <div>Created: <b>{{project.created}}</b></div>
+                    {% endif %}
+                    {% if project.allocation_start %}
+                        <div>CPU allocation kickoff: <b>{{project.allocation_start}}</b></div>
+                    {% endif %}
+                    {% if project.allocation_end %}
+                        <div>CPU allocation deadline: <b>{{project.allocation_end}}</b></div>
+                    {% endif %}
                     <div class="uk-margin-top">
                         {% if project.consumption and project.usage %}
                             CPU consumed: {{project.consumption}} out of {{project.resources.cpu}} ({{project.usage}})
