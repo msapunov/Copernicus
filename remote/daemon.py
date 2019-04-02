@@ -11,11 +11,11 @@ from optparse import OptionParser
 from os.path import exists
 from configparser import ConfigParser as Config
 from warnings import filterwarnings
-
+from smtplib import SMTP, SMTPException
+from email.message import EmailMessage
 
 __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
-
 
 filterwarnings(action='ignore', module='.*paramiko.*')
 parser = OptionParser()
@@ -66,22 +66,48 @@ log.debug("Reading configuration file '%s'" % cfg_file)
 CONFIG = Config()
 CONFIG.read(cfg_file)
 
+ERRORS = []
+
+
+def send_mail(subject, message):
+    init = get_config("Mail")
+
+    msg = EmailMessage()
+    msg.set_content(message)
+
+    if not subject:
+        subject = "Default subject"
+    msg["Subject"] = subject
+    msg["From"] = init.get("from")
+    msg["To"] = init.get("to")
+
+    try:
+        s = SMTP('localhost')
+        s.send_message(msg)
+        s.quit()
+        log.debug("Successfully sent an email")
+    except SMTPException as err:
+        log.debug("Failed to send email: %s" % err)
+
 
 def execute(argz):
-    log.debug("Executing command: %s" % " ".join(argz))
+    cmd = " ".join(argz)
+    log.debug("Executing command: %s" % cmd)
     command = Popen(argz, stderr=PIPE, stdout=PIPE)
     (out, err) = command.communicate()
 
-    out = out.strip()
+    out = out.strip().decode()
     log.debug("Command's output: %s" % str(out))
-    err = err.strip()
+    err = err.strip().decode()
     log.debug("Command's error: %s" % str(err))
-
+    if err:
+        ERRORS.append("Command:\n'%s'\nStdErr:\n'%s'\nStdOut:\n'%s'"
+                      % (cmd, err, out))
     if not command.returncode == 0:
         if err:
             log.error(err)
         else:
-            log.error("Command '%s' exit code is not null" % " ".join(argz))
+            log.error("Command '%s' exit code is not null" % cmd)
     return out, err
 
 
@@ -94,8 +120,6 @@ def remote_cmd(ssh):
     client = SSHClient()
     client.set_missing_host_key_policy(AutoAddPolicy())
     log.debug("Executing remote command: %s" % cmd)
-    out = ""
-    err = ""
     try:
         client.connect(host, username=login, password="", key_filename=key)
         stdin, stdout, stderr = client.exec_command(cmd)
@@ -105,6 +129,7 @@ def remote_cmd(ssh):
         log.debug("StdErr: %s" % err)
     except AuthenticationException:
         log.error("Can't connect to server %s" % host)
+        return
     finally:
         client.close()
     if err:
@@ -119,7 +144,7 @@ def is_master():
     stdout, stderr = execute(cmd)
     log.debug("StdOut: %s" % stdout)
     log.debug("StdErr: %s" % stderr)
-    if b"active (running)" not in stdout:
+    if "active (running)" not in stdout:
         return False
     return True
 
@@ -127,16 +152,15 @@ def is_master():
 def get_consumption(name):
     cmd = ["sreport", "-nP", "cluster", "AccountUtilizationByUser"]
     cmd += ["Start=2018-01-01", "account=%s" % name]
+    cmd += ["format=Accounts,Login,Used"]
     stdout, stderr = execute(cmd)
     if not stdout:
         return False
-    output = stdout.decode("utf-8")
-    log.debug("Convert bytes to utf-8 string: %s" % output)
-    recs = output.split("\n")
+    recs = stdout.split("\n")
     log.debug("Split to strings: %s" % recs)
-    rec = list(filter(lambda x: "|||", recs))[0]  # must be a list of one element
+    rec = list(filter(lambda x: "||", recs))[0]  # must be  alist of one element
     log.debug("Raw line of project's consumption: %s" % rec)
-    conso_str = rec.split("|")[4]
+    conso_str = rec.split("|")[2]
     log.debug("Consumption as a string: %s" % conso_str)
     try:
         return int(conso_str)
@@ -177,25 +201,31 @@ def new_ext_limit(rec):
 def enforce_limit(rec):
     name = rec["name"]
     new = rec["new"]
-    log.info("Enforcing new limit of %s minutes for project %s" % (new, name))
-    cmd1 = ["sacctmgr", "-i", "modify", "qos", name]
-    cmd1 += ["set", "GrpCPUMins=", new]
-    cmd2 = ["sacctmgr", "-i", "modify", "qos", name]
-    cmd2 += ["set", "GrpSubmitJobs=-1"]
-    """
+    msg = "Enforcing new limit of %s minutes for project %s" % (new, name)
+    log.info(msg)
+    rec["log"] = msg
+    base = ["sacctmgr", "-i", "modify", "qos", name]
+    cmd1 = base + ["set", "GrpCPUMins=%s" % new]
+    cmd2 = base + ["set", "GrpSubmitJobs=-1"]
+
     stdout, stderr = execute(cmd1)
     if not stdout:
         return False
+    rec["cmd1"] = " ".join(cmd1)
+
     stdout, stderr = execute(cmd2)
     if not stdout:
         return False
-    """
+    rec["cmd2"] = " ".join(cmd2)
+
     return rec
 
 
+def ext_log(rec):
+    return "%s:\n%s\n" % (rec["log"], rec["cmd1"])
+
+
 def update_ext_db(ssh, rec):
-    if not rec:
-        return False
     rid = rec["id"]
     host = ssh["hostname"]
     user = ssh["username"]
@@ -237,9 +267,15 @@ def extension():
     new = list(filter(lambda x: x, new_dirty))
     log.debug("Clean  new limits: %s" % new)
     result = list(map(lambda x: enforce_limit(x), new))
+    filter_result = list(filter(lambda x: x, result))
+    if not filter_result:
+        log.error("Seems there was an error during project extension")
+        return
+    log_message = "\n".join(list(map(lambda x: ext_log(x), filter_result)))
+    send_mail("Extension report", "Project extension \n\n" + log_message)
     cmd = init.get("update")
     ssh = {"hostname": hostname, "username": username, "key": key, "cmd": cmd}
-    list(map(lambda x: update_ext_db(ssh, x), result))
+    list(map(lambda x: update_ext_db(ssh, x), filter_result))
     log.info("Done with project extension processing")
     return
 
@@ -271,15 +307,15 @@ class Watchdog:
 
 
 def run():
-
     if not is_master():
         log.critical("Running on not master instance. Terminating")
         return
     log.debug("Running on a master instance")
-
     extension()
+    if ERRORS:
+        send_mail("Errors report", "\n".join(ERRORS))
 
 
 run()
-#task = Watchdog(cycle_seconds, run)
-#task.start()
+# task = Watchdog(cycle_seconds, run)
+# task.start()
