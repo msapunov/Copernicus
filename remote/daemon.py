@@ -13,6 +13,7 @@ from configparser import ConfigParser as Config
 from warnings import filterwarnings
 from smtplib import SMTP, SMTPException
 from email.message import EmailMessage
+from socket import gethostname
 
 __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
@@ -77,6 +78,8 @@ def send_mail(subject, message):
 
     if not subject:
         subject = "Default subject"
+    hostname = gethostname()
+    subject += " from %s" % hostname
     msg["Subject"] = subject
     msg["From"] = init.get("from")
     msg["To"] = init.get("to")
@@ -313,7 +316,7 @@ def run():
     log.debug("Running on a master instance")
     extension()
     if ERRORS:
-        send_mail("Errors report", "\n".join(ERRORS))
+        send_mail("Error report", "\n".join(ERRORS))
 
 
 run()
