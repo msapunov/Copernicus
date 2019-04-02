@@ -531,7 +531,7 @@ class Tasks(db.Model):
             "action": self.action,
             "pending": self.pending,
             "done": self.done,
-            "author": self.author.login.full_name() if self.author else "",
+            "author": self.author.full_name() if self.author else "",
             "approve": self.approve.full_name() if self.approve else "",
             "decision": self.decision,
             "processed": self.processed,
