@@ -491,6 +491,7 @@ class Tasks(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     action = db.Column(db.Text, nullable=False)
+    machine = db.Column(db.Text, nullable=False)
 
     author_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     author = db.relationship("User", foreign_keys=author_id)

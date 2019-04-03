@@ -146,6 +146,8 @@ class TaskQueue:
         self.task.action = "Add a user %s to the project %s" %\
                            (self.task.limbo_user.login,
                             self.task.project.get_name())
+        self.task.machine = "add|%s|%s" % (self.task.limbo_user.login,
+                                           self.task.project.get_name())
         self._user_action()
 
     def user_assign(self, user):
@@ -155,6 +157,8 @@ class TaskQueue:
         self.task.action = "Assign a user %s to the project %s" %\
                            (self.task.limbo_user.login,
                             self.task.project.get_name())
+        self.task.machine = "assign|%s|%s" % (self.task.limbo_user.login,
+                                              self.task.project.get_name())
         self._user_action()
 
     def responsible_assign(self, user):
@@ -165,12 +169,16 @@ class TaskQueue:
         self.task.action = "Assign new responsible %s to the project %s" %\
                            (self.task.limbo_user.login,
                             self.task.project.get_name())
+        self.task.machine = "assign|%s|%s" % (self.task.limbo_user.login,
+                                              self.task.project.get_name())
         self._user_action()
 
     def user_change(self, data):
         # TODO: update user information... email? name or surname?
         self.task.task = data
         self.task.action = "update"
+        self.task.machine = "update|%s|%s" % (self.task.limbo_user.login,
+                                              self.task.project.get_name())
         self._user_action()
 
     def user_delete(self, user):
@@ -180,6 +188,8 @@ class TaskQueue:
         self.task.action = "Delete a user %s from the project %s" %\
                            (self.task.limbo_user.login,
                             self.task.project.get_name())
+        self.task.machine = "remove|%s|%s" % (self.task.limbo_user.login,
+                                              self.task.project.get_name())
         self._user_action()
 
     @staticmethod
