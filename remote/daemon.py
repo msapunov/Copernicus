@@ -283,6 +283,75 @@ def extension():
     return
 
 
+def extract_tasks_data(rec):
+#175 | Assign|aacebron|b001
+    try:
+        tid, action, user, proj_or_data = rec.split("|")
+    except Exception as err:
+        log.error("Failed to extract data from record %s: %s" % (rec, err))
+        return None
+    tid = tid.strip()
+    act = action.strip()
+    user = user.strip()
+    proj_or_data = proj_or_data.strip()
+    if act not in ["add", "assign", "update", "remove"]:
+        log.error("Action '%s' from task record '%s' is unknown" % (act, rec))
+        return None
+    if act == "add":
+        result = add_user(user, proj_or_data)
+    elif act == "assign":
+        result = assign_user(user, proj_or_data)
+    elif act == "update":
+        result = update_user(user, proj_or_data)
+    else:  # Default action is to remove a user :)
+        result = remove_user(user, proj_or_data)
+    return {"id": tid, "result": result}
+
+
+def tasks():
+    log.info("Processing project tasks")
+    init = get_config("Tasks")
+    hostname = init.get("hostname")
+    username = init.get("username")
+    key = init.get("key")
+    cmd = init.get("command")
+    log.debug("hostname: %s, username: %s, key: %s, command: %s" %
+              (hostname, username, key, cmd))
+
+    dirty = remote_cmd({"hostname": hostname, "username": username, "key": key,
+                        "cmd": cmd})
+
+    dirty_tasks = list(map(lambda x: x.strip(), dirty))
+    log.debug("Stripped data: %s" % dirty_tasks)
+    data = list(filter(lambda x: len(x) > 0, dirty_tasks))
+    log.debug("Positive length data: %s" % data)
+    recs = list(filter(lambda x: x.split()[0].isdigit(), data))
+    if not recs:
+        log.info("No tasks found")
+        return
+    log.debug("Meaningful data: %s" % recs)
+    todo_dirty = list(map(lambda x: extract_tasks_data(x), recs))
+    log.debug("Extracted dirty data: %s" % todo_dirty)
+    todo = list(filter(lambda x: x, todo_dirty))
+    log.debug("Extracted clean data: %s" % todo)
+    new_dirty = list(map(lambda x: new_ext_limit(x), todo))
+    log.debug("Dirty new limits: %s" % new_dirty)
+    new = list(filter(lambda x: x, new_dirty))
+    log.debug("Clean  new limits: %s" % new)
+    result = list(map(lambda x: enforce_limit(x), new))
+    filter_result = list(filter(lambda x: x, result))
+    if not filter_result:
+        log.error("Seems there was an error during project extension")
+        return
+    log_message = "\n".join(list(map(lambda x: ext_log(x), filter_result)))
+    send_mail("Extension report", "Project extension \n\n" + log_message)
+    cmd = init.get("update")
+    ssh = {"hostname": hostname, "username": username, "key": key, "cmd": cmd}
+    list(map(lambda x: update_ext_db(ssh, x), filter_result))
+    log.info("Done with project extension processing")
+    return
+
+
 def get_config(section):
     if not CONFIG.has_section(section):
         log.critical("Expect to have section %s in config file" % section)
@@ -314,7 +383,8 @@ def run():
         log.critical("Running on not master instance. Terminating")
         return
     log.debug("Running on a master instance")
-    extension()
+#    extension()
+    tasks()
     if ERRORS:
         send_mail("Error report", "\n".join(ERRORS))
 
