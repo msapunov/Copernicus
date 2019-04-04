@@ -173,12 +173,16 @@ class TaskQueue:
                                               self.task.project.get_name())
         self._user_action()
 
-    def user_change(self, data):
-        # TODO: update user information... email? name or surname?
-        self.task.task = data
-        self.task.action = "update"
-        self.task.machine = "update|%s|%s" % (self.task.limbo_user.login,
-                                              self.task.project.get_name())
+    def user_update(self, data):
+        if not self.task.user:
+            raise ValueError("Can't update information of unset user")
+        act = []
+        for key, value in data.items():
+            act.append("%s: %s" % (key, value))
+        act = " and ".join(act)
+        self.task.action = "updating %s's information with new value(s): %s"\
+                           % (self.task.user.login, act)
+        self.task.machine = "update|%s|%s" % (self.task.user.login, act)
         self._user_action()
 
     def user_delete(self, user):
