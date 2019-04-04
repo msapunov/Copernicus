@@ -283,8 +283,28 @@ def extension():
     return
 
 
-def extract_tasks_data(rec):
-#175 | Assign|aacebron|b001
+def add_user(user, project):
+    log.info("Adding user '%s' to project '%s'" % (user, project))
+    pass
+
+
+def assign_user(user, project):
+    log.info("Assigning user '%s' to project '%s'" % (user, project))
+    pass
+
+
+def update_user(user, data):
+    log.info("Updating user '%s' information '%s'" % (user, data))
+    pass
+
+
+def remove_user(user, project):
+    log.info("Removing user '%s' from project '%s'" % (user, project))
+    pass
+
+
+def execute_task(rec):
+    log.debug("Parsing and executing task: %s" % rec)
     try:
         tid, action, user, proj_or_data = rec.split("|")
     except Exception as err:
@@ -329,26 +349,18 @@ def tasks():
     if not recs:
         log.info("No tasks found")
         return
-    log.debug("Meaningful data: %s" % recs)
-    todo_dirty = list(map(lambda x: extract_tasks_data(x), recs))
-    log.debug("Extracted dirty data: %s" % todo_dirty)
-    todo = list(filter(lambda x: x, todo_dirty))
-    log.debug("Extracted clean data: %s" % todo)
-    new_dirty = list(map(lambda x: new_ext_limit(x), todo))
-    log.debug("Dirty new limits: %s" % new_dirty)
-    new = list(filter(lambda x: x, new_dirty))
-    log.debug("Clean  new limits: %s" % new)
-    result = list(map(lambda x: enforce_limit(x), new))
+    log.debug("Meaningful tasks: %s" % recs)
+    result = list(map(lambda x: execute_task(x), recs))
     filter_result = list(filter(lambda x: x, result))
     if not filter_result:
-        log.error("Seems there was an error during project extension")
+        log.error("Seems there was an error during task execution")
         return
     log_message = "\n".join(list(map(lambda x: ext_log(x), filter_result)))
-    send_mail("Extension report", "Project extension \n\n" + log_message)
-    cmd = init.get("update")
-    ssh = {"hostname": hostname, "username": username, "key": key, "cmd": cmd}
-    list(map(lambda x: update_ext_db(ssh, x), filter_result))
-    log.info("Done with project extension processing")
+    #send_mail("Extension report", "Project extension \n\n" + log_message)
+    #cmd = init.get("update")
+    #ssh = {"hostname": hostname, "username": username, "key": key, "cmd": cmd}
+    #list(map(lambda x: update_ext_db(ssh, x), filter_result))
+    log.info("Done with project tasks")
     return
 
 
