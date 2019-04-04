@@ -45,6 +45,9 @@ def user_edit_info():
     data = request.get_json()
     if not data:
         raise ValueError("Expecting application/json requests")
+    for arg in ["name", "surname", "email", "login"]:
+        if arg not in data:
+            raise ValueError("Expecting to have '%s' in the request" % arg)
 
     user = get_user_record(data["login"])
     old = {"name": user.name, "surname": user.surname, "email": user.email,
@@ -61,11 +64,8 @@ def user_edit_info():
     if not c_dict:
         return jsonify(data="No changes in user's information found")
 
-    c_dict["entity"] = "user"
-    changes = dumps(c_dict)
-
     from code.pages import TaskQueue
-    TaskQueue().user_change(changes)
+    TaskQueue().user(user).user_update(c_dict)
     title = "User's information change request"
     msg = "Your request for personal information change (%s) has been " \
           "registered" % changes_to_string(c_dict)
