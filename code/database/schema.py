@@ -347,10 +347,7 @@ class Register(db.Model):
     genci_committee = db.Column(db.String(128))
     numerical_methods = db.Column(db.String)
     computing_resources = db.Column(db.String)
-    type_a = db.Column(db.Boolean, default=True)
-    type_b = db.Column(db.Boolean, default=False)
-    type_c = db.Column(db.Boolean, default=False)
-    type_h = db.Column(db.Boolean, default=False)
+    type = db.Column(db.String(1))
     cpu = db.Column(db.Integer, db.CheckConstraint("cpu_cluster>=0"))
     article_1 = db.Column(db.String)
     article_2 = db.Column(db.String)
@@ -372,14 +369,7 @@ class Register(db.Model):
         return "<Registration request {}>".format(self.id)
 
     def project_type(self):
-        if self.type_a:
-            return "A"
-        if self.type_b:
-            return "B"
-        if self.type_c:
-            return "C"
-        if self.type_h:
-            return "H"
+        return self.type.upper()
 
     def project_id(self):
         year = dt.now().year
