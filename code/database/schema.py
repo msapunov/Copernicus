@@ -512,11 +512,38 @@ class Tasks(db.Model):
     def __repr__(self):
         return "<Task queue record {}>".format(self.id)
 
+    def brief(self):
+        act, user, task = self.machine.split("|")
+        if act in ["create", "add", "assign", "delete", "remove"]:
+            act += " a user "
+        elif act in ["update"]:
+            act += " user's info "
+        act = act[0].upper() + act[1:].lower()
+        act += "by %s" % self.author.full_name()
+        return act
+
+    def description(self):
+        #Assign a user acrepieux to the project b001
+        act, user, task = self.machine.split("|")
+        if act in ["create"]:
+            act += " a user %s for the project %s" % (user, task)
+        if act in ["assign"]:
+            act += " a user %s to the project %s" % (user, task)
+        elif act in ["remove"]:
+            act += " a user %s from the project %s" % (user, task)
+        elif act in ["update"]:
+            act += " %s user's info with following data: %s" % (user, task)
+        act = act[0].upper() + act[1:]
+        act += " by %s" % self.author.full_name()
+        print(act)
+        return act
+
     def to_dict(self):
         mod = self.modified.strftime("%Y-%m-%d %X %Z") if self.modified else ""
         return {
             "id": self.id,
-            "action": self.action,
+            "description": self.description(),
+            "action": self.brief(),
             "pending": self.pending,
             "done": self.done,
             "author": self.author.full_name() if self.author else "",

@@ -87,23 +87,61 @@
         });
     }
 
+    window.render.task_row = function(val){
+        var day = moment(val.created, "YYYY-MM-DD HH:mm Z");
+
+        var b = $("<button/>").attr({"data-id": "task-"+val.id+"-child"});
+        b.addClass("uk-button uk-button-mini task_info");
+        b.append($("<span/>").addClass("uk-icon-plus"));
+        var btn = $("<td/>").addClass("uk-width-1-10").append(b);
+
+        var act = $("<td/>").addClass("uk-width-3-10 uk-text-nowrap");
+        act.text(val.action);
+//        var user = $("<td/>").addClass("uk-width-3-10 uk-text-truncate");
+//        user.text(val.author);
+        var data = $("<td/>").addClass("uk-width-3-10 uk-text-truncate");
+        data.text(day.format("L"));
+        var tr = $("<tr/>").attr({"id": "task-"+val.id+"-parent"});
+
+        tr.append(btn).append(act).append(data);
+        return tr
+
+    }
+    window.render.task_hidden_row = function(val){
+        var btn_grp = $("<div/>").addClass("uk-button-group uk-float-right uk-margin-top");
+        var btn_accept = $("<button/>").attr({"data-id": val.id}).addClass("uk-button task_accept").append($("<span/>").addClass("uk-icon-thumbs-up uk-margin-small-right").text("Accept")).appendTo(btn_grp);
+        var btn_ignore = $("<button/>").attr({"data-id": val.id}).addClass("uk-button task_ignore").append($("<span/>").addClass("uk-icon-thumbs-o-down uk-margin-small-right").text("Ignore")).appendTo(btn_grp);
+        var btn_reject = $("<button/>").attr({"data-id": val.id}).addClass("uk-button task_reject uk-button-danger").append($("<span/>").addClass("uk-icon-thumbs-down uk-margin-small-right").text("Reject")).appendTo(btn_grp);
+
+        var tr_hdn = $("<tr/>").attr({"id": "task-"+val.id+"-child"}).addClass("ext_info uk-hidden");
+        var td_hdn = $("<td/>").text(val.action.capitalize()).attr({"colspan": 5});
+        return tr_hdn.append(td_hdn).append(btn_grp)
+    }
+
     window.render.tasks = function(){
         json_send(window.admin.url.tasks).done(function(data){
             if(data.data.length < 1){
-                UIkit.notify("No pending tasks found!", {timeout: 2000, status:"primary"});
+                UIkit.notify("No pending tasks found!",{timeout: 2000, status:"primary"});
             }else{
 
-                var table = $("<table/>").addClass("uk-table uk-table-hover uk-table-condensed");
+                var table = $("<table/>").addClass(
+                    "uk-table uk-table-hover uk-table-condensed"
+                );
 
+                var head_empty = $("<th/>");
                 var head_act = $("<th/>").text("Action");
-                var head_author = $("<th/>").text("Author");
-                var head_status = $("<th/>").text("Status");
+//                var head_author = $("<th/>").text("Author");
                 var head_created = $("<th/>").text("Created");
-                $("<thead/>").append($("<th/>")).append(head_act).append(head_author).append(head_status).append(head_created).appendTo(table);
 
-                //data.data.sort(window.sort_by("created", false, function(a){return a.toUpperCase()}));
+                var th = $("<thead/>").append(head_empty).append(head_act).append(head_created);
+                table.append(th);
+
                 $.each(data.data, function(idx, val){
+                    var row = window.render.task_row(val);
+                    table.append(row);
+                    //$(row).appendTo(table);
                 // type="button" data-id='{{record.id}}-info'>
+                /*
                     var btn = $("<td/>").append($("<button/>").attr({"data-id": "task-"+val.id+"-child"}).addClass("uk-button uk-button-mini task_info").append($("<span/>").addClass("uk-icon-plus")));
                     var act = $("<td/>").addClass("uk-text-nowrap").text(val.action);
                     var task= $("<td/>").text(val.task);
@@ -116,7 +154,8 @@
                     var btn_ignore = $("<button/>").attr({"data-id": val.id}).addClass("uk-button task_ignore").append($("<span/>").addClass("uk-icon-thumbs-o-down uk-margin-small-right").text("Ignore")).appendTo(btn_grp);
                     var btn_reject = $("<button/>").attr({"data-id": val.id}).addClass("uk-button task_reject uk-button-danger").append($("<span/>").addClass("uk-icon-thumbs-down uk-margin-small-right").text("Reject")).appendTo(btn_grp);
 
-                    $("<tr/>").attr({"id": "task-"+val.id+"-child"}).addClass("ext_info uk-hidden").append( $("<td/>").text(val.human.capitalize()).attr({"colspan": 5}).append(btn_grp) ).appendTo(table);
+                    $("<tr/>").attr({"id": "task-"+val.id+"-child"}).addClass("ext_info uk-hidden").append( $("<td/>").text(val.action.capitalize()).attr({"colspan": 5}).append(btn_grp) ).appendTo(table);
+                */
                 });
                 $("#modal_body").html(table.prop("outerHTML"));
                 var modal = UIkit.modal("#modal");
