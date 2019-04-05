@@ -523,7 +523,6 @@ class Tasks(db.Model):
         return act
 
     def description(self):
-        #Assign a user acrepieux to the project b001
         act, user, task = self.machine.split("|")
         if act in ["create"]:
             act += " a user %s for the project %s" % (user, task)
@@ -534,8 +533,6 @@ class Tasks(db.Model):
         elif act in ["update"]:
             act += " %s user's info with following data: %s" % (user, task)
         act = act[0].upper() + act[1:]
-        act += " by %s" % self.author.full_name()
-        print(act)
         return act
 
     def to_dict(self):
