@@ -146,7 +146,7 @@ class TaskQueue:
         self.task.action = "Add a user %s to the project %s" %\
                            (self.task.limbo_user.login,
                             self.task.project.get_name())
-        self.task.machine = "add|%s|%s" % (self.task.limbo_user.login,
+        self.task.machine = "create|%s|%s" % (self.task.limbo_user.login,
                                            self.task.project.get_name())
         self._user_action()
 
