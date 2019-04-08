@@ -146,6 +146,7 @@ class Extend(db.Model):
     __tablename__ = "project_extension"
 
     id = db.Column(db.Integer, primary_key=True)
+    extend = db.Column(db.Boolean)
     reason = db.Column(db.Text)
     hours = db.Column(db.Integer, db.CheckConstraint("cpu>=0"))
     created = db.Column(db.DateTime(True))
