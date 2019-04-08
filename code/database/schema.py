@@ -179,6 +179,7 @@ class Extend(db.Model):
         approve = self.approve.full_name() if self.approve else ""
         return {
             "id": self.id,
+            "extension": self.extend,
             "reason": self.reason,
             "hours": self.hours,
             "created": start,
