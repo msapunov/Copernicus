@@ -353,21 +353,6 @@
             }
             $("#taks_queue_length").text(tasks);
         });
-        /*
-        $.ajax({
-            url: window.admin.url.tasks,
-            type: "POST",
-            cache: false
-        }).done(function(data){
-            var tasks = 0;
-            if(data.data.length < 1){
-                UIkit.notify("No pending tasks found!", {timeout: 2000, status:"primary"});
-            }else{
-                tasks = data.data.length;
-            }
-            $("#taks_queue_length").text(tasks);
-        });
-        */
     }
     window.render.tasks_act=function(action, btn){
         var id = $(btn).data("id");
