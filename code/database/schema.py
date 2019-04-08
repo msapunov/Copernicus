@@ -536,6 +536,14 @@ class Tasks(db.Model):
         return act
 
     def to_dict(self):
+        if self.done:
+            status = "done"
+        elif self.processed:
+            status = "processed"
+        elif self.pending:
+            status = "pending"
+        else:
+            status = ""
         mod = self.modified.strftime("%Y-%m-%d %X %Z") if self.modified else ""
         return {
             "id": self.id,
@@ -548,6 +556,7 @@ class Tasks(db.Model):
             "decision": self.decision,
             "processed": self.processed,
             "created": self.created.strftime("%Y-%m-%d %X %Z"),
+            "status": status,
             "modified": mod
         }
 
