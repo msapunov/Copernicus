@@ -79,6 +79,32 @@
         });
     }
 
+    window.board.render_radio = function(){
+
+        var new_div = $("<div/>").addClass("uk-form-controls uk-form-controls-text");
+        var new_res = $("<input>").attr({
+            "id": "new_resource_radio",
+            "name": "resource",
+            "type": "radio"
+        }).addClass("uk-margin-small-right");
+        var new_label = $("<label/>").attr('for', "new_resource_radio");
+        new_label.text("Assign new resource");
+        new_div.append(new_res).append(new_label)
+
+        var ext_div = $("<div/>").addClass("uk-form-controls uk-form-controls-text");
+        var ext_res = $("<input/>").attr({
+            "id": "ext_resource_radio",
+            "name": "resource",
+            "type": "radio"
+        }).addClass("uk-margin-small-right");
+        var ext_label = $("<label/>").attr('for', "ext_resource_radio");
+        ext_label.text("Extend already allocated resource");
+        ext_div.append(ext_res).append(ext_label)
+
+        return $("<div/>").append(new_div).append(ext_div)
+
+    }
+
     window.board.extend = function(me){
         var id = $(me).data("id");
         var project = $(me).data("name");
@@ -94,12 +120,17 @@
             "rows": "4",
             "name": "note"
         });
+
+        var radio = window.board.render_radio();
+
         var form = $("<form/>").addClass("uk-form").append(
                 $("<legend/>").text(title)
             ).append(
                 $("<div/>").addClass("uk-form-row").append(cpu)
             ).append(
                 $("<div/>").addClass("uk-form-row").append(motiv)
+            ).append(
+                $("<div/>").addClass("uk-form-row").append(radio)
             );
         UIkit.modal.confirm(form.prop("outerHTML"), function(){
             var comment = $("textarea[name=note]").val();
