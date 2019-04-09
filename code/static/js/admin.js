@@ -45,6 +45,9 @@
         }
     }
 
+    window.render.task_h_info = function(){
+    }
+
     window.render.tasks_history = function(){
         json_send(window.admin.url.tasks_history).done(function(data){
             if(data.data.length < 1){
@@ -53,28 +56,55 @@
 
                 var table = $("<table/>").addClass("uk-table uk-table-hover uk-table-condensed");
 
+                var thead = $("<thead/>").append($("<th/>"));
                 var head_act = $("<th/>").text("Action");
-                var head_author = $("<th/>").text("Author");
                 var head_status = $("<th/>").text("Status");
-                var head_approved = $("<th/>").text("Approved");
-                var head_processed = $("<th/>").text("Processed");
                 var head_decision = $("<th/>").text("Decision");
-                var head_created = $("<th/>").text("Created");
-                $("<thead/>").append($("<th/>")).append(head_act).append(head_author).append(head_status).append(head_approved).append(head_processed).append(head_decision).append(head_created).appendTo(table);
+
+                thead.append(head_act);
+                thead.append(head_status);
+                thead.append(head_decision);
+
+                thead.appendTo(table);
 
                 //data.data.sort(window.sort_by("created", false, function(a){return a.toUpperCase()}));
                 $.each(data.data, function(idx, val){
-                    var btn = $("<td/>").append($("<button/>").attr({"data-id": "task-"+val.id}).addClass("uk-button uk-button-mini task_info").append($("<span/>").addClass("uk-icon-plus")));
-                    var act = $("<td/>").addClass("uk-text-nowrap").text("{0} {1}".f(val.action, val.entity));
-                    var task= $("<td/>").text(val.task);
-                    var user = $("<td/>").text(val.author);
-                    var status = $("<td/>").text(val.status);
-                    var approved = $("<td/>").text(val.approved);
-                    var processed = $("<td/>").text(val.processed);
-                    var decision = $("<td/>").text(val.decision);
-                    var data = $("<td/>").addClass("uk-text-nowrap").text(val.created);
-                    $("<tr/>").append(btn).append(act).append(user).append(status).append(approved).append(processed).append(decision).append(data).appendTo(table);
-                    $("<tr/>").attr({"id": "task-"+val.id}).addClass("ext_info uk-hidden").append( $("<td/>").text("Task: " + val.task).attr({"colspan": 7})).appendTo(table);
+
+                    var icon = $("<span/>");
+                    if(val.decision == "accept"){
+                        icon.addClass("uk-icon-thumbs-o-up");
+                    }else if(val.decision == "ignore"){
+                        icon.addClass("uk-icon-thumbs-o-down");
+                    }else if(val.decision == "reject"){
+                        icon.addClass("uk-icon-thumbs-down");
+                    }
+
+                    var btn_span = $("<span/>").addClass("uk-icon-plus");
+                    var btn = $("<button/>").attr({"data-id": "history-"+val.id});
+                    btn.addClass("uk-button uk-button-mini history_info");
+                    btn.append(btn_span);
+                    var td_btn = $("<td/>").append(btn);
+                    var td_act = $("<td/>").addClass("uk-text-nowrap").text(val.action);
+                    var td_stat = $("<td/>").text(val.status);
+                    var td_decision = $("<td/>").addClass("uk-text-center");
+                    td_decision.prop("title", val.decision).append(icon);
+
+                    var tr = $("<tr/>");
+                    tr.append(td_btn).append(td_act).append(td_stat);
+                    tr.append(td_decision).appendTo(table);
+
+                    var td_hdn = $("<td/>").attr({"colspan": 4});
+                    var ul = $("<ul/>");
+                    var keys = ["description", "author", "created", "pending"]
+                    keys = $.merge(keys, ["processed", "done", "modified", "approve", "decision"]);
+                    $.each(keys, function(idx, prop){
+                        $("<li/>").text(prop.capitalize() + ": " + val[prop]).appendTo(ul);
+                    });
+                    td_hdn.append(ul);
+
+                    var tr_hdn = $("<tr/>").attr({"id": "history-"+val.id});
+                    tr_hdn.addClass("ext_info uk-hidden");
+                    tr_hdn.append(td_hdn).appendTo(table);
                 });
                 $("#modal_body").html(table.prop("outerHTML"));
                 var modal = UIkit.modal("#modal");
@@ -401,6 +431,7 @@
     $(document).on("click", ".task_accept", window.render.tasks_accept);
     $(document).on("click", ".task_ignore", window.render.tasks_ignore);
     $(document).on("click", ".task_reject", window.render.tasks_reject);
+    $(document).on("click", ".history_info", window.render.new_project);
 
     $(document).on({
         mouseenter: function () {
