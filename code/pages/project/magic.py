@@ -77,6 +77,14 @@ def extend_update():
     else:
         raise ValueError("Comment is absent")
 
+    extend = True
+    if "extend" in data:
+        dirty = check_str(data["extend"])
+        if dirty not in ["yes", "no"]:
+            raise ValueError("Provided extend flag '%s' is unknown" % dirty)
+        if dirty == "no":
+            extend = False
+
     project = get_project_record(pid)
     p_name = project.get_name()
     p_info = get_project_consumption([p_name])
@@ -90,7 +98,7 @@ def extend_update():
     else:
         usage = "{0:.1%}".format(float(use)/float(maximum))
     return Extend(project=project, hours=cpu, reason=note, present_use=use,
-                  usage_percent=usage, present_total=maximum)
+                  usage_percent=usage, present_total=maximum, extend=extend)
 
 
 def send_extend_mail(project, extend):
