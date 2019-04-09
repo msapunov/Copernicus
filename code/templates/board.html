@@ -96,7 +96,11 @@
                                             <td class="uk-width-1-10 uk-text-right uk-text-bold uk-text-nowrap">Comments:</td>
                                             <td class="uk-width-9-10">{{ record.reason }}</td>
                                         </tr>
-                                        <tr>
+                                        <tr class="ext_info">
+                                            <td class="uk-width-1-10 uk-text-right uk-text-bold uk-text-nowrap">Exceptional extension:</td>
+                                            <td class="uk-width-9-10">{{ record.exception }}</td>
+                                        </tr>
+                                        <tr class="ext_info">
                                             <td>
                                                 <div class="uk-button-group uk-margin-top">
                                                     <button class="uk-button history"  data-pid="{{record.project}}" data-name="{{record.project_name}}">
