@@ -159,27 +159,37 @@ function reduce_to_names(initial, object){
             "name": "note",
             "placeholder": placeholder
         })
+        var checkbox = $("<input>").attr({
+            "id": "exception_checkbox",
+            "name": "exception",
+            "type": "checkbox"
+        }).addClass("uk-margin-small-right uk-form-danger");
+        var label = $("<label/>").attr('for', "exception_checkbox");
+        label.text("Select checkbox for an exceptional extension requests only! Apply for a project running out of CPU time way before the next session.");
         var express = $("<div/>").addClass(
             "uk-form-row uk-alert uk-alert-danger"
-        ).text(
-            "For any exceptional extension, send a mail directly to: mesocentre-aap@univ-amu.fr"
+//        ).text(
+//            "For any exceptional extension, send a mail directly to: mesocentre-aap@univ-amu.fr"
         );
+        express.append(checkbox).append(label);
         var warn = "<div>" + date_warning() + "</div><div>" + end_warning() + "</div>";
         var form = $("<form/>").addClass("uk-form").append(
             $("<legend/>").text(title)
-        ).append(
-            express
         ).append(
             $("<div/>").addClass("uk-form-row").append(cpu)
         ).append(
             $("<div/>").addClass("uk-form-row").append(motiv)
         ).append(
+            express
+        ).append(
             $("<div>{0}</div>".f(warn)).addClass("uk-form-row uk-alert")
         );
         var pop = dialog(form.prop("outerHTML"), function(){
+            var exception = $("input[name=exception]").is(':checked') ? "yes" : "no";
             var data = {
                 "cpu": $("input[name=cpu]").val(),
                 "note": $("textarea[name=note]").val(),
+                "exception": exception,
                 "project": id
             };
             if(!window.render.paint_red(data)){
