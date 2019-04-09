@@ -72,11 +72,11 @@ def tasks_list(every=False):
 
 
 def task_mail(action, task):
-    human = task.to_dict()["human"]
+    description = task.description()
     tid = task.id
     to = current_app.config["EMAIL_TECH"]
     title = "Task id '%s' has been %s" % (tid, action)
-    msg = "Task '%s' with id '%s' has been %s" % (human, tid, action)
+    msg = "Task '%s' with id '%s' has been %s" % (description, tid, action)
     return message(to, msg, title)
 
 
