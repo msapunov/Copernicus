@@ -147,6 +147,7 @@ class Extend(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     extend = db.Column(db.Boolean)
+    exception = db.Column(db.Boolean)
     reason = db.Column(db.Text)
     hours = db.Column(db.Integer, db.CheckConstraint("cpu>=0"))
     created = db.Column(db.DateTime(True))
@@ -180,6 +181,7 @@ class Extend(db.Model):
         return {
             "id": self.id,
             "extension": self.extend,
+            "exception": self.exception,
             "reason": self.reason,
             "hours": self.hours,
             "created": start,
