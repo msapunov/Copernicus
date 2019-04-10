@@ -115,7 +115,8 @@ def extend_update():
     else:
         usage = "{0:.1%}".format(float(use)/float(maximum))
     return Extend(project=project, hours=cpu, reason=note, present_use=use,
-                  usage_percent=usage, present_total=maximum, extend=extend)
+                  usage_percent=usage, present_total=maximum, extend=extend,
+                  exception=exception)
 
 
 def send_extend_mail(project, extend):
