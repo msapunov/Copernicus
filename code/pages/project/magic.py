@@ -57,6 +57,21 @@ def get_project_record(pid):
     return project
 
 
+def is_extension():
+    kick_month = int(current_app.config.get("EXTENSION_KICKOFF_MONTH", 1))
+    kick_day = int(current_app.config.get("EXTENSION_KICKOFF_DAY", 1))
+    allo_month = int(current_app.config.get("ACC_START_MONTH", 3))
+    allo_day = int(current_app.config.get("ACC_START_DAY", 1))
+
+    present = dt.now()
+    kick_date = dt(present.year, kick_month, kick_day)
+    allo_date = dt(present.year, allo_month, allo_day)
+    if kick_date < present < allo_date:
+        return False
+    else:
+        return True
+
+
 def extend_update():
     from code.database.schema import Extend
 
