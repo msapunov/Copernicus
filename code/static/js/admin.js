@@ -142,19 +142,16 @@
             "uk-button-group uk-float-right uk-margin-top"
         );
 
-        var s_accept = $("<span/>").text("Accept");
-        s_accept.addClass("uk-icon-thumbs-o-up uk-margin-small-right");
+        var s_accept = $("<span/>").addClass("uk-icon-thumbs-o-up uk-margin-small-right");
         var btn_accept = $("<button/>").attr({"data-id": val.id});
-        btn_accept.addClass("uk-button task_accept").append(s_accept);
+        btn_accept.addClass("uk-button task_accept").append(s_accept).append("Accept");
 
-        var s_ignore = $("<span/>").text("Ignore");
-        s_ignore.addClass("uk-icon-thumbs-o-down uk-margin-small-right");
+        var s_ignore = $("<span/>").addClass("uk-icon-thumbs-o-down uk-margin-small-right");
         var btn_ignore = $("<button/>").attr({"data-id": val.id});
-        btn_ignore.addClass("uk-button task_ignore").append(s_ignore);
+        btn_ignore.addClass("uk-button task_ignore").append(s_ignore).append("Ignore");
 
-        var s_reject = $("<span/>").text("Reject");
-        s_reject.addClass("uk-icon-thumbs-down uk-margin-small-right");
-        var btn_reject = $("<button/>").attr({"data-id": val.id}).append(s_reject);
+        var s_reject = $("<span/>").addClass("uk-icon-thumbs-down uk-margin-small-right");
+        var btn_reject = $("<button/>").attr({"data-id": val.id}).append(s_reject).append("Reject");;
         btn_reject.addClass("uk-button task_reject uk-button-danger");
 
         $.each([btn_accept, btn_ignore, btn_reject], function(idx, el){
