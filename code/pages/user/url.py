@@ -22,14 +22,12 @@ def user_list():
     term = request.args.get("term")
     if term:
         term = "%%%s%%" % term.lower()
-        print(term)
         users_obj = User.query.filter(User.active==True)\
             .filter(User.surname.like(term) | User.name.like(term)
                     | User.login.like(term)).all()
     else:
         users_obj = User.query.filter(User.active==True)\
             .filter(User.surname!="").all()
-    print(users_obj)
     users_obj = sorted(users_obj, key=attrgetter("login"))
 
     users = map(lambda x: {"id": x.id, "login": x.login,
