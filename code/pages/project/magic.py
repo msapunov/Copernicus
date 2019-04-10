@@ -92,13 +92,15 @@ def extend_update():
     else:
         raise ValueError("Comment is absent")
 
-    extend = True
-    if "extend" in data:
-        dirty = check_str(data["extend"])
-        if dirty not in ["yes", "no"]:
-            raise ValueError("Provided extend flag '%s' is unknown" % dirty)
-        if dirty == "no":
-            extend = False
+    if "exception" in data:
+        if check_str(data["exception"]) == "yes":
+            exception = True
+        else:
+            exception = False
+
+    extend = is_extension()
+    if not extend and exception: # Make sure that exceptional extension are extention no matter when
+        extend = True
 
     project = get_project_record(pid)
     p_name = project.get_name()
