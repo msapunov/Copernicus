@@ -79,22 +79,24 @@
         });
     }
 
-    window.board.render_radio = function(){
+    window.board.render_radio = function(extend){
 
         var new_div = $("<div/>").addClass("uk-form-controls uk-form-controls-text");
         var new_res = $("<input>").attr({
             "id": "new_resource_radio",
             "name": "resource",
+            "checked": !extend,
             "type": "radio"
         }).addClass("uk-margin-small-right");
         var new_label = $("<label/>").attr('for', "new_resource_radio");
-        new_label.text("Assign new resource");
+        new_label.text("Start new resource allocation");
         new_div.append(new_res).append(new_label)
 
         var ext_div = $("<div/>").addClass("uk-form-controls uk-form-controls-text");
         var ext_res = $("<input/>").attr({
             "id": "ext_resource_radio",
             "name": "resource",
+            "checked": extend,
             "type": "radio"
         }).addClass("uk-margin-small-right");
         var ext_label = $("<label/>").attr('for', "ext_resource_radio");
