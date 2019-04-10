@@ -21,7 +21,7 @@ def user_list():
 
     term = request.args.get("term")
     if term:
-        term = "%%%s%%" % term
+        term = "%%%s%%" % term.lower()
         print(term)
         users_obj = User.query.filter(User.active==True)\
             .filter(User.surname.like(term) | User.name.like(term)
