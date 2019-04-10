@@ -109,6 +109,11 @@
         var id = $(me).data("id");
         var project = $(me).data("name");
         var hours = $(me).data("cpu");
+        if("False" === $(me).data("extend")){
+            var is_extension = false;
+        }else{
+            var is_extension = true;
+        }
         var title = "Accept extension of project {0} by {1} hours?".f(project, hours);
         var text = "Extension accepted by scientific committee";
         var cpu = $("<input/>").addClass("uk-width-1-1").attr({
