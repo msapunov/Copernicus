@@ -2,11 +2,8 @@ from flask import render_template, jsonify, current_app
 from flask_login import login_required, current_user
 from code.pages import ProjectLog, check_json, check_int
 from code.pages.board import bp
-from code.pages.board.magic import board_action
+from code.pages.board.magic import board_action, create_resource
 from code.pages.project.magic import get_project_record
-from datetime import datetime as dt
-from dateutil.relativedelta import relativedelta as rd
-from calendar import monthrange
 from operator import attrgetter
 
 
@@ -55,38 +52,17 @@ def web_board_accept():
         cpu = record.hours
 
     project = get_project_record(record.project.id)
-
-    now = dt.now()
-    if project.type == "a":
-        month = int(current_app.config["ACC_TYPE_A"])
-        ttl = now + rd(month=+month)
-    elif project.type == "h":
-        month = int(current_app.config["ACC_TYPE_H"])
-        ttl = now + rd(month=+month)
-    else:  # For project type B
-        year = now.year + 1
-        month = int(current_app.config["ACC_START_MONTH"])
-        if "ACC_START_DAY" in current_app.config:
-            day = int(current_app.config["ACC_START_DAY"])
-        else:
-            day = monthrange(year, month)[1]
-        ttl = dt(year, month, day, 23, 59, 59)
-
-    from code.database.schema import Resources
     from code import db
 
-    resource = Resources(
-        approve=current_user,
-        valid=True,
-        cpu=cpu,
-        type=project.type,
-        project=project.get_name(),
-        ttl=ttl,
-        treated=False
-    )
-    db.session.add(resource)
-    project.resources.valid = False
-    project.resources = resource
+    if record.extend:
+        project.resources.treated=False
+        project.resources.cpu += cpu
+    else:
+        project.resources.valid = False
+        resource = create_resource(project, cpu)
+        db.session.add(resource)
+        project.resources = resource
+
     db.session.commit()
     return jsonify(message=ProjectLog(record.project).accept(record),
                    data={"id": record.id})
