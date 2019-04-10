@@ -128,7 +128,7 @@
             "name": "note"
         });
 
-        var radio = window.board.render_radio();
+        var radio = window.board.render_radio(is_extension);
 
         var form = $("<form/>").addClass("uk-form").append(
                 $("<legend/>").text(title)
