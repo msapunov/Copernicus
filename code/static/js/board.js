@@ -263,7 +263,7 @@
             ["project_name", "hours", "approve", "accepted", "processed", "created"].forEach(function(attr){
                 if(attr=="accepted" || attr=="processed"){
                     if(attr=="accepted" && rec[attr]){
-                        tr.append("<td class='uk-width-1-10'><span class='uk-icon-thumbs-up'></span></td>");
+                        tr.append("<td class='uk-width-1-10'><span class='uk-icon-thumbs-o-up'></span></td>");
                     }else if(attr=="accepted" && !rec[attr]){
                         tr.append("<td class='uk-width-1-10'><span class='uk-icon-thumbs-o-down'></span></td>");
                     }else if(attr=="processed" && rec[attr]){
