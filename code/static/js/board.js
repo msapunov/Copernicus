@@ -87,7 +87,7 @@
             "name": "resource",
             "checked": !extend,
             "type": "radio"
-        }).addClass("uk-margin-small-right");
+        }).addClass("uk-margin-small-right").val("false");
         var new_label = $("<label/>").attr('for', "new_resource_radio");
         new_label.text("Start new resource allocation");
         new_div.append(new_res).append(new_label)
@@ -98,7 +98,7 @@
             "name": "resource",
             "checked": extend,
             "type": "radio"
-        }).addClass("uk-margin-small-right");
+        }).addClass("uk-margin-small-right").val("true");
         var ext_label = $("<label/>").attr('for', "ext_resource_radio");
         ext_label.text("Extend already allocated resource");
         ext_div.append(ext_res).append(ext_label)
@@ -142,9 +142,11 @@
         UIkit.modal.confirm(form.prop("outerHTML"), function(){
             var comment = $("textarea[name=note]").val();
             var cpu_hours = $("input[name=cpu]").val();
+            var extension = $("input[name=resource]:checked").val();
             json_send(window.board.url.accept, {
                 "eid": id,
                 "comment": comment,
+                "extension": extension,
                 "cpu": cpu_hours
             }).done(function(reply){
                 window.process(reply);
