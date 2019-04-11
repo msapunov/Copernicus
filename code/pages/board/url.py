@@ -1,6 +1,6 @@
 from flask import render_template, jsonify, current_app
 from flask_login import login_required, current_user
-from code.pages import ProjectLog, check_json, check_int
+from code.pages import ProjectLog, check_json, check_int, check_str
 from code.pages.board import bp
 from code.pages.board.magic import board_action, create_resource
 from code.pages.project.magic import get_project_record
@@ -50,6 +50,14 @@ def web_board_accept():
     cpu = check_int(data["cpu"])
     if (not cpu) or (cpu <= 0):
         cpu = record.hours
+
+    extension = False
+    if check_str(data["extension"]).lower() == "true":
+        extension = True
+
+    if record.extend != extension:
+        record.extend = extension
+        record.decision += "\nSet extension option to %s by hands"
 
     project = get_project_record(record.project.id)
     from code import db
