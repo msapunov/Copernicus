@@ -19,8 +19,8 @@
         <script src="{{ url_for('static', filename='js/lib.js') }}"></script>
 
         {% if current_user.login and "admin" in current_user.permissions() %}
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/select2.min.css') }}" />
+        <script src="{{ url_for('static', filename='js/select2.min.js') }}"></script>
         <script>
             var message_window = function(users){
                 var plural = users.length > 1 ? "s" : "";
