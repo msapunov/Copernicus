@@ -482,7 +482,6 @@ class Tasks(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     action = db.Column(db.Text, nullable=False)
-    machine = db.Column(db.Text, nullable=False)
 
     author_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     author = db.relationship("User", foreign_keys=author_id)
@@ -495,7 +494,6 @@ class Tasks(db.Model):
                          db.CheckConstraint("decision IN ('accept', 'reject',"
                                             " 'ignore')"))
     processed = db.Column(db.Boolean)
-    pending = db.Column(db.Boolean)
     done = db.Column(db.Boolean)
 
     created = db.Column(db.DateTime(True), default=dt.utcnow)
@@ -544,8 +542,6 @@ class Tasks(db.Model):
             status = "done"
         elif self.processed:
             status = "processed"
-        elif self.pending:
-            status = "pending"
         else:
             status = ""
         mod = self.modified.strftime("%Y-%m-%d %X %Z") if self.modified else ""
@@ -553,7 +549,6 @@ class Tasks(db.Model):
             "id": self.id,
             "description": self.description(),
             "action": self.brief(),
-            "pending": self.pending,
             "done": self.done,
             "author": self.author.full_name() if self.author else "",
             "approve": self.approve.full_name() if self.approve else "",
