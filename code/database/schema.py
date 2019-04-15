@@ -515,7 +515,7 @@ class Tasks(db.Model):
         return "<Task queue record {}>".format(self.id)
 
     def brief(self):
-        act, user, task = self.machine.split("|")
+        act, user, task = self.action.split("|")
         if act in ["create", "add", "assign", "delete", "remove"]:
             act += " a user "
         elif act in ["update"]:
@@ -525,7 +525,7 @@ class Tasks(db.Model):
         return act
 
     def description(self):
-        act, user, task = self.machine.split("|")
+        act, user, task = self.action.split("|")
         if act in ["create"]:
             act += " a user %s for the project %s" % (user, task)
         if act in ["assign"]:
