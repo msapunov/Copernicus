@@ -37,7 +37,7 @@ def web_project_add_user():
     user = LimboUser(name=name, surname=surname, email=email, login=auto,
                      active=False)
     db.session.commit()
-    TaskQueue().project(project).user_add(user)
+    TaskQueue().project(project).user_create(user)
     msg = "Request to add a new user: %s %s <%s>" % (name, surname, email)
     return jsonify(message=ProjectLog(project).event(msg), data=get_users(pid))
 
@@ -95,7 +95,7 @@ def web_project_delete_user():
         raise ValueError("User '%s' seems not to be registered in project '%s'"
                          % (login, project.get_name()))
     user = get_user_record(login)
-    TaskQueue().project(project).user_delete(user)
+    TaskQueue().project(project).user_remove(user)
     return jsonify(message=ProjectLog(project).user_del(user))
 
 
