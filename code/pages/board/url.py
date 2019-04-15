@@ -1,5 +1,5 @@
-from flask import render_template, jsonify, current_app
-from flask_login import login_required, current_user
+from flask import render_template, jsonify
+from flask_login import login_required
 from code.pages import ProjectLog, check_json, check_int, check_str
 from code.pages.board import bp
 from code.pages.board.magic import board_action, create_resource
