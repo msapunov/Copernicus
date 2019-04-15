@@ -143,10 +143,7 @@ class TaskQueue:
         if not self.project:
             raise ValueError("Can't add a user to none existent project")
         self.task.limbo_user = user
-        self.task.action = "Add a user %s to the project %s" %\
-                           (self.task.limbo_user.login,
-                            self.task.project.get_name())
-        self.task.machine = "create|%s|%s" % (self.task.limbo_user.login,
+        self.task.action = "create|%s||%s" % (self.task.limbo_user.login,
                                            self.task.project.get_name())
         self._user_action()
 
@@ -154,10 +151,7 @@ class TaskQueue:
         if not self.project:
             raise ValueError("Can't assign a user to none existent project")
         self.task.limbo_user = self._copy_user(user)
-        self.task.action = "Assign a user %s to the project %s" %\
-                           (self.task.limbo_user.login,
-                            self.task.project.get_name())
-        self.task.machine = "assign|%s|%s" % (self.task.limbo_user.login,
+        self.task.action = "assign|%s|%s" % (self.task.limbo_user.login,
                                               self.task.project.get_name())
         self._user_action()
 
@@ -166,10 +160,7 @@ class TaskQueue:
             raise ValueError("Can't assign a new responsible to none existent"
                              " project")
         self.task.limbo_user = self._copy_user(user)
-        self.task.action = "Assign new responsible %s to the project %s" %\
-                           (self.task.limbo_user.login,
-                            self.task.project.get_name())
-        self.task.machine = "assign|%s|%s" % (self.task.limbo_user.login,
+        self.task.action = "assign|%s|%s" % (self.task.limbo_user.login,
                                               self.task.project.get_name())
         self._user_action()
 
@@ -180,19 +171,14 @@ class TaskQueue:
         for key, value in data.items():
             act.append("%s: %s" % (key, value))
         act = " and ".join(act)
-        self.task.action = "updating %s's information with new value(s): %s"\
-                           % (self.task.user.login, act)
-        self.task.machine = "update|%s|%s" % (self.task.user.login, act)
+        self.task.action = "update|%s|%s" % (self.task.user.login, act)
         self._user_action()
 
     def user_delete(self, user):
         if not self.project:
             raise ValueError("Can't delete a user from none existent project")
         self.task.limbo_user = self._copy_user(user)
-        self.task.action = "Delete a user %s from the project %s" %\
-                           (self.task.limbo_user.login,
-                            self.task.project.get_name())
-        self.task.machine = "remove|%s|%s" % (self.task.limbo_user.login,
+        self.task.action = "remove|%s|%s" % (self.task.limbo_user.login,
                                               self.task.project.get_name())
         self._user_action()
 
