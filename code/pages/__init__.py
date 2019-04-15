@@ -139,7 +139,7 @@ class TaskQueue:
         self.task.project = p_name
         return self
 
-    def user_add(self, user):
+    def user_create(self, user):
         if not self.project:
             raise ValueError("Can't add a user to none existent project")
         self.task.limbo_user = user
@@ -174,7 +174,7 @@ class TaskQueue:
         self.task.action = "update|%s|%s" % (self.task.user.login, act)
         self._user_action()
 
-    def user_delete(self, user):
+    def user_remove(self, user):
         if not self.project:
             raise ValueError("Can't delete a user from none existent project")
         self.task.limbo_user = self._copy_user(user)
