@@ -226,7 +226,7 @@ class TaskQueue:
         return limbo
 
     def _user_action(self):
-        self.task.pending = True
+        self.processed = True
         self._commit()
 
     def _commit(self):
