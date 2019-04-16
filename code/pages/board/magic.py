@@ -1,6 +1,6 @@
 from flask import current_app
 from flask_login import current_user
-from code.pages import check_int, check_str, send_message, check_json
+from code.pages import check_int, check_str, check_json
 from datetime import datetime as dt
 from dateutil.relativedelta import relativedelta as rd
 from calendar import monthrange
