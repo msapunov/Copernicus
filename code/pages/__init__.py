@@ -125,6 +125,49 @@ def check_alnum(raw_note):
     return str(raw_note)
 
 
+class Task:
+
+    def __init__(self, id):
+        from code.database.schema import Tasks
+        task = Tasks().query.filter_by(id=id).first()
+        if not task:
+            raise ValueError("No task with id %s found" % id)
+        self.task = task
+        self.id = task.id
+
+    def is_processed(self):
+        return self.task.processed
+
+    def description(self):
+        return self.task.description()
+
+    def accept(self):
+        self.task.decision = "accept"
+        return self._action()
+
+    def ignore(self):
+        self.task.decision = "ignore"
+        return self._action()
+
+    def reject(self):
+        self.task.decision = "reject"
+        return self._action()
+
+    def action(self):
+        return self.task.action
+
+    def _action(self):
+        print(self.task.id)
+        self.task.processed = True
+        self.task.approve = current_user
+        self._commit()
+        return self
+
+    def _commit(self):
+        from code import db
+        db.session.commit()
+
+
 class TaskQueue:
 
     def __init__(self):
