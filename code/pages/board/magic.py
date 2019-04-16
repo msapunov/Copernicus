@@ -4,10 +4,65 @@ from code.pages import check_int, check_str, send_message, check_json
 from datetime import datetime as dt
 from dateutil.relativedelta import relativedelta as rd
 from calendar import monthrange
+from operator import attrgetter
 
 
 __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
+
+
+class Extensions:
+    def __init__(self, id=None):
+        from code.database.schema import Extend
+
+        if id:
+            self.id = id
+        self.queue = Extend().query
+        self.ext = Extend
+
+    def history(self, reverse=True):
+        records = self.records()
+        return sorted(records, key=attrgetter("created"), reverse=reverse)
+
+    def unprocessed(self):
+        return self.queue.filter_by(processed = False).all()
+
+    def pending(self):
+        return self.queue.filter_by(processed = False).filter_by(accepted=True)\
+            .all()
+
+    def records(self):
+        if self.id:
+            return self.record()
+        return self.queue.all()
+
+    def record(self):
+        if not self.id:
+            return self.records()
+        return self.queue.filter_by(id=self.id).one()
+
+    def _process(self, record):
+        record.processed = True
+        record.approve = current_user
+        from code import db
+        db.session.commit()
+        return record
+
+    def reject(self, note):
+        record = self.record()
+        if record.processed:
+            raise ValueError("This request has been already processed")
+        record.accepted = False
+        record.decision = note
+        return self._process(record)
+
+    def accept(self, note):
+        record = self.record()
+        if record.processed:
+            raise ValueError("This request has been already processed")
+        record.accepted = True
+        record.decision = note
+        return self._process(record)
 
 
 def create_resource(project, cpu):
@@ -41,54 +96,8 @@ def create_resource(project, cpu):
     return resource
 
 
-def board_action():
-
-    from code.database.schema import Extend
-
+def get_arguments():
     data = check_json()
     eid = check_int(data["eid"])
     note = check_str(data["comment"])
-    extend = Extend().query.filter(Extend.id == eid).one()
-    if not extend:
-        raise ValueError("No extension with id '%s' found" % eid)
-    if extend.processed:
-        raise ValueError("This request has been already processed")
-    extend.processed = True
-    extend.decision = note
-    extend.approve = current_user
-    return extend
-
-
-def accept_message(extension):
-    to = extension.project.responsible.email
-    full = extension.project.responsible.full_name()
-    name = extension.project.get_name()
-    cpu = extension.hours
-    ts = extension.created.strftime("%Y-%m-%d %X %Z"),
-    comment = extension.decision
-    title = "Project extension accepted"
-    msg_body = "Dear %s\nThe extension of your project %s for %s hours made " \
-               "%s has been accepted:\n%s" % (full, name, cpu, ts, comment)
-    return message(to, msg_body, title)
-
-
-def reject_message(extension):
-    to = extension.project.responsible.email
-    full = extension.project.responsible.full_name()
-    name = extension.project.get_name()
-    cpu = extension.hours
-    ts = extension.created.strftime("%Y-%m-%d %X %Z"),
-    comment = extension.decision
-    title = "Project extension rejected"
-    msg_body = "Dear %s\nThe extension of your project %s for %s hours made " \
-               "%s has been rejected:\n%s" % (full, name, cpu, ts, comment)
-    return message(to, msg_body, title)
-
-
-def message(to, msg, title=None):
-    by_who = current_app.config["EMAIL_PROJECT"]
-    #cc = current_app.config["EMAIL_PROJECT"]
-    cc = "matvey.sapunov@univ-amu.fr"
-    if not title:
-        title = "Concerning your project"
-    return send_message(to, by_who, cc, title, msg)
+    return eid, note

@@ -2,9 +2,8 @@ from flask import render_template, jsonify
 from flask_login import login_required
 from code.pages import ProjectLog, check_json, check_int, check_str
 from code.pages.board import bp
-from code.pages.board.magic import board_action, create_resource
+from code.pages.board.magic import get_arguments, create_resource, Extensions
 from code.pages.project.magic import get_project_record
-from operator import attrgetter
 
 
 __author__ = "Matvey Sapunov"
@@ -15,27 +14,21 @@ __copyright__ = "Aix Marseille University"
 @bp.route("/board.html", methods=["GET", "POST"])
 @login_required
 def web_board():
-    from code.database.schema import Extend
-
-    ext_list = Extend().query.filter(Extend.processed == False).all()
-    if not ext_list:
+    extensions_list = Extensions().unprocessed()
+    if not extensions_list:
         err = "No new project related requests found! Nothing to do"
         return render_template("board.html", error=err)
-    result = list(map(lambda x: x.to_dict(), ext_list))
+    result = list(map(lambda x: x.to_dict(), extensions_list))
     return render_template("board.html", data=result)
 
 
 @bp.route("/board/history", methods=["POST"])
 @login_required
 def web_board_history():
-    from code.database.schema import Extend
-
-    ext_list = Extend().query.all()
-    if not ext_list:
-        err = "No new project related requests found! Nothing to do"
-        return jsonify(message=err)
-    sorted_recs = sorted(ext_list, key=attrgetter("created"), reverse=True)
-    result = list(map(lambda x: x.to_dict(), sorted_recs))
+    extensions_list = Extensions().history()
+    if not extensions_list:
+        return jsonify(message="No records found for project extension")
+    result = list(map(lambda x: x.to_dict(), extensions_list))
     return jsonify(data=result)
 
 
@@ -43,8 +36,8 @@ def web_board_history():
 @login_required
 def web_board_accept():
 
-    record = board_action()
-    record.accepted = True
+    eid, note = get_arguments()
+    record = Extensions(eid).accept(note)
 
     data = check_json()
     cpu = check_int(data["cpu"])
@@ -79,11 +72,7 @@ def web_board_accept():
 @bp.route("/board/ignore", methods=["POST"])
 @login_required
 def web_board_ignore():
-    from code import db
-
-    record = board_action()
-    record.accepted = False
-    db.session.commit()
+    record = reject_extension()
     return jsonify(message=ProjectLog(record.project).ignore(record),
                    data={"id": record.id})
 
@@ -91,10 +80,11 @@ def web_board_ignore():
 @bp.route("/board/reject", methods=["POST"])
 @login_required
 def web_board_reject():
-    from code import db
-
-    record = board_action()
-    record.accepted = False
-    db.session.commit()
+    record = reject_extension()
     return jsonify(message=ProjectLog(record.project).reject(record),
                    data={"id": record.id})
+
+
+def reject_extension():
+    eid, note = get_arguments()
+    return Extensions(eid).reject(note)
