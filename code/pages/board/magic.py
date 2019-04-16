@@ -25,10 +25,10 @@ class Extensions:
         return sorted(records, key=attrgetter("created"), reverse=reverse)
 
     def unprocessed(self):
-        return self.queue.filter_by(processed = False).all()
+        return self.queue.filter_by(processed=False).all()
 
     def pending(self):
-        return self.queue.filter_by(processed = False).filter_by(accepted=True)\
+        return self.queue.filter_by(processed=False).filter_by(accepted=True)\
             .all()
 
     def records(self):
