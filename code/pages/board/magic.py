@@ -12,11 +12,11 @@ __copyright__ = "Aix Marseille University"
 
 
 class Extensions:
-    def __init__(self, id=None):
+    def __init__(self, eid=None):
         from code.database.schema import Extend
 
-        if id:
-            self.id = id
+        if eid:
+            self.id = eid
         self.queue = Extend().query
         self.ext = Extend
 
