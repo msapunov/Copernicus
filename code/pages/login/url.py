@@ -1,14 +1,36 @@
-from flask import render_template, request, redirect, url_for, g, flash
+from flask import render_template, request, redirect, url_for, g, flash, abort
 from flask_login import current_user, login_user, logout_user, login_required
 from code.pages.login.magic import ssh_login
 from code.pages.login.form import LoginForm
 from code.pages.login import bp
+from base64 import b64decode
 
 from logging import warning
 
 
 __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
+
+
+@bp.route("/api/<path:urlpath>", methods=["POST"])
+def load_user_from_request(urlpath):
+    api_key = request.headers.get('Authorization')
+    if api_key:
+        api_key = api_key.replace('Basic ', '', 1)
+        try:
+            api_key = b64decode(api_key)
+        except TypeError:
+            pass
+        username, password = api_key.decode(encoding="UTF-8").split(":")
+        if not ssh_login(username, password):
+            return abort(401)
+        from code.database.schema import User
+        user = User.query.filter_by(login=username).first()
+        login_user(user, True)
+        urlpath = "/%s" % urlpath
+        print(urlpath)
+        return redirect(urlpath, code=307)
+    return None
 
 
 @bp.route("/login", methods=["GET", "POST"])
