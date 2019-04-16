@@ -41,7 +41,8 @@ class Extensions:
             return self.records()
         return self.queue.filter_by(id=self.id).one()
 
-    def _process(self, record):
+    @staticmethod
+    def _process(record):
         record.processed = True
         record.approve = current_user
         from code import db
