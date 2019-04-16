@@ -537,6 +537,18 @@ class Tasks(db.Model):
         act = act[0].upper() + act[1:]
         return act
 
+    def api(self):
+        act, user, task = self.action.split("|")
+        return {
+            "id": self.id,
+            "notify": self.author.email if self.author else "",
+            "pid": self.pid if self.pid else "",
+            "uid": self.uid if self.uid else "",
+            "action": act,
+            "user": user,
+            "task": task
+        }
+
     def to_dict(self):
         if self.done:
             status = "done"
