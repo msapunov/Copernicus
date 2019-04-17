@@ -10,6 +10,21 @@ __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
 
 
+def processed_resource(pid):
+    project = get_project_record(pid)
+    if project.resources.treated:
+        raise ValueError("Resources for the project has been already processed")
+    project.resources.treated = True
+    from code import db
+    db.session.commit()
+    return project.api_resources()
+
+def pending_resources():
+    from code.database.schema import Project
+    projects = Project.query.all()
+    pending = list(filter(lambda x: x.resources.treated == False, projects))
+    return list(map(lambda x: x.api_resources(), pending))
+
 def get_users(pid):
 
     projects = get_project_info(p_ids=[pid])
