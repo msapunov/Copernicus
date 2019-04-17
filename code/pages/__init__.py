@@ -171,7 +171,7 @@ class Task:
         self.task.processed = True
         self.task.approve = current_user
         self._commit()
-        return self
+        return self.task
 
     @staticmethod
     def _commit():
