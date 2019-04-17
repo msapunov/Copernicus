@@ -75,7 +75,7 @@ def task_mail(action, task):
     description = task.description()
     tid = task.id
     to = current_app.config["EMAIL_TECH"]
-    title = "Task id '%s' has been %s" % (tid, action)
+    title = "Task id '%s' has been %sed" % (tid, action)
     msg = "Task '%s' with id '%s' has been %s" % (description, tid, action)
     return message(to, msg, title)
 
