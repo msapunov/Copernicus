@@ -166,6 +166,15 @@ class Task:
     def action(self):
         return self.task.action
 
+    def notify(self):
+        description = self.description()
+        tid = self.id
+        to = self.task.author.email
+        action = self.task.decision
+        title = "Task id '%s' has been %sed" % (tid, action)
+        msg = "Task '%s' with id '%s' has been %s" % (description, tid, action)
+        return send_message(to, title=title, message=msg)
+
     def _action(self):
         print(self.task.id)
         self.task.processed = True
