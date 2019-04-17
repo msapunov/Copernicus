@@ -1,7 +1,7 @@
 from flask import g, flash, request, redirect, url_for, render_template, jsonify
 from flask import current_app
 from flask_login import login_required, login_user
-from code.pages import ssh_wrapper, check_int, send_message
+from code.pages import ssh_wrapper, send_message, Task
 from code.pages.admin import bp
 from code.pages.admin.magic import remote_project_creation_magic, get_users
 from code.pages.admin.magic import get_responsible, get_registration_record
@@ -67,23 +67,23 @@ def admin_extension_todo():
 
 @bp.route("/admin/tasks/ignore/<int:tid>", methods=["POST"])
 @login_required
-def web_admin_tasks_ignore():
-    task_action("ignore")
-    return web_admin_tasks_list()
+def web_admin_tasks_ignore(tid):
+    Task(tid).ignore()
+    return jsonify(data=TaskManager().list())
 
 
 @bp.route("/admin/tasks/reject/<int:tid>", methods=["POST"])
 @login_required
-def web_admin_tasks_reject():
-    task_action("reject")
-    return web_admin_tasks_list()
+def web_admin_tasks_reject(tid):
+    Task(tid).reject()
+    return jsonify(data=TaskManager().list())
 
 
 @bp.route("/admin/tasks/accept/<int:tid>", methods=["POST"])
 @login_required
-def web_admin_tasks_accept():
-    task_action("accept")
-    return web_admin_tasks_list()
+def web_admin_tasks_accept(tid):
+    Task(tid).accept()
+    return jsonify(data=TaskManager().list())
 
 
 @bp.route("/admin/tasks/history", methods=["POST"])
@@ -107,7 +107,7 @@ def web_admin_tasks_list():
 @bp.route("/admin/tasks/done/<int:tid>", methods=["POST"])
 @login_required
 def admin_tasks_done(tid):
-    return jsonify(data=TaskManager().process(tid))
+    return jsonify(data=Task(tid).done())
 
 
 """
