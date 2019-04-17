@@ -153,6 +153,7 @@ class Task:
 
     def accept(self):
         self.task.decision = "accept"
+        self.notify()
         return self._action()
 
     def ignore(self):
@@ -161,6 +162,7 @@ class Task:
 
     def reject(self):
         self.task.decision = "reject"
+        self.notify()
         return self._action()
 
     def action(self):
