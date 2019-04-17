@@ -30,8 +30,10 @@ def delete_user(task):
 
 
 def task_action(action):
+
     if action not in ["accept", "reject", "ignore"]:
         raise ValueError("Action %s is unknown" % action)
+
     task = get_task()
     task.processed = True
     task.decision = action
