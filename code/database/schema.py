@@ -93,6 +93,17 @@ class Project(db.Model):
         genre = self.type
         return "%s%s" % (genre, str(pid).zfill(3))
 
+    def api_resources(self):
+        return {
+            "cpu": self.resources.cpu,
+            "finish": self.resources.ttl.strftime("%Y-%m-%d %X"),
+            "start": self.resources.created.strftime("%Y-%m-%d %X"),
+            "email": self.responsible.email,
+            "name": self.responsible.full_name(),
+            "pid": self.id,
+            "project": self.get_name()
+        }
+
     def to_dict(self):
         if self.created:
             created = self.created.strftime("%Y-%m-%d %X %Z")
@@ -132,7 +143,7 @@ class Project(db.Model):
             "responsible": self.responsible.to_dict(),
             "responsible_login": self.responsible.login,
             "files": self.files,
-            "articles": self.articles,
+            "articles": self.articles if self.articles else "",
             "users": list(map(lambda x: x.to_dict(), self.users)),
             "approve": self.approve.to_dict(),
             "resources": self.resources.to_dict(),
