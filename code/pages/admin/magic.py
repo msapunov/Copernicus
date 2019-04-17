@@ -59,16 +59,37 @@ def get_task():
     return task
 
 
-def tasks_list(every=False):
-    from code.database.schema import Tasks
+class TaskManager:
 
-    if every:
-        tasks = Tasks().query.all()
-    else:
-        tasks = Tasks().query.filter(Tasks.processed == False).all()
-    if not tasks:
-        return []
-    return list(map(lambda x: x.to_dict(), tasks))
+    def __init__(self):
+        from code.database.schema import Tasks
+
+        self.query = Tasks().query
+        self.tasks = Tasks
+
+    def history(self):
+        return self.process()
+
+    def todo(self):
+        self.query = self.query.filter(
+            self.tasks.processed == True
+        ).filter(
+            self.tasks.done == False
+        )
+        tasks = self.query.all()
+        return list(map(lambda x: x.api(), tasks)) if tasks else []
+
+    def list(self):
+        self.query = self.query.filter(
+            self.tasks.processed == False
+        ).filter(
+            self.tasks.done == False
+        )
+        return self.process()
+
+    def process(self):
+        tasks = self.query.all()
+        return list(map(lambda x: x.to_dict(), tasks)) if tasks else []
 
 
 def task_mail(action, task):
@@ -78,6 +99,8 @@ def task_mail(action, task):
     title = "Task id '%s' has been %sed" % (tid, action)
     msg = "Task '%s' with id '%s' has been %s" % (description, tid, action)
     return message(to, msg, title)
+
+#  Project registration logic below
 
 
 def remote_project_creation_magic(name, users):
