@@ -65,21 +65,21 @@ def admin_extension_todo():
     return jsonify(data=pending_resources())
 
 
-@bp.route("/admin/tasks/ignore", methods=["POST"])
+@bp.route("/admin/tasks/ignore/<int:tid>", methods=["POST"])
 @login_required
 def web_admin_tasks_ignore():
     task_action("ignore")
     return web_admin_tasks_list()
 
 
-@bp.route("/admin/tasks/reject", methods=["POST"])
+@bp.route("/admin/tasks/reject/<int:tid>", methods=["POST"])
 @login_required
 def web_admin_tasks_reject():
     task_action("reject")
     return web_admin_tasks_list()
 
 
-@bp.route("/admin/tasks/accept", methods=["POST"])
+@bp.route("/admin/tasks/accept/<int:tid>", methods=["POST"])
 @login_required
 def web_admin_tasks_accept():
     task_action("accept")
@@ -104,7 +104,7 @@ def web_admin_tasks_list():
     return jsonify(data=TaskManager().list())
 
 
-@bp.route("/admin/tasks/processed/<int:tid>", methods=["POST"])
+@bp.route("/admin/tasks/done/<int:tid>", methods=["POST"])
 @login_required
 def admin_tasks_done(tid):
     return jsonify(data=TaskManager().process(tid))
