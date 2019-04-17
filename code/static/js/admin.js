@@ -389,6 +389,7 @@
         }else if(action=="reject"){
             url = window.admin.url.tasks_reject;
         }
+        url += "/" + id;
         json_send(url, {task: id}, true).done(function(data){
             $("#taks_queue_length").text(data.data.length);
             var tr = $(btn).closest("tr").eq(0);
