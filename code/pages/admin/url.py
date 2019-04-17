@@ -96,7 +96,7 @@ def web_admin_tasks_history():
 def web_admin_tasks_list():
     return jsonify(data=tasks_list())
 
-
+"""
 @bp.route("/admin/registration/users", methods=["POST"])
 @login_required
 def web_admin_registration_users():
@@ -186,7 +186,7 @@ def web_admin_message():
     if not register:
         raise ValueError("Project with id %s not found" % pid)
     return jsonify(data=message(register.responsible_email, note))
-
+"""
 
 @bp.route("/admin/partition/info", methods=["POST"])
 @login_required
