@@ -163,7 +163,8 @@ class Task:
         self._commit()
         return self
 
-    def _commit(self):
+    @staticmethod
+    def _commit():
         from code import db
         db.session.commit()
 
