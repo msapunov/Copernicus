@@ -65,12 +65,6 @@ def admin_extension_todo():
     return jsonify(data=pending_resources())
 
 
-@bp.route("/admin/tasks/todo", methods=["POST"])
-@login_required
-def web_admin_tasks_execute():
-    return task_execute()
-
-
 @bp.route("/admin/tasks/ignore", methods=["POST"])
 @login_required
 def web_admin_tasks_ignore():
