@@ -9,8 +9,7 @@ from code.pages.admin.magic import is_user_exists, get_pid_notes, get_uptime
 from code.pages.admin.magic import slurm_partition_info, project_creation_magic
 from code.pages.admin.magic import project_assign_resources, get_mem, message
 from code.pages.admin.magic import accept_message, reject_message, TaskManager
-from code.pages.admin.magic import get_ltm, task_action, task_execute
-from code.pages.board.magic import Extensions
+from code.pages.admin.magic import get_ltm, task_action
 from code.pages.project.magic import pending_resources, processed_resource
 from logging import info, debug
 
@@ -109,6 +108,13 @@ def web_admin_tasks_todo():
 @login_required
 def web_admin_tasks_list():
     return jsonify(data=TaskManager().list())
+
+
+@bp.route("/admin/tasks/processed/<int:tid>", methods=["POST"])
+@login_required
+def admin_tasks_done(tid):
+    return jsonify(data=TaskManager().process(tid))
+
 
 """
 @bp.route("/admin/registration/users", methods=["POST"])
