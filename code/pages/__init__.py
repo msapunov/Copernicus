@@ -138,6 +138,11 @@ class Task:
     def is_processed(self):
         return self.task.processed
 
+    def process(self):
+        self.task.processed = True
+        self._commit()
+        return self
+
     def description(self):
         return self.task.description()
 
