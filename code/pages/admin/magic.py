@@ -1,8 +1,5 @@
 from flask import current_app, request
-from flask_login import current_user
-from code.pages import check_int, ssh_wrapper, send_message, check_str
-from code.pages.project.magic import get_project_record
-from code.pages.user.magic import get_user_record
+from code.pages import check_int, ssh_wrapper, send_message, check_str, Task
 from logging import error, debug
 from operator import attrgetter
 
@@ -50,12 +47,10 @@ def get_task():
         raise ValueError("Expecting application/json requests")
     tid = check_int(data["task"])
 
-    from code.database.schema import Tasks
-
-    task = Tasks().query.filter_by(id=tid).first()
+    task = Task(tid)
     if not task:
         raise ValueError("No task with id %s found" % tid)
-    if task.processed == True:
+    if task.is_processed():
         raise ValueError("Task with id %s has been already processed" % tid)
     return task
 
