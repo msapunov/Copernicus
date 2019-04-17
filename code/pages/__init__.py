@@ -143,6 +143,11 @@ class Task:
         self._commit()
         return self
 
+    def done(self):
+        self.task.done = True
+        self._commit()
+        return self
+
     def description(self):
         return self.task.description()
 
