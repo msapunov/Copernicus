@@ -28,7 +28,6 @@ def load_user_from_request(urlpath):
         user = User.query.filter_by(login=username).first()
         login_user(user, True)
         urlpath = "/%s" % urlpath
-        print(urlpath)
         return redirect(urlpath, code=307)
     return None
 
