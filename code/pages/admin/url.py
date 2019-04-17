@@ -8,8 +8,10 @@ from code.pages.admin.magic import get_responsible, get_registration_record
 from code.pages.admin.magic import is_user_exists, get_pid_notes, get_uptime
 from code.pages.admin.magic import slurm_partition_info, project_creation_magic
 from code.pages.admin.magic import project_assign_resources, get_mem, message
-from code.pages.admin.magic import accept_message, reject_message, tasks_list
-from code.pages.admin.magic import get_ltm, task_action, task_mail, execute_task
+from code.pages.admin.magic import accept_message, reject_message, TaskManager
+from code.pages.admin.magic import get_ltm, task_action, task_execute
+from code.pages.board.magic import Extensions
+from code.pages.project.magic import pending_resources, processed_resource
 from logging import info, debug
 
 
@@ -88,13 +90,19 @@ def web_admin_tasks_accept():
 @bp.route("/admin/tasks/history", methods=["POST"])
 @login_required
 def web_admin_tasks_history():
-    return jsonify(data=tasks_list(True))
+    return jsonify(data=TaskManager().history())
+
+
+@bp.route("/admin/tasks/todo", methods=["POST"])
+@login_required
+def web_admin_tasks_todo():
+    return jsonify(data=TaskManager().todo())
 
 
 @bp.route("/admin/tasks/list", methods=["POST"])
 @login_required
 def web_admin_tasks_list():
-    return jsonify(data=tasks_list())
+    return jsonify(data=TaskManager().list())
 
 """
 @bp.route("/admin/registration/users", methods=["POST"])
@@ -244,5 +252,5 @@ def web_admin():
         result["extension"] = False
     else:
         result["extension"] = list(map(lambda x: x.to_dict(), reg_list))
-    result["tasks"] = tasks_list()
+    result["tasks"] = TaskManager().list()
     return render_template("admin.html", data=result)
