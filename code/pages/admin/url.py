@@ -54,6 +54,12 @@ def web_admin_message_send():
     return jsonify(data=send_message(emails, message=msg, title=title))
 
 
+@bp.route("/admin/extension/processed/<int:pid>", methods=["POST"])
+@login_required
+def admin_extension_done(pid):
+    return jsonify(data=processed_resource(pid))
+
+
 @bp.route("/admin/extension/todo", methods=["POST"])
 @login_required
 def admin_extension_todo():
