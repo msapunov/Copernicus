@@ -58,32 +58,20 @@ def web_admin_message_send():
 @login_required
 def web_admin_tasks_ignore():
     task_action("ignore")
-
-    from code import db
-    db.session.commit()
     return web_admin_tasks_list()
 
 
 @bp.route("/admin/tasks/reject", methods=["POST"])
 @login_required
 def web_admin_tasks_reject():
-    task = task_action("reject")
-    task_mail("reject", task)
-
-    from code import db
-    db.session.commit()
+    task_action("reject")
     return web_admin_tasks_list()
 
 
 @bp.route("/admin/tasks/accept", methods=["POST"])
 @login_required
 def web_admin_tasks_accept():
-    task = task_action("accept")
-    execute_task(task)
-    task_mail("accept", task)
-
-    from code import db
-    db.session.commit()
+    task_action("accept")
     return web_admin_tasks_list()
 
 
