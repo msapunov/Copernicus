@@ -187,7 +187,7 @@ class TaskQueue:
             raise ValueError("Can't add a user to none existent project")
         self.task.limbo_user = user
         self.task.action = "create|%s||%s" % (self.task.limbo_user.login,
-                                           self.task.project.get_name())
+                                              self.task.project.get_name())
         self._user_action()
 
     def user_assign(self, user):
@@ -195,7 +195,7 @@ class TaskQueue:
             raise ValueError("Can't assign a user to none existent project")
         self.task.limbo_user = self._copy_user(user)
         self.task.action = "assign|%s|%s" % (self.task.limbo_user.login,
-                                              self.task.project.get_name())
+                                             self.task.project.get_name())
         self._user_action()
 
     def responsible_assign(self, user):
@@ -204,7 +204,7 @@ class TaskQueue:
                              " project")
         self.task.limbo_user = self._copy_user(user)
         self.task.action = "assign|%s|%s" % (self.task.limbo_user.login,
-                                              self.task.project.get_name())
+                                             self.task.project.get_name())
         self._user_action()
 
     def user_update(self, data):
@@ -222,7 +222,7 @@ class TaskQueue:
             raise ValueError("Can't delete a user from none existent project")
         self.task.limbo_user = self._copy_user(user)
         self.task.action = "remove|%s|%s" % (self.task.limbo_user.login,
-                                              self.task.project.get_name())
+                                             self.task.project.get_name())
         self._user_action()
 
     @staticmethod
