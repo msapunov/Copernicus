@@ -35,11 +35,15 @@ def task_action(action):
         raise ValueError("Action %s is unknown" % action)
 
     task = get_task()
-    task.processed = True
-    task.decision = action
-    task.approve = current_user
-    if action in ["reject", "ignore"]:
-        task.done = True
+    if action == "reject":
+        task_mail("reject", task)
+        return task.reject()
+    elif action == "ignore":
+        return task.ignore()
+
+    task_mail("accept", task)
+    task.accept()
+
     return task
 
 
