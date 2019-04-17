@@ -4,6 +4,7 @@ from code.pages import check_int, ssh_wrapper, send_message, check_str
 from code.pages.project.magic import get_project_record
 from code.pages.user.magic import get_user_record
 from logging import error, debug
+from operator import attrgetter
 
 
 __author__ = "Matvey Sapunov"
@@ -67,10 +68,16 @@ class TaskManager:
         self.query = Tasks().query
         self.tasks = Tasks
 
-    def history(self):
-        return self.process()
+    def history(self, reverse=True):
+        # Returns a list of all tasks registered in the system. by default
+        # the records are sorted by date in descending order
+        tasks = sorted(self.query.all(), key=attrgetter("created"),
+                       reverse=reverse)
+        return list(map(lambda x: x.to_dict(), tasks)) if tasks else []
 
     def todo(self):
+        # Returns a list of tasks which has been processed by admins but haven't
+        # been performed either by human or most likely by another code
         self.query = self.query.filter(
             self.tasks.processed == True
         ).filter(
@@ -80,14 +87,13 @@ class TaskManager:
         return list(map(lambda x: x.api(), tasks)) if tasks else []
 
     def list(self):
+        # Returns a list of unprocessed tasks, i.e. a task has been created by
+        # a user but admins haven't had time yet to check it out
         self.query = self.query.filter(
             self.tasks.processed == False
         ).filter(
             self.tasks.done == False
         )
-        return self.process()
-
-    def process(self):
         tasks = self.query.all()
         return list(map(lambda x: x.to_dict(), tasks)) if tasks else []
 
