@@ -8,24 +8,12 @@ __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
 
 
-def execute_task(task):
-    if task.done:
-        raise ValueError("Task '%s' seems to be processed already" % task.id)
-    if task.action not in ["create", "update", "delete"]:
-        raise ValueError("Inconsistency in the DB for task id: %s" % task.id)
-    if task.action == "delete":
-        delete_user(task)
-
-
-def delete_user(task):
-    if not task.limbo_user:
-        raise ValueError("")
-    if not task.limbo_project:
-        raise ValueError("")
-    project = get_project_record(task.limbo_project.ref_id)
-    user = get_user_record(task.limbo_user.login)
-    project.users.remove(user)
-    task.done = True
+def task_execute():
+    task = get_task()
+    act = task.action()
+    actions = [""]
+    if not list(filter(lambda x: x in act, actions)):
+        raise ValueError
     return task
 
 
