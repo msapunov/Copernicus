@@ -8,15 +8,6 @@ __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
 
 
-def task_execute():
-    task = get_task()
-    act = task.action()
-    actions = [""]
-    if not list(filter(lambda x: x in act, actions)):
-        raise ValueError
-    return task
-
-
 def task_action(action):
 
     if action not in ["accept", "reject", "ignore"]:
