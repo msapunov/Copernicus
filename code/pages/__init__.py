@@ -141,12 +141,12 @@ class Task:
     def process(self):
         self.task.processed = True
         self._commit()
-        return self
+        return True
 
     def done(self):
         self.task.done = True
         self._commit()
-        return self
+        return True
 
     def description(self):
         return self.task.description()
