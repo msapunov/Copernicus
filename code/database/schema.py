@@ -100,7 +100,7 @@ class Project(db.Model):
             "start": self.resources.created.strftime("%Y-%m-%d %X"),
             "email": self.responsible.email,
             "name": self.responsible.full_name(),
-            "pid": self.id,
+            "id": self.id,
             "project": self.get_name()
         }
 
