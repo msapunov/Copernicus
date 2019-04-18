@@ -175,7 +175,7 @@
     window.render.tasks = function(){
         json_send(window.admin.url.tasks).done(function(data){
             if(data.data.length < 1){
-                UIkit.notify("No pending tasks found!",{timeout: 2000, status:"primary"});
+                UIkit.notify("No new pending tasks found!",{timeout: 2000, status:"primary"});
             }else{
 
                 var table = $("<table/>").addClass(
