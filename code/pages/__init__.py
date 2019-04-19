@@ -268,6 +268,20 @@ class TaskQueue:
                                              self.task.project.get_name())
         self._user_action()
 
+    def _copy_user(self, user):
+        from code import db
+        from code.database.schema import LimboUser
+        from code.database.schema import User
+
+        data = {k: getattr(user, k) for k in db.inspect(User).columns.keys()}
+        del data["id"], data["created"], data["modified"]
+
+        limbo = LimboUser(**data)
+        limbo.reference = user
+
+        db.session.add(limbo)
+        return limbo
+
     @staticmethod
     def _copy_project(project):
         from code import db
@@ -292,24 +306,6 @@ class TaskQueue:
         db.session.add(limbo)
         return limbo
 
-    @staticmethod
-    def _copy_user(user):
-        from code import db
-        from code.database.schema import LimboUser
-        limbo = LimboUser(
-            name=user.name,
-            surname=user.surname,
-            email=user.email,
-            phone=user.phone,
-            lab=user.lab,
-            position=user.position,
-            login=user.login,
-            active=user.active,
-            comment=user.comment,
-            reference=user
-        )
-        db.session.add(limbo)
-        return limbo
 
     def _user_action(self):
         self.processed = True
