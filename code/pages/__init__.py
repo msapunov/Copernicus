@@ -168,6 +168,7 @@ class Task:
     def done(self):
         self.task.done = True
         self._commit()
+        self._execute()
         return True
 
     def description(self):
