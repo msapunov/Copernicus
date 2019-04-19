@@ -254,6 +254,7 @@ class TaskQueue:
     def user_update(self, data):
         if not self.task.user:
             raise ValueError("Can't update information of unset user")
+        self.task.limbo_user = self._copy_user(self.task.user)
         act = []
         for key, value in data.items():
             act.append("%s: %s" % (key, value))
