@@ -257,7 +257,9 @@ class TaskQueue:
         self.task.limbo_user = self._copy_user(self.task.user)
         act = []
         for key, value in data.items():
-            act.append("%s: %s" % (key, value))
+            if hasattr(self.task.limbo_user, key):
+                setattr(self.task.limbo_user, key, value)
+                act.append("%s: %s" % (key, value))
         act = " and ".join(act)
         self.task.action = "update|%s|%s" % (self.task.user.login, act)
         self._user_action()
