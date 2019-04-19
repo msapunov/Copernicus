@@ -673,6 +673,7 @@ class LimboUser(db.Model):
     created = db.Column(db.DateTime(True))
     ref_id = db.Column(db.Integer, db.ForeignKey("users.id"))
     reference = db.relationship("User", foreign_keys=ref_id)
+    acl_id = db.Column(db.Integer, db.ForeignKey("acl.id"))
 
     def __repr__(self):
         return '<Limbo User {}>'.format(self.login)
