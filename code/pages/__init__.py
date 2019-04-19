@@ -178,7 +178,6 @@ class Task:
         return send_message(to, title=title, message=msg)
 
     def _action(self):
-        print(self.task.id)
         self.task.processed = True
         self.task.approve = current_user
         self._commit()
