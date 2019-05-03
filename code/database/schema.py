@@ -383,6 +383,21 @@ class Register(db.Model):
     def __repr__(self):
         return "<Registration request {}>".format(self.id)
 
+    def _parse_user_rec(self, record):
+        tmp = {}
+        info = record.split(";")
+        for i in info:
+            j = i.split(":")
+            if "First Name" in j[0]:
+                tmp["name"] = j[1].strip()
+            elif "Last Name" in j[0]:
+                tmp["last"] = j[1].strip()
+            elif "E-mail" in j[0]:
+                tmp["mail"] = j[1].strip()
+            else:
+                tmp["login"] = j[1].strip()
+        return tmp
+
     def project_type(self):
         return self.type.upper()
 
@@ -394,18 +409,10 @@ class Register(db.Model):
         users = self.users.split("\n")
         result = []
         for user in users:
-            tmp = {}
-            info = user.split(";")
-            for i in info:
-                j = i.split(":")
-                if "First Name" in j[0]:
-                    tmp["name"] = j[1].strip()
-                elif "Last Name" in j[0]:
-                    tmp["last"] = j[1].strip()
-                elif "E-mail" in j[0]:
-                    tmp["mail"] = j[1].strip()
-                else:
-                    tmp["login"] = j[1].strip()
+            try:
+                tmp = self._parse_user_rec(user)
+            except:
+                continue
             result.append(tmp)
         return result
 
