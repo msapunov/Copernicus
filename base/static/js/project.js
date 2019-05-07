@@ -74,13 +74,13 @@ function reduce_to_names(initial, object){
     };
 
     window.render.check_positive = function(is_num, message){
-        var msg = "{0} must be a positive number".f(message)
+        var msg = "{0} must be a positive number".f(message);
         if(!/^\d+$/.test(is_num)){
             alert(msg);
             return false;
         }
         return true;
-    }
+    };
 
     window.render.paint_red = function(data){
         var regex = new RegExp("^[\\s\\0\\n\\r\\t\\v]+$");
@@ -92,7 +92,7 @@ function reduce_to_names(initial, object){
             }
         });
         return result
-    }
+    };
 
     window.render.new_user = function(e){
         var p_name = $(this).data("name");
@@ -142,7 +142,7 @@ function reduce_to_names(initial, object){
                 window.render.user_reshuffle(reply, {"name": p_name, "id": id})
             });
         });
-    }
+    };
 
     window.render.extend = function(e){
         var name = $(this).data("name");
@@ -158,7 +158,7 @@ function reduce_to_names(initial, object){
             "rows": "4",
             "name": "note",
             "placeholder": placeholder
-        })
+        });
         var checkbox = $("<input>").attr({
             "id": "exception_checkbox",
             "name": "exception",
@@ -205,7 +205,7 @@ function reduce_to_names(initial, object){
                 pop.hide();
             });
         });
-    }
+    };
 
     window.render.transform_project = function(e){
         var name = $(this).data("name");
@@ -216,7 +216,7 @@ function reduce_to_names(initial, object){
             "rows": "4",
             "name": "note",
             "placeholder": placeholder
-        })
+        });
         var form = $("<form/>").addClass("uk-form").append(
             $("<legend/>").text(title)
         ).append(
@@ -238,7 +238,7 @@ function reduce_to_names(initial, object){
                 pop.hide();
             });
         });
-    }
+    };
 
     window.render.activate_project = function(e){
         var name = $(this).data("name");
@@ -271,7 +271,7 @@ function reduce_to_names(initial, object){
                 pop.hide();
             });
         });
-    }
+    };
 
     window.render.remove_user = function(e){
         var id = $(this).data("pid");
@@ -287,7 +287,7 @@ function reduce_to_names(initial, object){
                 $("#"+uid).find(".uk-margin-small-left").addClass("uk-text-muted");
             });
         });
-    }
+    };
 
     window.render.assign_user = function(e){
         var name = $(this).data("name");
@@ -304,11 +304,11 @@ function reduce_to_names(initial, object){
             var data = {
                 "users": users,
                 "project": id
-            }
+            };
             var text = "You are about to add {0} to the project {1}. Are you sure?".f(fulls, name);
             window.render.user_confirmation(window.proj.url.user_assign, data, text, {"name": name, "id": id});
             return true;
-        })
+        });
         $("#"+sid).select2({
             ajax: {
                 delay: 250,
@@ -319,7 +319,7 @@ function reduce_to_names(initial, object){
             name: "users[]",
             multiple: "multiple"
         });
-    }
+    };
 
     window.render.assign_responsible = function(e){
         var name = $(this).data("name");
@@ -343,7 +343,7 @@ function reduce_to_names(initial, object){
             window.render.user_confirmation(window.proj.url.new_resp, data, text, {"name": name, "id": id});
             return true;
         });
-    }
+    };
 
     window.render.user_confirmation = function(url, data, text, p_object){
         var div = $("<h3/>").text(text);
@@ -356,7 +356,7 @@ function reduce_to_names(initial, object){
                 window.render.user_reshuffle(reply, p_object)
             });
         });
-    }
+    };
 
     window.render.del_button = function(project, user, disable){
         var btn = $("<button/>").attr({
@@ -374,7 +374,7 @@ function reduce_to_names(initial, object){
             btn.append($("<span/>").addClass("uk-icon-close"));
         }
         return btn
-    }
+    };
 
     window.render.history = function(data, title){
         var info = $("<table/>").addClass("uk-table uk-table-striped uk-table-condensed");
@@ -400,7 +400,7 @@ function reduce_to_names(initial, object){
         } else {
             modal.show();
         }
-    }
+    };
 
     window.render.project_history = function(e){
         var name = $(this).data("name");
@@ -414,7 +414,7 @@ function reduce_to_names(initial, object){
                 UIkit.modal.alert("No history found for project {0}".f(name));
             }
         });
-    }
+    };
 
     window.render.btn_reshuffle = function(proj, login){
         var id = "#{0}_{1}".f(proj, login);
@@ -425,7 +425,7 @@ function reduce_to_names(initial, object){
         if(btns.length == 1){
             btns[0].remove();
         }
-    }
+    };
 
     window.render.user_reshuffle = function(reply, p_object){
         var name = p_object.name;
@@ -463,7 +463,7 @@ function reduce_to_names(initial, object){
             );
             $(users_div).append(div);
         });
-    }
+    };
 
     $(document).on("click", ".user_ass", window.render.assign_user);
     $(document).on("click", ".user_add", window.render.new_user);
