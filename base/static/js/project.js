@@ -15,8 +15,6 @@ function date_warning(){
     }
     var end_date = end.format("Do of MMMM");
     var exam_date = end.add(EXAM_DAY, "days").format("Do of MMMM YYYY");
-    var fin_date = moment().add(1, "years").format("YYYY");
-
     return "Request submitted before the {0} will be examined the {1}.".f(end_date, exam_date);
 }
 
@@ -168,8 +166,6 @@ function reduce_to_names(initial, object){
         label.text("Select checkbox for an exceptional extension requests only! Apply for a project running out of CPU time way before the next session.");
         var express = $("<div/>").addClass(
             "uk-form-row uk-alert uk-alert-danger"
-//        ).text(
-//            "For any exceptional extension, send a mail directly to: mesocentre-aap@univ-amu.fr"
         );
         express.append(checkbox).append(label);
         var warn = "<div>" + date_warning() + "</div><div>" + end_warning() + "</div>";
