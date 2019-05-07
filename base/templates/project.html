@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+{% block head %}
+    <script src="{{ url_for('static', filename='js/moment-with-locales.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/project.js') }}"></script>
+    {% if current_user.login and "admin" not in current_user.permissions() %}
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+    {% endif %}
+{% endblock %}
+{% block main %}
+    {% if data.projects %}
+        {% for project in data.projects|sort(attribute='name') %}
+            <div class="uk-panel uk-width-1-1 uk-width-small-1-1 uk-panel-divider">
+                <h3 class="uk-panel-title">{{project.title}}</h3>
+            </div>
+            <div class="uk-width-medium-2-5 uk-width-small-1-1">
+                <div class="uk-panel uk-margin-top uk-margin-bottom">
+                    <div>Name: <b>{{project.name}}</b></div>
+                    <div>Status: <b>{% if project.active %}Active{% else %}Postponed{% endif %}</b></div>
+                    {% if project.created %}
+                        <div>Created: <b>{{project.created}}</b></div>
+                    {% endif %}
+                    {% if project.allocation_start %}
+                        <div>CPU allocation kickoff: <b>{{project.allocation_start}}</b></div>
+                    {% endif %}
+                    {% if project.allocation_end %}
+                        <div>CPU allocation deadline: <b>{{project.allocation_end}}</b></div>
+                    {% endif %}
+                    <div class="uk-margin-top">
+                        {% if project.consumption and project.usage %}
+                            CPU consumed: {{project.consumption}} out of {{project.resources.cpu}} ({{project.usage}})
+                        {% endif %}
+                        {% if project.usage %}
+                            {% set usage = project.usage[0:-1]|int %}
+                            {% set total = project.resources.cpu %}
+                            {% if total > 0 %}
+                                {% if usage > total %}
+                                    {% set color = "#da314b" %}
+                                    {% set style = "uk-progress-danger" %}
+                                {% elif usage > 60 %}
+                                    {% set color = "#faa732" %}
+                                    {% set style = "uk-progress-warning" %}
+                                {% elif usage < 10 %}
+                                    {% set color = "#8cc14c" %}
+                                    {% set style = "uk-progress-success" %}
+                                {% else %}
+                                    {% set color = "#00a8e6" %}
+                                    {% set style = "uk-progress-info" %}
+                                {% endif %}
+                            {% endif %}
+                        <div class="uk-width-small-1-1 uk-progress uk-progress-mini uk-progress-striped {{style}} uk-margin-small-top">
+                            <div class="uk-progress-bar" style="width: {{usage}}%;"></div>
+                        </div>
+                        {% else %}
+                            {% if project.resources.cpu %}
+                                <span class="uk-icon-exclamation-circle uk-margin-small-right uk-text-danger"></span>No CPU consumed out of {{project.resources.cpu}}
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="uk-width-medium-2-5 uk-width-small-1-1">
+                <div class="uk-panel uk-margin-top uk-margin-bottom" id="{{project.name}}_project_users">
+                {% for user in project.users|sort(attribute='fullname')%}
+                    <div class="uk-panel" id="{{project.name}}_{{user.login}}">
+                    {% if user.login != project.responsible_login and user.active == True %}
+                        <button class="uk-button uk-button-mini uk-button-link uk-text-danger remove uk-icon-justify"
+                        type="button" data-pid='{{project.id}}'
+                        data-name='{{user.fullname}}' data-login='{{user.login}}'
+                        data-project='{{project.name}}'>
+                        <span class="uk-icon-close"></span>
+                        </button>
+                    {% else %}
+                        <button class="uk-button uk-button-mini uk-button-link uk-text-warning uk-icon-justify"
+                        type="button" data-pid='{{project.id}}'
+                        data-name='{{user.fullname}}' data-login='{{user.login}}'
+                        data-project='{{project.name}}' disabled>
+                        </button>
+                    {% endif %}
+
+                        <span class={% if user.active == 'Suspended' %}"uk-margin-small-left uk-text-muted"{% else %}"uk-margin-small-left"{% endif %} title="{{user.email}}">
+                        {{user.fullname}}{% if user.consumption %} : {{user.consumption}} hours {% endif %}
+                        </span>
+
+                    </div>
+                {% endfor %}
+                </div>
+            </div>
+            <div class="uk-width-medium-1-5 uk-width-small-1-1">
+                <div class="uk-panel uk-margin-top uk-margin-bottom">
+                    {% if project.active %}
+                        <button class="uk-button uk-width-1-1 responsible_ass uk-button-danger uk-margin-small-bottom" data-project='{{project.id}}' data-name='{{project.name}}' type="button">Assign responsible</button>
+                        {% if project.type=='a' %}
+                            <button class="uk-button uk-width-1-1 trans uk-margin-small-bottom" data-project='{{project.id}}' data-name='{{project.name}}' type="button">Transform</button>
+                        {% else %}
+                            {% if data.renew %}
+                                <button class="uk-button uk-width-1-1 renew uk-margin-small-bottom" data-project='{{project.id}}' data-name='{{project.name}}' type="button">Renew&nbsp;project&nbsp;for&nbsp;{{data.renew}}</button>
+                            {% else %}
+                                <button class="uk-button uk-width-1-1 extend uk-margin-small-bottom" data-project='{{project.id}}' data-name='{{project.name}}' type="button">Extend&nbsp;project</button>
+                            {% endif %}
+                        {% endif %}
+                        <button class="uk-button uk-width-1-1 user_add uk-margin-small-bottom" data-project='{{project.id}}' data-name='{{project.name}}' type="button">Add user</button>
+                        <button class="uk-button uk-width-1-1 user_ass uk-margin-small-bottom" data-project='{{project.id}}' data-name='{{project.name}}' type="button">Assign user</button>
+                        <button class="uk-button uk-width-1-1 history uk-margin-small-bottom" data-project='{{project.id}}' data-name='{{project.name}}' type="button">History</button>
+                    {% else %}
+                        <button class="uk-button uk-width-1-1 react uk-margin-small-bottom" data-project='{{project.id}}' data-name='{{project.name}}' type="button">Activate project</button>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="uk-panel uk-width-medium-1-1 uk-width-small-1-1">
+                <ul class="uk-subnav uk-subnav-pill" data-uk-switcher="{connect:'#{{project.name}}-additional-info'}">
+                    <li class="uk-active"><a href="">Description</a></li>
+                    <li><a href="">Scientific fields</a></li>
+                    <li><a href="">Genci</a></li>
+                    <li><a href="">Methods</a></li>
+                    <li><a href="">Resources</a></li>
+                    <li><a href="">Management</a></li>
+                    <li><a href="">Motivation</a></li>
+                </ul>
+                <ul id="{{project.name}}-additional-info" class="uk-switcher">
+                    <li><article>{{project.description}}</article></li>
+                    <li><article>{{project.scientific_fields}}</article></li>
+                    <li><article>{{project.genci_committee}}</article></li>
+                    <li><article>{{project.numerical_methods}}</article></li>
+                    <li><article>{{project.computing_resources}}</article></li>
+                    <li><article>{{project.project_management}}</article></li>
+                    <li><article>{{project.project_motivation}}</article></li>
+                </ul>
+            </div>
+            <div class="uk-margin-large-bottom"></div>
+
+            {% if project.users|length > 1 %}
+                <div id="{{project.id}}_assign_list" class="uk-width-1-1" style="display: none;">
+                    <select class="admin_assign_select uk-width-1-1" data-placeholder="Select a user">
+                        {% for user in project.users|sort(attribute='fullname')%}
+                            {% if user.login != project.responsible_login and user.active == True %}
+                                <option value="{{user.login}}">{{user.fullname}}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+            {% else %}
+                <div id="{{project.id}}_assign_list" style="display: none;">
+                    <h3>You are the only user of this project. Please, add more users before re-assign the project's responsible</h3>
+                </div>
+            {% endif %}
+
+
+        {% endfor %}
+    {% endif %}
+{% endblock %}

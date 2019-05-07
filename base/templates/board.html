@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+{% block head %}
+
+    <script src="{{ url_for('static', filename='js/moment-with-locales.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/board.js') }}"></script>
+
+    <style>
+        .ext_info{
+            background-color: #ddd !important;
+        }
+        .glyphicon-plus {
+            cursor: pointer !important;
+        }
+        .glyphicon-minus {
+            cursor: pointer !important;
+        }
+    </style>
+{% endblock %}
+{% block main %}
+    {% if error %}
+        <div class="uk-panel uk-width-1-1 uk-panel-space">
+            <h1 class="uk-text-center">{{ error }}</h1>
+            <button class="uk-button global_history uk-align-center">
+                <span class="uk-icon-history uk-margin-small-right"></span>Project requests history
+            </button>
+        </div>
+    {% else %}
+        <div class="uk-panel uk-width-1-1 uk-panel-space treated uk-hidden">
+            <h1 class="uk-text-center">All new project requests are treated!</h1>
+            <button class="uk-button global_history uk-align-center">
+                <span class="uk-icon-history uk-margin-small-right"></span>Project requests history
+            </button>
+        </div>
+        <div class="uk-panel uk-width-1-1 uk-panel-space uk-overflow-container">
+            <div class="container" role="main">
+                <table id="ext_projects_table" class="uk-table uk-table-striped uk-table-condensed">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Project</th>
+                            <th>Responsible</th>
+                            <th>Present</th>
+                            <th>Use</th>
+                            <th>Extension</th>
+                            <th>Activate</th>
+                            <th>Transform</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                <tbody id="ext_result_records">
+                    {% for record in data|sort(attribute='created', reverse=True) %}
+                        <tr id="{{record.id}}">
+                            <td class="uk-width-1-10"><button class="uk-button uk-button-mini new_ext" type="button" data-id='{{record.id}}-info'><span class="uk-icon-plus"></span></button></td>
+                            <td class="uk-width-1-10">{{ record.project_name }}</td>
+                            <td class="uk-width-1-10 uk-text-nowrap">{{ record.responsible }}</td>
+                            <td class="uk-width-1-10">{{ record.total }}</td>
+                            <td class="uk-width-1-10">{{ record.usage }}</td>
+                            <td class="uk-width-1-10">{{ record.hours }}</td>
+                            <td class="uk-width-1-10">
+                                {% if record.activate %}
+                                    <span class="uk-icon-plus"></span>
+                                {% else %}
+                                    &nbsp;
+                                {% endif %}
+                            </td>
+                            <td class="uk-width-1-10">
+                                {% if record.transform %}
+                                    <span class="uk-icon-plus"></span>
+                                {% else %}
+                                    &nbsp;
+                                {% endif %}
+                            </td>
+                            <td class="uk-width-2-10">{{ record.created }}</td>
+                        </tr>
+                        <tr id="{{record.id}}-info" class="ext_info uk-hidden"> <!-- uk-text-center uk-hidden -->
+                            <td colspan="9">
+                                <table id="info_table" class="uk-table">
+                                    <tbody>
+                                        <tr class="ext_info">
+                                            <td class="uk-width-1-10 uk-text-right uk-text-bold uk-text-nowrap">CPU total:</td>
+                                            <td class="uk-width-9-10">{{ record.total }}</td>
+                                        </tr>
+                                        <tr class="ext_info">
+                                            <td class="uk-width-1-10 uk-text-right uk-text-bold uk-text-nowrap">CPU used:</td>
+                                            <td class="uk-width-9-10">{{ record.present_use }}</td>
+                                        </tr>
+                                        <tr class="ext_info">
+                                            <td class="uk-width-1-10 uk-text-right uk-text-bold uk-text-nowrap">CPU usage:</td>
+                                            <td class="uk-width-9-10">{{ record.usage }}</td>
+                                        </tr>
+                                        <tr class="ext_info">
+                                            <td class="uk-width-1-10 uk-text-right uk-text-bold uk-text-nowrap">CPU extension:</td>
+                                            <td class="uk-width-9-10">{{ record.hours }}</td>
+                                        </tr>
+                                        <tr class="ext_info">
+                                            <td class="uk-width-1-10 uk-text-right uk-text-bold uk-text-nowrap">Comments:</td>
+                                            <td class="uk-width-9-10">{{ record.reason }}</td>
+                                        </tr>
+                                        <tr class="ext_info">
+                                            <td class="uk-width-1-10 uk-text-right uk-text-bold uk-text-nowrap">Exceptional extension:</td>
+                                            <td class="uk-width-9-10">{{ record.exception }}</td>
+                                        </tr>
+                                        <tr class="ext_info">
+                                            <td>
+                                                <div class="uk-button-group uk-margin-top">
+                                                    <button class="uk-button history"  data-pid="{{record.project}}" data-name="{{record.project_name}}">
+                                                        <span class="uk-icon-history uk-margin-small-right"></span>History
+                                                    </button>
+                                                    <button class="uk-button contact" data-login="{{record.responsible_login}}">
+                                                        <span class="uk-icon-commenting uk-margin-small-right"></span>Contact
+                                                    </button>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="uk-button-group uk-float-right uk-margin-top">
+                                                    <button class="uk-button accept" data-id="{{record.id}}" data-pid="{{record.project}}" data-name="{{record.project_name}}" data-act="{{record.activate}}" data-trans="{{record.transform}}" data-cpu="{{record.hours}}"  data-extend="{{record.extension}}">
+                                                        <span class="uk-icon-thumbs-o-up uk-margin-small-right"></span>Accept
+                                                    </button>
+                                                    <button class="uk-button ignore" data-id="{{record.id}}" data-pid="{{record.project}}" data-name="{{record.project_name}}" data-act="{{record.activate}}" data-trans="{{record.transform}}">
+                                                        <span class="uk-icon-thumbs-o-down uk-margin-small-right"></span>Ignore
+                                                    </button>
+                                                    <button class="uk-button uk-button-danger reject" data-id="{{record.id}}" data-pid="{{record.project}}" data-name="{{record.project_name}}" data-act="{{record.activate}}" data-trans="{{record.transform}}">
+                                                        <span class="uk-icon-thumbs-down uk-margin-small-right"></span>Reject
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}
