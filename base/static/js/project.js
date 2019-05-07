@@ -440,8 +440,8 @@ function reduce_to_names(initial, object){
             if(!value.active){
                 return true;
             }
-            var btn_rndr = (value.active == "Suspended") ? true : false;
-            var btn = window.render.del_button({id: pid, name: name}, value, btn_rndr)
+            var btn_rndr = (value.active == "Suspended");
+            var btn = window.render.del_button({id: pid, name: name}, value, btn_rndr);
             var id = "{0}_{1}".f(name, value.login);
             if(value.consumption){
                 var info = "{0}: {1}".f(value.fullname, value.consumption);
