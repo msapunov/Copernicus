@@ -18,11 +18,13 @@ def processed_resource(pid):
     db.session.commit()
     return project.api_resources()
 
+
 def pending_resources():
     from base.database.schema import Project
     projects = Project.query.all()
     pending = list(filter(lambda x: x.resources.treated == False, projects))
     return list(map(lambda x: x.api_resources(), pending))
+
 
 def get_users(pid):
 
