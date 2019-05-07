@@ -106,14 +106,14 @@ def extend_update():
     else:
         raise ValueError("Comment is absent")
 
-    if "exception" in data:
-        if check_str(data["exception"]) == "yes":
-            exception = True
-        else:
-            exception = False
+    if ("exception" in data) and (check_str(data["exception"]) == "yes"):
+        exception = True
+    else:
+        exception = False
 
     extend = is_extension()
-    if not extend and exception: # Make sure that exceptional extension are extention no matter when
+    # Make sure that exceptional extension are extension no matter when
+    if not extend and exception:
         extend = True
 
     project = get_project_record(pid)
