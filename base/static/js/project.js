@@ -44,7 +44,7 @@ function reduce_to_names(initial, object){
         add: "project/add/user",
         assign: "project/assign/user",
         new_resp: "project/assign/responsible",
-        user_assign: "/project/assign/user",
+        user_assign: "project/assign/user",
         user_list: "user/list",
         extend: "project/extend",
         delete: "project/delete/user",
