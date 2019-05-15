@@ -27,8 +27,8 @@ def load_user_from_request(urlpath):
         from base.database.schema import User
         user = User.query.filter_by(login=username).first()
         login_user(user, True)
-        if ("SCRIPT" in request.environ) and request.environ["SCRIPT"]:
-            urlpath = "%s/%s" % (request.environ["SCRIPT"], urlpath)
+        if ("SCRIPT_NAME" in request.environ) and request.environ["SCRIPT_NAME"]:
+            urlpath = "%s/%s" % (request.environ["SCRIPT_NAME"], urlpath)
         else:
             urlpath = "/%s" % urlpath
         return redirect(urlpath, code=307)
