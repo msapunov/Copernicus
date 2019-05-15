@@ -57,9 +57,11 @@ class TaskManager:
 
     def todo(self):
         # Returns a list of tasks which has been processed by admins but haven't
-        # been performed either by human or most likely by another base
+        # been performed by a script
         self.query = self.query.filter(
             self.tasks.processed == True
+        ).filter(
+            self.tasks.decision == "accept"
         ).filter(
             self.tasks.done == False
         )
