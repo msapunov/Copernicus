@@ -15,7 +15,7 @@ __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
 
 
-@bp.route("/project/overview/annie", methods=["POST", "GET"])
+@bp.route("/project/overview/annie", methods=["POST"])
 @login_required
 def project_overview_annie():
     result = get_project_overview()
