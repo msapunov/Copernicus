@@ -178,6 +178,21 @@ def project_email(to, title, msg):
                                      message=msg))
 
 
+def get_project_overview():
+    from base.database.schema import Project
+
+    def extract_info(rec):
+        name = rec.get_name()
+        start = rec.resources.created.strftime("%Y-%m-%d")
+        finish = rec.resources.ttl.strftime("%Y-%m-%d")
+        total = rec.resources.cpu
+        responsible = rec.responsible.login
+        return "%s %s %s %s %s" % (name, start, finish, total, responsible)
+
+    projects = Project.query.all()
+    return list(map(lambda x: extract_info(x), projects))
+
+
 def get_project_info(start=None, end=None, p_ids=None):
     from base.database.schema import Project
 
