@@ -4,6 +4,7 @@ from base.pages import ProjectLog, check_int, check_str, check_mail, TaskQueue
 from base.pages import generate_login
 from base.pages.user import bp
 from base.pages.project.magic import get_project_info, get_project_record
+from base.pages.project.magic import get_project_overview
 from base.pages.project.magic import extend_update, get_limbo_users, get_users
 from base.pages.user.magic import get_user_record
 from datetime import datetime as dt
@@ -12,6 +13,13 @@ from operator import attrgetter
 
 __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
+
+
+@bp.route("/project/overview/annie", methods=["POST", "GET"])
+@login_required
+def project_overview_annie():
+    result = get_project_overview()
+    return jsonify(data=result)
 
 
 @bp.route("/project/add/user", methods=["POST"])
