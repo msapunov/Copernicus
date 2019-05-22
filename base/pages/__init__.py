@@ -128,11 +128,11 @@ def check_alnum(raw_note):
 
 class Task:
 
-    def __init__(self, id):
+    def __init__(self, tid):
         from base.database.schema import Tasks
-        task = Tasks().query.filter_by(id=id).first()
+        task = Tasks().query.filter_by(id=tid).first()
         if not task:
-            raise ValueError("No task with id %s found" % id)
+            raise ValueError("No task with id %s found" % tid)
         self.task = task
         self.id = task.id
 
