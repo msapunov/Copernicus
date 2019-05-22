@@ -16,7 +16,6 @@
         tasks_reject: "admin/tasks/reject",
         user: "admin/user/info"
     };
-
     window.admin.sys = function(){
         json_send(window.admin.url.system).done(function(data){
             if(!data){
@@ -32,7 +31,6 @@
             system_body.html(tmp_div);
         });
     };
-
     window.render = {};
     window.sort_by = function(field, reverse, primer){
         var key = primer ?
@@ -43,11 +41,9 @@
         return function (a, b) {
             return a = key(a), b = key(b), reverse * ((a > b) - (b > a));
         }
-    }
-
+    };
     window.render.task_h_info = function(){
-    }
-
+    };
     window.render.tasks_history = function(){
         json_send(window.admin.url.tasks_history).done(function(data){
             if(data.data.length < 1){
@@ -115,8 +111,7 @@
                 }
             }
         });
-    }
-
+    };
     window.render.task_row = function(val){
         var day = moment(val.created, "YYYY-MM-DD HH:mm Z");
 
@@ -135,7 +130,7 @@
         tr.append(btn).append(act).append(data);
         return tr
 
-    }
+    };
     window.render.task_hidden_row = function(val){
 
         var btn_grp = $("<div/>").addClass(
@@ -170,8 +165,7 @@
         var tr_hdn = $("<tr/>").attr({"id": "task-"+val.id+"-child"});
         tr_hdn.addClass("ext_info uk-hidden");
         return tr_hdn.append(td_hdn)
-    }
-
+    };
     window.render.tasks = function(){
         json_send(window.admin.url.tasks).done(function(data){
             if(data.data.length < 1){
@@ -214,7 +208,7 @@
 
             }
         });
-    }
+    };
     window.render.sys = function(data){
         var div = $("<div/>");
         $("<h3/>").append(data.server).appendTo(div);
@@ -236,8 +230,7 @@
         $("<div/>").attr({"class": "uk-progress-bar"}).css("width", data.mem.swap_usage).appendTo(swap_prog);
         swap_prog.appendTo(div)
         return div;
-    }
-
+    };
     window.render.user=function(){
         var data = $(this).data("data");
         json_send(window.admin.url.user, {server: data}).done(function(data){
@@ -259,8 +252,7 @@
                 modal.show();
             }
         });
-    }
-
+    };
     window.render.partition=function(){
         json_send(window.admin.url.info).done(function(data){
             var tbody = $("<tbody/>").attr({"id": "slurm"});
@@ -275,15 +267,13 @@
             });
             $("#slurm").replaceWith(tbody);
         });
-    }
-
+    };
     window.render.new_project=function(){
         var data = $(this).data("id");
         $("#"+data).toggleClass("uk-hidden");
         $(this).closest("tr").eq(0).toggleClass("ext_info");
         $(this).find("span").eq(0).toggleClass("uk-icon-plus uk-icon-minus");
-    }
-
+    };
     window.render.message=function(){
         var id = $(this).data("id");
         var mail = $(this).data("addr");
@@ -311,8 +301,7 @@
                 popup.hide();
             });
         });
-    }
-
+    };
     window.render.new_reject=function(){
         var id = $.trim( $(this).data("id") );
         var mid = $.trim( $(this).data("meso") );
@@ -341,16 +330,14 @@
                 $("#"+id+"-info").remove();
             });
         });
-    }
-
+    };
     window.render.new_accept_users=function(id){
         json_send(window.admin.url.new_users, JSON.stringify({"pid": id})).done(function(data){
             var responsible = data.responsible;
             var users = data.users;
             var i = 0;
         });
-    }
-
+    };
     window.render.new_accept=function(){
         var id = $.trim( $(this).data("id") );
         window.render.new_accept_users(id);
@@ -368,8 +355,7 @@
         ).append(
             $("<div/>").addClass("uk-form-row").append(motiv)
         );
-    }
-
+    };
     window.render.tasks_reload=function(){
         json_send(window.admin.url.tasks).done(function(data){
             var tasks = 0;
@@ -380,7 +366,7 @@
             }
             $("#taks_queue_length").text(tasks);
         });
-    }
+    };
     window.render.tasks_act=function(action, btn){
         var id = $(btn).data("id");
         var url = window.admin.url.tasks_ignore;
@@ -401,16 +387,16 @@
                 UIkit.modal("#modal").hide();
             }
         });
-    }
+    };
     window.render.tasks_accept=function(){
         window.render.tasks_act("accept", this);
-    }
+    };
     window.render.tasks_ignore=function(){
         window.render.tasks_act("ignore", this);
-    }
+    };
     window.render.tasks_reject=function(){
         window.render.tasks_act("reject", this);
-    }
+    };
 
     $(document).on("ready", function(){
         window.admin.sys();
@@ -430,7 +416,6 @@
     $(document).on("click", ".task_ignore", window.render.tasks_ignore);
     $(document).on("click", ".task_reject", window.render.tasks_reject);
     $(document).on("click", ".history_info", window.render.new_project);
-
     $(document).on({
         mouseenter: function () {
             $("#task_btn_group").toggleClass("uk-hidden");
