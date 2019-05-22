@@ -690,6 +690,10 @@ class LimboUser(db.Model):
             return "%s %s" % (self.name.capitalize(), self.surname.capitalize())
         return "Not available"
 
+    def task_ready(self):
+        return "login: %s and name: %s and surname: %s and email: %s" % (
+            self.login, self.name, self.surname, self.email)
+
     def to_dict(self):
         return {
             "id": self.id,
