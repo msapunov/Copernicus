@@ -4,12 +4,12 @@ from flask_login import current_user
 from flask_mail import Message
 from logging import debug, error
 from re import compile
-#from unibasedata import normalize
+from unicodedata import normalize
 
 
 def normalize_word(word):
     word = word.replace("'", "")
-    word = normalize("NFKD", word).enbase("ascii", "ignore").decode("ascii")
+    word = normalize("NFKD", word).encode("ascii", "ignore").decode("ascii")
     return word
 
 
