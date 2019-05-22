@@ -91,7 +91,7 @@
 
                     var td_hdn = $("<td/>").attr({"colspan": 4});
                     var ul = $("<ul/>");
-                    var keys = ["description", "author", "created", "pending"]
+                    var keys = ["description", "author", "created", "pending"];
                     keys = $.merge(keys, ["processed", "done", "modified", "approve", "decision"]);
                     $.each(keys, function(idx, prop){
                         $("<li/>").text(prop.capitalize() + ": " + val[prop]).appendTo(ul);
@@ -146,7 +146,7 @@
         btn_ignore.addClass("uk-button task_ignore").append(s_ignore).append("Ignore");
 
         var s_reject = $("<span/>").addClass("uk-icon-thumbs-down uk-margin-small-right");
-        var btn_reject = $("<button/>").attr({"data-id": val.id}).append(s_reject).append("Reject");;
+        var btn_reject = $("<button/>").attr({"data-id": val.id}).append(s_reject).append("Reject");
         btn_reject.addClass("uk-button task_reject uk-button-danger");
 
         $.each([btn_accept, btn_ignore, btn_reject], function(idx, el){
@@ -216,19 +216,19 @@
         var user = $("<span/>").attr({"class": "user_show"}).append(data.uptime.users);
         $("<li/>").append("Users: ").append($("<a/>").attr({"class": "user_show"}).text(data.uptime.users).data("data", data.server)).appendTo(ul);
 
-        var load_1 = data.uptime.load_1
-        var load_5 = data.uptime.load_5
-        var load_15 = data.uptime.load_15
+        var load_1 = data.uptime.load_1;
+        var load_5 = data.uptime.load_5;
+        var load_15 = data.uptime.load_15;
         $("<li/>").append("Load: "+load_1+", "+load_5+", "+load_15).appendTo(ul);
         ul.appendTo(div);
         $("<p/>").append("Memory usage: "+data.mem.mem_usage).appendTo(div);
         var progress = $("<div/>").attr({"class": "uk-progress uk-progress-mini uk-progress-striped"});
         $("<div/>").attr({"class": "uk-progress-bar"}).css("width", data.mem.mem_usage).appendTo(progress);
-        progress.appendTo(div)
+        progress.appendTo(div);
         $("<p/>").append("Swap usage: "+data.mem.swap_usage).appendTo(div);
         var swap_prog = $("<div/>").attr({"class": "uk-progress uk-progress-mini uk-progress-striped"});
         $("<div/>").attr({"class": "uk-progress-bar"}).css("width", data.mem.swap_usage).appendTo(swap_prog);
-        swap_prog.appendTo(div)
+        swap_prog.appendTo(div);
         return div;
     };
     window.render.user=function(){
@@ -239,7 +239,7 @@
             $.each(data.data, function(idx, val){
                 var user = $("<td/>").text(val.username);
                 var from = $("<td/>").text(val.from);
-                var proc_data = val.process.replace(/ /g, "&nbsp;")
+                var proc_data = val.process.replace(/ /g, "&nbsp;");
                 var proc = $("<td/>").html(proc_data);
                 $("<tr/>").append(user).append(from).append(proc).appendTo(table);
             });
