@@ -67,11 +67,11 @@
                 $.each(data.data, function(idx, val){
 
                     var icon = $("<span/>");
-                    if(val.decision == "accept"){
+                    if(val.decision === "accept"){
                         icon.addClass("uk-icon-thumbs-o-up");
-                    }else if(val.decision == "ignore"){
+                    }else if(val.decision === "ignore"){
                         icon.addClass("uk-icon-thumbs-o-down");
-                    }else if(val.decision == "reject"){
+                    }else if(val.decision === "reject"){
                         icon.addClass("uk-icon-thumbs-down");
                     }
 
