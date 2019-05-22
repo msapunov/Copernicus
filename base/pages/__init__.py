@@ -310,7 +310,6 @@ class TaskQueue:
         db.session.add(limbo)
         return limbo
 
-
     def _user_action(self):
         self.processed = True
         self._commit()
