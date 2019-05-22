@@ -380,7 +380,7 @@
             $("#taks_queue_length").text(data.data.length);
             var tr = $(btn).closest("tr").eq(0);
             var el_id = tr.attr('id');
-            var del_id = el_id.replace("child", "parent")
+            var del_id = el_id.replace("child", "parent");
             tr.remove();
             $("#"+del_id).remove();
             if(data.data.length < 1){
