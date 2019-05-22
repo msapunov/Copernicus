@@ -229,8 +229,8 @@ class TaskQueue:
     def user_create(self, user):
         if not self.project:
             raise ValueError("Can't add a user to none existent project")
-        self.task.limbo_user = user
-        self.task.action = "create|%s|%s" % (self.task.limbo_user.login,
+        description = user.task_ready()
+        self.task.action = "create|%s|%s" % (description,
                                              self.task.project.get_name())
         self._user_action()
 
