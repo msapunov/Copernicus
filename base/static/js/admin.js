@@ -370,9 +370,9 @@
     window.render.tasks_act=function(action, btn){
         var id = $(btn).data("id");
         var url = window.admin.url.tasks_ignore;
-        if(action=="accept"){
+        if(action==="accept"){
             url = window.admin.url.tasks_accept;
-        }else if(action=="reject"){
+        }else if(action==="reject"){
             url = window.admin.url.tasks_reject;
         }
         url += "/" + id;
