@@ -350,7 +350,7 @@
             "rows": "4",
             "name": "note"
         });
-        var form = $("<form/>").addClass("uk-form").append(
+        $("<form/>").addClass("uk-form").append(
             $("<legend/>").text(title)
         ).append(
             $("<div/>").addClass("uk-form-row").append(motiv)
