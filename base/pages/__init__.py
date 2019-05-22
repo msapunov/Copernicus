@@ -230,8 +230,8 @@ class TaskQueue:
         if not self.project:
             raise ValueError("Can't add a user to none existent project")
         description = user.task_ready()
-        self.task.action = "create|%s|%s" % (description,
-                                             self.task.project.get_name())
+        self.task.action = "create|%s|%s" % (self.task.project.get_name(),
+                                             description)
         self._user_action()
 
     def user_assign(self, user):
