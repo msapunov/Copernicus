@@ -87,10 +87,10 @@
 
         var tr = $("<tr/>");
         tr.append( $("<td/>").text(val.id));
-        tr.append(b);
-        tr.append(b);
-        tr.append(b);
-        tr.append(b);
+        tr.append($("<td/>").append(b));
+        tr.append($("<td/>").append(b));
+        tr.append($("<td/>").append(b));
+        tr.append($("<td/>").append(b));
 
         var tr_second = $("<tr/>");
         tr_second.append($("<td/>").attr({"colspan": 5}).text(val.description));
