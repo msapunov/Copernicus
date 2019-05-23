@@ -80,10 +80,10 @@
         tr_hdn.append(td_hdn);
         return tr.add(tr_hdn);
     };
-    window.render.task_manage = function(){
+    window.render.tasks_manage = function(){
         json_send(window.admin.url.tasks_history).done(function(data){
             if(data.data.length < 1){
-                UIkit.notify("No historic tasks found!", {timeout: 2000, status:"primary"});
+                UIkit.notify("No tasks found!", {timeout: 2000, status:"primary"});
             }else{
 
                 var table = $("<table/>").addClass("uk-table uk-table-hover uk-table-condensed");
