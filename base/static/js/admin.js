@@ -80,6 +80,22 @@
         tr_hdn.append(td_hdn);
         return tr.add(tr_hdn);
     };
+    window.render.render_management = function(idx, val){
+
+        var sel = $('<select/>');
+        var b = sel.append(new Option("text", "true"), new Option("false", "true"));
+
+        var tr = $("<tr/>");
+        tr.append( $("<td/>").text(val.id));
+        tr.append(b);
+        tr.append(b);
+        tr.append(b);
+        tr.append(b);
+
+        var tr_second = $("<tr/>");
+        tr_second.append($("<td/>").attr({"colspan": 5}).text(val.description));
+        return tr.add(tr_second);
+    };
     window.render.tasks_manage = function(){
         json_send(window.admin.url.tasks_history).done(function(data){
             if(data.data.length < 1){
@@ -88,19 +104,16 @@
 
                 var table = $("<table/>").addClass("uk-table uk-table-hover uk-table-condensed");
 
-                var thead = $("<thead/>").append($("<th/>"));
-                var head_act = $("<th/>").text("Action");
-                var head_status = $("<th/>").text("Status");
-                var head_decision = $("<th/>").text("Decision");
-
-                thead.append(head_act);
-                thead.append(head_status);
-                thead.append(head_decision);
-
+                var thead = $("<thead/>");
+                thead.append( $("<th/>").text("ID") );
+                thead.append( $("<th/>").text("Pending") );
+                thead.append( $("<th/>").text("Processed") );
+                thead.append( $("<th/>").text("Done") );
+                thead.append( $("<th/>").text("Decision") );
                 thead.appendTo(table);
 
                 $.each(data.data, function(idx, val){
-                    table.append(window.render.render_task(idx, val));
+                    table.append(window.render.render_management(idx, val));
                 });
 
                 $("#modal_body").html(table.prop("outerHTML"));
@@ -132,45 +145,10 @@
 
                 thead.appendTo(table);
 
-                //data.data.sort(window.sort_by("created", false, function(a){return a.toUpperCase()}));
                 $.each(data.data, function(idx, val){
-
-                    var icon = $("<span/>");
-                    if(val.decision === "accept"){
-                        icon.addClass("uk-icon-thumbs-o-up");
-                    }else if(val.decision === "ignore"){
-                        icon.addClass("uk-icon-thumbs-o-down");
-                    }else if(val.decision === "reject"){
-                        icon.addClass("uk-icon-thumbs-down");
-                    }
-
-                    var btn_span = $("<span/>").addClass("uk-icon-plus");
-                    var btn = $("<button/>").attr({"data-id": "history-"+val.id});
-                    btn.addClass("uk-button uk-button-mini history_info");
-                    btn.append(btn_span);
-                    var td_btn = $("<td/>").append(btn);
-                    var td_act = $("<td/>").addClass("uk-text-nowrap").text(val.action);
-                    var td_stat = $("<td/>").text(val.status);
-                    var td_decision = $("<td/>").addClass("uk-text-center");
-                    td_decision.prop("title", val.decision).append(icon);
-
-                    var tr = $("<tr/>");
-                    tr.append(td_btn).append(td_act).append(td_stat);
-                    tr.append(td_decision).appendTo(table);
-
-                    var td_hdn = $("<td/>").attr({"colspan": 4});
-                    var ul = $("<ul/>");
-                    var keys = ["description", "author", "created", "pending"];
-                    keys = $.merge(keys, ["processed", "done", "modified", "approve", "decision"]);
-                    $.each(keys, function(idx, prop){
-                        $("<li/>").text(prop.capitalize() + ": " + val[prop]).appendTo(ul);
-                    });
-                    td_hdn.append(ul);
-
-                    var tr_hdn = $("<tr/>").attr({"id": "history-"+val.id});
-                    tr_hdn.addClass("ext_info uk-hidden");
-                    tr_hdn.append(td_hdn).appendTo(table);
+                    table.append(window.render.render_task(idx, val));
                 });
+
                 $("#modal_body").html(table.prop("outerHTML"));
                 var modal = UIkit.modal("#modal");
                 if ( modal.isActive() ) {
