@@ -91,10 +91,10 @@
             $("<select/>").addClass("uk-form-small").append(new Option("True", "true"), new Option("False", "true"))
         ));
         tr.append( $("<td/>").append(
-            $("<select/>").addClass("uk-form-small").append(new Option("True", "true"), new Option("False", "true"))
+            $("<select/>").addClass("uk-form-small").append(new Option("True", "true"), new Option("False", "true")).val(val.done)
         ));
         tr.append( $("<td/>").append(
-            $("<select/>").addClass("uk-form-small").append(new Option("Accept", "accept"), new Option("Reject", "reject"), new Option("Ignore", "ignore"))
+            $("<select/>").addClass("uk-form-small").append(new Option("Accept", "accept"), new Option("Reject", "reject"), new Option("Ignore", "ignore")).val(val.decision)
         ));
         return tr;
     };
@@ -107,7 +107,7 @@
                 var table = $("<table/>").addClass("uk-table uk-table-hover uk-table-condensed");
 
                 var thead = $("<thead/>");
-                thead.append( $("<th/>").text("ID") );
+                thead.append( $("<th/>").text("Act") );
                 thead.append( $("<th/>").text("Pending") );
                 thead.append( $("<th/>").text("Processed") );
                 thead.append( $("<th/>").text("Done") );
