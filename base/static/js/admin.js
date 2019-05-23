@@ -91,10 +91,10 @@
             $("<select/>").addClass("uk-form-small").append(new Option("True", "true"), new Option("False", "true"))
         ));
         tr.append( $("<td/>").append(
-            $("<select/>").addClass("uk-form-small").append(new Option("True", "true"), new Option("False", "true")).val(val.done)
+            $("<select/>").addClass("uk-form-small").append(new Option("True", "true"), new Option("False", "true"))
         ));
         tr.append( $("<td/>").append(
-            $("<select/>").addClass("uk-form-small").append(new Option("Accept", "accept"), new Option("Reject", "reject"), new Option("Ignore", "ignore")).val(val.decision)
+            $("<select/>").addClass("uk-form-small").append(new Option("Accept", "accept"), new Option("Reject", "reject"), new Option("Ignore", "ignore"))
         ));
         return tr;
     };
@@ -115,7 +115,9 @@
                 thead.appendTo(table);
 
                 $.each(data.data, function(idx, val){
-                    table.append(window.render.render_management(idx, val));
+                    var el = window.render.render_management(idx, val);
+                    var ttt = el.find("<select/>");
+                    table.append(el);
                 });
 
                 $("#modal_body").html(table.prop("outerHTML"));
