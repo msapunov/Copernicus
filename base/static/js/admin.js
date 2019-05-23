@@ -83,7 +83,7 @@
     window.render.render_management = function(idx, val){
 
         var tr = $("<tr/>");
-        tr.append( $("<td/>").text(val.id));
+        tr.append( $("<td/>").text(val.action));
         tr.append( $("<td/>").append(
             $('<select/>').append(new Option("text", "true"), new Option("false", "true"))
         ));
@@ -96,10 +96,7 @@
         tr.append( $("<td/>").append(
             $('<select/>').append(new Option("text", "true"), new Option("false", "true"))
         ));
-
-        var tr_second = $("<tr/>");
-        tr_second.append($("<td/>").attr({"colspan": 5}).text(val.action));
-        return tr.add(tr_second);
+        return tr;
     };
     window.render.tasks_manage = function(){
         json_send(window.admin.url.tasks_history).done(function(data){
