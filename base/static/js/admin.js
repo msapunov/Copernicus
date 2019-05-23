@@ -82,19 +82,19 @@
     };
     window.render.render_management = function(idx, val){
 
-        var tr = $("<tr/>").addClass("uk-form-small");
+        var tr = $("<tr/>").addClass("uk-form");
         tr.append( $("<td/>").text(val.action));
         tr.append( $("<td/>").append(
-            $('<select/>').append(new Option("True", "true"), new Option("False", "true"))
+            $("<select/>").addClass("uk-form-small").append(new Option("True", "true"), new Option("False", "true"))
         ));
         tr.append( $("<td/>").append(
-            $('<select/>').append(new Option("True", "true"), new Option("False", "true"))
+            $("<select/>").addClass("uk-form-small").append(new Option("True", "true"), new Option("False", "true"))
         ));
         tr.append( $("<td/>").append(
-            $('<select/>').append(new Option("True", "true"), new Option("False", "true"))
+            $("<select/>").addClass("uk-form-small").append(new Option("True", "true"), new Option("False", "true"))
         ));
         tr.append( $("<td/>").append(
-            $('<select/>').append(new Option("True", "true"), new Option("False", "true"))
+            $("<select/>").addClass("uk-form-small").append(new Option("True", "true"), new Option("False", "true"))
         ));
         return tr;
     };
