@@ -6,7 +6,7 @@ if(!String.prototype.f){
         if(!arguments.length)
             return str;
         var args = typeof arguments[0],
-            args = (("string" == args || "number" == args) ? arguments : arguments[0]);
+            args = (("string" === args || "number" === args) ? arguments : arguments[0]);
         for(arg in args)
             str = str.replace(RegExp("\\{" + arg + "\\}", "gi"), args[arg]);
         return str;
@@ -20,7 +20,7 @@ if(!String.prototype.capitalize){
 }
 if(!String.prototype.idfy){
     String.prototype.idfy = function(){
-        if(this.charAt(0) != "#"){
+        if(this.charAt(0) !== "#"){
             return "#" + this;
         }else{
             return this;
@@ -85,9 +85,9 @@ show_error = function(req){
 };
 
 json_send = function(url, data, show_modal){
-    var modal = {show: function(){}, hide: function(){}}
+    var modal = {show: function(){}, hide: function(){}};
     if(typeof(show_modal)==='undefined'){
-        var modal = UIkit.modal("#ajax_call");
+        modal = UIkit.modal("#ajax_call");
     }
     modal.show();
     return $.ajax({
