@@ -44,6 +44,39 @@
     };
     window.render.task_h_info = function(){
     };
+    window.render.task_manage = function(){
+        json_send(window.admin.url.tasks_history).done(function(data){
+            if(data.data.length < 1){
+                UIkit.notify("No historic tasks found!", {timeout: 2000, status:"primary"});
+            }else{
+
+                var table = $("<table/>").addClass("uk-table uk-table-hover uk-table-condensed");
+
+                var thead = $("<thead/>").append($("<th/>"));
+                var head_act = $("<th/>").text("Action");
+                var head_status = $("<th/>").text("Status");
+                var head_decision = $("<th/>").text("Decision");
+
+                thead.append(head_act);
+                thead.append(head_status);
+                thead.append(head_decision);
+
+                thead.appendTo(table);
+
+                $.each(data.data, function(idx, val){
+                    table.append(window.render.render_task(idx, val));
+                });
+
+                $("#modal_body").html(table.prop("outerHTML"));
+                var modal = UIkit.modal("#modal");
+                if ( modal.isActive() ) {
+                    modal.hide();
+                } else {
+                    modal.show();
+                }
+            }
+        });
+    };
     window.render.tasks_history = function(){
         json_send(window.admin.url.tasks_history).done(function(data){
             if(data.data.length < 1){
