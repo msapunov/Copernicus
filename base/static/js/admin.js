@@ -82,18 +82,23 @@
     };
     window.render.render_management = function(idx, val){
 
-        var sel = $('<select/>');
-        var b = sel.append(new Option("text", "true"), new Option("false", "true"));
-
         var tr = $("<tr/>");
         tr.append( $("<td/>").text(val.id));
-        tr.append($("<td/>").append(b));
-        tr.append($("<td/>").append(b));
-        tr.append($("<td/>").append(b));
-        tr.append($("<td/>").append(b));
+        tr.append( $("<td/>").append(
+            $('<select/>').append(new Option("text", "true"), new Option("false", "true"))
+        ));
+        tr.append( $("<td/>").append(
+            $('<select/>').append(new Option("text", "true"), new Option("false", "true"))
+        ));
+        tr.append( $("<td/>").append(
+            $('<select/>').append(new Option("text", "true"), new Option("false", "true"))
+        ));
+        tr.append( $("<td/>").append(
+            $('<select/>').append(new Option("text", "true"), new Option("false", "true"))
+        ));
 
         var tr_second = $("<tr/>");
-        tr_second.append($("<td/>").attr({"colspan": 5}).text(val.description));
+        tr_second.append($("<td/>").attr({"colspan": 5}).text(val.action));
         return tr.add(tr_second);
     };
     window.render.tasks_manage = function(){
