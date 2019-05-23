@@ -102,7 +102,7 @@ json_send = function(url, data, show_modal){
     }).always(function() {
         modal.hide();
     });
-}
+};
 
 trigger_modal = function(modal){
     if( modal.isActive() ){
@@ -110,7 +110,7 @@ trigger_modal = function(modal){
     }else{
         modal.show();
     }
-}
+};
 
 data_check = function(data){
     var result = true;
@@ -121,4 +121,4 @@ data_check = function(data){
         }
     });
     return result
-}
+};
