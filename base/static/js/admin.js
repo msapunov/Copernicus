@@ -85,16 +85,16 @@
         var tr = $("<tr/>");
         tr.append( $("<td/>").text(val.action));
         tr.append( $("<td/>").append(
-            $('<select/>').append(new Option("text", "true"), new Option("false", "true"))
+            $('<select/>').append(new Option("True", "true"), new Option("False", "true"))
         ));
         tr.append( $("<td/>").append(
-            $('<select/>').append(new Option("text", "true"), new Option("false", "true"))
+            $('<select/>').append(new Option("True", "true"), new Option("False", "true"))
         ));
         tr.append( $("<td/>").append(
-            $('<select/>').append(new Option("text", "true"), new Option("false", "true"))
+            $('<select/>').append(new Option("True", "true"), new Option("False", "true"))
         ));
         tr.append( $("<td/>").append(
-            $('<select/>').append(new Option("text", "true"), new Option("false", "true"))
+            $('<select/>').append(new Option("True", "true"), new Option("False", "true"))
         ));
         return tr;
     };
