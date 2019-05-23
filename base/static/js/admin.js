@@ -83,9 +83,9 @@
     window.render.render_management = function(idx, val){
 
         var tr = $("<tr/>").addClass("uk-form");
-        tr.append( $("<td/>").text(val.action));
+        tr.append( $("<td/>").addClass("uk-text-nowrap").text(val.action));
         tr.append( $("<td/>").append(
-            $("<select/>").addClass("uk-form-small").append(new Option("True", "true"), new Option("False", "true"))
+            $("<select/>").append(new Option("True", "true"), new Option("False", "true"))
         ));
         tr.append( $("<td/>").append(
             $("<select/>").addClass("uk-form-small").append(new Option("True", "true"), new Option("False", "true"))
