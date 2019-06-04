@@ -14,6 +14,7 @@
         tasks_history: "admin/tasks/history",
         tasks_ignore: "admin/tasks/ignore",
         tasks_reject: "admin/tasks/reject",
+        tasks_update: "admin/tasks/update",
         user: "admin/user/info"
     };
     window.admin.sys = function(){
@@ -42,7 +43,86 @@
             return a = key(a), b = key(b), reverse * ((a > b) - (b > a));
         }
     };
-    window.render.render_task = function(idx, val){
+    window.render.tasks_sel_update = function(){
+        var data = $(this).data("id");
+        var selectors = $("#"+data).find("select");
+        $.each(selectors, function(idx, el){
+            var val = $(el).attr("data-val");
+            if(val != "") {
+                $(el).val(val);
+            }
+        });
+    };
+    window.render.tasks_btn_toggle = function(){
+        var tid = $(this).data("tid");
+        $(".task_btn_" + tid).prop("disabled", false);
+    };
+    window.render.tasks_edit = function(){
+        var tid = $(this).attr("data-tid");
+        var selectors = $("#history-" + tid + ".ext_info").find("select");
+        var data = {};
+        $.each(selectors, function(idx, el){
+            var val = $(el).val();
+            data[ $(el).attr("name") ] = val;
+        });
+        var url = window.admin.url.tasks_update + "/" + tid;
+        json_send(url, data, true).done(function(){
+            $(this).prop("disabled", true);
+        });
+    };
+    window.render.render_manage = function(val){
+        var tid = val.id;
+        var td_hdn = $("<td/>").attr({"colspan": 4}).addClass("uk-form");
+        var ul = $("<ul/>");
+        var keys = ["description", "author", "created", "modified", "approve"];
+        var opts = ["pending", "processed", "done", "decision"];
+        var all = $.merge($.merge([], keys), opts);
+        $.each(all, function(idx, prop){
+            var value = val[prop];
+            if((value === undefined)||(value === null)){
+                value = "";
+            }else {
+                value = value.toString();
+            }
+            if($.inArray(prop, keys) >= 0) {
+                $("<li/>").text(prop.capitalize() + ": " + value).appendTo(ul);
+            }else{
+                var txt = prop.capitalize();
+                var sel = $("<select/>").addClass("task_sel_info").width("100%");
+                sel.append(new Option(txt + ": Undefined", ""));
+                if (prop == "decision"){
+                    sel.append(new Option(txt + ": Accept", "accept"));
+                    sel.append(new Option(txt + ": Reject", "reject"));
+                    sel.append(new Option(txt + ": Ignore", "ignore"));
+                }else{
+                    sel.append(new Option(txt + ": True", "true"));
+                    sel.append(new Option(txt + ": False", "false"));
+                }
+                sel.attr({"data-val": value, "data-tid": tid, "name": prop});
+                $("<li/>").append(sel).appendTo(ul);
+            }
+        });
+        td_hdn.append(ul);
+
+        var btn = $("<button/>").text("Apply").addClass("uk-button task_edit");
+        btn.attr({"type": "button", "data-tid": tid}).prop("disabled",true);
+        btn.addClass("task_btn_" + tid);
+
+        td_hdn.append(btn);
+        return td_hdn;
+    };
+    window.render.render_task_item = function(val){
+        var td_hdn = $("<td/>").attr({"colspan": 4});
+        var ul = $("<ul/>");
+        var keys = ["description", "author", "created", "pending"];
+        keys = $.merge(keys, ["processed", "done", "modified", "approve", "decision"]);
+        $.each(keys, function(idx, prop){
+            $("<li/>").text(prop.capitalize() + ": " + val[prop]).appendTo(ul);
+        });
+        td_hdn.append(ul);
+        return td_hdn;
+    };
+    window.render.render_task = function(val, item){
         var icon = $("<span/>");
         if(val.decision === "accept"){
             icon.addClass("uk-icon-thumbs-o-up");
@@ -66,37 +146,16 @@
         tr.append(td_btn).append(td_act).append(td_stat);
         tr.append(td_decision);
 
-        var td_hdn = $("<td/>").attr({"colspan": 4});
-        var ul = $("<ul/>");
-        var keys = ["description", "author", "created", "pending"];
-        keys = $.merge(keys, ["processed", "done", "modified", "approve", "decision"]);
-        $.each(keys, function(idx, prop){
-            $("<li/>").text(prop.capitalize() + ": " + val[prop]).appendTo(ul);
-        });
-        td_hdn.append(ul);
+        if(item) {
+            var td_hdn = window.render.render_task_item(val);
+        }else{
+            var td_hdn = window.render.render_manage(val);
+        }
 
         var tr_hdn = $("<tr/>").attr({"id": "history-"+val.id});
         tr_hdn.addClass("ext_info uk-hidden");
         tr_hdn.append(td_hdn);
         return tr.add(tr_hdn);
-    };
-    window.render.render_management = function(idx, val){
-
-        var tr = $("<tr/>").addClass("uk-form");
-        tr.append( $("<td/>").addClass("uk-text-nowrap uk-text-small").text(val.action));
-        tr.append( $("<td/>").append(
-            $("<select/>").addClass("uk-form-small").append(new Option("True", "true"), new Option("False", "true"))
-        ));
-        tr.append( $("<td/>").append(
-            $("<select/>").addClass("uk-form-small").append(new Option("True", "true"), new Option("False", "true"))
-        ));
-        tr.append( $("<td/>").append(
-            $("<select/>").addClass("uk-form-small").append(new Option("True", "true"), new Option("False", "true"))
-        ));
-        tr.append( $("<td/>").append(
-            $("<select/>").addClass("uk-form-small").append(new Option("Accept", "accept"), new Option("Reject", "reject"), new Option("Ignore", "ignore"))
-        ));
-        return tr;
     };
     window.render.tasks_manage = function(){
         json_send(window.admin.url.tasks_history).done(function(data){
@@ -107,17 +166,14 @@
                 var table = $("<table/>").addClass("uk-table uk-table-hover uk-table-condensed");
 
                 var thead = $("<thead/>");
-                thead.append( $("<th/>").text("Act") );
-                thead.append( $("<th/>").text("Pending") );
-                thead.append( $("<th/>").text("Processed") );
-                thead.append( $("<th/>").text("Done") );
+                thead.append( $("<th/>") );
+                thead.append( $("<th/>").text("Action") );
+                thead.append( $("<th/>").text("Status") );
                 thead.append( $("<th/>").text("Decision") );
                 thead.appendTo(table);
 
                 $.each(data.data, function(idx, val){
-                    var el = window.render.render_management(idx, val);
-                    var ttt = el.find("<select/>");
-                    table.append(el);
+                    table.append(window.render.render_task(val, false));
                 });
 
                 $("#modal_body").html(table.prop("outerHTML"));
@@ -150,7 +206,7 @@
                 thead.appendTo(table);
 
                 $.each(data.data, function(idx, val){
-                    table.append(window.render.render_task(idx, val));
+                    table.append(window.render.render_task(val, true));
                 });
 
                 $("#modal_body").html(table.prop("outerHTML"));
@@ -468,6 +524,10 @@
     $(document).on("click", ".task_ignore", window.render.tasks_ignore);
     $(document).on("click", ".task_reject", window.render.tasks_reject);
     $(document).on("click", ".history_info", window.render.new_project);
+    $(document).on("click", ".history_info", window.render.tasks_sel_update);
+    $(document).on("click", ".task_edit", window.render.tasks_edit);
+    $(document).on("change", ".task_sel_info", window.render.tasks_btn_toggle);
+
     $(document).on({
         mouseenter: function () {
             $("#task_btn_group").toggleClass("uk-hidden");
