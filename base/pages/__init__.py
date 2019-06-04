@@ -191,6 +191,18 @@ class Task:
     def action(self):
         return self.task.action
 
+    def update(self, data):
+        for prop in ["pending", "processed", "done", "decision"]:
+            if prop != "decision":
+                value = bool(data[prop])
+            else:
+                value = str(data[prop])
+                if value not in ["accept", "ignore", "reject"]:
+                    raise ValueError("Decision property can't be '%s'" % value)
+            setattr(self.task, prop, value)
+        self._commit()
+        return self.task
+
     def notify(self):
         description = self.description()
         tid = self.id
