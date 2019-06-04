@@ -65,6 +65,13 @@ def admin_extension_todo():
     return jsonify(data=pending_resources())
 
 
+@bp.route("/admin/tasks/update/<int:tid>", methods=["POST"])
+@login_required
+def web_admin_tasks_update(tid):
+    data = request.get_json()
+    return jsonify(data=Task(tid).update(data).to_dict())
+
+
 @bp.route("/admin/tasks/ignore/<int:tid>", methods=["POST"])
 @login_required
 def web_admin_tasks_ignore(tid):
