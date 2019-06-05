@@ -62,8 +62,7 @@
         var selectors = $("#history-" + tid + ".ext_info").find("select");
         var data = {};
         $.each(selectors, function(idx, el){
-            var val = $(el).val();
-            data[ $(el).attr("name") ] = val;
+            data[ $(el).attr("name") ] = $(el).val();
         });
         var url = window.admin.url.tasks_update + "/" + tid;
         json_send(url, data, true).done(function(){
@@ -122,15 +121,19 @@
         td_hdn.append(ul);
         return td_hdn;
     };
-    window.render.render_task = function(val, item){
+    window.render.decision_icon = function(decision){
         var icon = $("<span/>");
-        if(val.decision === "accept"){
+        if(decision === "accept"){
             icon.addClass("uk-icon-thumbs-o-up");
-        }else if(val.decision === "ignore"){
+        }else if(decision === "ignore"){
             icon.addClass("uk-icon-thumbs-o-down");
-        }else if(val.decision === "reject"){
+        }else if(decision === "reject"){
             icon.addClass("uk-icon-thumbs-down");
         }
+        return icon
+    };
+    window.render.render_task = function(val, item){
+        var icon = window.render.decision_icon(val.decision);
 
         var btn_span = $("<span/>").addClass("uk-icon-plus");
         var btn = $("<button/>").attr({"data-id": "history-"+val.id});
@@ -138,8 +141,8 @@
         btn.append(btn_span);
         var td_btn = $("<td/>").append(btn);
         var td_act = $("<td/>").addClass("uk-text-nowrap").text(val.action);
-        var td_stat = $("<td/>").text(val.status);
-        var td_decision = $("<td/>").addClass("uk-text-center");
+        var td_stat = $("<td/>").addClass("task_status_" + val.id).text(val.status);
+        var td_decision = $("<td/>").addClass("uk-text-center task_decision_" + val.id);
         td_decision.prop("title", val.decision).append(icon);
 
         var tr = $("<tr/>");
