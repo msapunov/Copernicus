@@ -58,6 +58,7 @@
         $(".task_btn_" + tid).prop("disabled", false);
     };
     window.render.tasks_edit = function(){
+        $(this).prop("disabled", true);
         var tid = $(this).attr("data-tid");
         var selectors = $("#history-" + tid + ".ext_info").find("select");
         var data = {};
