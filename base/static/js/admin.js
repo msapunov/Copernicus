@@ -66,8 +66,18 @@
             data[ $(el).attr("name") ] = $(el).val();
         });
         var url = window.admin.url.tasks_update + "/" + tid;
-        json_send(url, data, true).done(function(){
-            $(this).prop("disabled", true);
+
+        json_send(url, data, true).done(function(data){
+            var stat = $(".task_status_" + tid);
+            var st_value = data.data.status;
+            if ((st_value === undefined) || (st_value === null)){
+                st_value = "";
+            }
+            stat.text(st_value.toString());
+
+            var deci = $(".task_decision_" + tid);
+            var icon = window.render.decision_icon(data.data.decision);
+            deci.html(icon.prop("outerHTML"));
         });
     };
     window.render.render_manage = function(val){
