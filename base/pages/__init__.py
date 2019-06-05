@@ -193,12 +193,12 @@ class Task:
 
     def update(self, data):
         for prop in ["pending", "processed", "done", "decision"]:
-            if prop != "decision":
-                value = bool(data[prop])
+            value = str(data[prop])
+            if value not in ["accept", "ignore", "reject", "true", "false"]:
+                value = None
             else:
-                value = str(data[prop])
-                if value not in ["accept", "ignore", "reject"]:
-                    raise ValueError("Decision property can't be '%s'" % value)
+                if value in ["true", "false"]:
+                    value = bool(value)
             setattr(self.task, prop, value)
         self._commit()
         return self.task
