@@ -72,9 +72,9 @@ class TaskManager:
         # Returns a list of unprocessed tasks, i.e. a task has been created by
         # a user but admins haven't had time yet to check it out
         self.query = self.query.filter(
-            self.tasks.processed == False
+            (self.tasks.processed == False) | (self.tasks.processed == None)
         ).filter(
-            self.tasks.done == False
+            (self.tasks.done == False) | (self.tasks.done == None)
         )
         tasks = self.query.all()
         return list(map(lambda x: x.to_dict(), tasks)) if tasks else []
