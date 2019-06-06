@@ -564,7 +564,9 @@ class Tasks(db.Model):
             "pid": self.pid if self.pid else "",
             "uid": self.uid if self.uid else "",
             "action": act,
-            "user": user,
+            "user": login,
+            "project": project,
+            "entity": entity,
             "task": task
         }
 
