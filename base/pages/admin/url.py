@@ -2,6 +2,7 @@ from flask import g, flash, request, redirect, url_for, render_template, jsonify
 from flask import current_app
 from flask_login import login_required, login_user
 from base.pages import ssh_wrapper, send_message, Task
+from base.pages.user.magic import get_user_record
 from base.pages.admin import bp
 from base.pages.admin.magic import remote_project_creation_magic, get_users
 from base.pages.admin.magic import get_responsible, get_registration_record
@@ -29,9 +30,7 @@ def web_switch_user():
         else:
             return redirect(url_for("stat.index"))
 
-    from base.database.schema import User
-
-    user = User.query.filter_by(login=username).first()
+    user = get_user_record(username)
     login_user(user, True)
     return redirect(url_for("user.user_index"))
 
@@ -44,11 +43,9 @@ def web_admin_message_send():
         raise ValueError("Expecting application/json requests")
     logins, title, msg = get_ltm(data)
 
-    from base.database.schema import User
-
     emails = []
     for login in logins:
-        user = User.query.filter_by(login=login).first()
+        user = get_user_record(login)
         emails.append(user.email)
     return jsonify(data=send_message(emails, message=msg, title=title))
 
@@ -114,6 +111,7 @@ def web_admin_tasks_list():
 @bp.route("/admin/tasks/done/<int:tid>", methods=["POST"])
 @login_required
 def admin_tasks_done(tid):
+
     return jsonify(data=Task(tid).done())
 
 
