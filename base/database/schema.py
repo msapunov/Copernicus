@@ -533,7 +533,7 @@ class Tasks(db.Model):
         return "<Task queue record {}>".format(self.id)
 
     def brief(self):
-        act, user, task = self.action.split("|")
+        act, entity, login, project, task = self.action.split("|")
         if act in ["create", "add", "assign", "delete", "remove"]:
             act += " a user "
         elif act in ["update"]:
@@ -543,7 +543,7 @@ class Tasks(db.Model):
         return act
 
     def description(self):
-        act, entity, task = self.action.split("|")
+        act, entity, login, project, task = self.action.split("|")
         if act in ["create"]:
             act += " a user with %s for the project %s" % (task, entity)
         if act in ["assign"]:
@@ -556,7 +556,8 @@ class Tasks(db.Model):
         return act
 
     def api(self):
-        act, user, task = self.action.split("|")
+#  task: act|<user, resp, proj>|<user_login, ''>|<project_name, ''>|task_encoded
+        act, entity, login, project, task = self.action.split("|")
         return {
             "id": self.id,
             "notify": self.author.email if self.author else "",
