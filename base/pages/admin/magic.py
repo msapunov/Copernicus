@@ -1,83 +1,12 @@
 from flask import current_app, request
 from base.pages import check_int, ssh_wrapper, send_message, check_str, Task
+from base.pages.project.magic import get_project_record
 from logging import error, debug
 from operator import attrgetter
 
 
 __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
-
-
-def task_action(action):
-
-    if action not in ["accept", "reject", "ignore"]:
-        raise ValueError("Action %s is unknown" % action)
-
-    task = get_task()
-    if action == "reject":
-        task_mail("reject", task)
-        return task.reject()
-    elif action == "ignore":
-        return task.ignore()
-
-    task_mail("accept", task)
-    task.accept()
-
-    return task
-
-
-def get_task():
-    data = request.get_json()
-    if not data:
-        raise ValueError("Expecting application/json requests")
-    tid = check_int(data["task"])
-
-    task = Task(tid)
-    if not task:
-        raise ValueError("No task with id %s found" % tid)
-    if task.is_processed():
-        raise ValueError("Task with id %s has been already processed" % tid)
-    return task
-
-
-class TaskManager:
-
-    def __init__(self):
-        from base.database.schema import Tasks
-
-        self.query = Tasks().query
-        self.tasks = Tasks
-
-    def history(self, reverse=True):
-        # Returns a list of all tasks registered in the system. by default
-        # the records are sorted by date in descending order
-        tasks = sorted(self.query.all(), key=attrgetter("created"),
-                       reverse=reverse)
-        return list(map(lambda x: x.to_dict(), tasks)) if tasks else []
-
-    def todo(self):
-        # Returns a list of tasks which has been processed by admins but haven't
-        # been performed by a script
-        self.query = self.query.filter(
-            self.tasks.processed == True
-        ).filter(
-            self.tasks.decision == "accept"
-        ).filter(
-            self.tasks.done == False
-        )
-        tasks = self.query.all()
-        return list(map(lambda x: x.api(), tasks)) if tasks else []
-
-    def list(self):
-        # Returns a list of unprocessed tasks, i.e. a task has been created by
-        # a user but admins haven't had time yet to check it out
-        self.query = self.query.filter(
-            (self.tasks.processed == False) | (self.tasks.processed == None)
-        ).filter(
-            (self.tasks.done == False) | (self.tasks.done == None)
-        )
-        tasks = self.query.all()
-        return list(map(lambda x: x.to_dict(), tasks)) if tasks else []
 
 
 def task_mail(action, task):
@@ -252,13 +181,153 @@ def is_user_exists(record):
         result = User.query.filter_by(login=login, email=email, name=name,
                                       surname=surname).first()
 
-    print(result)
     if result:
         print(result.id)
         record["exists"] = True
     else:
         record["exists"] = False
     return record
+
+
+def task_create_user(pid, user_data, responsible=False):
+    # user_data =  login: masapunov and name: matvey and surname: sapunov and email: matvey.sapunov@gmail.com
+    project = get_project_record(pid)
+
+    data = user_data.split(" and ")
+    login = surname = name = email = ""
+    for i in data:
+        if "login" in i:
+            login = i.replace("login: ", "")
+        elif "surname" in i:
+            surname = i.replace("surname: ", "")
+        elif "name" in i:
+            name = i.replace("name: ", "")
+        elif "email" in i:
+            email = i.replace("email: ", "")
+    for i in [login, surname, name, email]:
+        if not i:
+            raise ValueError("Empty!")
+
+    from base.database.schema import User
+    from base.database.schema import ACLDB
+    from base import db
+
+    if responsible:
+        acl = ACLDB(is_user=True, is_responsible=True, is_manager=False,
+                    is_tech=False, is_committee=False, is_admin=False)
+    else:
+        acl = ACLDB(is_user=True, is_responsible=False, is_manager=False,
+                    is_tech=False, is_committee=False, is_admin=False)
+
+    user  = User(login=login, name=name, surname=surname, email=email,
+                 active=True, acl=acl, project=project)
+
+    db.session.add(acl)
+    db.session.add(user)
+
+
+def process_task(tid):
+    task = Task(tid)
+    verb, kind, item, act = task.action().split("|")
+    if verb not in ["create", "assign", "update", "remove"]:
+        raise ValueError("The action '%s' is not supported" % verb)
+
+    print(verb)
+    if verb == "create" and kind == "user":
+        task_create_user(item, act)
+    elif verb == "create" and kind == "resp":
+        task_create_user(item, act, True)
+    elif verb == "create" and kind == "proj":
+        pass
+    elif verb == "update" and kind == "user":
+        pass
+    elif verb == "update" and kind == "proj":
+        pass
+    elif verb == "assign" and kind == "user":
+        pass
+    elif verb == "assign" and kind == "resp":
+        pass
+    elif verb == "remove" and kind == "user":
+        pass
+    elif verb == "assign" and kind == "resp":
+        pass
+    elif verb == "assign" and kind == "proj":
+        pass
+
+    task.done()
+    pass
+
+
+def task_action(action):
+
+    if action not in ["accept", "reject", "ignore"]:
+        raise ValueError("Action %s is unknown" % action)
+
+    task = get_task()
+    if action == "reject":
+        task_mail("reject", task)
+        return task.reject()
+    elif action == "ignore":
+        return task.ignore()
+
+    task_mail("accept", task)
+    task.accept()
+
+    return task
+
+
+def get_task():
+    data = request.get_json()
+    if not data:
+        raise ValueError("Expecting application/json requests")
+    tid = check_int(data["task"])
+
+    task = Task(tid)
+    if not task:
+        raise ValueError("No task with id %s found" % tid)
+    if task.is_processed():
+        raise ValueError("Task with id %s has been already processed" % tid)
+    return task
+
+
+class TaskManager:
+
+    def __init__(self):
+        from base.database.schema import Tasks
+
+        self.query = Tasks().query
+        self.tasks = Tasks
+
+    def history(self, reverse=True):
+        # Returns a list of all tasks registered in the system. by default
+        # the records are sorted by date in descending order
+        tasks = sorted(self.query.all(), key=attrgetter("created"),
+                       reverse=reverse)
+        return list(map(lambda x: x.to_dict(), tasks)) if tasks else []
+
+    def todo(self):
+        # Returns a list of tasks which has been processed by admins but haven't
+        # been performed by a script
+        self.query = self.query.filter(
+            self.tasks.processed == True
+        ).filter(
+            self.tasks.decision == "accept"
+        ).filter(
+            self.tasks.done == False
+        )
+        tasks = self.query.all()
+        return list(map(lambda x: x.api(), tasks)) if tasks else []
+
+    def list(self):
+        # Returns a list of unprocessed tasks, i.e. a task has been created by
+        # a user but admins haven't had time yet to check it out
+        self.query = self.query.filter(
+            (self.tasks.processed == False) | (self.tasks.processed == None)
+        ).filter(
+            (self.tasks.done == False) | (self.tasks.done == None)
+        )
+        tasks = self.query.all()
+        return list(map(lambda x: x.to_dict(), tasks)) if tasks else []
 
 
 def get_uptime(server):
