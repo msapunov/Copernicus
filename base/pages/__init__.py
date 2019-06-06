@@ -227,6 +227,7 @@ class Task:
 class TaskQueue:
 
     def __init__(self):
+#  task: act|<user, resp, proj>|<user_login, ''>|<project_name, ''>|task_encoded
         from base.database.schema import Tasks
         self.task = Tasks(author=current_user, processed=False, done=False)
 
