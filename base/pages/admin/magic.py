@@ -1,6 +1,6 @@
 from flask import current_app, request
 from base.pages import check_int, ssh_wrapper, send_message, check_str, Task
-from base.pages.project.magic import get_project_record
+from base.pages.project.magic import get_project_by_name
 from base.pages.user.magic import get_user_record
 from logging import error, debug
 from operator import attrgetter
@@ -208,9 +208,8 @@ def task_update_user(login, user_data):
             setattr(user, key, value)
 
 
-def task_create_user(pid, user_data, responsible=False):
-    # user_data =  login: masapunov and name: matvey and surname: sapunov and email: matvey.sapunov@gmail.com
-    project = get_project_record(pid)
+def task_create_user(p_name, user_data, responsible=False):
+    project = get_project_by_name(p_name)
 
     data = user_data.split(" and ")
     login = surname = name = email = ""
