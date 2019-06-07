@@ -189,6 +189,24 @@ def is_user_exists(record):
     return record
 
 
+def task_update_user(login, user_data):
+    data = user_data.split(" and ")
+
+    info = {"surname": "", "name": "", "email": ""}
+    for i in data:
+        if "surname" in i:
+            info["surname"] = i.replace("surname: ", "").strip()
+        elif "name" in i:
+            info["name"] = i.replace("name: ", "").strip()
+        elif "email" in i:
+            info["email"] = i.replace("email: ", "").strip()
+
+    user = get_user_record(login)
+    for key, value in info.items():
+        if hasattr(user, key):
+            setattr(user, key, value)
+
+
 def task_create_user(pid, user_data, responsible=False):
     # user_data =  login: masapunov and name: matvey and surname: sapunov and email: matvey.sapunov@gmail.com
     project = get_project_record(pid)
