@@ -64,6 +64,17 @@ def get_limbo_users(projects):
     return projects
 
 
+def get_project_by_name(name):
+    from base.database.schema import Project
+
+    projects = Project.query.all()
+    for project in projects:
+        if project.get_name() != name:
+            continue
+        return project
+    raise ValueError("Failed to find a project with name '%s'" % name)
+
+
 def get_project_record(pid):
     from base.database.schema import Project
 
