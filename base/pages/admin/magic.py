@@ -1,6 +1,7 @@
 from flask import current_app, request
 from base.pages import check_int, ssh_wrapper, send_message, check_str, Task
 from base.pages.project.magic import get_project_record
+from base.pages.user.magic import get_user_record
 from logging import error, debug
 from operator import attrgetter
 
