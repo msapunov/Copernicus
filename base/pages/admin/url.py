@@ -5,7 +5,7 @@ from base.pages import ssh_wrapper, send_message, Task
 from base.pages.user.magic import get_user_record
 from base.pages.admin import bp
 from base.pages.admin.magic import get_uptime, get_mem, get_ltm, TaskManager
-from base.pages.admin.magic import slurm_partition_info
+from base.pages.admin.magic import slurm_partition_info, process_task
 from base.pages.project.magic import pending_resources, processed_resource
 
 
@@ -105,7 +105,7 @@ def web_admin_tasks_list():
 @bp.route("/admin/tasks/done/<int:tid>", methods=["POST"])
 @login_required
 def admin_tasks_done(tid):
-
+    process_task(tid)
     return jsonify(data=Task(tid).done())
 
 
