@@ -197,8 +197,10 @@ class Task:
             if value not in ["accept", "ignore", "reject", "true", "false"]:
                 value = None
             else:
-                if value in ["true", "false"]:
-                    value = bool(value)
+                if value == "true":
+                    value = True
+                elif value == "false":
+                    value = False
             setattr(self.task, prop, value)
         self._commit()
         return self.task
