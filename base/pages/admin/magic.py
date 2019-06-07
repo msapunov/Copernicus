@@ -228,30 +228,29 @@ def task_create_user(pid, user_data, responsible=False):
 
 def process_task(tid):
     task = Task(tid)
-    verb, kind, item, act = task.action().split("|")
-    if verb not in ["create", "assign", "update", "remove"]:
-        raise ValueError("The action '%s' is not supported" % verb)
+    act, entity, login, project, task = task.action().split("|")
+    if act not in ["create", "assign", "update", "remove"]:
+        raise ValueError("The action '%s' is not supported" % act)
 
-    print(verb)
-    if verb == "create" and kind == "user":
-        task_create_user(item, act)
-    elif verb == "create" and kind == "resp":
-        task_create_user(item, act, True)
-    elif verb == "create" and kind == "proj":
+    if act == "create" and entity == "user":
+        task_create_user(project, task)
+    elif act == "create" and entity == "resp":
+        task_create_user(project, act, True)
+    elif act == "create" and entity == "proj":
         pass
-    elif verb == "update" and kind == "user":
+    elif act == "update" and entity == "user":
+        task_update_user(login, task)
+    elif act == "update" and entity == "proj":
         pass
-    elif verb == "update" and kind == "proj":
+    elif act == "assign" and entity == "user":
         pass
-    elif verb == "assign" and kind == "user":
+    elif act == "assign" and entity == "resp":
         pass
-    elif verb == "assign" and kind == "resp":
+    elif act == "remove" and entity == "user":
         pass
-    elif verb == "remove" and kind == "user":
+    elif act == "assign" and entity == "resp":
         pass
-    elif verb == "assign" and kind == "resp":
-        pass
-    elif verb == "assign" and kind == "proj":
+    elif act == "assign" and entity == "proj":
         pass
 
     task.done()
