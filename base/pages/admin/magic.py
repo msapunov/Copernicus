@@ -5,7 +5,6 @@ from base.pages.user.magic import get_user_record
 from logging import error, debug
 from operator import attrgetter
 
-
 __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
 
@@ -17,6 +16,7 @@ def task_mail(action, task):
     title = "Task id '%s' has been %sed" % (tid, action)
     msg = "Task '%s' with id '%s' has been %s" % (description, tid, action)
     return message(to, msg, title)
+
 
 #  Project registration logic below
 
@@ -238,8 +238,8 @@ def task_create_user(pid, user_data, responsible=False):
         acl = ACLDB(is_user=True, is_responsible=False, is_manager=False,
                     is_tech=False, is_committee=False, is_admin=False)
 
-    user  = User(login=login, name=name, surname=surname, email=email,
-                 active=True, acl=acl, project=project)
+    user = User(login=login, name=name, surname=surname, email=email,
+                active=True, acl=acl, project=project)
 
     db.session.add(acl)
     db.session.add(user)
@@ -277,7 +277,6 @@ def process_task(tid):
 
 
 def task_action(action):
-
     if action not in ["accept", "reject", "ignore"]:
         raise ValueError("Action %s is unknown" % action)
 
