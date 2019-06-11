@@ -239,8 +239,9 @@ class TaskQueue:
         self.task.user = u_name
         return self
 
-    def project(self, p_name):
-        self.p_name = p_name.get_name()
+    def project(self, project):
+        self.p_name = project.get_name()
+        self.task.project = project
         return self
 
     def user_create(self, user):
