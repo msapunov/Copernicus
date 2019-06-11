@@ -555,12 +555,20 @@ class Tasks(db.Model):
         act = act[0].upper() + act[1:]
         return act
 
+    def notify(self):
+        if "create" in self.action and self.project:
+            return self.project.responsible.email
+        elif self.author:
+            return self.author.email
+        else:
+            return ""
+
     def api(self):
 #  task: act|<user, resp, proj>|<user_login, ''>|<project_name, ''>|task_encoded
         act, entity, login, project, task = self.action.split("|")
         return {
             "id": self.id,
-            "notify": self.author.email if self.author else "",
+            "notify": self.notify(),
             "pid": self.pid if self.pid else "",
             "uid": self.uid if self.uid else "",
             "action": act,
