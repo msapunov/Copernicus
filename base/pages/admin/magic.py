@@ -237,8 +237,8 @@ def task_create_user(p_name, user_data, responsible=False):
         acl = ACLDB(is_user=True, is_responsible=False, is_manager=False,
                     is_tech=False, is_committee=False, is_admin=False)
 
-    user = User(login=login, name=name, surname=surname, email=email,
-                active=True, acl=acl, project=project)
+    user = User(login=login, name=name, surname=surname, email=email, acl=acl,
+                active=True, project=[project])
 
     db.session.add(acl)
     db.session.add(user)
@@ -246,18 +246,18 @@ def task_create_user(p_name, user_data, responsible=False):
 
 def process_task(tid):
     task = Task(tid)
-    act, entity, login, project, task = task.action().split("|")
+    act, entity, login, project, description = task.action().split("|")
     if act not in ["create", "assign", "update", "remove"]:
         raise ValueError("The action '%s' is not supported" % act)
 
     if act == "create" and entity == "user":
-        task_create_user(project, task)
+        task_create_user(project, description)
     elif act == "create" and entity == "resp":
         task_create_user(project, act, True)
     elif act == "create" and entity == "proj":
         pass
     elif act == "update" and entity == "user":
-        task_update_user(login, task)
+        task_update_user(login, description)
     elif act == "update" and entity == "proj":
         pass
     elif act == "assign" and entity == "user":
