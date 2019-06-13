@@ -247,7 +247,15 @@ def task_create_user(p_name, user_data, responsible=False):
 
 
 def task_remove_user(login, p_name):
-    pass
+    project = get_project_by_name(p_name)
+    user = get_user_record(login)
+    if project not in user.project:
+        raise ValueError("Failed to find project %s among %s projects" % (
+            p_name, login))
+    user.project.remove(project)
+    if not user.project:
+        user.active = False
+    return ProjectLog(project).user_deleted(user)
 
 
 def process_task(tid):
