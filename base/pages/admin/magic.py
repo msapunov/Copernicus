@@ -290,9 +290,7 @@ def process_task(tid):
         pass
     elif act == "remove" and entity == "user":
         log = task_remove_user(login, project)
-    elif act == "assign" and entity == "resp":
-        pass
-    elif act == "assign" and entity == "proj":
+    elif act == "remove" and entity == "proj":
         pass
 
     return task.done()
