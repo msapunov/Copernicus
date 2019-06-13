@@ -546,9 +546,7 @@ class Tasks(db.Model):
         act, entity, login, project, task = self.action.split("|")
         if act in ["create"]:
             act += " a user with %s for the project %s" % (task, entity)
-        if act in ["assign"]:
-            act += " a user %s to the project %s" % (entity, task)
-        elif act in ["remove"]:
+        if act in ["assign", "remove"]:
             return task
         elif act in ["update"]:
             act += " %s user's info with following data: %s" % (entity, task)
