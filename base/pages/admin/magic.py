@@ -277,8 +277,7 @@ def process_task(tid):
     elif act == "assign" and entity == "proj":
         pass
 
-    task.done()
-    pass
+    return task.done()
 
 
 def task_action(action):
