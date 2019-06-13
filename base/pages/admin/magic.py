@@ -246,6 +246,10 @@ def task_create_user(p_name, user_data, responsible=False):
     return ProjectLog(project).user_added(user)
 
 
+def task_remove_user(login, p_name):
+    pass
+
+
 def process_task(tid):
     task = Task(tid)
     act, entity, login, project, description = task.action().split("|")
@@ -269,7 +273,7 @@ def process_task(tid):
     elif act == "assign" and entity == "resp":
         pass
     elif act == "remove" and entity == "user":
-        pass
+        log = task_remove_user(login, project)
     elif act == "assign" and entity == "resp":
         pass
     elif act == "assign" and entity == "proj":
