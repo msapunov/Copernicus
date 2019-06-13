@@ -243,7 +243,7 @@ def task_create_user(p_name, user_data, responsible=False):
 
     db.session.add(acl)
     db.session.add(user)
-    return user
+    return ProjectLog(project).user_added(user)
 
 
 def process_task(tid):
