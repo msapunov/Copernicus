@@ -259,6 +259,8 @@ def process_task(tid):
         user = task_create_user(project, act, True)
         ProjectLog(project).responsible_added(user)
     elif act == "create" and entity == "proj":
+        #  After project creation, automatically create a task to create
+        #  a responsible and users
         pass
     elif act == "update" and entity == "user":
         task_update_user(login, description)
