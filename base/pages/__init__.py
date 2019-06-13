@@ -388,6 +388,12 @@ class ProjectLog:
         self.log.user = user
         return self._commit()
 
+    def user_deleted(self, user):
+        self.log.event = "User %s (%s) has been deleted" % (
+            user.full_name(), user.login)
+        self.log.user = user
+        return self._commit()
+
     def user_del(self, user):
         self.log.event = "Made a request to delete user %s" % user.full_name()
         self.log.user = user
