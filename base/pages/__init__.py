@@ -367,32 +367,31 @@ class ProjectLog:
     def responsible_added(self, user):
         self.log.event = "Added a new project responsible %s with login %s" % (
             user.full_name(), user.login)
-        self.log.user = user
-        return self._commit()
+        return self._commit_user(user)
 
     def responsible_assign(self, user):
         self.log.event = "Made a request to assign new responsible %s"\
                          % user.full_name()
-        self.log.user = user
-        return self._commit()
+        return self._commit_user(user)
 
     def user_added(self, user):
         self.log.event = "Added a new user %s with login %s" % (
             user.full_name(), user.login)
-        self.log.user = user
-        return self._commit()
+        return self._commit_user(user)
 
     def user_assign(self, user):
         self.log.event = "Made a request to assign a new user %s"\
                          % user.full_name()
-        self.log.user = user
-        return self._commit()
+        return self._commit_user(user)
+
+    def user_assigned(self, user):
+        self.log.event = "User %s has been attached" % user.full_name()
+        return self._commit_user(user)
 
     def user_deleted(self, user):
         self.log.event = "User %s (%s) has been deleted" % (
             user.full_name(), user.login)
-        self.log.user = user
-        return self._commit()
+        return self._commit_user(user)
 
     def user_del(self, user):
         self.log.event = "Made a request to delete user %s" % user.full_name()
