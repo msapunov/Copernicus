@@ -5,6 +5,7 @@ from base.pages.project.magic import get_project_by_name
 from base.pages.user.magic import get_user_record
 from logging import error, debug
 from operator import attrgetter
+from datetime import datetime as dt
 
 __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
@@ -239,7 +240,7 @@ def task_create_user(p_name, user_data, responsible=False):
                     is_tech=False, is_committee=False, is_admin=False)
 
     user = User(login=login, name=name, surname=surname, email=email, acl=acl,
-                active=True, project=[project])
+                active=True, project=[project], created=dt.now())
 
     db.session.add(acl)
     db.session.add(user)
