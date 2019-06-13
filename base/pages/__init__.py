@@ -364,9 +364,21 @@ class ProjectLog:
         self.log = LogDB(author=current_user, project=project)
         self.send = True
 
+    def responsible_added(self, user):
+        self.log.event = "Added a new project responsible %s with login %s" % (
+            user.full_name(), user.login)
+        self.log.user = user
+        return self._commit()
+
     def responsible_assign(self, user):
         self.log.event = "Made a request to assign new responsible %s"\
                          % user.full_name()
+        self.log.user = user
+        return self._commit()
+
+    def user_added(self, user):
+        self.log.event = "Added a new user %s with login %s" % (
+            user.full_name(), user.login)
         self.log.user = user
         return self._commit()
 
