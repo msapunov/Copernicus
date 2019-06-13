@@ -549,7 +549,7 @@ class Tasks(db.Model):
         if act in ["assign"]:
             act += " a user %s to the project %s" % (entity, task)
         elif act in ["remove"]:
-            act += " a user %s from the project %s" % (entity, task)
+            return task
         elif act in ["update"]:
             act += " %s user's info with following data: %s" % (entity, task)
         act = act[0].upper() + act[1:]
