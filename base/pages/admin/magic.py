@@ -253,17 +253,15 @@ def process_task(tid):
         raise ValueError("The action '%s' is not supported" % act)
 
     if act == "create" and entity == "user":
-        user = task_create_user(project, description)
-        ProjectLog(project).user_added(user)
+        log = task_create_user(project, description)
     elif act == "create" and entity == "resp":
-        user = task_create_user(project, act, True)
-        ProjectLog(project).responsible_added(user)
+        log = task_create_user(project, act, True)
     elif act == "create" and entity == "proj":
         #  After project creation, automatically create a task to create
         #  a responsible and users
         pass
     elif act == "update" and entity == "user":
-        task_update_user(login, description)
+        log = task_update_user(login, description)
     elif act == "update" and entity == "proj":
         pass
     elif act == "assign" and entity == "user":
@@ -278,6 +276,7 @@ def process_task(tid):
         pass
 
     return task.done()
+    #  TODO: return log.event
 
 
 def task_action(action):
