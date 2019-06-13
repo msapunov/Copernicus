@@ -105,8 +105,7 @@ def web_admin_tasks_list():
 @bp.route("/admin/tasks/done/<int:tid>", methods=["POST"])
 @login_required
 def admin_tasks_done(tid):
-    process_task(tid)
-    return jsonify(data=Task(tid).done())
+    return jsonify(data=process_task(tid))
 
 
 @bp.route("/admin/partition/info", methods=["POST"])
