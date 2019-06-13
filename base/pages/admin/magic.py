@@ -285,7 +285,7 @@ def process_task(tid):
     elif act == "update" and entity == "proj":
         pass
     elif act == "assign" and entity == "user":
-        pass
+        log = task_assign_user(login, project)
     elif act == "assign" and entity == "resp":
         pass
     elif act == "remove" and entity == "user":
