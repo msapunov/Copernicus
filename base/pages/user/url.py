@@ -1,5 +1,4 @@
 from flask import render_template, request, jsonify, flash
-from flask.json import dumps
 from flask_login import login_required
 from base.pages import check_str, send_message
 from base.pages.user import bp
