@@ -22,9 +22,9 @@ def user_list():
     term = request.args.get("term")
     if term:
         term = "%%%s%%" % term.lower()
-        users_obj = User.query.filter(User.active==True)\
-            .filter(User.surname.like(term) | User.name.like(term)
-                    | User.login.like(term)).all()
+        users_obj = User.query.filter(User.surname.like(term)
+                                      | User.name.like(term)
+                                      | User.login.like(term)).all()
     else:
         users_obj = User.query.filter(User.active==True)\
             .filter(User.surname!="").all()
