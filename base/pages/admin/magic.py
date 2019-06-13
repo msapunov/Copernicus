@@ -259,6 +259,13 @@ def task_remove_user(login, p_name):
     return ProjectLog(project).user_deleted(user)
 
 
+def task_assign_user(login, p_name):
+    project = get_project_by_name(p_name)
+    user = get_user_record(login)
+    user.project.append(project)
+    return ProjectLog(project).user_deleted(user)
+
+
 def process_task(tid):
     task = Task(tid)
     act, entity, login, project, description = task.action().split("|")
