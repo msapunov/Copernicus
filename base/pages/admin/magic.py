@@ -1,5 +1,6 @@
 from flask import current_app, request
 from base.pages import check_int, ssh_wrapper, send_message, check_str, Task
+from base.pages import ProjectLog
 from base.pages.project.magic import get_project_by_name
 from base.pages.user.magic import get_user_record
 from logging import error, debug
@@ -252,9 +253,11 @@ def process_task(tid):
         raise ValueError("The action '%s' is not supported" % act)
 
     if act == "create" and entity == "user":
-        task_create_user(project, description)
+        user = task_create_user(project, description)
+        ProjectLog(project).user_added(user)
     elif act == "create" and entity == "resp":
-        task_create_user(project, act, True)
+        user = task_create_user(project, act, True)
+        ProjectLog(project).responsible_added(user)
     elif act == "create" and entity == "proj":
         pass
     elif act == "update" and entity == "user":
