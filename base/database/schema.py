@@ -556,10 +556,10 @@ class Tasks(db.Model):
         return act
 
     def notify(self):
-        if "create" in self.action and self.project:
-            return self.project.responsible.email
-        elif self.author:
+        if "update" in self.action and self.project:
             return self.author.email
+        elif self.author:
+            return self.project.responsible.email
         else:
             return ""
 
