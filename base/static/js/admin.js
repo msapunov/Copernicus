@@ -8,6 +8,7 @@
         message: "admin/message/register",
         new_users: "admin/registration/users",
         reject: "admin/registration/reject",
+        ignore: "admin/registration/ignore",
         system: "admin/sys/info",
         tasks: "admin/tasks/list",
         tasks_accept: "admin/tasks/accept",
