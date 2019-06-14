@@ -453,16 +453,8 @@
             });
         });
     };
-    window.render.new_accept_users=function(id){
-        json_send(window.admin.url.new_users, JSON.stringify({"pid": id})).done(function(data){
-            var responsible = data.responsible;
-            var users = data.users;
-            var i = 0;
-        });
-    };
     window.render.new_accept=function(){
         var id = $.trim( $(this).data("id") );
-        window.render.new_accept_users(id);
 
         var mid = $.trim( $(this).data("meso") );
         var project_title = $.trim( $(this).data("title") );
