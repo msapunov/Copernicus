@@ -48,7 +48,7 @@ def web_admin_message_send():
 @bp.route("/admin/registration/ignore/<int:pid>", methods=["POST"])
 @login_required
 def admin_registration_ignore(pid):
-    return jsonify(data=reg_ignore())
+    return jsonify(data=reg_ignore(pid))
 
 
 @bp.route("/admin/extension/processed/<int:pid>", methods=["POST"])
