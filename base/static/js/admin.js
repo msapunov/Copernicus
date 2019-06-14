@@ -431,7 +431,7 @@
         UIkit.modal.confirm(msg, function(){
             var url = window.admin.url.ignore + "/" + tid;
             json_send(url, {
-                "pid": id,
+                "pid": id
             }).done(function(reply){
                 if(reply.data){
                     UIkit.notify(reply.data, {timeout: 2000, status:"success"});
