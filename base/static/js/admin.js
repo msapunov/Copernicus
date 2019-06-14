@@ -429,7 +429,7 @@
         var mid = $.trim( $(this).data("meso") );
         var msg = "Ignore project {0}? Are you sure?".f(mid);
         UIkit.modal.confirm(msg, function(){
-            var url = window.admin.url.ignore + "/" + tid;
+            var url = window.admin.url.ignore + "/" + id;
             json_send(url, {
                 "pid": id
             }).done(function(reply){
