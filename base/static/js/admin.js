@@ -424,6 +424,23 @@
             });
         });
     };
+    window.render.new_ignore=function(){
+        var id = $.trim( $(this).data("id") );
+        var mid = $.trim( $(this).data("meso") );
+        var msg = "Ignore project {0}? Are you sure?".f(mid);
+        UIkit.modal.confirm(msg, function(){
+            var url = window.admin.url.ignore + "/" + tid;
+            json_send(url, {
+                "pid": id,
+            }).done(function(reply){
+                if(reply.data){
+                    UIkit.notify(reply.data, {timeout: 2000, status:"success"});
+                }
+                $("#"+id).remove();
+                $("#"+id+"-info").remove();
+            });
+        });
+    };
     window.render.new_reject=function(){
         var id = $.trim( $(this).data("id") );
         var mid = $.trim( $(this).data("meso") );
