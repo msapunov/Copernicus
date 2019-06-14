@@ -428,7 +428,7 @@
         var id = $.trim( $(this).data("id") );
         var mid = $.trim( $(this).data("meso") );
         var project_title = $.trim( $(this).data("title") );
-        var title = "Rejecting project {0}".f(mid);
+        var title = "Reject project {0}?".f(mid);
         var text = "Enter a reason for rejecting project '{0}' ({1})".f(project_title, mid);
         var motiv = $("<textarea/>").html(text).addClass("uk-width-1-1").attr({
             "rows": "4",
