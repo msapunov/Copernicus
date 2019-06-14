@@ -509,6 +509,7 @@
             }
         });
     };
+
     window.render.tasks_accept=function(){
         window.render.tasks_act("accept", this);
     };
@@ -525,10 +526,13 @@
     $(document).on("click", ".user_show", window.render.user);
     $(document).on("click", ".system_reload", window.admin.sys);
     $(document).on("click", ".slurm_reload", window.render.partition);
+    $(document).on("click", ".message", window.render.message);
+
     $(document).on("click", ".new_project", window.render.new_project);
     $(document).on("click", ".new_accept", window.render.new_accept);
+    $(document).on("click", ".new_ignore", window.render.new_ignore);
     $(document).on("click", ".new_reject", window.render.new_reject);
-    $(document).on("click", ".message", window.render.message);
+
     $(document).on("click", ".task_show", window.render.tasks);
     $(document).on("click", ".task_info", window.render.new_project);
     $(document).on("click", ".task_history", window.render.tasks_history);
@@ -537,10 +541,13 @@
     $(document).on("click", ".task_accept", window.render.tasks_accept);
     $(document).on("click", ".task_ignore", window.render.tasks_ignore);
     $(document).on("click", ".task_reject", window.render.tasks_reject);
+    $(document).on("click", ".task_edit", window.render.tasks_edit);
+
     $(document).on("click", ".history_info", window.render.new_project);
     $(document).on("click", ".history_info", window.render.tasks_sel_update);
-    $(document).on("click", ".task_edit", window.render.tasks_edit);
+
     $(document).on("change", ".task_sel_info", window.render.tasks_btn_toggle);
+
 
     $(document).on({
         mouseenter: function () {
