@@ -1,4 +1,5 @@
 from flask import current_app, request
+from flask_login import current_user
 from base.pages import check_int, ssh_wrapper, send_message, check_str, Task
 from base.pages import ProjectLog
 from base.pages.project.magic import get_project_by_name
@@ -139,6 +140,16 @@ def project_creation_magic(register, users, approve):
         users=users["users"]
     )
     return project
+
+def reg_ignore(pid):
+    full_name = current_user.full_name()
+    rec = get_registration_record(pid)
+    rec.processed = True
+    rec.accepted = False
+    rec.comment = "Project creation request ignored by %s" % full_name
+    rec.accepted_ts = dt.now()
+    rec.processed_ts = dt.now()
+    return True
 
 
 def get_registration_record(pid):
