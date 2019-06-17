@@ -141,6 +141,7 @@ def project_creation_magic(register, users, approve):
     )
     return project
 
+
 def reg_ignore(pid):
     full_name = current_user.full_name()
     rec = get_registration_record(pid)
