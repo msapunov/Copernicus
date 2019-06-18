@@ -1,4 +1,4 @@
-from flask import current_app, request
+from flask import current_app, request, g
 from flask_login import current_user
 from base.pages import check_int, ssh_wrapper, send_message, check_str, Task
 from base.pages import ProjectLog
