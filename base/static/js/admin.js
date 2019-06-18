@@ -16,7 +16,8 @@
         tasks_ignore: "admin/tasks/ignore",
         tasks_reject: "admin/tasks/reject",
         tasks_update: "admin/tasks/update",
-        user: "admin/user/info"
+        user: "admin/user/info",
+        user_details: "admin/user/details"
     };
     window.admin.sys = function(){
         json_send(window.admin.url.system).done(function(data){
