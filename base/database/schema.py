@@ -20,6 +20,21 @@ class ACLDB(db.Model):
     modified = db.Column(db.DateTime(True))
     created = db.Column(db.DateTime(True))
 
+    def to_dict(self):
+        start = self.created.strftime("%Y-%m-%d %X %Z") if self.created else ""
+        mod = self.modified.strftime("%Y-%m-%d %X %Z") if self.modified else ""
+        return {
+            "id": self.id,
+            "user": self.is_user,
+            "responsible": self.is_responsible,
+            "manager": self.is_manager,
+            "tech": self.is_tech,
+            "committee": self.is_committee,
+            "admin": self.is_admin,
+            "created": start,
+            "modified": mod,
+        }
+
 
 class MethodDB(db.Model):
     __tablename__ = "methods"
