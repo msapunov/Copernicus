@@ -8,6 +8,15 @@ __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
 
 
+def user_by_id(uid):
+    from base.database.schema import User
+
+    user = User.query.filter_by(id=uid).first()
+    if not user:
+        raise ValueError("Failed to find user with id '%s'" % uid)
+    return user
+
+
 def get_user_record(login=None):
     from base.database.schema import User
 
