@@ -341,6 +341,35 @@ class User(UserMixin, db.Model):
         ids = map(lambda x: x.id, projects)
         return list(ids)
 
+    def to_dict_with_acl(self):
+        start = self.acl.created.strftime("%Y-%m-%d %X %Z") if self.acl.created else ""
+        mod = self.acl.modified.strftime("%Y-%m-%d %X %Z") if self.acl.modified else ""
+        return {
+            "id": self.id,
+            "login": self.login,
+            "name": self.name,
+            "fullname": self.full_name(),
+            "surname": self.surname,
+            "email": self.email,
+            "phone": self.phone,
+            "lab": self.lab,
+            "position": self.position,
+            "active": self.active,
+            "comment": self.comment,
+            #            "last_seen": self.last_seen.isoformat() + 'Z',
+            "modified": self.modified,
+            "created": self.created,
+            "acl_id": self.acl.id,
+            "user": self.acl.is_user,
+            "responsible": self.acl.is_responsible,
+            "manager": self.acl.is_manager,
+            "tech": self.acl.is_tech,
+            "committee": self.acl.is_committee,
+            "admin": self.acl.is_admin,
+            "acl_created": start,
+            "acl_modified": mod
+        }
+
     def to_dict(self):
         return {
             "id": self.id,
