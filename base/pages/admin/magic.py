@@ -204,6 +204,34 @@ def is_user_exists(record):
     return record
 
 
+def group_users():
+    result = {}
+
+    from base.database.schema import User
+    users_obj = User.query.all()
+    users_obj = sorted(users_obj, key=attrgetter("login"))
+    users = map(lambda x: {"id": x.id, "login": x.login, "name": x.name,
+                           "surname": x.surname, "status": x.active,
+                           "user": x.acl.is_user, "manager": x.acl.is_manager,
+                           "tech": x.acl.is_tech, "admin": x.acl.is_admin,
+                           "responsible": x.acl.is_responsible,
+                           "committee": x.acl.is_committee}, users_obj)
+
+    roles = ["user", "manager", "tech", "admin", "committee", "responsible"]
+    for user in list(users):
+        first = user["login"][0]
+        if first not in result:
+            result[first] = []
+        result[first].append(user)
+        for i in roles:
+            if not user[i]:
+                continue
+            if i not in result:
+                result[i] = []
+            result[i].append(user)
+    return result
+
+
 def task_update_user(login, user_data):
     data = user_data.split(" and ")
 
