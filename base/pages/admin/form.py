@@ -1,10 +1,11 @@
 from flask_wtf import Form
-from wtforms import StringField, BooleanField
+from wtforms import StringField, BooleanField, HiddenField
 from wtforms.fields.html5 import EmailField
 from wtforms.validators import DataRequired, Email
 
 
 class UserEditForm(Form):
+    uid = HiddenField(validators=[DataRequired()])
     login = StringField("Login", validators=[DataRequired()])
     name = StringField("Name", validators=[DataRequired()])
     surname = StringField("Surname", validators=[DataRequired()])
