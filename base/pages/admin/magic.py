@@ -3,7 +3,7 @@ from flask_login import current_user
 from base.pages import check_int, ssh_wrapper, send_message, check_str, Task
 from base.pages import ProjectLog
 from base.pages.project.magic import get_project_by_name
-from base.pages.user.magic import get_user_record
+from base.pages.user.magic import get_user_record, user_by_id
 from logging import error, debug
 from operator import attrgetter
 from datetime import datetime as dt
