@@ -222,7 +222,7 @@ def user_info_update(form):
     from base import db
     db.session.commit()
 
-    return user
+    return user.to_dict_with_acl()
 
 
 def group_users():

@@ -17,7 +17,8 @@
         tasks_reject: "admin/tasks/reject",
         tasks_update: "admin/tasks/update",
         user: "admin/user/info",
-        user_details: "admin/user/details"
+        user_details: "admin/user/details/get",
+        user_edit: "admin/user/details/set"
     };
     window.admin.sys = function(){
         json_send(window.admin.url.system).done(function(data){
@@ -520,7 +521,41 @@
             }
         });
     };
-
+    window.render.name_swap=function(){
+        var name = $("#ua_name").val();
+        var surname = $("#ua_surname").val();
+        $("#ua_name").val(surname);
+        $("#ua_surname").val(name);
+    };
+    window.render.user_add=function(){
+        var id = $.trim( $(this).data("id") );
+        var url = window.admin.url.user_details + "/" + id;
+        if(id !== 'undefined'){
+            json_send(url, false, false).done(function(reply) {
+                if(! reply.data){
+                    UIkit.notify("No data returned by service", {timeout: 2000, status:"danger"});
+                    return
+                }
+                var data = reply.data;
+                $("#ua_id").val(data.id ? data.id : '');
+                $("#ua_login").val(data.login ? data.login : '');
+                $("#ua_name").val(data.name ? data.name : '');
+                $("#ua_surname").val(data.surname ? data.surname : '');
+                $("#ua_email").val(data.email ? data.email : '');
+                $("#ua_active").prop('checked', data.active);
+                $("#ua_user").prop('checked', data.user);
+                $("#ua_resp").prop('checked', data.responsible);
+                $("#ua_comm").prop('checked', data.committee);
+                $("#ua_admn").prop('checked', data.admin);
+            });
+        }
+        var modal = UIkit.modal("#user_change");
+        if ( modal.isActive() ) {
+            modal.hide();
+        } else {
+            modal.show();
+        }
+    };
     window.render.tasks_accept=function(){
         window.render.tasks_act("accept", this);
     };
@@ -529,6 +564,20 @@
     };
     window.render.tasks_reject=function(){
         window.render.tasks_act("reject", this);
+    };
+    window.render.ue_submit_or_cancel=function(){
+        if($(this).hasClass("ue_submit")){
+            var data = $("form#ue_form").serializeArray().map(function(x){this[x.name] = x.value; return this;}.bind({}))[0];
+            //var data = $("form#ue_form").serialize();
+            json_send(window.admin.url.user_edit, data, false).done(function(reply){
+                if(reply.message){
+                    UIkit.notify(reply.message, {timeout: 2000, status:"success"});
+                }
+            })
+        }else{
+            $("#ue_form").trigger("reset");
+        }
+        UIkit.modal("#user_change").hide();
     };
 
     $(document).on("ready", function(){
@@ -556,6 +605,12 @@
 
     $(document).on("click", ".history_info", window.render.new_project);
     $(document).on("click", ".history_info", window.render.tasks_sel_update);
+
+    $(document).on("click", ".user_add", window.render.user_add);
+    $(document).on("click", ".user_edit", window.render.user_add);
+    $(document).on("click", ".name_swap", window.render.name_swap);
+    $(document).on("click", ".ue_submit", window.render.ue_submit_or_cancel);
+    $(document).on("click", ".ue_cancel", window.render.ue_submit_or_cancel);
 
     $(document).on("change", ".task_sel_info", window.render.tasks_btn_toggle);
 

@@ -272,5 +272,50 @@
 
     </div>
 </div>
+{% endblock %}
 
+{% block last %}
+<div id="user_change" class="uk-modal fade" tabindex="-1" role="dialog" aria-labelledby="confirm-modal" aria-hidden="true">
+    <div class="uk-modal-dialog">
+        <a class="uk-modal-close uk-close"></a>
+        <div class="uk-overflow-container">
+            <form id="ue_form" action="test" method="post" class="uk-panel uk-panel-box uk-form">
+                {{ form.csrf_token }}
+                {{ form.uid(id="ua_id") }}
+                <div class="uk-form-row">
+                    {{ form.login(placeholder="username", class_="uk-width-1-1 uk-form-large", id="ua_login") }}
+                </div>
+                <div class="uk-form-row">
+                    {{ form.name(placeholder="name", class_="uk-width-1-1 uk-form-large uk-text-capitalize", id="ua_name") }}
+                </div>
+                <div class="uk-form-row">
+                    {{ form.surname(placeholder="surname", class_="uk-width-1-1 uk-form-large uk-text-capitalize", id="ua_surname") }}
+                </div>
+                <div class="uk-form-row">
+                    {{ form.email(placeholder="email", class_="uk-width-1-1 uk-form-large", id="ua_email") }}
+                </div>
+                <div class="uk-form-row">
+                    <button class="uk-button uk-align-center name_swap" type="button">
+                        <span class=" uk-margin-small-right uk-icon-retweet"></span>
+                        Swap name and surname
+                    </button>
+                </div>
+                <div class="uk-form-row">
+                    {{ form.active(placeholder="active", id="ua_active") }} Active user?
+                </div>
+
+                <div class="uk-form-row">
+                    <div>{{ form.is_user(id="ua_user") }} User</div>
+                    <div>{{ form.is_responsible(id="ua_resp") }} Responsible</div>
+                    <div>{{ form.is_committee(id="ua_comm") }} Scientific committee</div>
+                    <div>{{ form.is_admin(id="ua_admn") }} Admin</div>
+                </div>
+            </form>
+        </div>
+        <div class="uk-modal-footer uk-text-right">
+            <button class="uk-button js-modal-confirm-cancel ue_cancel">Cancel</button>
+            <button class="uk-button uk-button-primary js-modal-confirm ue_submit">Submit</button>
+        </div>
+    </div>
+</div>
 {% endblock %}
