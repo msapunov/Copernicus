@@ -6,7 +6,7 @@ from base.pages.user.magic import get_user_record, user_by_id
 from base.pages.admin import bp
 from base.pages.admin.magic import get_uptime, get_mem, get_ltm, TaskManager
 from base.pages.admin.magic import slurm_partition_info, process_task
-from base.pages.admin.magic import reg_ignore, group_users
+from base.pages.admin.magic import reg_ignore, group_users, user_info_update
 from base.pages.admin.form import UserEditForm
 from base.pages.project.magic import pending_resources, processed_resource
 
@@ -44,6 +44,24 @@ def web_admin_message_send():
         user = get_user_record(login)
         emails.append(user.email)
     return jsonify(data=send_message(emails, message=msg, title=title))
+
+
+@bp.route("/admin/user/details/set", methods=["POST"])
+@login_required
+def admin_user_update():
+    form = UserEditForm()
+    if form.validate_on_submit():
+        return jsonify(data=user_info_update(form),
+                       message="Modifications has been saved to the database")
+    raise ValueError(form.errors)
+
+
+
+@bp.route("/admin/user/details/get/<int:uid>", methods=["POST"])
+@login_required
+def admin_user_details(uid):
+    user = user_by_id(uid)
+    return jsonify(data=user.to_dict_with_acl())
 
 
 @bp.route("/admin/registration/ignore/<int:pid>", methods=["POST"])
