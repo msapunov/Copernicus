@@ -2,11 +2,12 @@ from flask import g, flash, request, redirect, url_for, render_template, jsonify
 from flask import current_app
 from flask_login import login_required, login_user
 from base.pages import ssh_wrapper, send_message, Task
-from base.pages.user.magic import get_user_record
+from base.pages.user.magic import get_user_record, user_by_id
 from base.pages.admin import bp
 from base.pages.admin.magic import get_uptime, get_mem, get_ltm, TaskManager
 from base.pages.admin.magic import slurm_partition_info, process_task
-from base.pages.admin.magic import reg_ignore
+from base.pages.admin.magic import reg_ignore, group_users
+from base.pages.admin.form import UserEditForm
 from base.pages.project.magic import pending_resources, processed_resource
 
 
@@ -172,4 +173,6 @@ def web_admin():
     else:
         result["extension"] = list(map(lambda x: x.to_dict(), reg_list))
     result["tasks"] = TaskManager().list()
-    return render_template("admin.html", data=result)
+    result["users"] = group_users()
+    form = UserEditForm()
+    return render_template("admin.html", data=result, form = form)
