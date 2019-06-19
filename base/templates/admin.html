@@ -192,6 +192,80 @@
         </div>
         {% endif %}
 
+        {% if data.users %}
+            {% set long=[] %}
+            {% set short=[] %}
+            {% for key in data.users.keys() %}
+                {% if key | length > 1 %}
+                    {{ long.append(key) or '' }}
+                {% else %}
+                    {{ short.append(key) or '' }}
+                {% endif %}
+            {% endfor %}
+            {% set long = long | sort %}
+            {% set short = short | sort %}
+            {% set every = long+short%}
+
+        <h3 class="uk-accordion-title">
+            Users
+            <button class="uk-float-right uk-button uk-button-small user_add" type="button">
+                <span class="uk-icon-user-plus"></span>
+                Add user
+            </button>
+        </h3>
+        <div class="uk-accordion-content">
+            <div class="uk-grid">
+                <div class="uk-width-small-1-1 uk-width-medium-1-3">
+                    <ul class="uk-nav uk-nav-side" data-uk-switcher="{connect:'#userz'}">
+                        {% for key in every %}
+                            {% if key in ["admin", "responsible", "user"] %}
+                                <li><a href="#" class="uk-text-capitalize">{{ key }}s</a></li>
+                            {% else %}
+                                <li><a href="#" class="uk-text-capitalize">{{ key }}</a></li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="uk-width-small-1-1 uk-width-medium-2-3">
+
+                    <ul id="userz" class="uk-switcher">
+                        {% for key in every %}
+                            <li>
+                                <table class="uk-table uk-table-hover uk-table-striped uk-table-condensed">
+                                    <thead>
+                                        <tr>
+                                            <th data-priority="1">Login</th>
+                                            <th data-priority="2">Name</th>
+                                            <th data-priority="3">Surname</th>
+                                            <th data-priority="4">Active</th>
+                                            <th data-priority="5"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for user in data.users[key] %}
+                                            <tr>
+                                                <td>{{user.login}}</td>
+                                                <td class="uk-text-capitalize">{{user.name}}</td>
+                                                <td class="uk-text-capitalize">{{user.surname}}</td>
+                                                <td>
+                                                {% if user.status %}
+                                                    <span class="uk-icon-check"></span>
+                                                {% endif %}
+                                                </td>
+                                                <td><button class="uk-button uk-button-mini user_edit" type="button" data-id='{{user.id}}'><span class="uk-icon-cog"></span></button>
+                                                    <button class="uk-button uk-button-mini user_del uk-text-danger" type="button" data-id='{{user.id}}'><span class="uk-icon-close"></span></button></td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                    </table>
+                                </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
         <h3 class="uk-accordion-title">Endpoint Access Control List</h3>
         <div class="uk-accordion-content">
         </div>
