@@ -626,11 +626,31 @@
         }
         UIkit.modal("#user_change").hide();
     };
+    window.render.user_destruction=function(msg, url){
+        UIkit.modal.confirm(msg, function(){
+            json_send(url,false).done(function(reply){
+                if(reply.data && reply.data == ""){
+                    if(reply.message){
+                        UIkit.notify(reply.message, {timeout: 2000, status:"success"});
+                    }
+                    $("#"+id).remove();
+                }
+            });
+        });
+    };
     window.render.user_purge=function(){
-
+        var id = $.trim( $(this).data("id") );
+        var login = $.trim( $(this).data("login") );
+        var msg = "Delete user {0} and corresponding directories with data? Are you sure?".f(login);
+        var url = window.admin.url.user_purge + "/" + id;
+        window.render.user_destruction(msg, url);
     };
     window.render.user_block=function(){
-
+        var id = $.trim( $(this).data("id") );
+        var login = $.trim( $(this).data("login") );
+        var msg = "Block user {0} from submitting jobs via SLURM? Are you sure?".f(login);
+        var url = window.admin.url.user_block + "/" + id;
+        window.render.user_destruction(msg, url);
     };
 
     $(document).on("ready", function(){
