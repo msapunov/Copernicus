@@ -318,7 +318,9 @@ class User(UserMixin, db.Model):
         return '<User {}>'.format(self.login)
 
     def full_name(self):
-        return "%s %s" % (self.name.capitalize(), self.surname.capitalize())
+        if self.name and self.surname:
+            return "%s %s" % (self.name.capitalize(), self.surname.capitalize())
+        return "%s %s" % (self.name, self.surname)
 
     def permissions(self):
         perm = []
