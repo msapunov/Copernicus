@@ -239,8 +239,6 @@
                                             <th data-priority="6">Surname</th>
                                             <th data-priority="4">Active</th>
                                             <th data-priority="2"></th>
-                                            <th data-priority="2"></th>
-                                            <th data-priority="2"></th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -255,13 +253,11 @@
                                                 {% endif %}
                                                 </td>
                                                 <td>
-                                                    <button class="uk-button uk-button-mini user_edit" type="button" data-id='{{user.id}}'><span class="uk-icon-cog"></span></button>
-                                                </td>
-                                                <td>
-                                                    <button class="uk-button uk-button-mini user_block" type="button" data-id='{{user.id}}'><span class="uk-icon-ban"></span></button>
-                                                </td>
-                                                <td>
-                                                    <button class="uk-button uk-button-mini user_purge uk-text-danger" type="button" data-id='{{user.id}}'><span class="uk-icon-close"></span></button>
+                                                    <div class="uk-button-group uk-float-right">
+                                                        <button class="uk-button uk-button-mini user_edit" type="button" data-id='{{user.id}}'><span class="uk-icon-cog"></span></button>
+                                                        <button class="uk-button uk-button-mini user_block uk-text-danger" type="button" data-id='{{user.id}}' data-login='{{user.login}}'><span class="uk-icon-ban"></span></button>
+                                                        <button class="uk-button uk-button-mini user_purge uk-button-danger" type="button" data-id='{{user.id}}' data-login='{{user.login}}'><span class="uk-icon-close"></span></button>
+                                                    </div>
                                                 </td>
                                             </tr>
                                         {% endfor %}
