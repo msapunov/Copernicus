@@ -238,7 +238,8 @@
                                             <th data-priority="2">Name</th>
                                             <th data-priority="3">Surname</th>
                                             <th data-priority="4">Active</th>
-                                            <th data-priority="5"></th>
+                                            <th data-priority="2"></th>
+                                            <th data-priority="2"></th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -252,8 +253,12 @@
                                                     <span class="uk-icon-check"></span>
                                                 {% endif %}
                                                 </td>
-                                                <td><button class="uk-button uk-button-mini user_edit" type="button" data-id='{{user.id}}'><span class="uk-icon-cog"></span></button>
-                                                    <button class="uk-button uk-button-mini user_del uk-text-danger" type="button" data-id='{{user.id}}'><span class="uk-icon-close"></span></button></td>
+                                                <td>
+                                                    <button class="uk-button uk-button-mini user_edit" type="button" data-id='{{user.id}}'><span class="uk-icon-cog"></span></button>
+                                                </td>
+                                                <td>
+                                                    <button class="uk-button uk-button-mini user_del uk-text-danger" type="button" data-id='{{user.id}}'><span class="uk-icon-close"></span></button>
+                                                </td>
                                             </tr>
                                         {% endfor %}
                                     </tbody>
