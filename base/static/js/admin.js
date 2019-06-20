@@ -603,6 +603,7 @@
                 if(reply.message){
                     UIkit.notify(reply.message, {timeout: 2000, status:"success"});
                 }
+                window.render.update_ue(reply);
             })
         }else{
             $("#ue_form").trigger("reset");
