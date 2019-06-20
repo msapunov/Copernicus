@@ -18,7 +18,9 @@
         tasks_update: "admin/tasks/update",
         user: "admin/user/info",
         user_details: "admin/user/details/get",
-        user_edit: "admin/user/details/set"
+        user_edit: "admin/user/details/set",
+        user_block: "admin/user/block",
+        user_purge: "admin/user/purge"
     };
     window.admin.sys = function(){
         json_send(window.admin.url.system).done(function(data){
