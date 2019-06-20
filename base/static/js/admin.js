@@ -556,6 +556,29 @@
             modal.show();
         }
     };
+    window.render.ue_buttons=function(id, login){
+        var s_edit = $("<span/>").addClass("uk-icon-cog");
+        var btn_edit = $("<button/>").attr({"data-id": id, "type": "button"}).append(s_edit);
+        btn_edit.addClass("uk-button uk-button-mini user_edit");
+
+        var s_ban = $("<span/>").addClass("uk-icon-ban");
+        var btn_ban = $("<button/>").attr({"data-id": id, "type": "button"}).append(s_ban);
+        btn_ban.addClass("uk-button uk-button-mini user_del uk-text-danger");
+
+        var s_del = $("<span/>").addClass("uk-icon-close");
+        var btn_del = $("<button/>").attr({"data-id": id, "data-login": login, "type": "button"}).append(s_del);
+        btn_del.addClass("uk-button uk-button-mini user_del uk-button-danger");
+
+        var btn_grp = $("<div/>").addClass(
+            "uk-button-group uk-float-right"
+        );
+
+        $.each([btn_edit, btn_ban, btn_del], function(idx, el){
+            el.appendTo(btn_grp);
+        });
+
+        return $("<td/>").append(btn_grp)
+    };
     window.render.update_ue=function(reply){
         if(!reply.data) {
             return false;
@@ -571,19 +594,10 @@
             status.append( $("<span/>").addClass("uk-icon-check") )
         }
 
-        var s_edit = $("<span/>").addClass("uk-icon-cog");
-        var btn_edit = $("<button/>").attr({"data-id": id, "type": "button"}).append(s_edit);
-        btn_edit.addClass("uk-button uk-button-mini user_edit");
-
-        var s_del = $("<span/>").addClass("uk-icon-close");
-        var btn_del = $("<button/>").attr({"data-id": id, "type": "button"}).append(s_del);
-        btn_del.addClass("uk-button uk-button-mini user_del uk-text-danger");
-
-        var td_edit = $("<td/>").append(btn_edit);
-        var td_del = $("<td/>").append(btn_del);
+        var buttons = window.render.ue_buttons(id, data.login);
 
         var tr = $("<tr/>").attr({"id": "ue_rec_"+id}).append(login).append(name);
-        tr.append(surname).append(status).append(td_edit).append(td_del);
+        tr.append(surname).append(status).append(buttons);
         $("tr#ue_rec_"+id).replaceWith(tr);
     };
     window.render.tasks_accept=function(){
