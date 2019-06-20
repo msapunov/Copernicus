@@ -244,7 +244,7 @@
                                     </thead>
                                     <tbody>
                                         {% for user in data.users[key] %}
-                                            <tr>
+                                            <tr id="ue_rec_{{user.id}}">
                                                 <td>{{user.login}}</td>
                                                 <td class="uk-text-capitalize">{{user.name}}</td>
                                                 <td class="uk-text-capitalize">{{user.surname}}</td>
