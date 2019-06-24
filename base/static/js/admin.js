@@ -545,31 +545,23 @@
     window.render.user_edit=function(btn){
         var id = $.trim( $(btn).data("id") );
         var url = window.admin.url.user_details + "/" + id;
-        if(id !== 'undefined'){
-            json_send(url, false, false).done(function(reply) {
-                if(! reply.data){
-                    UIkit.notify("No data returned by service", {timeout: 2000, status:"danger"});
-                    return
-                }
-                var data = reply.data;
-                $("#ua_id").val(data.id ? data.id : '');
-                $("#ua_login").val(data.login ? data.login : '');
-                $("#ua_name").val(data.name ? data.name : '');
-                $("#ua_surname").val(data.surname ? data.surname : '');
-                $("#ua_email").val(data.email ? data.email : '');
-                $("#ua_active").prop('checked', data.active);
-                $("#ua_user").prop('checked', data.user);
-                $("#ua_resp").prop('checked', data.responsible);
-                $("#ua_comm").prop('checked', data.committee);
-                $("#ua_admn").prop('checked', data.admin);
-            });
-        }
-        var modal = UIkit.modal("#user_change");
-        if ( modal.isActive() ) {
-            modal.hide();
-        } else {
-            modal.show();
-        }
+        json_send(url, false, false).done(function(reply) {
+            if(! reply.data){
+                UIkit.notify("No data returned by service", {timeout: 2000, status:"danger"});
+                return
+            }
+            var data = reply.data;
+            $("#ua_id").val(data.id ? data.id : '');
+            $("#ua_login").val(data.login ? data.login : '');
+            $("#ua_name").val(data.name ? data.name : '');
+            $("#ua_surname").val(data.surname ? data.surname : '');
+            $("#ua_email").val(data.email ? data.email : '');
+            $("#ua_active").prop('checked', data.active);
+            $("#ua_user").prop('checked', data.user);
+            $("#ua_resp").prop('checked', data.responsible);
+            $("#ua_comm").prop('checked', data.committee);
+            $("#ua_admn").prop('checked', data.admin);
+        });
     };
     window.render.ue_buttons=function(id, login){
         var s_edit = $("<span/>").addClass("uk-icon-cog");
