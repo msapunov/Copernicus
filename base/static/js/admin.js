@@ -530,8 +530,20 @@
         $("#ua_name").val(surname);
         $("#ua_surname").val(name);
     };
-    window.render.user_add=function(){
-        var id = $.trim( $(this).data("id") );
+    window.render.user_add=function() {
+        $("#ue_form").trigger("reset");
+        if ($(this).hasClass("user_edit")) {
+            window.render.user_edit(this);
+        }
+        var modal = UIkit.modal("#user_change");
+        if ( modal.isActive() ) {
+            modal.hide();
+        } else {
+            modal.show();
+        }
+    };
+    window.render.user_edit=function(btn){
+        var id = $.trim( $(btn).data("id") );
         var url = window.admin.url.user_details + "/" + id;
         if(id !== 'undefined'){
             json_send(url, false, false).done(function(reply) {
