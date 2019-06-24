@@ -7,6 +7,7 @@ from base.pages.admin import bp
 from base.pages.admin.magic import get_uptime, get_mem, get_ltm, TaskManager
 from base.pages.admin.magic import slurm_partition_info, process_task
 from base.pages.admin.magic import reg_ignore, group_users, user_info_update
+from base.pages.admin.magic import user_create_by_admin
 from base.pages.admin.form import UserEditForm
 from base.pages.project.magic import pending_resources, processed_resource
 
@@ -55,6 +56,15 @@ def admin_user_update():
                        message="Modifications has been saved to the database")
     raise ValueError(form.errors)
 
+
+@bp.route("/admin/user/create", methods=["POST"])
+@login_required
+def admin_user_create():
+    form = UserEditForm()
+    if form.validate_on_submit():
+        return jsonify(data=user_create_by_admin(form),
+                       message="User creation task has been created")
+    raise ValueError(form.errors)
 
 
 @bp.route("/admin/user/details/get/<int:uid>", methods=["POST"])

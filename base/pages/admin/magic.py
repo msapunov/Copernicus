@@ -204,6 +204,23 @@ def is_user_exists(record):
     return record
 
 
+def user_create_by_admin(form):
+    from base.database.schema import LimboUser
+
+    user = LimboUser()
+    user.name = form.name.data.strip().lower()
+    user.surname = form.surname.data.strip().lower()
+    user.email = form.email.data.strip().lower()
+    user.active = True if form.active.data else False
+    user.acl.is_user = True if form.is_user.data else False
+    user.acl.is_responsible = True if form.is_responsible.data else False
+    user.acl.is_manager = True if form.is_manager.data else False
+    user.acl.is_tech = True if form.is_tech.data else False
+    user.acl.is_committee = True if form.is_committee.data else False
+    user.acl.is_admin = True if form.is_admin.data else False
+
+
+
 def user_info_update(form):
     uid = form.uid.data
     user = user_by_id(uid)
