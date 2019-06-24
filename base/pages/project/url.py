@@ -15,9 +15,10 @@ __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
 
 
-@bp.route("/project/list", methods=["POST"])
+@bp.route("/project/list/<login>", methods=["POST"])
 @login_required
-def project_list():
+def project_list(login=None):
+    print(login)
     return jsonify(data=get_list_of_projects())
 
 
