@@ -615,8 +615,13 @@
     window.render.ue_submit_or_cancel=function(){
         if($(this).hasClass("ue_submit")){
             var data = $("form#ue_form").serializeArray().map(function(x){this[x.name] = x.value; return this;}.bind({}))[0];
-            //var data = $("form#ue_form").serialize();
-            json_send(window.admin.url.user_edit, data, false).done(function(reply){
+            var uid = data.uid;
+            if(uid === "" ){
+                var url = window.admin.url.user_create;
+            }else{
+                var url = window.admin.url.user_edit;
+            }
+            json_send(url, data, false).done(function(reply){
                 if(reply.message){
                     UIkit.notify(reply.message, {timeout: 2000, status:"success"});
                 }
