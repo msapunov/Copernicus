@@ -5,7 +5,7 @@ from wtforms.validators import DataRequired, Email
 
 
 class UserEditForm(Form):
-    uid = HiddenField(validators=[DataRequired()])
+    uid = HiddenField()
     login = StringField("Login", validators=[DataRequired()])
     name = StringField("Name", validators=[DataRequired()])
     surname = StringField("Surname", validators=[DataRequired()])
