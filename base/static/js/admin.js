@@ -18,6 +18,7 @@
         tasks_update: "admin/tasks/update",
         user: "admin/user/info",
         user_details: "admin/user/details/get",
+        user_create: "admin/user/create",
         user_edit: "admin/user/details/set",
         user_block: "admin/user/block",
         user_purge: "admin/user/purge"
