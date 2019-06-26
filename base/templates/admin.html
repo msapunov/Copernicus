@@ -286,42 +286,67 @@
     <div class="uk-modal-dialog">
         <a class="uk-modal-close uk-close"></a>
         <div class="uk-overflow-container">
-            <form id="ue_form" action="test" method="post" class="uk-panel uk-panel-box uk-form">
+            <form id="ue_form" action="test" method="post" class="uk-panel uk-panel-box uk-form uk-form-horizontal">
                 {{ form.csrf_token }}
                 {{ form.uid(id="ua_id") }}
                 <div class="uk-form-row">
-                    {{ form.login(placeholder="username", class_="uk-width-1-1 uk-form-large", id="ua_login") }}
+                    <label class="uk-form-label" for="ua_login">Username:</label>
+                    <div class="uk-form-controls">
+                        {{ form.login(placeholder="jsmith", class_="uk-width-1-1 uk-form-large", id="ua_login") }}
+                    </div>
                 </div>
                 <div class="uk-form-row">
-                    {{ form.name(placeholder="name", class_="uk-width-1-1 uk-form-large uk-text-capitalize", id="ua_name") }}
+                    <label class="uk-form-label" for="ua_name">Name:</label>
+                    <div class="uk-form-controls">
+                        {{ form.name(placeholder="John", class_="uk-width-1-1 uk-form-large uk-text-capitalize", id="ua_name") }}
+                    </div>
                 </div>
                 <div class="uk-form-row">
-                    {{ form.surname(placeholder="surname", class_="uk-width-1-1 uk-form-large uk-text-capitalize", id="ua_surname") }}
+                    <label class="uk-form-label" for="ua_surname">Surname:</label>
+                    <div class="uk-form-controls">
+                        {{ form.surname(placeholder="Smith", class_="uk-width-1-1 uk-form-large uk-text-capitalize", id="ua_surname") }}
+                    </div>
                 </div>
                 <div class="uk-form-row">
-                    {{ form.email(placeholder="email", class_="uk-width-1-1 uk-form-large", id="ua_email") }}
+                    <label class="uk-form-label" for="ua_email">E-mail:</label>
+                    <div class="uk-form-controls">
+                        {{ form.email(placeholder="john.smith@univ-amu.fr", class_="uk-width-1-1 uk-form-large", id="ua_email") }}
+                    </div>
                 </div>
                 <div class="uk-form-row">
-                    <button class="uk-button uk-align-center name_swap" type="button">
-                        <span class=" uk-margin-small-right uk-icon-retweet"></span>
-                        Swap name and surname
-                    </button>
+                    <span class="uk-form-label">Project(s):</span>
+                    <div class="uk-form-controls uk-form-controls-text">
+                        {{ form.project(id="ua_project", class_="uk-width-1-1 uk-form-large", size=5) }}
+                    </div>
                 </div>
                 <div class="uk-form-row">
-                    {{ form.active(placeholder="active", id="ua_active") }} Active user?
+                    <span class="uk-form-label"></span>
+                    <div class="uk-form-controls uk-form-controls-text">
+                        {{ form.active(placeholder="active", id="ua_active") }} Active user?
+                    </div>
                 </div>
 
                 <div class="uk-form-row">
-                    <div>{{ form.is_user(id="ua_user") }} User</div>
-                    <div>{{ form.is_responsible(id="ua_resp") }} Responsible</div>
-                    <div>{{ form.is_committee(id="ua_comm") }} Scientific committee</div>
-                    <div>{{ form.is_admin(id="ua_admn") }} Admin</div>
+                    <span class="uk-form-label">User roles:</span>
+                    <div class="uk-form-controls uk-form-controls-text">
+                        <div>{{ form.is_user(id="ua_user") }} User</div>
+                        <div>{{ form.is_responsible(id="ua_resp") }} Responsible</div>
+                        <div>{{ form.is_committee(id="ua_comm") }} Scientific committee</div>
+                        <div>{{ form.is_admin(id="ua_admn") }} Admin</div>
+                    </div>
                 </div>
             </form>
         </div>
-        <div class="uk-modal-footer uk-text-right">
-            <button class="uk-button js-modal-confirm-cancel ue_cancel">Cancel</button>
-            <button class="uk-button uk-button-primary js-modal-confirm ue_submit">Submit</button>
+        <div class="uk-modal-footer">
+            <div class="uk-text-left">
+                <button class="uk-button uk-align-left name_swap" type="button" title="Swap name and surname">
+                    <span class="uk-icon-retweet"></span>
+                </button>
+            </div>
+            <div class="uk-text-right">
+                <button class="uk-button js-modal-confirm-cancel ue_cancel">Cancel</button>
+                <button class="uk-button uk-button-primary js-modal-confirm ue_submit">Submit</button>
+            </div>
         </div>
     </div>
 </div>
