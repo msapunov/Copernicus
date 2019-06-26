@@ -338,6 +338,11 @@ class User(UserMixin, db.Model):
             perm.append("admin")
         return perm
 
+    def project_names(self):
+        projects = list(self.project)
+        names = map(lambda x: x.get_name(), projects)
+        return list(names)
+
     def project_ids(self):
         projects = list(self.project)
         ids = map(lambda x: x.id, projects)
@@ -369,7 +374,8 @@ class User(UserMixin, db.Model):
             "committee": self.acl.is_committee,
             "admin": self.acl.is_admin,
             "acl_created": start,
-            "acl_modified": mod
+            "acl_modified": mod,
+            "projects": self.project_names()
         }
 
     def to_dict(self):
