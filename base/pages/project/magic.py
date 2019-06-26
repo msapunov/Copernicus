@@ -191,8 +191,8 @@ def project_email(to, title, msg):
 
 def get_list_of_projects():
     from base.database.schema import Project
-    projects = Project.query.all()
-    return list(map(lambda x: x.get_name(), projects))
+    projects = map(lambda x: x.get_name(), Project.query.all())
+    return sorted(list(projects))
 
 
 def get_project_overview():
