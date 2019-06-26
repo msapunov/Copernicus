@@ -25,8 +25,7 @@ def project_list(login=None):
 @bp.route("/project/overview/annie", methods=["POST"])
 @login_required
 def project_overview_annie():
-    result = get_project_overview()
-    return jsonify(data=result)
+    return jsonify(data=get_project_overview())
 
 
 @bp.route("/project/add/user", methods=["POST"])
