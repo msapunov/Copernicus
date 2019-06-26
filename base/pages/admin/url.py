@@ -71,7 +71,7 @@ def admin_user_create():
 @login_required
 def admin_user_details(uid):
     user = user_by_id(uid)
-    return jsonify(data=user.to_dict_with_acl())
+    return jsonify(data=user.details())
 
 
 @bp.route("/admin/registration/ignore/<int:pid>", methods=["POST"])
