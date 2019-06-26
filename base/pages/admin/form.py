@@ -1,5 +1,5 @@
 from flask_wtf import Form
-from wtforms import StringField, BooleanField, HiddenField
+from wtforms import StringField, BooleanField, HiddenField, SelectMultipleField
 from wtforms.fields.html5 import EmailField
 from wtforms.validators import DataRequired, Email
 
@@ -10,6 +10,7 @@ class UserEditForm(Form):
     name = StringField("Name", validators=[DataRequired()])
     surname = StringField("Surname", validators=[DataRequired()])
     email = EmailField("Surname", validators=[DataRequired(), Email()])
+    project = SelectMultipleField("Project", choices=[])
     active = BooleanField("Surname", default=True)
     is_user = BooleanField("User", default=True)
     is_responsible = BooleanField("Responsible", default=False)
