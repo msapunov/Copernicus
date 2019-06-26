@@ -343,7 +343,7 @@ class User(UserMixin, db.Model):
         ids = map(lambda x: x.id, projects)
         return list(ids)
 
-    def to_dict_with_acl(self):
+    def details(self):
         start = self.acl.created.strftime("%Y-%m-%d %X %Z") if self.acl.created else ""
         mod = self.acl.modified.strftime("%Y-%m-%d %X %Z") if self.acl.modified else ""
         return {
