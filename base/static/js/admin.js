@@ -22,7 +22,6 @@
         user_edit: "admin/user/details/set",
         user_block: "admin/user/block",
         user_purge: "admin/user/purge",
-        user_project_list: "user/project/list",
         project_list: "project/list"
     };
     window.admin.sys = function(){
