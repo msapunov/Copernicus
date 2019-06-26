@@ -21,7 +21,9 @@
         user_create: "admin/user/create",
         user_edit: "admin/user/details/set",
         user_block: "admin/user/block",
-        user_purge: "admin/user/purge"
+        user_purge: "admin/user/purge",
+        user_project_list: "user/project/list",
+        project_list: "project/list"
     };
     window.admin.sys = function(){
         json_send(window.admin.url.system).done(function(data){
