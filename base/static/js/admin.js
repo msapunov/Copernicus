@@ -563,6 +563,7 @@
             $("#ua_resp").prop('checked', data.responsible);
             $("#ua_comm").prop('checked', data.committee);
             $("#ua_admn").prop('checked', data.admin);
+            $("#ua_project").val(data.projects).multiselect("refresh");
         });
     };
     window.render.ue_buttons=function(id, login){
