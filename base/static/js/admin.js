@@ -682,6 +682,7 @@
 
     $(document).on("ready", function(){
         window.admin.sys();
+        window.project_req();
     });
     $(document).on("click", ".user_show", window.render.user);
     $(document).on("click", ".system_reload", window.admin.sys);
