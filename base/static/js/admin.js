@@ -618,7 +618,11 @@
     };
     window.render.ue_submit_or_cancel=function(){
         if($(this).hasClass("ue_submit")){
-            var data = $("form#ue_form").serializeArray().map(function(x){this[x.name] = x.value; return this;}.bind({}))[0];
+            var data = {};
+            var ids = ["#ua_id","#ua_login","#ua_name","#ua_surname","#ua_email","#ua_project","#ua_active","#ua_user","#ua_resp","#ua_comm","#ua_admn"];
+            $.each(ids, function(idx, name){
+                data[name] = $(name).val();
+            });
             var uid = data.uid;
             if(uid === "" ){
                 var url = window.admin.url.user_create;
