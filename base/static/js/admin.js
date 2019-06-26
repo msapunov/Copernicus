@@ -532,6 +532,16 @@
         $("#ua_name").val(surname);
         $("#ua_surname").val(name);
     };
+    window.project_req=function(){
+        var url = window.admin.url.project_list;
+        json_send(url, false, false).done(function(reply){
+            $("#ua_project").empty();
+            $.each(reply.data, function(idx, el){
+                var opt = $("<option/>").text(el).val(el);
+                $("#ua_project").append(opt);
+            });
+        });
+    };
     window.render.user_add=function() {
         $("#ue_form").trigger("reset");
         if ($(this).hasClass("user_edit")) {
