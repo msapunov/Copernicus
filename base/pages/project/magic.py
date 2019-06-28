@@ -189,15 +189,6 @@ def project_email(to, title, msg):
                                      message=msg))
 
 
-def get_pid_n_names():
-    def by_name(elem):
-        return elem[1]
-
-    from base.database.schema import Project
-    projects = map(lambda x: (x.id, x.get_name()), Project.query.all())
-    return sorted(list(projects), key=by_name)
-
-
 def list_of_projects():
     from base.database.schema import Project
     projects = map(lambda x: x.get_name(), Project.query.all())
