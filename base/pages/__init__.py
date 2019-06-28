@@ -249,7 +249,7 @@ class TaskQueue:
         description = user.task_ready()
         self.task.action = "create|user|%s|%s|%s" % (user.login, self.p_name,
                                                   description)
-        self._user_action()
+        return self._user_action()
 
     def responsible_create(self, user):
         if not self.p_name:
@@ -257,7 +257,7 @@ class TaskQueue:
         description = user.task_ready()
         self.task.action = "create|resp|%s|%s|%s" % (user.login, self.p_name,
                                                      description)
-        self._user_action()
+        return self._user_action()
 
     def user_assign(self, user):
         if not self.project:
@@ -267,7 +267,7 @@ class TaskQueue:
         description = "Assign user %s to project %s" % (login, self.p_name)
         self.task.action = "assign|user|%s|%s|%s" % (login, self.p_name,
                                                      description)
-        self._user_action()
+        return self._user_action()
 
     def responsible_assign(self, user):
         if not self.project:
@@ -279,7 +279,7 @@ class TaskQueue:
                                                                self.p_name)
         self.task.action = "assign|resp|%s|%s|%s" % (login, self.p_name,
                                                      description)
-        self._user_action()
+        return self._user_action()
 
     def user_update(self, data):
         print(data)
@@ -322,6 +322,7 @@ class TaskQueue:
     def _user_action(self):
         self.processed = True
         self._commit()
+        return self
 
     def _commit(self):
         from base import db
