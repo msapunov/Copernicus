@@ -5,13 +5,22 @@ from wtforms.validators import DataRequired, Email
 from base.pages.project.magic import list_of_projects
 
 
+class SelectMultipleProjects(SelectMultipleField):
+    def pre_validate(self, form):
+        print(form.project.data)
+        projects = list_of_projects()
+        for i in form.project.data:
+            if i not in projects:
+                raise ValueError("Project %s doesn't register in the DB" % i)
+
+
 class UserEditForm(Form):
     uid = HiddenField()
     login = StringField("Login", validators=[DataRequired()])
     name = StringField("Name", validators=[DataRequired()])
     surname = StringField("Surname", validators=[DataRequired()])
     email = EmailField("Surname", validators=[DataRequired(), Email()])
-    project = SelectMultipleField("Project", choices=[])
+    project = SelectMultipleProjects("Project", choices=[])
     active = BooleanField("Surname", default=True)
     is_user = BooleanField("User", default=True)
     is_responsible = BooleanField("Responsible", default=False)
