@@ -229,7 +229,6 @@ class Task:
 class TaskQueue:
 
     def __init__(self):
-#  task: act|<user, resp, proj>|<user_login, ''>|<project_name, ''>|task_encoded
         from base.database.schema import Tasks
         self.task = Tasks(author=current_user, processed=False, done=False)
         self.u_name = ""
@@ -294,10 +293,8 @@ class TaskQueue:
                 setattr(tmp_user, key, value)
                 act.append("%s: %s" % (key, value))
         act = " and ".join(act)
-        print(act)
         self.task.action = "update|user|%s|%s|%s" % (login, "", act)
-        print(self.task.action)
-        self._user_action()
+        return self._user_action()
 
     def user_remove(self, user):
         if not self.project:
@@ -306,7 +303,7 @@ class TaskQueue:
         description = "Remove user %s from project %s" % (login, self.p_name)
         self.task.action = "remove|user|%s|%s|%s" % (login,self.p_name,
                                                      description)
-        self._user_action()
+        return self._user_action()
 
     def _copy_user(self, user):
         from base import db
@@ -319,30 +316,6 @@ class TaskQueue:
         limbo = LimboUser(**data)
         limbo.reference = user
 
-        db.session.add(limbo)
-        return limbo
-
-    @staticmethod
-    def _copy_project(project):
-        from base import db
-        from base.database.schema import LimboProject
-        limbo = LimboProject(
-            title=project.title,
-            description=project.description,
-            scientific_fields=project.scientific_fields,
-            genci_committee=project.genci_committee,
-            numerical_methods=project.numerical_methods,
-            computing_resources=project.computing_resources,
-            project_management=project.project_management,
-            project_motivation=project.project_motivation,
-            allocation_end=project.allocation_end,
-            comment=project.comment,
-            gid=project.gid,
-            privileged=project.privileged,
-            name=project.name,
-            type=project.type,
-            reference=project
-        )
         db.session.add(limbo)
         return limbo
 
