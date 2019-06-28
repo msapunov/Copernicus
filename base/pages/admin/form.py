@@ -2,6 +2,7 @@ from flask_wtf import Form
 from wtforms import StringField, BooleanField, HiddenField, SelectMultipleField
 from wtforms.fields.html5 import EmailField
 from wtforms.validators import DataRequired, Email
+from base.pages.project.magic import list_of_projects
 
 
 class UserEditForm(Form):
@@ -18,3 +19,8 @@ class UserEditForm(Form):
     is_tech = BooleanField("Tech", default=False)
     is_committee = BooleanField("Committee", default=False)
     is_admin = BooleanField("Admin", default=False)
+
+    def __init__(self, *args, **kwargs):
+        super(UserEditForm, self).__init__(*args, **kwargs)
+        projects = list_of_projects()
+        self.project.choices = [(project, project) for project in projects]
