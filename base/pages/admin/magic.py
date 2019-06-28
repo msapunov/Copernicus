@@ -235,18 +235,33 @@ class TmpUser:
 
 def user_create_by_admin(form):
 
-    user = LimboUser()
+    email = form.email.data.strip().lower()
+    if User.query.filter(User.email == email).first():
+        raise ValueError("User with e-mail %s has been registered already"
+                         % email)
+
+    user = TmpUser()
     user.name = form.name.data.strip().lower()
     user.surname = form.surname.data.strip().lower()
-    user.email = form.email.data.strip().lower()
+    user.email = email
+    user.login = form.login.data.strip().lower()
     user.active = True if form.active.data else False
-    user.acl.is_user = True if form.is_user.data else False
-    user.acl.is_responsible = True if form.is_responsible.data else False
-    user.acl.is_manager = True if form.is_manager.data else False
-    user.acl.is_tech = True if form.is_tech.data else False
-    user.acl.is_committee = True if form.is_committee.data else False
-    user.acl.is_admin = True if form.is_admin.data else False
+    user.is_user = True if form.is_user.data else False
+    user.is_responsible = True if form.is_responsible.data else False
+    user.is_manager = True if form.is_manager.data else False
+    user.is_tech = True if form.is_tech.data else False
+    user.is_admin = True if form.is_admin.data else False
+    user.is_committee = True if form.is_committee.data else False
 
+    for name in form.project.data:
+        project = get_project_by_name(name)
+        tid = TaskQueue().project(project).user_create(user).task.id
+        Task(tid).accept()
+        msg = "Add a new user: %s '%s %s <%s>'" % (
+            user.login, user.name, user.surname, user.email)
+        ProjectLog(project).event(msg)
+    return "Add creation of the user %s for %s to the execution queue" % (
+        user.login, ", ".join(form.project.data))
 
 
 def user_info_update(form):
