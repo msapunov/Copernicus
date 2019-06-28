@@ -4,12 +4,24 @@ from base.pages.login.magic import ssh_login
 from base.pages.login.form import LoginForm
 from base.pages.login import bp
 from base64 import b64decode
+from base.database.schema import User
+from base.extensions import login_manager
+
 
 from logging import warning, debug
 
 
 __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
+
+
+login_manager.login_view = "login.login"
+login_manager.session_protection = "strong"
+
+
+@login_manager.user_loader
+def load_user(userid):
+    return User.query.filter(User.id == userid).first()
 
 
 @bp.route("/api/<path:urlpath>", methods=["POST"])

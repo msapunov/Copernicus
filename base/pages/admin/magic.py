@@ -1,4 +1,4 @@
-from flask import current_app, request, g
+from flask import current_app, request
 from flask_login import current_user
 from base.pages import check_int, ssh_wrapper, send_message, check_str, Task
 from base.pages import ProjectLog
@@ -7,6 +7,7 @@ from base.pages.user.magic import get_user_record, user_by_id
 from logging import error, debug
 from operator import attrgetter
 from datetime import datetime as dt
+from base import db
 
 __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"

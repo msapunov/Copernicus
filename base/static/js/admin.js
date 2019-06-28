@@ -21,8 +21,7 @@
         user_create: "admin/user/create",
         user_edit: "admin/user/details/set",
         user_block: "admin/user/block",
-        user_purge: "admin/user/purge",
-        project_list: "project/list"
+        user_purge: "admin/user/purge"
     };
     window.admin.sys = function(){
         json_send(window.admin.url.system).done(function(data){
@@ -531,18 +530,20 @@
         $("#ua_name").val(surname);
         $("#ua_surname").val(name);
     };
-    window.project_req=function(){
-        var url = window.admin.url.project_list;
-        json_send(url, false, false).done(function(reply){
-            $("#ua_project").empty();
-            $.each(reply.data, function(idx, el){
-                var opt = $("<option/>").text(el).val(el);
-                $("#ua_project").append(opt);
-            });
+    window.render.form_reset=function(){
+        var ids = ["#ua_id","#ua_login","#ua_name","#ua_surname","#ua_email"];
+        $.each(ids, function(idx, name){
+            $(name).val("");
         });
+        var ids = ["#ua_active","#ua_user","#ua_resp","#ua_comm","#ua_admn"];
+        $.each(ids, function(idx, name){
+            $(name).prop("checked", false);
+        });
+        $("#ua_current").text("None");
+        $("#ua_project").val('').trigger('chosen');
     };
     window.render.user_add=function() {
-        $("#ue_form").trigger("reset");
+        window.render.form_reset();
         if ($(this).hasClass("user_edit")) {
             window.render.user_edit(this);
         }
@@ -572,7 +573,9 @@
             $("#ua_resp").prop('checked', data.responsible);
             $("#ua_comm").prop('checked', data.committee);
             $("#ua_admn").prop('checked', data.admin);
-            $("#ua_project").val(data.projects).multiselect("refresh");
+            $("#ua_current").text(data.projects.join(", "));
+            $("#ua_project").val(data.projects);
+            $("#ua_project").multiselect("refresh");
         });
     };
     window.render.ue_buttons=function(id, login){
@@ -628,13 +631,33 @@
     window.render.tasks_reject=function(){
         window.render.tasks_act("reject", this);
     };
+    window.render.update_project_list=function(){
+        var data=[];
+        $(this).find('option:selected').each(function() {
+            data.push( $(this).text() );
+        });
+        if(data.length > 0){
+            $("#ua_current").text(data.join(", "));
+        }else{
+            $("#ua_current").text("None");
+        }
+    };
     window.render.ue_submit_or_cancel=function(){
         if($(this).hasClass("ue_submit")){
+
             var data = {};
-            var ids = ["#ua_id","#ua_login","#ua_name","#ua_surname","#ua_email","#ua_project","#ua_active","#ua_user","#ua_resp","#ua_comm","#ua_admn"];
-            $.each(ids, function(idx, name){
-                data[name] = $(name).val();
+            var ids = ["#csrf_token", "#ua_id","#ua_login","#ua_name","#ua_surname","#ua_email","#ua_project"];
+            $.each(ids, function(idx, id){
+                var name = $(id).prop("name");
+                data[name] = $(id).val();
             });
+            var ids = ["#ua_active","#ua_user","#ua_resp","#ua_comm","#ua_admn"];
+            $.each(ids, function(idx, id){
+                var name = $(id).prop("name");
+                data[name] = $(id).prop("checked") ? "y" : "";
+            });
+
+            //var data = $("form#ue_form").serializeArray().map(function(x){this[x.name] = x.value; return this;}.bind({}))[0];
             var uid = data.uid;
             if(uid === "" ){
                 var url = window.admin.url.user_create;
@@ -647,8 +670,6 @@
                 }
                 window.render.update_ue(reply);
             })
-        }else{
-            $("#ue_form").trigger("reset");
         }
         UIkit.modal("#user_change").hide();
     };
@@ -681,7 +702,6 @@
 
     $(document).on("ready", function(){
         window.admin.sys();
-        window.project_req();
     });
     $(document).on("click", ".user_show", window.render.user);
     $(document).on("click", ".system_reload", window.admin.sys);
@@ -714,6 +734,7 @@
     $(document).on("click", ".ue_submit", window.render.ue_submit_or_cancel);
     $(document).on("click", ".ue_cancel", window.render.ue_submit_or_cancel);
 
+    $(document).on("change", "#ua_project", window.render.update_project_list);
     $(document).on("change", ".task_sel_info", window.render.tasks_btn_toggle);
 
 
