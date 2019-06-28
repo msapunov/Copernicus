@@ -62,8 +62,7 @@ def admin_user_update():
 def admin_user_create():
     form = UserEditForm()
     if form.validate_on_submit():
-        return jsonify(data=user_create_by_admin(form),
-                       message="User creation task has been created")
+        return jsonify(message=user_create_by_admin(form))
     raise ValueError(form.errors)
 
 
