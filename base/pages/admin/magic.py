@@ -8,6 +8,9 @@ from logging import error, debug
 from operator import attrgetter
 from datetime import datetime as dt
 from base import db
+from base.pages import TaskQueue
+from base.database.schema import User
+
 
 __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
@@ -231,7 +234,6 @@ class TmpUser:
 
 
 def user_create_by_admin(form):
-    from base.database.schema import LimboUser
 
     user = LimboUser()
     user.name = form.name.data.strip().lower()
