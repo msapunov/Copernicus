@@ -205,6 +205,31 @@ def is_user_exists(record):
     return record
 
 
+class TmpUser:
+    def __init__(self):
+        self.login = None
+        self.name = None
+        self.surname = None
+        self.email = None
+        self.active = True
+        self.is_user = True
+        self.is_responsible = False
+        self.is_manager = False
+        self.is_tech = False
+        self.is_committee = False
+        self.is_admin = False
+
+    def task_ready(self):
+        u_part = "login: %s and name: %s and surname: %s and email: %s" % (
+            self.login, self.name, self.surname, self.email)
+        a_part = "user: %s, responsible: %s, manager: %s, tech: %s, " \
+                 "committee: %s, admin: %s" % (
+            self.is_user, self.is_responsible, self.is_manager,
+            self.is_tech, self.is_committee, self.is_admin)
+
+        return "%s WITH ACL %s" % (u_part, a_part)
+
+
 def user_create_by_admin(form):
     from base.database.schema import LimboUser
 
