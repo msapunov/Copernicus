@@ -7,7 +7,6 @@ from base.pages.project.magic import list_of_projects
 
 class SelectMultipleProjects(SelectMultipleField):
     def pre_validate(self, form):
-        print(form.project.data)
         projects = list_of_projects()
         for i in form.project.data:
             if i not in projects:
@@ -21,7 +20,7 @@ class UserEditForm(Form):
     surname = StringField("Surname", validators=[DataRequired()])
     email = EmailField("Surname", validators=[DataRequired(), Email()])
     project = SelectMultipleProjects("Project", choices=[])
-    active = BooleanField("Surname", default=True)
+    active = BooleanField("Active", default=True)
     is_user = BooleanField("User", default=True)
     is_responsible = BooleanField("Responsible", default=False)
     is_manager = BooleanField("Manager", default=False)
