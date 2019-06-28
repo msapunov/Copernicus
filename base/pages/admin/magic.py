@@ -237,10 +237,13 @@ def user_info_update(form):
     user.acl.is_committee = True if form.is_committee.data else False
     user.acl.is_admin = True if form.is_admin.data else False
 
-    from base import db
-    db.session.commit()
+    projects = []
+    for project in form.project.data:
+        projects.append(get_project_by_name(project))
+    user.project = projects
 
-    return user.to_dict_with_acl()
+    db.session.commit()
+    return user.details()
 
 
 def group_users():
