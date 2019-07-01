@@ -395,7 +395,7 @@ def task_create_user(p_name, user_data):
                 is_admin=is_admin)
 
     user = User(login=login, name=name, surname=surname, email=email, acl=acl,
-                active=True, project=[project], created=dt.now())
+                active=active, project=[project], created=dt.now())
 
     db.session.add(acl)
     db.session.add(user)
