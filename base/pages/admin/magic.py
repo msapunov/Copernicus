@@ -335,7 +335,30 @@ def task_update_user(login, user_data):
             setattr(user, key, value)
 
 
-def task_create_user(p_name, user_data, responsible=False):
+def _parse_user_info(raw):
+    data = raw.split(" and ")
+    login = surname = name = email = None
+    for i in data:
+        if "login" in i:
+            login = i.replace("login: ", "")
+        elif "surname" in i:
+            surname = i.replace("surname: ", "")
+        elif "name" in i:
+            name = i.replace("name: ", "")
+        elif "email" in i:
+            email = i.replace("email: ", "")
+    if not login:
+        raise ValueError("Failed to parse login value")
+    if not surname:
+        raise ValueError("Failed to parse surname value")
+    if not name:
+        raise ValueError("Failed to parse name value")
+    if not email:
+        raise ValueError("Failed to parse email value")
+    return login, surname, name, email
+
+
+def task_create_user(p_name, user_data):
     project = get_project_by_name(p_name)
 
     data = user_data.split(" and ")
