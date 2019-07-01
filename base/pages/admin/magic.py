@@ -7,9 +7,10 @@ from base.pages.user.magic import get_user_record, user_by_id
 from logging import error, debug
 from operator import attrgetter
 from datetime import datetime as dt
-from base import db
 from base.pages import TaskQueue
 from base.database.schema import User
+from base.database.schema import ACLDB
+from base import db
 
 
 __author__ = "Matvey Sapunov"
