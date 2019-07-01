@@ -231,7 +231,7 @@ class TmpUser:
             self.is_user, self.is_responsible, self.is_manager,
             self.is_tech, self.is_committee, self.is_admin)
 
-        return "%s WITH ACL %s" % (u_part, a_part)
+        return "%s WITH ACL %s WITH STATUS %s" % (u_part, a_part, self.active)
 
 
 def user_create_by_admin(form):
