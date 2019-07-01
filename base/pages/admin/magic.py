@@ -336,26 +336,19 @@ def task_update_user(login, user_data):
 
 
 def _parse_acl_info(raw):
-    is_user = is_responsible = is_manager = is_tech = is_committee = False
-    is_admin = False
 
+    tmp = {}
+    roles = ["user", "responsible", "manager", "tech", "committee", "admin"]
     data = raw.split(", ")
     for i in data:
-        if "user: " in i:
-            is_user = bool(i.replace("user: ", ""))
-        elif "responsible: " in i:
-            is_responsible = bool(i.replace("responsible: ", ""))
-        elif "manager: " in i:
-            is_manager = bool(i.replace("manager: ", ""))
-        elif "tech: " in i:
-            is_tech = bool(i.replace("tech: ", ""))
-        elif "committee: " in i:
-            is_committee = bool(i.replace("committee: ", ""))
-        elif "admin: " in i:
-            is_admin = bool(i.replace("admin: ", ""))
-        else:
-            raise ValueError("Unknown ACL: '%s'" % i)
-    return is_user, is_responsible, is_manager, is_tech, is_committee, is_admin
+        for j in roles:
+            if j not in i:
+                continue
+            cond = i.replace("%s: " % j, "").strip()
+            tmp[j] = True if cond == "True" else False
+
+    return tmp["user"], tmp["responsible"], tmp["manager"], tmp["tech"],\
+           tmp["committee"], tmp["admin"]
 
 
 def _parse_user_info(raw):
