@@ -384,20 +384,11 @@ def _parse_user_info(raw):
 def task_create_user(p_name, user_data):
     project = get_project_by_name(p_name)
 
-    data = user_data.split(" and ")
-    login = surname = name = email = ""
-    for i in data:
-        if "login" in i:
-            login = i.replace("login: ", "")
-        elif "surname" in i:
-            surname = i.replace("surname: ", "")
-        elif "name" in i:
-            name = i.replace("name: ", "")
-        elif "email" in i:
-            email = i.replace("email: ", "")
-    for i in [login, surname, name, email]:
-        if not i:
-            raise ValueError("Empty!")
+    user_part, service_part = user_data.split(" WITH ACL ")
+    login, surname, name, email = _parse_user_info(user_part)
+    acl_part, active = service_part.split(" WITH STATUS ")
+    is_user, is_responsible, is_manager, is_tech, is_committee,\
+    is_admin = _parse_acl_info(acl_part)
 
     from base.database.schema import User
     from base.database.schema import ACLDB
