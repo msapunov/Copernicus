@@ -386,9 +386,10 @@ def task_create_user(p_name, user_data):
 
     user_part, service_part = user_data.split(" WITH ACL ")
     login, surname, name, email = _parse_user_info(user_part)
-    acl_part, active = service_part.split(" WITH STATUS ")
+    acl_part, active_part = service_part.split(" WITH STATUS ")
     is_user, is_responsible, is_manager, is_tech, is_committee,\
     is_admin = _parse_acl_info(acl_part)
+    active = bool(active_part)
 
     acl = ACLDB(is_user=is_user, is_responsible=is_responsible, is_tech=is_tech,
                 is_manager=is_manager, is_committee=is_committee,
