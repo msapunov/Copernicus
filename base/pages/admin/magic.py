@@ -390,16 +390,9 @@ def task_create_user(p_name, user_data):
     is_user, is_responsible, is_manager, is_tech, is_committee,\
     is_admin = _parse_acl_info(acl_part)
 
-    from base.database.schema import User
-    from base.database.schema import ACLDB
-    from base import db
-
-    if responsible:
-        acl = ACLDB(is_user=True, is_responsible=True, is_manager=False,
-                    is_tech=False, is_committee=False, is_admin=False)
-    else:
-        acl = ACLDB(is_user=True, is_responsible=False, is_manager=False,
-                    is_tech=False, is_committee=False, is_admin=False)
+    acl = ACLDB(is_user=is_user, is_responsible=is_responsible, is_tech=is_tech,
+                is_manager=is_manager, is_committee=is_committee,
+                is_admin=is_admin)
 
     user = User(login=login, name=name, surname=surname, email=email, acl=acl,
                 active=True, project=[project], created=dt.now())
