@@ -289,6 +289,13 @@ def user_info_update(form):
     return user.details()
 
 
+def user_reset_pass(uid):
+    user = user_by_id(uid)
+    tid = TaskQueue().password_reset(user).task.id
+    Task(tid).accept()
+    return "Password reset task has been added to execution queue"
+
+
 def group_users():
     result = {}
 
