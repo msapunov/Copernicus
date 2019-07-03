@@ -306,7 +306,7 @@ def group_users():
                            "surname": x.surname, "status": x.active,
                            "user": x.acl.is_user, "manager": x.acl.is_manager,
                            "tech": x.acl.is_tech, "admin": x.acl.is_admin,
-                           "responsible": x.acl.is_responsible,
+                           "responsible": x.acl.is_responsible, "mail": x.email,
                            "committee": x.acl.is_committee}, users_obj)
 
     roles = ["user", "manager", "tech", "admin", "committee", "responsible"]
