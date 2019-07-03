@@ -234,13 +234,14 @@ class TaskQueue:
         self.u_name = None  # User login name. String
         self.p_name = None  # Project name. String
 
-    def user(self, u_name):
-        self.task.user = u_name
+    def user(self, user_obj):
+        self.u_name = user_obj.login
+        self.task.user = user_obj
         return self
 
-    def project(self, project):
-        self.p_name = project.get_name()
-        self.task.project = project
+    def project(self, project_obj):
+        self.p_name = project_obj.get_name()
+        self.task.project = project_obj
         return self
 
     def password_reset(self):
