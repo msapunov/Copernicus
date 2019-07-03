@@ -231,7 +231,7 @@ class TaskQueue:
     def __init__(self):
         from base.database.schema import Tasks
         self.task = Tasks(author=current_user, processed=False, done=False)
-        self.u_name = ""
+        self.u_name = None
         self.p_name = None
 
     def user(self, u_name):
