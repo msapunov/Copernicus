@@ -7,7 +7,7 @@ from base.pages.admin import bp
 from base.pages.admin.magic import get_uptime, get_mem, get_ltm, TaskManager
 from base.pages.admin.magic import slurm_partition_info, process_task
 from base.pages.admin.magic import reg_ignore, group_users, user_info_update
-from base.pages.admin.magic import user_create_by_admin
+from base.pages.admin.magic import user_create_by_admin, user_reset_pass
 from base.pages.admin.form import UserEditForm
 from base.pages.project.magic import pending_resources, processed_resource
 
@@ -45,6 +45,12 @@ def web_admin_message_send():
         user = get_user_record(login)
         emails.append(user.email)
     return jsonify(data=send_message(emails, message=msg, title=title))
+
+
+@bp.route("/admin/user/password/<int:uid>", methods=["POST"])
+@login_required
+def admin_user_password(uid):
+    return jsonify(message=user_reset_pass(uid))
 
 
 @bp.route("/admin/user/details/set", methods=["POST"])
