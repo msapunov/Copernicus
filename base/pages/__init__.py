@@ -245,9 +245,9 @@ class TaskQueue:
         return self
 
     def password_reset(self):
-        if not self.task.user:
+        if not self.u_name:
             raise ValueError("User is  not set. Can't change the password")
-        self.task.action = "change|user|%s||password" % self.task.user.login
+        self.task.action = "change|user|%s||password" % self.u_name
         return self._user_action()
 
     def user_create(self, user):
