@@ -730,6 +730,7 @@
     $(document).on("click", ".user_edit", window.render.user_add);
     $(document).on("click", ".user_purge", window.render.user_purge);
     $(document).on("click", ".user_block", window.render.user_block);
+    $(document).on("click", ".user_password_reset", window.render.pass_reset);
     $(document).on("click", ".name_swap", window.render.name_swap);
     $(document).on("click", ".ue_submit", window.render.ue_submit_or_cancel);
     $(document).on("click", ".ue_cancel", window.render.ue_submit_or_cancel);
