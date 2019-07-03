@@ -254,12 +254,12 @@
                                                 </td>
                                                 <td>
                                                     <div class="uk-button-group uk-float-right">
-                                                        <button class="uk-button uk-button-mini pass_reset uk-text-danger" type="button" data-id='{{user.id}}' data-login='{{user.login}}'><span class="uk-icon-ban"></span></button>
-                                                        <button class="uk-button uk-button-mini user_edit" type="button" data-id='{{user.id}}'><span class="uk-icon-cogs"></span></button>
+                                                        <button class="uk-button uk-button-mini user_password_reset" type="button" data-id='{{user.id}}' data-login='{{user.login}}' data-mail="{{user.mail}}" title="User's password reset"><span class="uk-icon-eraser"></span></button>
+                                                        <button class="uk-button uk-button-mini user_edit" type="button" data-id='{{user.id}}' title="Change user's info"><span class="uk-icon-cogs"></span></button>
                                                         <!--
                                                         <button class="uk-button uk-button-mini user_block uk-text-danger" type="button" data-id='{{user.id}}' data-login='{{user.login}}'><span class="uk-icon-ban"></span></button>
                                                         -->
-                                                        <button class="uk-button uk-button-mini user_purge uk-button-danger" type="button" data-id='{{user.id}}' data-login='{{user.login}}'><span class="uk-icon-close"></span></button>
+                                                        <button class="uk-button uk-button-mini user_purge uk-button-danger" type="button" data-id='{{user.id}}' data-login='{{user.login}}' title="Completely remove this user and the data from the cluster"><span class="uk-icon-close"></span></button>
                                                     </div>
                                                 </td>
                                             </tr>
