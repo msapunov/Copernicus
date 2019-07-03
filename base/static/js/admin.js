@@ -21,7 +21,8 @@
         user_create: "admin/user/create",
         user_edit: "admin/user/details/set",
         user_block: "admin/user/block",
-        user_purge: "admin/user/purge"
+        user_purge: "admin/user/purge",
+        user_p_reset: "admin/user/password"
     };
     window.admin.sys = function(){
         json_send(window.admin.url.system).done(function(data){
@@ -698,6 +699,14 @@
         var msg = "Block user {0} from submitting jobs via SLURM? Are you sure?".f(login);
         var url = window.admin.url.user_block + "/" + id;
         window.render.user_destruction(msg, url);
+    };
+    window.render.pass_reset=function(){
+        var id = $.trim( $(this).data("id") );
+        var login = $.trim( $(this).data("login") );
+        var mail = $.trim( $(this).data("mail") );
+        var msg = "<p>Reset the login password for {0}?<p>An e-mail with the new password will be sent to {1}<p>Are you sure?".f(login, mail);
+        var url = window.admin.url.user_p_reset + "/" + id;
+        window.render.user_password_reset(msg, url);
     };
 
     $(document).on("ready", function(){
