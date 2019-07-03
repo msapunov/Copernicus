@@ -291,7 +291,7 @@ def user_info_update(form):
 
 def user_reset_pass(uid):
     user = user_by_id(uid)
-    tid = TaskQueue().password_reset(user).task.id
+    tid = TaskQueue().user(user).password_reset().task.id
     Task(tid).accept()
     return "Password reset task has been added to execution queue"
 
