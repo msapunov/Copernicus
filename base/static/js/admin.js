@@ -674,6 +674,17 @@
         }
         UIkit.modal("#user_change").hide();
     };
+    window.render.user_password_reset=function(msg, url){
+        UIkit.modal.confirm(msg, function(){
+            json_send(url,false).done(function(reply){
+                if(reply.data && reply.data == ""){
+                    if(reply.message){
+                        UIkit.notify(reply.message, {timeout: 2000, status:"success"});
+                    }
+                }
+            });
+        });
+    };
     window.render.user_destruction=function(msg, url){
         UIkit.modal.confirm(msg, function(){
             json_send(url,false).done(function(reply){
