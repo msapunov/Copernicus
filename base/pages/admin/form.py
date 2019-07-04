@@ -8,7 +8,7 @@ from base.pages.project.magic import list_of_projects
 class SelectMultipleProjects(SelectMultipleField):
     def pre_validate(self, form):
         projects = list_of_projects()
-        projects.append(None)
+        projects.append("None")
         for i in form.project.data:
             if i not in projects:
                 raise ValueError("Project %s doesn't register in the DB" % i)
