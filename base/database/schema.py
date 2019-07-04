@@ -608,6 +608,8 @@ class Tasks(db.Model):
     def notify(self):
         if "update" in self.action and self.project:
             return self.author.email
+        elif ("change" in self.action) and ("password" in self.action):
+            return self.user.email
         elif self.author:
             return self.project.responsible.email
         else:
