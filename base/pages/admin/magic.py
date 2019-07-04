@@ -254,7 +254,11 @@ def user_create_by_admin(form):
     user.is_admin = True if form.is_admin.data else False
     user.is_committee = True if form.is_committee.data else False
 
-    for name in form.project.data:
+    names = filter(lambda x: True if x != "None" else False, form.project.data)
+    if not list(names):
+        raise ValueError("Can't create a user in not existing project: %s" %
+                         ", ".join(form.project.data))
+    for name in list(names):
         project = get_project_by_name(name)
         tid = TaskQueue().project(project).user_create(user).task.id
         Task(tid).accept()
