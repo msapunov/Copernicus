@@ -284,10 +284,11 @@ def user_info_update(form):
     user.acl.is_committee = True if form.is_committee.data else False
     user.acl.is_admin = True if form.is_admin.data else False
 
-    projects = []
-    for project in form.project.data:
-        projects.append(get_project_by_name(project))
-    user.project = projects
+    names = filter(lambda x: True if x != "None" else False, form.project.data)
+    if names:
+        user.projects = list(map(lambda x: get_project_by_name(x), names))
+    else:
+        user.project = []
 
     db.session.commit()
     return user.details()
