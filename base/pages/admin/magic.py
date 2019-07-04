@@ -425,7 +425,7 @@ def task_assign_user(login, p_name):
 def process_task(tid):
     task = Task(tid)
     act, entity, login, project, description = task.action().split("|")
-    if act not in ["create", "assign", "update", "remove"]:
+    if act not in ["create", "assign", "update", "remove", "change"]:
         raise ValueError("The action '%s' is not supported" % act)
 
     if act == "create" and entity == "user":
