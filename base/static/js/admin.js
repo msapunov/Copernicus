@@ -575,8 +575,7 @@
             $("#ua_comm").prop('checked', data.committee);
             $("#ua_admn").prop('checked', data.admin);
             $("#ua_current").text(data.projects.join(", "));
-            $("#ua_project").val(data.projects);
-            $("#ua_project").multiselect("refresh");
+            $("#ua_project").val(data.projects).multiselect("refresh");
         });
     };
     window.render.ue_buttons=function(id, login){
