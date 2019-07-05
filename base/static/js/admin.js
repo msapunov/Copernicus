@@ -703,13 +703,6 @@
         var url = window.admin.url.user_purge + "/" + id;
         window.render.user_destruction(msg, url);
     };
-    window.render.user_block=function(){
-        var id = $.trim( $(this).data("id") );
-        var login = $.trim( $(this).data("login") );
-        var msg = "Block user {0} from submitting jobs via SLURM? Are you sure?".f(login);
-        var url = window.admin.url.user_block + "/" + id;
-        window.render.user_destruction(msg, url);
-    };
     window.render.pass_reset=function(){
         var id = $.trim( $(this).data("id") );
         var login = $.trim( $(this).data("login") );
@@ -748,7 +741,6 @@
     $(document).on("click", ".user_add", window.render.user_add);
     $(document).on("click", ".user_edit", window.render.user_add);
     $(document).on("click", ".user_purge", window.render.user_purge);
-    $(document).on("click", ".user_block", window.render.user_block);
     $(document).on("click", ".user_password_reset", window.render.pass_reset);
     $(document).on("click", ".name_swap", window.render.name_swap);
     $(document).on("click", ".ue_submit", window.render.ue_submit_or_cancel);
