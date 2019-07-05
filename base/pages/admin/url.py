@@ -18,6 +18,7 @@ __copyright__ = "Aix Marseille University"
 
 @bp.route("/admin/switch_user", methods=["POST"])
 @login_required
+@grant_access("admin")
 def web_switch_user():
     username = request.form.get("switch_user")
     if username not in g.user_list:
@@ -34,6 +35,7 @@ def web_switch_user():
 
 @bp.route("/admin/message/send", methods=["POST"])
 @login_required
+@grant_access("admin")
 def web_admin_message_send():
     data = request.get_json()
     if not data:
@@ -49,12 +51,14 @@ def web_admin_message_send():
 
 @bp.route("/admin/user/password/<int:uid>", methods=["POST"])
 @login_required
+@grant_access("admin")
 def admin_user_password(uid):
     return jsonify(message=user_reset_pass(uid))
 
 
 @bp.route("/admin/user/details/set", methods=["POST"])
 @login_required
+@grant_access("admin")
 def admin_user_update():
     form = UserEditForm()
     if form.validate_on_submit():
@@ -65,6 +69,7 @@ def admin_user_update():
 
 @bp.route("/admin/user/create", methods=["POST"])
 @login_required
+@grant_access("admin")
 def admin_user_create():
     form = UserEditForm()
     if form.validate_on_submit():
@@ -74,6 +79,7 @@ def admin_user_create():
 
 @bp.route("/admin/user/details/get/<int:uid>", methods=["POST"])
 @login_required
+@grant_access("admin")
 def admin_user_details(uid):
     user = user_by_id(uid)
     return jsonify(data=user.details())
@@ -81,24 +87,28 @@ def admin_user_details(uid):
 
 @bp.route("/admin/registration/ignore/<int:pid>", methods=["POST"])
 @login_required
+@grant_access("admin")
 def admin_registration_ignore(pid):
     return jsonify(data=reg_ignore(pid))
 
 
 @bp.route("/admin/extension/processed/<int:pid>", methods=["POST"])
 @login_required
+@grant_access("admin")
 def admin_extension_done(pid):
     return jsonify(data=processed_resource(pid))
 
 
 @bp.route("/admin/extension/todo", methods=["POST"])
 @login_required
+@grant_access("admin")
 def admin_extension_todo():
     return jsonify(data=pending_resources())
 
 
 @bp.route("/admin/tasks/update/<int:tid>", methods=["POST"])
 @login_required
+@grant_access("admin")
 def web_admin_tasks_update(tid):
     data = request.get_json()
     return jsonify(data=Task(tid).update(data).to_dict())
@@ -106,6 +116,7 @@ def web_admin_tasks_update(tid):
 
 @bp.route("/admin/tasks/ignore/<int:tid>", methods=["POST"])
 @login_required
+@grant_access("admin")
 def web_admin_tasks_ignore(tid):
     Task(tid).ignore()
     return jsonify(data=TaskManager().list())
@@ -113,6 +124,7 @@ def web_admin_tasks_ignore(tid):
 
 @bp.route("/admin/tasks/reject/<int:tid>", methods=["POST"])
 @login_required
+@grant_access("admin")
 def web_admin_tasks_reject(tid):
     Task(tid).reject()
     return jsonify(data=TaskManager().list())
@@ -120,6 +132,7 @@ def web_admin_tasks_reject(tid):
 
 @bp.route("/admin/tasks/accept/<int:tid>", methods=["POST"])
 @login_required
+@grant_access("admin")
 def web_admin_tasks_accept(tid):
     Task(tid).accept()
     return jsonify(data=TaskManager().list())
@@ -127,36 +140,42 @@ def web_admin_tasks_accept(tid):
 
 @bp.route("/admin/tasks/history", methods=["POST"])
 @login_required
+@grant_access("admin")
 def web_admin_tasks_history():
     return jsonify(data=TaskManager().history())
 
 
 @bp.route("/admin/tasks/todo", methods=["POST"])
 @login_required
+@grant_access("admin")
 def web_admin_tasks_todo():
     return jsonify(data=TaskManager().todo())
 
 
 @bp.route("/admin/tasks/list", methods=["POST"])
 @login_required
+@grant_access("admin")
 def web_admin_tasks_list():
     return jsonify(data=TaskManager().list())
 
 
 @bp.route("/admin/tasks/done/<int:tid>", methods=["POST"])
 @login_required
+@grant_access("admin")
 def admin_tasks_done(tid):
     return jsonify(data=process_task(tid))
 
 
 @bp.route("/admin/partition/info", methods=["POST"])
 @login_required
+@grant_access("admin")
 def web_admin_partition_info():
     return jsonify(data=slurm_partition_info())
 
 
 @bp.route("/admin/user/info", methods=["POST"])
 @login_required
+@grant_access("admin")
 def web_admin_user_info():
 
     data = request.get_json()
@@ -184,6 +203,7 @@ def web_admin_user_info():
 
 @bp.route("/admin/sys/info", methods=["POST"])
 @login_required
+@grant_access("admin")
 def web_admin_sys_info():
     servers = current_app.config["ADMIN_SERVER"]
     uptime = []
@@ -196,6 +216,7 @@ def web_admin_sys_info():
 @bp.route("/admin", methods=["GET", "POST"])
 @bp.route("/admin.html", methods=["GET", "POST"])
 @login_required
+@grant_access("admin")
 def web_admin():
     from base.database.schema import Register
 
