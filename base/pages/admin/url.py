@@ -1,7 +1,7 @@
 from flask import g, flash, request, redirect, url_for, render_template, jsonify
 from flask import current_app
 from flask_login import login_required, login_user
-from base.pages import ssh_wrapper, send_message, Task
+from base.pages import ssh_wrapper, send_message, Task, grant_access
 from base.pages.user.magic import get_user_record, user_by_id
 from base.pages.admin import bp
 from base.pages.admin.magic import get_uptime, get_mem, get_ltm, TaskManager
