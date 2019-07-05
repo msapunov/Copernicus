@@ -1,4 +1,5 @@
 from flask import Flask, g
+from flask_login import current_user
 
 from base.extensions import mail, cache, db, login_manager
 
@@ -63,6 +64,12 @@ def register_decor(app):
             user_list = sorted(list(users))
             cache.set("user_list", user_list, 600)
         g.user_list = user_list
+
+        if current_user.is_authenticated:
+            g.permissions = current_user.permissions()
+        else:
+            g.permissions = []
+
         tmp = "%s" % dt.now()
         g.timestamp = tmp.split(".")[0]
 
