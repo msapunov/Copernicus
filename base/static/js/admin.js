@@ -581,7 +581,7 @@
     window.render.ue_buttons=function(id, login){
         var s_reset = $("<span/>").addClass("uk-icon-eraser");
         var btn_reset = $("<button/>").attr({"data-id": id, "type": "button"}).append(s_reset);
-        btn_reset.addClass("uk-button uk-button-mini user_del uk-text-danger");
+        btn_reset.addClass("uk-button uk-button-mini user_del");
 
         var s_edit = $("<span/>").addClass("uk-icon-cogs");
         var btn_edit = $("<button/>").attr({"data-id": id, "type": "button"}).append(s_edit);
