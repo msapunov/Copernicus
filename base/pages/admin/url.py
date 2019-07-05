@@ -94,14 +94,14 @@ def admin_registration_ignore(pid):
 
 @bp.route("/admin/extension/processed/<int:pid>", methods=["POST"])
 @login_required
-@grant_access("admin")
+@grant_access("admin", "tech")
 def admin_extension_done(pid):
     return jsonify(data=processed_resource(pid))
 
 
 @bp.route("/admin/extension/todo", methods=["POST"])
 @login_required
-@grant_access("admin")
+@grant_access("admin", "tech")
 def admin_extension_todo():
     return jsonify(data=pending_resources())
 
@@ -147,7 +147,7 @@ def web_admin_tasks_history():
 
 @bp.route("/admin/tasks/todo", methods=["POST"])
 @login_required
-@grant_access("admin")
+@grant_access("admin", "tech")
 def web_admin_tasks_todo():
     return jsonify(data=TaskManager().todo())
 
@@ -161,7 +161,7 @@ def web_admin_tasks_list():
 
 @bp.route("/admin/tasks/done/<int:tid>", methods=["POST"])
 @login_required
-@grant_access("admin")
+@grant_access("admin", "tech")
 def admin_tasks_done(tid):
     return jsonify(data=process_task(tid))
 
