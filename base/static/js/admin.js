@@ -745,6 +745,7 @@
     $(document).on("click", ".history_info", window.render.new_project);
     $(document).on("click", ".history_info", window.render.tasks_sel_update);
 
+    $(document).on("click", ".user_add", window.render.user_add);
     $(document).on("click", ".user_edit", window.render.user_add);
     $(document).on("click", ".user_purge", window.render.user_purge);
     $(document).on("click", ".user_block", window.render.user_block);
@@ -755,17 +756,6 @@
 
     $(document).on("change", "#ua_project", window.render.update_project_list);
     $(document).on("change", ".task_sel_info", window.render.tasks_btn_toggle);
-
-    $(document).on("toggle.uk.accordion", function(e){
-        $(".user_add").on("click", function(e){
-            e.preventDefault();
-            e.stopPropagation();
-            window.render.user_add();
-            $(".user_add").off("click");
-            return false;
-        });
-    });
-
 
     $(document).on({
         mouseenter: function () {
