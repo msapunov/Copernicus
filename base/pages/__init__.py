@@ -443,5 +443,8 @@ class ProjectLog:
         db.session.commit()
         message = "%s: %s" % (self.project.get_name(), self.log.event)
         if self.send:
+            if not self.project.responsible:
+                raise ValueError("project % has no responsible attached!" %
+                                 self.project.get_name())
             send_message(self.project.responsible.email, message=message)
         return message
