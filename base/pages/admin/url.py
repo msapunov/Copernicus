@@ -8,6 +8,7 @@ from base.pages.admin.magic import get_uptime, get_mem, get_ltm, TaskManager
 from base.pages.admin.magic import slurm_partition_info, process_task
 from base.pages.admin.magic import reg_ignore, group_users, user_info_update
 from base.pages.admin.magic import user_create_by_admin, user_reset_pass
+from base.pages.admin.magic import user_delete
 from base.pages.admin.form import UserEditForm
 from base.pages.project.magic import pending_resources, processed_resource
 
@@ -54,6 +55,13 @@ def web_admin_message_send():
 @grant_access("admin")
 def admin_user_password(uid):
     return jsonify(message=user_reset_pass(uid))
+
+
+@bp.route("/admin/user/delete/<int:uid>", methods=["POST"])
+@login_required
+@grant_access("admin")
+def admin_user_delete(uid):
+    return jsonify(message=user_delete(uid), data=True)
 
 
 @bp.route("/admin/user/details/set", methods=["POST"])
