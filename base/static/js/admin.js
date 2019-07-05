@@ -699,7 +699,7 @@
     window.render.user_purge=function(){
         var id = $.trim( $(this).data("id") );
         var login = $.trim( $(this).data("login") );
-        var msg = "Delete user {0} and corresponding directories with data? Are you sure?".f(login);
+        var msg = "Delete user {0} and all user's directories? Are you sure?".f(login);
         var url = window.admin.url.user_purge + "/" + id;
         window.render.user_destruction(msg, url);
     };
