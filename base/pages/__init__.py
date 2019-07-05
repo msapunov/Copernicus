@@ -1,10 +1,26 @@
 from paramiko import SSHClient, AutoAddPolicy, AuthenticationException, RSAKey
-from flask import current_app, request
-from flask_login import current_user
+from flask import current_app, request, flash, redirect, url_for
+from flask_login import current_user, logout_user
 from flask_mail import Message
 from logging import debug, error
 from re import compile
+from functools import wraps
 from unicodedata import normalize
+
+
+def grant_access(*roles):
+    def log_required(f):
+        @wraps(f)
+        def decorated_function(*args, **kwargs):
+            url = request.full_path
+            for role in roles:
+                if role in g.permissions:
+                    return f(*args, **kwargs)
+            flash("permissions denied to access URL: %s" % url)
+            logout_user()
+            return redirect(url_for("login.login"))
+        return decorated_function
+    return log_required
 
 
 def normalize_word(word):
