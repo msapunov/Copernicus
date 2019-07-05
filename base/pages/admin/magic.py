@@ -294,6 +294,18 @@ def user_info_update(form):
     return user.details()
 
 
+def user_delete(uid):
+    user = user_by_id(uid)
+    login = user.login
+    projects = user.project
+    User.query.filter_by(id=uid).delete()
+    db.session.commit()
+    for project in projects:
+        msg = "User %s has been removed from the UserDB by admins" % login
+        ProjectLog(project).event(msg)
+    return "User %s has been removed from the database" % login
+
+
 def user_reset_pass(uid):
     user = user_by_id(uid)
     tid = TaskQueue().user(user).password_reset().task.id
