@@ -20,7 +20,7 @@
         user_details: "admin/user/details/get",
         user_create: "admin/user/create",
         user_edit: "admin/user/details/set",
-        user_block: "admin/user/block",
+        user_delete: "admin/user/delete",
         user_purge: "admin/user/purge",
         user_p_reset: "admin/user/password"
     };
