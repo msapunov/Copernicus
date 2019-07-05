@@ -584,10 +584,6 @@
         var btn_edit = $("<button/>").attr({"data-id": id, "type": "button"}).append(s_edit);
         btn_edit.addClass("uk-button uk-button-mini user_edit");
 
-        var s_ban = $("<span/>").addClass("uk-icon-ban");
-        var btn_ban = $("<button/>").attr({"data-id": id, "type": "button"}).append(s_ban);
-        btn_ban.addClass("uk-button uk-button-mini user_del uk-text-danger");
-
         var s_del = $("<span/>").addClass("uk-icon-close");
         var btn_del = $("<button/>").attr({"data-id": id, "data-login": login, "type": "button"}).append(s_del);
         btn_del.addClass("uk-button uk-button-mini user_del uk-button-danger");
@@ -688,7 +684,7 @@
     window.render.user_destruction=function(msg, url){
         UIkit.modal.confirm(msg, function(){
             json_send(url,false).done(function(reply){
-                if(reply.data && reply.data == ""){
+                if(reply.data && reply.data === ""){
                     if(reply.message){
                         UIkit.notify(reply.message, {timeout: 2000, status:"success"});
                     }
