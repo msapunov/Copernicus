@@ -684,24 +684,31 @@
             });
         });
     };
-    window.render.user_destruction=function(msg, url){
-        UIkit.modal.confirm(msg, function(){
-            json_send(url,false).done(function(reply){
-                if(reply.data && reply.data === ""){
-                    if(reply.message){
-                        UIkit.notify(reply.message, {timeout: 2000, status:"success"});
-                    }
-                    $("#"+id).remove();
-                }
-            });
+    window.render.destroy=function(url, id){
+        var url = url + "/" + id;
+        json_send(url,false).done(function(reply){
+            if(reply.message){
+                UIkit.notify(reply.message, {timeout: 2000, status:"success"});
+            }
+            if(reply.data && reply.data === true){
+                $("tr#ue_rec_"+id).remove();
+            }
         });
     };
     window.render.user_purge=function(){
         var id = $.trim( $(this).data("id") );
         var login = $.trim( $(this).data("login") );
-        var msg = "Delete user {0} and all user's directories? Are you sure?".f(login);
-        var url = window.admin.url.user_purge + "/" + id;
-        window.render.user_destruction(msg, url);
+        var msg1 = "<p>Delete user {0} from the data base? Are you sure?".f(login);
+        var msg2 = "<p><input type='checkbox' id='purge_chk'> Delete user account and user files too?";
+        var msg = msg1 + msg2;
+        UIkit.modal.confirm(msg, function(){
+            if($("#purge_chk").prop("checked") === true){
+                var url = window.admin.url.user_purge;
+            }else{
+                var url = window.admin.url.user_delete;
+            }
+            window.render.destroy(url, id);
+        });
     };
     window.render.pass_reset=function(){
         var id = $.trim( $(this).data("id") );
