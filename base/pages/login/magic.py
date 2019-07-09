@@ -1,5 +1,5 @@
 from paramiko import SSHClient, AutoAddPolicy, AuthenticationException
-from logging import warning, debug
+from logging import warning, debug, error
 
 
 __author__ = "Matvey Sapunov"
@@ -17,9 +17,12 @@ def ssh_login(login, password):
                            allow_agent=False, look_for_keys=False)
             if client.get_transport().is_authenticated():
                 auth = True
-                break
         except AuthenticationException:
             warning("Wrong password to server %s" % host)
+            continue
+        except:
+            error("Exception connecting to %s. Trying next server" % host)
+            continue
         finally:
             client.close()
     return auth
