@@ -175,9 +175,9 @@
                                     </tbody>
                                 </table>
                                 <div class="uk-button-group uk-float-right">
-                                    <button class="uk-button new_accept" type="button" data-id='{{record.id}}' data-meso='{{record.meso_id}}' data-title='{{record.title}}'><span class="uk-icon-thumbs-o-up uk-margin-small-right"></span>Accept</button>
+                                    <button class="uk-button new_accept" type="button" data-id='{{record.id}}' data-meso='{{record.meso_id}}' data-title='{{record.title}}' disabled><span class="uk-icon-thumbs-o-up uk-margin-small-right"></span>Accept</button>
                                     <button class="uk-button new_ignore" type="button" data-id='{{record.id}}' data-meso='{{record.meso_id}}' data-title='{{record.title}}'><span class="uk-icon-thumbs-o-down uk-margin-small-right"></span>Ignore</button>
-                                    <button class="uk-button new_reject uk-button-danger" type="button" data-id='{{record.id}}' data-meso='{{record.meso_id}}' data-title='{{record.title}}'><span class="uk-icon-thumbs-down uk-margin-small-right"></span>Reject</button>
+                                    <button class="uk-button new_reject uk-button-danger" type="button" data-id='{{record.id}}' data-meso='{{record.meso_id}}' data-title='{{record.title}}' disabled><span class="uk-icon-thumbs-down uk-margin-small-right"></span>Reject</button>
                                 </div>
                                 {% if record.responsible_email %}
                                 <div class="uk-button-group uk-float-left">
