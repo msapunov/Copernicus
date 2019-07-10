@@ -100,6 +100,14 @@ def admin_registration_ignore(pid):
     return jsonify(data=reg_ignore(pid))
 
 
+@bp.route("/admin/registration/reject/<int:pid>", methods=["POST"])
+@login_required
+@grant_access("admin")
+def admin_registration_reject(pid):
+    pass
+    #return jsonify(data=reg_reject(pid, note))
+
+
 @bp.route("/admin/extension/processed/<int:pid>", methods=["POST"])
 @login_required
 @grant_access("admin", "tech")
