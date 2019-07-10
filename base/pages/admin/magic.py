@@ -560,7 +560,7 @@ def get_server_info(server):
     uptime = parse_uptime(uptime_data)
     swap = parse_swap(swap_data)
     memory = parse_memory(memory_data)
-    total = {**memory, **swap}
+    total = dict(list(memory.items()) + list(swap.items()))
     return {"server": server, "uptime": uptime, "mem": total}
 
 
