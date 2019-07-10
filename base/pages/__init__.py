@@ -286,35 +286,34 @@ class TaskQueue:
     def user_assign(self, user):
         if not self.project:
             raise ValueError("Can't assign a user to none existent project")
-        login = self._copy_user(user).login
-
+        login = user.login
         description = "Assign user %s to project %s" % (login, self.p_name)
         self.task.action = "assign|user|%s|%s|%s" % (login, self.p_name,
                                                      description)
+        self.task.user = user
         return self._user_action()
 
     def responsible_assign(self, user):
         if not self.project:
             raise ValueError("Can't assign a new responsible to none existent"
                              " project")
-        login = self._copy_user(user).login
-
+        login = user.login
         description = "Assign responsible %s to project %s" % (login,
                                                                self.p_name)
         self.task.action = "assign|resp|%s|%s|%s" % (login, self.p_name,
                                                      description)
+        self.task.user = user
         return self._user_action()
 
     def user_update(self, data):
         print(data)
         if not self.task.user:
             raise ValueError("Can't update information of unset user")
-        tmp_user = self._copy_user(self.task.user)
+        tmp_user = self.task.user
         login = tmp_user.login
         act = []
         for key, value in data.items():
             if hasattr(tmp_user, key):
-                setattr(tmp_user, key, value)
                 act.append("%s: %s" % (key, value))
         act = " and ".join(act)
         self.task.action = "update|user|%s|%s|%s" % (login, "", act)
@@ -323,25 +322,13 @@ class TaskQueue:
     def user_remove(self, user):
         if not self.project:
             raise ValueError("Can't delete a user from none existent project")
-        login = self._copy_user(user).login
+        login = user.login
         description = "Remove user %s from project %s" % (login, self.p_name)
-        self.task.action = "remove|user|%s|%s|%s" % (login,self.p_name,
+        self.task.action = "remove|user|%s|%s|%s" % (login, self.p_name,
                                                      description)
+        self.task.user = user
         return self._user_action()
 
-    def _copy_user(self, user):
-        from base import db
-        from base.database.schema import LimboUser
-        from base.database.schema import User
-
-        data = {k: getattr(user, k) for k in db.inspect(User).columns.keys()}
-        del data["id"], data["created"], data["modified"]
-
-        limbo = LimboUser(**data)
-        limbo.reference = user
-
-        db.session.add(limbo)
-        return limbo
 
     def _user_action(self):
         self.processed = True
