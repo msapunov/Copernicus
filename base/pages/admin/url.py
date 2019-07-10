@@ -97,7 +97,7 @@ def admin_user_details(uid):
 @login_required
 @grant_access("admin")
 def admin_registration_ignore(pid):
-    return jsonify(message=reg_ignore(pid))
+    return jsonify(data=reg_ignore(pid))
 
 
 @bp.route("/admin/extension/processed/<int:pid>", methods=["POST"])
