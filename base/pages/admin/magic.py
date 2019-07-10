@@ -155,6 +155,7 @@ def reg_ignore(pid):
     rec.comment = "Project creation request ignored by %s" % full_name
     rec.accepted_ts = dt.now()
     rec.processed_ts = dt.now()
+    db.session.commit()
     return rec.comment
 
 
