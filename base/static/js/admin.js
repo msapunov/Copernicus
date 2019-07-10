@@ -581,7 +581,7 @@
     window.render.ue_buttons=function(id, login){
         var s_reset = $("<span/>").addClass("uk-icon-eraser");
         var btn_reset = $("<button/>").attr({"data-id": id, "type": "button"}).append(s_reset);
-        btn_reset.addClass("uk-button uk-button-mini user_del");
+        btn_reset.addClass("uk-button uk-button-mini user_password_reset");
 
         var s_edit = $("<span/>").addClass("uk-icon-cogs");
         var btn_edit = $("<button/>").attr({"data-id": id, "type": "button"}).append(s_edit);
@@ -589,7 +589,7 @@
 
         var s_del = $("<span/>").addClass("uk-icon-close");
         var btn_del = $("<button/>").attr({"data-id": id, "data-login": login, "type": "button"}).append(s_del);
-        btn_del.addClass("uk-button uk-button-mini user_del uk-button-danger");
+        btn_del.addClass("uk-button uk-button-mini user_purge uk-button-danger");
 
         var btn_grp = $("<div/>").addClass(
             "uk-button-group uk-float-right"
