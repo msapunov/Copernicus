@@ -1,5 +1,6 @@
 from base import create_app
 
+
 app = create_app("copernicus.cfg")
 
 if __name__ == "__main__":
