@@ -431,11 +431,19 @@ def task_remove_user(login, p_name):
     return ProjectLog(project).user_deleted(user)
 
 
+def task_assign_resp(login, p_name):
+    project = get_project_by_name(p_name)
+    user = get_user_record(login)
+    user.acl.is_responsible = True
+    project.responsible = user
+    return ProjectLog(project).responsible_added(user)
+
+
 def task_assign_user(login, p_name):
     project = get_project_by_name(p_name)
     user = get_user_record(login)
     user.project.append(project)
-    return ProjectLog(project).user_deleted(user)
+    return ProjectLog(project).user_assigned(user)
 
 
 def process_task(tid):
@@ -459,7 +467,7 @@ def process_task(tid):
     elif act == "assign" and entity == "user":
         log = task_assign_user(login, project)
     elif act == "assign" and entity == "resp":
-        pass
+        log = task_assign_resp(login, project)
     elif act == "remove" and entity == "user":
         log = task_remove_user(login, project)
     elif act == "remove" and entity == "proj":
