@@ -48,7 +48,7 @@
                         "message": $("textarea[name=global_message]").val(),
                         "user": users
                     };
-                    json_send("/admin/message/send", data).done(function(reply){
+                    json_send("admin/message/send", data).done(function(reply){
                         if(reply.data){
                             UIkit.notify(reply.data, {timeout: 2000, status:"success"});
                         }
