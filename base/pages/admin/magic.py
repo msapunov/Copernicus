@@ -8,8 +8,7 @@ from logging import error, debug
 from operator import attrgetter
 from datetime import datetime as dt
 from base.pages import TaskQueue
-from base.database.schema import User
-from base.database.schema import ACLDB
+from base.database.schema import User, ACLDB, Register
 from base import db
 
 
@@ -160,8 +159,6 @@ def reg_ignore(pid):
 
 
 def get_registration_record(pid):
-    from base.database.schema import Register
-
     register = Register.query.filter_by(id=pid).first()
     if not register:
         raise ValueError("Project registration request with id %s not found"
