@@ -74,6 +74,14 @@ def admin_user_password(uid):
     return jsonify(message=user_reset_pass(uid))
 
 
+@bp.route("/admin/user/purge/<int:uid>", methods=["POST"])
+@login_required
+@grant_access("admin")
+def admin_user_purge(uid):
+    raise ValueError("This sensitive code is not tested yet! Sorry!!!")
+    #return jsonify(message=user_purge(uid), data=True)
+
+
 @bp.route("/admin/user/delete/<int:uid>", methods=["POST"])
 @login_required
 @grant_access("admin")
