@@ -4,7 +4,7 @@ from flask_login import login_required, login_user
 from base.pages import ssh_wrapper, send_message, Task, grant_access
 from base.pages.user.magic import get_user_record, user_by_id
 from base.pages.admin import bp
-from base.pages.admin.magic import get_uptime, get_mem, get_ltm, TaskManager
+from base.pages.admin.magic import get_server_info, get_ltm, TaskManager
 from base.pages.admin.magic import slurm_partition_info, process_task
 from base.pages.admin.magic import reg_ignore, group_users, user_info_update
 from base.pages.admin.magic import user_create_by_admin, user_reset_pass
@@ -216,8 +216,7 @@ def web_admin_sys_info():
     servers = current_app.config["ADMIN_SERVER"]
     uptime = []
     for server in servers:
-        uptime.append({"server": server, "uptime": get_uptime(server),
-                       "mem": get_mem(server)})
+        uptime.append(get_server_info(server))
     return jsonify(data=uptime)
 
 
