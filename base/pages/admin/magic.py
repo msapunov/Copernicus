@@ -155,7 +155,7 @@ def reg_ignore(pid):
     rec.comment = "Project creation request ignored by %s" % full_name
     rec.accepted_ts = dt.now()
     rec.processed_ts = dt.now()
-    return True
+    return rec.comment
 
 
 def get_registration_record(pid):
