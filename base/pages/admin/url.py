@@ -34,6 +34,23 @@ def web_switch_user():
     return redirect(url_for("user.user_index"))
 
 
+@bp.route("/admin/message/register", methods=["POST"])
+@login_required
+@grant_access("admin")
+def web_admin_message_register():
+    data = request.get_json()
+    if not data:
+        raise ValueError("Expecting application/json requests")
+    message = data["note"]
+    rid = data["project"]
+    reg_rec = get_registration_record(rid)
+    id = reg_rec.project_id()
+    title = "[%s] %s" % (id, reg_rec.title)
+
+    emails = [reg_rec.responsible_email]
+    return jsonify(data=send_message(emails, message=message, title=title))
+
+
 @bp.route("/admin/message/send", methods=["POST"])
 @login_required
 @grant_access("admin")
