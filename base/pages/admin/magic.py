@@ -541,34 +541,51 @@ class TaskManager:
         return list(map(lambda x: x.to_dict(), tasks)) if tasks else []
 
 
-def get_uptime(server):
+def get_server_info(server):
     tmp = {}
-    result, err = ssh_wrapper("uptime", host=server)
+    result, err = ssh_wrapper("uptime && free -m", host=server)
     if not result:
-        error("Error getting 'uptime' information: %s" % err)
+        error("Error getting information from the remote server: %s" % err)
         return tmp
 
-    for up in result:
-        output = up.split(",")
-        for i in output:
-            if "users" in i:
-                users = i.replace("users", "")
-                users = users.strip()
-                try:
-                    users = int(users)
-                except Exception as err:
-                    error("Failed to convert to int: %s" % err)
-                    continue
-                tmp["users"] = users
-            if "load average" in i:
-                idx = output.index(i)
-                i = "|".join(output[idx:])
-                load = i.replace("load average: ", "")
-                load = load.strip()
-                loads = load.split("|")
-                tmp["load_1"] = loads[0]
-                tmp["load_5"] = loads[1]
-                tmp["load_15"] = loads[2]
+    uptime_data = memory_data = swap_data = ""
+    for i in result:
+        if "load average" in i:
+            uptime_data = i
+        elif "Mem" in i:
+            memory_data = i
+        elif "Swap" in i:
+            swap_data = i
+
+    uptime = parse_uptime(uptime_data)
+    swap = parse_swap(swap_data)
+    memory = parse_memory(memory_data)
+    total = {**memory, **swap}
+    return {"server": server, "uptime": uptime, "mem": total}
+
+
+def parse_uptime(result):
+    tmp = {}
+    output = result.split(",")
+    for i in output:
+        if "users" in i:
+            users = i.replace("users", "")
+            users = users.strip()
+            try:
+                users = int(users)
+            except Exception as err:
+                error("Failed to convert to int: %s" % err)
+                continue
+            tmp["users"] = users
+        if "load average" in i:
+            idx = output.index(i)
+            i = "|".join(output[idx:])
+            load = i.replace("load average: ", "")
+            load = load.strip()
+            loads = load.split("|")
+            tmp["load_1"] = loads[0]
+            tmp["load_5"] = loads[1]
+            tmp["load_15"] = loads[2]
     return tmp
 
 
