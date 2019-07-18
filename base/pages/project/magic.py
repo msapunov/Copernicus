@@ -40,6 +40,9 @@ def get_users(pid):
 def get_limbo_users(projects):
     from base.database.schema import Tasks
 
+    if not projects:
+        return projects
+
     for project in projects:
         pid = project["id"]
         tasks = Tasks.query.filter(
