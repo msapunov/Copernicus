@@ -17,6 +17,8 @@ class Extensions:
 
         if eid:
             self.id = eid
+        else:
+            self.id = False
         self.queue = Extend().query
         self.ext = Extend
 
