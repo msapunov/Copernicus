@@ -1,6 +1,7 @@
 from flask import current_app
 from flask_login import current_user
 from base.pages import check_int, check_str, check_json
+from base.database.schema import Extend
 from datetime import datetime as dt
 from dateutil.relativedelta import relativedelta as rd
 from calendar import monthrange
@@ -13,8 +14,6 @@ __copyright__ = "Aix Marseille University"
 
 class Extensions:
     def __init__(self, eid=None):
-        from base.database.schema import Extend
-
         if eid:
             self.id = eid
         else:
