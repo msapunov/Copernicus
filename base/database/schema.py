@@ -181,7 +181,7 @@ class Extend(db.Model):
     accepted = db.Column(db.Boolean)
     processed = db.Column(db.Boolean, default=False)
     decision = db.Column(db.Text)
-    allocation = db.Column(db.Boolean, default=False)
+    done = db.Column(db.Boolean, default=False)
     present_use = db.Column(db.Integer)
     present_total = db.Column(db.Integer)
     usage_percent = db.Column(db.String(10))
@@ -215,7 +215,7 @@ class Extend(db.Model):
             "accepted": self.accepted,
             "processed": self.processed,
             "decision": self.decision,
-            "allocation": self.allocation,
+            "done": self.done,
             "present_use": self.present_use,
             "present_total": self.present_total,
             "activate": self.activate,
