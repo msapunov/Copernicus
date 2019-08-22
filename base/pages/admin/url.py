@@ -10,7 +10,8 @@ from base.pages.admin.magic import reg_ignore, group_users, user_info_update
 from base.pages.admin.magic import user_create_by_admin, user_reset_pass
 from base.pages.admin.magic import user_delete, get_registration_record
 from base.pages.admin.form import UserEditForm
-from base.pages.project.magic import pending_resources, processed_resource
+from base.pages.project.magic import processed_resource
+from base.pages.board.magic import Extensions
 
 
 __author__ = "Matvey Sapunov"
@@ -144,7 +145,7 @@ def admin_extension_done(pid):
 @login_required
 @grant_access("admin", "tech")
 def admin_extension_todo():
-    return jsonify(data=pending_resources())
+    return jsonify(data=Extensions().pending())
 
 
 @bp.route("/admin/tasks/update/<int:tid>", methods=["POST"])
