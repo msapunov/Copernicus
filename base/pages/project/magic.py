@@ -3,6 +3,7 @@ from flask_login import current_user
 from base.pages import ssh_wrapper, check_int, check_str, send_message
 from base.utils import accounting_start
 from datetime import datetime as dt
+from base import db
 
 
 __author__ = "Matvey Sapunov"
@@ -14,7 +15,6 @@ def processed_resource(pid):
     if project.resources.treated:
         raise ValueError("Resources for the project has been already processed")
     project.resources.treated = True
-    from base import db
     db.session.commit()
     return project.api_resources()
 
