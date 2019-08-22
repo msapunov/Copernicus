@@ -1,5 +1,6 @@
 from flask import render_template, jsonify
 from flask_login import login_required
+from base import db
 from base.pages import ProjectLog, check_json, check_int, check_str
 from base.pages.board import bp
 from base.pages.board.magic import get_arguments, create_resource, Extensions
@@ -53,8 +54,6 @@ def web_board_accept():
         record.decision += "\nSet extension option to %s by hands"
 
     project = get_project_record(record.project.id)
-    from base import db
-
     if record.extend:
         project.resources.treated=False
         project.resources.cpu += cpu
@@ -65,6 +64,7 @@ def web_board_accept():
         project.resources = resource
 
     db.session.commit()
+
     return jsonify(message=ProjectLog(record.project).accept(record),
                    data={"id": record.id})
 
