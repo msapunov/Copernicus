@@ -115,7 +115,7 @@ class Project(db.Model):
             "start": self.resources.created.strftime("%Y-%m-%d %X"),
             "notify": self.responsible.email,
             "name": self.responsible.full_name(),
-            "id": self.resources.id,
+            "id": self.id,
             "project": self.get_name()
         }
 
