@@ -113,9 +113,9 @@ class Project(db.Model):
             "cpu": self.resources.cpu,
             "finish": self.resources.ttl.strftime("%Y-%m-%d %X"),
             "start": self.resources.created.strftime("%Y-%m-%d %X"),
-            "email": self.responsible.email,
+            "notify": self.responsible.email,
             "name": self.responsible.full_name(),
-            "id": self.id,
+            "id": self.resources.id,
             "project": self.get_name()
         }
 
@@ -616,7 +616,6 @@ class Tasks(db.Model):
             return ""
 
     def api(self):
-#  task: act|<user, resp, proj>|<user_login, ''>|<project_name, ''>|task_encoded
         act, entity, login, project, task = self.action.split("|")
         return {
             "id": self.id,
