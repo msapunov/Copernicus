@@ -37,8 +37,16 @@ def web_board_history():
 @login_required
 def web_board_accept():
 
-    eid, note = get_arguments()
-    record = Extensions(eid).accept(note)
+    eid, note, cpu, ext = get_arguments()
+
+    record = Extensions(eid)
+    record.cpu = cpu
+    record.extend = ext
+    record.accept(note)
+    db.session.commit()
+
+    return jsonify(message=ProjectLog(record.project).accept(record),
+                   data={"id": record.id})
 
     data = check_json()
     cpu = check_int(data["cpu"])
@@ -86,5 +94,8 @@ def web_board_reject():
 
 
 def reject_extension():
-    eid, note = get_arguments()
-    return Extensions(eid).reject(note)
+    eid, note, cpu, ext = get_arguments()
+    record = Extensions(eid)
+    record.cpu = cpu
+    record.extend = ext
+    return record.reject(note)
