@@ -103,4 +103,14 @@ def get_arguments():
     data = check_json()
     eid = check_int(data["eid"])
     note = check_str(data["comment"])
-    return eid, note
+
+    ext = check_str(data["extension"]).lower()
+    extension = False
+    if ext ==  "true":
+        extension = True
+
+    cpu = check_int(data["cpu"])
+    if (not cpu) or (cpu <= 0):
+        raise ValueError("CPU value is absent, zero or a negative value!")
+
+    return eid, note, cpu, extension
