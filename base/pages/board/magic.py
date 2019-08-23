@@ -6,6 +6,7 @@ from datetime import datetime as dt
 from dateutil.relativedelta import relativedelta as rd
 from calendar import monthrange
 from operator import attrgetter
+from base import db
 
 
 __author__ = "Matvey Sapunov"
@@ -46,7 +47,6 @@ class Extensions:
     def _process(record):
         record.processed = True
         record.approve = current_user
-        from base import db
         db.session.commit()
         return record
 
@@ -59,12 +59,20 @@ class Extensions:
         return self._process(record)
 
     def accept(self, note):
-        record = self.record()
-        if record.processed:
+        self.rec = self.record()
+        if self.rec.processed:
             raise ValueError("This request has been already processed")
-        record.accepted = True
-        record.decision = note
-        return self._process(record)
+        self.rec.decision = note
+        if self.extend:
+            self.rec.extend = self.extend
+            self.rec.decision += "\nExtension option was manually set to %s"\
+                                 % self.extend
+        if self.cpu:
+            self.rec.hours = self.cpu
+            self.rec.decision += "\nCPU value was manually set to %s" % self.cpu
+        self.rec.accepted = True
+        self.project = self.rec.project
+        return self._process(self.rec)
 
 
 def create_resource(project, cpu):
