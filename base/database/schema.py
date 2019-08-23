@@ -200,6 +200,17 @@ class Extend(db.Model):
     def __repr__(self):
         return "<Extension for project {}>".format(self.project.get_name())
 
+    def api(self):
+        return {
+            "cpu": self.hours,
+            "finish": self.project.resources.ttl.strftime("%Y-%m-%d %X"),
+            "start": self.project.resources.created.strftime("%Y-%m-%d %X"),
+            "notify": self.project.responsible.email,
+            "name": self.project.responsible.full_name(),
+            "id": self.id,
+            "project": self.get_name()
+        }
+
     def to_dict(self):
         start = self.created.strftime("%Y-%m-%d %X %Z") if self.created else ""
         mod = self.modified.strftime("%Y-%m-%d %X %Z") if self.modified else ""
