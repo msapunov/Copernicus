@@ -36,43 +36,12 @@ def web_board_history():
 @bp.route("/board/accept", methods=["POST"])
 @login_required
 def web_board_accept():
-
     eid, note, cpu, ext = get_arguments()
-
     record = Extensions(eid)
     record.cpu = cpu
     record.extend = ext
     record.accept(note)
-
     return jsonify(message=ProjectLog(record.rec.project).accept(record.rec),
-                   data={"id": record.id})
-
-    data = check_json()
-    cpu = check_int(data["cpu"])
-    if (not cpu) or (cpu <= 0):
-        cpu = record.hours
-
-    extension = False
-    if check_str(data["extension"]).lower() == "true":
-        extension = True
-
-    if record.extend != extension:
-        record.extend = extension
-        record.decision += "\nSet extension option to %s by hands"
-
-    project = get_project_record(record.project.id)
-    if record.extend:
-        project.resources.treated=False
-        project.resources.cpu += cpu
-    else:
-        project.resources.valid = False
-        resource = create_resource(project, cpu)
-        db.session.add(resource)
-        project.resources = resource
-
-    db.session.commit()
-
-    return jsonify(message=ProjectLog(record.project).accept(record),
                    data={"id": record.id})
 
 
