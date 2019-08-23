@@ -1,10 +1,8 @@
 from flask import render_template, jsonify
 from flask_login import login_required
-from base import db
-from base.pages import ProjectLog, check_json, check_int, check_str
+from base.pages import ProjectLog
 from base.pages.board import bp
-from base.pages.board.magic import get_arguments, create_resource, Extensions
-from base.pages.project.magic import get_project_record
+from base.pages.board.magic import get_arguments, Extensions
 
 
 __author__ = "Matvey Sapunov"
