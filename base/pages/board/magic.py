@@ -74,7 +74,6 @@ class Extensions:
             self.rec.hours = self.cpu
             self.rec.decision += "\nCPU value was manually set to %s" % self.cpu
         self.rec.accepted = True
-        self.project = self.rec.project
         return self._process(self.rec)
 
 
