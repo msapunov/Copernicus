@@ -33,8 +33,7 @@ class Extensions:
         return self.queue.filter_by(processed=False).all()
 
     def pending(self):
-        return self.queue.filter_by(processed=False).filter_by(accepted=True)\
-            .all()
+        return self.queue.filter_by(processed=True).filter_by(done=False).all()
 
     def records(self):
         if self.id:
