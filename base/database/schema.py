@@ -578,9 +578,6 @@ class Tasks(db.Model):
     pid = db.Column(db.Integer, db.ForeignKey("projects.id"))
     project = db.relationship("Project", foreign_keys=pid)
 
-    limbo_pid = db.Column(db.Integer, db.ForeignKey("limbo_projects.id"))
-    limbo_project = db.relationship("LimboProject", foreign_keys=limbo_pid)
-
     def __repr__(self):
         return "<Task queue record {}>".format(self.id)
 
