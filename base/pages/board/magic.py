@@ -33,7 +33,8 @@ class Extensions:
         return self.queue.filter_by(processed=False).all()
 
     def pending(self):
-        return self.queue.filter_by(processed=True).filter_by(done=False).all()
+        recs = self.queue.filter_by(processed=True).filter_by(done=False).all()
+        return list(map(lambda x: x.api(), recs))
 
     def records(self):
         if self.id:
