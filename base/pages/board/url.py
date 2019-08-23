@@ -43,7 +43,6 @@ def web_board_accept():
     record.cpu = cpu
     record.extend = ext
     record.accept(note)
-    db.session.commit()
 
     return jsonify(message=ProjectLog(record.project).accept(record),
                    data={"id": record.id})
