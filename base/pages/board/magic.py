@@ -20,6 +20,9 @@ class Extensions:
         else:
             self.id = False
         self.queue = Extend().query
+        self.cpu = None
+        self.extend = None
+        self.rec = None
         self.ext = Extend
 
     def history(self, reverse=True):
