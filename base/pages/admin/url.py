@@ -10,7 +10,7 @@ from base.pages.admin.magic import reg_ignore, group_users, user_info_update
 from base.pages.admin.magic import user_create_by_admin, user_reset_pass
 from base.pages.admin.magic import user_delete, get_registration_record
 from base.pages.admin.form import UserEditForm
-from base.pages.project.magic import processed_resource
+from base.pages.project.magic import process_extension
 from base.pages.board.magic import Extensions
 
 
@@ -138,7 +138,7 @@ def admin_registration_reject(pid):
 @login_required
 @grant_access("admin", "tech")
 def admin_extension_done(pid):
-    return jsonify(data=processed_resource(pid))
+    return jsonify(data=process_extension(pid))
 
 
 @bp.route("/admin/extension/todo", methods=["POST"])
