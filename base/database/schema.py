@@ -208,7 +208,7 @@ class Extend(db.Model):
             "notify": self.project.responsible.email,
             "name": self.project.responsible.full_name(),
             "id": self.id,
-            "project": self.get_name()
+            "project": self.project.get_name()
         }
 
     def to_dict(self):
