@@ -66,11 +66,12 @@ class Extensions:
         if self.rec.processed:
             raise ValueError("This request has been already processed")
         self.rec.decision = note
-        if self.extend:
+
+        if self.extend and (self.rec.extend != self.extend):
             self.rec.extend = self.extend
             self.rec.decision += "\nExtension option was manually set to %s"\
                                  % self.extend
-        if self.cpu:
+        if self.cpu and (self.rec.hours != self.cpu):
             self.rec.hours = self.cpu
             self.rec.decision += "\nCPU value was manually set to %s" % self.cpu
 
