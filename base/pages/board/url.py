@@ -44,7 +44,7 @@ def web_board_accept():
     record.extend = ext
     record.accept(note)
 
-    return jsonify(message=ProjectLog(record.project).accept(record),
+    return jsonify(message=ProjectLog(record.rec.project).accept(record.rec),
                    data={"id": record.id})
 
     data = check_json()
