@@ -73,6 +73,7 @@ class Extensions:
         if self.cpu:
             self.rec.hours = self.cpu
             self.rec.decision += "\nCPU value was manually set to %s" % self.cpu
+
         self.rec.accepted = True
         return self._process(self.rec)
 
@@ -115,7 +116,7 @@ def get_arguments():
 
     ext = check_str(data["extension"]).lower()
     extension = False
-    if ext ==  "true":
+    if ext == "true":
         extension = True
 
     cpu = check_int(data["cpu"])
