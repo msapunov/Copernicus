@@ -393,7 +393,7 @@ class ProjectLog:
         return self._commit()
 
     def extended(self, extension):
-        self.log.event = "Extension request for %s hour(s) has been set"\
+        self.log.event = "Extension request for %s hour(s) has been processed"\
                          % extension.hours
         self.log.extension = extension
         return self._commit()
