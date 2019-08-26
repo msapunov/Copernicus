@@ -26,9 +26,12 @@ def process_extension(eid):
     else:
         ext.project.resources.cpu += ext.hours
         ext.project.resources.valid = True
-        msg = "\nCPU value has been extended to %s hours on %s based upon " \
+        msg = "CPU value has been extended to %s hours on %s based upon " \
               "extension request ID %s" % (ext.hours, date, eid)
-        ext.project.resources.comment += msg
+        if ext.project.resources.comment:
+            ext.project.resources.comment += msg
+        else:
+            ext.project.resources.comment = msg
     ext.done = True
     db.session.commit()
     return jsonify(message=ProjectLog(ext.project).extend(ext))
