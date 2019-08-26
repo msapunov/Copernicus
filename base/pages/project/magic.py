@@ -35,7 +35,8 @@ def process_extension(eid):
             ext.project.resources.comment = msg
     ext.done = True
     db.session.commit()
-    return jsonify(message=ProjectLog(ext.project).extended(ext))
+    ProjectLog(ext.project).extended(ext)
+    return "Project extension ID %s has been processed" % eid
 
 
 def pending_resources():
