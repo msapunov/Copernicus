@@ -29,7 +29,8 @@ def process_extension(eid):
         msg = "CPU value has been extended to %s hours on %s based upon " \
               "extension request ID %s" % (ext.hours, date, eid)
         if ext.project.resources.comment:
-            ext.project.resources.comment += msg
+            ext.project.resources.comment = ext.project.resources.comment\
+                                            + "\n" + msg
         else:
             ext.project.resources.comment = msg
     ext.done = True
