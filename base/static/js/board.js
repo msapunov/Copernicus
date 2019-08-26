@@ -178,13 +178,13 @@
         }else{
             var action = "extension";
         }
-        if(url_name=="ignore"){
+        if(url_name.includes("ignore")){
             var verb = "ignoring";
         }else{
             var verb = "rejecting";
         }
         var title = "{0} {1} of project {2}".f(verb.capitalize(), action, project);
-        if(url_name=="ignore"){
+        if(url_name.includes("ignore")){
             var form = $("<span/>").html("Are you sure?");
         }else {
             var text = "Enter a reason for {0} {1} of project {2}".f(verb, action, project);
