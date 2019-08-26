@@ -1,8 +1,9 @@
 from flask import render_template, jsonify
 from flask_login import login_required
-from base.pages import ProjectLog
+from base.pages import ProjectLog, grant_access
 from base.pages.board import bp
-from base.pages.board.magic import get_arguments, Extensions, reject_extension
+from base.pages.board.magic import get_arguments, Extensions, reject_extension,\
+    ignore_extension
 
 
 __author__ = "Matvey Sapunov"
