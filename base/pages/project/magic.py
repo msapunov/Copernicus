@@ -4,6 +4,7 @@ from flask_login import current_user
 from base import db
 from base.utils import accounting_start
 from base.database.schema import Extend
+from base.pages import ProjectLog
 from base.pages import ssh_wrapper, check_int, check_str, send_message
 from base.pages.board.magic import create_resource
 
@@ -12,13 +13,25 @@ __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
 
 
-def processed_resource(pid):
-    project = get_project_record(pid)
-    if project.resources.treated:
-        raise ValueError("Resources for the project has been already processed")
-    project.resources.treated = True
+def process_extension(eid):
+    ext = Extend.query.filter_by(id=eid).first()
+    if not ext:
+        raise ValueError("Failed to find extension record with id '%s'" % ext)
+    date = dt.now().replace(microsecond=0).isoformat(" ")
+    if not ext.extend:
+        ext.project.resources.valid = False
+        ext.project.resources = create_resource(ext.project, ext.hours)
+        msg = "Created based on extension request ID %s on %s" % (eid, date)
+        ext.project.resources.comment = msg
+    else:
+        ext.project.resources.cpu += ext.hours
+        ext.project.resources.valid = True
+        msg = "\nCPU value has been extended to %s hours on %s based upon " \
+              "extension request ID %s" % (ext.hours, date, eid)
+        ext.project.resources.comment += msg
+    ext.done = True
     db.session.commit()
-    return project.api_resources()
+    return jsonify(message=ProjectLog(ext.project).extend(ext))
 
 
 def pending_resources():
