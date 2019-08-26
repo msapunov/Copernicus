@@ -183,9 +183,9 @@
         }else{
             var verb = "rejecting";
         }
-        var title = "{0} {1} of project {2}".f(verb.capitalize(), action, project);
+        var title = "{0} {1} of the project {2}".f(verb.capitalize(), action, project);
         if(url_name.includes("ignore")){
-            var msg = title + "\nNo email will be send\nAre you sure?";
+            var msg = title + "<br>No email will be send<br>Are you sure?";
             var form = $("<span/>").html(msg);
         }else {
             var text = "Enter a reason for {0} {1} of project {2}".f(verb, action, project);
