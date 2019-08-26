@@ -185,7 +185,8 @@
         }
         var title = "{0} {1} of project {2}".f(verb.capitalize(), action, project);
         if(url_name.includes("ignore")){
-            var form = $("<span/>").html("Are you sure?");
+            var msg = title + "\nNo email will be send\nAre you sure?";
+            var form = $("<span/>").html(msg);
         }else {
             var text = "Enter a reason for {0} {1} of project {2}".f(verb, action, project);
             var motiv = $("<textarea/>").html(text).addClass("uk-width-1-1").attr({
