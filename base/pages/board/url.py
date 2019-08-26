@@ -45,18 +45,19 @@ def web_board_accept():
                    data={"id": record.id})
 
 
-@bp.route("/board/reject", methods=["POST"])
+@bp.route("/board/reject/<int:eid>", methods=["POST"])
 @login_required
-def web_board_reject():
-    record = reject_extension()
+def web_board_reject(eid):
+    record = reject_extension(eid)
     # TODO: send email
     return jsonify(message=ProjectLog(record.project).reject(record),
                    data={"id": record.id})
 
 
-@bp.route("/board/ignore", methods=["POST"])
+@bp.route("/board/ignore/<int:eid>", methods=["POST"])
 @login_required
-def web_board_ignore():
-    record = reject_extension(ignore=True)
+@grant_access("admin", "tech")
+def web_board_ignore(eid):
+    record = ignore_extension(eid)
     return jsonify(message=ProjectLog(record.project).ignore(record),
                    data={"id": record.id})
