@@ -87,13 +87,16 @@ class Extensions:
         return self._process(self.rec)
 
 
-def reject_extension(ignore=False):
-    eid, note, cpu, ext = get_arguments()
-    record = Extensions(eid)
-    if ignore:
-        note = "Extension request has been ignored"
+def ignore_extension(eid):
+    return Extensions(eid).reject("Extension request has been ignored")
+
+
+def reject_extension(eid):
+    data = check_json()
+    note = check_str(data["comment"])
     if not note:
-        raise ValueError("Please provide a reason for rejection")
+        raise ValueError("Please indicate reason for rejection extension")
+    record = Extensions(eid)
     return record.reject(note)
 
 
