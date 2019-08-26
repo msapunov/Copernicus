@@ -199,10 +199,10 @@
                 $("<div/>").addClass("uk-form-row").append(motiv)
             );
         }
+        url_name += "/" + id;
         UIkit.modal.confirm(form.prop("outerHTML"), function(){
             var comment = $("textarea[name=note]").val();
             json_send(url_name, {
-                "eid": id,
                 "comment": comment
             }).done(function(reply){
                 window.process(reply);
