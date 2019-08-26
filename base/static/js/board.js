@@ -157,12 +157,11 @@
     window.board.ignore = function(){
         var me = this;
         window.board.kill(window.board.url.ignore, me)
-    }
-
+    };
     window.board.reject = function(){
         var me = this;
         window.board.kill(window.board.url.reject, me)
-    }
+    };
     window.board.kill = function(url_name, me){
         if (typeof(url_name)==="undefined") url_name="reject";
         if (typeof(me)==="undefined") me=this;
@@ -185,16 +184,20 @@
             var verb = "rejecting";
         }
         var title = "{0} {1} of project {2}".f(verb.capitalize(), action, project);
-        var text = "Enter a reason for {0} {1} of project {2}".f(verb, action, project);
-        var motiv = $("<textarea/>").html(text).addClass("uk-width-1-1").attr({
-            "rows": "4",
-            "name": "note"
-        });
-        var form = $("<form/>").addClass("uk-form").append(
+        if(url_name=="ignore"){
+            var form = $("<span/>").html("Are you sure?");
+        }else {
+            var text = "Enter a reason for {0} {1} of project {2}".f(verb, action, project);
+            var motiv = $("<textarea/>").html(text).addClass("uk-width-1-1").attr({
+                "rows": "4",
+                "name": "note"
+            });
+            var form = $("<form/>").addClass("uk-form").append(
                 $("<legend/>").text(title)
             ).append(
                 $("<div/>").addClass("uk-form-row").append(motiv)
             );
+        }
         UIkit.modal.confirm(form.prop("outerHTML"), function(){
             var comment = $("textarea[name=note]").val();
             json_send(url_name, {
@@ -204,8 +207,7 @@
                 window.process(reply);
             });
         });
-    }
-
+    };
     window.board.history = function(){
         var id = $(this).data("pid");
         var name = $(this).data("name");
