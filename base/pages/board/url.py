@@ -2,7 +2,7 @@ from flask import render_template, jsonify
 from flask_login import login_required
 from base.pages import ProjectLog
 from base.pages.board import bp
-from base.pages.board.magic import get_arguments, Extensions
+from base.pages.board.magic import get_arguments, Extensions, reject_extension
 
 
 __author__ = "Matvey Sapunov"
@@ -39,15 +39,8 @@ def web_board_accept():
     record.cpu = cpu
     record.extend = ext
     record.accept(note)
+    #TODO: send email
     return jsonify(message=ProjectLog(record.rec.project).accept(record.rec),
-                   data={"id": record.id})
-
-
-@bp.route("/board/ignore", methods=["POST"])
-@login_required
-def web_board_ignore():
-    record = reject_extension()
-    return jsonify(message=ProjectLog(record.project).ignore(record),
                    data={"id": record.id})
 
 
@@ -55,13 +48,14 @@ def web_board_ignore():
 @login_required
 def web_board_reject():
     record = reject_extension()
+    # TODO: send email
     return jsonify(message=ProjectLog(record.project).reject(record),
                    data={"id": record.id})
 
 
-def reject_extension():
-    eid, note, cpu, ext = get_arguments()
-    record = Extensions(eid)
-    record.cpu = cpu
-    record.extend = ext
-    return record.reject(note)
+@bp.route("/board/ignore", methods=["POST"])
+@login_required
+def web_board_ignore():
+    record = reject_extension(ignore=True)
+    return jsonify(message=ProjectLog(record.project).ignore(record),
+                   data={"id": record.id})

@@ -53,6 +53,14 @@ class Extensions:
         db.session.commit()
         return record
 
+    def ignore(self):
+        record = self.record()
+        if record.processed:
+            raise ValueError("This request has been already processed")
+        record.accepted = False
+        record.decision = "Extension request has been ignored"
+        return self._process(record)
+
     def reject(self, note):
         record = self.record()
         if record.processed:
@@ -77,6 +85,16 @@ class Extensions:
 
         self.rec.accepted = True
         return self._process(self.rec)
+
+
+def reject_extension(ignore=False):
+    eid, note, cpu, ext = get_arguments()
+    record = Extensions(eid)
+    if ignore:
+        note = "Extension request has been ignored"
+    if not note:
+        raise ValueError("Please provide a reason for rejection")
+    return record.reject(note)
 
 
 def create_resource(project, cpu):
