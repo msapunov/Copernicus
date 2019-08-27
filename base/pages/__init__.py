@@ -266,7 +266,7 @@ class TaskQueue:
             raise ValueError("Can't add a user to none existent project")
         description = user.task_ready()
         self.task.action = "create|user|%s|%s|%s" % (user.login, self.p_name,
-                                                  description)
+                                                     description)
         return self._user_action()
 
     def responsible_create(self, user):
@@ -322,7 +322,6 @@ class TaskQueue:
                                                      description)
         self.task.user = user
         return self._user_action()
-
 
     def _user_action(self):
         self.processed = True
