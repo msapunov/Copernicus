@@ -1,112 +1,12 @@
 from flask import current_app
 from datetime import datetime as dt
-from flask_login import current_user
-from base.database.schema import LogDB
+from unicodedata import normalize
 
 
-class ProjectLog:
-
-    def __init__(self, project, send=True):
-        self.project = project
-        self.log = LogDB(author=current_user, project=project)
-        self.send = send
-
-    def responsible_added(self, user):
-        self.log.event = "Added a new project responsible %s with login %s" % (
-            user.full_name(), user.login)
-        return self._commit_user(user)
-
-    def responsible_assign(self, user):
-        self.log.event = "Made a request to assign new responsible %s"\
-                         % user.full_name()
-        return self._commit_user(user)
-
-    def user_added(self, user):
-        self.log.event = "Added a new user %s with login %s" % (
-            user.full_name(), user.login)
-        return self._commit_user(user)
-
-    def user_assign(self, user):
-        self.log.event = "Made a request to assign a new user %s"\
-                         % user.full_name()
-        return self._commit_user(user)
-
-    def user_assigned(self, user):
-        self.log.event = "User %s has been attached" % user.full_name()
-        return self._commit_user(user)
-
-    def user_deleted(self, user):
-        self.log.event = "User %s (%s) has been deleted" % (
-            user.full_name(), user.login)
-        return self._commit_user(user)
-
-    def user_del(self, user):
-        self.log.event = "Made a request to delete user %s" % user.full_name()
-        return self._commit_user(user)
-
-    def _commit_user(self, user):
-        self.log.user = user
-        return self._commit()
-
-    def extend(self, extension):
-        self.log.event = "Made a request to extend project for %s hour(s)"\
-                         % extension.hours
-        self.log.extension = extension
-        return self._commit()
-
-    def extended(self, extension):
-        self.log.event = "Extension request for %s hour(s) has been processed"\
-                         % extension.hours
-        self.log.extension = extension
-        return self._commit()
-
-    def activate(self, extension):
-        self.log.event = "Made an activation request"
-        self.log.extension = extension
-        return self._commit()
-
-    def transform(self, extension):
-        self.log.event = "Made a request to transform from type A to type B"
-        self.log.extension = extension
-        return self._commit()
-
-    def accept(self, extension):
-        self.log.event = "Extend request for %s hours is accepted"\
-                         % extension.hours
-        self.log.extension = extension
-        return self._commit()
-
-    def ignore(self, extension):
-        self.log.event = "Extend request for %s hours is ignored"\
-                         % extension.hours
-        self.log.extension = extension
-        self.send = False
-        return self._commit()
-
-    def reject(self, extension):
-        self.log.event = "Extend request for %s hours is rejected"\
-                         % extension.hours
-        self.log.extension = extension
-        return self._commit()
-
-    def event(self, message):
-        self.log.event = message.lower()
-        return self._commit()
-
-    def _commit(self):
-        from base import db
-        db.session.add(self.log)
-        db.session.commit()
-        message = "%s: %s" % (self.project.get_name(), self.log.event)
-        if self.send:
-            if not self.project.responsible:
-                raise ValueError("project %s has no responsible attached!" %
-                                 self.project.get_name())
-            if not self.project.responsible.email:
-                raise ValueError("project %s responsible nas no email!" %
-                                 self.project.get_name())
-            #send_message(self.project.responsible.email, message=message)
-        return message
+def normalize_word(word):
+    word = word.replace("'", "")
+    word = normalize("NFKD", word).encode("ascii", "ignore").decode("ascii")
+    return word
 
 
 """

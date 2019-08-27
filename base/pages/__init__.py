@@ -5,7 +5,8 @@ from flask_mail import Message
 from logging import debug, error
 from re import compile
 from functools import wraps
-from unicodedata import normalize
+from base.database.schema import LogDB, User
+from base.utils import normalize_word
 
 
 def grant_access(*roles):
@@ -23,14 +24,7 @@ def grant_access(*roles):
     return log_required
 
 
-def normalize_word(word):
-    word = word.replace("'", "")
-    word = normalize("NFKD", word).encode("ascii", "ignore").decode("ascii")
-    return word
-
-
 def generate_login(name, surname):
-    from base.database.schema import User
     users = User.query.all()
     logins = list(map(lambda x: x.login, users))
 
@@ -344,10 +338,28 @@ class TaskQueue:
 class ProjectLog:
 
     def __init__(self, project):
-        from base.database.schema import LogDB
         self.project = project
         self.log = LogDB(author=current_user, project=project)
         self.send = True
+
+    def _commit(self):
+        from base import db
+        db.session.add(self.log)
+        db.session.commit()
+        message = "%s: %s" % (self.project.get_name(), self.log.event)
+        if self.send:
+            if not self.project.responsible:
+                raise ValueError("project %s has no responsible attached!" %
+                                 self.project.get_name())
+            if not self.project.responsible.email:
+                raise ValueError("project %s responsible nas no email!" %
+                                 self.project.get_name())
+            send_message(self.project.responsible.email, message=message)
+        return message
+
+    def _commit_user(self, user):
+        self.log.user = user
+        return self._commit()
 
     def responsible_added(self, user):
         self.log.event = "Added a new project responsible %s with login %s" % (
@@ -381,10 +393,6 @@ class ProjectLog:
     def user_del(self, user):
         self.log.event = "Made a request to delete user %s" % user.full_name()
         return self._commit_user(user)
-
-    def _commit_user(self, user):
-        self.log.user = user
-        return self._commit()
 
     def extend(self, extension):
         self.log.event = "Made a request to extend project for %s hour(s)"\
@@ -430,18 +438,3 @@ class ProjectLog:
     def event(self, message):
         self.log.event = message.lower()
         return self._commit()
-
-    def _commit(self):
-        from base import db
-        db.session.add(self.log)
-        db.session.commit()
-        message = "%s: %s" % (self.project.get_name(), self.log.event)
-        if self.send:
-            if not self.project.responsible:
-                raise ValueError("project %s has no responsible attached!" %
-                                 self.project.get_name())
-            if not self.project.responsible.email:
-                raise ValueError("project %s responsible nas no email!" %
-                                 self.project.get_name())
-            send_message(self.project.responsible.email, message=message)
-        return message
