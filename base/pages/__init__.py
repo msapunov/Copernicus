@@ -5,6 +5,7 @@ from flask_mail import Message
 from logging import debug, error
 from re import compile
 from functools import wraps
+from base import mail
 from base.database.schema import LogDB, User
 from base.utils import normalize_word
 
@@ -59,7 +60,7 @@ def send_message(to_who, by_who=None, cc=None, title=None, message=None):
         cc = cc.split(";")
     if not message:
         raise ValueError("Message body is empty")
-    from base import mail
+
     title = "[TEST MODE] "+title
     tech = current_app.config["EMAIL_TECH"]
     msg = Message(title, sender=by_who, recipients=to_who, cc=cc)
