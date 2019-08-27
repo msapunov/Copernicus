@@ -342,19 +342,40 @@ class ProjectLog:
         self.log = LogDB(author=current_user, project=project)
         self.send = True
 
+    def _send_email(self, message):
+        email = current_app.config.get("EMAIL_PROJECT", None)
+        if not email:
+            raise ValueError("")
+        sender = ("Automatic messaging system", email)
+        cc = [email]
+        if not self.project.responsible:
+            raise ValueError("")
+        if not self.project.responsible.email:
+            raise ValueError("")
+        to = [self.project.responsible.email]
+        # full_name = self.project.responsible.full_name()
+        tech = current_app.config.get("EMAIL_TECH", None)
+        if tech:
+            postfix = "If you believe that this email has been sent to you by" \
+                      " mistake, please report to: %s" % tech
+        else:
+            postfix = "If you believe that this email has been sent to you by" \
+                      " mistake, please delete it!"
+        title = "[TEST MODE] Mesocentre reporting"
+        email = Message(title, sender=sender, recipients=to, cc=cc)
+        email.body = message + "\n" + postfix
+        if not current_app.config.get("MAIL_SEND", None):
+            return "E-mail submission has been blocked in configuration file"
+        mail.send(email)
+        return "E-mail has been sent successfully"
+
     def _commit(self):
         from base import db
         db.session.add(self.log)
         db.session.commit()
         message = "%s: %s" % (self.project.get_name(), self.log.event)
         if self.send:
-            if not self.project.responsible:
-                raise ValueError("project %s has no responsible attached!" %
-                                 self.project.get_name())
-            if not self.project.responsible.email:
-                raise ValueError("project %s responsible nas no email!" %
-                                 self.project.get_name())
-            send_message(self.project.responsible.email, message=message)
+            self._send_email(message)
         return message
 
     def _commit_user(self, user):
