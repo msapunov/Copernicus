@@ -40,7 +40,6 @@ def web_board_accept():
     record.cpu = cpu
     record.extend = ext
     record.accept(note)
-    #TODO: send email
     return jsonify(message=ProjectLog(record.rec.project).accept(record.rec),
                    data={"id": record.id})
 
@@ -49,7 +48,6 @@ def web_board_accept():
 @login_required
 def web_board_reject(eid):
     record = reject_extension(eid)
-    # TODO: send email
     return jsonify(message=ProjectLog(record.project).reject(record),
                    data={"id": record.id})
 
