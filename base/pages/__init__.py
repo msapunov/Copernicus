@@ -428,30 +428,31 @@ class ProjectLog:
         return self._commit()
 
     def activate(self, extension):
-        self.log.event = "Made an activation request"
+        self.log.event = "Activation request has been registered"
         self.log.extension = extension
         return self._commit()
 
     def transform(self, extension):
-        self.log.event = "Made a request to transform from type A to type B"
+        self.log.event = "Request to transform the project from type A to " \
+                         "type B has been registered"
         self.log.extension = extension
         return self._commit()
 
     def accept(self, extension):
-        self.log.event = "Extend request for %s hours is accepted"\
+        self.log.event = "Extension request for %s hours is accepted"\
                          % extension.hours
         self.log.extension = extension
         return self._commit()
 
     def ignore(self, extension):
-        self.log.event = "Extend request for %s hours is ignored"\
+        self.log.event = "Extension request for %s hours is ignored"\
                          % extension.hours
         self.log.extension = extension
         self.send = False
         return self._commit()
 
     def reject(self, extension):
-        self.log.event = "Extend request for %s hours is rejected"\
+        self.log.event = "Extension request for %s hours is rejected"\
                          % extension.hours
         self.log.extension = extension
         return self._commit()
