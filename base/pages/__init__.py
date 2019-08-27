@@ -438,7 +438,10 @@ class ProjectLog:
         message = "%s: %s" % (self.project.get_name(), self.log.event)
         if self.send:
             if not self.project.responsible:
-                raise ValueError("project % has no responsible attached!" %
+                raise ValueError("project %s has no responsible attached!" %
+                                 self.project.get_name())
+            if not self.project.responsible.email:
+                raise ValueError("project %s responsible nas no email!" %
                                  self.project.get_name())
             send_message(self.project.responsible.email, message=message)
         return message
