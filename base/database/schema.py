@@ -208,6 +208,7 @@ class Extend(db.Model):
             "notify": self.project.responsible.email,
             "name": self.project.responsible.full_name(),
             "id": self.id,
+            "add_hours": self.extend,
             "project": self.project.get_name()
         }
 
