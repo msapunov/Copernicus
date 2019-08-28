@@ -76,7 +76,8 @@ class Extensions:
             raise ValueError("This request has been already processed")
         self.rec.decision = note
 
-        if self.extend and (self.rec.extend != self.extend):
+        if (self.extend is True or self.extend is False) and \
+                self.rec.extend is not self.extend:
             self.rec.extend = self.extend
             self.rec.decision += "\nExtension option was manually set to %s"\
                                  % self.extend
