@@ -285,7 +285,7 @@ def user_info_update(form):
 
     names = filter(lambda x: True if x != "None" else False, form.project.data)
     if names:
-        user.projects = list(map(lambda x: get_project_by_name(x), names))
+        user.project = list(map(lambda x: get_project_by_name(x), names))
     else:
         user.project = []
 
