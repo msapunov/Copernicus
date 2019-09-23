@@ -37,6 +37,7 @@
                     <thead>
                         <tr>
                             <th></th>
+                            <th></th>
                             <th>Project</th>
                             <th>Responsible</th>
                             <th>Present</th>
@@ -51,6 +52,13 @@
                     {% for record in data|sort(attribute='created', reverse=True) %}
                         <tr id="{{record.id}}">
                             <td class="uk-width-1-10"><button class="uk-button uk-button-mini new_ext" type="button" data-id='{{record.id}}-info'><span class="uk-icon-plus"></span></button></td>
+                            <td class="uk-width-1-10">
+                                {% if record.exception %}
+                                    <span class="uk-icon-exclamation"></span>
+                                {% else %}
+
+                                {%% endif }
+                            </td>
                             <td class="uk-width-1-10">{{ record.project_name }}</td>
                             <td class="uk-width-1-10 uk-text-nowrap">{{ record.responsible }}</td>
                             <td class="uk-width-1-10">{{ record.total }}</td>
