@@ -37,6 +37,7 @@
                     <thead>
                         <tr>
                             <th></th>
+                            <th></th>
                             <th>Project</th>
                             <th>Responsible</th>
                             <th>Present</th>
@@ -54,10 +55,10 @@
                                 <button class="uk-button uk-button-mini new_ext" type="button" data-id='{{record.id}}-info'>
                                     <span class="uk-icon-plus"></span>
                                 </button>
+                            </td>
+                            <td class="uk-width-1-10">
                                 {% if record.exception %}
                                     <span class="uk-icon-exclamation"></span>
-                                {% else %}
-
                                 {% endif %}
                             </td>
                             <td class="uk-width-1-10">{{ record.project_name }}</td>
@@ -68,8 +69,6 @@
                             <td class="uk-width-1-10">
                                 {% if record.activate %}
                                     <span class="uk-icon-plus"></span>
-                                {% else %}
-                                    &nbsp;
                                 {% endif %}
                             </td>
                             <td class="uk-width-1-10">
@@ -79,10 +78,10 @@
                                     &nbsp;
                                 {% endif %}
                             </td>
-                            <td class="uk-width-2-10 uk-text-nowrap">{{ record.created }}</td>
+                            <td class="uk-width-1-10 uk-text-nowrap">{{ record.created }}</td>
                         </tr>
                         <tr id="{{record.id}}-info" class="ext_info uk-hidden"> <!-- uk-text-center uk-hidden -->
-                            <td colspan="9">
+                            <td colspan="10">
                                 <table id="info_table" class="uk-table">
                                     <tbody>
                                         <tr class="ext_info">
