@@ -82,29 +82,34 @@
                     {% for record in data.extension|sort(attribute='id', reverse=True) %}
                         <tr id="{{record.id}}">
                             <td class="uk-width-1-10"><button class="uk-button uk-button-mini new_project" type="button" data-id='{{record.id}}-info'><span class="uk-icon-plus"></span></button></td>
-                            <td class="uk-width-4-10">{{record.title}}</td>
+                            <td class="uk-width-1-10">
+                                {% if record.type = a %}
+                                    <strong class="uk-text-success">A</strong>
+                                {% elif record.type = b %}
+                                    <strong class="uk-text-primary">B</strong>
+                                {% elif record.type = c %}
+                                    <strong>C</strong>
+                                {% elif record.type = e %}
+                                    <strong>E</strong>
+                                {% elif record.type = h %}
+                                    <strong class="uk-text-warning">H</strong>
+                                {% else %}
+                                    {{record.type}}
+                                {% endif %}
+                            </td>
+                            <td class="uk-width-3-10">{{record.title}}</td>
                             <td class="uk-width-2-10">{{record.responsible_first_name}}&nbsp;{{record.responsible_last_name}}</td>
                             <td class="uk-width-1-10">{{record.cpu}}</td>
                             <td class="uk-width-2-10">{{record.ts}}</td>
                         </tr>
                         <tr id="{{record.id}}-info" class="ext_info uk-hidden uk-text-center">
-                            <td colspan="5">
+                            <td colspan="6">
                                 <table id="info_table" class="uk-table">
                                     <tbody>
                                         <tr class="ext_info">
                                             <td class="uk-width-1-10 uk-text-right">Project type:</td>
                                             <td class="uk-width-9-10 uk-text-left">
-                                                {% if record.type_a %}
-                                                    <strong>A</strong>
-                                                {% elif record.type_b %}
-                                                    <strong>B</strong>
-                                                {% elif record.type_c%}
-                                                    <strong>C</strong>
-                                                {% elif record.type_e%}
-                                                    <strong>E</strong>
-                                                {% elif record.type_h%}
-                                                    <strong>H</strong>
-                                                {% endif %}
+                                                <strong>{{record.type}}</strong>
                                             </td>
                                         </tr>
                                         <tr class="ext_info">
