@@ -84,15 +84,15 @@
                             <td class="uk-width-1-10"><button class="uk-button uk-button-mini new_project" type="button" data-id='{{record.id}}-info'><span class="uk-icon-plus"></span></button></td>
                             <td class="uk-width-1-10">
                                 {% if "A" in record.type %}
-                                    <strong class="uk-text-success">A</strong>
+                                    <span class="uk-text-bold uk-text-success">A</span>
                                 {% elif "B" in record.type %}
-                                    <strong class="uk-text-primary">B</strong>
+                                    <span class="uk-text-bold uk-text-primary">B</span>
                                 {% elif "C" in record.type %}
-                                    <strong>C</strong>
+                                    <span>C</span>
                                 {% elif "E" in record.type %}
-                                    <strong>E</strong>
+                                    <span>E</span>
                                 {% elif "H" in record.type %}
-                                    <strong class="uk-text-warning">H</strong>
+                                    <span class="uk-text-bold uk-text-warning">H</span>
                                 {% else %}
                                     {{record.type}}
                                 {% endif %}
