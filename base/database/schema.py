@@ -512,6 +512,7 @@ class Register(db.Model):
             "comment": self.comment,
             "created": self.created,
             "created_ts": self.created_ts,
+            "type": self.project_type(),
             "meso_id": self.project_id()
         }
 
