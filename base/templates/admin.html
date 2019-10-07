@@ -81,8 +81,7 @@
                 <tbody id="ext_result_records">
                     {% for record in data.extension|sort(attribute='id', reverse=True) %}
                         <tr id="{{record.id}}">
-                            <td class="uk-width-1-10"><button class="uk-button uk-button-mini new_project" type="button" data-id='{{record.id}}-info'><span class="uk-icon-plus"></span></button></td>
-                            <td class="uk-width-1-10">
+                            <td class="uk-width-1-10 uk-text-middle"><button class="uk-button uk-button-mini new_project" type="button" data-id='{{record.id}}-info'><span class="uk-icon-plus"></span></button>
                                 {% if "A" in record.type %}
                                     <span class="uk-text-bold uk-text-success">A</span>
                                 {% elif "B" in record.type %}
@@ -103,7 +102,7 @@
                             <td class="uk-width-2-10">{{record.ts}}</td>
                         </tr>
                         <tr id="{{record.id}}-info" class="ext_info uk-hidden uk-text-center">
-                            <td colspan="6">
+                            <td colspan="5">
                                 <table id="info_table" class="uk-table">
                                     <tbody>
                                         <tr class="ext_info">
