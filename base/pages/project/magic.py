@@ -18,7 +18,7 @@ def process_extension(eid):
     if not ext:
         raise ValueError("Failed to find extension record with id '%s'" % ext)
     date = dt.now().replace(microsecond=0).isoformat(" ")
-    if not ext.extend:
+    if (not ext.extend) or (ext.extend and ext.project.type == "h"):
         ext.project.resources.valid = False
         ext.project.resources = create_resource(ext.project, ext.hours)
         msg = "Created based on extension request ID %s on %s" % (eid, date)
