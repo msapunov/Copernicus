@@ -113,7 +113,8 @@ def get_scratch():
 def get_jobs(start, end, last=10):
     cmd = ["sacct", "-nPX",
            "--format=JobID,State,Start,Account,JobName,CPUTime,Partition",
-           "--start=%s" % start, "-u", current_user.login]
+           "--start=%s" % start, "--end=%s" % end, "-u",
+           current_user.login]
     run = " ".join(cmd)
 
     result, err = ssh_wrapper(run)
