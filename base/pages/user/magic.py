@@ -113,8 +113,8 @@ def get_scratch():
 def get_jobs(start, end, last=10):
     cmd = ["sacct", "-nPX",
            "--format=JobID,State,Start,Account,JobName,CPUTime,Partition",
-           "--start=%s" % start, "--end=%s" % end, "-u",
-           current_user.login]
+           "--start=%s" % start, "--end=%s" % end, "-u", current_user.login,
+           "|", "sort", "-n", "-r", "|", "head", "-%s" % last]
     run = " ".join(cmd)
 
     result, err = ssh_wrapper(run)
@@ -133,9 +133,7 @@ def get_jobs(start, end, last=10):
         tmp["name"] = job[4]
         tmp["duration"] = job[5]
         jobs.append(tmp)
-    jobs = sorted(jobs, key=lambda x: x["id"], reverse=True)
-    result = jobs[0:last]
-    return result
+    return jobs
 
 
 def changes_to_string(c_dict):
