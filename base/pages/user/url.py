@@ -82,6 +82,7 @@ def user_index():
             "name": user_record.name,
             "surname": user_record.surname,
             "email": user_record.email,
+            "uid": user_record.id,
             "login": user_record.login}
     try:
         jobs = get_jobs(start, end)
