@@ -325,6 +325,7 @@ class User(UserMixin, db.Model):
     comment = db.Column(db.Text)
     modified = db.Column(db.DateTime(True))
     created = db.Column(db.DateTime(True))
+    uid = db.Column(db.Integer)
 
     def __repr__(self):
         return '<User {}>'.format(self.login)
@@ -387,6 +388,7 @@ class User(UserMixin, db.Model):
             "admin": self.acl.is_admin,
             "acl_created": start,
             "acl_modified": mod,
+            "uid": self.uid,
             "projects": self.project_names()
         }
 
@@ -405,6 +407,7 @@ class User(UserMixin, db.Model):
             "comment": self.comment,
             #            "last_seen": self.last_seen.isoformat() + 'Z',
             "modified": self.modified,
+            "uid": self.uid,
             "created": self.created
         }
 
