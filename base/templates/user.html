@@ -89,13 +89,12 @@
                     {% set project_percent = "" %}
                 {% endif %}
             <div class="uk-panel uk-width-1-1 uk-panel-space">
-                <!--
+
                 <h2 class="uk-h2">Project {{project.name}}</h2>
-                <h4 class="uk-h4">Group ID: {{project.gid}}</h4>
-                -->
+                <p>Group ID: {{project.gid}}</p>
+
                 <div class="uk-grid">
                     <div class="uk-width-small-1-1 uk-width-medium-1-2">
-                        <p class="uk-h2">Project {{project.name}}</p>
                         <p>Start: {{project.start}}</p>
                         <p>End: {{project.end}}</p>
                         {% if project.max == 0 %}
@@ -107,7 +106,6 @@
                     <div class="uk-margin-top uk-width-small-1-1 uk-hidden-medium uk-hidden-large">
                     </div>
                     <div class="uk-width-small-1-1 uk-width-medium-1-2">
-                        <p>Group ID: {{project.gid}}</p>
                         <div class="uk-progress uk-progress-mini uk-progress-striped {{style}}">
                             <div class="uk-progress-bar" style="width: {{project.consumed_use}}%;"></div>
                         </div>
