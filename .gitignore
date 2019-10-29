@@ -8,6 +8,7 @@ __pycache__/
 
 # Instance Folder - used for configuration parameters
 /instance
+/remote
 
 # Tests folder
 /code/tests
