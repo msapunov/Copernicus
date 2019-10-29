@@ -93,5 +93,8 @@ def register_decor(app):
 
 def configure_logger(app):
     handler = logging.StreamHandler(stdout)
+    FORMAT = "[%(filename)s:%(lineno)s - %(funcName)20s() ] %(message)s"
+    formatter = logging.Formatter(FORMAT)
+    handler.setFormatter(formatter)
     if not app.logger.handlers:
         app.logger.addHandler(handler)
