@@ -81,12 +81,14 @@ def get_project_consumption(projects, start, end):
     if not result:
         raise ValueError("No project consumption information found")
 
+    for project in projects.keys():
+        projects[project]["consumed"] = 0
+        projects[project]["private"] = 0  # Person consumption within a project
+
     login = current_user.login
     for item in result:
         item = item.strip()
         project, user, conso = item.split("|")
-        if "private" not in projects[project]:
-            projects[project]["private"] = 0
         if not user:
             projects[project]["consumed"] = int(conso)
             continue
