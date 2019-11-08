@@ -184,7 +184,7 @@
                                 </table>
 
                                 <div class="uk-button-group uk-float-right">
-                                    {% if record.processed %}
+                                    {% if record.approve %}
                                         <p>Technical approve granted!</p>
                                         <button class="uk-button new_accept" type="button" data-id='{{record.id}}' data-meso='{{record.meso_id}}' data-title='{{record.title}}' disabled><span class="uk-icon-thumbs-o-up uk-margin-small-right"></span>Accept</button>
                                     {% else %}
