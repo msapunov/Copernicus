@@ -446,6 +446,8 @@ class Register(db.Model):
     comment = db.Column(db.String)
     created = db.Column(db.Boolean)
     created_ts = db.Column(db.DateTime(True))
+    approve = db.Column(db.Boolean)
+    approve_ts = db.Column(db.DateTime(True))
 
     def __repr__(self):
         return "<Registration request {}>".format(self.id)
@@ -515,6 +517,8 @@ class Register(db.Model):
             "comment": self.comment,
             "created": self.created,
             "created_ts": self.created_ts,
+            "approve": self.approve,
+            "approve_ts": self.approve_ts,
             "type": self.project_type(),
             "meso_id": self.project_id()
         }
