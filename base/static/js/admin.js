@@ -500,10 +500,9 @@
         var project_title = $.trim( $(this).data("title") );
         var title = "Approve project demand {0}?".f(mid);
         var text = "Approve technical aspects of proposed project '{0}' ({1})?".f(project_title, mid);
-        var motiv = $("<textarea/>").html(text).addClass("uk-width-1-1").attr({
+        var motiv = $("<textarea/>").html(text).html(met).addClass("uk-width-1-1").attr({
             "rows": "4",
             "readonly": true,
-            "text": met,
             "name": "note"
         });
         var form = $("<form/>").addClass("uk-form").append(
