@@ -499,22 +499,18 @@
         var met = $.trim( $(this).data("tech") );
         var project_title = $.trim( $(this).data("title") );
         var title = "Approve project demand {0}?".f(mid);
-        var text = "Approve technical aspects of proposed project '{0}' ({1})?".f(project_title, mid);
-        var motiv = $("<textarea/>").html(text).html(met).addClass("uk-width-1-1").attr({
-            "rows": "4",
-            "readonly": true,
-            "name": "note"
-        });
+        var text = "Do you confirm that the project '{0}' ({1}) has no software restriction and will be able to submit jobs?".f(project_title, mid);
+        /*
+        var motiv = $("<div/>").html(text).html(met).addClass("uk-width-1-1");
         var form = $("<form/>").addClass("uk-form").append(
             $("<legend/>").text(title)
         ).append(
             $("<div/>").addClass("uk-form-row").append(motiv)
         );
-        UIkit.modal.confirm(form.prop("outerHTML"), function(){
-            var comment = $("textarea[name=note]").val();
-            json_send(window.admin.url.reject, {
-                "pid": id,
-                "note": comment
+        */
+        UIkit.modal.confirm(text, function(){
+            json_send(window.admin.url.approve, {
+                "pid": id
             }).done(function(reply){
                 if(reply.data){
                     UIkit.notify(reply.data, {timeout: 2000, status:"success"});
