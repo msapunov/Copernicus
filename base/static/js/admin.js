@@ -497,8 +497,8 @@
         var id = $.trim( $(this).data("id") );
         var mid = $.trim( $(this).data("meso") );
         var project_title = $.trim( $(this).data("title") );
-        var title = "Project: {0}".f(project_title);
-        var name = "Registration ID: {0}".f(mid);
+        var title = "Project: <b>{0}</b>".f(project_title);
+        var name = "Registration ID: <b>{0}</b>b>".f(mid);
         var text = "Do you confirm that software requirements indicated in numerical methods field can be satisfied?";
         var conf = [title, name, text].join("<br>");
         UIkit.modal.confirm(conf, function(){
