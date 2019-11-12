@@ -92,9 +92,26 @@ def register_decor(app):
 
 
 def configure_logger(app):
+    root = logging.getLogger()
+#    root.setLevel(logging.DEBUG)
+    handler = logging.StreamHandler(stdout)
+    FORMAT = "[%(filename)s:%(lineno)s - %(funcName)20s() ] %(message)s"
+    formatter = logging.Formatter(FORMAT)
+    handler.setFormatter(formatter)
+    app.logger.addHandler(handler)
+    """
+    ch = logging.StreamHandler(sys.stdout)
+    ch.setLevel(logging.DEBUG)
+    FORMAT = "[%(filename)s:%(lineno)s - %(funcName)20s() ] %(message)s"
+    formatter = logging.Formatter(FORMAT)
+    ch.setFormatter(formatter)
+    root.addHandler(ch)
+
+
     handler = logging.StreamHandler(stdout)
     FORMAT = "[%(filename)s:%(lineno)s - %(funcName)20s() ] %(message)s"
     formatter = logging.Formatter(FORMAT)
     handler.setFormatter(formatter)
     if not app.logger.handlers:
         app.logger.addHandler(handler)
+    """
