@@ -182,16 +182,19 @@
                                         </tr>
                                     </tbody>
                                 </table>
-
+                                {% if record.approve %}
+                                    <div class="uk-width-1-1">
+                                        <div class="uk-badge uk-badge-success uk-margin-bottom">Technical approval granted!</div>
+                                    </div>
+                                {% endif %}
                                 <div class="uk-button-group uk-float-right">
                                     {% if record.approve %}
-                                        <p>Technical approve granted!</p>
                                         <button class="uk-button new_accept" type="button" data-id='{{record.id}}' data-meso='{{record.meso_id}}' data-title='{{record.title}}' disabled><span class="uk-icon-thumbs-o-up uk-margin-small-right"></span>Accept</button>
                                     {% else %}
                                         <button class="uk-button new_approve" type="button" data-id='{{record.id}}' data-meso='{{record.meso_id}}' data-title='{{record.title}}'><span class="uk-icon-wrench uk-margin-small-right"></span>Approve</button>
                                     {% endif %}
                                     <button class="uk-button new_ignore" type="button" data-id='{{record.id}}' data-meso='{{record.meso_id}}' data-title='{{record.title}}'><span class="uk-icon-thumbs-o-down uk-margin-small-right"></span>Ignore</button>
-                                    <button class="uk-button new_reject uk-button-danger" type="button" data-id='{{record.id}}' data-meso='{{record.meso_id}}' data-title='{{record.title}}' disabled><span class="uk-icon-thumbs-down uk-margin-small-right"></span>Reject</button>
+                                    <button class="uk-button new_reject uk-button-danger" type="button" data-id='{{record.id}}' data-meso='{{record.meso_id}}' data-title='{{record.title}}'><span class="uk-icon-thumbs-down uk-margin-small-right"></span>Reject</button>
                                 </div>
                                 {% if record.responsible_email %}
                                 <div class="uk-button-group uk-float-left">
