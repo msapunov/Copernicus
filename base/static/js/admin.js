@@ -728,6 +728,7 @@
     $(document).on("click", ".message", window.render.message);
 
     $(document).on("click", ".new_project", window.render.new_project);
+    $(document).on("click", ".new_approve", window.render.new_approve);
     $(document).on("click", ".new_accept", window.render.new_accept);
     $(document).on("click", ".new_ignore", window.render.new_ignore);
     $(document).on("click", ".new_reject", window.render.new_reject);
