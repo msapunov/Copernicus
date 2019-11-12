@@ -7,6 +7,7 @@
         history: "admin/history",
         message: "admin/message/register",
         new_users: "admin/registration/users",
+        approve: "admin/registration/approve",
         reject: "admin/registration/reject",
         ignore: "admin/registration/ignore",
         system: "admin/sys/info",
