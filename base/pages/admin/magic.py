@@ -397,7 +397,7 @@ def _parse_user_info(raw):
     return login, surname, name, email
 
 
-def task_create_user(p_name, user_data):
+def task_create_user(p_name, user_data, responsible=None):
     project = get_project_by_name(p_name)
 
     user_part, service_part = user_data.split(" WITH ACL ")
