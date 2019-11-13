@@ -162,7 +162,11 @@ def reg_approve(pid):
     rec = get_registration_record(pid)
     rec.approve = True
     rec.approve_ts = dt.now()
-    rec.comment += "Project software requirements approved by %s" % full_name
+    msg = "Project software requirements approved by %s" % full_name
+    if rec.comment:
+        rec.comment += "\n" + msg
+    else:
+        rec.comment = msg
     db.session.commit()
     return approve_message(rec)
 
