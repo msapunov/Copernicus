@@ -509,8 +509,11 @@
                 if(reply.data){
                     UIkit.notify(reply.data, {timeout: 2000, status:"success"});
                 }
-                $("#"+id).remove();
-                $("#"+id+"-info").remove();
+                $("#approval_msg").append(
+                    $("<div/>").addClass("uk-badge uk-badge-success").html(
+                        "Technical approval granted!")
+                );
+                window.render.approveBtnReplace(this);
             });
         });
     };
