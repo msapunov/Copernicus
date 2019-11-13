@@ -4,11 +4,20 @@ from flask_login import login_required, login_user
 from base.pages import ssh_wrapper, send_message, Task, grant_access
 from base.pages.user.magic import get_user_record, user_by_id
 from base.pages.admin import bp
-from base.pages.admin.magic import get_server_info, get_ltm, TaskManager
-from base.pages.admin.magic import slurm_partition_info, process_task
-from base.pages.admin.magic import reg_ignore, group_users, user_info_update
-from base.pages.admin.magic import user_create_by_admin, user_reset_pass
-from base.pages.admin.magic import user_delete, get_registration_record
+from base.pages.admin.magic import (
+    get_server_info,
+    get_ltm,
+    TaskManager,
+    slurm_partition_info,
+    process_task,
+    reg_ignore,
+    group_users,
+    user_info_update,
+    user_create_by_admin,
+    user_reset_pass,
+    user_delete,
+    get_registration_record,
+    reg_approve)
 from base.pages.admin.form import UserEditForm
 from base.pages.project.magic import process_extension
 from base.pages.board.magic import Extensions
