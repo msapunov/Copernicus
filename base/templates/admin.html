@@ -182,11 +182,11 @@
                                         </tr>
                                     </tbody>
                                 </table>
-                                {% if record.approve %}
-                                    <div class="uk-width-1-1">
-                                        <div class="uk-badge uk-badge-success uk-margin-bottom">Technical approval granted!</div>
-                                    </div>
-                                {% endif %}
+                                <div class="uk-width-1-1 uk-margin-bottom approval_msg">
+                                    {% if record.approve %}
+                                        <div class="uk-badge uk-badge-success">Technical approval granted!</div>
+                                    {% endif %}
+                                </div>
                                 <div class="uk-button-group uk-float-right">
                                     {% if record.approve %}
                                         <button class="uk-button new_accept" type="button" data-id='{{record.id}}' data-meso='{{record.meso_id}}' data-title='{{record.title}}'><span class="uk-icon-thumbs-o-up uk-margin-small-right"></span>Accept</button>
