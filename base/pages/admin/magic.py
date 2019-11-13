@@ -157,6 +157,16 @@ def project_creation_magic(register, users, approve):
     return project
 
 
+def reg_approve(pid):
+    full_name = current_user.full_name()
+    rec = get_registration_record(pid)
+    rec.approve = True
+    rec.approve_ts = dt.now()
+    rec.comment += "Project software requirements approved by %s" % full_name
+    db.session.commit()
+    return approve_message(rec)
+
+
 def reg_ignore(pid):
     full_name = current_user.full_name()
     rec = get_registration_record(pid)
