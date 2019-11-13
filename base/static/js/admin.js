@@ -559,11 +559,12 @@
         surname_el.val(name);
     };
     window.render.form_reset=function(){
-        var ids = ["#ua_id","#ua_login","#ua_name","#ua_surname","#ua_email"];
+        var ids;
+        ids = ["#ua_id","#ua_login","#ua_name","#ua_surname","#ua_email"];
         $.each(ids, function(idx, name){
             $(name).val("");
         });
-        var ids = ["#ua_active","#ua_user","#ua_resp","#ua_comm","#ua_admn"];
+        ids = ["#ua_active","#ua_user","#ua_resp","#ua_comm","#ua_admn"];
         $.each(ids, function(idx, name){
             $(name).prop("checked", false);
         });
