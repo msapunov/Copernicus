@@ -502,10 +502,9 @@
         var name = "Registration ID: {0}".f(mid);
         var text = "Do you confirm that software requirements indicated in numerical methods field can be satisfied?";
         var conf = [title, name, text].join("<br>");
+        var url = window.admin.url.ignore + "/" + id;
         UIkit.modal.confirm(conf, function(){
-            json_send(window.admin.url.approve, {
-                "pid": id
-            }).done(function(reply){
+            json_send(url).done(function(reply){
                 if(reply.data){
                     UIkit.notify(reply.data, {timeout: 2000, status:"success"});
                 }
