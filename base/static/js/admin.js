@@ -547,10 +547,13 @@
         });
     };
     window.render.name_swap=function(){
-        var name = $("#ua_name").val();
-        var surname = $("#ua_surname").val();
-        $("#ua_name").val(surname);
-        $("#ua_surname").val(name);
+        var name_el, surname_el, name, surname;
+        name_el = $("#ua_name");
+        surname_el = $("#ua_surname");
+        name = name_el.val();
+        surname = surname_el.val();
+        name_el.val(surname);
+        surname_el.val(name);
     };
     window.render.form_reset=function(){
         var ids = ["#ua_id","#ua_login","#ua_name","#ua_surname","#ua_email"];
