@@ -495,6 +495,7 @@
         );
     };
     window.render.new_approve=function(){
+        var btn = $(this);
         var id = $.trim( $(this).data("id") );
         var mid = $.trim( $(this).data("meso") );
         var project_title = $.trim( $(this).data("title") );
@@ -512,7 +513,7 @@
                     $("<div/>").addClass("uk-badge uk-badge-success").html(
                         "Technical approval granted!")
                 );
-                window.render.approveBtnReplace(this);
+                window.render.approveBtnReplace(btn);
             });
         });
     };
