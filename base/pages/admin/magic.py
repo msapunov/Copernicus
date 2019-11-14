@@ -158,30 +158,19 @@ def project_creation_magic(register, users, approve):
 
 
 def reg_approve(pid):
-    full_name = current_user.full_name()
     rec = get_registration_record(pid)
     rec.approve = True
     rec.approve_ts = dt.now()
-    msg = "Project software requirements approved by %s" % full_name
-    if rec.comment:
-        rec.comment += "\n" + msg
-    else:
-        rec.comment = msg
+    rec.comment = reg_message(rec.comment, "approve")
     db.session.commit()
     return approve_message(rec)
 
 
 def reg_reject(pid, note):
-    full_name = current_user.full_name()
     rec = get_registration_record(pid)
     rec.processed = True
     rec.accepted = False
-    msg = "Project creation request rejected by %s\nReason:\n%s" % (full_name,
-                                                                    note)
-    if rec.comment:
-        rec.comment += "\n" + msg
-    else:
-        rec.comment = msg
+    rec.comment = reg_message(rec.comment, "reject") % note
     rec.accepted_ts = dt.now()
     rec.processed_ts = dt.now()
     db.session.commit()
@@ -189,11 +178,10 @@ def reg_reject(pid, note):
 
 
 def reg_ignore(pid):
-    full_name = current_user.full_name()
     rec = get_registration_record(pid)
     rec.processed = True
     rec.accepted = False
-    rec.comment = "Project creation request ignored by %s" % full_name
+    rec.comment = reg_message(rec.comment, "ignore")
     rec.accepted_ts = dt.now()
     rec.processed_ts = dt.now()
     db.session.commit()
