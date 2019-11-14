@@ -171,6 +171,23 @@ def reg_approve(pid):
     return approve_message(rec)
 
 
+def reg_reject(pid, note):
+    full_name = current_user.full_name()
+    rec = get_registration_record(pid)
+    rec.processed = True
+    rec.accepted = False
+    msg = "Project creation request rejected by %s\nReason:\n%s" % (full_name,
+                                                                    note)
+    if rec.comment:
+        rec.comment += "\n" + msg
+    else:
+        rec.comment = msg
+    rec.accepted_ts = dt.now()
+    rec.processed_ts = dt.now()
+    db.session.commit()
+    return reject_message(rec, note)
+
+
 def reg_ignore(pid):
     full_name = current_user.full_name()
     rec = get_registration_record(pid)
@@ -197,13 +214,6 @@ def get_ltm(data):
     title = check_str(data["title"])
     msg = check_str(data["message"])
     return users, title, msg
-
-
-def get_pid_notes(data):
-    pid = check_int(data["pid"])
-    note = check_str(data["note"])
-    debug("Got pid: %s and note: %s" % (pid, note))
-    return pid, note
 
 
 def is_user_exists(record):
