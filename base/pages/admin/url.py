@@ -10,13 +10,14 @@ from base.pages.admin.magic import (
     TaskManager,
     slurm_partition_info,
     process_task,
-    reg_ignore,
     group_users,
     user_info_update,
     user_create_by_admin,
     user_reset_pass,
     user_delete,
     get_registration_record,
+    reg_ignore,
+    reg_reject,
     reg_approve)
 from base.pages.admin.form import UserEditForm
 from base.pages.project.magic import process_extension
