@@ -140,8 +140,12 @@ def admin_registration_ignore(pid):
 @login_required
 @grant_access("admin")
 def admin_registration_reject(pid):
-    pass
-    #return jsonify(data=reg_reject(pid, note))
+    data = request.get_json()
+    if not data:
+        raise ValueError("Expecting application/json requests")
+    if "note" not in data:
+        raise ValueError("Parameter 'note' was not found in the client request")
+    return jsonify(data=reg_reject(pid, data["note"]))
 
 
 @bp.route("/admin/registration/approve/<int:pid>", methods=["POST"])
