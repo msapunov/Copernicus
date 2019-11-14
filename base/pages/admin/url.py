@@ -146,7 +146,7 @@ def admin_registration_reject(pid):
 
 @bp.route("/admin/registration/approve/<int:pid>", methods=["POST"])
 @login_required
-@grant_access("admin")
+@grant_access("admin", "tech")
 def admin_registration_approve(pid):
     return jsonify(data=reg_approve(pid))
 
