@@ -3,13 +3,13 @@
     window.admin = {};
     window.admin.url = {
         accept: "admin/registration/accept",
+        approve: "admin/registration/approve",
+        reject: "admin/registration/reject",
+        ignore: "admin/registration/ignore",
         info: "admin/partition/info",
         history: "admin/history",
         message: "admin/message/register",
         new_users: "admin/registration/users",
-        approve: "admin/registration/approve",
-        reject: "admin/registration/reject",
-        ignore: "admin/registration/ignore",
         system: "admin/sys/info",
         tasks: "admin/tasks/list",
         tasks_accept: "admin/tasks/accept",
