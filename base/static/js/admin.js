@@ -465,10 +465,8 @@
         );
         UIkit.modal.confirm(form.prop("outerHTML"), function(){
             var comment = $("textarea[name=note]").val();
-            json_send(window.admin.url.reject, {
-                "pid": id,
-                "note": comment
-            }).done(function(reply){
+            var url = window.admin.url.reject + "/" + id;
+            json_send(url, {"note": comment}).done(function(reply){
                 if(reply.data){
                     UIkit.notify(reply.data, {timeout: 2000, status:"success"});
                 }
