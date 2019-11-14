@@ -200,6 +200,23 @@ def reg_ignore(pid):
     return rec.comment
 
 
+def reg_message(txt, selector):
+    full_name = current_user.full_name()
+    if selector == "accept":
+        msg = "Project creation request accepted by %s" % full_name
+    elif selector == "approve":
+        msg = "Project software requirements approved by %s" % full_name
+    elif selector == "reject":
+        msg = "Project creation request rejected by %s\nReason:\n%s" % full_name
+    elif selector == "ignore":
+        msg = "Project creation request ignored by %s" % full_name
+    else:
+        raise ValueError("Selector %s does not supported" % selector)
+    if txt:
+        return "%s\n%s" % (txt, msg)
+    return msg
+
+
 def get_registration_record(pid):
     register = Register.query.filter_by(id=pid).first()
     if not register:
