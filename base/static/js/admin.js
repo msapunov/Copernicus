@@ -509,7 +509,7 @@
                 if(reply.data){
                     UIkit.notify(reply.data, {timeout: 2000, status:"success"});
                 }
-                $("#approval_msg").append(
+                $(".approval_msg").append(
                     $("<div/>").addClass("uk-badge uk-badge-success").html(
                         "Technical approval granted!")
                 );
