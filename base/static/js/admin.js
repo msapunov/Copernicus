@@ -552,7 +552,7 @@
     window.render.approveBtnReplace=function(btn){
         btn.removeClass("new_approve").addClass("new_accept");
         var span = btn.find("span")[0];
-        span.removeClass("uk-icon-wrench").addClass("uk-icon-thumbs-o-up");
+        $(span).removeClass("uk-icon-wrench").addClass("uk-icon-thumbs-o-up");
         btn.html("Accept");
     };
     window.render.name_swap=function(){
