@@ -138,6 +138,21 @@ def check_alnum(raw_note):
     return str(raw_note)
 
 
+class MailingList:
+
+    def __init__(self):
+        pass
+
+    def subscribe(self, email):
+        pass
+
+    def unsubscribe(self, email):
+        pass
+
+    def change(self, old_mail, new_mail):
+        pass
+
+
 class Task:
 
     def __init__(self, tid):
