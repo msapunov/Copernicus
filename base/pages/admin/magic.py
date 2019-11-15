@@ -170,7 +170,7 @@ def reg_reject(pid, note):
     rec = get_registration_record(pid)
     rec.processed = True
     rec.accepted = False
-    rec.comment = reg_message(rec.comment, "reject") % note
+    rec.comment = reg_message(rec.comment, "reject") + note
     rec.accepted_ts = dt.now()
     rec.processed_ts = dt.now()
     db.session.commit()
