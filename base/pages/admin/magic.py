@@ -1,6 +1,12 @@
 from flask import current_app, request
 from flask_login import current_user
-from base.pages import check_int, ssh_wrapper, send_message, check_str, Task
+from base.pages import (check_int,
+                        ssh_wrapper,
+                        send_message,
+                        check_str,
+                        Task,
+                        ResponsibleMailingList,
+                        UserMailingList)
 from base.pages import ProjectLog
 from base.pages.project.magic import get_project_by_name
 from base.pages.user.magic import get_user_record, user_by_id
