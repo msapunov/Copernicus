@@ -160,6 +160,13 @@ class UserMailingList(MailingList):
         super().__init__(list)
 
 
+class ResponsibleMailingList(MailingList):
+
+    def __init__(self):
+        list = current_app.config.get("RESPONSIBLE_LIST")
+        super().__init__(list)
+
+
 class Task:
 
     def __init__(self, tid):
