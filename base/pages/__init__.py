@@ -140,8 +140,8 @@ def check_alnum(raw_note):
 
 class MailingList:
 
-    def __init__(self):
-        pass
+    def __init__(self, list):
+        self.list = list
 
     def subscribe(self, email):
         pass
