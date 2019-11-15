@@ -195,7 +195,7 @@ def reg_message(txt, selector):
     elif selector == "approve":
         msg = "Project software requirements approved by %s" % full_name
     elif selector == "reject":
-        msg = "Project creation request rejected by %s\nReason:\n%s" % full_name
+        msg = "Project creation request rejected by %s\nReason:\n" % full_name
     elif selector == "ignore":
         msg = "Project creation request ignored by %s" % full_name
     else:
