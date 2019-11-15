@@ -399,6 +399,10 @@ def task_update_user(login, user_data):
             info["email"] = i.replace("email: ", "").strip()
 
     user = get_user_record(login)
+    if "email" in info:
+        UserMailingList().change(user.email, info["email"])
+        if user.acl.is_responsible:
+            ResponsibleMailingList().change(user.email, info["email"])
     for key, value in info.items():
         if hasattr(user, key):
             setattr(user, key, value)
