@@ -163,8 +163,7 @@ class MailingList:
 class UserMailingList(MailingList):
 
     def __init__(self):
-        list = current_app.config.get("USER_LIST")
-        super().__init__(list)
+        super().__init__("USER_LIST")
 
 
 class ResponsibleMailingList(MailingList):
