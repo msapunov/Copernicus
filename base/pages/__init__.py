@@ -66,7 +66,8 @@ def send_message(to_who, by_who=None, cc=None, title=None, message=None):
     msg = Message(title, sender=by_who, recipients=to_who, cc=cc)
     postfix = "If this email has been sent to you by mistake, please report " \
               "to: %s" % tech
-    msg.body = message + "\n" + postfix
+    if message:
+        msg.body = message + "\n" + postfix
     if current_app.config["MAIL_SEND"]:
         mail.send(msg)
     return "Message was sent to %s successfully" % ", ".join(to_who)
