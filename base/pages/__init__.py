@@ -141,8 +141,14 @@ def check_alnum(raw_note):
 
 class MailingList:
 
-    def __init__(self, list):
-        self.list = list
+    def __init__(self, list_name):
+        email_list = current_app.config.get(list_name, None)
+        if email_list:
+            self.list = email_list
+            debug("Found emailing list '%s' for %s" % (email_list, list_name))
+        else:
+            self.list = None
+            debug("No emailing list found in configuration for %s" % list_name)
 
     def subscribe(self, email):
         pass
