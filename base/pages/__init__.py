@@ -151,7 +151,8 @@ class MailingList:
             debug("No emailing list found in configuration for %s" % list_name)
 
     def subscribe(self, email):
-        pass
+        if self.list:
+            return self._send(email, "SUBSCRIBE %s" % self.list)
 
     def unsubscribe(self, email):
         pass
