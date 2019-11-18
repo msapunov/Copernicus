@@ -34,6 +34,7 @@ def web_board_history():
 
 @bp.route("/board/accept", methods=["POST"])
 @login_required
+@grant_access("admin")
 def web_board_accept():
     eid, note, cpu, ext = get_arguments()
     record = Extensions(eid)
@@ -46,6 +47,7 @@ def web_board_accept():
 
 @bp.route("/board/reject/<int:eid>", methods=["POST"])
 @login_required
+@grant_access("admin")
 def web_board_reject(eid):
     record = reject_extension(eid)
     return jsonify(message=ProjectLog(record.project).reject(record),
@@ -54,7 +56,7 @@ def web_board_reject(eid):
 
 @bp.route("/board/ignore/<int:eid>", methods=["POST"])
 @login_required
-@grant_access("admin", "tech")
+@grant_access("admin")
 def web_board_ignore(eid):
     record = ignore_extension(eid)
     return jsonify(message=ProjectLog(record.project).ignore(record),
