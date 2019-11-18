@@ -94,7 +94,7 @@ def approve_message(register):
     mid = register.project_id()
     title = "Project request '%s' has been approved by tech team" % mid
     msg = "Software requirements of project request '%s' can be satisfied " \
-             "and required application(s) can be or already installed" % mid
+          "and required application(s) can be or already installed" % mid
     return send_message(to, by_who, cc, title, msg)
 
 
@@ -272,8 +272,8 @@ class TmpUser:
             self.login, self.name, self.surname, self.email)
         a_part = "user: %s, responsible: %s, manager: %s, tech: %s, " \
                  "committee: %s, admin: %s" % (
-            self.is_user, self.is_responsible, self.is_manager,
-            self.is_tech, self.is_committee, self.is_admin)
+            self.is_user, self.is_responsible, self.is_manager,self.is_tech,
+            self.is_committee, self.is_admin)
 
         return "%s WITH ACL %s WITH STATUS %s" % (u_part, a_part, self.active)
 
