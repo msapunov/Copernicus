@@ -159,7 +159,12 @@ class MailingList:
             return self._send(email, "UNSUBSCRIBE %s" % self.list)
 
     def change(self, old_mail, new_mail):
-        pass
+        if self.list:
+            if self.unsubscribe(old_mail):
+                return self.subscribe(new_mail)
+
+    def _send(self, address, title):
+        return send_message(self.list, by_who=address, title=title)
 
 
 class UserMailingList(MailingList):
