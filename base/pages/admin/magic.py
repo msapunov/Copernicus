@@ -401,13 +401,19 @@ def task_update_user(login, user_data):
     user = get_user_record(login)
 
     if "email" in info:
-        UserMailingList().change(user.email, info["email"])
-        if user.acl.is_responsible:
-            ResponsibleMailingList().change(user.email, info["email"])
+        old_email = user.email
+    else:
+        old_email = None
 
     for key, value in info.items():
         if hasattr(user, key):
             setattr(user, key, value)
+
+    if old_email:
+        UserMailingList().change(old_email, user.email, user.full_name())
+        if user.acl.is_responsible:
+            ResponsibleMailingList().change(old_email, user.email,
+                                            user.full_name())
 
 
 def _parse_acl_info(raw):
