@@ -461,10 +461,156 @@ function reduce_to_names(initial, object){
         });
     };
 
+    window.render.activity = function(e){
+        var name = $(this).data("name");
+        var id = $(this).data("project");
+        var title = "Activity report for the project {0}".f(name);
+        var report = $("<textarea/>").addClass("uk-width-1-1").attr({
+            "rows": "5",
+            "name": "report",
+            "placeholder": "Activity report:\n50 lines maximum"
+        });
+        var doi = $("<textarea/>").addClass("uk-width-1-1").attr({
+            "rows": "3",
+            "name": "doi",
+            "placeholder": "List of publications (DOI) for last activity period"
+        });
+        var training = $("<textarea/>").addClass("uk-width-1-1").attr({
+            "rows": "3",
+            "name": "training",
+            "placeholder": "List of students (licence, master, doctorat) trained recently"
+        });
+        var hiring = $("<textarea/>").addClass("uk-width-1-1").attr({
+            "rows": "3",
+            "name": "hiring",
+            "placeholder": "List of people hired during last activity period"
+        });
+        //var upload = $("<div/>").attr({"id": "test"}).html("Drop here to test!").dropzone({ url: "/file/post" });
+        var upload = FilePond.create($("<input/>").attr({"type": "file"}));
+        //const pond = FilePond.create({name: 'filepond', maxFiles: 10, allowBrowse: false});
+        var pond = $("<div/>").attr({"id": "myId"});
+        var form = $("<form/>").addClass("uk-form").append(
+            $("<legend/>").text(title)
+        ).append(
+            $("<div/>").addClass("uk-form-row").append(report)
+        ).append(
+            $("<div/>").addClass("uk-form-row").append(doi)
+        ).append(
+            $("<div/>").addClass("uk-form-row").append(training)
+        ).append(
+            $("<div/>").addClass("uk-form-row").append(hiring)
+        ).append(
+            pond
+        );
+        //new Dropzone("div#myId", { url: "/file/post"});
+        //new Dropzone(form);
+        //pond.appendTo(document.body);
+        //pond.appendTo(form);
+        //$('#upload-select').filepond();
+        //var input = $("#upload-select");
+        //FilePond.create(input);
+        /*
+        var upload = $("<a>selecting one</a>").addClass("uk-form-file").append(
+                $("<input/>").attr({"type": "file", "id": "upload-select"})
+        );
+        var bar = $("<div/>").addClass("uk-progress-bar").css("width", "100%").html("100%");
+        var up_message = "Attach images by dropping them here or ";
+        var form = $("<form/>").addClass("uk-form").append(
+            $("<legend/>").text(title)
+        ).append(
+            $("<div/>").addClass("uk-form-row").append(report)
+        ).append(
+            $("<div/>").addClass("uk-form-row").append(doi)
+        ).append(
+            $("<div/>").addClass("uk-form-row").append(training)
+        ).append(
+            $("<div/>").addClass("uk-form-row").append(hiring)
+        ).append(
+            $("<div/>").addClass("uk-placeholder").attr({"id": "upload-drop"}).html(up_message).append(
+                upload
+            )
+        ).append(
+            $("<div/>").addClass("uk-progress uk-hidden").attr({"id": "progressbar"}).append(bar)
+        );
+        */
+        //$("div#myId").dropzone({ url: "/file/post" });
+
+        var pop = dialog(form.prop("outerHTML"), function(){
+            var data = {
+                "cpu": $("input[name=cpu]").val(),
+                "report": $("textarea[name=report]").val(),
+                "exception": exception,
+                "project": id
+            };
+        });
+        /*
+Image(s) : maximum 3 téléchargeables séparément, avec leurs légendes
+        */
+
+
+        /*
+        var cpu = $("<input/>").addClass("uk-width-1-1").attr({
+            "name": "cpu",
+            "type": "text",
+            "placeholder": "CPU hours"
+        });
+        var motiv = $("<textarea/>").addClass("uk-width-1-1").attr({
+            "rows": "4",
+            "name": "note",
+            "placeholder": placeholder
+        });
+        var checkbox = $("<input>").attr({
+            "id": "exception_checkbox",
+            "name": "exception",
+            "type": "checkbox"
+        }).addClass("uk-margin-small-right uk-form-danger");
+        var label = $("<label/>").attr('for', "exception_checkbox");
+        label.text("Select checkbox for an exceptional extension requests only! Apply for a project running out of CPU time way before the next session.");
+        var express = $("<div/>").addClass(
+            "uk-form-row uk-alert uk-alert-danger"
+        );
+        express.append(checkbox).append(label);
+        var warn = "<div>" + date_warning() + "</div><div>" + end_warning() + "</div>";
+        var form = $("<form/>").addClass("uk-form").append(
+            $("<legend/>").text(title)
+        ).append(
+            $("<div/>").addClass("uk-form-row").append(cpu)
+        ).append(
+            $("<div/>").addClass("uk-form-row").append(motiv)
+        ).append(
+            express
+        ).append(
+            $("<div>{0}</div>".f(warn)).addClass("uk-form-row uk-alert")
+        );
+        var pop = dialog(form.prop("outerHTML"), function(){
+            var exception = $("input[name=exception]").is(':checked') ? "yes" : "no";
+            var data = {
+                "cpu": $("input[name=cpu]").val(),
+                "note": $("textarea[name=note]").val(),
+                "exception": exception,
+                "project": id
+            };
+            if(!window.render.paint_red(data)){
+                return false;
+            }
+            if(!window.render.check_positive(data["cpu"], "CPU hours")){
+                return false;
+            }
+            json_send(window.proj.url["extend"], data).done(function(reply){
+                if(reply.message){
+                    UIkit.notify(reply.message, {timeout: 2000, status:"success"});
+                }
+                pop.hide();
+            });
+        });
+        */
+    };
+
     $(document).on("click", ".user_ass", window.render.assign_user);
     $(document).on("click", ".user_add", window.render.new_user);
     $(document).on("click", ".responsible_ass", window.render.assign_responsible);
     $(document).on("click", ".extend", window.render.extend);
+    $(document).on("click", ".activity", window.render.activity);
     $(document).on("click", ".renew", window.render.extend);
     $(document).on("click", ".history", window.render.project_history);
     $(document).on("click", ".react", window.render.activate_project);

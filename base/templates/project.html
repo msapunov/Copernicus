@@ -1,5 +1,10 @@
 {% extends "base.html" %}
 {% block head %}
+    <link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet">
+    <script src="https://unpkg.com/filepond/dist/filepond.min.js"></script>
+    <script src="https://unpkg.com/jquery-filepond/filepond.jquery.js"></script>
+
+    <script src="{{ url_for('static', filename='js/upload.js') }}"></script>
     <script src="{{ url_for('static', filename='js/moment-with-locales.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/project.js') }}"></script>
     {% if current_user.login and "admin" not in current_user.permissions() %}
@@ -96,6 +101,7 @@
                                 <button class="uk-button uk-width-1-1 renew uk-margin-small-bottom" data-project='{{project.id}}' data-name='{{project.name}}' type="button">Renew&nbsp;project&nbsp;for&nbsp;{{data.renew}}</button>
                             {% else %}
                                 <button class="uk-button uk-width-1-1 extend uk-margin-small-bottom" data-project='{{project.id}}' data-name='{{project.name}}' type="button">Extend&nbsp;project</button>
+                                <button class="uk-button uk-width-1-1 activity uk-margin-small-bottom" data-project='{{project.id}}' data-name='{{project.name}}' type="button">Activity report</button>
                             {% endif %}
                         {% endif %}
                         <button class="uk-button uk-width-1-1 user_add uk-margin-small-bottom" data-project='{{project.id}}' data-name='{{project.name}}' type="button">Add user</button>
