@@ -25,6 +25,12 @@ __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
 
 
+@bp.route("/project/activity/upload", methods=["POST"])
+@login_required
+def project_activity_upload():
+    print("File upload trigger")
+    return "Done"
+
 @bp.route("/project/list", methods=["POST"])
 @login_required
 def project_list():
