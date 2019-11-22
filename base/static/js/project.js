@@ -50,7 +50,8 @@ function reduce_to_names(initial, object){
         delete: "project/delete/user",
         history: "project/history",
         activate: "project/reactivate",
-        transform: "project/transform"
+        transform: "project/transform",
+        activity: "project/activity/upload"
     };
 
     window.error = function(req){
@@ -485,10 +486,8 @@ function reduce_to_names(initial, object){
             "name": "hiring",
             "placeholder": "List of people hired during last activity period"
         });
-        //var upload = $("<div/>").attr({"id": "test"}).html("Drop here to test!").dropzone({ url: "/file/post" });
-        var upload = FilePond.create($("<input/>").attr({"type": "file"}));
-        //const pond = FilePond.create({name: 'filepond', maxFiles: 10, allowBrowse: false});
-        var pond = $("<div/>").attr({"id": "myId"});
+        var uText = "";
+        var upload = $("<div/>").attr({"id": "upload"}).addClass("uk-alert dropzone needsclick dz-clickable dz-started");//.addClass("dropzone needsclick dz-clickable dz-started");
         var form = $("<form/>").addClass("uk-form").append(
             $("<legend/>").text(title)
         ).append(
@@ -500,41 +499,8 @@ function reduce_to_names(initial, object){
         ).append(
             $("<div/>").addClass("uk-form-row").append(hiring)
         ).append(
-            pond
+            $("<div/>").addClass("uk-form-row").append(upload)
         );
-        //new Dropzone("div#myId", { url: "/file/post"});
-        //new Dropzone(form);
-        //pond.appendTo(document.body);
-        //pond.appendTo(form);
-        //$('#upload-select').filepond();
-        //var input = $("#upload-select");
-        //FilePond.create(input);
-        /*
-        var upload = $("<a>selecting one</a>").addClass("uk-form-file").append(
-                $("<input/>").attr({"type": "file", "id": "upload-select"})
-        );
-        var bar = $("<div/>").addClass("uk-progress-bar").css("width", "100%").html("100%");
-        var up_message = "Attach images by dropping them here or ";
-        var form = $("<form/>").addClass("uk-form").append(
-            $("<legend/>").text(title)
-        ).append(
-            $("<div/>").addClass("uk-form-row").append(report)
-        ).append(
-            $("<div/>").addClass("uk-form-row").append(doi)
-        ).append(
-            $("<div/>").addClass("uk-form-row").append(training)
-        ).append(
-            $("<div/>").addClass("uk-form-row").append(hiring)
-        ).append(
-            $("<div/>").addClass("uk-placeholder").attr({"id": "upload-drop"}).html(up_message).append(
-                upload
-            )
-        ).append(
-            $("<div/>").addClass("uk-progress uk-hidden").attr({"id": "progressbar"}).append(bar)
-        );
-        */
-        //$("div#myId").dropzone({ url: "/file/post" });
-
         var pop = dialog(form.prop("outerHTML"), function(){
             var data = {
                 "cpu": $("input[name=cpu]").val(),
@@ -543,67 +509,30 @@ function reduce_to_names(initial, object){
                 "project": id
             };
         });
-        /*
-Image(s) : maximum 3 téléchargeables séparément, avec leurs légendes
-        */
-
-
-        /*
-        var cpu = $("<input/>").addClass("uk-width-1-1").attr({
-            "name": "cpu",
-            "type": "text",
-            "placeholder": "CPU hours"
-        });
-        var motiv = $("<textarea/>").addClass("uk-width-1-1").attr({
-            "rows": "4",
-            "name": "note",
-            "placeholder": placeholder
-        });
-        var checkbox = $("<input>").attr({
-            "id": "exception_checkbox",
-            "name": "exception",
-            "type": "checkbox"
-        }).addClass("uk-margin-small-right uk-form-danger");
-        var label = $("<label/>").attr('for', "exception_checkbox");
-        label.text("Select checkbox for an exceptional extension requests only! Apply for a project running out of CPU time way before the next session.");
-        var express = $("<div/>").addClass(
-            "uk-form-row uk-alert uk-alert-danger"
-        );
-        express.append(checkbox).append(label);
-        var warn = "<div>" + date_warning() + "</div><div>" + end_warning() + "</div>";
-        var form = $("<form/>").addClass("uk-form").append(
-            $("<legend/>").text(title)
-        ).append(
-            $("<div/>").addClass("uk-form-row").append(cpu)
-        ).append(
-            $("<div/>").addClass("uk-form-row").append(motiv)
-        ).append(
-            express
-        ).append(
-            $("<div>{0}</div>".f(warn)).addClass("uk-form-row uk-alert")
-        );
-        var pop = dialog(form.prop("outerHTML"), function(){
-            var exception = $("input[name=exception]").is(':checked') ? "yes" : "no";
-            var data = {
-                "cpu": $("input[name=cpu]").val(),
-                "note": $("textarea[name=note]").val(),
-                "exception": exception,
-                "project": id
-            };
-            if(!window.render.paint_red(data)){
-                return false;
-            }
-            if(!window.render.check_positive(data["cpu"], "CPU hours")){
-                return false;
-            }
-            json_send(window.proj.url["extend"], data).done(function(reply){
-                if(reply.message){
-                    UIkit.notify(reply.message, {timeout: 2000, status:"success"});
+        if(pop.isActive()){
+            $("div#upload").dropzone({
+                url: window.proj.url.activity,
+                withCredentials: true,
+                maxFilesize: 10, // 10 Mb maximum file size
+                maxFiles: 3,
+                //autoProcessQueue: false,
+                addRemoveLinks: true,
+                acceptedFiles: 'image/*'
+                ,maxfilesexceeded: function(file) {
+                    this.removeFile(file);
                 }
-                pop.hide();
+                ,success: function(image, response){
+                    console.debug("Uploaded!");
+                }
+                ,canceled: function(x,y,z,f,d,g,h){
+                    console.debug("Canceled!")
+                }
+                ,removedfile: function(x,y,z,f,d,g,h){
+                    console.debug("removed!")
+                }
+                //forceFallback: true
             });
-        });
-        */
+        }
     };
 
     $(document).on("click", ".user_ass", window.render.assign_user);
