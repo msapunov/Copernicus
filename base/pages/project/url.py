@@ -1,3 +1,4 @@
+from werkzeug import secure_filename
 from flask import render_template, request, jsonify
 from flask_login import login_required
 from base.pages import (
@@ -28,7 +29,10 @@ __copyright__ = "Aix Marseille University"
 @bp.route("/project/activity/upload", methods=["POST"])
 @login_required
 def project_activity_upload():
-    print("File upload trigger")
+    f = request.files['file']
+    print(f.filename)
+    f.save(secure_filename(f.filename))
+    print("saved?!")
     return "Done"
 
 @bp.route("/project/list", methods=["POST"])
