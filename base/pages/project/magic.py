@@ -13,6 +13,10 @@ __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
 
 
+def upload_file_cloud(cloud):
+    pass
+
+
 def upload_file():
     connected, oc = False
     url = current_app.config.get("OWN_CLOUD_URL", None)
