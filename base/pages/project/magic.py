@@ -7,7 +7,7 @@ from base.database.schema import Extend
 from base.pages import ProjectLog
 from base.pages import ssh_wrapper, check_int, check_str, send_message
 from base.pages.board.magic import create_resource
-
+from owncloud import Client as OwnClient
 
 __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
@@ -47,7 +47,6 @@ def pending_resources():
 
 
 def get_users(pid):
-
     projects = get_project_info(p_ids=[pid])
     get_limbo_users(projects)
     users = projects[0]["users"]
@@ -163,7 +162,7 @@ def extend_update():
     if not use:
         usage = 0
     else:
-        usage = "{0:.1%}".format(float(use)/float(maximum))
+        usage = "{0:.1%}".format(float(use) / float(maximum))
     return Extend(project=project, hours=cpu, reason=note, present_use=use,
                   usage_percent=usage, present_total=maximum, extend=extend,
                   exception=exception)
@@ -261,7 +260,7 @@ def get_project_info(start=None, end=None, p_ids=None):
             total = conso[name]["total"]
             project["consumption"] = total
             project["usage"] = "{0:.1%}".format(
-                float(total)/float(project["resources"]["cpu"]))
+                float(total) / float(project["resources"]["cpu"]))
         else:
             project["consumption"] = 0
             project["usage"] = 0
