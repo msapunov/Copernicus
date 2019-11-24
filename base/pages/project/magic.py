@@ -13,6 +13,22 @@ __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
 
 
+def upload_file():
+    connected, oc = False
+    url = current_app.config.get("OWN_CLOUD_URL", None)
+    if url:
+        oc = OwnClient(url)
+        login = current_app.config.get("OWN_CLOUD_LOGIN", None)
+        password = current_app.config.get("OWN_CLOUD_PASSWORD", None)
+        try:
+            connected = oc.login(login, password)
+        except Exception as err:
+            debug("Can't connect to own cloud instance: %s Falling back" % err)
+    if connected and oc:
+        return upload_file_cloud(oc)
+    return upload_file_fallback()
+
+
 def process_extension(eid):
     ext = Extend.query.filter_by(id=eid).first()
     if not ext:
