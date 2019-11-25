@@ -29,11 +29,8 @@ __copyright__ = "Aix Marseille University"
 @bp.route("/project/activity/upload", methods=["POST"])
 @login_required
 def project_activity_upload():
-    f = request.files['file']
-    print(f.filename)
-    f.save(secure_filename(f.filename))
-    print("saved?!")
-    return "Done"
+    return upload_file(request)
+
 
 @bp.route("/project/list", methods=["POST"])
 @login_required
