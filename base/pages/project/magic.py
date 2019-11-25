@@ -13,7 +13,13 @@ __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
 
 
-def upload_file_cloud(cloud):
+def upload_file_cloud(f, project, client):
+    file_name = None
+    f.save(file_name)
+    return file_name
+
+
+def upload_file_temp(f, project):
     pass
 
 
