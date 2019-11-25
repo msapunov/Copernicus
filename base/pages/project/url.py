@@ -1,4 +1,3 @@
-from werkzeug import secure_filename
 from flask import render_template, request, jsonify
 from flask_login import login_required
 from base.pages import (
@@ -11,6 +10,7 @@ from base.pages import (
 from base.pages.user import bp
 from base.pages.user.magic import get_user_record
 from base.pages.project.magic import (
+    upload_file,
     get_project_info,
     get_project_record,
     get_project_overview,
