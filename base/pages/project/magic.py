@@ -17,7 +17,11 @@ def upload_file_cloud(cloud):
     pass
 
 
-def upload_file():
+def upload_file(req):
+    files = req.files["file"]
+    project = req.form.get("project", None)
+    if not project:
+        raise ValueError("No project name provided!")
     connected, oc = False
     url = current_app.config.get("OWN_CLOUD_URL", None)
     if url:
