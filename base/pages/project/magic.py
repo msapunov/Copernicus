@@ -39,8 +39,8 @@ def upload_file(req):
         except Exception as err:
             debug("Can't connect to own cloud instance: %s Falling back" % err)
     if connected and oc:
-        return upload_file_cloud(oc)
-    return upload_file_fallback()
+        return upload_file_cloud(files, project, oc)
+    return upload_file_temp(files, project)
 
 
 def process_extension(eid):
