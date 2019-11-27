@@ -512,6 +512,7 @@ function reduce_to_names(initial, object){
         if(pop.isActive()){
             $("div#upload").dropzone({
                 url: window.proj.url.activity,
+                params: {"project": id},
                 withCredentials: true,
                 maxFilesize: 10, // 10 Mb maximum file size
                 maxFiles: 3,
