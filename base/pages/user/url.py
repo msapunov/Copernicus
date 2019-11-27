@@ -76,7 +76,7 @@ def user_edit_info():
 def exception_test():
     log.critical("Critical level")
     log.error("Error level")
-    log.warning("warning level")
+    log.warning("Warning level")
     log.info("Info level")
     log.debug("Debug level")
     raise ValueError("This is a test exception")
