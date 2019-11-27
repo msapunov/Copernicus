@@ -70,6 +70,17 @@ def user_edit_info():
     return jsonify(data=msg)
 
 
+@bp.route("/exception_test", methods=["GET", "POST"])
+@login_required
+def exception_test():
+    log.critical("Critical level")
+    log.error("Error level")
+    log.warning("warning level")
+    log.info("Info level")
+    log.debug("Debug level")
+    raise ValueError("This is a test exception")
+
+
 @bp.route("/", methods=["GET"])
 @bp.route("/index", methods=["GET"])
 @bp.route("/user.html", methods=["GET"])
