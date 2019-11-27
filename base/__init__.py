@@ -84,7 +84,7 @@ def register_decor(app):
         code = 500
         if isinstance(e, HTTPException):
             code = e.code
-        logging.error(str(e))
+        logging.critical(str(e))
         return str(e), code
 
     return None
