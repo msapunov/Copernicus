@@ -7,6 +7,7 @@ from base.pages.user.magic import get_scratch, get_project_info
 from base.utils import accounting_start
 from datetime import datetime as dt
 from operator import attrgetter
+import logging as log
 
 
 __author__ = "Matvey Sapunov"
