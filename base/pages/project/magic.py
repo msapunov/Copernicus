@@ -14,7 +14,7 @@ __copyright__ = "Aix Marseille University"
 
 
 def upload_file_cloud(f, project, client):
-    file_name = None
+    file_name = dt.now().strftime("%Y-%m-%d")
     f.save(file_name)
     return file_name
 
@@ -37,7 +37,8 @@ def upload_file(req):
         try:
             connected = oc.login(login, password)
         except Exception as err:
-            debug("Can't connect to own cloud instance: %s Falling back" % err)
+            #error("Can't connect to own cloud instance: %s Falling back" % err)
+            pass
     if connected and oc:
         return upload_file_cloud(files, project, oc)
     return upload_file_temp(files, project)
