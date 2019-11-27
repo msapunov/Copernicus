@@ -13,9 +13,10 @@ from base.database.schema import User, Project
 
 from datetime import datetime as dt
 from werkzeug.exceptions import HTTPException
-from sys import stdout
+from os.path import join as path_join, exists
 
 import logging
+import logging.config
 
 
 def create_app(config_filename):
