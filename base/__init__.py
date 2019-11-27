@@ -91,17 +91,9 @@ def register_decor(app):
 
 
 def configure_logger(app):
-    root = logging.getLogger()
-#    root.setLevel(logging.DEBUG)
-    handler = logging.StreamHandler(stdout)
-    FORMAT = "[%(filename)s:%(lineno)s - %(funcName)20s() ] %(message)s"
-    formatter = logging.Formatter(FORMAT)
-    handler.setFormatter(formatter)
-    app.logger.addHandler(handler)
-    """
-    ch = logging.StreamHandler(sys.stdout)
-    ch.setLevel(logging.DEBUG)
-    FORMAT = "[%(filename)s:%(lineno)s - %(funcName)20s() ] %(message)s"
-    formatter = logging.Formatter(FORMAT)
-    ch.setFormatter(formatter)
-    root.addHandler(ch)
+    cfg_file = app.config.get("LOG_CONFIG", "logging.cfg")
+    cfg_path = path_join(app.instance_path, cfg_file)
+    if exists(cfg_path):
+        logging.config.fileConfig(cfg_path)
+    else:
+        print("No config found! Using default logger")
