@@ -25,7 +25,6 @@ def create_app(config_filename):
     register_extensions(app)
     register_blueprints(app)
     register_decor(app)
-    #register_errorhandlers(app)
     configure_logger(app)
     return app
 
@@ -80,7 +79,6 @@ def register_decor(app):
             cache.set("url_list", url_list, 600)
         g.url_list = url_list
 
-
     @app.errorhandler(Exception)
     def handle_error(e):
         code = 500
@@ -107,12 +105,3 @@ def configure_logger(app):
     formatter = logging.Formatter(FORMAT)
     ch.setFormatter(formatter)
     root.addHandler(ch)
-
-
-    handler = logging.StreamHandler(stdout)
-    FORMAT = "[%(filename)s:%(lineno)s - %(funcName)20s() ] %(message)s"
-    formatter = logging.Formatter(FORMAT)
-    handler.setFormatter(formatter)
-    if not app.logger.handlers:
-        app.logger.addHandler(handler)
-    """
