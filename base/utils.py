@@ -3,6 +3,16 @@ from datetime import datetime as dt
 from unicodedata import normalize
 
 
+def get_tmpdir_name(app):
+    """
+    Construct the prefix for the temporary directory based on SECRET_KEY
+    parameter from configuration file
+    :param app: Current application
+    :return: String
+    """
+    return "%s_copernicus_" % app.config.get("SECRET_KEY", "XXX")[0:3]
+
+
 def normalize_word(word):
     word = word.replace("'", "")
     word = normalize("NFKD", word).encode("ascii", "ignore").decode("ascii")
