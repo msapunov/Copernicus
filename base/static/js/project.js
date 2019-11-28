@@ -525,12 +525,12 @@ function reduce_to_names(initial, object){
                 ,success: function(image, response){
                     console.debug("Uploaded!");
                 }
-                ,canceled: function(x,y,z,f,d,g,h){
-                    console.debug("Canceled!")
+                ,canceled: function(file,y,z,f,d,g,h){
+                    this.removeFile(file);
                 }
-                ,removedfile: function(x,y,z,f,d,g,h){
-                    console.debug("removed!")
-                }
+                //,removedfile: function(file){
+                //    this.removeFile(file);
+                //}
                 //forceFallback: true
             });
         }
