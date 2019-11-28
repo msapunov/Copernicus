@@ -1,6 +1,29 @@
 from flask import current_app
 from datetime import datetime as dt
 from unicodedata import normalize
+from tempfile import gettempdir, mkdtemp
+from os import walk
+import logging as log
+
+
+def get_tmpdir(app):
+    """
+    Check if application specific directory has been already created and create
+    said directory if it doesn't exists. If directory started with prefix is
+    already there the function returns first element from the directory list
+    :param app: Current flask application
+    :return: String. Name of the temporary application specific directory.
+    """
+    prefix = get_tmpdir_prefix(app)
+    dirs = [x[0] for x in walk(gettempdir())]
+    exists = list(filter(lambda x: True if prefix in x else False, dirs))
+    if exists:
+        dir_name = exists[0]
+        log.debug("Found existing directory: %s" % dir_name)
+    else:
+        dir_name = mkdtemp(prefix=prefix)
+        log.debug("Temporary directory created: %s" % dir_name)
+    return dir_name
 
 
 def get_tmpdir_prefix(app):

@@ -1,13 +1,17 @@
 from datetime import datetime as dt
+from os.path import join as join_dir, exists
 from flask import flash, current_app, jsonify, request
 from flask_login import current_user
 from base import db
-from base.utils import accounting_start
+from base.utils import accounting_start, save_file, get_tmpdir
 from base.database.schema import Extend
 from base.pages import ProjectLog
 from base.pages import ssh_wrapper, check_int, check_str, send_message
 from base.pages.board.magic import create_resource
 from owncloud import Client as OwnClient
+
+import logging as log
+
 
 __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
@@ -16,18 +20,6 @@ __copyright__ = "Aix Marseille University"
 def upload_file_cloud(f, project, client):
     file_name = dt.now().strftime("%Y-%m-%d")
     f.save(file_name)
-    return file_name
-
-
-def upload_file_temp(f, project):
-    pass
-
-
-def upload_file(req):
-    files = req.files["file"]
-    project = req.form.get("project", None)
-    if not project:
-        raise ValueError("No project name provided!")
     connected, oc = False
     url = current_app.config.get("OWN_CLOUD_URL", None)
     if url:
@@ -39,9 +31,25 @@ def upload_file(req):
         except Exception as err:
             #error("Can't connect to own cloud instance: %s Falling back" % err)
             pass
-    if connected and oc:
-        return upload_file_cloud(files, project, oc)
-    return upload_file_temp(files, project)
+    return file_name
+
+
+def save_activity(req):
+    project = req.form.get("project", None)
+    if not project:
+        raise ValueError("No project name provided!")
+    temp_dir = get_tmpdir(current_app)
+    log.debug("Using temporary directory to store files: %s" % temp_dir)
+    image_name = "activity_report_%s" % project
+    for i in range(0, current_app.config.get("ACTIVITY_REPORT_LIMIT", 3)):
+        tmp_name = "%s_%s" % (image_name, i)
+        if not exists(join_dir(temp_dir,tmp_name)):
+            image_name = tmp_name
+            break
+    name = join_dir(temp_dir, image_name)
+    save_file(req, name)
+    log.debug("Returning file name: %s" % name)
+    return name
 
 
 def process_extension(eid):
