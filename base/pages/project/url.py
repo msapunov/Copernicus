@@ -10,7 +10,7 @@ from base.pages import (
 from base.pages.user import bp
 from base.pages.user.magic import get_user_record
 from base.pages.project.magic import (
-    upload_file,
+    save_activity,
     get_project_info,
     get_project_record,
     get_project_overview,
@@ -29,7 +29,7 @@ __copyright__ = "Aix Marseille University"
 @bp.route("/project/activity/upload", methods=["POST"])
 @login_required
 def project_activity_upload():
-    return upload_file(request)
+    return save_activity(request)
 
 
 @bp.route("/project/list", methods=["POST"])
