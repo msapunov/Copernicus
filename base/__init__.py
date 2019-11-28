@@ -29,8 +29,8 @@ def create_app(config_filename):
     register_extensions(app)
     register_blueprints(app)
     register_decor(app)
-    #register_errorhandlers(app)
     configure_logger(app)
+    cleanup(app)
     return app
 
 
