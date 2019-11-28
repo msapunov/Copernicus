@@ -56,8 +56,8 @@ def cleanup(app):
     dirs = [x[0] for x in walk(gettempdir())]
     exists = list(filter(lambda x: True if prefix in x else False, dirs))
     if exists:
-        print("Clean-up from previous session: %s" % exists)
-        map(lambda x: rmtree(x), exists)
+        print("Clean-up from previous session: %s" % ",".join(exists))
+        list(map(lambda x: rmtree(x), exists))
 
 
 def register_decor(app):
@@ -110,5 +110,5 @@ def configure_logger(app):
     FORMAT = "[%(filename)s:%(lineno)s - %(funcName)20s() ] %(message)s"
     formatter = logging.Formatter(FORMAT)
     handler.setFormatter(formatter)
-    if not app.logger.handlers:
-        app.logger.addHandler(handler)
+    #  if not app.logger.handlers:
+    app.logger.addHandler(handler)
