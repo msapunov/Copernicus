@@ -11,9 +11,14 @@ from base.pages.admin import bp as blueprint_admin
 
 from base.database.schema import User, Project
 
+from base.utils import get_tmpdir_prefix
+
 from datetime import datetime as dt
 from werkzeug.exceptions import HTTPException
 from sys import stdout
+from tempfile import gettempdir
+from os import walk
+from shutil import rmtree
 
 import logging
 
