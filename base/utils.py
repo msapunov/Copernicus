@@ -3,7 +3,7 @@ from datetime import datetime as dt
 from unicodedata import normalize
 
 
-def get_tmpdir_name(app):
+def get_tmpdir_prefix(app):
     """
     Construct the prefix for the temporary directory based on SECRET_KEY
     parameter from configuration file
