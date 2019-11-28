@@ -51,6 +51,15 @@ def register_blueprints(app):
     return None
 
 
+def cleanup(app):
+    prefix = get_tmpdir_prefix(app)
+    dirs = [x[0] for x in walk(gettempdir())]
+    exists = list(filter(lambda x: True if prefix in x else False, dirs))
+    if exists:
+        print("Clean-up from previous session: %s" % exists)
+        map(lambda x: rmtree(x), exists)
+
+
 def register_decor(app):
 
     @app.template_filter("menu_item")
