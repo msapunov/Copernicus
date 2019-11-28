@@ -36,6 +36,24 @@ def get_tmpdir_prefix(app):
     return "%s_copernicus_" % app.config.get("SECRET_KEY", "XXX")[0:3]
 
 
+def save_file(req, file_name):
+    if "file" not in req.files:
+        raise ValueError("File expected!")
+    file = req.files["file"]
+    if file.filename == '':
+        raise ValueError("No selected file")
+    log.debug("File name from incoming request: %s" % file.filename)
+    if "." not in file.filename:
+        ext = "unknown"
+    else:
+        ext = file.filename.rsplit('.', 1)[1].lower()
+    log.debug("Deducted file extensions: %s" % ext)
+    file_name = "%s.%s" % (file_name, ext)
+    log.debug("Saving file from incoming request to: %s" % file_name)
+    file.save(file_name)
+    return file_name.rsplit("", 1)[1].lower()
+
+
 def normalize_word(word):
     word = word.replace("'", "")
     word = normalize("NFKD", word).encode("ascii", "ignore").decode("ascii")
