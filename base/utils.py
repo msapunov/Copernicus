@@ -3,6 +3,7 @@ from datetime import datetime as dt
 from unicodedata import normalize
 from tempfile import gettempdir, mkdtemp
 from os import walk
+from os.path import join as join_dir
 import logging as log
 
 
@@ -36,7 +37,7 @@ def get_tmpdir_prefix(app):
     return "%s_copernicus_" % app.config.get("SECRET_KEY", "XXX")[0:3]
 
 
-def save_file(req, file_name):
+def save_file(req, directory, file_name):
     if "file" not in req.files:
         raise ValueError("File expected!")
     file = req.files["file"]
@@ -49,9 +50,10 @@ def save_file(req, file_name):
         ext = file.filename.rsplit('.', 1)[1].lower()
     log.debug("Deducted file extensions: %s" % ext)
     file_name = "%s.%s" % (file_name, ext)
-    log.debug("Saving file from incoming request to: %s" % file_name)
-    file.save(file_name)
-    return file_name.rsplit("", 1)[1].lower()
+    name = join_dir(directory, file_name)
+    log.debug("Saving file from incoming request to: %s" % name)
+    file.save(name)
+    return {"new_name": file_name, "old_name": file.filename}
 
 
 def normalize_word(word):
