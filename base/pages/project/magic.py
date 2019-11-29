@@ -9,6 +9,7 @@ from base.pages import ProjectLog
 from base.pages import ssh_wrapper, check_int, check_str, send_message
 from base.pages.board.magic import create_resource
 from owncloud import Client as OwnClient
+from pathlib import Path
 
 import logging as log
 
@@ -41,13 +42,13 @@ def save_activity(req):
     temp_dir = get_tmpdir(current_app)
     log.debug("Using temporary directory to store files: %s" % temp_dir)
     image_name = "activity_report_%s" % project
+    exist_files = [p for p in Path(temp_dir).iterdir() if p.is_file()]
     for i in range(0, current_app.config.get("ACTIVITY_REPORT_LIMIT", 3)):
         tmp_name = "%s_%s" % (image_name, i)
-        if not exists(join_dir(temp_dir,tmp_name)):
+        if tmp_name not in exist_files:
             image_name = tmp_name
             break
-    name = join_dir(temp_dir, image_name)
-    save_file(req, name)
+    name = save_file(req, temp_dir, image_name)
     log.debug("Returning file name: %s" % name)
     return name
 
