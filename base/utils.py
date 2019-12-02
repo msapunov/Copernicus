@@ -37,7 +37,16 @@ def get_tmpdir_prefix(app):
     return "%s_copernicus_" % app.config.get("SECRET_KEY", "XXX")[0:3]
 
 
-def save_file(req, directory, file_name):
+def save_file(req, directory, file_name=False):
+    """
+    Saving incoming file HTTP request to provided directory under original or
+    provided filename
+    :param req: Incoming file HTTP request
+    :param directory: Directory where to save the file from incoming request
+    :param file_name: Default is False. By default the file is saved under name
+    extracted from file http request.
+    :return: Dictionary
+    """
     if "file" not in req.files:
         raise ValueError("File expected!")
     file = req.files["file"]
