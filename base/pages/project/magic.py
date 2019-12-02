@@ -41,10 +41,12 @@ def save_activity(req):
     temp_dir = get_tmpdir(current_app)
     log.debug("Using temporary directory to store files: %s" % temp_dir)
     image_name = "activity_report_%s" % project
-    exist_files = [p for p in Path(temp_dir).iterdir() if p.is_file()]
+    exist_files = [p.name for p in Path(temp_dir).iterdir() if p.is_file()]
+    log.debug("List of existing files: %s" % exist_files)
     for i in range(0, current_app.config.get("ACTIVITY_REPORT_LIMIT", 3)):
         tmp_name = "%s_%s" % (image_name, i)
-        if tmp_name not in exist_files:
+        there = filter(lambda x: True if tmp_name in x else False, exist_files)
+        if not list(there):
             image_name = tmp_name
             break
     name = save_file(req, temp_dir, image_name)
