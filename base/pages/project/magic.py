@@ -1,5 +1,4 @@
 from datetime import datetime as dt
-from os.path import join as join_dir, exists
 from flask import flash, current_app, jsonify, request
 from flask_login import current_user
 from base import db
