@@ -56,9 +56,9 @@ def register_blueprints(app):
 def cleanup(app):
     prefix = get_tmpdir_prefix(app)
     dirs = [x[0] for x in walk(gettempdir())]
-    exists = list(filter(lambda x: True if prefix in x else False, dirs))
-    if exists:
-        print("Clean-up from previous session: %s" % ",".join(exists))
+    there = list(filter(lambda x: True if prefix in x else False, dirs))
+    if there:
+        print("Clean-up from previous session: %s" % ",".join(there))
         list(map(lambda x: rmtree(x), exists))
 
 
