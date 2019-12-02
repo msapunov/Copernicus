@@ -97,10 +97,14 @@ def register_decor(app):
 
     @app.errorhandler(Exception)
     def handle_error(e):
+        tb = format_exc()
         code = 500
         if isinstance(e, HTTPException):
             code = e.code
-        logging.critical(str(e))
+        if tb:
+            logging.critical(tb)
+        else:
+            logging.critical(str(e))
         return str(e), code
 
     return None
