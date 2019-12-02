@@ -74,7 +74,6 @@ def user_edit_info():
 @bp.route("/exception_test", methods=["GET", "POST"])
 @login_required
 def exception_test():
-    log.critical("Critical level")
     log.error("Error level")
     log.warning("Warning level")
     log.info("Info level")
