@@ -15,12 +15,14 @@ from base.utils import get_tmpdir_prefix
 
 from datetime import datetime as dt
 from werkzeug.exceptions import HTTPException
+from os.path import join as path_join, exists
 from sys import stdout
 from tempfile import gettempdir
 from os import walk
 from shutil import rmtree
 
 import logging
+import logging.config
 
 
 def create_app(config_filename):
@@ -93,22 +95,21 @@ def register_decor(app):
             cache.set("url_list", url_list, 600)
         g.url_list = url_list
 
-
     @app.errorhandler(Exception)
     def handle_error(e):
         code = 500
         if isinstance(e, HTTPException):
             code = e.code
-        logging.error(str(e))
+        logging.critical(str(e))
         return str(e), code
 
     return None
 
 
 def configure_logger(app):
-    handler = logging.StreamHandler(stdout)
-    FORMAT = "[%(filename)s:%(lineno)s - %(funcName)20s() ] %(message)s"
-    formatter = logging.Formatter(FORMAT)
-    handler.setFormatter(formatter)
-    #  if not app.logger.handlers:
-    app.logger.addHandler(handler)
+    cfg_file = app.config.get("LOG_CONFIG", "logging.cfg")
+    cfg_path = path_join(app.instance_path, cfg_file)
+    if exists(cfg_path):
+        logging.config.fileConfig(cfg_path)
+    else:
+        print("No config found! Using default logger")
