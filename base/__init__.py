@@ -16,7 +16,7 @@ from base.utils import get_tmpdir_prefix
 from datetime import datetime as dt
 from werkzeug.exceptions import HTTPException
 from os.path import join as path_join, exists
-from sys import stdout
+from traceback import format_exc
 from tempfile import gettempdir
 from os import walk
 from shutil import rmtree
