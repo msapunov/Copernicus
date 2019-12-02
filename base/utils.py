@@ -53,12 +53,15 @@ def save_file(req, directory, file_name=False):
     if file.filename == '':
         raise ValueError("No selected file")
     log.debug("File name from incoming request: %s" % file.filename)
-    if "." not in file.filename:
-        ext = "unknown"
+    if not file_name:
+        file_name = file.filename
     else:
-        ext = file.filename.rsplit('.', 1)[1].lower()
-    log.debug("Deducted file extensions: %s" % ext)
-    file_name = "%s.%s" % (file_name, ext)
+        if "." not in file_name and "." not in file.filename:
+            file_name = "%s.unknown" % file_name
+        elif "." not in file_name and "." in file.filename:
+            ext = file.filename.rsplit('.', 1)[1].lower()
+            log.debug("Deducted file extensions: %s" % ext)
+            file_name = "%s.%s" % (file_name, ext)
     name = join_dir(directory, file_name)
     log.debug("Saving file from incoming request to: %s" % name)
     file.save(name)
