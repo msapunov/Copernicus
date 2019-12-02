@@ -7,6 +7,7 @@ from base.pages.user.magic import get_scratch, get_project_info
 from base.utils import accounting_start
 from datetime import datetime as dt
 from operator import attrgetter
+import logging as log
 
 
 __author__ = "Matvey Sapunov"
@@ -68,6 +69,17 @@ def user_edit_info():
           "registered" % changes_to_string(c_dict)
     send_message(user.email, title=title, message=msg)
     return jsonify(data=msg)
+
+
+@bp.route("/exception_test", methods=["GET", "POST"])
+@login_required
+def exception_test():
+    log.critical("Critical level")
+    log.error("Error level")
+    log.warning("Warning level")
+    log.info("Info level")
+    log.debug("Debug level")
+    raise ValueError("This is a test exception")
 
 
 @bp.route("/", methods=["GET"])
