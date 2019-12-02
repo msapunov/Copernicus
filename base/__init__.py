@@ -59,7 +59,7 @@ def cleanup(app):
     there = list(filter(lambda x: True if prefix in x else False, dirs))
     if there:
         print("Clean-up from previous session: %s" % ",".join(there))
-        list(map(lambda x: rmtree(x), exists))
+        list(map(lambda x: rmtree(x), there))
 
 
 def register_decor(app):
