@@ -65,7 +65,7 @@ def save_file(req, directory, file_name=False):
     name = join_dir(directory, file_name)
     log.debug("Saving file from incoming request to: %s" % name)
     file.save(name)
-    return {"new_name": file_name, "old_name": file.filename}
+    return {"saved_name": file_name, "incoming_name": file.filename}
 
 
 def normalize_word(word):

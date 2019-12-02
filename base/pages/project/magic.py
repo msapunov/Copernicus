@@ -49,7 +49,7 @@ def save_activity(req):
             image_name = tmp_name
             break
     name = save_file(req, temp_dir, image_name)
-    log.debug("Returning file name: %s" % name)
+    log.debug("Returning result: %s" % name)
     return name
 
 
