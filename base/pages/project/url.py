@@ -29,7 +29,7 @@ __copyright__ = "Aix Marseille University"
 @bp.route("/project/activity/upload", methods=["POST"])
 @login_required
 def project_activity_upload():
-    return save_activity(request)
+    return jsonify(data=save_activity(request))
 
 
 @bp.route("/project/list", methods=["POST"])
