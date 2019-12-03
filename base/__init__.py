@@ -1,4 +1,4 @@
-from flask import Flask, g
+from flask import Flask, g, request
 from flask_login import current_user
 
 from base.extensions import mail, cache, db, login_manager
@@ -97,12 +97,13 @@ def register_decor(app):
 
     @app.errorhandler(Exception)
     def handle_error(e):
+        url = request.url
         tb = format_exc()
         code = 500
         if isinstance(e, HTTPException):
             code = e.code
         if tb:
-            logging.critical(tb)
+            logging.critical(tb + "Request URL: %s" % url)
         else:
             logging.critical(str(e))
         return str(e), code
