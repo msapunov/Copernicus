@@ -73,6 +73,7 @@ def register_decor(app):
 
     @app.before_request
     def first_request():
+        logging.debug("-"*80)
         user_list = cache.get("user_list")
         if not user_list:
             users_obj = User.query.all()
