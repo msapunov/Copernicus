@@ -35,6 +35,7 @@ def upload_file_cloud(f, project, client):
 
 
 def save_activity(req):
+    limit = current_app.config.get("ACTIVITY_REPORT_LIMIT", 3)
     project = req.form.get("project", None)
     if not project:
         raise ValueError("No project name provided!")
@@ -44,9 +45,9 @@ def save_activity(req):
     exist_files = [p.name for p in Path(temp_dir).iterdir() if p.is_file()]
     log.debug("List of existing files: %s" % exist_files)
     already = filter(lambda x: True if image_name in x else False, exist_files)
-    if len(list(already)) >= 3:
+    if len(list(already)) >= limit:
         raise ValueError("You have already 3 or more files uploaded")
-    for i in range(0, current_app.config.get("ACTIVITY_REPORT_LIMIT", 3)):
+    for i in range(0, limit):
         tmp_name = "%s_%s" % (image_name, i)
         there = filter(lambda x: True if tmp_name in x else False, exist_files)
         if not list(there):
