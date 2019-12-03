@@ -10,6 +10,7 @@ from base.pages import (
 from base.pages.user import bp
 from base.pages.user.magic import get_user_record
 from base.pages.project.magic import (
+    clean_activity,
     save_activity,
     get_project_info,
     get_project_record,
@@ -24,6 +25,12 @@ from operator import attrgetter
 
 __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
+
+
+@bp.route("/project/activity/clean/<string:project_name>", methods=["POST"])
+@login_required
+def project_activity_clean(project_name):
+    return jsonify(data=clean_activity(project_name))
 
 
 @bp.route("/project/activity/upload", methods=["POST"])
