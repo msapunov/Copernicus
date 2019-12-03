@@ -462,9 +462,28 @@ function reduce_to_names(initial, object){
         });
     };
 
+    window.render.hidden_field = function(resp){
+        if(!resp.data){
+            alert("Server response is corrupted!");
+            return false;
+        }
+        if((!resp.data.incoming_name)||(!resp.data.saved_name)){
+            alert("Server response is incomplete!");
+            return false;
+        }
+        var incoming= resp.data.incoming_name;
+        var saved = resp.data.saved_name;
+        for(var i of [1, 2, 3]) {
+            var value = $("input[name=image_{0}]".f(i)).val();
+            if(! value){
+                $("input[name=image_{0}]".f(i)).val(saved);
+                break
+            }
+        }
+    };
+
     window.render.activity = function(e){
         var name = $(this).data("name");
-        var id = $(this).data("project");
         var title = "Activity report for the project {0}".f(name);
         var report = $("<textarea/>").addClass("uk-width-1-1").attr({
             "rows": "5",
@@ -486,7 +505,6 @@ function reduce_to_names(initial, object){
             "name": "hiring",
             "placeholder": "List of people hired during last activity period"
         });
-        var uText = "";
         var upload = $("<div/>").attr({"id": "upload"}).addClass("uk-alert dropzone needsclick dz-clickable dz-started");//.addClass("dropzone needsclick dz-clickable dz-started");
         var form = $("<form/>").addClass("uk-form").append(
             $("<legend/>").text(title)
@@ -500,14 +518,28 @@ function reduce_to_names(initial, object){
             $("<div/>").addClass("uk-form-row").append(hiring)
         ).append(
             $("<div/>").addClass("uk-form-row").append(upload)
+        ).append(
+            $("<input/>").attr({"type": "hidden", "name": "image_1"})
+        ).append(
+            $("<input/>").attr({"type": "hidden", "name": "image_2"})
+        ).append(
+            $("<input/>").attr({"type": "hidden", "name": "image_3"})
         );
         var pop = dialog(form.prop("outerHTML"), function(){
             var data = {
                 "cpu": $("input[name=cpu]").val(),
                 "report": $("textarea[name=report]").val(),
-                "exception": exception,
-                "project": id
+                "project": name,
+                "image_1": $("input[name=image_1]").val(),
+                "image_2": $("input[name=image_2]").val(),
+                "image_3": $("input[name=image_3]").val()
             };
+            json_send(window.proj.url["activity"], data).done(function(reply){
+                if(reply.message){
+                    UIkit.notify(reply.message, {timeout: 2000, status:"success"});
+                }
+                pop.hide();
+            })
         });
         if(pop.isActive()){
             $("div#upload").dropzone({
@@ -523,7 +555,7 @@ function reduce_to_names(initial, object){
                     this.removeFile(file);
                 }
                 ,success: function(image, response){
-                    console.debug("Uploaded!");
+                    window.render.hidden_field(response);
                 }
                 ,canceled: function(file,y,z,f,d,g,h){
                     this.removeFile(file);
