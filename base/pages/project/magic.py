@@ -64,6 +64,20 @@ def save_activity(req):
     return name
 
 
+def clean_activity(name):
+    project = get_project_by_name(name)
+    if current_user != project.get_responsible():
+        raise ValueError()
+    files = get_activity_files(name)
+    if len(files) < 1:
+        return True
+    for x in files:
+        log.debug("Removing file %s" % x)
+        Path(x).unlink()
+    #list(map(lambda x: Path(x).unlink(), files))
+    return True
+
+
 def process_extension(eid):
     ext = Extend.query.filter_by(id=eid).first()
     if not ext:
