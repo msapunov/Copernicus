@@ -43,6 +43,9 @@ def save_activity(req):
     image_name = "activity_report_%s" % project
     exist_files = [p.name for p in Path(temp_dir).iterdir() if p.is_file()]
     log.debug("List of existing files: %s" % exist_files)
+    already = filter(lambda x: True if image_name in x else False, exist_files)
+    if len(list(already)) >= 3:
+        raise ValueError("You have already 3 or more files uploaded")
     for i in range(0, current_app.config.get("ACTIVITY_REPORT_LIMIT", 3)):
         tmp_name = "%s_%s" % (image_name, i)
         there = filter(lambda x: True if tmp_name in x else False, exist_files)
