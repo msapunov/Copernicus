@@ -34,6 +34,16 @@ def upload_file_cloud(f, project, client):
     return file_name
 
 
+def get_activity_files(name):
+    temp_dir = get_tmpdir(current_app)
+    log.debug("Using temporary directory to store files: %s" % temp_dir)
+    image_name = "activity_report_%s" % name
+    exist_files = [p.name for p in Path(temp_dir).iterdir() if p.is_file()]
+    log.debug("List of existing files: %s" % exist_files)
+    already = filter(lambda x: True if image_name in x else False, exist_files)
+    return list(already)
+
+
 def save_activity(req):
     limit = current_app.config.get("ACTIVITY_REPORT_LIMIT", 3)
     project = req.form.get("project", None)
