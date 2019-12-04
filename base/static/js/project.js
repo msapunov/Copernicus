@@ -485,7 +485,7 @@ function reduce_to_names(initial, object){
 
     window.render.activity = function(e){
         var name = $(this).data("name");
-        $.post("%s/%s" % (window.proj.url["activity_clean"], name));
+        $.post("{0}/{1}".f(window.proj.url["activity_clean"], name));
         var title = "Activity report for the project {0}".f(name);
         var report = $("<textarea/>").addClass("uk-width-1-1").attr({
             "rows": "5",
