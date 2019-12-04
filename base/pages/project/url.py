@@ -10,6 +10,7 @@ from base.pages import (
 from base.pages.user import bp
 from base.pages.user.magic import get_user_record
 from base.pages.project.magic import (
+    remove_activity,
     clean_activity,
     save_activity,
     get_project_info,
@@ -25,6 +26,13 @@ from operator import attrgetter
 
 __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
+
+
+@bp.route("/project/activity/remove/<string:project>/<string:file_name>",
+          methods=["POST"])
+@login_required
+def project_activity_remove(project, file_name):
+    return jsonify(data=remove_activity(project, file_name))
 
 
 @bp.route("/project/activity/clean/<string:project_name>", methods=["POST"])
@@ -191,6 +199,7 @@ def web_project_history():
 @login_required
 def web_project_index():
     projects = get_project_info()
+    list(map(lambda x: clean_activity(x["name"]), projects))
     now = dt.now()
     if now.month != 1:
         renew = False

@@ -34,6 +34,14 @@ def upload_file_cloud(f, project, client):
     return file_name
 
 
+def check_responsible(name):
+    project = get_project_by_name(name)
+    if current_user != project.get_responsible():
+        raise ValueError("User %s is not register as the responsible person "
+                         "for the project %s" % (current_user.login, name))
+    return True
+
+
 def get_activity_files(name):
     temp_dir = get_tmpdir(current_app)
     log.debug("Using temporary directory to store files: %s" % temp_dir)
