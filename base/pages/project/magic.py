@@ -74,6 +74,16 @@ def save_activity(req):
     return name
 
 
+def remove_activity(name, file_name):
+    check_responsible(name)
+    files = get_activity_files(name)
+    if file_name not in files:
+        return True
+    Path(get_tmpdir(current_app), file_name).unlink()
+    log.debug("File deleted: %s" % file_name)
+    return True
+
+
 def clean_activity(name):
     log.debug("Cleaning activity files for project %s" % name)
     check_responsible(name)
