@@ -483,9 +483,13 @@ function reduce_to_names(initial, object){
         }
     };
 
+    window.render.clean_activity = function(project_name){
+        $.post("{0}/{1}".f(window.proj.url["activity_clean"], project_name));
+    }
+
     window.render.activity = function(e){
         var name = $(this).data("name");
-        $.post("{0}/{1}".f(window.proj.url["activity_clean"], name));
+        window.render.clean_activity(name);
         var title = "Activity report for the project {0}".f(name);
         var report = $("<textarea/>").addClass("uk-width-1-1").attr({
             "rows": "5",
@@ -527,7 +531,7 @@ function reduce_to_names(initial, object){
         ).append(
             $("<input/>").attr({"type": "hidden", "name": "image_3"})
         );
-        var pop = dialog(form.prop("outerHTML"), function(){
+        var pop = dialog(form.prop("outerHTML"), function() {
             var data = {
                 "cpu": $("input[name=cpu]").val(),
                 "report": $("textarea[name=report]").val(),
@@ -536,12 +540,17 @@ function reduce_to_names(initial, object){
                 "image_2": $("input[name=image_2]").val(),
                 "image_3": $("input[name=image_3]").val()
             };
-            json_send(window.proj.url["activity"], data).done(function(reply){
-                if(reply.message){
-                    UIkit.notify(reply.message, {timeout: 2000, status:"success"});
+            json_send(window.proj.url["activity"], data).done(function (reply) {
+                if (reply.message) {
+                    UIkit.notify(reply.message, {
+                        timeout: 2000,
+                        status: "success"
+                    });
                 }
                 pop.hide();
             })
+        }, function () {
+            window.render.clean_activity(name);
         });
         if(pop.isActive()){
             $("div#upload").dropzone({
