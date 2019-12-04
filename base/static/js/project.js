@@ -52,7 +52,8 @@ function reduce_to_names(initial, object){
         activate: "project/reactivate",
         transform: "project/transform",
         activity: "project/activity/upload",
-        activity_clean: "project/activity/clean"
+        activity_clean: "project/activity/clean",
+        activity_delete: "project/activity/remove"
     };
 
     window.error = function(req){
@@ -472,7 +473,6 @@ function reduce_to_names(initial, object){
             alert("Server response is incomplete!");
             return false;
         }
-        var incoming= resp.data.incoming_name;
         var saved = resp.data.saved_name;
         for(var i of [1, 2, 3]) {
             var value = $("input[name=image_{0}]".f(i)).val();
@@ -481,11 +481,24 @@ function reduce_to_names(initial, object){
                 break
             }
         }
+        return saved
     };
 
     window.render.clean_activity = function(project_name){
         $.post("{0}/{1}".f(window.proj.url["activity_clean"], project_name));
-    }
+    };
+
+    window.render.delete_activity = function(project, name){
+        let url = "{0}/{1}/{2}".f(window.proj.url["activity_delete"], project, name);
+        json_send(url).done(function(reply){
+            if(reply.data === true){
+                UIkit.notify("File {0} has been removed from the server".f(name), {
+                    timeout: 2000,
+                    status: "success"
+                });
+            }
+        });
+    };
 
     window.render.activity = function(e){
         var name = $(this).data("name");
@@ -566,14 +579,16 @@ function reduce_to_names(initial, object){
                     this.removeFile(file);
                 }
                 ,success: function(image, response){
-                    window.render.hidden_field(response);
+                    image.server_name = window.render.hidden_field(response);
                 }
-                ,canceled: function(file,y,z,f,d,g,h){
+                ,canceled: function(file){
                     this.removeFile(file);
                 }
-                //,removedfile: function(file){
-                //    this.removeFile(file);
-                //}
+                ,removedfile: function(file){
+                    if(file.server_name){
+                        window.render.delete_activity(name, file.server_name);
+                    }
+                }
                 //forceFallback: true
             });
         }
