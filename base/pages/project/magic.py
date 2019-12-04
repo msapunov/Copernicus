@@ -71,10 +71,10 @@ def clean_activity(name):
     files = get_activity_files(name)
     if len(files) < 1:
         return True
+    tmp = get_tmpdir(current_app)
     for x in files:
-        log.debug("Removing file %s" % x)
-        Path(x).unlink()
-    #list(map(lambda x: Path(x).unlink(), files))
+        Path(tmp, x).unlink()
+        log.debug("File deleted: %s" % x)
     return True
 
 
