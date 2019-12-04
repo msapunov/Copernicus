@@ -43,6 +43,7 @@ def check_responsible(name):
 
 
 def get_activity_files(name):
+    check_responsible(name)
     temp_dir = get_tmpdir(current_app)
     log.debug("Using temporary directory to store files: %s" % temp_dir)
     image_name = "activity_report_%s" % name
@@ -57,6 +58,7 @@ def save_activity(req):
     project = req.form.get("project", None)
     if not project:
         raise ValueError("No project name provided!")
+    check_responsible(project)
     files = get_activity_files(project)
     if len(files) >= limit:
         raise ValueError("You have already uploaded %s or more files" % limit)
@@ -73,9 +75,8 @@ def save_activity(req):
 
 
 def clean_activity(name):
-    project = get_project_by_name(name)
-    if current_user != project.get_responsible():
-        raise ValueError()
+    log.debug("Cleaning activity files for project %s" % name)
+    check_responsible(name)
     files = get_activity_files(name)
     if len(files) < 1:
         return True
