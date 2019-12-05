@@ -547,9 +547,10 @@ function reduce_to_names(initial, object){
         );
         var pop = dialog(form.prop("outerHTML"), function() {
             var data = {
-                "cpu": $("input[name=cpu]").val(),
+                "doi": $("textarea[name=doi]").val(),
                 "report": $("textarea[name=report]").val(),
-                "project": name,
+                "training": $("textarea[name=training]").val(),
+                "hiring": $("textarea[name=hiring]").val(),
                 "image_1": $("input[name=image_1]").val(),
                 "image_2": $("input[name=image_2]").val(),
                 "image_3": $("input[name=image_3]").val()
