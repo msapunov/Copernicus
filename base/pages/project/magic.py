@@ -1,5 +1,5 @@
 from datetime import datetime as dt
-from flask import flash, current_app, jsonify, request
+from flask import flash, current_app, jsonify, request, render_template
 from flask_login import current_user
 from base import db
 from base.utils import accounting_start, save_file, get_tmpdir
@@ -72,6 +72,28 @@ def save_activity(req):
     name = save_file(req, get_tmpdir(current_app), image_name)
     log.debug("Returning result: %s" % name)
     return name
+
+
+def report_activity(name, req):
+    check_responsible(name)
+    data = req.get_json()
+    if not data:
+        raise ValueError("Expecting application/json requests")
+
+    project = get_project_by_name(name)
+    log.debug(project)
+    result = get_project_info(p_ids=[project.id])
+    log.debug(result)
+    result["doi"] = data["doi"]
+    result["report"] = data["report"]
+    result["training"] = data["training"]
+    result["hiring"] = data["hiring"]
+    result["img_1"] = data["image_1"]
+    result["img_2"] = data["image_2"]
+    result["img_3"] = data["image_3"]
+    log.debug(result)
+    #render_template("report.html", data=result)
+    return True
 
 
 def remove_activity(name, file_name):
