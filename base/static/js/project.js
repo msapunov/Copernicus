@@ -51,7 +51,8 @@ function reduce_to_names(initial, object){
         history: "project/history",
         activate: "project/reactivate",
         transform: "project/transform",
-        activity: "project/activity/upload",
+        activity: "project/activity",
+        activity_upload: "project/activity/upload",
         activity_clean: "project/activity/clean",
         activity_delete: "project/activity/remove"
     };
@@ -567,7 +568,7 @@ function reduce_to_names(initial, object){
         });
         if(pop.isActive()){
             $("div#upload").dropzone({
-                url: window.proj.url.activity,
+                url: window.proj.url.activity_upload,
                 params: {"project": name},
                 withCredentials: true,
                 maxFilesize: 10, // 10 Mb maximum file size
