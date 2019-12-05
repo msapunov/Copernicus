@@ -555,7 +555,8 @@ function reduce_to_names(initial, object){
                 "image_2": $("input[name=image_2]").val(),
                 "image_3": $("input[name=image_3]").val()
             };
-            json_send(window.proj.url["activity"], data).done(function (reply) {
+            let url = "{0}/{1}".f(window.proj.url.activity, name);
+            json_send(url, data).done(function (reply) {
                 if (reply.message) {
                     UIkit.notify(reply.message, {
                         timeout: 2000,
