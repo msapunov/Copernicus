@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Activity report for the project {{data.name}}</title>
+</head>
+<body>
+<h2>{{data.name}}: {{data.title}}</h2>
+<table>
+  <tbody>
+    <tr>
+      <td>Created</td>
+      <td>{{data.created.split(" ")[0]}}</td>
+    </tr>
+    <tr>
+      <td>Responsible</td>
+      <td>{{data.responsible.fullname}} &lt;{{data.responsible.email}}&gt;</td>
+    </tr>
+    <tr>
+      <td>Users</td>
+      <td>
+          {% for user in data.users%}
+          {{user.fullname}} &lt;{{user.email}}&gt;
+          <br>
+          {% endfor %}
+      </td>
+    </tr>
+    <tr>
+      <td>Description</td>
+      <td>{{data.description}}</td>
+    </tr>
+    <tr>
+      <td>Scientific&nbsp;fields</td>
+      <td>{{data.scientific_fields}}</td>
+    </tr>
+    <tr>
+      <td>Activity&nbsp;report</td>
+      <td>{{data.report}}</td>
+    </tr>
+    <tr>
+      <td>Publications</td>
+      <td>{{data.doi}}</td>
+    </tr>
+    <tr>
+      <td>Training</td>
+      <td>{{data.training}}</td>
+    </tr>
+    <tr>
+      <td>Hiring</td>
+      <td>{{data.hiring}}</td>
+    </tr>
+  </tbody>
+</table>
+{% if data.image_1 %}
+    <img src="{{data.image_1}}" width="100%">
+{% endif %}
+{% if data.image_2 %}
+    <img src="{{data.image_2}}" width="100%">
+{% endif %}
+{% if data.image_3 %}
+    <img src="{{data.image_3}}" width="100%">
+{% endif %}
+</body>
+</html>
