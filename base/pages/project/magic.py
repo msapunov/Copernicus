@@ -82,17 +82,28 @@ def report_activity(name, req):
 
     project = get_project_by_name(name)
     log.debug(project)
-    result = get_project_info(p_ids=[project.id])
-    log.debug(result)
-    result["doi"] = data["doi"]
+    raw_result = get_project_info(p_ids=[project.id])
+    log.debug(raw_result)
+    if not raw_result:
+        raise ValueError("No information found for project '%s' Failure during "
+                         "report generation" % project.get_name())
+    result = raw_result[0]
     result["report"] = data["report"]
+    result["doi"] = data["doi"]
     result["training"] = data["training"]
     result["hiring"] = data["hiring"]
-    result["img_1"] = data["image_1"]
-    result["img_2"] = data["image_2"]
-    result["img_3"] = data["image_3"]
+
+    tmp =  get_tmpdir(current_app)
+    for i in ["image_1", "image_2", "image_3"]:
+        path = Path(tmp, data[i])
+        if path.exists() and path.is_file():
+            result[i] = path.resolve()
+
     log.debug(result)
-    #render_template("report.html", data=result)
+    html = render_template("report.html", data=result)
+    log.debug(html)
+    import pdfkit
+    pdfkit.from_string(html, "/tmp/res.pdf")
     return True
 
 
