@@ -18,8 +18,7 @@ __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
 
 
-def upload_file_cloud(path, project):
-    connected, oc = False
+def upload_file_cloud(path):
     url = current_app.config.get("OWN_CLOUD_URL", None)
     if not url:
         log.error("No url to the cloud given")
@@ -28,7 +27,7 @@ def upload_file_cloud(path, project):
     login = current_app.config.get("OWN_CLOUD_LOGIN", None)
     password = current_app.config.get("OWN_CLOUD_PASSWORD", None)
     try:
-        connected = oc.login(login, password)
+        oc.login(login, password)
     except Exception as err:
         log.error("Failed to connect to the cloud: %s" % err)
         return False
@@ -96,8 +95,9 @@ def save_report(data, project):
     if current_app.config.get("ACTIVITY_UPLOAD", False):
         log.debug("Uploading report to a cloud storage")
         for i in ["image_1", "image_2", "image_3"]:
-            upload_file_cloud(data[i], project_name) if data[i] else False
-        upload_file_cloud(path, project_name)
+            if i in data and data[i]:
+                upload_file_cloud(data[i])
+        upload_file_cloud(path)
 
     if current_app.config.get("ACTIVITY_SEND", False):
         log.debug("Sending report by mail to project's responsible")
