@@ -36,11 +36,13 @@ def upload_file_cloud(path, remote = None):
         log.error("Can't upload a file to a cloud. '%s' doesn't exists or not "
                   "a file" % path)
         return False
-    #date = dt.strftime(dt.now(), "%Y.%m.%d")
-    remote = "%s_activity_report" % project
-    oc.put_file(remote, path)
-    log.debug("File %s uploaded to %s" % (path, remote))
-    return True
+    if not remote:
+        remote_dir = current_app.config.get("ACTIVITY_DIR", "/")
+        if remote_dir[-1] is not "/":
+            remote_dir += "/"
+        remote = remote_dir + po.name
+    log.debug("Uploading file %s to %s" % (path, remote))
+    return oc.put_file(remote, path)
 
 
 def check_responsible(name):
