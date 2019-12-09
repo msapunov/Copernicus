@@ -2,6 +2,8 @@ from paramiko import SSHClient, AutoAddPolicy, AuthenticationException, RSAKey
 from flask import current_app, request, flash, redirect, url_for, g
 from flask_login import current_user, logout_user
 from flask_mail import Message
+from magic import from_file
+from pathlib import Path
 from logging import debug, error
 from re import compile
 from functools import wraps
@@ -47,7 +49,8 @@ def generate_login(name, surname):
                      " registered in our database" % guess)
 
 
-def send_message(to_who, by_who=None, cc=None, title=None, message=None):
+def send_message(to_who, by_who=None, cc=None, title=None, message=None,
+                 attach=None):
     if isinstance(to_who, str):
         to_who = to_who.split(";")
     if not by_who:
@@ -64,6 +67,17 @@ def send_message(to_who, by_who=None, cc=None, title=None, message=None):
     title = "[TEST MODE] "+title
     tech = current_app.config["EMAIL_TECH"]
     msg = Message(title, sender=by_who, recipients=to_who, cc=cc)
+    if attach:
+        attach_file = Path(attach)
+        if not attach_file.exists():
+            raise ValueError("Failed to attach %s to the mail. "
+                             "File doesn't exists" % attach)
+        if not attach_file.is_file():
+            raise ValueError("Failed to attach %s to the mail. It's not a file"
+                             % attach)
+        mime = from_file(attach, True)
+        with current_app.open_resource(attach) as fp:
+            msg.attach(attach_file.name, mime, fp.read())
     postfix = "If this email has been sent to you by mistake, please report " \
               "to: %s" % tech
     if message:
