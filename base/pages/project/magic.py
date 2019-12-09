@@ -92,9 +92,16 @@ def save_report(data):
     log.debug("PDF converted successfully: %s" % pdf)
     if pdf and current_app.config.get("CLOUD_UPLOAD", False):
         for i in ["image_1", "image_2", "image_3"]:
-            upload_file_cloud(data[i], project) if data[i] else False
-        upload_file_cloud(path, project)
-    return True
+            upload_file_cloud(data[i], project_name) if data[i] else False
+        upload_file_cloud(path, project_name)
+
+    if current_app.config.get("ACTIVITY_SEND", False):
+        log.debug("Sending report by mail to project's responsible")
+        result = send_activity_report(project, path)
+        log.debug(result)
+
+    log.debug("Activity report saved to the file %s" % path)
+    return "Activity report saved on the server to the file %s" % name
 
 
 def report_activity(name, req):
@@ -120,7 +127,7 @@ def report_activity(name, req):
         if path.exists() and path.is_file():
             result[i] = path.resolve()
     log.debug(result)
-    return save_report(result)
+    return save_report(result, project)
 
 
 def remove_activity(name, file_name):
