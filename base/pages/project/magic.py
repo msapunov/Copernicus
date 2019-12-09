@@ -301,6 +301,16 @@ def extend_update():
                   exception=exception)
 
 
+def send_activity_report(project, report):
+    subj = "Activity report for the project %s" % project.name
+    msg = """
+    Dear %s
+    Thank you for submitting the activity report for the project %s
+    You can find a copy of the report in the attachment 
+    """ % (project.responsible.full_name(), project.get_name())
+    return project_email(project.responsible.email, subj, msg, attach=report)
+
+
 def send_extend_mail(project, extend):
     subj = "Request extend project %s" % project.name
     msg = """
