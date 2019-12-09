@@ -9,6 +9,7 @@ from base.pages import ssh_wrapper, check_int, check_str, send_message
 from base.pages.board.magic import create_resource
 from owncloud import Client as OwnClient
 from pathlib import Path
+from pdfkit import from_string
 
 import logging as log
 
@@ -17,21 +18,28 @@ __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
 
 
-def upload_file_cloud(f, project, client):
-    file_name = dt.now().strftime("%Y-%m-%d")
-    f.save(file_name)
+def upload_file_cloud(path, project):
     connected, oc = False
     url = current_app.config.get("OWN_CLOUD_URL", None)
-    if url:
-        oc = OwnClient(url)
-        login = current_app.config.get("OWN_CLOUD_LOGIN", None)
-        password = current_app.config.get("OWN_CLOUD_PASSWORD", None)
-        try:
-            connected = oc.login(login, password)
-        except Exception as err:
-            #error("Can't connect to own cloud instance: %s Falling back" % err)
-            pass
-    return file_name
+    if not url:
+        log.error("No url to the cloud given")
+        return False
+    oc = OwnClient(url)
+    login = current_app.config.get("OWN_CLOUD_LOGIN", None)
+    password = current_app.config.get("OWN_CLOUD_PASSWORD", None)
+    try:
+        connected = oc.login(login, password)
+    except Exception as err:
+        log.error("Failed to connect to the cloud: %s" % err)
+        return False
+    if not connected:
+        log.error("failed to connect to the cloud with provide credentials")
+        return False
+    #date = dt.strftime(dt.now(), "%Y.%m.%d")
+    remote = "%s_activity_report" % project
+    oc.put_file(remote, path)
+    log.debug("File %s uploaded to %s" % (path, remote))
+    return True
 
 
 def check_responsible(name):
@@ -81,9 +89,7 @@ def report_activity(name, req):
         raise ValueError("Expecting application/json requests")
 
     project = get_project_by_name(name)
-    log.debug(project)
     raw_result = get_project_info(p_ids=[project.id])
-    log.debug(raw_result)
     if not raw_result:
         raise ValueError("No information found for project '%s' Failure during "
                          "report generation" % project.get_name())
@@ -93,18 +99,13 @@ def report_activity(name, req):
     result["training"] = data["training"]
     result["hiring"] = data["hiring"]
 
-    tmp =  get_tmpdir(current_app)
+    tmp = get_tmpdir(current_app)
     for i in ["image_1", "image_2", "image_3"]:
         path = Path(tmp, data[i])
         if path.exists() and path.is_file():
             result[i] = path.resolve()
-
     log.debug(result)
-    html = render_template("report.html", data=result)
-    log.debug(html)
-    import pdfkit
-    pdfkit.from_string(html, "/tmp/res.pdf")
-    return True
+    return save_report(result)
 
 
 def remove_activity(name, file_name):
