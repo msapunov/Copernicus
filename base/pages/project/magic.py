@@ -82,15 +82,19 @@ def save_activity(req):
     return name
 
 
-def save_report(data):
-    project = data["name"]
+def save_report(data, project):
+    project_name = project.get_name()
     html = render_template("report.html", data=data)
-    name = "%s_activity_report.pdf" % project
+    name = "%s_activity_report.pdf" % project_name
     path = str(Path(get_tmpdir(current_app), name))
     log.debug("The resulting PDF will be saved to: %s" % path)
     pdf = from_string(html, path)
-    log.debug("PDF converted successfully: %s" % pdf)
-    if pdf and current_app.config.get("CLOUD_UPLOAD", False):
+    log.debug("If PDF converted successfully: %s" % pdf)
+    if not pdf:
+        return False
+
+    if current_app.config.get("ACTIVITY_UPLOAD", False):
+        log.debug("Uploading report to a cloud storage")
         for i in ["image_1", "image_2", "image_3"]:
             upload_file_cloud(data[i], project_name) if data[i] else False
         upload_file_cloud(path, project_name)
