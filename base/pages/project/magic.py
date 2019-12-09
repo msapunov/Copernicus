@@ -82,6 +82,21 @@ def save_activity(req):
     return name
 
 
+def save_report(data):
+    project = data["name"]
+    html = render_template("report.html", data=data)
+    name = "%s_activity_report.pdf" % project
+    path = str(Path(get_tmpdir(current_app), name))
+    log.debug("The resulting PDF will be saved to: %s" % path)
+    pdf = from_string(html, path)
+    log.debug("PDF converted successfully: %s" % pdf)
+    if pdf and current_app.config.get("CLOUD_UPLOAD", False):
+        for i in ["image_1", "image_2", "image_3"]:
+            upload_file_cloud(data[i], project) if data[i] else False
+        upload_file_cloud(path, project)
+    return True
+
+
 def report_activity(name, req):
     check_responsible(name)
     data = req.get_json()
