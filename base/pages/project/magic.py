@@ -348,10 +348,10 @@ def send_transform_mail(project, extend):
     project_email(project.responsible.email, subj, msg)
 
 
-def project_email(to, title, msg):
+def project_email(to, title, msg, attach=None):
     by_who = current_app.config["EMAIL_PROJECT"]
     return jsonify(data=send_message(to, by_who=by_who, title=title,
-                                     message=msg))
+                                     message=msg, attach=attach))
 
 
 def list_of_projects():
