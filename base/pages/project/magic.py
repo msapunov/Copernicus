@@ -31,8 +31,10 @@ def upload_file_cloud(path, remote = None):
     except Exception as err:
         log.error("Failed to connect to the cloud: %s" % err)
         return False
-    if not connected:
-        log.error("failed to connect to the cloud with provide credentials")
+    po = Path(path)
+    if not po.exists() or not po.is_file():
+        log.error("Can't upload a file to a cloud. '%s' doesn't exists or not "
+                  "a file" % path)
         return False
     #date = dt.strftime(dt.now(), "%Y.%m.%d")
     remote = "%s_activity_report" % project
