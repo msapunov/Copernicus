@@ -564,7 +564,7 @@ function reduce_to_names(initial, object){
                     });
                 }
                 pop.hide();
-            })
+            });
         }, function () {
             window.render.clean_activity(name);
         });
