@@ -511,31 +511,36 @@ function reduce_to_names(initial, object){
             "placeholder": "Activity report:\n50 lines maximum"
         });
         var doi = $("<textarea/>").addClass("uk-width-1-1").attr({
-            "rows": "3",
+            "rows": "5",
             "name": "doi",
             "placeholder": "List of publications (DOI) for last activity period"
         });
         var training = $("<textarea/>").addClass("uk-width-1-1").attr({
-            "rows": "3",
+            "rows": "5",
             "name": "training",
             "placeholder": "List of students (licence, master, doctorat) trained recently"
         });
         var hiring = $("<textarea/>").addClass("uk-width-1-1").attr({
-            "rows": "3",
+            "rows": "5",
             "name": "hiring",
             "placeholder": "List of people hired during last activity period"
         });
         var upload = $("<div/>").attr({"id": "upload"}).addClass("uk-alert dropzone needsclick dz-clickable dz-started");//.addClass("dropzone needsclick dz-clickable dz-started");
-        var form = $("<form/>").addClass("uk-form").append(
+
+        var form = $("<form/>").addClass("uk-form uk-accordion").attr("data-uk-accordion", "{collapse: false}").append(
             $("<legend/>").text(title)
         ).append(
-            $("<div/>").addClass("uk-form-row").append(report)
+            $("<h3/>").addClass("uk-accordion-title").text("Activity report"),
+            $("<div/>").addClass("uk-form-row uk-accordion-content").append(report)
         ).append(
-            $("<div/>").addClass("uk-form-row").append(doi)
+            $("<h3/>").addClass("uk-accordion-title").text("List of publications (Optional)"),
+            $("<div/>").addClass("uk-form-row uk-accordion-content").append(doi)
         ).append(
-            $("<div/>").addClass("uk-form-row").append(training)
+            $("<h3/>").addClass("uk-accordion-title").text("Training activity (Optional)"),
+            $("<div/>").addClass("uk-form-row uk-accordion-content").append(training)
         ).append(
-            $("<div/>").addClass("uk-form-row").append(hiring)
+            $("<h3/>").addClass("uk-accordion-title").text("Hiring (Optional)"),
+            $("<div/>").addClass("uk-form-row uk-accordion-content").append(hiring)
         ).append(
             $("<div/>").addClass("uk-form-row").append(upload)
         ).append(
@@ -544,7 +549,7 @@ function reduce_to_names(initial, object){
             $("<input/>").attr({"type": "hidden", "name": "image_2"})
         ).append(
             $("<input/>").attr({"type": "hidden", "name": "image_3"})
-        );
+        );//);
         var pop = dialog(form.prop("outerHTML"), function() {
             var data = {
                 "doi": $("textarea[name=doi]").val(),
