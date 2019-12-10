@@ -133,7 +133,7 @@ def report_activity(name, req):
     for i in ["image_1", "image_2", "image_3"]:
         path = Path(tmp, data[i])
         if path.exists() and path.is_file():
-            result[i] = path.resolve()
+            result[i] = str(path.resolve())
     log.debug(result)
     return save_report(result, project)
 
