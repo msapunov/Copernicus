@@ -38,6 +38,7 @@ function reduce_to_names(initial, object){
 
 (function(window, document, $, undefined){
     "use strict";
+    Dropzone.autoDiscover = false;
     window.contact = "mesocentre-techn@univ-amu.fr";
     window.proj = {};
     window.proj.url = {
@@ -508,7 +509,7 @@ function reduce_to_names(initial, object){
         var report = $("<textarea/>").addClass("uk-width-1-1").attr({
             "rows": "5",
             "name": "report",
-            "placeholder": "Activity report:\n50 lines maximum"
+            "placeholder": "50 lines maximum"
         });
         var doi = $("<textarea/>").addClass("uk-width-1-1").attr({
             "rows": "5",
@@ -525,12 +526,14 @@ function reduce_to_names(initial, object){
             "name": "hiring",
             "placeholder": "List of people hired during last activity period"
         });
-        var upload = $("<div/>").attr({"id": "upload"}).addClass("uk-alert dropzone needsclick dz-clickable dz-started");//.addClass("dropzone needsclick dz-clickable dz-started");
-
+        //var upload = $("<div/>").attr({"id": "upload"}).addClass("needsclick dropzone dz-clickable dz-started uk-alert uk-text-center").text("Test");
+        var upload = $("<div/>").attr({"id": "upload"}).addClass("dropzone uk-alert uk-text-center").append(
+            $("<div/>").addClass("dz-default dz-message").text("Drop files to upload (or click here). Total 3 images are allowed, limited by 3 Mb per image")
+        );
         var form = $("<form/>").addClass("uk-form uk-accordion").attr("data-uk-accordion", "{collapse: false}").append(
             $("<legend/>").text(title)
         ).append(
-            $("<h3/>").addClass("uk-accordion-title").text("Activity report"),
+            $("<h3/>").addClass("uk-accordion-title").text("Report"),
             $("<div/>").addClass("uk-form-row uk-accordion-content").append(report)
         ).append(
             $("<h3/>").addClass("uk-accordion-title").text("List of publications (Optional)"),
@@ -549,7 +552,7 @@ function reduce_to_names(initial, object){
             $("<input/>").attr({"type": "hidden", "name": "image_2"})
         ).append(
             $("<input/>").attr({"type": "hidden", "name": "image_3"})
-        );//);
+        );
         var pop = dialog(form.prop("outerHTML"), function() {
             var data = {
                 "doi": $("textarea[name=doi]").val(),
@@ -564,7 +567,7 @@ function reduce_to_names(initial, object){
             json_send(url, data).done(function (reply) {
                 if (reply.message) {
                     UIkit.notify(reply.message, {
-                        timeout: 2000,
+                        timeout: 3000,
                         status: "success"
                     });
                 }
@@ -578,7 +581,7 @@ function reduce_to_names(initial, object){
                 url: window.proj.url.activity_upload,
                 params: {"project": name},
                 withCredentials: true,
-                maxFilesize: 10, // 10 Mb maximum file size
+                maxFilesize: 3, // 3 Mb maximum file size
                 maxFiles: 3,
                 //autoProcessQueue: false,
                 addRemoveLinks: true,
@@ -593,9 +596,9 @@ function reduce_to_names(initial, object){
                     this.removeFile(file);
                 }
                 ,removedfile: function(file){
-                    if(file.server_name){
-                        window.render.delete_activity(name, file.server_name);
-                    }
+                    //if(file.server_name){
+                    //    window.render.delete_activity(name, file.server_name);
+                    //}
                 }
                 //forceFallback: true
             });
