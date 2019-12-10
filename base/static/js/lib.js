@@ -94,7 +94,7 @@ json_send = function(url, data, show_modal){
         contentType: "application/json",
         data: data ? JSON.stringify(data): undefined,
         dataType: "json",
-        timeout: 5000,
+        timeout: 60000,
         type: "POST",
         url: url
     }).fail(function(request){
