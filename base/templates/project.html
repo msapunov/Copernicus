@@ -10,6 +10,30 @@
     {% endif %}
     <script defer type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.2/js/components/accordion.min.js"></script>
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.2/css/components/accordion.gradient.min.css" />
+    <style>
+        .dropzone {
+            min-height: 50px;
+            border: 1px solid rgba(45,112,145,.3);
+            padding: 10px 10px;
+            background-color: #ebf7fd;
+        }
+        .dropzone .dz-preview .dz-image img {
+           margin: auto;   /* center the image inside the thumbnail */
+        }
+        .dropzone .dz-preview .dz-error-message {
+            top: 140px;     /* move the tooltip below the "Remove" link */
+        }
+        .dropzone .dz-preview .dz-error-message:after {
+            left: 30px;     /* move the tooltip's arrow to the left of the "Remove" link */
+            top: -18px;
+            border-bottom-width: 18px;
+        }
+        .dropzone .dz-preview .dz-remove {
+            margin-top: 4px;
+            font-size: 11px;
+            text-transform: uppercase;
+        }
+    </style>
 {% endblock %}
 {% block main %}
     {% if data.projects %}
