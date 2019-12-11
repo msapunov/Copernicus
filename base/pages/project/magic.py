@@ -118,7 +118,6 @@ def report_activity(name, req):
     if not data:
         raise ValueError("Expecting application/json requests")
 
-    project = get_project_by_name(name)
     raw_result = get_project_info(p_ids=[project.id])
     if not raw_result:
         raise ValueError("No information found for project '%s' Failure during "
@@ -154,7 +153,6 @@ def clean_activity(name):
     files = get_activity_files(name)
     if len(files) < 1:
         return True
-    tmp = get_tmpdir(current_app)
     for x in files:
         Path(tmp, x).unlink()
         log.debug("File deleted: %s" % x)
