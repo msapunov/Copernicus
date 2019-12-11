@@ -76,7 +76,7 @@ def save_activity(req):
     image_name = "%s_activity_report" % project
     for i in range(0, limit):
         tmp_name = "%s_%s" % (image_name, i)
-        there = filter(lambda x: True if tmp_name in x else False, files)
+        there = filter(lambda x: True if tmp_name in str(x) else False, files)
         if not list(there):
             image_name = tmp_name
             break
