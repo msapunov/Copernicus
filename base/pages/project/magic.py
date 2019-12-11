@@ -18,7 +18,7 @@ __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
 
 
-def upload_file_cloud(path, remote = None):
+def upload_file_cloud(path, remote=None):
     url = current_app.config.get("OWN_CLOUD_URL", None)
     if not url:
         log.error("No url to the cloud given")
