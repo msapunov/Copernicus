@@ -149,8 +149,8 @@ def remove_activity(name, file_name):
 
 def clean_activity(name):
     log.debug("Cleaning activity files for project %s" % name)
-    check_responsible(name)
-    files = get_activity_files(name)
+    project = check_responsible(name)
+    files = get_activity_files(project.get_name())
     if len(files) < 1:
         return True
     for x in files:
