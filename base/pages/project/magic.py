@@ -57,11 +57,11 @@ def get_activity_files(name):
     check_responsible(name)
     temp_dir = get_tmpdir(current_app)
     log.debug("Using temporary directory to store files: %s" % temp_dir)
-    image_name = "activity_report_%s" % name
-    exist_files = [p.name for p in Path(temp_dir).iterdir() if p.is_file()]
-    log.debug("List of existing files: %s" % exist_files)
-    already = filter(lambda x: True if image_name in x else False, exist_files)
-    return list(already)
+    pattern = "*%s*" % name
+    log.debug("Pattern %s to get associated files for %s" % (pattern, name))
+    already = list(Path(temp_dir).glob(pattern))
+    log.debug("List of existing files: %s" % already)
+    return already
 
 
 def save_activity(req):
