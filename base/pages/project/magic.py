@@ -154,8 +154,8 @@ def clean_activity(name):
     if len(files) < 1:
         return True
     for x in files:
-        Path(tmp, x).unlink()
-        log.debug("File deleted: %s" % x)
+        x.unlink()
+        log.debug("File deleted: %s" % str(x))
     return True
 
 
