@@ -50,7 +50,7 @@ def check_responsible(name):
     if current_user != project.get_responsible():
         raise ValueError("User %s is not register as the responsible person "
                          "for the project %s" % (current_user.login, name))
-    return True
+    return project
 
 
 def get_activity_files(name):
@@ -73,7 +73,7 @@ def save_activity(req):
     files = get_activity_files(project)
     if len(files) >= limit:
         raise ValueError("You have already uploaded %s or more files" % limit)
-    image_name = "activity_report_%s" % project
+    image_name = "%s_activity_report" % project
     for i in range(0, limit):
         tmp_name = "%s_%s" % (image_name, i)
         there = filter(lambda x: True if tmp_name in x else False, files)
@@ -113,7 +113,7 @@ def save_report(data, project):
 
 
 def report_activity(name, req):
-    check_responsible(name)
+    project = check_responsible(name)
     data = req.get_json()
     if not data:
         raise ValueError("Expecting application/json requests")
