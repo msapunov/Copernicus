@@ -596,9 +596,10 @@ function reduce_to_names(initial, object){
                     this.removeFile(file);
                 }
                 ,removedfile: function(file){
-                    //if(file.server_name){
-                    //    window.render.delete_activity(name, file.server_name);
-                    //}
+                    if(file.server_name){
+                        window.render.delete_activity(name, file.server_name);
+                    }
+                    $(file.previewElement).remove();
                 }
                 //forceFallback: true
             });
