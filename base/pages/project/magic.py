@@ -139,12 +139,18 @@ def report_activity(name, req):
 
 def remove_activity(name, file_name):
     check_responsible(name)
-    files = get_activity_files(name)
-    if file_name not in files:
+    temp_dir = get_tmpdir(current_app)
+    path = Path(temp_dir) / file_name
+    if not path.exists():
+        log.debug("Path doesn't exists: %s" % str(path))
         return True
-    Path(get_tmpdir(current_app), file_name).unlink()
-    log.debug("File deleted: %s" % file_name)
-    return True
+    if path.is_file():
+        path.unlink()
+        log.debug("File deleted: %s" % file_name)
+        return True
+    if path.is_dir():
+        log.error("Path %s is a directory and can't be removed" % str(path))
+        return False
 
 
 def clean_activity(name):
