@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="file:///c:/Users/Matvey/Work/Copernicus/base/static/css/uikit.docs.min.css">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/uikit.docs.min.css') }}" />
     <title>Activity report for the project {{data.name}}</title>
     <style>
         .uk-table td, .uk-table th {
@@ -14,49 +14,49 @@
 <h2 class="uk-margin-left uk-margin-bottom-remove uk-margin-large-top">{{data.name}}: {{data.title}}</h2>
 <p class="uk-margin-left uk-margin-small-top uk-article-meta">Generated on 1st of April</p>
 <table class="uk-table uk-margin-large-top">
-  <tbody>
+    <tbody>
     <tr>
-      <td class="uk-text-bold uk-text-right uk-text-nowrap">Project started:</td>
-      <td>{{data.created.split(" ")[0]}}</td>
+        <td class="uk-text-bold uk-text-right uk-text-nowrap">Project started:</td>
+        <td>{{data.created.split(" ")[0]}}</td>
     </tr>
     <tr>
-      <td class="uk-text-bold uk-text-right uk-text-nowrap">Responsible:</td>
-      <td>{{data.responsible.fullname}} &lt;{{data.responsible.email}}&gt;</td>
+        <td class="uk-text-bold uk-text-right uk-text-nowrap">Responsible:</td>
+        <td>{{data.responsible.fullname}} &lt;{{data.responsible.email}}&gt;</td>
     </tr>
     <tr>
-      <td class="uk-text-bold uk-text-right uk-text-nowrap">Users:</td>
-      <td>
-          {% for user in data.users%}
-          {{user.fullname}} &lt;{{user.email}}&gt;
-          <br>
-          {% endfor %}
-      </td>
+        <td class="uk-text-bold uk-text-right uk-text-nowrap">Users:</td>
+        <td>
+            {% for user in data.users%}
+            {{user.fullname}} &lt;{{user.email}}&gt;
+            <br>
+            {% endfor %}
+        </td>
     </tr>
     <tr>
-      <td class="uk-text-bold uk-text-right uk-text-nowrap">Description:</td>
-      <td>{{data.description}}</td>
+        <td class="uk-text-bold uk-text-right uk-text-nowrap">Description:</td>
+        <td>{{data.description}}</td>
     </tr>
     <tr>
-      <td class="uk-text-bold uk-text-right uk-text-nowrap">Scientific fields:</td>
-      <td>{{data.scientific_fields}}</td>
+        <td class="uk-text-bold uk-text-right uk-text-nowrap">Scientific fields:</td>
+        <td>{{data.scientific_fields}}</td>
     </tr>
     <tr>
-      <td class="uk-text-bold uk-text-right uk-text-nowrap">Activity report:</td>
-      <td>{{data.report}}</td>
+        <td class="uk-text-bold uk-text-right uk-text-nowrap">Activity report:</td>
+        <td>{{data.report}}</td>
     </tr>
     <tr>
-      <td class="uk-text-bold uk-text-right uk-text-nowrap">Publications:</td>
-      <td>{{data.doi}}</td>
+        <td class="uk-text-bold uk-text-right uk-text-nowrap">Publications:</td>
+        <td>{{data.doi}}</td>
     </tr>
     <tr>
-      <td class="uk-text-bold uk-text-right uk-text-nowrap">Training:</td>
-      <td>{{data.training}}</td>
+        <td class="uk-text-bold uk-text-right uk-text-nowrap">Training:</td>
+        <td>{{data.training}}</td>
     </tr>
     <tr>
-      <td class="uk-text-bold uk-text-right uk-text-nowrap">Hiring:</td>
-      <td>{{data.hiring}}</td>
+        <td class="uk-text-bold uk-text-right uk-text-nowrap">Hiring:</td>
+        <td>{{data.hiring}}</td>
     </tr>
-  </tbody>
+    </tbody>
 </table>
 {% if data.image_1 %}
     <img src="{{data.image_1}}" width="100%">
