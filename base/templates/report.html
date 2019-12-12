@@ -2,11 +2,63 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/uikit.docs.min.css') }}" />
     <title>Activity report for the project {{data.name}}</title>
     <style>
         .uk-table td, .uk-table th {
-            border-bottom: 0px;
+            border-bottom: 0!important;
+        }
+        .uk-margin-bottom-remove {
+            margin-bottom: 0!important;
+        }
+        .uk-margin-large-top {
+            margin-top: 50px!important;
+        }
+        .uk-margin-small-top {
+            margin-top: 5px!important;
+        }
+        .uk-margin-left {
+            margin-left: 15px!important;
+        }
+        .uk-article-meta {
+            font-size: 12px;
+            line-height: 18px;
+            color: #999;
+        }
+        h2 {
+            font-size: 24px;
+            line-height: 30px;
+            margin: 0 0 15px 0;
+            font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+            font-weight: 800;
+            color: #222;
+            text-transform: none;
+        }
+        .uk-table {
+            border-collapse: collapse;
+            border-spacing: 0;
+            width: 100%;
+            margin-bottom: 15px;
+        }
+        .uk-table td {
+            vertical-align: top;
+        }
+        .uk-table td, .uk-table th {
+            padding: 8px 8px;
+            border-bottom: 1px solid #E5E5E5;
+        }
+        .uk-text-nowrap {
+            white-space: nowrap;
+        }
+        .uk-text-right {
+            text-align: right!important;
+        }
+        .uk-text-bold {
+            font-weight: 700;
+        }
+        html {
+            font: 400 14px/20px "Helvetica Neue",Helvetica,Arial,sans-serif;
+            background: #fff;
+            color: #222;
         }
     </style>
 </head>
