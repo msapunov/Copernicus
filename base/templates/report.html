@@ -2,22 +2,29 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="file:///c:/Users/Matvey/Work/Copernicus/base/static/css/uikit.docs.min.css">
     <title>Activity report for the project {{data.name}}</title>
+    <style>
+        .uk-table td, .uk-table th {
+            border-bottom: 0px;
+        }
+    </style>
 </head>
 <body>
-<h2>{{data.name}}: {{data.title}}</h2>
-<table>
+<h2 class="uk-margin-left uk-margin-bottom-remove uk-margin-large-top">{{data.name}}: {{data.title}}</h2>
+<p class="uk-margin-left uk-margin-small-top uk-article-meta">Generated on 1st of April</p>
+<table class="uk-table uk-margin-large-top">
   <tbody>
     <tr>
-      <td>Created</td>
+      <td class="uk-text-bold uk-text-right uk-text-nowrap">Project started:</td>
       <td>{{data.created.split(" ")[0]}}</td>
     </tr>
     <tr>
-      <td>Responsible</td>
+      <td class="uk-text-bold uk-text-right uk-text-nowrap">Responsible:</td>
       <td>{{data.responsible.fullname}} &lt;{{data.responsible.email}}&gt;</td>
     </tr>
     <tr>
-      <td>Users</td>
+      <td class="uk-text-bold uk-text-right uk-text-nowrap">Users:</td>
       <td>
           {% for user in data.users%}
           {{user.fullname}} &lt;{{user.email}}&gt;
@@ -26,27 +33,27 @@
       </td>
     </tr>
     <tr>
-      <td>Description</td>
+      <td class="uk-text-bold uk-text-right uk-text-nowrap">Description:</td>
       <td>{{data.description}}</td>
     </tr>
     <tr>
-      <td>Scientific&nbsp;fields</td>
+      <td class="uk-text-bold uk-text-right uk-text-nowrap">Scientific fields:</td>
       <td>{{data.scientific_fields}}</td>
     </tr>
     <tr>
-      <td>Activity&nbsp;report</td>
+      <td class="uk-text-bold uk-text-right uk-text-nowrap">Activity report:</td>
       <td>{{data.report}}</td>
     </tr>
     <tr>
-      <td>Publications</td>
+      <td class="uk-text-bold uk-text-right uk-text-nowrap">Publications:</td>
       <td>{{data.doi}}</td>
     </tr>
     <tr>
-      <td>Training</td>
+      <td class="uk-text-bold uk-text-right uk-text-nowrap">Training:</td>
       <td>{{data.training}}</td>
     </tr>
     <tr>
-      <td>Hiring</td>
+      <td class="uk-text-bold uk-text-right uk-text-nowrap">Hiring:</td>
       <td>{{data.hiring}}</td>
     </tr>
   </tbody>
