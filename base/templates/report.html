@@ -64,12 +64,16 @@
 </head>
 <body>
 <h2 class="uk-margin-left uk-margin-bottom-remove uk-margin-large-top">{{data.name}}: {{data.title}}</h2>
-<p class="uk-margin-left uk-margin-small-top uk-article-meta">Generated on 1st of April</p>
+<p class="uk-margin-left uk-margin-small-top uk-article-meta">Generated on {{data.generated}}</p>
 <table class="uk-table uk-margin-large-top">
     <tbody>
     <tr>
         <td class="uk-text-bold uk-text-right uk-text-nowrap">Project started:</td>
         <td>{{data.created.split(" ")[0]}}</td>
+    </tr>
+    <tr>
+        <td class="uk-text-bold uk-text-right uk-text-nowrap">Consumption:</td>
+        <td>{{data.conso}}</td>
     </tr>
     <tr>
         <td class="uk-text-bold uk-text-right uk-text-nowrap">Responsible:</td>
