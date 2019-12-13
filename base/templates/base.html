@@ -23,6 +23,11 @@
         {% if current_user.login and "admin" in current_user.permissions() %}
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/select2.min.css') }}" />
         <script src="{{ url_for('static', filename='js/select2.min.js') }}"></script>
+        <style>
+            #ajax_call {
+                z-index: 10000000;
+            }
+        </style>
         <script>
             var message_window = function(users){
                 var plural = users.length > 1 ? "s" : "";
