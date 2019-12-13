@@ -127,6 +127,8 @@ def report_activity(name, req):
     result["doi"] = data["doi"]
     result["training"] = data["training"]
     result["hiring"] = data["hiring"]
+    result["conso"] = data["usage"] if "usage" in data else "0 CPU hours"
+    result["generated"] = dt.strftime(dt.now(), "%c")
 
     tmp = get_tmpdir(current_app)
     for i in ["image_1", "image_2", "image_3"]:
