@@ -1,6 +1,6 @@
 from flask import g, flash, request, redirect, url_for, render_template, jsonify
 from flask import current_app
-from flask_login import login_required, login_user
+from flask_login import login_required, login_user, current_user
 from base.pages import ssh_wrapper, send_message, Task, grant_access
 from base.pages.user.magic import get_user_record, user_by_id
 from base.pages.admin import bp
@@ -75,7 +75,8 @@ def web_admin_message_send():
     for login in logins:
         user = get_user_record(login)
         emails.append(user.email)
-    return jsonify(data=send_message(emails, message=msg, title=title))
+    cc = current_user.email
+    return jsonify(data=send_message(emails, cc=cc, message=msg, title=title))
 
 
 @bp.route("/admin/user/password/<int:uid>", methods=["POST"])
