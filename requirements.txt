@@ -1,4 +1,5 @@
-pdfkit
+pdfkit==0.6.1
+python-magic==0.4.15
 asn1crypto==0.24.0
 bcrypt==3.1.4
 blinker==1.4
