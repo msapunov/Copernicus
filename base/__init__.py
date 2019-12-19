@@ -66,7 +66,7 @@ def cleanup(app):
         path = Path(tmpdir) / leftover
         if not path.exists():
             continue
-        real_path = path.resolve()
+        real_path = str(path.resolve())
         logging.debug("Cleanup from previous session: %s" % real_path)
         rmtree(real_path)
     return True
