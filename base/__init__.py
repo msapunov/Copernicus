@@ -67,8 +67,9 @@ def cleanup(app):
         if not path.exists():
             continue
         real_path = path.resolve()
-        print("Clean-up from previous session: %s" % real_path)
-        rmtree(real_path)
+        logging.debug("Cleanup from previous session: %s" % real_path)
+        result = rmtree(real_path)
+        logging.debug("Result of cleanup operation: %s" % result)
     return True
 
 
