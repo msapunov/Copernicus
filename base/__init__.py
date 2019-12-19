@@ -18,7 +18,7 @@ from werkzeug.exceptions import HTTPException
 from os.path import join as path_join, exists
 from traceback import format_exc
 from tempfile import gettempdir
-from os import walk
+from pathlib import Path
 from shutil import rmtree
 
 import logging
@@ -54,12 +54,22 @@ def register_blueprints(app):
 
 
 def cleanup(app):
-    prefix = get_tmpdir_prefix(app)
-    dirs = [x[0] for x in walk(gettempdir())]
-    there = list(filter(lambda x: True if prefix in x else False, dirs))
-    if there:
-        print("Clean-up from previous session: %s" % ",".join(there))
-        list(map(lambda x: rmtree(x), there))
+    pattern = "%s*" % get_tmpdir_prefix(app)
+    logging.debug("Temporary directory pattern: %s" % pattern)
+    tmpdir = gettempdir()
+    leftovers = list(Path(tmpdir).glob(pattern))
+    logging.debug("Found matches: %s" % len(leftovers))
+    if not leftovers:
+        logging.debug("Nothing to cleanup")
+        return True
+    for leftover in leftovers:
+        path = Path(tmpdir) / leftover
+        if not path.exists():
+            continue
+        real_path = path.resolve()
+        print("Clean-up from previous session: %s" % real_path)
+        rmtree(real_path, ignore_errors=True)
+    return True
 
 
 def register_decor(app):
