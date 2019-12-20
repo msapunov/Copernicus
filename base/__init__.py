@@ -68,7 +68,7 @@ def cleanup(app):
             continue
         real_path = str(path.resolve())
         logging.debug("Cleanup from previous session: %s" % real_path)
-        rmtree(real_path)
+        rmtree(real_path, ignore_errors=True)
     return True
 
 
