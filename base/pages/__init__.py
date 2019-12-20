@@ -11,6 +11,12 @@ from base import mail
 from base.database.schema import LogDB, User
 from base.utils import normalize_word
 
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.application import MIMEApplication
+from email.mime.text import MIMEText
+from email.utils import COMMASPACE, formatdate
+
 
 def grant_access(*roles):
     def log_required(f):
