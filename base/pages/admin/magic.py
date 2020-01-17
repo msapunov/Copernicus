@@ -464,6 +464,10 @@ def task_create_user(p_name, user_data, responsible=None):
 
     user_part, service_part = user_data.split(" WITH ACL ")
     login, surname, name, email = _parse_user_info(user_part)
+
+    if " WITH STATUS " not in service_part:
+        service_part += " WITH STATUS True"
+
     acl_part, active_part = service_part.split(" WITH STATUS ")
     is_user, is_responsible, is_manager, is_tech, is_committee,\
     is_admin = _parse_acl_info(acl_part)
