@@ -208,7 +208,7 @@ def web_project_index():
     projects = get_project_info()
     if not projects:
         flash("No projects associated with %s" % current_user.full_name())
-        return render_template("project.html")
+        return render_template("project.html", data={})
     list(map(lambda x: clean_activity(x["name"]), projects))
     now = dt.now()
     if now.month != 1:
