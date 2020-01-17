@@ -424,6 +424,7 @@ def _parse_acl_info(raw):
     for i in data:
         for j in roles:
             if j not in i:
+                tmp[j] = False
                 continue
             cond = i.replace("%s: " % j, "").strip()
             tmp[j] = True if cond == "True" else False
