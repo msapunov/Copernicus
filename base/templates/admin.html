@@ -96,13 +96,20 @@
                                     {{record.type}}
                                 {% endif %}
                             </td>
-                            <td class="uk-width-3-10">{{record.title}}</td>
+                            <td class="uk-width-4-10">{{record.title}}</td>
                             <td class="uk-width-2-10">{{record.responsible_first_name}}&nbsp;{{record.responsible_last_name}}</td>
                             <td class="uk-width-1-10">{{record.cpu}}</td>
                             <td class="uk-width-2-10">{{record.ts}}</td>
+                            <td style="width: 20px;">
+                                {% if record.approve %}
+                                    <span class="uk-icon-wrench uk-text-success"></span>
+                                {% else %}
+                                    <span class="uk-icon-question uk-text-primary"></span>
+                                {% endif %}
+                            </td>
                         </tr>
                         <tr id="{{record.id}}-info" class="ext_info uk-hidden uk-text-center">
-                            <td colspan="5">
+                            <td colspan="6">
                                 <table id="info_table" class="uk-table">
                                     <tbody>
                                         <tr class="ext_info">
