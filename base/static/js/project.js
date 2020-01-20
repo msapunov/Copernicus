@@ -181,8 +181,6 @@ function reduce_to_names(initial, object){
         ).append(
             $("<div/>").addClass("uk-form-row").append(motiv)
         ).append(
-            express
-        ).append(
             $("<div>{0}</div>".f(warn)).addClass("uk-form-row uk-alert")
         );
         var pop = dialog(form.prop("outerHTML"), function(){
