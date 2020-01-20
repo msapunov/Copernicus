@@ -147,10 +147,13 @@ function reduce_to_names(initial, object){
         });
     };
 
-    window.render.extend = function(e){
-        var name = $(this).data("name");
-        var id = $(this).data("project");
-        var title = "Request additional CPU hours for the project {0}?".f(name);
+    window.render.extend = function(name, id, renew){
+        var title;
+        if(renew){
+            title = "Request CPU hours for the project {0}?".f(name);
+        }else {
+            title = "Request additional CPU hours for the project {0}?".f(name);
+        }
         var placeholder = "Motivation:\nShort description of the request";
         var cpu = $("<input/>").addClass("uk-width-1-1").attr({
             "name": "cpu",
@@ -183,6 +186,9 @@ function reduce_to_names(initial, object){
         ).append(
             $("<div>{0}</div>".f(warn)).addClass("uk-form-row uk-alert")
         );
+        if(!renew) {
+            form.append(express);
+        }
         var pop = dialog(form.prop("outerHTML"), function(){
             var exception = $("input[name=exception]").is(':checked') ? "yes" : "no";
             var data = {
