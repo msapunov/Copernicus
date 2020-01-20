@@ -168,7 +168,7 @@ function reduce_to_names(initial, object){
             "type": "checkbox"
         }).addClass("uk-margin-small-right uk-form-danger");
         var label = $("<label/>").attr('for', "exception_checkbox");
-        label.text("Select checkbox for an exceptional extension requests only! Apply for a project running out of CPU time way before the next session.");
+        label.text("Select checkbox for an exceptional extension request only! Apply for a project running out of CPU time way before the next session.");
         var express = $("<div/>").addClass(
             "uk-form-row uk-alert uk-alert-danger"
         );
