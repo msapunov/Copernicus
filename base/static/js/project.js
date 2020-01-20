@@ -150,7 +150,7 @@ function reduce_to_names(initial, object){
     window.render.extend = function(name, id, renew){
         var title;
         if(renew){
-            title = "Request CPU hours for the project {0}?".f(name);
+            title = "Request to renew CPU hours for the project {0}?".f(name);
         }else {
             title = "Request additional CPU hours for the project {0}?".f(name);
         }
