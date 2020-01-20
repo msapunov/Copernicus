@@ -618,9 +618,9 @@ function reduce_to_names(initial, object){
     $(document).on("click", ".user_ass", window.render.assign_user);
     $(document).on("click", ".user_add", window.render.new_user);
     $(document).on("click", ".responsible_ass", window.render.assign_responsible);
-    $(document).on("click", ".extend", window.render.extend);
+    $(document).on("click", ".extend", window.render.renew_extend);
     $(document).on("click", ".activity", window.render.activity);
-    $(document).on("click", ".renew", window.render.extend);
+    $(document).on("click", ".renew", window.render.renew_extend);
     $(document).on("click", ".history", window.render.project_history);
     $(document).on("click", ".react", window.render.activate_project);
     $(document).on("click", ".trans", window.render.transform_project);
