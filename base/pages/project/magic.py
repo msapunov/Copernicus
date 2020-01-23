@@ -8,7 +8,7 @@ from owncloud import Client as OwnClient
 from pdfkit import from_string
 
 from base import db
-from base.database.schema import Extend
+from base.database.schema import Extend, File
 from base.pages import ProjectLog
 from base.pages import ssh_wrapper, check_int, check_str, send_message
 from base.pages.board.magic import create_resource
@@ -108,6 +108,14 @@ def save_report(data, project):
         result = send_activity_report(project, path)
         log.debug(result)
 
+    report = File(path=name,
+                  size=Path(path).stat().st_size,
+                  comment="Activity report",
+                  user=current_user,
+                  project_id=project.id,
+                  created=dt.now())
+    project.resources.file = report
+    db.session.commit()
     log.debug("Activity report saved to the file %s" % path)
     return "Activity report saved on the server to the file %s" % name
 
