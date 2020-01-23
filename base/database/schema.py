@@ -82,7 +82,7 @@ class Project(db.Model):
     responsible = db.relationship("User", backref="responsible",
                                   uselist=False, foreign_keys=responsible_id)
 
-    files = db.relationship("FileDB", back_populates="project")
+    files = db.relationship("File", back_populates="project")
     articles = db.relationship("ArticleDB", back_populates="project")
     users = db.relationship("User", secondary="user_project")
 
@@ -189,7 +189,7 @@ class Extend(db.Model):
     transform = db.Column(db.Boolean, default=False)
 
     doc_id = db.Column(db.Integer, db.ForeignKey("project_files.id"))
-    doc = db.relationship("FileDB", foreign_keys=[doc_id])
+    doc = db.relationship("File", foreign_keys=[doc_id])
 
     project_id = db.Column(db.Integer, db.ForeignKey("projects.id"))
     project = db.relationship("Project", foreign_keys=project_id)
@@ -257,7 +257,7 @@ class ArticleDB(db.Model):
     user = db.relationship("User", foreign_keys=user_id)
 
 
-class FileDB(db.Model):
+class File(db.Model):
     __tablename__ = "project_files"
 
     id = db.Column(db.Integer, primary_key=True)
@@ -549,7 +549,7 @@ class LogDB(db.Model):
     extension = db.relationship("Extend", foreign_keys=extension_id)
 
     files_id = db.Column(db.Integer, db.ForeignKey("project_files.id"))
-    files = db.relationship("FileDB", foreign_keys=files_id)
+    files = db.relationship("File", foreign_keys=files_id)
 
     resources_id = db.Column(db.Integer, db.ForeignKey("project_resources.id"))
     resources = db.relationship("Resources", foreign_keys=resources_id)
