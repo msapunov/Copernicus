@@ -280,6 +280,9 @@ class Resources(db.Model):
     approve_id = db.Column(db.Integer, db.ForeignKey("users.id"))
     approve = db.relationship("User", foreign_keys=approve_id)
 
+    file_id = db.Column(db.Integer, db.ForeignKey("project_files.id"))
+    file = db.relationship("File", foreign_keys=file_id)
+
     valid = db.Column(db.Boolean, default=False)
     cpu = db.Column(db.Integer, db.CheckConstraint("cpu>=0"))
     type = db.Column(db.String(1))
@@ -297,6 +300,7 @@ class Resources(db.Model):
         return {
             "id": self.id,
             "approve": self.approve.to_dict(),
+            "report": self.file.path if self.file else False,
             "valid": self.valid,
             "cpu": self.cpu,
             "type": self.type,
