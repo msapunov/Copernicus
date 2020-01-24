@@ -283,7 +283,6 @@ def is_extension():
 
 
 def extend_update():
-    from base.database.schema import Extend
 
     data = request.get_json()
     if not data:
