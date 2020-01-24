@@ -175,6 +175,17 @@ def web_project_reactivate():
     return jsonify(message=ProjectLog(record.project).activate(record))
 
 
+@bp.route("/project/renew", methods=["POST"])
+@login_required
+def web_project_renew():
+    from base import db
+
+    record = extend_update()
+    db.session.add(record)
+    db.session.commit()
+    return jsonify(message=ProjectLog(record.project).extend(record))
+
+
 @bp.route("/project/extend", methods=["POST"])
 @login_required
 def web_project_extend():
