@@ -541,7 +541,7 @@ function reduce_to_names(initial, object){
             "placeholder": "List of people hired during last activity period"
         });
         var upload = $("<div/>").attr({"id": "upload"}).addClass("dropzone uk-alert uk-text-center").append(
-            $("<div/>").addClass("dz-default dz-message").text("Drop files to upload (or click here). Total 3 images are allowed, limited by 3 Mb per image")
+            $("<div/>").addClass("dz-default dz-message").text("Drop files to upload (or click here). Total 3 images are allowed, limited by 3 Mb per image. Supported formats are jpeg, png and gif")
         );
         var form = $("<form/>").addClass("uk-form uk-accordion").attr("data-uk-accordion", "{collapse: false}").append(
             $("<legend/>").text(title)
