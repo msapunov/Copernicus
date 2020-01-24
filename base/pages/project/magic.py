@@ -282,7 +282,7 @@ def is_extension():
         return True
 
 
-def renew():
+def extend_renew_parse(ext = True):
     data = request.get_json()
     if not data:
         raise ValueError("Expecting application/json requests")
@@ -298,8 +298,19 @@ def renew():
         note = check_str(data["note"])
     else:
         raise ValueError("Comment is absent")
+    if ext:
+        if ("exception" in data) and (check_str(data["exception"]) == "yes"):
+            exception = True
+        else:
+            exception = False
+        return pid, cpu, note, exception
+    return pid, cpu, note
 
+
+def renew():
+    pid, cpu, note = extend_renew_parse()
     project = get_project_record(pid)
+
     p_name = project.get_name()
     p_info = get_project_consumption([p_name])
 
