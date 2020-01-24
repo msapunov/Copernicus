@@ -186,7 +186,10 @@ function reduce_to_names(initial, object){
         ).append(
             $("<div>{0}</div>".f(warn)).addClass("uk-form-row uk-alert")
         );
-        if(!renew) {
+        var report = $("<div>{0}</div>".f("Make sure that you have uploaded project activity report first!")).addClass("uk-form-row uk-alert uk-alert-warning");
+        if(renew) {
+            form.append(report);
+        }else{
             form.append(express);
         }
         var pop = dialog(form.prop("outerHTML"), function(){
