@@ -282,6 +282,28 @@ def is_extension():
         return True
 
 
+def renew():
+    data = request.get_json()
+    if not data:
+        raise ValueError("Expecting application/json requests")
+    if "project" in data:
+        pid = check_int(data["project"])
+    else:
+        raise ValueError("Project ID is missing")
+    if "cpu" in data:
+        cpu = check_int(data["cpu"])
+    else:
+        cpu = 0
+    if "note" in data:
+        note = check_str(data["note"])
+    else:
+        raise ValueError("Comment is absent")
+
+    project = get_project_record(pid)
+    p_name = project.get_name()
+    p_info = get_project_consumption([p_name])
+
+
 def extend_update():
 
     data = request.get_json()
