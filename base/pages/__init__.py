@@ -548,6 +548,12 @@ class ProjectLog:
         self.log.extension = extension
         return self._commit()
 
+    def renewed(self, extension):
+        self.log.event = "Renewal request for %s hour(s) has been processed"\
+                         % extension.hours
+        self.log.extension = extension
+        return self._commit()
+
     def extend(self, extension):
         self.log.event = "Made a request to extend project for %s hour(s)"\
                          % extension.hours
