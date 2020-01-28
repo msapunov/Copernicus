@@ -148,7 +148,7 @@ function reduce_to_names(initial, object){
     };
 
     window.render.extend = function(name, id, renew){
-        var title;
+        var title, url;
         if(renew){
             title = "Request to renew CPU hours for the project {0}?".f(name);
         }else {
@@ -192,6 +192,11 @@ function reduce_to_names(initial, object){
         }else{
             form.append(express);
         }
+        if(renew){
+            url = window.proj.url["renew"];
+        }else{
+            url = window.proj.url["extend"]
+        }
         var pop = dialog(form.prop("outerHTML"), function(){
             var exception = $("input[name=exception]").is(':checked') ? "yes" : "no";
             var data = {
@@ -206,7 +211,7 @@ function reduce_to_names(initial, object){
             if(!window.render.check_positive(data["cpu"], "CPU hours")){
                 return false;
             }
-            json_send(window.proj.url["extend"], data).done(function(reply){
+            json_send(url, data).done(function(reply){
                 if(reply.message){
                     UIkit.notify(reply.message, {timeout: 2000, status:"success"});
                 }
