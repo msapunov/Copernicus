@@ -104,12 +104,12 @@ function reduce_to_names(initial, object){
         var name = $("<input/>").addClass("uk-width-1-1").attr({
             "name": "name",
             "type": "text",
-            "placeholder": "Name"
+            "placeholder": "Name (Prénom)"
         });
         var surname = $("<input/>").addClass("uk-width-1-1").attr({
             "name": "surname",
             "type": "text",
-            "placeholder": "Surname"
+            "placeholder": "Surname (Nom)"
         });
         var mail = $("<input/>").addClass("uk-width-1-1").attr({
             "name": "email",
