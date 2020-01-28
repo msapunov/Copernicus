@@ -542,6 +542,12 @@ class ProjectLog:
         self.log.event = "Made a request to delete user %s" % user.full_name()
         return self._commit_user(user)
 
+    def renew(self, extension):
+        self.log.event = "Made a request to renew project for %s hour(s)"\
+                         % extension.hours
+        self.log.extension = extension
+        return self._commit()
+
     def extend(self, extension):
         self.log.event = "Made a request to extend project for %s hour(s)"\
                          % extension.hours
