@@ -48,6 +48,7 @@ function reduce_to_names(initial, object){
         user_assign: "project/assign/user",
         user_list: "user/list",
         extend: "project/extend",
+        renew: "project/renew",
         delete: "project/delete/user",
         history: "project/history",
         activate: "project/reactivate",
