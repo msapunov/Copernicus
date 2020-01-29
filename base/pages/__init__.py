@@ -10,6 +10,7 @@ from functools import wraps
 from base import mail
 from base.database.schema import LogDB, User
 from base.utils import normalize_word
+from string import ascii_letters
 
 import smtplib
 from email.mime.multipart import MIMEMultipart
@@ -37,12 +38,10 @@ def generate_login(name, surname):
     users = User.query.all()
     logins = list(map(lambda x: x.login, users))
 
-    name = name.split(" ")[0]
-    name = name.split("-")[0]
-    surname = surname.split(" ")[0]
-    surname = surname.split("-")[0]
     name = normalize_word(name)
+    name = "".join(filter(lambda x: x in ascii_letters, name))
     surname = normalize_word(surname)
+    surname = "".join(filter(lambda x: x in ascii_letters, surname))
 
     i = 1
     guess = None
