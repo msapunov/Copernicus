@@ -282,39 +282,6 @@ def is_extension():
         return True
 
 
-def extend_renew_parse(ext = True):
-    data = request.get_json()
-    if not data:
-        raise ValueError("Expecting application/json requests")
-    if "project" in data:
-        pid = check_int(data["project"])
-    else:
-        raise ValueError("Project ID is missing")
-    if "cpu" in data:
-        cpu = check_int(data["cpu"])
-    else:
-        cpu = 0
-    if "note" in data:
-        note = check_str(data["note"])
-    else:
-        raise ValueError("Comment is absent")
-    if ext:
-        if ("exception" in data) and (check_str(data["exception"]) == "yes"):
-            exception = True
-        else:
-            exception = False
-        return pid, cpu, note, exception
-    return pid, cpu, note
-
-
-def renew():
-    pid, cpu, note = extend_renew_parse()
-    project = get_project_record(pid)
-
-    p_name = project.get_name()
-    p_info = get_project_consumption([p_name])
-
-
 def extend_update():
 
     data = request.get_json()
@@ -361,6 +328,35 @@ def extend_update():
                   exception=exception)
 
 
+def is_activity_report(rec):
+    if (not rec.project.resources) or (not rec.project.resources.file):
+        return False
+    path = rec.project.resources.file.path
+    if not current_app.config.get("ACTIVITY_UPLOAD", False):
+        return True
+    url = current_app.config.get("OWN_CLOUD_URL", None)
+    if not url:
+        raise ValueError("Failed to find own cloud url. Please try later")
+    oc = OwnClient(url)
+    login = current_app.config.get("OWN_CLOUD_LOGIN", None)
+    password = current_app.config.get("OWN_CLOUD_PASSWORD", None)
+    try:
+        oc.login(login, password)
+    except Exception as err:
+        raise ValueError("Failed to connect to the cloud: %s" % err)
+    remote_dir = current_app.config.get("ACTIVITY_DIR", "/")
+    if remote_dir[-1] is not "/":
+        remote_dir += "/"
+    remote = remote_dir + path
+    log.debug("Checking is file %s exists" % remote)
+    try:
+        oc.file_info(remote)
+    except Exception as e:
+        raise ValueError("Failed to find activity report %s on the cloud:"
+                         " %s\nProbably you should re-upload it" % (path, e))
+    return True
+
+
 def send_activity_report(project, report):
     subj = "Activity report for the project %s" % project.name
     msg = """
@@ -369,6 +365,19 @@ def send_activity_report(project, report):
     You can find a copy of the report in the attachment 
     """ % (project.responsible.full_name(), project.get_name())
     return project_email(project.responsible.email, subj, msg, attach=report)
+
+
+def send_renew_mail(project, extend):
+    subj = "Request renew project %s" % project.name
+    msg = """
+    Dear %s
+    You have requested to renew your project %s with %s hours
+    Renew reason is:
+      %s
+    Your request will be examined shortly
+    """ % (project.responsible.full_name(), project.name, extend.hours,
+           extend.reason)
+    project_email(project.responsible.email, subj, msg)
 
 
 def send_extend_mail(project, extend):
