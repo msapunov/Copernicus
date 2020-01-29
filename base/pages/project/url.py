@@ -1,5 +1,6 @@
 from flask import render_template, request, jsonify, flash
 from flask_login import login_required, current_user
+from base import db
 from base.pages import (
     ProjectLog,
     check_int,
@@ -10,6 +11,7 @@ from base.pages import (
 from base.pages.user import bp
 from base.pages.user.magic import get_user_record
 from base.pages.project.magic import (
+    is_activity_report,
     report_activity,
     remove_activity,
     clean_activity,
@@ -178,12 +180,12 @@ def web_project_reactivate():
 @bp.route("/project/renew", methods=["POST"])
 @login_required
 def web_project_renew():
-    from base import db
-
     record = extend_update()
+    if not is_activity_report(record):
+        raise ValueError("Please upload an activity report first!")
     db.session.add(record)
     db.session.commit()
-    return jsonify(message=ProjectLog(record.project).extend(record))
+    return jsonify(message=ProjectLog(record.project).renew(record))
 
 
 @bp.route("/project/extend", methods=["POST"])
