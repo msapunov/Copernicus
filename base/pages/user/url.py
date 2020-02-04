@@ -1,5 +1,6 @@
 from flask import render_template, request, jsonify, flash
 from flask_login import login_required
+from base.database.schema import User
 from base.pages import check_str, send_message
 from base.pages.user import bp
 from base.pages.user.magic import get_user_record, changes_to_string, get_jobs
@@ -16,18 +17,16 @@ __copyright__ = "Aix Marseille University"
 
 @bp.route("/user/list", methods=["GET"])
 @login_required
-def user_list():
-    from base.database.schema import User
-
+def user_list(active=True):
     term = request.args.get("term")
+    query = User.query.filter(User.active==active)
     if term:
         term = "%%%s%%" % term.lower()
-        users_obj = User.query.filter(User.surname.like(term)
-                                      | User.name.like(term)
-                                      | User.login.like(term)).all()
+        users_obj = query.filter(User.surname.like(term)
+                                 | User.name.like(term)
+                                 | User.login.like(term)).all()
     else:
-        users_obj = User.query.filter(User.active==True)\
-            .filter(User.surname!="").all()
+        users_obj = query.filter(User.surname!="").all()
     users_obj = sorted(users_obj, key=attrgetter("login"))
 
     users = map(lambda x: {"id": x.id, "login": x.login,
