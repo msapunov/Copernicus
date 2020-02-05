@@ -88,7 +88,7 @@ def save_activity(req):
 def save_report(data, project):
     project_name = project.get_name()
     html = render_template("report.html", data=data)
-    ts = dt.now().replace(microsecond=0).isoformat("_")
+    ts = str(dt.now().replace(microsecond=0).isoformat("_")).replace(":", "-")
     name = "%s_activity_report_%s.pdf" % (project_name, ts)
     path = str(Path(get_tmpdir(current_app), name))
     log.debug("The resulting PDF will be saved to: %s" % path)
