@@ -73,13 +73,8 @@ def save_activity(req):
     files = get_activity_files(project)
     if len(files) >= limit:
         raise ValueError("You have already uploaded %s or more files" % limit)
-    image_name = "%s_activity_report" % project
-    for i in range(0, limit):
-        tmp_name = "%s_%s" % (image_name, i)
-        there = filter(lambda x: True if tmp_name in str(x) else False, files)
-        if not list(there):
-            image_name = tmp_name
-            break
+    ts = str(dt.now().replace(microsecond=0).isoformat("_")).replace(":", "-")
+    image_name = "%s_activity_report_%s" % (project, ts)
     name = save_file(req, get_tmpdir(current_app), image_name)
     log.debug("Returning result: %s" % name)
     return name
