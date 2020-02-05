@@ -125,6 +125,10 @@ def project_type(register):
         return "b"
     elif register.type_c:
         return "c"
+    elif register.type_h:
+        return "h"
+    elif register.type_p:
+        return "p"
     else:
         raise ValueError("Failed to determine project's type")
 
