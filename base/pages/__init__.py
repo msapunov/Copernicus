@@ -577,21 +577,25 @@ class ProjectLog:
         return self._commit()
 
     def accept(self, extension):
-        self.log.event = "Extension request for %s hours is accepted"\
-                         % extension.hours
+        new = "Extension" if extension.extend else "Renewal"
+        self.log.event = "%s request for %s hours is accepted"\
+                         % (new, extension.hours)
+
         self.log.extension = extension
         return self._commit()
 
     def ignore(self, extension):
-        self.log.event = "Extension request for %s hours is ignored"\
-                         % extension.hours
+        new = "Extension" if extension.extend else "Renewal"
+        self.log.event = "%s request for %s hours is ignored"\
+                         % (new, extension.hours)
         self.log.extension = extension
         self.send = False
         return self._commit()
 
     def reject(self, extension):
-        self.log.event = "Extension request for %s hours is rejected"\
-                         % extension.hours
+        new = "Extension" if extension.extend else "Renewal"
+        self.log.event = "%s request for %s hours is rejected"\
+                         % (new, extension.hours)
         self.log.extension = extension
         return self._commit()
 
