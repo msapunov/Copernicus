@@ -116,8 +116,9 @@
         }else{
             var is_extension = true;
         }
-        var title = "Accept extension of project {0} by {1} hours?".f(project, hours);
-        var text = "Extension accepted by scientific committee";
+        var e_word = (is_extension) ? "extension" : "renewal";
+        var title = "Accept {0} of project {1} by {2} hours?".f(e_word, project, hours);
+        var text = "{0} accepted by scientific committee".f(e_word).capitalize();
         var cpu = $("<input/>").addClass("uk-width-1-1").attr({
             "name": "cpu",
             "type": "text",
