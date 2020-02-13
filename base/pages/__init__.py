@@ -487,9 +487,9 @@ class ProjectLog:
         else:
             postfix = "If you believe that this email has been sent to you by" \
                       " mistake, please delete it!"
-        title = "[TEST MODE] Mesocentre reporting"
+        title = "[%s] %s" % (self.project.get_name(), self.log.event)
         email = Message(title, sender=sender, recipients=to, cc=cc)
-        email.body = message + "\n" + postfix
+        email.body = self.log.extension.decision + "\n" + postfix
         if not current_app.config.get("MAIL_SEND", None):
             return "E-mail submission has been blocked in configuration file"
         mail.send(email)
