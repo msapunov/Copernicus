@@ -489,7 +489,9 @@ class ProjectLog:
                       " mistake, please delete it!"
         title = "[%s] %s" % (self.project.get_name(), self.log.event)
         email = Message(title, sender=sender, recipients=to, cc=cc)
-        email.body = self.log.extension.decision + "\n" + postfix
+        if self.log.extension and self.log.extension.decision:
+            message = self.log.extension.decision
+        email.body = message + "\n" + postfix
         if not current_app.config.get("MAIL_SEND", None):
             return "E-mail submission has been blocked in configuration file"
         mail.send(email)
