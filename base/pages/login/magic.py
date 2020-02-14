@@ -8,7 +8,12 @@ __copyright__ = "Aix Marseille University"
 
 def ssh_login(login, password):
     auth = False
-    for host in ["login.ccamu.u-3mrs.fr", "login.mesocentre.univ-amu.fr"]:
+    login_servers = current_app.config.get("LOGIN_SERVER", None)
+    if not login_servers:
+        return False
+    if not isinstance(login_servers, list):
+        return False
+    for host in login_servers:
         debug("Trying the host: %s" % host)
         client = SSHClient()
         try:
