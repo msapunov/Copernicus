@@ -512,6 +512,9 @@
                     $("<div/>").addClass("uk-badge uk-badge-success").html(
                         "Technical approval granted!")
                 );
+                var ico_id = "#approval_ico_{0}".f(id);
+                $(ico_id).addClass("uk-icon-wrench").addClass("uk-text-success");
+                $(ico_id).removeClass("uk-icon-question").removeClass("uk-text-primary");
                 window.render.approveBtnReplace(btn);
             });
         });
