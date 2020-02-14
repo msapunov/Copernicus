@@ -11,6 +11,7 @@ def ssh_login(login, password):
     auth = False
     login_servers = current_app.config.get("LOGIN_SERVER", None)
     if not login_servers:
+        error("Configuration has no LOGIN_SERVER option")
         return False
     if not isinstance(login_servers, list):
         return False
