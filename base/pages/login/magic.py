@@ -14,7 +14,9 @@ def ssh_login(login, password):
         error("Configuration has no LOGIN_SERVER option")
         return False
     if not isinstance(login_servers, list):
-        return False
+        debug("Option LOGIN_SERVER has to be a list")
+        debug("Converting string to list with comma as separator")
+        login_servers = login_servers.split(",")
     for host in login_servers:
         host = host.strip()
         debug("Trying the host: %s" % host)
