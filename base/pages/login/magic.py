@@ -16,6 +16,7 @@ def ssh_login(login, password):
     if not isinstance(login_servers, list):
         return False
     for host in login_servers:
+        host = host.strip()
         debug("Trying the host: %s" % host)
         client = SSHClient()
         try:
