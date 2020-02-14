@@ -123,7 +123,7 @@
                         <button class="uk-button uk-width-1-1 responsible_ass uk-button-danger uk-margin-small-bottom" data-project='{{project.id}}' data-name='{{project.name}}' type="button">Assign responsible</button>
                         -->
                         {% if project.type=='a' %}
-                            <button class="uk-button uk-width-1-1 trans uk-margin-small-bottom" data-project='{{project.id}}' data-name='{{project.name}}' type="button">Transform</button>
+                            <button class="uk-button uk-width-1-1 trans uk-margin-small-bottom uk-button-primary" data-project='{{project.id}}' data-name='{{project.name}}' type="button">Transform</button>
                         {% else %}
                             {% if data.renew %}
                                 <button class="uk-button uk-width-1-1 renew uk-margin-small-bottom uk-button-primary" data-project='{{project.id}}' data-name='{{project.name}}' type="button">Renew&nbsp;project&nbsp;for&nbsp;{{data.renew}}</button>
