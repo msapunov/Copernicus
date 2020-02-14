@@ -2,8 +2,6 @@ from paramiko import SSHClient, AutoAddPolicy, AuthenticationException
 from logging import warning, debug, error
 from flask import current_app
 
-import logging as log
-
 
 __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
