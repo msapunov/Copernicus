@@ -102,9 +102,9 @@
                             <td class="uk-width-2-10">{{record.ts}}</td>
                             <td style="width: 20px;">
                                 {% if record.approve %}
-                                    <span class="uk-icon-wrench uk-text-success"></span>
+                                    <span id="approval_ico_{{record.id}}" class="uk-icon-wrench uk-text-success"></span>
                                 {% else %}
-                                    <span class="uk-icon-question uk-text-primary"></span>
+                                    <span id="approval_ico_{{record.id}}" class="uk-icon-question uk-text-primary"></span>
                                 {% endif %}
                             </td>
                         </tr>
