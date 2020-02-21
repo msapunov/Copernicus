@@ -174,26 +174,24 @@ def process_extension(eid):
     ext = Extend.query.filter_by(id=eid).first()
     if not ext:
         raise ValueError("Failed to find extension record with id '%s'" % ext)
+    ext.done = True
     date = dt.now().replace(microsecond=0).isoformat(" ")
     if (not ext.extend) or (ext.extend and ext.project.type == "h"):
         ext.project.resources.valid = False
         ext.project.resources = create_resource(ext.project, ext.hours)
-        msg = "Created based on extension request ID %s on %s" % (eid, date)
+        msg = "Created based on renewal request ID %s on %s" % (eid, date)
         ext.project.resources.comment = msg
+        return ProjectLog(ext.project).renew(ext)
+    ext.project.resources.cpu += ext.hours
+    ext.project.resources.valid = True
+    msg = "CPU value has been extended to %s hours on %s based upon "\
+          "extension request ID %s" % (ext.hours, date, eid)
+    if ext.project.resources.comment:
+        ext.project.resources.comment = ext.project.resources.comment \
+                                        + "\n" + msg
     else:
-        ext.project.resources.cpu += ext.hours
-        ext.project.resources.valid = True
-        msg = "CPU value has been extended to %s hours on %s based upon " \
-              "extension request ID %s" % (ext.hours, date, eid)
-        if ext.project.resources.comment:
-            ext.project.resources.comment = ext.project.resources.comment\
-                                            + "\n" + msg
-        else:
-            ext.project.resources.comment = msg
-    ext.done = True
-    db.session.commit()
-    ProjectLog(ext.project).extended(ext)
-    return "Project extension ID %s has been processed" % eid
+        ext.project.resources.comment = msg
+    return ProjectLog(ext.project).extended(ext)
 
 
 def pending_resources():
