@@ -573,8 +573,7 @@ class ProjectLog:
         return self._commit()
 
     def transform(self, extension):
-        self.log.event = "Request to transform the project from type A to " \
-                         "type B has been registered"
+        self.log.event = "Transformation request  has been registered"
         self.log.extension = extension
         return self._commit()
 
