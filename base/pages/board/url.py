@@ -32,6 +32,19 @@ def web_board_history():
     return jsonify(data=result)
 
 
+@bp.route("/board/transform", methods=["POST"])
+@login_required
+@grant_access("admin")
+def web_board_transform():
+    eid, note, cpu, ext = get_arguments()
+    record = Extensions(eid)
+    record.cpu = cpu
+    record.extend = False
+    record.accept(note)
+    return jsonify(message=ProjectLog(record.rec.project).transform(record.rec),
+                   data={"id": record.id})
+
+
 @bp.route("/board/accept", methods=["POST"])
 @login_required
 @grant_access("admin")
