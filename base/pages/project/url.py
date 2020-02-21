@@ -25,6 +25,7 @@ from base.pages.project.magic import (
     get_users)
 from datetime import datetime as dt
 from operator import attrgetter
+from logging import warning, debug
 
 
 __author__ = "Matvey Sapunov"
@@ -219,6 +220,7 @@ def web_project_history():
 @login_required
 def web_project_index():
     projects = get_project_info()
+    debug(projects)
     if not projects:
         flash("No projects associated with %s" % current_user.full_name())
         return render_template("project.html", data={})
