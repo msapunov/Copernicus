@@ -131,3 +131,25 @@ def configure_logger(app):
         logging.config.fileConfig(cfg_path)
     else:
         print("No config found! Using default logger")
+
+
+def configure_project(app):
+    cfg_file = app.config.get("PROJECT_CONFIG", "project.cfg")
+    cfg_path = path_join(app.instance_path, cfg_file)
+    if not exists(cfg_path):
+        logging.warning("Projects configuration file doesn't exists. Using "
+                        "defaults")
+        return
+    config = ConfigParser()
+    config.read(cfg_path)
+    ctx = app.app_context()
+    ctx.g.project = {}
+
+    projects = config.sections()
+    for project in projects:
+        duration = config[project].get("duration", None)
+        end = config[project].get("end_date", None)
+        cpu = config[project].get("cpu", None)
+        name = project.lower()
+        ctx.g.project[name] = {"duration": duration, "end": end, "cpu": cpu}
+    print(ctx.g.project)
