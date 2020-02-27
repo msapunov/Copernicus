@@ -1,4 +1,4 @@
-from flask import Flask, g, request
+from flask import Flask, g, request, current_app
 from flask_login import current_user
 
 from base.extensions import mail, cache, db, login_manager
@@ -20,6 +20,7 @@ from traceback import format_exc
 from tempfile import gettempdir
 from pathlib import Path
 from shutil import rmtree
+from configparser import ConfigParser
 
 import logging
 import logging.config
@@ -32,6 +33,7 @@ def create_app(config_filename):
     register_blueprints(app)
     register_decor(app)
     configure_logger(app)
+    configure_project(app)
     cleanup(app)
     return app
 
