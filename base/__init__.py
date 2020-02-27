@@ -152,4 +152,4 @@ def configure_project(app):
         cpu = config[project].get("cpu", None)
         name = project.lower()
         ctx.g.project[name] = {"duration": duration, "end": end, "cpu": cpu}
-    print(ctx.g.project)
+    logging.debug("Project configuration: %s" % ctx.g.project)
