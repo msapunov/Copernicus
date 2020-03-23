@@ -42,7 +42,7 @@
     {% if data.projects %}
         {% for project in data.projects|sort(attribute='name') %}
             <div class="uk-panel uk-width-1-1 uk-width-small-1-1 uk-panel-divider">
-                <h3 class="uk-panel-title">{{project.title}}</h3>
+                <h3 class="uk-panel-title {% if !project.active %}uk-text-muted{% endif %}">{{project.title}}</h3>
             </div>
             <div class="uk-width-medium-2-5 uk-width-small-1-1">
                 <div class="uk-panel uk-margin-top uk-margin-bottom">
@@ -89,7 +89,7 @@
                                 {% endif %}
                             {% endif %}
                         {% else %}
-                            <span class="uk-icon-exclamation-circle uk-margin-small-right uk-text-danger"></span>Project is suspended
+                            <span class="uk-icon-exclamation-circle uk-margin-small-right uk-text-danger"></span>Suspended project
                         {% endif %}
                     </div>
                 </div>
