@@ -44,7 +44,7 @@
             <div class="uk-panel uk-width-1-1 uk-width-small-1-1 uk-panel-divider">
                 <h3 class="uk-panel-title {% if project.active != True %}uk-text-muted{% endif %}">{{project.title}}</h3>
             </div>
-            <div class="uk-width-medium-2-5 uk-width-small-1-1">
+            <div class="uk-width-medium-2-5 uk-width-small-1-1 {% if project.active != True %}uk-text-muted{% endif %}">
                 <div class="uk-panel uk-margin-top uk-margin-bottom">
                     <div>Name: <b>{{project.name}}</b></div>
                     <div>Status: <b>{% if project.active %}Active{% else %}Suspended{% endif %}</b></div>
