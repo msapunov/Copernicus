@@ -105,7 +105,8 @@ def user_index():
         scratch = None
         flash(err)
     try:
-        projects = get_project_info(start, end)
+        #projects = get_project_info(start, end)
+        projects = None
     except ValueError as err:
         projects = None
         flash(err)

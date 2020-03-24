@@ -11,10 +11,10 @@ def ssh_login(login, password):
     auth = False
     login_servers = current_app.config.get("LOGIN_SERVER", None)
     if not login_servers:
-        error("Configuration has no LOGIN_SERVER option")
+        error("Configuration has no LOGIN_SERVER option set")
         return False
     if not isinstance(login_servers, list):
-        debug("Option LOGIN_SERVER has to be a list")
+        warning("Option LOGIN_SERVER has to be a list")
         debug("Converting string to list with comma as separator")
         login_servers = login_servers.split(",")
     for host in login_servers:
