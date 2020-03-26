@@ -5,6 +5,7 @@ from base.pages import ssh_wrapper, send_message, Task, grant_access
 from base.pages.user.magic import get_user_record, user_by_id
 from base.pages.admin import bp
 from base.pages.admin.magic import (
+    event_log,
     get_server_info,
     get_ltm,
     TaskManager,
@@ -291,5 +292,6 @@ def web_admin():
         result["extension"] = list(map(lambda x: x.to_dict(), reg_list))
     result["tasks"] = TaskManager().list()
     result["users"] = group_users()
+    result["events"] = event_log()
     form = UserEditForm()
     return render_template("admin.html", data=result, form = form)
