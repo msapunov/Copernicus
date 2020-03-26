@@ -14,12 +14,18 @@ from logging import error, debug
 from operator import attrgetter
 from datetime import datetime as dt
 from base.pages import TaskQueue
-from base.database.schema import User, ACLDB, Register
+from base.database.schema import User, ACLDB, Register, LogDB
 from base import db
 
 
 __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
+
+
+def event_log():
+    recs = LogDB().query.all()
+    sorted_recs = sorted(recs, key=attrgetter("created"), reverse=True)
+    return list(map(lambda x: x.to_web(), sorted_recs))
 
 
 def task_mail(action, task):
