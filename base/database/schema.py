@@ -561,9 +561,19 @@ class LogDB(db.Model):
     def __repr__(self):
         return "<Log event for project {}>".format(self.project.get_name())
 
+    def to_web(self):
+        event = self.event[0].upper() + self.event[1:]
+        creator = self.author.full_name() if self.author else "Author is unknown"
+        msg = "%s by %s" % (event, creator)
+        return {
+            "project": self.project.name,
+            "date": self.created.strftime("%Y-%m-%d %X %Z"),
+            "message": msg
+        }
+
     def to_dict(self):
         event = self.event[0].upper() + self.event[1:]
-        creator = self.author.full_name()
+        creator = self.author.full_name() if self.author else "Author is unknown"
         msg = "%s by %s" % (event, creator)
         return {
             "date": self.created.strftime("%Y-%m-%d %X %Z"),
