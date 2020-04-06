@@ -486,11 +486,22 @@
             "rows": "4",
             "name": "note"
         });
-        $("<form/>").addClass("uk-form").append(
+        var form = $("<form/>").addClass("uk-form").append(
             $("<legend/>").text(title)
         ).append(
             $("<div/>").addClass("uk-form-row").append(motiv)
         );
+        UIkit.modal.confirm(form.prop("outerHTML"), function(){
+            var comment = $("textarea[name=note]").val();
+            var url = window.admin.url.accept + "/" + id;
+            json_send(url, {"note": comment}).done(function(reply){
+                if(reply.data){
+                    UIkit.notify(reply.data, {timeout: 2000, status:"success"});
+                }
+                $("#"+id).remove();
+                $("#"+id+"-info").remove();
+            });
+        });
     };
     window.render.new_approve=function(){
         var btn = $(this);
