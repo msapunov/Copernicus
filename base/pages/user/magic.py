@@ -1,6 +1,7 @@
 from flask_login import current_user
 from base.utils import bytes2human
 from base.pages import ssh_wrapper
+from base.database.schema import Project, User
 from datetime import datetime as dt
 
 
@@ -9,8 +10,6 @@ __copyright__ = "Aix Marseille University"
 
 
 def user_by_id(uid):
-    from base.database.schema import User
-
     user = User.query.filter_by(id=uid).first()
     if not user:
         raise ValueError("Failed to find user with id '%s'" % uid)
@@ -18,8 +17,6 @@ def user_by_id(uid):
 
 
 def get_user_record(login=None):
-    from base.database.schema import User
-
     if not login:
         login = current_user.login
     user = User.query.filter_by(login=login).first()
@@ -29,9 +26,6 @@ def get_user_record(login=None):
 
 
 def get_project_info(start, end):
-
-    from base.database.schema import Project
-
     p_ids = current_user.project_ids()
     tmp = {}
     for pid in p_ids:
