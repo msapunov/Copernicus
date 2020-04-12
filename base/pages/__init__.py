@@ -177,7 +177,8 @@ def ssh_wrapper(cmd, host=None):
     output = stdout.readlines()
     errors = stderr.readlines()
     client.close()
-
+    debug("Out: %s" % output)
+    debug("Err: %s" % errors)
     return output, errors
 
 
