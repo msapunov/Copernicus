@@ -34,6 +34,11 @@ def grant_access(*roles):
     return log_required
 
 
+def calculate_usage(use, total):
+    use = "{0:.1%}".format(float(use) / float(total))
+    return float(use.replace("%", ""))
+
+
 def generate_login(name, surname):
     users = User.query.all()
     logins = list(map(lambda x: x.login, users))
