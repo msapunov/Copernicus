@@ -63,8 +63,8 @@
         {% endif %}
         {% if data and data.projects %}
             {% for project in data.projects|sort(attribute='name') %}
-                {% if project.max > 0 %}
-                    {% if project.consumed_use > project.max %}
+                {% if project.resources.cpu > 0 %}
+                    {% if project.consumed_use > project.resources.cpu %}
                         {% set color = "#da314b" %}
                         {% set style = "uk-progress-danger" %}
                     {% elif project.consumed_use > 60 %}
@@ -97,10 +97,10 @@
                     <div class="uk-width-small-1-1 uk-width-medium-1-2">
                         <p>Created: {{project.start}}</p>
                         <p>End of resources allocation: {{project.end}}</p>
-                        {% if project.max == 0 %}
+                        {% if project.resources.cpu == 0 %}
                             <p>No limit for CPU hours</p>
                         {% else %}
-                            <p>Assigned resources: {{project.max}} CPU hours</p>
+                            <p>Assigned resources: {{project.resources.cpu}} CPU hours</p>
                         {% endif %}
                     </div>
                     <div class="uk-margin-top uk-width-small-1-1 uk-hidden-medium uk-hidden-large">
