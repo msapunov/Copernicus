@@ -14,7 +14,7 @@ from logging import error, debug
 from operator import attrgetter
 from datetime import datetime as dt
 from base.pages import TaskQueue
-from base.database.schema import User, ACLDB, Register, LogDB
+from base.database.schema import User, ACLDB, Register, LogDB, Project
 from base import db
 
 
@@ -180,6 +180,22 @@ def reg_approve(pid):
     rec.comment = reg_message(rec.comment, "approve")
     db.session.commit()
     return approve_message(rec)
+
+
+def reg_accept(pid, note):
+    rec = get_registration_record(pid)
+    rec.accepted = True
+    rec.accepted_ts = dt.now()
+    rec.comment = reg_message(rec.comment, "accept") + note
+    #  TEMP code start here
+    p = db.session.query(Project).filter(Project.title.ilike(rec.title)).first()
+    if not p:
+        raise ValueError("Project with title %s not in ProjectDB!" % rec.title)
+    created = p.resources.created
+    ProjectLog(p).created(created)
+    #  TEMP code ends here
+    db.session.commit()
+    return accept_message(rec, note)
 
 
 def reg_reject(pid, note):

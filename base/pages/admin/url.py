@@ -19,6 +19,7 @@ from base.pages.admin.magic import (
     get_registration_record,
     reg_ignore,
     reg_reject,
+    reg_accept,
     reg_approve)
 from base.pages.admin.form import UserEditForm
 from base.pages.project.magic import process_extension
@@ -148,6 +149,18 @@ def admin_registration_reject(pid):
     if "note" not in data:
         raise ValueError("Parameter 'note' was not found in the client request")
     return jsonify(data=reg_reject(pid, data["note"]))
+
+
+@bp.route("/admin/registration/accept/<int:pid>", methods=["POST"])
+@login_required
+@grant_access("admin")
+def admin_registration_accept(pid):
+    data = request.get_json()
+    if not data:
+        raise ValueError("Expecting application/json requests")
+    if "note" not in data:
+        raise ValueError("Parameter 'note' was not found in the client request")
+    return jsonify(data=reg_accept(pid, data["note"]))
 
 
 @bp.route("/admin/registration/approve/<int:pid>", methods=["POST"])
