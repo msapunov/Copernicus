@@ -511,6 +511,12 @@ class ProjectLog:
         self.log.user = user
         return self._commit()
 
+    def created(self, date):
+        self.log.event = "Project created"
+        if date:
+            self.log.created = date
+        return self._commit()
+
     def responsible_added(self, user):
         self.log.event = "Added a new project responsible %s with login %s" % (
             user.full_name(), user.login)
