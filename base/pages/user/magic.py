@@ -37,9 +37,34 @@ def get_project_info(every=None):
         else:
             raise ValueError("No projects found for user '%s'" %
                              current_user.login)
-    info = list(map(lambda x: get_project_consumption_2(x), projects))
+    info = list(map(lambda x: get_project_consumption(x), projects))
     debug(info)
     return info
+
+
+def get_project_consumption(project, start=None, end=dt.now()):
+    name = project.get_name()
+    if not project.resources:
+        error("No resources attached to project %s" % name)
+        return project
+    if not start:
+        start = project.resources.created
+    start = start.strftime("%Y-%m-%d")
+    finish = end.strftime("%Y-%m-%d")
+    conso = get_project_conso(name, start, finish)
+    if not conso:
+        return project
+    login = current_user.login
+    if not project.resources.cpu:
+        error("No CPU set in project resources for %s" % name)
+    cpu = project.resources.cpu
+    if login in conso.keys():
+        project.private_use = calculate_usage(conso[login], cpu)
+        project.private = conso[login]
+    if name in conso.keys():
+        project.consumed_use = calculate_usage(conso[name], cpu)
+        project.consumed = conso[name]
+    return project
 
 
 def get_scratch():
