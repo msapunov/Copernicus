@@ -25,71 +25,21 @@ def get_user_record(login=None):
     return user
 
 
-def get_project_info(start, end):
-    p_ids = current_user.project_ids()
-    tmp = {}
-    for pid in p_ids:
-        project = Project().query.filter_by(id=pid).first()
-        if not project.active:
-            continue
-        name = project.get_name()
-        if name not in tmp:
-            tmp[name] = {}
-        tmp[name]["gid"] = project.gid
-        tmp[name]["max"] = project.resources.cpu
-        tmp[name]["start"] = project.created.strftime("%Y-%m-%d")
-        tmp[name]["end"] = project.resources.ttl.strftime("%Y-%m-%d")
-
-    if not tmp:
-        raise ValueError("No active projects found for user '%s'" %
-                         current_user.login)
-
-    projects = get_project_consumption(tmp, start, end)
+def get_project_info(every=None):
+    if every:
+        projects = Project.query.all()
+    else:
+        pids = current_user.project_ids()
+        projects = Project.query.filter(Project.id.in_(pids)).all()
     if not projects:
-        return []
-    result = []
-    for key in projects.keys():
-        projects[key]["name"] = key
-        if ("consumed" not in projects[key])or("private" not in projects[key]):
-            continue
-        total = projects[key]["max"]
-        if total > 0:
-            for i in ["consumed", "private"]:
-                val = projects[key][i]
-                tmp_usage = "{0:.1%}".format(float(val) / float(total))
-                projects[key]["%s_use" % i] = float(tmp_usage.replace("%", ""))
+        if every:
+            raise ValueError("No projects found!")
         else:
-            projects[key]["consumed_use"] = 0
-            projects[key]["private_use"] = 0
-        result.append(projects[key])
-    return result
-
-
-def get_project_consumption(projects, start, end):
-    name = ",".join(projects.keys())
-    cmd = ["sreport", "cluster", "AccountUtilizationByUser", "-t", "hours"]
-    cmd += ["-nP", "format=Account,Login,Used", "Accounts=%s" % name]
-    cmd += ["start=%s" % start, "end=%s" % end]
-    run = " ".join(cmd)
-    result, err = ssh_wrapper(run)
-    if not result:
-        raise ValueError("No project consumption information found")
-
-    for project in projects.keys():
-        projects[project]["consumed"] = 0
-        projects[project]["private"] = 0  # Person consumption within a project
-
-    login = current_user.login
-    for item in result:
-        item = item.strip()
-        project, user, conso = item.split("|")
-        if not user:
-            projects[project]["consumed"] = int(conso)
-            continue
-        if user == login:
-            projects[project]["private"] = int(conso)
-            continue
-    return projects
+            raise ValueError("No projects found for user '%s'" %
+                             current_user.login)
+    info = list(map(lambda x: get_project_consumption_2(x), projects))
+    debug(info)
+    return info
 
 
 def get_scratch():
