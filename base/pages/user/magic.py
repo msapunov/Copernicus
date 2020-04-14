@@ -67,6 +67,31 @@ def get_project_consumption(project, start=None, end=dt.now()):
     return project
 
 
+def get_project_conso(name, start, finish):
+    cmd = ["sreport", "cluster", "AccountUtilizationByUser", "-t", "hours"]
+    cmd += ["-nP", "format=Account,Login,Used", "Accounts=%s" % name]
+    cmd += ["start=%s" % start, "end=%s" % finish]
+    run = " ".join(cmd)
+    data, err = ssh_wrapper(run)
+    if not data:
+        debug("No data received, nothing to return")
+        return None
+    result = {}
+    for item in data:
+        item = item.strip()
+        items = item.split("|")
+        if len(items) != 3:
+            continue
+        login = items[1]
+        conso = items[2]
+        if not login:
+            result[name] = int(conso)
+        else:
+            result[login] = int(conso)
+    debug("Project '%s' consumption: %s" % (name, result))
+    return result
+
+
 def get_scratch():
     cmd = "beegfs-ctl --getquota --csv --uid %s" % current_user.login
     result, err = ssh_wrapper(cmd)
