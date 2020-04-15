@@ -95,8 +95,8 @@
 
                 <div class="uk-grid">
                     <div class="uk-width-small-1-1 uk-width-medium-1-2">
-                        <p>Created: {{project.start}}</p>
-                        <p>End of resources allocation: {{project.end}}</p>
+                        <p>Created: {{project.created.strftime("%Y-%m-%d")}}</p>
+                        <p>End of resources allocation: {{project.resources.ttl.strftime("%Y-%m-%d")}}</p>
                         {% if project.resources.cpu == 0 %}
                             <p>No limit for CPU hours</p>
                         {% else %}
