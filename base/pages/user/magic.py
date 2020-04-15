@@ -63,6 +63,7 @@ def get_project_consumption(project, start=None, end=dt.now()):
     login = current_user.login
     if not project.resources.cpu:
         error("No CPU set in project resources for %s" % name)
+        return project
     cpu = project.resources.cpu
     if login in conso.keys():
         project.private_use = calculate_usage(conso[login], cpu)
