@@ -44,6 +44,10 @@ def get_project_info(every=None):
 
 
 def get_project_consumption(project, start=None, end=dt.now()):
+    project.private_use = 0
+    project.private = 0
+    project.consumed_use = 0
+    project.consumed = 0
     name = project.get_name()
     if not project.resources:
         error("No resources attached to project %s" % name)
