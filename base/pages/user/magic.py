@@ -50,8 +50,8 @@ def get_project_consumption(project, start=None, end=dt.now()):
         return project
     if not start:
         start = project.resources.created
-    start = start.strftime("%Y-%m-%d")
-    finish = end.strftime("%Y-%m-%d")
+    start = start.strftime("%m/%d/%y-%H:%M")
+    finish = end.strftime("%m/%d/%y-%H:%M")
     conso = get_project_conso(name, start, finish)
     if not conso:
         return project
