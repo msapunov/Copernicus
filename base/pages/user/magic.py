@@ -58,6 +58,7 @@ def get_project_consumption(project, start=None, end=dt.now()):
     finish = end.strftime("%m/%d/%y-%H:%M")
     conso = get_project_conso(name, start, finish)
     if not conso:
+        error("Failed to get consumption for project %s" % name)
         return project
     login = current_user.login
     if not project.resources.cpu:
