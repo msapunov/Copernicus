@@ -184,9 +184,6 @@ def reg_approve(pid):
 
 def reg_accept(pid, note):
     rec = get_registration_record(pid)
-    rec.accepted = True
-    rec.accepted_ts = dt.now()
-    rec.comment = reg_message(rec.comment, "accept") + note
     #  TEMP code start here
     p = db.session.query(Project).filter(Project.title.ilike(rec.title)).first()
     if not p:
@@ -194,6 +191,11 @@ def reg_accept(pid, note):
     created = p.resources.created
     ProjectLog(p).created(created)
     #  TEMP code ends here
+    rec.accepted = True
+    rec.accepted_ts = created
+    rec.comment = reg_message(rec.comment, "accept") + note
+    rec.processed = True
+    rec.accepted_ts = created
     db.session.commit()
     return accept_message(rec, note)
 
