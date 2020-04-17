@@ -7,6 +7,7 @@ from dateutil.relativedelta import relativedelta as rd
 from calendar import monthrange
 from operator import attrgetter
 from base import db
+from logging import debug
 
 
 __author__ = "Matvey Sapunov"
@@ -137,13 +138,13 @@ def get_arguments():
     data = check_json()
     eid = check_int(data["eid"])
     note = check_str(data["comment"])
-
     ext = check_str(data["extension"]).lower()
+    debug("Extension flag is set to: %s" % ext)
     extension = False
     if ext == "true":
         extension = True
-
     cpu = check_int(data["cpu"])
+    debug("Got CPU value: %s" % cpu)
     if (not cpu) or (cpu < 0):
         raise ValueError("CPU value is absent, or a negative value!")
 
