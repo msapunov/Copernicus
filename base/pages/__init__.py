@@ -191,6 +191,7 @@ def check_json():
     data = request.get_json()
     if not data:
         raise ValueError("Expecting application/json requests")
+    debug("Incoming JSON: %s" % data)
     return data
 
 
