@@ -145,7 +145,7 @@ def get_arguments():
         extension = True
     cpu = check_int(data["cpu"])
     debug("Got CPU value: %s" % cpu)
-    if (not cpu) or (cpu < 0):
+    if cpu < 0:
         raise ValueError("CPU value is absent, or a negative value!")
 
     return eid, note, cpu, extension
