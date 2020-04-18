@@ -178,7 +178,7 @@ def renew_project(id, ext, date):
     return ProjectLog(ext.project).renew(ext)
 
 
-def extend_on_extension(id, ext, date):
+def extend_project(id, ext, date):
     ext.project.resources.cpu += ext.hours
     ext.project.resources.valid = True
     msg = "CPU value has been extended to %s hours on %s based upon "\
@@ -202,10 +202,10 @@ def process_extension(eid):
     if ext.project.type in never_extend:
         return renew_project(eid, ext, date)
     if ext.project.type in never_renew:
-        return extend_on_extension(eid, ext, date)
+        return extend_project(eid, ext, date)
     if not ext.extend:
         return renew_project(eid, ext, date)
-    return extend_on_extension(eid, ext, date)
+    return extend_project(eid, ext, date)
 
 
 def pending_resources():
