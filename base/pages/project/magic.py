@@ -170,11 +170,10 @@ def clean_activity(name):
     return True
 
 
-def create_out_extension(ext, date):
-    eid = ext.id
+def create_out_extension(id, ext, date):
     ext.project.resources.valid = False
     ext.project.resources = create_resource(ext.project, ext.hours)
-    msg = "Created based on renewal request ID %s on %s" % (eid, date)
+    msg = "Created based on renewal request ID %s on %s" % (id, date)
     ext.project.resources.comment = msg
     return ProjectLog(ext.project).renew(ext)
 
