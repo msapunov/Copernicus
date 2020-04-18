@@ -170,12 +170,25 @@ def clean_activity(name):
     return True
 
 
-def create_out_extension(id, ext, date):
+def renew_project(id, ext, date):
     ext.project.resources.valid = False
     ext.project.resources = create_resource(ext.project, ext.hours)
     msg = "Created based on renewal request ID %s on %s" % (id, date)
     ext.project.resources.comment = msg
     return ProjectLog(ext.project).renew(ext)
+
+
+def extend_on_extension(id, ext, date):
+    ext.project.resources.cpu += ext.hours
+    ext.project.resources.valid = True
+    msg = "CPU value has been extended to %s hours on %s based upon "\
+          "extension request ID %s" % (ext.hours, date, id)
+    if ext.project.resources.comment:
+        ext.project.resources.comment = ext.project.resources.comment \
+                                        + "\n" + msg
+    else:
+        ext.project.resources.comment = msg
+    return ProjectLog(ext.project).extended(ext)
 
 
 def process_extension(eid):
@@ -184,22 +197,15 @@ def process_extension(eid):
         raise ValueError("Failed to find extension record with id '%s'" % ext)
     ext.done = True
     date = dt.now().replace(microsecond=0).isoformat(" ")
-    if (not ext.extend) or (ext.extend and ext.project.type == "h"):
-        ext.project.resources.valid = False
-        ext.project.resources = create_resource(ext.project, ext.hours)
-        msg = "Created based on renewal request ID %s on %s" % (eid, date)
-        ext.project.resources.comment = msg
-        return ProjectLog(ext.project).renew(ext)
-    ext.project.resources.cpu += ext.hours
-    ext.project.resources.valid = True
-    msg = "CPU value has been extended to %s hours on %s based upon "\
-          "extension request ID %s" % (ext.hours, date, eid)
-    if ext.project.resources.comment:
-        ext.project.resources.comment = ext.project.resources.comment \
-                                        + "\n" + msg
-    else:
-        ext.project.resources.comment = msg
-    return ProjectLog(ext.project).extended(ext)
+    never_extend = current_app.config.get("NO_EXTENSION_TYPE", None)
+    never_renew = current_app.config.get("NO_RENEWAL_TYPE", None)
+    if ext.project.type in never_extend:
+        return renew_project(eid, ext, date)
+    if ext.project.type in never_renew:
+        return extend_on_extension(eid, ext, date)
+    if not ext.extend:
+        return renew_project(eid, ext, date)
+    return extend_on_extension(eid, ext, date)
 
 
 def pending_resources():
