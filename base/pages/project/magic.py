@@ -285,11 +285,9 @@ def is_extension():
 
 
 def extend_update():
-
     data = request.get_json()
     if not data:
         raise ValueError("Expecting application/json requests")
-
     if "project" in data:
         pid = check_int(data["project"])
     else:
@@ -314,19 +312,11 @@ def extend_update():
         extend = True
 
     project = get_project_record(pid)
-    p_name = project.get_name()
-    p_info = get_project_consumption([p_name])
-    if not p_info:
-        use = 0
-    else:
-        use = p_info[p_name]["total"]
-    maximum = project.resources.cpu
-    if not use:
-        usage = 0
-    else:
-        usage = "{0:.1%}".format(float(use) / float(maximum))
-    return Extend(project=project, hours=cpu, reason=note, present_use=use,
-                  usage_percent=usage, present_total=maximum, extend=extend,
+    project = get_project_consumption(project)
+    return Extend(project=project, hours=cpu, reason=note, extend=extend,
+                  present_use=project.consumed,
+                  usage_percent=project.consumed_use,
+                  present_total=project.resources.cpu,
                   exception=exception)
 
 
