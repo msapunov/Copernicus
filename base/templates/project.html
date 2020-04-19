@@ -96,24 +96,24 @@
             </div>
             <div class="uk-width-medium-2-5 uk-width-small-1-1 {% if project.active != True %}uk-text-muted{% endif %}">
                 <div class="uk-panel uk-margin-top uk-margin-bottom" id="{{project.name}}_project_users">
-                {% for user in project.users|sort(attribute='fullname')%}
+                {% for user in project.users|sort(attribute='login')%}
                     <div class="uk-panel" id="{{project.name}}_{{user.login}}">
                     {% if user.login != project.responsible_login %}
                         <button class="uk-button uk-button-mini uk-button-link uk-text-danger remove uk-icon-justify"
                         type="button" data-pid='{{project.id}}'
-                        data-name='{{user.fullname}}' data-login='{{user.login}}'
+                        data-name='{{user.full_name()}}' data-login='{{user.login}}'
                         data-project='{{project.name}}'>
                         <span class="uk-icon-close"></span>
                         </button>
                     {% else %}
                         <button class="uk-button uk-button-mini uk-button-link uk-text-warning uk-icon-justify"
                         type="button" data-pid='{{project.id}}'
-                        data-name='{{user.fullname}}' data-login='{{user.login}}'
+                        data-name='{{user.full_name()}}' data-login='{{user.login}}'
                         data-project='{{project.name}}' disabled>
                         </button>
                     {% endif %}
                         <span class={% if user.active == 'Suspended' %}"uk-margin-small-left uk-text-muted"{% else %}"uk-margin-small-left"{% endif %} title="{{user.email}}">
-                        {{user.fullname}}{% if user.consumption %} : {{user.consumption}} hours {% endif %} {% if user.active == 'Suspended' %}[Inactive]{% endif%}
+                        {{user.full_name()}}{% if user.consumption %} : {{user.consumption}} hours {% endif %} {% if user.active == 'Suspended' %}[Inactive]{% endif%}
                         </span>
 
                     </div>
@@ -168,9 +168,9 @@
             {% if project.users|length > 1 %}
                 <div id="{{project.id}}_assign_list" class="uk-width-1-1" style="display: none;">
                     <select class="admin_assign_select uk-width-1-1" data-placeholder="Select a user">
-                        {% for user in project.users|sort(attribute='fullname')%}
+                        {% for user in project.users|sort(attribute='login')%}
                             {% if user.login != project.responsible_login and user.active == True %}
-                                <option value="{{user.login}}">{{user.fullname}}</option>
+                                <option value="{{user.login}}">{{user.full_name()}}</option>
                             {% endif %}
                         {% endfor %}
                     </select>
