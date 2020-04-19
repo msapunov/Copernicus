@@ -64,7 +64,7 @@
         {% if data and data.projects %}
             {% for project in data.projects|sort(attribute='name') %}
                 {% if project.resources.cpu > 0 %}
-                    {% if project.consumed_use > project.resources.cpu %}
+                    {% if project.consumed_use > 100 %}
                         {% set color = "#da314b" %}
                         {% set style = "uk-progress-danger" %}
                     {% elif project.consumed_use > 60 %}
