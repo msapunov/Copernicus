@@ -9,10 +9,11 @@ from pdfkit import from_string
 
 from base import db
 from base.database.schema import Extend, File, Project, Tasks
-from base.pages import ProjectLog
+from base.pages import ProjectLog, calculate_usage
 from base.pages import ssh_wrapper, check_int, check_str, send_message
 from base.pages.board.magic import create_resource
 from base.utils import accounting_start, save_file, get_tmpdir
+from logging import error, debug, warning
 
 __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
@@ -229,7 +230,7 @@ def get_limbo_users(projects):
         return projects
 
     for project in projects:
-        pid = project["id"]
+        pid = project.id
         tasks = Tasks.query.filter(
             Tasks.processed == False, Tasks.pid == pid, Tasks.limbo_uid > 0
         ).all()
@@ -237,18 +238,18 @@ def get_limbo_users(projects):
             continue
         limbos = list(map(lambda x: x.limbo_user.login, tasks))
 
-        for user in project["users"]:
-            login = user["login"]
+        for user in project.users:
+            login = user.login
             if login in limbos:
-                user["active"] = "Suspended"
+                user.active = "Suspended"
                 limbos = [x for x in limbos if x != login]
 
         if len(limbos) > 0:
             add = list(filter(lambda x: x.limbo_user.login in limbos, tasks))
             new_users = list(map(lambda x: x.limbo_user.to_dict(), add))
             for user in new_users:
-                user["active"] = "Suspended"
-            project["users"].extend(new_users)
+                user.active = "Suspended"
+            project.users.extend(new_users)
     return projects
 
 
@@ -442,73 +443,78 @@ def get_project_overview():
     return list(map(lambda x: extract_info(x), projects))
 
 
-def get_project_info(start=None, end=None, p_ids=None):
-    if not p_ids:
-        p_ids = current_user.project_ids()
-    tmp = []
-    for pid in p_ids:
-        project = Project().query.filter_by(id=pid).first()
-        if not project:
-            continue
-        if current_user != project.get_responsible():
-            continue
-        tmp.append(project.to_dict())
-    if not tmp:
-        return flash("No active projects found for user '%s'" %
-                     current_user.login)
-
-    tmp_project = list(map(lambda x: x["name"], tmp))
-    conso = get_project_consumption(tmp_project, start, end)
-    if not conso:
-        return tmp
-
-    for project in tmp:
-        name = project["name"]
-        if name in conso:
-            total = conso[name]["total"]
-            project["consumption"] = total
-            project["usage"] = "{0:.1%}".format(
-                float(total) / float(project["resources"]["cpu"]))
+def get_project_info(every=None, user_is_responsible=None):
+    if every:
+        projects = Project.query.all()
+    else:
+        pids = current_user.project_ids()
+        if user_is_responsible:
+            query = Project.query.filter(Project.id.in_(pids))
+            projects = query.filter(Project.responsible == current_user).all()
         else:
-            project["consumption"] = 0
-            project["usage"] = 0
-
-        for user in project["users"]:
-            username = user["login"]
-            if name not in conso:
-                user["consumption"] = 0
-                continue
-            if username not in conso[name]:
-                user["consumption"] = 0
-                continue
-            user["consumption"] = conso[name][username]
-
-    return tmp
+            projects = Project.query.filter(Project.id.in_(pids)).all()
+    if not projects:
+        if every:
+            raise ValueError("No projects found!")
+        else:
+            raise ValueError("No projects found for user '%s'" %
+                             current_user.login)
+    info = list(map(lambda x: get_project_consumption(x), projects))
+    debug(info)
+    return info
 
 
-def get_project_consumption(projects, start=None, end=None):
+def get_project_consumption(project, start=None, end=dt.now()):
+    project.private_use = 0
+    project.private = 0
+    project.consumed_use = 0
+    project.consumed = 0
+    name = project.get_name()
+    if not project.resources:
+        error("No resources attached to project %s" % name)
+        return project
     if not start:
-        start = accounting_start()
-    if not end:
-        end = dt.now().strftime("%m/%d/%y-%H:%M")
+        start = project.resources.created
+    start = start.strftime("%m/%d/%y-%H:%M")
+    finish = end.strftime("%m/%d/%y-%H:%M")
+    conso = get_project_conso(name, start, finish)
+    if not conso:
+        error("Failed to get consumption for project %s" % name)
+        return project
+    login = current_user.login
+    if not project.resources.cpu:
+        error("No CPU set in project resources for %s" % name)
+        return project
+    cpu = project.resources.cpu
+    if login in conso.keys():
+        project.private_use = calculate_usage(conso[login], cpu)
+        project.private = conso[login]
+    if name in conso.keys():
+        project.consumed_use = calculate_usage(conso[name], cpu)
+        project.consumed = conso[name]
+    return project
 
-    name = ",".join(projects)
+
+def get_project_conso(name, start, finish):
     cmd = ["sreport", "cluster", "AccountUtilizationByUser", "-t", "hours"]
     cmd += ["-nP", "format=Account,Login,Used", "Accounts=%s" % name]
-    cmd += ["start=%s" % start, "end=%s" % end]
+    cmd += ["start=%s" % start, "end=%s" % finish]
     run = " ".join(cmd)
-    result, err = ssh_wrapper(run)
-    if not result:
-        return flash("No project consumption information found")
-
-    tmp = {}
-    for item in result:
+    data, err = ssh_wrapper(run)
+    if not data:
+        debug("No data received, nothing to return")
+        return None
+    result = {}
+    for item in data:
         item = item.strip()
-        project, user, conso = item.split("|")
-        if project not in tmp:
-            tmp[project] = {}
-        if not user:
-            tmp[project]["total"] = int(conso)
+        items = item.split("|")
+        if len(items) != 3:
+            continue
+        login = items[1]
+        conso = items[2]
+        if not login:
+            result[name] = int(conso)
         else:
-            tmp[project][user] = int(conso)
-    return tmp
+            result[login] = int(conso)
+    debug("Project '%s' consumption: %s" % (name, result))
+    return result
