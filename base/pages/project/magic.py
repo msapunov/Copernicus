@@ -197,8 +197,8 @@ def process_extension(eid):
         raise ValueError("Failed to find extension record with id '%s'" % ext)
     ext.done = True
     date = dt.now().replace(microsecond=0).isoformat(" ")
-    never_extend = current_app.config.get("NO_EXTENSION_TYPE", None)
-    never_renew = current_app.config.get("NO_RENEWAL_TYPE", None)
+    never_extend = current_app.config.get("NO_EXTENSION_TYPE", [])
+    never_renew = current_app.config.get("NO_RENEWAL_TYPE", [])
     if ext.project.type in never_extend:
         return renew_project(eid, ext, date)
     if ext.project.type in never_renew:
