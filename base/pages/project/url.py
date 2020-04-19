@@ -1,6 +1,7 @@
 from flask import render_template, request, jsonify, flash
 from flask_login import login_required, current_user
 from base import db
+from base.database.schema import LogDB
 from base.pages import (
     ProjectLog,
     check_int,
@@ -192,8 +193,6 @@ def web_project_renew():
 @bp.route("/project/extend", methods=["POST"])
 @login_required
 def web_project_extend():
-    from base import db
-
     record = extend_update()
     db.session.add(record)
     db.session.commit()
@@ -203,8 +202,6 @@ def web_project_extend():
 @bp.route("/project/history", methods=["POST"])
 @login_required
 def web_project_history():
-    from base.database.schema import LogDB
-
     data = request.get_json()
     if not data:
         raise ValueError("Expecting application/json requests")
