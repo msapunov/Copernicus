@@ -8,7 +8,7 @@ from owncloud import Client as OwnClient
 from pdfkit import from_string
 
 from base import db
-from base.database.schema import Extend, File
+from base.database.schema import Extend, File, Project, Tasks
 from base.pages import ProjectLog
 from base.pages import ssh_wrapper, check_int, check_str, send_message
 from base.pages.board.magic import create_resource
@@ -209,7 +209,6 @@ def process_extension(eid):
 
 
 def pending_resources():
-    from base.database.schema import Project
     projects = Project.query.all()
     pending = list(filter(lambda x: x.resources.treated == False, projects))
     return list(map(lambda x: x.api_resources(), pending))
@@ -226,8 +225,6 @@ def get_users(pid):
 
 
 def get_limbo_users(projects):
-    from base.database.schema import Tasks
-
     if not projects:
         return projects
 
@@ -256,8 +253,6 @@ def get_limbo_users(projects):
 
 
 def get_project_by_name(name):
-    from base.database.schema import Project
-
     projects = Project.query.all()
     for project in projects:
         if project.get_name() != name:
@@ -267,8 +262,6 @@ def get_project_by_name(name):
 
 
 def get_project_record(pid):
-    from base.database.schema import Project
-
     project = Project.query.filter_by(id=pid).first()
     if not project:
         raise ValueError("Failed to find project with id '%s'" % pid)
@@ -432,14 +425,11 @@ def project_email(to, title, msg, attach=None):
 
 
 def list_of_projects():
-    from base.database.schema import Project
     projects = map(lambda x: x.get_name(), Project.query.all())
     return sorted(list(projects))
 
 
 def get_project_overview():
-    from base.database.schema import Project
-
     def extract_info(rec):
         name = rec.get_name()
         start = rec.resources.created.strftime("%Y-%m-%d")
@@ -453,8 +443,6 @@ def get_project_overview():
 
 
 def get_project_info(start=None, end=None, p_ids=None):
-    from base.database.schema import Project
-
     if not p_ids:
         p_ids = current_user.project_ids()
     tmp = []
