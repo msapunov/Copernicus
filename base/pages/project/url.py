@@ -219,12 +219,12 @@ def web_project_history():
 @bp.route("/project.html", methods=["GET"])
 @login_required
 def web_project_index():
-    projects = get_project_info()
+    projects = get_project_info(user_is_responsible=True)
     debug(projects)
     if not projects:
         flash("No projects associated with %s" % current_user.full_name())
         return render_template("project.html", data={})
-    list(map(lambda x: clean_activity(x["name"]), projects))
+    list(map(lambda x: clean_activity(x.get_name()), projects))
     now = dt.now()
     if now.month != 1:
         renew = False
