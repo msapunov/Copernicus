@@ -1,7 +1,7 @@
 from flask import current_app
 from flask_login import current_user
 from base.pages import check_int, check_str, check_json
-from base.database.schema import Extend
+from base.database.schema import Extend, Resources
 from datetime import datetime as dt
 from dateutil.relativedelta import relativedelta as rd
 from calendar import monthrange
@@ -119,8 +119,6 @@ def create_resource(project, cpu):
         else:
             day = monthrange(year, month)[1]
         ttl = dt(year, month, day, 0, 0, 0)
-
-    from base.database.schema import Resources
 
     resource = Resources(
         approve=current_user,
