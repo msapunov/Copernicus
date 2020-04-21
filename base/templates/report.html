@@ -69,11 +69,11 @@
     <tbody>
     <tr>
         <td class="uk-text-bold uk-text-right uk-text-nowrap">Project started:</td>
-        <td>{{data.created.split(" ")[0]}}</td>
+        <td>{{data.created.strftime("%Y-%m-%d %H:%M")}}</td>
     </tr>
     <tr>
         <td class="uk-text-bold uk-text-right uk-text-nowrap">Consumption:</td>
-        <td>{{data.consumption}} CPU hours</td>
+        <td>{{data.consumed}} CPU hours</td>
     </tr>
     <tr>
         <td class="uk-text-bold uk-text-right uk-text-nowrap">Responsible:</td>
