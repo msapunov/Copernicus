@@ -123,16 +123,15 @@ def report_activity(name, req):
     if not data:
         raise ValueError("Expecting application/json requests")
 
-    raw_result = get_project_info(p_ids=[project.id])
-    if not raw_result:
+    result = get_project_consumption(project)
+    if not result:
         raise ValueError("No information found for project '%s' Failure during "
                          "report generation" % project.get_name())
-    result = raw_result[0]
-    result["report"] = data["report"]
-    result["doi"] = data["doi"]
-    result["training"] = data["training"]
-    result["hiring"] = data["hiring"]
-    result["generated"] = dt.strftime(dt.now(), "%c")
+    result.report = data["report"]
+    result.doi = data["doi"]
+    result.training = data["training"]
+    result.hiring = data["hiring"]
+    result.generated = dt.strftime(dt.now(), "%c")
 
     tmp = get_tmpdir(current_app)
     for i in ["image_1", "image_2", "image_3"]:
