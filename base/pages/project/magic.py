@@ -215,11 +215,12 @@ def pending_resources():
 
 
 def get_users(pid):
-    projects = get_project_info(p_ids=[pid])
-    get_limbo_users(projects)
-    users = projects[0]["users"]
+    project = get_project_record(pid)
+    get_limbo_users([project])
+    users = list(map(lambda x: x.to_dict(), project.users))
+    debug(users)
     for user in users:
-        if user["login"] == projects[0]["responsible"]["login"]:
+        if user["login"] == project.responsible.login:
             user["responsible"] = True
     return users
 
