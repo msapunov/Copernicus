@@ -178,6 +178,21 @@ def admin_registration_approve(pid):
     return jsonify(data=reg_approve(pid))
 
 
+@bp.route("/admin/registration/visa/<int:pid>", methods=["POST", "GET"])
+@login_required
+@grant_access("admin", "tech")
+def admin_registration_visa(pid):
+    record = get_registration_record(pid)
+    result = record.to_dict()
+    result["dt"] = dt.now().strftime("%d/%m/%Y")
+    locale.setlocale(locale.LC_ALL, "Fr_fr")
+    result["ttl"] = calculate_ttl(record).strftime("%d %B %Y")
+    if not result["type"]:
+        warning("Register project has no time")
+    result["type"].upper()
+    return render_template("visa.html", data=result)
+
+
 @bp.route("/admin/extension/processed/<int:pid>", methods=["POST"])
 @login_required
 @grant_access("admin", "tech")
