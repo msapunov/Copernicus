@@ -11,6 +11,9 @@ from base import mail
 from base.database.schema import LogDB, User
 from base.utils import normalize_word
 from string import ascii_letters
+from dateutil.relativedelta import relativedelta as rd
+from datetime import datetime as dt
+from calendar import monthrange
 
 import smtplib
 from email.mime.multipart import MIMEMultipart
@@ -32,6 +35,24 @@ def grant_access(*roles):
             return redirect(url_for("login.login"))
         return decorated_function
     return log_required
+
+
+def calculate_ttl(project):
+    now = dt.now()
+    if project.type == "a":
+        month = int(current_app.config.get("ACC_TYPE_A", 6))
+        return now + rd(month=+month)
+    if project.type == "h":
+        month = int(current_app.config.get("ACC_TYPE_H", 6))
+        return now + rd(month=+month)
+    # For project type B
+    year = now.year + 1
+    month = int(current_app.config.get("ACC_START_MONTH", 3))
+    if "ACC_START_DAY" in current_app.config:
+        day = int(current_app.config.get("ACC_START_DAY", 1))
+    else:
+        day = monthrange(year, month)[1]
+    return dt(year, month, day, 0, 0, 0)
 
 
 def calculate_usage(use, total):
