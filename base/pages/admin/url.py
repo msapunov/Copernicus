@@ -1,7 +1,12 @@
 from flask import g, flash, request, redirect, url_for, render_template, jsonify
 from flask import current_app
 from flask_login import login_required, login_user, current_user
-from base.pages import ssh_wrapper, send_message, Task, grant_access
+from base.pages import (
+    ssh_wrapper,
+    send_message,
+    Task,
+    grant_access,
+    calculate_ttl)
 from base.pages.user.magic import get_user_record, user_by_id
 from base.pages.admin import bp
 from base.pages.admin.magic import (
@@ -24,6 +29,9 @@ from base.pages.admin.magic import (
 from base.pages.admin.form import UserEditForm
 from base.pages.project.magic import process_extension
 from base.pages.board.magic import Extensions
+from datetime import datetime as dt
+from logging import warning
+import locale
 
 
 __author__ = "Matvey Sapunov"
