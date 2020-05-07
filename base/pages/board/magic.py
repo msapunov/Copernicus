@@ -1,10 +1,6 @@
-from flask import current_app
 from flask_login import current_user
-from base.pages import check_int, check_str, check_json
+from base.pages import check_int, check_str, check_json, calculate_ttl
 from base.database.schema import Extend, Resources
-from datetime import datetime as dt
-from dateutil.relativedelta import relativedelta as rd
-from calendar import monthrange
 from operator import attrgetter
 from base import db
 from logging import debug
@@ -104,32 +100,15 @@ def reject_extension(eid):
 
 
 def create_resource(project, cpu):
-    now = dt.now()
-    if project.type == "a":
-        month = int(current_app.config.get("ACC_TYPE_A", 6))
-        ttl = now + rd(month=+month)
-    elif project.type == "h":
-        month = int(current_app.config.get("ACC_TYPE_H", 6))
-        ttl = now + rd(month=+month)
-    else:  # For project type B
-        year = now.year + 1
-        month = int(current_app.config.get("ACC_START_MONTH", 3))
-        if "ACC_START_DAY" in current_app.config:
-            day = int(current_app.config.get("ACC_START_DAY", 1))
-        else:
-            day = monthrange(year, month)[1]
-        ttl = dt(year, month, day, 0, 0, 0)
-
-    resource = Resources(
+    return Resources(
         approve=current_user,
         valid=True,
         cpu=cpu,
         type=project.type,
         project=project.get_name(),
-        ttl=ttl,
+        ttl=calculate_ttl(project),
         treated=False
     )
-    return resource
 
 
 def get_arguments():
