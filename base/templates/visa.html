@@ -102,9 +102,13 @@
                     <p>Une interface de gestion des projets vous est proposée à l’adresse <a href="https://mesocentre.univamu.fr/copernicus/">https://mesocentre.univamu.fr/copernicus/</a>. Elle permet en particulier de formuler les demandes d'ajout ou suppression de compte.</p>
                     <p>En qualité de coordinateur·trice de projet, la signature de ce document vous engage, ainsi que les autres utilisateur·trices y participant, à respecter les termes de la charte d'utilisation du Mésocentre consultable à l'adresse <a href="https://mesocentre.univ-amu.fr/charte/">https://mesocentre.univ-amu.fr/charte/</a>.</p>
                     <p>Même si vous n'en avez pas formulé la demande, un compte à votre nom sera créé et vous serez abonné·e à la liste de diffusion des responsables des projets et à celle des utilisateurs du Mésocentre.</p>
-
-                        <p>L'allocation accordée est utilisable jusqu'au 01 mars 2021, elle peut être augmentée ou diminuée lors de chaque session d'appel à projet. En particulier, au moment de la première session complémentaire (mai), les projets dont la consommation est inférieure à 15% verront leur allocation diminuée après concertation avec les coordinateurs concernés. La même procédure s'applique lors de la deuxième session complémentaire (octobre) pour une consommation inférieure à 50%.</p>
-
+                    {% if data.type == "B" %}
+                        <p>L'allocation accordée est utilisable jusqu'au {{data.ttl}}, elle peut être augmentée ou diminuée lors de chaque session d'appel à projet. En particulier, au moment de la première session complémentaire (mai), les projets dont la consommation est inférieure à 15% verront leur allocation diminuée après concertation avec les coordinateurs concernés. La même procédure s'applique lors de la deuxième session complémentaire (octobre) pour une consommation inférieure à 50%.</p>
+                    {% elif data.type == "H" %}
+                        <p>Votre allocation relève du projet HPCboost (<a href="https://mesocentre.univ-amu.fr/hpcboost/">https://mesocentre.univ-amu.fr/hpcboost/</a>), financé avec le concours de l’Union européenne avec le Fonds Européen de Développement Régional. Elle est utilisable dans les 6 mois suivants la date du présent avis.</p>
+                    {% elif data.type == "A" %}
+                        <p>L'allocation accordée est utilisable dans les 6 mois suivants la date du présent avis.</p>
+                    {% endif %}
                     <p>Un ensemble de tutoriaux sur l'utilisation des ressources du Mésocentre est proposé sur son site web (<a href="https://mesocentre.univ-amu.fr/les-tutoriaux/">https://mesocentre.univ-amu.fr/les-tutoriaux/</a>).</p>
                     <p>La signature de ce document couvre également toute modification du projet (allocations, comptes, espace disque, ...) qui pourrait survenir à votre demande ou à celle du Mésocentre, et ce pendant toute la durée du projet scientifique associé.</p>
                 </td>
