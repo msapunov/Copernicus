@@ -27,6 +27,32 @@ __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
 
 
+def create_visa(pid):
+    record = get_registration_record(pid)
+    result = record.to_dict()
+    result["dt"] = dt.now().strftime("%d/%m/%Y")
+    locale.setlocale(locale.LC_ALL, "Fr_fr")
+    result["ttl"] = calculate_ttl(record).strftime("%d %B %Y")
+    if not result["type"]:
+        warning("Register project has no time")
+    result["type"].upper()
+    html = render_template("visa.html", data=result)
+    name = "%s.pdf" % record.project_id()
+    path = str(Path(get_tmpdir(current_app), name))
+    debug("PDF temporary file created: %s" % path)
+    pdf = from_string(html, path)
+    debug("If PDF converted successfully: %s" % pdf)
+    if not pdf:
+        return False
+
+    title = "Visa for project %s" % record.project_id()
+    msg = "Test for visa"
+    send_message(, by_who=None, cc=None, title=title, message=msg,
+                 attach=path)
+    if not (path):
+        error("Failed to delete pdf tmp file '%s'" % path)
+
+
 def event_log():
     recs = LogDB().query.all()
     sorted_recs = sorted(recs, key=attrgetter("created"), reverse=True)
