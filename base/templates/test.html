@@ -34,8 +34,8 @@
                     {% for record in data|sort(attribute='name') %}
                         <tr>
                             <td>{{ record.name }}</td>
-                            <td>{{ record.resources.created }}</td>
-                            <td>{{ record.resources.ttl }}</td>
+                            <td>{{ record.resources.created.strftime("%Y-%m-%d") }}</td>
+                            <td>{{ record.resources.ttl.strftime("%Y-%m-%d") }}</td>
                             <td>{{ record.responsible.login }}</td>
                             <td>{{ record.responsible.name }}</td>
                             <td>{{ record.responsible.surname }}</td>
