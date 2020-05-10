@@ -29,6 +29,7 @@ from base.pages.admin.magic import (
 from base.pages.admin.form import UserEditForm
 from base.pages.project.magic import process_extension
 from base.pages.board.magic import Extensions
+from base.database.schema import Project
 from datetime import datetime as dt
 from logging import warning
 import locale
