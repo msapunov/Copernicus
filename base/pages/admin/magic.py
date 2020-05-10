@@ -47,7 +47,8 @@ def create_visa(pid):
 
     title = "Visa for project %s" % record.project_id()
     msg = "Test for visa"
-    send_message(, by_who=None, cc=None, title=title, message=msg,
+    destination = record.responsible_email
+    send_message(destination, by_who=None, cc=None, title=title, message=msg,
                  attach=path)
     if not (path):
         error("Failed to delete pdf tmp file '%s'" % path)
