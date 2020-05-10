@@ -33,12 +33,18 @@
                 <tbody>
                     {% for record in data|sort(attribute='name') %}
                         <tr>
-                            <td>{{ record.name }}</td>
+                            <td>
+                                {% if record.active %}
+                                    <strong>{{ record.name }}</strong>
+                                {% else %}
+                                    {{ record.name }}
+                                {% endif %}
+                            </td>
                             <td>{{ record.resources.created.strftime("%Y-%m-%d") }}</td>
                             <td>{{ record.resources.ttl.strftime("%Y-%m-%d") }}</td>
                             <td>{{ record.responsible.login }}</td>
-                            <td>{{ record.responsible.name }}</td>
-                            <td>{{ record.responsible.surname }}</td>
+                            <td class="uk-text-capitalize">{{ record.responsible.name }}</td>
+                            <td class="uk-text-capitalize">{{ record.responsible.surname }}</td>
                             <td>{{ record.active }}</td>
                         </tr>
                     {% endfor %}
