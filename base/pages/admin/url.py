@@ -38,6 +38,14 @@ __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
 
 
+@bp.route("/test", methods=["GET"])
+@bp.route("/test.html", methods=["GET"])
+@login_required
+@grant_access("admin")
+def web_test():
+    return render_template("test.html", data=Project.query.all())
+
+
 @bp.route("/admin/switch_user", methods=["POST"])
 @login_required
 @grant_access("admin")
