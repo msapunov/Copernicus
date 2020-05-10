@@ -74,8 +74,8 @@ def web_admin_message_register():
     message = data["note"]
     rid = data["project"]
     reg_rec = get_registration_record(rid)
-    id = reg_rec.project_id()
-    title = "[%s] %s" % (id, reg_rec.title)
+    pid = reg_rec.project_id()
+    title = "[%s] %s" % (pid, reg_rec.title)
 
     emails = [reg_rec.responsible_email]
     return jsonify(data=send_message(emails, message=message, title=title))
