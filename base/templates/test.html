@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block head %}
+
+    <script src="{{ url_for('static', filename='js/moment-with-locales.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/board.js') }}"></script>
+
+    <style>
+        .ext_info{
+            background-color: #ddd !important;
+        }
+        .glyphicon-plus {
+            cursor: pointer !important;
+        }
+        .glyphicon-minus {
+            cursor: pointer !important;
+        }
+    </style>
+{% endblock %}
+{% block main %}
+
+                <table id="ext_projects_table" class="uk-table uk-table-striped uk-table-condensed">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Alloc Start</th>
+                            <th>Alloc End</th>
+                            <th>Responsible login</th>
+                            <th>Responsible Name</th>
+                            <th>Responsible Surname</th>
+                            <th>Active</th>
+                        </tr>
+                    </thead>
+                <tbody>
+                    {% for record in data|sort(attribute='name') %}
+                        <tr>
+                            <td>{{ record.name }}</td>
+                            <td>{{ record.resources.created }}</td>
+                            <td>{{ record.resources.ttl }}</td>
+                            <td>{{ record.responsible.login }}</td>
+                            <td>{{ record.responsible.name }}</td>
+                            <td>{{ record.responsible.surname }}</td>
+                            <td>{{ record.active }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+{% endblock %}
