@@ -1,23 +1,24 @@
 from flask import current_app, request, render_template
 from flask_login import current_user
+from base import db
 from base.pages import (check_int,
                         ssh_wrapper,
                         send_message,
                         check_str,
                         Task,
+                        ProjectLog,
+                        TaskQueue,
                         ResponsibleMailingList,
                         UserMailingList,
                         calculate_ttl)
-from base.pages import ProjectLog
 from base.pages.project.magic import get_project_by_name
 from base.pages.user.magic import get_user_record, user_by_id
+from base.utils import get_tmpdir
+from base.database.schema import User, ACLDB, Register, LogDB, Project
+from base.email import Mail
 from logging import error, debug, warning
 from operator import attrgetter
 from datetime import datetime as dt
-from base.pages import TaskQueue
-from base.utils import get_tmpdir
-from base.database.schema import User, ACLDB, Register, LogDB, Project
-from base import db
 from pdfkit import from_string
 from pathlib import Path
 import locale
