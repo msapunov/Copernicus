@@ -37,21 +37,17 @@ def create_visa(pid):
         warning("Register project has no time")
     result["type"].upper()
     html = render_template("visa.html", data=result)
-    name = "%s.pdf" % record.project_id()
+    ts = str(dt.now().replace(microsecond=0).isoformat("_")).replace(":", "-")
+    name = "%s_visa_%s.pdf" % (record.project_id(), ts)
     path = str(Path(get_tmpdir(current_app), name))
-    debug("PDF temporary file created: %s" % path)
+    debug("The resulting PDF will be saved to: %s" % path)
     pdf = from_string(html, path)
     debug("If PDF converted successfully: %s" % pdf)
     if not pdf:
-        return False
-
-    title = "Visa for project %s" % record.project_id()
-    msg = "Test for visa"
-    destination = record.responsible_email
-    send_message(destination, by_who=None, cc=None, title=title, message=msg,
-                 attach=path)
-    if not (path):
-        error("Failed to delete pdf tmp file '%s'" % path)
+        return "Failed to convert a file to pdf"
+    result = Mail().registration(record).send_visa(path)
+    Path(path).unlink()
+    return result
 
 
 def event_log():
