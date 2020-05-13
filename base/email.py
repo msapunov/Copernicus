@@ -88,6 +88,11 @@ class Mail:
         self.cc = [current_app.config.get("EMAIL_PROJECT", ""),
                    current_app.config.get("EMAIL_TECH", "")]
         self.sender = current_app.config.get("EMAIL_PROJECT", "")
+        name = self.working_object.responsible_first_name
+        surname = self.working_object.responsible_last_name
+        self.message = """Dear %s %s
+        Have to sign the visa
+        """ % (name, surname)
         if self.send():
             return "Sent email with visa to %s" % self.destination
         return "Failed to send email with visa to %s" % self.destination
