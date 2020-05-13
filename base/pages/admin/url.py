@@ -11,6 +11,7 @@ from base.pages.user.magic import get_user_record, user_by_id
 from base.pages.admin import bp
 from base.pages.admin.magic import (
     event_log,
+    create_visa,
     get_server_info,
     get_ltm,
     TaskManager,
@@ -30,9 +31,6 @@ from base.pages.admin.form import UserEditForm
 from base.pages.project.magic import process_extension
 from base.pages.board.magic import Extensions
 from base.database.schema import Project
-from datetime import datetime as dt
-from logging import warning
-import locale
 
 
 __author__ = "Matvey Sapunov"
@@ -191,15 +189,7 @@ def admin_registration_approve(pid):
 @login_required
 @grant_access("admin", "tech")
 def admin_registration_visa(pid):
-    record = get_registration_record(pid)
-    result = record.to_dict()
-    result["dt"] = dt.now().strftime("%d/%m/%Y")
-    locale.setlocale(locale.LC_ALL, "Fr_fr")
-    result["ttl"] = calculate_ttl(record).strftime("%d %B %Y")
-    if not result["type"]:
-        warning("Register project has no time")
-    result["type"].upper()
-    return render_template("visa.html", data=result)
+    return jsonify(data=create_visa(pid))
 
 
 @bp.route("/admin/extension/processed/<int:pid>", methods=["POST"])
