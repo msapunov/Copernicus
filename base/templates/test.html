@@ -14,6 +14,9 @@
         .glyphicon-minus {
             cursor: pointer !important;
         }
+        ul {
+            list-style-type: none;
+        }
     </style>
 {% endblock %}
 {% block main %}
@@ -49,7 +52,9 @@
     {% endfor %}
     </tbody>
 </table>
+<ul>
 {% for record in data|sort(attribute='name') %}
-    {{ record.name }}, {{ record.resources.created.strftime("%Y-%m-%d") }}, {{ record.resources.ttl.strftime("%Y-%m-%d") }}, {{ record.responsible.login }}, {{ record.responsible.name }}, {{ record.responsible.surname }}, {{ record.active }}<br>
+    <li>{{ record.name }}, {{ record.resources.created.strftime("%Y-%m-%d") }}, {{ record.resources.ttl.strftime("%Y-%m-%d") }}, {{ record.responsible.login }}, {{ record.responsible.name }}, {{ record.responsible.surname }}, {{ record.active }}</li>
 {% endfor %}
+</ul>
 {% endblock %}
