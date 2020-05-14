@@ -50,6 +50,6 @@
     </tbody>
 </table>
 {% for record in data|sort(attribute='name') %}
-    {{ record.name }}, {{ record.resources.created.strftime("%Y-%m-%d") }}, {{ record.resources.ttl.strftime("%Y-%m-%d") }}, {{ record.responsible.login }}, {{ record.responsible.name }}, {{ record.responsible.surname }}, {{ record.active }}
+    {{ record.name }}, {{ record.resources.created.strftime("%Y-%m-%d") }}, {{ record.resources.ttl.strftime("%Y-%m-%d") }}, {{ record.responsible.login }}, {{ record.responsible.name }}, {{ record.responsible.surname }}, {{ record.active }}<br>
 {% endfor %}
 {% endblock %}
