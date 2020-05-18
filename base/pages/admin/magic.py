@@ -30,6 +30,9 @@ __copyright__ = "Aix Marseille University"
 
 def create_visa(pid):
     record = get_registration_record(pid)
+    if not record.approve:
+        raise ValueError("Project %s has to be approved first!"
+                         % record.project_id())
     result = record.to_dict()
     result["dt"] = dt.now().strftime("%d/%m/%Y")
     locale.setlocale(locale.LC_ALL, "Fr_fr")
