@@ -21,6 +21,7 @@ from operator import attrgetter
 from datetime import datetime as dt
 from pdfkit import from_string
 from pathlib import Path
+from base.utils import image_string
 import locale
 
 
@@ -38,10 +39,9 @@ def create_visa(pid):
     loc = app.config.get("LOCALE", "C.UTF-8")
     locale.setlocale(locale.LC_ALL, loc)
     result["ttl"] = calculate_ttl(record).strftime("%d %B %Y")
-    if not result["type"]:
-        raise ValueError("Register project has no type")
     result["type"].upper()
-    html = render_template("visa.html", data=result)
+    img = image_string("signature.png")
+    html = render_template("visa.html", data=result, signature=img)
     ts = str(dt.now().replace(microsecond=0).isoformat("_")).replace(":", "-")
     name = "%s_visa_%s.pdf" % (record.project_id(), ts)
     path = str(Path(get_tmpdir(app), name))
