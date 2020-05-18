@@ -1,4 +1,4 @@
-from flask import current_app, request, render_template
+from flask import request, url_for, render_template, current_app as app
 from flask_login import current_user
 from base import db
 from base.pages import (check_int,
@@ -40,7 +40,7 @@ def create_visa(pid):
     html = render_template("visa.html", data=result)
     ts = str(dt.now().replace(microsecond=0).isoformat("_")).replace(":", "-")
     name = "%s_visa_%s.pdf" % (record.project_id(), ts)
-    path = str(Path(get_tmpdir(current_app), name))
+    path = str(Path(get_tmpdir(app), name))
     debug("The resulting PDF will be saved to: %s" % path)
     pdf = from_string(html, path)
     debug("If PDF converted successfully: %s" % pdf)
@@ -60,7 +60,7 @@ def event_log():
 def task_mail(action, task):
     description = task.description()
     tid = task.id
-    to = current_app.config["EMAIL_TECH"]
+    to = app.config["EMAIL_TECH"]
     title = "Task id '%s' has been %sed" % (tid, action)
     msg = "Task '%s' with id '%s' has been %s" % (description, tid, action)
     return message(to, msg, title)
@@ -70,7 +70,7 @@ def task_mail(action, task):
 
 
 def remote_project_creation_magic(name, users):
-    task_file = current_app.config["TASKS_FILE"]
+    task_file = app.config["TASKS_FILE"]
     task = str({"project": name, "users": users})
     with open(task_file, "w") as fd:
         fd.write(task)
@@ -123,9 +123,9 @@ def accept_message(register, msg):
 
 
 def approve_message(register):
-    to = current_app.config["EMAIL_PROJECT"]
-    by_who = current_app.config["EMAIL_TECH"]
-    cc = current_app.config["EMAIL_TECH"]
+    to = app.config["EMAIL_PROJECT"]
+    by_who = app.config["EMAIL_TECH"]
+    cc = app.config["EMAIL_TECH"]
     mid = register.project_id()
     title = "Project request '%s' has been approved by tech team" % mid
     msg = "Software requirements of project request '%s' can be satisfied " \
@@ -146,8 +146,8 @@ def reject_message(register, msg):
 
 
 def message(to, msg, title=None):
-    by_who = current_app.config["EMAIL_PROJECT"]
-    cc = current_app.config["EMAIL_PROJECT"]
+    by_who = app.config["EMAIL_PROJECT"]
+    cc = app.config["EMAIL_PROJECT"]
     if not title:
         title = "Concerning your project"
     return send_message(to, by_who, cc, title, msg)
