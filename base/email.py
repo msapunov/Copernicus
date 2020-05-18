@@ -51,12 +51,19 @@ class Mail:
         return self
 
     def configure(self):
-        self.server = current_app.config.get("MAIL_SERVER", "localhost")
-        self.port = current_app.config.get("MAIL_PORT", 25)
-        self.use_tls = current_app.config.get("MAIL_USE_TLS", False)
-        self.use_ssl = current_app.config.get("MAIL_USE_SSL", False)
-        self.username = current_app.config.get("MAIL_USERNAME", None)
-        self.password = current_app.config.get("MAIL_PASSWORD", None)
+        cfg_file = app.config.get("EMAIL_CONFIG", "mail.cfg")
+        cfg_path = path_join(app.instance_path, cfg_file)
+        if not exists(cfg_path):
+            warning("E-mail configuration file doesn't exists. Using defaults")
+            return
+        self.cfg = ConfigParser()
+        self.cfg.read(cfg_path, encoding="utf-8")
+        self.server = self.cfg.get("SERVER", "HOST")
+        self.port = self.cfg.getint("SERVER", "PORT", fallback=25)
+        self.use_tls = self.cfg.getboolean("SERVER", "USE_TLS", fallback=False)
+        self.use_ssl = self.cfg.getboolean("SERVER", "USE_SSL", fallback=False)
+        self.username = self.cfg.get("SERVER", "USERNAME", fallback=None)
+        self.password = self.cfg.get("SERVER", "PASSWORD", fallback=None)
         return self
 
     def send(self):
