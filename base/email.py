@@ -1,6 +1,8 @@
 from pathlib import Path
-from flask import current_app
-import smtplib
+from flask import current_app as app
+from logging import warning
+from configparser import ConfigParser
+from os.path import join as path_join, exists
 from email.mime.application import MIMEApplication
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -11,8 +13,8 @@ class Mail:
 
     def __init__(self):
         self. destination = None
-        self.sender = current_app.config.get("EMAIL_TECH")
-        self.cc = [current_app.config.get("EMAIL_TECH", [])]
+        self.sender = None
+        self.cc = []
         self.title = "Mesocentre reporting"
         self.message = None
         self.msg = MIMEMultipart()
