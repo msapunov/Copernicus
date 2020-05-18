@@ -3,7 +3,8 @@ from datetime import datetime as dt
 from unicodedata import normalize
 from tempfile import gettempdir, mkdtemp
 from os import walk
-from os.path import join as join_dir
+from os.path import join as join_dir, exists
+from base64 import b64encode
 import logging as log
 
 
