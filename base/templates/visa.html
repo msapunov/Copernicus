@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <base href="{{ data.base_url }}">
     <title>Visa for the project {{data.meso_id}}</title>
     <style>
         @media print {
@@ -120,7 +121,7 @@
                 <td class="uk-text-bold uk-text-left uk-text-nowrap half">
                     <p>Directeur du CCIAM</p>
                     <figure>
-                        <img src="data:image/jpeg;base64,{{ signature | safe }}" width="50%">
+                        <img src="data:image/jpeg;base64,{{ data.signature | safe }}" width="50%">
                         <figcaption>Nicolas Ferre</figcaption>
                     </figure>
                 </td>
