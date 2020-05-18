@@ -51,6 +51,9 @@ def create_visa(pid):
         return "Failed to convert a file to pdf"
     result = Mail().registration(record).send_visa(path)
     Path(path).unlink()
+    debug("Temporary file %s was deleted" % path)
+    record.accepted = True
+    record.accepted_ts = dt.now()
     return result
 
 
