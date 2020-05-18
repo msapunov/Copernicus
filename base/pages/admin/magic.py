@@ -39,6 +39,18 @@ def parse_register_record(rec):
     return result
 
 
+def generate_visa(html, rec):
+    ts = str(dt.now().replace(microsecond=0).isoformat("_")).replace(":", "-")
+    name = "%s_visa_%s.pdf" % (rec.project_id(), ts)
+    path = str(Path(get_tmpdir(app), name))
+    debug("The resulting PDF will be saved to: %s" % path)
+    pdf = from_string(html, path)
+    debug("If PDF converted successfully: %s" % pdf)
+    if not pdf:
+        raise ValueError("Failed to convert a file to pdf")
+    return path
+
+
 def create_visa(pid):
     record = get_registration_record(pid)
     if not record.approve:
