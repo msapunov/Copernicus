@@ -140,16 +140,15 @@ def configure_project(app):
         logging.warning("Projects configuration file doesn't exists. Using "
                         "defaults")
         return
-    config = ConfigParser()
-    config.read(cfg_path)
+    cfg = ConfigParser()
+    cfg.read(cfg_path)
     ctx = app.app_context()
     ctx.g.project = {}
-
-    projects = config.sections()
+    projects = cfg.sections()
     for project in projects:
-        duration = config[project].get("duration", None)
-        end = config[project].get("end_date", None)
-        cpu = config[project].get("cpu", None)
+        duration = cfg.get(project, "duration", fallback=None)
+        end = cfg.get(project, "end_date", fallback=None)
+        cpu = cfg.get(project, "cpu", fallback=None)
         name = project.lower()
         ctx.g.project[name] = {"duration": duration, "end": end, "cpu": cpu}
     logging.debug("Project configuration: %s" % ctx.g.project)
