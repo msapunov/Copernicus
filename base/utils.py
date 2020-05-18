@@ -7,6 +7,14 @@ from os.path import join as join_dir
 import logging as log
 
 
+def image_string(name):
+    img_path = join_dir(current_app.instance_path, name)
+    if not exists(img_path):
+        raise ValueError("Image %s doesn't exists" % img_path)
+    with open(img_path, "rb") as img_file:
+        return b64encode(img_file.read()).decode("ascii")
+
+
 def get_tmpdir(app):
     """
     Check if application specific directory has been already created and create
