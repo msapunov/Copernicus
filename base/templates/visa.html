@@ -78,7 +78,7 @@
     <table class="uk-table uk-margin-large-top">
         <tbody>
             <tr>
-                <td><img src="/static/img/logo.png" width="48%"></td>
+                <td><img src="{{ url_for('static', filename = 'img/logo.png') }}" width="48%"></td>
                 <td>
                     <p>Marseille, le {{data.dt}}</p>
                     <p class="uk-text-nowrap">{{data.responsible_first_name}} {{data.responsible_last_name}}</p>
