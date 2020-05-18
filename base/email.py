@@ -69,12 +69,11 @@ class Mail:
     def send(self):
         self.msg["Subject"] = self.title
         self.msg["From"] = self.sender
-        self.msg["To"] = COMMASPACE.join(self.destination)
+        self.msg["To"] = self.destination
         self.msg["Date"] = formatdate(localtime=True)
         self.msg["Cc"] = COMMASPACE.join(self.cc)
         if self.message:
             self.msg.attach(MIMEText(self.message))
-        self.configure()
         if self.use_ssl:
             smtp = smtplib.SMTP_SSL(self.server, self.port)
         else:
@@ -83,7 +82,7 @@ class Mail:
             smtp.starttls()
         if self.username and self.password:
             smtp.login(self.username, self.password)
-        if current_app.config.get("MAIL_SEND", False):
+        if app.config.get("MAIL_SEND", False):
             smtp.send_message(self.msg)
         smtp.quit()
         return True
