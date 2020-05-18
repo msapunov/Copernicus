@@ -19,7 +19,7 @@ from base.email import Mail
 from logging import error, debug, warning
 from operator import attrgetter
 from datetime import datetime as dt
-from pdfkit import from_string, configuration
+from pdfkit import from_string
 from pathlib import Path
 import locale
 
@@ -42,8 +42,7 @@ def create_visa(pid):
     name = "%s_visa_%s.pdf" % (record.project_id(), ts)
     path = str(Path(get_tmpdir(app), name))
     debug("The resulting PDF will be saved to: %s" % path)
-    config = configuration(wkhtmltopdf="C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe")
-    pdf = from_string(html, path, configuration=config)
+    pdf = from_string(html, path)
     debug("If PDF converted successfully: %s" % pdf)
     if not pdf:
         return "Failed to convert a file to pdf"
