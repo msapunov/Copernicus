@@ -29,6 +29,16 @@ __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
 
 
+def parse_register_record(rec):
+    result = rec.to_dict()
+    result["dt"] = dt.now().strftime("%d/%m/%Y")
+    result["ttl"] = calculate_ttl(rec).strftime("%d %B %Y")
+    result["type"].upper()
+    result["signature"] = image_string("signature.png")
+    result["base_url"] = request.url_root
+    return result
+
+
 def create_visa(pid):
     record = get_registration_record(pid)
     if not record.approve:
