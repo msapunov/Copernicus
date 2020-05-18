@@ -26,6 +26,8 @@ class Mail:
         self.username = None
         self.password = None
         self.working_object = None
+        self.cfg = None
+        self.configure()
 
     def attach_file(self, path=None):
         if not path:
