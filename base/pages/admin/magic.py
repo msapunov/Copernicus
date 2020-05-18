@@ -53,9 +53,11 @@ def generate_pdf(html, rec):
 
 def create_visa(pid):
     record = get_registration_record(pid)
+    name = record.project_id()
     if not record.approve:
-        raise ValueError("Project %s has to be approved first!"
-                         % record.project_id())
+        raise ValueError("Project %s has to be approved first!" % name)
+    if record.accepted:
+        raise ValueError("Visa for the project %s has been already sent" % name)
     result = parse_register_record(record)
     loc = app.config.get("LOCALE", "C.UTF-8")
     locale.setlocale(locale.LC_ALL, loc)
