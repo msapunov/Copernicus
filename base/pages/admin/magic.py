@@ -35,7 +35,8 @@ def create_visa(pid):
                          % record.project_id())
     result = record.to_dict()
     result["dt"] = dt.now().strftime("%d/%m/%Y")
-    locale.setlocale(locale.LC_ALL, "Fr_fr")
+    loc = app.config.get("LOCALE", "C.UTF-8")
+    locale.setlocale(locale.LC_ALL, loc)
     result["ttl"] = calculate_ttl(record).strftime("%d %B %Y")
     if not result["type"]:
         warning("Register project has no time")
@@ -48,7 +49,7 @@ def create_visa(pid):
     pdf = from_string(html, path)
     debug("If PDF converted successfully: %s" % pdf)
     if not pdf:
-        return "Failed to convert a file to pdf"
+        raise ValueError("Failed to convert a file to pdf")
     result = Mail().registration(record).send_visa(path)
     Path(path).unlink()
     debug("Temporary file %s was deleted" % path)
