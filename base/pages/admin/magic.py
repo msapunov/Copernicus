@@ -39,7 +39,7 @@ def create_visa(pid):
     locale.setlocale(locale.LC_ALL, loc)
     result["ttl"] = calculate_ttl(record).strftime("%d %B %Y")
     if not result["type"]:
-        warning("Register project has no time")
+        raise ValueError("Register project has no type")
     result["type"].upper()
     html = render_template("visa.html", data=result)
     ts = str(dt.now().replace(microsecond=0).isoformat("_")).replace(":", "-")
