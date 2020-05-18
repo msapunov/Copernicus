@@ -39,7 +39,7 @@ def parse_register_record(rec):
     return result
 
 
-def generate_visa(html, rec):
+def generate_pdf(html, rec):
     ts = str(dt.now().replace(microsecond=0).isoformat("_")).replace(":", "-")
     name = "%s_visa_%s.pdf" % (rec.project_id(), ts)
     path = str(Path(get_tmpdir(app), name))
@@ -60,7 +60,7 @@ def create_visa(pid):
     loc = app.config.get("LOCALE", "C.UTF-8")
     locale.setlocale(locale.LC_ALL, loc)
     html = render_template("visa.html", data=result)
-    path = generate_visa(html, record)
+    path = generate_pdf(html, record)
     result = Mail().registration(record).send_visa(path)
     Path(path).unlink()
     debug("Temporary file %s was deleted" % path)
