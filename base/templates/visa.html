@@ -92,7 +92,7 @@
                     <p>Référence : {{data.meso_id}}</p>
                     <p>Le projet pour lequel vous avez déposé une demande d'accès aux ressources du Mésocentre a reçu un avis favorable.</p>
                     <p>Titre : {{data.title}}</p>
-                    <p>Allocation accordée (sous réserve du retour sous 3 mois du présent courrier visé) : <b>{{data.cpu}}</b> heures CPU</p>
+                    <p>Allocation accordée (sous réserve du retour sous 3 mois du présent courrier visé) : {{data.cpu}} heures CPU</p>
                     <p>Utilisateur·trices : </p>
                     <ul>
                     {% for user in data.users|sort(attribute='last')%}
@@ -100,7 +100,7 @@
                     {% endfor %}
                     </ul>
                     <p>Pour les nouveaux comptes, les logins et mots de passe seront communiqués dans un message séparé.</p>
-                    <p>Une interface de gestion des projets vous est proposée à l’adresse <a href="https://mesocentre.univamu.fr/copernicus/">https://mesocentre.univamu.fr/copernicus/</a> Elle permet en particulier de formuler les demandes d'ajout ou suppression de compte.</p>
+                    <p>Une interface de gestion des projets vous est proposée à l’adresse <a href="https://mesocentre.univ-amu.fr/copernicus/">https://mesocentre.univ-amu.fr/copernicus/</a> Elle permet en particulier de formuler les demandes d'ajout ou suppression de compte.</p>
                     <p>En qualité de coordinateur·trice de projet, la signature de ce document vous engage, ainsi que les autres utilisateur·trices y participant, à respecter les termes de la charte d'utilisation du Mésocentre consultable à l'adresse <a href="https://mesocentre.univ-amu.fr/charte/">https://mesocentre.univ-amu.fr/charte/</a>.</p>
                     <p>Même si vous n'en avez pas formulé la demande, un compte à votre nom sera créé et vous serez abonné·e à la liste de diffusion des responsables des projets et à celle des utilisateurs du Mésocentre.</p>
                     {% if data.type == "B" %}
