@@ -23,7 +23,8 @@
         user_edit: "admin/user/details/set",
         user_delete: "admin/user/delete",
         user_purge: "admin/user/purge",
-        user_p_reset: "admin/user/password"
+        user_p_reset: "admin/user/password",
+        visa: "admin/registration/visa",
     };
     window.admin.sys = function(){
         json_send(window.admin.url.system).done(function(data){
