@@ -1,4 +1,4 @@
-from flask import request, url_for, render_template, current_app as app
+from flask import request, render_template, current_app as app
 from flask_login import current_user
 from base import db
 from base.pages import (check_int,
@@ -36,6 +36,10 @@ def parse_register_record(rec):
     result["type"].upper()
     result["signature"] = image_string("signature.png")
     result["base_url"] = request.url_root
+    u_list = Mail().cfg.get("DEFAULT", "USER_LIST", fallback=None)
+    r_list = Mail().cfg.get("DEFAULT", "RESPONSIBLE_LIST", fallback=None)
+    result["user_list"] = "(%s)" % u_list if u_list else ""
+    result["resp_list"] = "(%s)" % r_list if r_list else ""
     return result
 
 
