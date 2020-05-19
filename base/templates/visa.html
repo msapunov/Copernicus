@@ -92,7 +92,7 @@
                     <p>Référence&nbsp;:&nbsp;{{data.meso_id}}</p>
                     <p>Le projet pour lequel vous avez déposé une demande d'accès aux ressources du Mésocentre a reçu un avis favorable.</p>
                     <p>Titre&nbsp;:&nbsp;{{data.title}}</p>
-                    <p>Allocation accordée (sous réserve du retour sous 3 mois du présent courrier visé)&nbsp;:&nbsp;<strong>{{data.cpu}}</strong> heures CPU</p>
+                    <p>Allocation accordée (sous réserve du retour sous 3 mois du présent courrier visé)&nbsp;:&nbsp;{{data.cpu}} heures CPU</p>
                     <p>Utilisateur·trices&nbsp;:&nbsp;</p>
                     <ul>
                     {% for user in data.users|sort(attribute='last')%}
