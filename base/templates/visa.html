@@ -100,9 +100,9 @@
                     {% endfor %}
                     </ul>
                     <p>Pour les nouveaux comptes, les logins et mots de passe seront communiqués dans un message séparé.</p>
-                    <p>Une interface de gestion des projets vous est proposée à l’adresse <a href="https://mesocentre.univ-amu.fr/copernicus/">https://mesocentre.univ-amu.fr/copernicus/</a> Elle permet en particulier de formuler les demandes d'ajout ou suppression de compte.</p>
+                    <p>Une interface de gestion des projets vous est proposée à l’adresse <a href="https://mesocentre.univ-amu.fr/copernicus/">https://mesocentre.univ-amu.fr/copernicus/</a>. Elle permet en particulier de formuler les demandes d'ajout ou suppression de compte.</p>
                     <p>En qualité de coordinateur·trice de projet, la signature de ce document vous engage, ainsi que les autres utilisateur·trices y participant, à respecter les termes de la charte d'utilisation du Mésocentre consultable à l'adresse <a href="https://mesocentre.univ-amu.fr/charte/">https://mesocentre.univ-amu.fr/charte/</a>.</p>
-                    <p>Même si vous n'en avez pas formulé la demande, un compte à votre nom sera créé et vous serez abonné·e à la liste de diffusion des responsables des projets et à celle des utilisateurs du Mésocentre.</p>
+                    <p>Même si vous n'en avez pas formulé la demande, un compte à votre nom sera créé et vous serez abonné·e à la liste de diffusion des responsables des projets {{ data.resp_list }} et à celle des utilisateurs du Mésocentre {{ data.user_list }}.</p>
                     {% if data.type == "B" %}
                         <p>L'allocation accordée est utilisable jusqu'au {{data.ttl}}, elle peut être augmentée ou diminuée lors de chaque session d'appel à projet. En particulier, au moment de la première session complémentaire (mai), les projets dont la consommation est inférieure à 15% verront leur allocation diminuée après concertation avec les coordinateurs concernés. La même procédure s'applique lors de la deuxième session complémentaire (octobre) pour une consommation inférieure à 50%.</p>
                     {% elif data.type == "H" %}
