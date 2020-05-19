@@ -88,19 +88,19 @@
             </tr>
             <tr>
                 <td colspan="2">
-                    <p>Objet&nbsp;:&nbsp;Allocation de ressources</p>
-                    <p>Référence&nbsp;:&nbsp;{{data.meso_id}}</p>
+                    <p>Objet : Allocation de ressources</p>
+                    <p>Référence : {{data.meso_id}}</p>
                     <p>Le projet pour lequel vous avez déposé une demande d'accès aux ressources du Mésocentre a reçu un avis favorable.</p>
-                    <p>Titre&nbsp;:&nbsp;{{data.title}}</p>
-                    <p>Allocation accordée (sous réserve du retour sous 3 mois du présent courrier visé)&nbsp;:&nbsp;{{data.cpu}} heures CPU</p>
-                    <p>Utilisateur·trices&nbsp;:&nbsp;</p>
+                    <p>Titre : {{data.title}}</p>
+                    <p>Allocation accordée (sous réserve du retour sous 3 mois du présent courrier visé) : <b>{{data.cpu}}</b> heures CPU</p>
+                    <p>Utilisateur·trices : </p>
                     <ul>
                     {% for user in data.users|sort(attribute='last')%}
                         <li>{{user.name[0]|upper}}{{user.name[1:]|lower}} {{user.last[0]|upper}}{{user.last[1:]|lower}} - {{user.mail|lower}}</li>
                     {% endfor %}
                     </ul>
                     <p>Pour les nouveaux comptes, les logins et mots de passe seront communiqués dans un message séparé.</p>
-                    <p>Une interface de gestion des projets vous est proposée à l’adresse&nbsp;<a href="https://mesocentre.univamu.fr/copernicus/">https://mesocentre.univamu.fr/copernicus/</a> Elle permet en particulier de formuler les demandes d'ajout ou suppression de compte.</p>
+                    <p>Une interface de gestion des projets vous est proposée à l’adresse <a href="https://mesocentre.univamu.fr/copernicus/">https://mesocentre.univamu.fr/copernicus/</a> Elle permet en particulier de formuler les demandes d'ajout ou suppression de compte.</p>
                     <p>En qualité de coordinateur·trice de projet, la signature de ce document vous engage, ainsi que les autres utilisateur·trices y participant, à respecter les termes de la charte d'utilisation du Mésocentre consultable à l'adresse <a href="https://mesocentre.univ-amu.fr/charte/">https://mesocentre.univ-amu.fr/charte/</a>.</p>
                     <p>Même si vous n'en avez pas formulé la demande, un compte à votre nom sera créé et vous serez abonné·e à la liste de diffusion des responsables des projets et à celle des utilisateurs du Mésocentre.</p>
                     {% if data.type == "B" %}
