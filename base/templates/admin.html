@@ -103,6 +103,8 @@
                             <td style="width: 20px;">
                                 {% if record.approve %}
                                     <span id="approval_ico_{{record.id}}" class="uk-icon-wrench uk-text-success"></span>
+                                {% elif record.accepted %}
+                                    <span id="approval_ico_{{record.id}}" class="uk-icon-edit uk-text-success"></span>
                                 {% else %}
                                     <span id="approval_ico_{{record.id}}" class="uk-icon-question uk-text-primary"></span>
                                 {% endif %}
@@ -192,11 +194,15 @@
                                 <div id="approval_msg_{{record.id}}" class="uk-width-1-1 uk-margin-bottom">
                                     {% if record.approve %}
                                         <div class="uk-badge uk-badge-success">Technical approval granted!</div>
+                                    {% elif record.accepted %}
+                                        <div class="uk-badge uk-badge-success">Visa sent! Waiting for reply</div>
                                     {% endif %}
                                 </div>
                                 <div class="uk-button-group uk-float-right">
                                     {% if record.approve %}
-                                        <button class="uk-button new_accept" type="button" data-id='{{record.id}}' data-meso='{{record.meso_id}}' data-title='{{record.title}}'><span class="uk-icon-thumbs-o-up uk-margin-small-right"></span>Accept</button>
+                                        <button class="uk-button new_visa" type="button" data-id='{{record.id}}' data-meso='{{record.meso_id}}' data-title='{{record.title}}'><span class="uk-icon-edit uk-margin-small-right"></span>Send Visa</button>
+                                    {% elif record.accepted %}
+                                        <button class="uk-button new_accept" type="button" data-id='{{record.id}}' data-meso='{{record.meso_id}}' data-title='{{record.title}}'><span class="uk-icon-cogs uk-margin-small-right"></span>Create!</button>
                                     {% else %}
                                         <button class="uk-button new_approve" type="button" data-id='{{record.id}}' data-meso='{{record.meso_id}}' data-title='{{record.title}}'><span class="uk-icon-wrench uk-margin-small-right"></span>Approve</button>
                                     {% endif %}
