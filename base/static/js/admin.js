@@ -503,6 +503,32 @@
             });
         });
     };
+    window.render.new_visa=function(){
+        var id = $.trim( $(this).data("id") );
+        var mid = $.trim( $(this).data("meso") );
+        var project_title = $.trim( $(this).data("title") );
+        var title = "Project: {0}".f(project_title);
+        var name = "Registration ID: {0}".f(mid);
+        var text = "Create and send visa to responsible person?";
+        var conf = [title, name, text].join("<br>");
+        var url = window.admin.url.visa + "/" + id;
+        UIkit.modal.confirm(conf, function(){
+            json_send(url).done(function(reply){
+                if(reply.data){
+                    UIkit.notify(reply.data, {timeout: 2000, status:"success"});
+                }
+                var app_id = "#approval_msg_{0}".f(id);
+                $(app_id).append(
+                    $("<div/>").addClass("uk-badge uk-badge-success").html(
+                        "Visa sent! Waiting for reply")
+                );
+                var ico_id = "#approval_ico_{0}".f(id);
+                $(ico_id).addClass("uk-icon-edit").addClass("uk-text-warning");
+                $(ico_id).removeClass("uk-icon-wrench").removeClass("uk-text-success");
+                window.render.approveBtnReplace(btn);
+            });
+        });
+    };
     window.render.new_approve=function(){
         var btn = $(this);
         var id = $.trim( $(this).data("id") );
@@ -776,6 +802,7 @@
 
     $(document).on("click", ".new_project", window.render.new_project);
     $(document).on("click", ".new_approve", window.render.new_approve);
+    $(document).on("click", ".new_visa", window.render.new_visa);
     $(document).on("click", ".new_accept", window.render.new_accept);
     $(document).on("click", ".new_ignore", window.render.new_ignore);
     $(document).on("click", ".new_reject", window.render.new_reject);
