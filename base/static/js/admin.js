@@ -2,7 +2,7 @@
     "use strict";
     window.admin = {};
     window.admin.url = {
-        accept: "admin/registration/accept",
+        accept: "admin/registration/accept",  // Temporary handler to be removed
         approve: "admin/registration/approve",
         reject: "admin/registration/reject",
         ignore: "admin/registration/ignore",
