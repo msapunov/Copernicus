@@ -82,7 +82,7 @@
                 <td><img src="{{ url_for('static', filename = 'img/logo.png') }}" width="48%"></td>
                 <td>
                     <p>Marseille, le {{data.dt}}</p>
-                    <p class="uk-text-nowrap">{{data.responsible_first_name}} {{data.responsible_last_name}}</p>
+                    <p class="uk-text-nowrap">{{data.responsible_first_name[0]|upper}}{{data.responsible_first_name[1:]|lower}} {{data.responsible_last_name[0]|upper}}{{data.responsible_last_name[1:]|lower}}</p>
                     <p>{{data.responsible_lab}}</p>
                 </td>
             </tr>
@@ -96,7 +96,7 @@
                     <p>Utilisateur·trices:</p>
                     <ul>
                     {% for user in data.users|sort(attribute='last')%}
-                        <li>{{user.name}} {{user.last}} - {{user.mail}}</li>
+                        <li>{{user.name[0]|upper}}{{user.name[1:]|lower}} {{user.last[0]|upper}}{{user.last[1:]|lower}} - {{user.mail|lower}}</li>
                     {% endfor %}
                     </ul>
                     <p>Pour les nouveaux comptes, les logins et mots de passe seront communiqués dans un message séparé.</p>
