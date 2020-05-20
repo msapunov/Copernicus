@@ -72,6 +72,7 @@ def create_visa(pid, force=False):
     debug("Temporary file %s was deleted" % path)
     record.accepted = True
     record.accepted_ts = dt.now()
+    db.session.commit()
     return result
 
 
