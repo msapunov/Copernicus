@@ -526,7 +526,7 @@
                 var ico_id = "#approval_ico_{0}".f(id);
                 $(ico_id).addClass("uk-icon-edit").addClass("uk-text-warning");
                 $(ico_id).removeClass("uk-icon-wrench").removeClass("uk-text-success");
-                window.render.approveBtnReplace(btn);
+                window.render.visaBtnReplace(btn);
             });
         });
     };
@@ -588,6 +588,12 @@
                 UIkit.modal("#modal").hide();
             }
         });
+    };
+    window.render.visaBtnReplace=function(btn){
+        btn.removeClass("new_visa").addClass("new_create");
+        var span = btn.find("span")[0];
+        $(span).removeClass("uk-icon-wrench").addClass("uk-icon-cogs");
+        btn.html(span.outerHTML + "Create Project!");
     };
     window.render.approveBtnReplace=function(btn){
         btn.removeClass("new_approve").addClass("new_visa");
