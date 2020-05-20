@@ -590,10 +590,10 @@
         });
     };
     window.render.approveBtnReplace=function(btn){
-        btn.removeClass("new_approve").addClass("new_accept");
+        btn.removeClass("new_approve").addClass("new_visa");
         var span = btn.find("span")[0];
-        $(span).removeClass("uk-icon-wrench").addClass("uk-icon-thumbs-o-up");
-        btn.html(span.outerHTML + "Accept");
+        $(span).removeClass("uk-icon-wrench").addClass("uk-icon-edit");
+        btn.html(span.outerHTML + "Send Visa");
     };
     window.render.name_swap=function(){
         var name_el, surname_el, name, surname;
