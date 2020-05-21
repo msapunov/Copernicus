@@ -104,7 +104,7 @@
                                 {% if record.approve and not record.accepted %}
                                     <span id="approval_ico_{{record.id}}" class="uk-icon-wrench uk-text-success"></span>
                                 {% elif record.approve and record.accepted %}
-                                    <span id="approval_ico_{{record.id}}" class="uk-icon-edit uk-text-success"></span>
+                                    <span id="approval_ico_{{record.id}}" class="uk-icon-edit uk-text-warning"></span>
                                 {% else %}
                                     <span id="approval_ico_{{record.id}}" class="uk-icon-question uk-text-primary"></span>
                                 {% endif %}
