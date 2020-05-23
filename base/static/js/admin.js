@@ -511,17 +511,29 @@
         var title = "Project: {0}".f(project_title);
         var name = "Registration ID: {0}".f(mid);
         var text = "Create and send visa to responsible person?";
-        var conf = [title, name, text].join("<br>");
+        var checkbox = $("<input>").attr({
+            "id": "visa_checkbox",
+            "name": "visa_exception",
+            "type": "checkbox"
+        }).addClass("uk-margin-small-right uk-form-danger");
+        var label = $("<label/>").attr('for', "visa_checkbox");
+        label.text("Select checkbox if project does not require a signed visa");
+        var express = $("<div/>").addClass(
+            "uk-form-row uk-alert uk-alert-danger"
+        );
+        express.append(checkbox).append(label);
+
+        var conf = [title, name, text, express.prop("outerHTML")].join("<br>");
         var url = window.admin.url.visa + "/" + id;
         UIkit.modal.confirm(conf, function(){
-            json_send(url).done(function(reply){
+            var exception = $("input[name=visa_exception]").is(':checked') ? true : false;
+            json_send(url, {"visa": exception}).done(function(reply){
                 if(reply.data){
                     UIkit.notify(reply.data, {timeout: 2000, status:"success"});
                 }
                 var app_id = "#approval_msg_{0}".f(id);
                 $(app_id).append(
-                    $("<div/>").addClass("uk-badge uk-badge-success").html(
-                        "Visa sent! Waiting for reply")
+                    $("<div/>").addClass("uk-badge uk-badge-success").html("Visa done")
                 );
                 var ico_id = "#approval_ico_{0}".f(id);
                 $(ico_id).addClass("uk-icon-edit").addClass("uk-text-warning");
@@ -548,7 +560,7 @@
                 var app_id = "#approval_msg_{0}".f(id);
                 $(app_id).append(
                     $("<div/>").addClass("uk-badge uk-badge-success").html(
-                        "Technical approval granted!")
+                        "Technical approval granted")
                 );
                 var ico_id = "#approval_ico_{0}".f(id);
                 $(ico_id).addClass("uk-icon-wrench").addClass("uk-text-success");

@@ -5,12 +5,12 @@ from base.pages import (
     ssh_wrapper,
     send_message,
     Task,
-    grant_access,
-    calculate_ttl)
+    grant_access)
 from base.pages.user.magic import get_user_record, user_by_id
 from base.pages.admin import bp
 from base.pages.admin.magic import (
     event_log,
+    skip_visa,
     create_visa,
     get_server_info,
     get_ltm,
@@ -189,6 +189,9 @@ def admin_registration_approve(pid):
 @login_required
 @grant_access("admin", "tech")
 def admin_registration_visa(pid):
+    data = request.get_json()
+    if data["visa"]:
+        return jsonify(data=skip_visa(pid))
     return jsonify(data=create_visa(pid))
 
 

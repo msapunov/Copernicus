@@ -76,9 +76,7 @@ def skip_visa(pid):
         raise ValueError("Project %s has to be approved first!" % name)
     record.accepted = True
     record.accepted_ts = dt.now()
-    skip_ts = dt.now().replace(microsecond=0).isoformat("_").replace(":", "-")
-    msg = "%s: Visa step has been skipped" % skip_ts
-    record.comment = record.comment + "\n" + msg
+    record.comment = visa_comment(record, sent=False)
     db.session.commit()
     return record.comment
 
@@ -95,13 +93,14 @@ def create_visa(pid, force=False):
     locale.setlocale(locale.LC_ALL, loc)
     html = render_template("visa.html", data=result)
     path = generate_pdf(html, record)
-    result = Mail().registration(record).send_visa(path)
+    Mail().registration(record).send_visa(path)
     Path(path).unlink()
     debug("Temporary file %s was deleted" % path)
     record.accepted = True
     record.accepted_ts = dt.now()
+    record.comment = visa_comment(record, sent=True)
     db.session.commit()
-    return result
+    return record.comment
 
 
 def event_log():
