@@ -55,6 +55,20 @@ def generate_pdf(html, rec):
     return path
 
 
+def visa_comment(rec, sent=True):
+    visa_ts = rec.accepted_ts.replace(
+        microsecond=0
+    ).isoformat("_").replace(":", "-")
+    if sent:
+        msg = "%s: Visa sent to %s" % (visa_ts, rec.responsible_email)
+    else:
+        msg = "%s: Visa step has been skipped" % visa_ts
+    comments = rec.comment.split("\n")
+    comment_list = list(map(lambda x: x.strip(), comments))
+    comment_list.append(msg)
+    return "\n".join(comment_list)
+
+
 def skip_visa(pid):
     record = get_registration_record(pid)
     name = record.project_id()
