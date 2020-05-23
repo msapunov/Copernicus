@@ -55,6 +55,20 @@ def generate_pdf(html, rec):
     return path
 
 
+def skip_visa(pid):
+    record = get_registration_record(pid)
+    name = record.project_id()
+    if not record.approve:
+        raise ValueError("Project %s has to be approved first!" % name)
+    record.accepted = True
+    record.accepted_ts = dt.now()
+    skip_ts = dt.now().replace(microsecond=0).isoformat("_").replace(":", "-")
+    msg = "%s: Visa step has been skipped" % skip_ts
+    record.comment = record.comment + "\n" + msg
+    db.session.commit()
+    return record.comment
+
+
 def create_visa(pid, force=False):
     record = get_registration_record(pid)
     name = record.project_id()
