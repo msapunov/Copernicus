@@ -154,6 +154,16 @@ def admin_registration_ignore(pid):
     return jsonify(data=reg_ignore(pid))
 
 
+@bp.route("/admin/registration/create/<int:pid>", methods=["POST"])
+@login_required
+@grant_access("admin")
+def admin_registration_create(pid):
+    data = request.get_json()
+    if not data["safety"]:
+        raise ValueError("You should confirm that everything is correct")
+    return jsonify(data="No ready yet!")
+
+
 @bp.route("/admin/registration/reject/<int:pid>", methods=["POST"])
 @login_required
 @grant_access("admin")
