@@ -449,6 +449,38 @@
             });
         });
     };
+    window.render.new_create=function(){
+        var id = $.trim( $(this).data("id") );
+        var mid = $.trim( $(this).data("meso") );
+        var project_title = $.trim( $(this).data("title") );
+        var title = "Project: {0}".f(project_title);
+        var name = "Registration ID: {0}".f(mid);
+        var text = "Create project record and correspondent task in the task queue?";
+        var checkbox = $("<input>").attr({
+            "id": "safety_checkbox",
+            "name": "safety",
+            "type": "checkbox"
+        }).addClass("uk-margin-small-right uk-form-danger");
+        var label = $("<label/>").attr('for', "safety_checkbox");
+        label.text("I do confirm that all bureaucratic procedures are finished");
+        var express = $("<div/>").addClass(
+            "uk-form-row uk-alert uk-alert-danger"
+        );
+        express.append(checkbox).append(label);
+
+        var conf = [title, name, text, express.prop("outerHTML")].join("<br>");
+        var url = window.admin.url.visa + "/" + id;
+        UIkit.modal.confirm(conf, function(){
+            var safety = $("input[name=safety]").is(':checked') ? true : false;
+            json_send(url, {"safety": safety}).done(function(reply){
+                if(reply.data){
+                    UIkit.notify(reply.data, {timeout: 2000, status:"success"});
+                }
+                $("#"+id).remove();
+                $("#"+id+"-info").remove();
+            });
+        });
+    };
     window.render.new_reject=function(){
         var id = $.trim( $(this).data("id") );
         var mid = $.trim( $(this).data("meso") );
