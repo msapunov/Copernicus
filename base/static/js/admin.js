@@ -820,6 +820,7 @@
     $(document).on("click", ".message", window.render.message);
 
     $(document).on("click", ".new_project", window.render.new_project);
+    $(document).on("click", ".new_create", window.render.new_create);
     $(document).on("click", ".new_approve", window.render.new_approve);
     $(document).on("click", ".new_visa", window.render.new_visa);
     $(document).on("click", ".new_accept", window.render.new_accept);
