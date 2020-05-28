@@ -76,7 +76,7 @@ def skip_visa(pid):
         raise ValueError("Project %s has to be approved first!" % name)
     record.accepted = True
     record.accepted_ts = dt.now()
-    record.comment = visa_comment(record, sent=False)
+    record.comment = reg_msg(record, "visa_skip")
     db.session.commit()
     return record.comment
 
@@ -98,7 +98,7 @@ def create_visa(pid, force=False):
     debug("Temporary file %s was deleted" % path)
     record.accepted = True
     record.accepted_ts = dt.now()
-    record.comment = visa_comment(record, sent=True)
+    record.comment = reg_msg(record, "visa_sent")
     db.session.commit()
     return record.comment
 
@@ -301,6 +301,29 @@ def reg_ignore(pid):
     rec.processed_ts = dt.now()
     db.session.commit()
     return rec.comment
+
+
+def reg_msg(rec, act):
+    ts = dt.now().replace(microsecond=0).isoformat("_").replace(":", "-")
+    if act == "accept":
+        msg = "Project creation request accepted"
+    elif act == "approve":
+        msg = "Project software requirements approved"
+    elif act == "reject":
+        msg = "Project creation request rejected"
+    elif act == "ignore":
+        msg = "Project creation request ignored"
+    elif act == "visa_skip":
+        msg = "Visa sent to %s" % rec.responsible_email
+    elif act == "visa_sent":
+        msg = "Visa sending step has been skipped"
+    else:
+        raise ValueError("Selector %s does not supported" % act)
+    message = "%s: %s by %s" % (ts, msg, current_user.full_name())
+    comments = rec.comment.split("\n")
+    comment_list = list(map(lambda x: x.strip(), comments))
+    comment_list.append(message)
+    return "\n".join(comment_list)
 
 
 def reg_message(txt, selector):
