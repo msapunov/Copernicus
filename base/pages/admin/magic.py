@@ -845,3 +845,7 @@ def slurm_partition_info():
         partition.append({"name": name, "allocated": allocated, "idle": idle,
                           "other": other, "total": int(total)})
     return partition
+
+
+def create_project(rid):
+    pass
