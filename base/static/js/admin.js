@@ -4,6 +4,7 @@
     window.admin.url = {
         accept: "admin/registration/accept",  // Temporary handler to be removed
         approve: "admin/registration/approve",
+        create: "admin/registration/create",
         reject: "admin/registration/reject",
         ignore: "admin/registration/ignore",
         info: "admin/partition/info",
@@ -469,7 +470,7 @@
         express.append(checkbox).append(label);
 
         var conf = [title, name, text, express.prop("outerHTML")].join("<br>");
-        var url = window.admin.url.visa + "/" + id;
+        var url = window.admin.url.create + "/" + id;
         UIkit.modal.confirm(conf, function(){
             var safety = $("input[name=safety]").is(':checked') ? true : false;
             json_send(url, {"safety": safety}).done(function(reply){
