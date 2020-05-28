@@ -9,6 +9,7 @@ from base.pages import (
 from base.pages.user.magic import get_user_record, user_by_id
 from base.pages.admin import bp
 from base.pages.admin.magic import (
+    create_project,
     event_log,
     skip_visa,
     create_visa,
@@ -161,7 +162,7 @@ def admin_registration_create(pid):
     data = request.get_json()
     if not data["safety"]:
         raise ValueError("You should confirm that everything is correct")
-    return jsonify(data="No ready yet!")
+    return jsonify(data=create_project(pid))
 
 
 @bp.route("/admin/registration/reject/<int:pid>", methods=["POST"])
