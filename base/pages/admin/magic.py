@@ -848,4 +848,28 @@ def slurm_partition_info():
 
 
 def create_project(rid):
-    pass
+    record = get_registration_record(rid)
+    reg_name = record.project_id()
+    if not record.approve:
+        raise ValueError("Project %s has to be approved first!" % reg_name)
+    if not record.accepted:
+        raise ValueError("Project %s has to be accepted first!" % reg_name)
+    project = Project(
+        title=record.title,
+        description=record.description,
+        scientific_fields=record.scientific_fields,
+        genci_committee=record.genci_committee,
+        numerical_methods=record.numerical_methods,
+        computing_resources=record.computing_resources,
+        project_management=record.project_management,
+        project_motivation=record.project_motivation,
+        active=False,
+        comment="Initial commit",
+        ref=record,
+        privileged=False,
+        type=record.type,
+        created=dt.now()
+    )
+    db.session.commit()
+    name = project.get_name()
+    project.resources = create_resource(project, record.cpu)
