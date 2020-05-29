@@ -12,6 +12,7 @@ from base.pages import (check_int,
                         UserMailingList,
                         calculate_ttl)
 from base.pages.project.magic import get_project_by_name
+from base.pages.board.magic import create_resource
 from base.pages.user.magic import get_user_record, user_by_id
 from base.utils import get_tmpdir
 from base.database.schema import User, ACLDB, Register, LogDB, Project
