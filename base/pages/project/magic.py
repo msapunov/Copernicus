@@ -455,8 +455,6 @@ def get_project_info(every=None, user_is_responsible=None):
 
 
 def get_project_consumption(project, start=None, end=None):
-    if not end:
-        end = dt.now()
     project.private_use = 0
     project.private = 0
     project.consumed_use = 0
@@ -468,6 +466,8 @@ def get_project_consumption(project, start=None, end=None):
     if not start:
         start = project.resources.created
     start = start.strftime("%m/%d/%y-%H:%M")
+    if not end:
+        end = dt.now()
     finish = end.strftime("%m/%d/%y-%H:%M")
     conso = get_project_conso(name, start, finish)
     if not conso:
