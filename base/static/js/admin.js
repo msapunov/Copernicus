@@ -846,6 +846,7 @@
 
     $(document).on("ready", function(){
         window.admin.sys();
+        $("#events").DataTable();
     });
     $(document).on("click", ".user_show", window.render.user);
     $(document).on("click", ".system_reload", window.admin.sys);
