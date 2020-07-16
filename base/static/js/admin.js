@@ -635,10 +635,10 @@
         });
     };
     window.render.visaBtnReplace=function(btn){
-        btn.removeClass("new_visa").addClass("new_create");
+        btn.removeClass("new_visa").addClass("new_resend_visa");
         var span = btn.find("span")[0];
-        $(span).removeClass("uk-icon-wrench").addClass("uk-icon-cogs");
-        btn.html(span.outerHTML + "Create Project!");
+        //$(span).removeClass("uk-icon-wrench").addClass("uk-icon-cogs");
+        btn.html(span.outerHTML + "Re-send Visa");
     };
     window.render.approveBtnReplace=function(btn){
         btn.removeClass("new_approve").addClass("new_visa");
@@ -857,6 +857,7 @@
     $(document).on("click", ".new_create", window.render.new_create);
     $(document).on("click", ".new_approve", window.render.new_approve);
     $(document).on("click", ".new_visa", window.render.new_visa);
+    $(document).on("click", ".new_resend_visa", window.render.new_resend_visa);
     $(document).on("click", ".new_accept", window.render.new_accept);
     $(document).on("click", ".new_ignore", window.render.new_ignore);
     $(document).on("click", ".new_reject", window.render.new_reject);
