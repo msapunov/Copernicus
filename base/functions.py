@@ -1,4 +1,4 @@
-from flask import current_app as app
+from flask import current_app as app, flash
 from datetime import datetime as dt
 from unicodedata import normalize
 from tempfile import gettempdir, mkdtemp
