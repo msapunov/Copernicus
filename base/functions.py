@@ -25,17 +25,18 @@ __copyright__ = "Aix Marseille University"
 
 
 def project_check_resources(project):
+    err = None
     if not project.resources:
-        error("No resources attached to project %s" % project)
-        return False
+        err = "No resources attached to project %s" % project
     if not project.resources.cpu:
-        error("No CPU set in project resources for %s" % project)
-        return False
+        err = "No CPU set in project resources for %s" % project
     if not project.resources.consumption:
-        error("No consumption information found for %s" % project)
-        return False
+        err = "No consumption information found for %s" % project
     if not project.resources.consumption_ts:
-        error("No consumption timestamp found in %s" % project)
+        err = "No consumption timestamp found in %s" % project
+    if err:
+        error(err)
+        flash(err)
         return False
     return True
 
