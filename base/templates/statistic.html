@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block head %}
+    <script src="{{ url_for('static', filename='js/datatables.min.js') }}"></script>
+    <style>
+        $(document).ready(function(){
+            $("#stat").DataTable();
+        });
+    </style>
+{% endblock %}
+{% block main %}
+
+<table class="uk-table uk-table-hover uk-table-striped uk-table-condensed" id="stat">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Start</th>
+            <th>End</th>
+            <th>Responsible</th>
+            <th>Use</th>
+            <th>Total</th>
+            <th>Usage</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for project in data %}
+            <tr>
+                <td>
+                    {% if project.name %}
+                        {{project.name}}
+                    {% else %}
+                        No name
+                    {% endif %}
+                </td>
+                <td>
+                    {% if project.resources.start %}
+                        {{project.resources.start.strftime("%Y-%m-%d")}}
+                    {% endif %}
+                </td>
+                <td>
+                    {% if project.resources.ttl %}
+                        {{project.resources.ttl.strftime("%Y-%m-%d")}}
+                    {% endif %}
+                </td>
+                <td>
+                    {% if project.responsible.name and project.responsible.surname and project.responsible.login %}
+                        {{project.responsible.name[0]|upper}}{{project.responsible.name[1:]|lower}} {{project.responsible.surname[0]|upper}}{{project.responsible.surname[1:]|lower}} <{{project.responsible.login}}>
+                    {% endif %}
+                </td>
+                <td>{{project.consumed}}</td>
+                <td>{{project.resources.cpu}}</td>
+                <td>{{project.consumed_use}}%</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+{% endblock %}
