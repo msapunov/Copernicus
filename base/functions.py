@@ -1,6 +1,5 @@
 from flask import current_app as app
 from datetime import datetime as dt
-from datetime import timezone
 from unicodedata import normalize
 from tempfile import gettempdir, mkdtemp
 from os import walk
