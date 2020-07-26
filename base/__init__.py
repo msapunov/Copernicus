@@ -8,6 +8,7 @@ from base.pages.project import bp as blueprint_project
 from base.pages.user import bp as blueprint_user
 from base.pages.board import bp as blueprint_board
 from base.pages.admin import bp as blueprint_admin
+from base.pages.statistic import bp as blueprint_stat
 
 from base.database.schema import User, Project
 
@@ -52,6 +53,7 @@ def register_blueprints(app):
     app.register_blueprint(blueprint_user)
     app.register_blueprint(blueprint_board)
     app.register_blueprint(blueprint_admin)
+    app.register_blueprint(blueprint_stat)
     return None
 
 
