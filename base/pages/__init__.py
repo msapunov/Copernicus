@@ -198,7 +198,7 @@ def ssh_wrapper(cmd, host=None):
         error("Failed to connect to %s under using %s with key '%s'"
               % (host, login, key_file))
         client.close()
-
+        return [], []
     stdin, stdout, stderr = client.exec_command(cmd)
     output = stdout.readlines()
     errors = stderr.readlines()
