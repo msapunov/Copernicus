@@ -97,7 +97,8 @@ def save_report(data, project):
         log.debug("Uploading report to a cloud storage")
         if current_app.config.get("ACTIVITY_UPLOAD_IMG", False):
             for i in ["image_1", "image_2", "image_3"]:
-                upload_file_cloud(data[i]) if i in data and data[i] else False
+                tmp = getattr(data, i, None)
+                upload_file_cloud(tmp) if tmp else False
         upload_file_cloud(path)
 
     if current_app.config.get("ACTIVITY_SEND", False):
