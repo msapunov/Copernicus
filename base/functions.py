@@ -88,6 +88,12 @@ def project_get_info(every=None, user_is_responsible=None):
 
 
 def slurm_parse_project_conso(slurm_raw_output):
+    """
+    Parsing the output of sreport command looking for account, not user,
+    consumption. Normally it's the line with || in it
+    :param slurm_raw_output: list of lines produced by sreport command
+    :return: dictionary, where project name is the key, consumption is the value
+    """
     output = {}
     if not slurm_raw_output:
         return output
