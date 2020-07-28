@@ -9,7 +9,7 @@ __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
 
 
-@bp.route("/statistic/update", methods=["GET"])
+@bp.route("/statistic/update", methods=["POST"])
 @login_required
 @grant_access("admin", "tech")
 def web_statistic_update():
