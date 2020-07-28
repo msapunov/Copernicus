@@ -81,9 +81,9 @@ def save_activity(req):
     return name
 
 
-def save_report(data, project):
+def save_report(project):
     project_name = project.get_name()
-    html = render_template("report.html", data=data)
+    html = render_template("report.html", data=project)
     ts = str(dt.now().replace(microsecond=0).isoformat("_")).replace(":", "-")
     name = "%s_activity_report_%s.pdf" % (project_name, ts)
     path = str(Path(get_tmpdir(current_app), name))
@@ -97,7 +97,7 @@ def save_report(data, project):
         log.debug("Uploading report to a cloud storage")
         if current_app.config.get("ACTIVITY_UPLOAD_IMG", False):
             for i in ["image_1", "image_2", "image_3"]:
-                tmp = getattr(data, i, None)
+                tmp = getattr(project, i, None)
                 upload_file_cloud(tmp) if tmp else False
         upload_file_cloud(path)
 
@@ -140,7 +140,7 @@ def report_activity(name, req):
         if path.exists() and path.is_file():
             setattr(result, i, str(path.resolve()))
     log.debug(result)
-    return save_report(result, project)
+    return save_report(result)
 
 
 def remove_activity(name, file_name):
