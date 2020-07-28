@@ -89,6 +89,8 @@ def project_get_info(every=None, user_is_responsible=None):
 
 def slurm_parse_project_conso(slurm_raw_output):
     output = {}
+    if not slurm_raw_output:
+        return output
     for item in slurm_raw_output:
         if "||" not in item:  # skip user consumption
             continue
