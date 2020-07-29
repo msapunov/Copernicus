@@ -25,18 +25,18 @@ __copyright__ = "Aix Marseille University"
 
 
 def project_check_resources(project):
-    err = None
+    err = []
     if not project.resources:
-        err = "No resources attached to project %s" % project
+        err.append("No resources attached to project %s" % project)
     if not project.resources.cpu:
-        err = "No CPU set in project resources for %s" % project
+        err.append("No CPU set in project resources for %s" % project)
     if not project.resources.consumption:
-        err = "No consumption information found for %s" % project
+        err.append("No consumption information found for %s" % project)
     if not project.resources.consumption_ts:
-        err = "No consumption timestamp found in %s" % project
+        err.append("No consumption timestamp found in %s" % project)
     if err:
-        error(err)
-        flash(err)
+        error("; ".join(err))
+        flash("<br>".join(err))
         return False
     return True
 
@@ -148,15 +148,13 @@ def resource_consumption(project, start=None, end=None):
     end = end.strftime("%Y-%m-%d-%H:%M:%S")
     raw = slurm_consumption_raw(name, start, end)
     if not raw:
-        debug("No data received, nothing to return")
+        debug("Returning 0")
         return 0
     result = slurm_parse_project_conso(raw)
     if name not in result:
         debug("Failed to find consumption of %s in raw data: %s" % (name, raw))
         return 0
     return result[name]
-
-
 
 
 def resources_update_statistics(pid=None, force=False):
