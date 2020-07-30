@@ -24,6 +24,38 @@ __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
 
 
+def slurm_nodes_status():
+    """
+    Function issued a sinfo command to get the reasons for down, drained, fail
+    or failing state of a node.
+    Command is sinfo -R --format='%100E|%19H|%30N|%t'
+    Output to parse: Not responding |2020-07-25T22:39:23|skylake106|down*
+    :return: dictionary where nodes names are the keys
+    """
+    cmd = ["sinfo", "-R", "--format='%100E|%19H|%30N|%t'"]
+    run = " ".join(cmd)
+    data, err = ssh_wrapper(run)
+    if not data:
+        debug("No data received, returning empty dictionary")
+        return {}
+    result = []
+    for line in data:
+        if ("REASON" or "TIMESTAMP" or "NODELIST" or "STATE") in line:
+            debug("Skipping headline: %s" % line)
+            continue
+        info = line.split("|")
+        if len(info) != 4:
+            error("Wrong format: %s" % line)
+            continue
+        reason = info[0].strip()
+        date = info[1].replace("T"," ").strip()
+        node = info[2].strip()
+        stat = info[3].strip()
+        result.append({
+            "date": date, "reason": reason, "status": stat, "node": node})
+    return result
+
+
 def project_check_resources(project):
     err = []
     if not project.resources:
