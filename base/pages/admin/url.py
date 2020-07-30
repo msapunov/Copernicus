@@ -28,6 +28,7 @@ from base.pages.admin.magic import (
     reg_reject,
     reg_accept,
     reg_approve)
+from base.functions import slurm_nodes_status
 from base.pages.admin.form import UserEditForm
 from base.pages.project.magic import process_extension
 from base.pages.board.magic import Extensions
