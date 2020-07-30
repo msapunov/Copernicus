@@ -11,6 +11,7 @@
         history: "admin/history",
         message: "admin/message/register",
         new_users: "admin/registration/users",
+        sinfo: "/admin/slurm/nodes/list",
         system: "admin/sys/info",
         tasks: "admin/tasks/list",
         tasks_accept: "admin/tasks/accept",
