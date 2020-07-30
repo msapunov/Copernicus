@@ -848,6 +848,17 @@
     $(document).on("ready", function(){
         window.admin.sys();
         $("#events").DataTable();
+        $("#sinfo").DataTable({
+            "ajax": {"type": "POST", "url": window.admin.url.sinfo},
+            "paging": false,
+            "searching": false,
+            "columns": [
+                    {"data": "node"},
+                    {"data": "reason"},
+                    {"data": "date"},
+                    {"data": "status"}
+                ]
+        });
     });
     $(document).on("click", ".user_show", window.render.user);
     $(document).on("click", ".system_reload", window.admin.sys);
