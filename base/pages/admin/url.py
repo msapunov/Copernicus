@@ -316,6 +316,13 @@ def web_admin_user_info():
     return jsonify(data=users)
 
 
+@bp.route("/admin/slurm/nodes/list", methods=["POST"])
+@login_required
+@grant_access("admin")
+def web_slurm_node_list():
+    return jsonify(data=slurm_nodes_status())
+
+
 @bp.route("/admin/sys/info", methods=["POST"])
 @login_required
 @grant_access("admin")
