@@ -114,6 +114,11 @@
                 {% endif %}
             {% endif %}
         {% endif %}
+        {% if current_user.responsible|length > 1 %}
+            {% set multi_project = "s" %}
+        {% else %}
+            {% set multi_project = "" %}
+        {% endif %}
 
         {% if menu %}
             <nav class="uk-navbar uk-navbar-attached uk-margin-bottom">
@@ -121,10 +126,10 @@
                 <div class="uk-navbar-content uk-display-inline uk-margin-small-left uk-hidden-medium uk-hidden-small">Last update: {{g.timestamp}}</div>
                 <ul class="uk-navbar-nav uk-hidden-small">
                     {% if user %}
-                        <li {% if item == 'user' %}class="uk-active"{% endif %}><a href="user.html">User</a></li>
+                        <li {% if item == 'user' %}class="uk-active"{% endif %}><a href="user.html">My Account</a></li>
                     {% endif %}
                     {% if responsible %}
-                        <li {% if item == 'project' %}class="uk-active"{% endif %}><a href="project.html">Project</a></li>
+                        <li {% if item == 'project' %}class="uk-active"{% endif %}><a href="project.html">My Project{{multi_project}}</a></li>
                     {% endif %}
                     {% if committee %}
                         <li {% if item == 'board' %}class="uk-active"{% endif %}><a href="board.html">Board</a></li>
@@ -187,10 +192,10 @@
                     <div class="uk-panel">Last update: {{g.timestamp}}</div>
                     <ul class="uk-nav uk-nav-offcanvas">
                         {% if user %}
-                            <li {% if item == 'user' or item == 'index' %}class="uk-active"{% endif %}><a href="user.html">User</a></li>
+                            <li {% if item == 'user' or item == 'index' %}class="uk-active"{% endif %}><a href="user.html">My Account</a></li>
                         {% endif %}
                         {% if responsible %}
-                            <li {% if item == 'project.html' %}class="uk-active"{% endif %}><a href="project.html">Project</a></li>
+                            <li {% if item == 'project.html' %}class="uk-active"{% endif %}><a href="project.html">My Project{{multi_project}}</a></li>
                         {% endif %}
                         {% if committee %}
                             <li {% if item == 'board.html' %}class="uk-active"{% endif %}><a href="board.html">Board</a></li>
