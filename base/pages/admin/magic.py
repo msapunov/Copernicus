@@ -92,11 +92,13 @@ def create_visa(pid, force=False):
     result = parse_register_record(record)
     loc = app.config.get("LOCALE", "C.UTF-8")
     locale.setlocale(locale.LC_ALL, loc)
-    html = render_template("visa.html", data=result)
-    path = generate_pdf(html, record)
+    path = []
+    for i in ["fr_visa.html", "en_visa.html"]:
+        html = render_template(i, data=result)
+        path.append(generate_pdf(html, record))
     Mail().registration(record).send_visa(path)
-    Path(path).unlink()
-    debug("Temporary file %s was deleted" % path)
+    map(lambda x: Path(x).unlink(), path)
+    debug("Temporary file(s) %s was deleted" % ",".join(path))
     record.accepted = True
     record.accepted_ts = dt.now()
     record.comment = reg_msg(record, "visa_sent")
