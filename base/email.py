@@ -92,7 +92,10 @@ class Mail:
         return self
 
     def send_visa(self, visa):
-        map(lambda x: self.attach_file(x), visa)
+        if type(visa) is list:
+            [self.attach_file(x) for x in visa]
+        else:
+            self.attach_file(visa)
         to = self.working_object.responsible_email
         self.destination = self.cfg.get("PROJECT VISA", "TO",fallback=to)
         self.cc = [self.cfg.get("PROJECT VISA", "CC", fallback="")]
