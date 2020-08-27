@@ -11,7 +11,7 @@
         history: "admin/history",
         message: "admin/message/register",
         new_users: "admin/registration/users",
-        sinfo: "/admin/slurm/nodes/list",
+        sinfo: "admin/slurm/nodes/list",
         system: "admin/sys/info",
         tasks: "admin/tasks/list",
         tasks_accept: "admin/tasks/accept",
@@ -638,7 +638,6 @@
     window.render.visaBtnReplace=function(btn){
         btn.removeClass("new_visa").addClass("new_resend_visa");
         var span = btn.find("span")[0];
-        //$(span).removeClass("uk-icon-wrench").addClass("uk-icon-cogs");
         btn.html(span.outerHTML + "Re-send Visa");
     };
     window.render.approveBtnReplace=function(btn){
