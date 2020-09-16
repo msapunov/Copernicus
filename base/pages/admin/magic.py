@@ -406,10 +406,10 @@ class TmpUser:
         u_part = "login: %s and name: %s and surname: %s and email: %s" % (
             self.login, self.name, self.surname, self.email)
         a_part = "user: %s, responsible: %s, manager: %s, tech: %s, " \
-                 "committee: %s, admin: %s" % (
-            self.is_user, self.is_responsible, self.is_manager,self.is_tech,
-            self.is_committee, self.is_admin)
-
+                 "committee: %s, admin: %s" % (self.is_user,
+                                               self.is_responsible,
+                                               self.is_manager, self.is_tech,
+                                               self.is_committee, self.is_admin)
         return "%s WITH ACL %s WITH STATUS %s" % (u_part, a_part, self.active)
 
 
