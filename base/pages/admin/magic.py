@@ -316,9 +316,9 @@ def reg_msg(rec, act):
         msg = "Project creation request rejected"
     elif act == "ignore":
         msg = "Project creation request ignored"
-    elif act == "visa_skip":
-        msg = "Visa sent to %s" % rec.responsible_email
     elif act == "visa_sent":
+        msg = "Visa sent to %s" % rec.responsible_email
+    elif act == "visa_skip":
         msg = "Visa sending step has been skipped"
     else:
         raise ValueError("Selector %s does not supported" % act)
