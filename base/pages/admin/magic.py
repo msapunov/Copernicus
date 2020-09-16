@@ -322,10 +322,10 @@ def reg_msg(rec, act):
         msg = "Visa sending step has been skipped"
     else:
         raise ValueError("Selector %s does not supported" % act)
-    message = "%s: %s by %s" % (ts, msg, current_user.full_name())
+    msg = "%s: %s by %s" % (ts, msg, current_user.full_name())
     comments = rec.comment.split("\n")
     comment_list = list(map(lambda x: x.strip(), comments))
-    comment_list.append(message)
+    comment_list.append(msg)
     return "\n".join(comment_list)
 
 
