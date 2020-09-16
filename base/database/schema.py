@@ -449,11 +449,13 @@ class Register(db.Model):
     processed_ts = db.Column(db.DateTime(True))
     accepted = db.Column(db.Boolean)
     accepted_ts = db.Column(db.DateTime(True))
+    accepted_skip = db.Column(db.Boolean)
     comment = db.Column(db.String)
     created = db.Column(db.Boolean)
     created_ts = db.Column(db.DateTime(True))
     approve = db.Column(db.Boolean)
     approve_ts = db.Column(db.DateTime(True))
+    approve_skip = db.Column(db.Boolean)
 
     def __repr__(self):
         return "<Registration request {}>".format(self.id)
