@@ -1,6 +1,14 @@
 {% extends "base.html" %}
 {% block head %}
-    <script src="{{ url_for('static', filename='js/datatables.min.js') }}"></script>
+    <!--<script src="{{ url_for('static', filename='js/datatables.min.js') }}"></script>-->
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.10.21/b-1.6.2/b-html5-1.6.2/r-2.2.5/datatables.min.css"/>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.10.21/b-1.6.2/b-html5-1.6.2/r-2.2.5/datatables.min.js"></script>
+
+
+
     <script src="{{ url_for('static', filename='js/moment-with-locales.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/admin.js') }}"></script>
 
@@ -14,11 +22,24 @@
           background-color: #ddd !important;
         }
         table.dataTable thead th {
-            border-bottom: none;
+            border-bottom: 0 !important;
         }
         table.dataTable tfoot th {
-            border-top: none;
-            border-bottom: none;
+            border-top: 0 !important;
+        }
+        button.dt-button {
+            margin-right: 0;
+            margin-top: 5px;
+            padding-right: 1em;
+            padding-left: 1em;
+            padding-top: 0.2em;
+            padding-bottom: 0.2em;
+        }
+        table.dataTable.no-footer {
+            border-bottom: 0;
+        }
+        div.dt-buttons {
+            float: right;
         }
     </style>
 
@@ -96,7 +117,7 @@
         </div>
 
         {% if data.extension %}
-        <h3 class="uk-accordion-title">Pending projects</h3>
+        <h3 class="uk-accordion-title">Pending projects [{{ data.extension | length }}]</h3>
         <div class="uk-accordion-content uk-overflow-container" id="pending_content">
             <table id="new_projects_table" class="uk-table uk-table-striped uk-table-condensed">
                 <tbody id="ext_result_records">

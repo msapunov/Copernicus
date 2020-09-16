@@ -845,10 +845,26 @@
     };
 
     $(document).on("ready", function(){
+        $.fn.dataTable.ext.buttons.refresh = {
+            text: "<span class='uk-icon-refresh uk-margin-small-right'></span>&nbsp;Reload",
+            className: "uk-button uk-button-small uk-margin-small-top",
+            init: function(api, node, config) {
+                $(node).removeClass("dt-button")
+            },
+            action: function( e, dt, node, config ){
+                dt.clear().draw();
+                dt.ajax.reload();
+            }
+        };
         window.admin.sys();
         $("#events").DataTable();
         $("#sinfo").DataTable({
             "ajax": {"type": "POST", "url": window.admin.url.sinfo},
+            dom: 'tiB',
+            buttons: {
+                className: 'copyButton',
+                buttons: [ 'refresh' ]
+            },
             "paging": false,
             "searching": false,
             "columns": [
