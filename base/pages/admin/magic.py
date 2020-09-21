@@ -316,16 +316,16 @@ def reg_msg(rec, act):
         msg = "Project creation request rejected"
     elif act == "ignore":
         msg = "Project creation request ignored"
-    elif act == "visa_skip":
-        msg = "Visa sent to %s" % rec.responsible_email
     elif act == "visa_sent":
+        msg = "Visa sent to %s" % rec.responsible_email
+    elif act == "visa_skip":
         msg = "Visa sending step has been skipped"
     else:
         raise ValueError("Selector %s does not supported" % act)
-    message = "%s: %s by %s" % (ts, msg, current_user.full_name())
+    msg = "%s: %s by %s" % (ts, msg, current_user.full_name())
     comments = rec.comment.split("\n")
     comment_list = list(map(lambda x: x.strip(), comments))
-    comment_list.append(message)
+    comment_list.append(msg)
     return "\n".join(comment_list)
 
 
@@ -406,10 +406,10 @@ class TmpUser:
         u_part = "login: %s and name: %s and surname: %s and email: %s" % (
             self.login, self.name, self.surname, self.email)
         a_part = "user: %s, responsible: %s, manager: %s, tech: %s, " \
-                 "committee: %s, admin: %s" % (
-            self.is_user, self.is_responsible, self.is_manager,self.is_tech,
-            self.is_committee, self.is_admin)
-
+                 "committee: %s, admin: %s" % (self.is_user,
+                                               self.is_responsible,
+                                               self.is_manager, self.is_tech,
+                                               self.is_committee, self.is_admin)
         return "%s WITH ACL %s WITH STATUS %s" % (u_part, a_part, self.active)
 
 
