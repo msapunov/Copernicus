@@ -172,25 +172,23 @@ function reduce_to_names(initial, object){
             "type": "checkbox"
         }).addClass("uk-margin-small-right uk-form-danger");
         var label = $("<label/>").attr('for', "exception_checkbox");
-        label.text("Select checkbox for an exceptional extension request only! Apply for a project running out of CPU time way before the next session.");
+        label.text("Select this checkbox only in case you would need an exceptional extension! Will only be considered for a project running out of CPU time way before the next application deadline (see the date above).");
+        //label.text("Select checkbox for an exceptional extension request only! Apply for a project running out of CPU time way before the next session.");
         var express = $("<div/>").addClass(
             "uk-form-row uk-alert uk-alert-danger"
         );
         express.append(checkbox).append(label);
         var warn = "<div>" + date_warning() + "</div><div>" + end_warning() + "</div>";
-        var form = $("<form/>").addClass("uk-form").append(
-            $("<legend/>").text(title)
-        );
+        var form = $("<form/>").addClass("uk-form");
+        form.append($("<legend/>").text(title));
+        form.append($("<div>{0}</div>".f(warn)).addClass("uk-form-row uk-alert"));
         if(!renew){
             form.append(express);
         }
-        form.append(
-            $("<div/>").addClass("uk-form-row").append(cpu)
-        ).append(
-            $("<div/>").addClass("uk-form-row").append(motiv)
-        ).append(
-            $("<div>{0}</div>".f(warn)).addClass("uk-form-row uk-alert")
-        );
+        form.append($("<div/>").addClass("uk-form-row").append(cpu));
+        form.append($("<div/>").addClass("uk-form-row").append(motiv));
+
+
         var report = $("<div>{0}</div>".f("Make sure that you have uploaded project activity report first!")).addClass("uk-form-row uk-alert uk-alert-warning");
         if(renew) {
             form.append(report);
