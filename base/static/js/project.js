@@ -24,7 +24,7 @@ function end_warning(){
     var between = moment().isBetween(start, end);
     var prefix = (between) ? "Additional" : "Allocated";
     var year = moment().add(1, "years").format("YYYY");
-    return prefix + " resources must be used before <b>the end of February {0}</b>.".f(year);
+    return prefix + " resources must be used before the end of February {0}.".f(year);
 }
 
 function reduce_to_names(initial, object){
