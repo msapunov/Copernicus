@@ -180,7 +180,11 @@ function reduce_to_names(initial, object){
         var warn = "<div>" + date_warning() + "</div><div>" + end_warning() + "</div>";
         var form = $("<form/>").addClass("uk-form").append(
             $("<legend/>").text(title)
-        ).append(
+        );
+        if(!renew){
+            form.append(express);
+        }
+        form.append(
             $("<div/>").addClass("uk-form-row").append(cpu)
         ).append(
             $("<div/>").addClass("uk-form-row").append(motiv)
@@ -190,8 +194,6 @@ function reduce_to_names(initial, object){
         var report = $("<div>{0}</div>".f("Make sure that you have uploaded project activity report first!")).addClass("uk-form-row uk-alert uk-alert-warning");
         if(renew) {
             form.append(report);
-        }else{
-            form.append(express);
         }
         if(renew){
             url = window.proj.url["renew"];
