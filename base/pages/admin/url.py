@@ -19,7 +19,7 @@ from base.pages.admin.magic import (
     slurm_partition_info,
     process_task,
     group_users,
-    user_info_update,
+    user_info_update_new,
     user_create_by_admin,
     user_reset_pass,
     user_delete,
@@ -125,10 +125,10 @@ def admin_user_delete(uid):
 @grant_access("admin")
 def admin_user_update():
     form = UserEditForm()
-    if form.validate_on_submit():
-        return jsonify(data=user_info_update(form),
-                       message="Modifications has been saved to the database")
-    raise ValueError(form.errors)
+    if not form.validate_on_submit():
+        raise ValueError(form.errors)
+    result, msg = user_info_update_new(form)
+    return jsonify(data=result, message=msg)
 
 
 @bp.route("/admin/user/create", methods=["POST"])

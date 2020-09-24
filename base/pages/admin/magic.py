@@ -449,6 +449,67 @@ def user_create_by_admin(form):
         user.login, ", ".join(form.project.data))
 
 
+def user_changed_prop(obj, frm):
+    result = []
+    if obj.name.lower() != frm.name.data.strip().lower():
+        result.append("name")
+    if obj.surname.lower() != frm.surname.data.strip().lower():
+        result.append("surname")
+    if obj.email.lower() != frm.email.data.strip().lower():
+        result.append("email")
+    if obj.active != frm.active.data:
+        result.append("active")
+    if obj.acl.is_user != frm.is_user.data:
+        result.append("is_user")
+    if obj.acl.is_responsible != frm.is_responsible.data:
+        result.append("is_responsible")
+    if obj.acl.is_manager != frm.is_manager.data:
+        result.append("is_manager")
+    if obj.acl.is_tech != frm.is_tech.data:
+        result.append("is_tech")
+    if obj.acl.is_committee != frm.is_committee.data:
+        result.append("is_committee")
+    if obj.acl.is_admin != frm.is_admin.data:
+        result.append("is_admin")
+    names = filter(lambda x: True if x != "None" else False, frm.project.data)
+    xxx = set(obj.project_names()) ^ set(list(names))
+    print(list(xxx))
+    if list(set(obj.project_names()) ^ set(list(names))):
+        result.append("project")
+    return result
+
+
+def user_acl_update(obj, frm):
+    pass
+
+
+def user_cluster_update(obj, frm):
+    pass
+
+
+def user_info_update_new(form):
+    uid = form.uid.data
+    user = user_by_id(uid)
+    changed = user_changed_prop(user, form)
+    props = ["login", "name", "surname", "email", "activate", "project"]
+    not_db = list(filter(lambda x: True if x in changed else False, props))
+    acl = ["user", "responsible", "manager", "tech", "committee", "admin"]
+    db = list(filter(lambda x: True if "is_%s" % x in changed else False, acl))
+
+    if db and not_db:
+        user_acl_update(user, form)
+        user_cluster_update(user, form)
+        return user.details(), "Update task will be performed shortly. DB okay"
+    elif not_db:
+        user_cluster_update(user, form)
+        return user.details(), "Modifications task has been registered. DB okay"
+    elif db:
+        user_acl_update(user, form)
+        return user.details(), "Modifications has been saved to the database"
+    else:
+        return user.details(), "No modifications has been provided"
+
+
 def user_info_update(form):
     uid = form.uid.data
     user = user_by_id(uid)
@@ -471,7 +532,7 @@ def user_info_update(form):
         user.project = []
 
     db.session.commit()
-    return user.details()
+    return user.details(),"Modifications has been saved to the database"
 
 
 def user_delete(uid):
