@@ -450,33 +450,30 @@ def user_create_by_admin(form):
 
 
 def user_changed_prop(obj, frm):
-    result = []
+    info, acl = [], []
     if obj.name.lower() != frm.name.data.strip().lower():
-        result.append("name")
+        info.append("name")
     if obj.surname.lower() != frm.surname.data.strip().lower():
-        result.append("surname")
+        info.append("surname")
     if obj.email.lower() != frm.email.data.strip().lower():
-        result.append("email")
+        info.append("email")
     if obj.active != frm.active.data:
-        result.append("active")
+        info.append("active")
     if obj.acl.is_user != frm.is_user.data:
-        result.append("is_user")
+        acl.append("is_user")
     if obj.acl.is_responsible != frm.is_responsible.data:
-        result.append("is_responsible")
+        acl.append("is_responsible")
     if obj.acl.is_manager != frm.is_manager.data:
-        result.append("is_manager")
+        acl.append("is_manager")
     if obj.acl.is_tech != frm.is_tech.data:
-        result.append("is_tech")
+        acl.append("is_tech")
     if obj.acl.is_committee != frm.is_committee.data:
-        result.append("is_committee")
+        acl.append("is_committee")
     if obj.acl.is_admin != frm.is_admin.data:
-        result.append("is_admin")
+        acl.append("is_admin")
     names = filter(lambda x: True if x != "None" else False, frm.project.data)
-    xxx = set(obj.project_names()) ^ set(list(names))
-    print(list(xxx))
-    if list(set(obj.project_names()) ^ set(list(names))):
-        result.append("project")
-    return result
+    projects = list(set(obj.project_names()) ^ set(list(names)))
+    return info, acl, projects
 
 
 def user_acl_update(obj, frm):
