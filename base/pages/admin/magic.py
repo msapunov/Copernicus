@@ -480,7 +480,13 @@ def user_changed_prop(obj, frm):
 
 
 def user_acl_update(obj, frm):
-    pass
+    obj.acl.is_user = True if frm.is_user.data else False
+    obj.acl.is_responsible = True if frm.is_responsible.data else False
+    obj.acl.is_manager = True if frm.is_manager.data else False
+    obj.acl.is_tech = True if frm.is_tech.data else False
+    obj.acl.is_committee = True if frm.is_committee.data else False
+    obj.acl.is_admin = True if frm.is_admin.data else False
+    db.session.commit()
 
 
 def user_cluster_update(obj, frm):
