@@ -2,10 +2,23 @@ from flask_login import current_user
 from base.database.schema import Extend
 from operator import attrgetter
 from base import db
+from base.database.schema import LogDB, User
 
 
 __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
+
+
+class Log:
+
+    def __init__(self):
+        self.log = LogDB(author=current_user)
+
+    def _commit(self):
+        db.session.add(self.log)
+        db.session.commit()
+        return self.log.event
+
 
 
 class Extensions:
