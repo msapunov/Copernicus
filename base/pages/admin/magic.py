@@ -490,6 +490,18 @@ def user_cluster_update(obj, frm):
     pass
 
 
+def user_project_update(user, projects):
+    old = user.project_names()
+    for name in projects:
+        project = Project.query.filter_by(name=name).first()
+        if not project:
+            continue
+        if name in old:
+            TaskQueue().project(project).user_remove(user)
+        else:
+            TaskQueue().project(project).user_assign(user)
+
+
 def user_info_update_new(form):
     uid = form.uid.data
     user = user_by_id(uid)
