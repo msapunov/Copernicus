@@ -493,25 +493,19 @@ def user_cluster_update(obj, frm):
 def user_info_update_new(form):
     uid = form.uid.data
     user = user_by_id(uid)
-    changed = user_changed_prop(user, form)
-    props = ["login", "name", "surname", "email", "activate", "project"]
-    not_db = list(filter(lambda x: True if x in changed else False, props))
-    acl = ["user", "responsible", "manager", "tech", "committee", "admin"]
-    db = list(filter(lambda x: True if "is_%s" % x in changed else False, acl))
-
-    if db and not_db:
+    info, acl, project = user_changed_prop(user, form)
+    if not info and not acl and not project:
+        return user.details(), "No modifications has been detected"
+    result = []
+    if acl:
         user_acl_update(user, form)
-        user_cluster_update(user, form)
-        return user.details(), "Update task will be performed shortly. DB okay"
-    elif not_db:
-        user_cluster_update(user, form)
-        return user.details(), "Modifications task has been registered. DB okay"
-    elif db:
-        user_acl_update(user, form)
-        return user.details(), "Modifications has been saved to the database"
-    else:
-        return user.details(), "No modifications has been provided"
-
+        result.append("ACL modifications has been saved to the database")
+    if project:
+        user_project_update(user, project)
+        result.append("Project changes has been saved to the database")
+    if info:
+        result.append("User information has been updated in the DB")
+    return user.details(), "\n".join(result)
 
 def user_info_update(form):
     uid = form.uid.data
