@@ -17,6 +17,7 @@ from base.pages.user.magic import get_user_record, user_by_id
 from base.utils import get_tmpdir
 from base.database.schema import User, ACLDB, Register, LogDB, Project
 from base.email import Mail
+from base.classes import UserLog
 from logging import error, debug
 from operator import attrgetter
 from datetime import datetime as dt
@@ -37,8 +38,9 @@ def parse_register_record(rec):
     result["type"].upper()
     result["signature"] = image_string("signature.png")
     result["base_url"] = request.url_root
-    u_list = Mail().cfg.get("DEFAULT", "USER_LIST", fallback=None)
-    r_list = Mail().cfg.get("DEFAULT", "RESPONSIBLE_LIST", fallback=None)
+    mail = Mail()
+    u_list = mail.cfg.get("DEFAULT", "USER_LIST", fallback=None)
+    r_list = mail.cfg.get("DEFAULT", "RESPONSIBLE_LIST", fallback=None)
     result["user_list"] = "(%s)" % u_list if u_list else ""
     result["resp_list"] = "(%s)" % r_list if r_list else ""
     return result
@@ -450,40 +452,34 @@ def user_create_by_admin(form):
 
 
 def user_changed_prop(obj, frm):
-    info, acl = [], []
-    if obj.name.lower() != frm.name.data.strip().lower():
-        info.append("name")
-    if obj.surname.lower() != frm.surname.data.strip().lower():
-        info.append("surname")
-    if obj.email.lower() != frm.email.data.strip().lower():
-        info.append("email")
-    if obj.active != frm.active.data:
-        info.append("active")
-    if obj.acl.is_user != frm.is_user.data:
-        acl.append("is_user")
-    if obj.acl.is_responsible != frm.is_responsible.data:
-        acl.append("is_responsible")
-    if obj.acl.is_manager != frm.is_manager.data:
-        acl.append("is_manager")
-    if obj.acl.is_tech != frm.is_tech.data:
-        acl.append("is_tech")
-    if obj.acl.is_committee != frm.is_committee.data:
-        acl.append("is_committee")
-    if obj.acl.is_admin != frm.is_admin.data:
-        acl.append("is_admin")
+    info, acl, act = {}, {}, None
+    for name in ["login", "name", "surname", "email", "test"]:
+        if name not in frm:
+            continue
+        data = getattr(frm, name).data.strip().lower()
+        if getattr(obj, name).lower() != data:
+            info[name] = data
+    for i in ["user", "responsible", "manager", "tech", "committee", "admin"]:
+        name = "is_%s" % i
+        if name not in frm:
+            continue
+        data = getattr(frm, name).data
+        if getattr(obj.acl, name) != data:
+            acl[name] = data
+    if "active" in frm and (obj.active != frm.active.data):
+        act = frm.active.data
     names = filter(lambda x: True if x != "None" else False, frm.project.data)
     projects = list(set(obj.project_names()) ^ set(list(names)))
-    return info, acl, projects
+    UserLog(obj).info_update(info=info, acl=acl, projects=projects, active=act)
+    return info, acl, projects, act
 
 
-def user_acl_update(obj, frm):
-    obj.acl.is_user = True if frm.is_user.data else False
-    obj.acl.is_responsible = True if frm.is_responsible.data else False
-    obj.acl.is_manager = True if frm.is_manager.data else False
-    obj.acl.is_tech = True if frm.is_tech.data else False
-    obj.acl.is_committee = True if frm.is_committee.data else False
-    obj.acl.is_admin = True if frm.is_admin.data else False
+def user_acl_update(user, acl):
+    for name, value in acl.items():
+        setattr(user, name, value)
     db.session.commit()
+    UserLog(user).acl(acl)
+    return "ACL modifications has been saved to the database"
 
 
 def user_cluster_update(obj, frm):
@@ -492,32 +488,36 @@ def user_cluster_update(obj, frm):
 
 def user_project_update(user, projects):
     old = user.project_names()
+    idz = []
     for name in projects:
         project = Project.query.filter_by(name=name).first()
         if not project:
             continue
         if name in old:
-            TaskQueue().project(project).user_remove(user)
+            task = TaskQueue().project(project).user_remove(user)
         else:
-            TaskQueue().project(project).user_assign(user)
+            task = TaskQueue().project(project).user_assign(user)
+        idz.append(task.task.id)
+    s, ids = "s" if len(idz) > 1 else "", ", ".join(map(str, idz))
+    return "Project change task%s with id%s has been created: %s" % (s, s, ids)
 
 
 def user_info_update_new(form):
     uid = form.uid.data
     user = user_by_id(uid)
-    info, acl, project = user_changed_prop(user, form)
-    if not info and not acl and not project:
+    info, acl, project, active = user_changed_prop(user, form)
+    if not info and not acl and not project and not active:
         return user.details(), "No modifications has been detected"
-    result = []
+    msg = []
     if acl:
-        user_acl_update(user, form)
-        result.append("ACL modifications has been saved to the database")
+        msg.append(user_acl_update(user, acl))
     if project:
-        user_project_update(user, project)
-        result.append("Project changes has been saved to the database")
+        msg.append(user_project_update(user, project))
     if info:
-        result.append("User information has been updated in the DB")
-    return user.details(), "\n".join(result)
+        msg.append("User information has been updated in the DB")
+    result = "\n".join(msg)
+    return user.details(), result
+
 
 def user_info_update(form):
     uid = form.uid.data

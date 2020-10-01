@@ -20,6 +20,46 @@ class Log:
         return self.log.event
 
 
+class UserLog(Log):
+
+    def __init__(self, user):
+        super().__init__()
+        self.user = user
+        self.log = LogDB(author=current_user, user=user)
+        self.send = True
+
+    def acl(self, acl):
+        result = []
+        for name, value in acl.items():
+            result.append("%s to %s" % (name, value))
+        self.log.event = "Set ACL permissions: %s" % "; ".join(result)
+        return self._commit()
+
+    def info_update(self, info=None, acl=None, projects=None, active=None):
+        changes = []
+        if info is not None:
+            for name, value in info.items():
+                old = getattr(self.user, name)
+                prop = name.capitalize()
+                changes.append("%s change: %s -> %s" % (prop, old, value))
+        if acl is not None:
+            for name, value in acl.items():
+                old = getattr(self.user.acl, name)
+                changes.append("ACL %s change %s -> %s" % (name, old, value))
+        if active is not None:
+            old = self.user.active
+            changes.append("Set active status from %s to '%s'" % (old, active))
+        if projects is not None:
+            old = self.user.project_names()
+            for name in projects:
+                if name in old:
+                    changes.append("Add to project %s" % name)
+                else:
+                    changes.append("Remove from project %s" % name)
+        result = "; ".join(changes)
+        self.log.event = "User information changes requested: %s" % result
+        return self._commit()
+
 
 class Extensions:
     def __init__(self, eid=None):
