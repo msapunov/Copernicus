@@ -533,7 +533,7 @@ class Register(db.Model):
 
 
 class LogDB(db.Model):
-    __tablename__ = "project_logs"
+    __tablename__ = "logs"
 
     id = db.Column(db.Integer, primary_key=True)
 
@@ -543,8 +543,7 @@ class LogDB(db.Model):
     author_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     author = db.relationship("User", foreign_keys=author_id)
 
-    project_id = db.Column(db.Integer, db.ForeignKey("projects.id"),
-                           nullable=False)
+    project_id = db.Column(db.Integer, db.ForeignKey("projects.id"))
     project = db.relationship("Project", foreign_keys=project_id)
 
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
