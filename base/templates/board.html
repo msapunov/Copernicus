@@ -72,10 +72,8 @@
                                 {% endif %}
                             </td>
                             <td class="uk-width-1-10">
-                                {% if record.transform %}
+                                {% if record.transform|trim != "" %}
                                     <span class="uk-icon-plus"></span>
-                                {% else %}
-                                    &nbsp;
                                 {% endif %}
                             </td>
                             <td class="uk-width-1-10 uk-text-nowrap">{{ record.created }}</td>
@@ -121,7 +119,7 @@
                                             </td>
                                             <td>
                                                 <div class="uk-button-group uk-float-right uk-margin-top">
-                                                    <button class="uk-button accept" data-id="{{record.id}}" data-pid="{{record.project}}" data-name="{{record.project_name}}" data-act="{{record.activate}}" data-trans="{{record.transform}}" data-cpu="{{record.hours}}"  data-extend="{{record.extension}}">
+                                                    <button class="uk-button accept" data-id="{{record.id}}" data-pid="{{record.project}}" data-name="{{record.project_name}}" data-act="{{record.activate}}" data-trans="{{record.transform|trim}}" data-cpu="{{record.hours}}"  data-extend="{{record.extension}}">
                                                         <span class="uk-icon-thumbs-o-up uk-margin-small-right"></span>Accept
                                                     </button>
                                                     <button class="uk-button ignore" data-id="{{record.id}}" data-pid="{{record.project}}" data-name="{{record.project_name}}" data-act="{{record.activate}}" data-trans="{{record.transform}}">
