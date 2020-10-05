@@ -186,7 +186,7 @@ class Extend(db.Model):
     present_total = db.Column(db.Integer)
     usage_percent = db.Column(db.String(10))
     activate = db.Column(db.Boolean, default=False)
-    transform = db.Column(db.Boolean, default=False)
+    transform = db.Column(db.String(1), default="")
 
     doc_id = db.Column(db.Integer, db.ForeignKey("project_files.id"))
     doc = db.relationship("File", foreign_keys=[doc_id])
