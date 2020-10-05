@@ -209,7 +209,8 @@ class Extend(db.Model):
             "name": self.project.responsible.full_name(),
             "id": self.id,
             "add_hours": self.extend,
-            "project": self.project.get_name()
+            "project": self.project.get_name(),
+            "transform": self.transform
         }
 
     def to_dict(self):
