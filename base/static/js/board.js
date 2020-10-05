@@ -32,7 +32,8 @@
     window.board.transform = function(me){
         var id = $(me).data("id");
         var project = $(me).data("name");
-        var title = "Accept transformation of project {0} to type B?".f(project);
+        var trans = $(me).data("trans");
+        var title = "Accept transformation of project {0} to type {1}?".f(project, trans);
         var text = "Transformation accepted by scientific committee";
         var motiv = $("<textarea/>").html(text).addClass("uk-width-1-1").attr({
             "rows": "4",
