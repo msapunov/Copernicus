@@ -20,7 +20,7 @@
         var project = $(me).data("name");
         var act = $(me).data("act");
         var trans = $(me).data("trans");
-        if(trans=="True"){
+        if(trans!=""){
             return window.board.transform(me)
         }else if(act=="True"){
             return window.board.activate(me)
