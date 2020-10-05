@@ -209,9 +209,11 @@ def ssh_wrapper(cmd, host=None):
 
 
 def check_json():
+    if not request.is_json:
+        raise ValueError("Expecting application/json requests")
     data = request.get_json()
     if not data:
-        raise ValueError("Expecting application/json requests")
+        raise ValueError("Empty JSON request received")
     debug("Incoming JSON: %s" % data)
     return data
 
