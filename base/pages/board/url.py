@@ -3,7 +3,7 @@ from flask_login import login_required
 from base.pages import ProjectLog, grant_access
 from base.pages.board import bp
 from base.pages.board.magic import get_arguments, Extensions, reject_extension,\
-    ignore_extension
+    ignore_extension, transform
 
 
 __author__ = "Matvey Sapunov"
@@ -36,13 +36,8 @@ def web_board_history():
 @login_required
 @grant_access("admin")
 def web_board_transform():
-    eid, note, cpu, ext = get_arguments()
-    record = Extensions(eid)
-    record.cpu = cpu
-    record.extend = False
-    record.accept(note)
-    return jsonify(message=ProjectLog(record.rec.project).transform(record.rec),
-                   data={"id": record.id})
+    id, message = transform()
+    return jsonify(data={"id": id}, message = message)
 
 
 @bp.route("/board/accept", methods=["POST"])

@@ -1,5 +1,5 @@
 from flask_login import current_user
-from base.pages import check_int, check_str, check_json, calculate_ttl
+from base.pages import check_str, check_json, calculate_ttl, ProjectLog
 from base.database.schema import Extend, Resources
 from operator import attrgetter
 from base import db
@@ -67,6 +67,16 @@ class Extensions:
         record.decision = note
         return self._process(record)
 
+    def transform(self, note):
+        self.rec = self.record()
+        if self.rec.processed:
+            raise ValueError("This request has been already processed")
+        self.rec.decision = note
+        if not self.rec.transform:
+            raise ValueError("This request is not transformation one")
+        self.rec.accepted = True
+        return self._process(self.rec)
+
     def accept(self, note):
         self.rec = self.record()
         if self.rec.processed:
@@ -111,18 +121,40 @@ def create_resource(project, cpu):
     )
 
 
-def get_arguments():
-    data = check_json()
-    eid = check_int(data["eid"])
-    note = check_str(data["comment"])
-    ext = check_str(data["extension"]).lower()
-    debug("Extension flag is set to: %s" % ext)
-    extension = False
-    if ext == "true":
-        extension = True
-    cpu = check_int(data["cpu"])
-    debug("Got CPU value: %s" % cpu)
-    if cpu < 0:
-        raise ValueError("CPU value is absent, or a negative value!")
+def transform():
+    eid, note, cpu = get_arguments(True)
+    record = Extensions(eid)
+    if cpu > 0:
+        record.cpu = cpu
+    record.extend = False
+    record.transform(note)
+    message = ProjectLog(record.rec.project).transform(record.rec)
+    return record.id, message
 
-    return eid, note, cpu, extension
+
+def get_arguments(trans=False):
+    data = check_json()
+
+    eid = int(data["eid"]) if "eid" in data else None
+    debug("Extension's ID: %s" % eid)
+    if not eid:
+        raise ValueError("No extension ID provided")
+
+    note = str(data["comment"]) if "comment" in data else None
+    debug("Extension's comment value: %s" % note)
+    if not note:
+        raise ValueError("Provide a comment please!")
+
+    cpu = int(data["cpu"]) if "cpu" in data else 0
+    debug("Extension's CPU value: %s" % cpu)
+    if cpu < 0:
+        raise ValueError("CPU can't be a negative value!")
+
+    ext = bool(data["extension"].lower()) if "extension" in data else None
+    debug("Extension flag is set to: %s" % ext)
+    if not trans and ext is None:
+        raise ValueError("Failed to get value of extension variable")
+
+    if trans:
+        return eid, note, cpu
+    return eid, note, cpu, ext
