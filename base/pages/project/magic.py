@@ -192,6 +192,16 @@ def extend_project(id, ext, date):
     return ProjectLog(ext.project).extended(ext)
 
 
+def transform_project(id, ext, date):
+    ext.project.type = ext.transform
+    ext.project.name = "%s%s" % (ext.transform, str(ext.project.id).zfill(3))
+    ext.project.resources.valid = False
+    ext.project.resources = create_resource(ext.project, ext.hours)
+    msg = "Created based on transformation request ID %s on %s" % (id, date)
+    ext.project.resources.comment = msg
+    return ProjectLog(ext.project).transformed(ext)
+
+
 def process_extension(eid):
     ext = Extend.query.filter_by(id=eid).first()
     if not ext:
@@ -200,6 +210,8 @@ def process_extension(eid):
     date = dt.now().replace(microsecond=0).isoformat(" ")
     never_extend = current_app.config.get("NO_EXTENSION_TYPE", [])
     never_renew = current_app.config.get("NO_RENEWAL_TYPE", [])
+    if ext.transform.strip() != "":
+        return transform_project(eid, ext, date)
     if ext.project.type in never_extend:
         return renew_project(eid, ext, date)
     if ext.project.type in never_renew:
