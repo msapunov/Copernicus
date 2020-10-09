@@ -603,6 +603,12 @@ class ProjectLog:
         self.log.extension = extension
         return self._commit()
 
+    def transformed(self, extension):
+        self.log.event = "Transformation to type %s finished successfully"\
+                            % extension.trasnformation
+        self.log.extension = extension
+        return self._commit()
+
     def activate(self, extension):
         self.log.event = "Activation request has been registered"
         self.log.extension = extension
