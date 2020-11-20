@@ -12,6 +12,7 @@ from base.pages import (
 from base.pages.user import bp
 from base.pages.user.magic import get_user_record
 from base.pages.project.magic import (
+    project_info_by_name,
     is_activity_report,
     report_activity,
     remove_activity,
@@ -56,6 +57,12 @@ def project_activity_upload():
 @login_required
 def project_activity(project_name):
     return jsonify(message=report_activity(project_name, request))
+
+
+@bp.route("/project/info/<string:project_name>", methods=["POST"])
+@login_required
+def project_info(project_name):
+    return jsonify(data=project_info_by_name(project_name))
 
 
 @bp.route("/project/list", methods=["POST"])
