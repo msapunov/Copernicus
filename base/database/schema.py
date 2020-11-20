@@ -570,7 +570,7 @@ class LogDB(db.Model):
         creator = self.author.full_name() if self.author else "Author is unknown"
         msg = "%s by %s" % (event, creator)
         return {
-            "project": self.project.name,
+            "project": self.project.name if self.project else "",
             "date": self.created.strftime("%Y-%m-%d %X %Z"),
             "message": msg
         }
