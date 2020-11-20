@@ -446,6 +446,11 @@ def get_project_overview():
     return list(map(lambda x: extract_info(x), projects))
 
 
+def project_info_by_name(name):
+    project = get_project_by_name(name)
+    return project.to_dict()
+
+
 def get_project_info(every=None, user_is_responsible=None):
     if every:
         projects = Project.query.all()
