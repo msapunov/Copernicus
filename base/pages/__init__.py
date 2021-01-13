@@ -605,7 +605,7 @@ class ProjectLog:
 
     def transformed(self, extension):
         self.log.event = "Transformation to type %s finished successfully"\
-                            % extension.trasnformation
+                            % extension.transform
         self.log.extension = extension
         return self._commit()
 
