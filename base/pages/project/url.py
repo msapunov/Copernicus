@@ -168,7 +168,7 @@ def web_project_transform():
     from base import db
 
     record = extend_update()
-    record.transform = True
+    record.transform = "b"
     db.session.add(record)
     db.session.commit()
     return jsonify(message=ProjectLog(record.project).transform(record))
