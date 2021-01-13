@@ -580,8 +580,9 @@ class ProjectLog:
         return self._commit_user(user)
 
     def renew(self, extension):
-        self.log.event = "Made a request to renew project for %s hour(s)"\
-                         % extension.hours
+        article = "an exceptional" if extension.exception else "a"
+        self.log.event = "Made %s request to renew project for %s hour(s)"\
+                         % (article, extension.hours)
         self.log.extension = extension
         return self._commit()
 
@@ -592,8 +593,9 @@ class ProjectLog:
         return self._commit()
 
     def extend(self, extension):
-        self.log.event = "Made a request to extend project for %s hour(s)"\
-                         % extension.hours
+        article = "an exceptional" if extension.exception else "a"
+        self.log.event = "Made %s request to extend project for %s hour(s)"\
+                         % (article, extension.hours)
         self.log.extension = extension
         return self._commit()
 
