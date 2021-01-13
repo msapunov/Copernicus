@@ -97,7 +97,7 @@ class Extensions:
 
 
 def ignore_extension(eid):
-    return Extensions(eid).reject("Extension request has been ignored")
+    return Extensions(eid).ignore()
 
 
 def reject_extension(eid):
