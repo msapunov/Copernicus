@@ -119,6 +119,17 @@ class Project(db.Model):
             "project": self.get_name()
         }
 
+    def pretty_dict(self):
+        rec = self.to_dict()
+        rec["approve"] = rec["approve"]["fullname"]
+        rec["responsible"] = rec["responsible"]["fullname"]
+        rec["resources"] = rec["resources"]["cpu"]
+        tmp = []
+        for user in rec["users"]:
+            tmp.append(user["fullname"])
+        rec["users"] = tmp
+        return rec
+
     def to_dict(self):
         if self.created:
             created = self.created.strftime("%Y-%m-%d %X %Z")
