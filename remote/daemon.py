@@ -14,6 +14,7 @@ from warnings import filterwarnings
 from smtplib import SMTP, SMTPException
 from email.message import EmailMessage
 from socket import gethostname
+from sqlite3 import connect
 
 __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
@@ -56,7 +57,7 @@ if not cfg_file:
     log.critical("Option 'config' is not optional")
     exit(99)
 if not exists(cfg_file):
-    log.critical("Config file '%s' does not exists or having bad permissions"
+    log.critical("Config file '%s' does not exists or having wrong permissions"
                  % cfg_file)
     exit(100)
 
@@ -64,311 +65,37 @@ cycle_seconds = options.interval * 60
 log.debug("Cycle interval set to '%s' seconds" % cycle_seconds)
 log.debug("Reading configuration file '%s'" % cfg_file)
 
-CONFIG = Config()
-CONFIG.read(cfg_file)
 
-ERRORS = []
+class Tasks:
+    def __init__(self, db, cfg):
+        self.db = db
+        self.cfg = cfg
 
+    def upload(self):
+        pass
 
-def send_mail(subject, message):
-    init = get_config("Mail")
+    def new(self):
+        pass
 
-    msg = EmailMessage()
-    msg.set_content(message)
-
-    if not subject:
-        subject = "Default subject"
-    hostname = gethostname()
-    subject += " from %s" % hostname
-    msg["Subject"] = subject
-    msg["From"] = init.get("from")
-    msg["To"] = init.get("to")
-
-    try:
-        s = SMTP('localhost')
-        s.send_message(msg)
-        s.quit()
-        log.debug("Successfully sent an email")
-    except SMTPException as err:
-        log.debug("Failed to send email: %s" % err)
+    def execute(self):
+        pass
 
 
-def execute(argz):
-    cmd = " ".join(argz)
-    log.debug("Executing command: %s" % cmd)
-    command = Popen(argz, stderr=PIPE, stdout=PIPE)
-    (out, err) = command.communicate()
-
-    out = out.strip().decode()
-    log.debug("Command's output: %s" % str(out))
-    err = err.strip().decode()
-    log.debug("Command's error: %s" % str(err))
-    if err:
-        ERRORS.append("Command:\n'%s'\nStdErr:\n'%s'\nStdOut:\n'%s'"
-                      % (cmd, err, out))
-    if not command.returncode == 0:
-        if err:
-            log.error(err)
-        else:
-            log.error("Command '%s' exit code is not null" % cmd)
-    return out, err
-
-
-def remote_cmd(ssh):
-    host = ssh["hostname"]
-    login = ssh["username"]
-    key = ssh["key"]
-    cmd = ssh["cmd"]
-
-    client = SSHClient()
-    client.set_missing_host_key_policy(AutoAddPolicy())
-    log.debug("Executing remote command: %s" % cmd)
-    try:
-        client.connect(host, username=login, password="", key_filename=key)
-        stdin, stdout, stderr = client.exec_command(cmd)
-        out = stdout.readlines()
-        log.debug("StdOut: %s" % out)
-        err = stderr.readlines()
-        log.debug("StdErr: %s" % err)
-    except AuthenticationException:
-        log.error("Can't connect to server %s" % host)
-        return
-    finally:
-        client.close()
-    if err:
-        log.error("Error while executing remote code: %s" % err)
-        return False
-    return out
-
-
-def is_master():
-    cmd = ["systemctl", "status", "slurmctld.service"]
-    log.debug("Command: %s" % " ".join(cmd))
-    stdout, stderr = execute(cmd)
-    log.debug("StdOut: %s" % stdout)
-    log.debug("StdErr: %s" % stderr)
-    if "active (running)" not in stdout:
-        return False
-    return True
-
-
-def get_consumption(name):
-    cmd = ["sreport", "-nP", "cluster", "AccountUtilizationByUser"]
-    cmd += ["Start=2018-01-01", "account=%s" % name]
-    cmd += ["format=Accounts,Login,Used"]
-    stdout, stderr = execute(cmd)
-    if not stdout:
-        return False
-    recs = stdout.split("\n")
-    log.debug("Split to strings: %s" % recs)
-    rec = list(filter(lambda x: "||", recs))[0]  # must be  alist of one element
-    log.debug("Raw line of project's consumption: %s" % rec)
-    conso_str = rec.split("|")[2]
-    log.debug("Consumption as a string: %s" % conso_str)
-    try:
-        return int(conso_str)
-    except Exception as err:
-        log.error("failed to convert value %s to int: %s" % (conso_str, err))
-        return False
-
-
-def extract_ext_data(rec):
-    try:
-        rid, hours, project = rec.split("|")
-    except Exception as err:
-        log.error("Failed to extract data from record %s: %s" % (rec, err))
-        return None
-    project = project.strip()
-    rid = rid.strip()
-    try:
-        hours = int(hours)
-    except Exception as err:
-        log.error("Failed to convert %s to int: %s" % (hours, err))
-        return None
-    return {"limit": hours * 60, "id": rid, "name": project}
-
-
-def new_ext_limit(rec):
-    project = rec["name"]
-    limit = rec["limit"]
-    conso = get_consumption(project)
-    if not conso:
-        log.error("Failed to get project's consumption!")
-        return None
-    log.debug("Consumption in minutes: %s" % conso)
-    rec["new"] = conso + limit
-    log.debug("New limit in minutes: %s" % rec["new"])
-    return rec
-
-
-def enforce_limit(rec):
-    name = rec["name"]
-    new = rec["new"]
-    msg = "Enforcing new limit of %s minutes for project %s" % (new, name)
-    log.info(msg)
-    rec["log"] = msg
-    base = ["sacctmgr", "-i", "modify", "qos", name]
-    cmd1 = base + ["set", "GrpCPUMins=%s" % new]
-    cmd2 = base + ["set", "GrpSubmitJobs=-1"]
-
-    stdout, stderr = execute(cmd1)
-    if not stdout:
-        return False
-    rec["cmd1"] = " ".join(cmd1)
-
-    stdout, stderr = execute(cmd2)
-    if not stdout:
-        return False
-    rec["cmd2"] = " ".join(cmd2)
-
-    return rec
-
-
-def ext_log(rec):
-    return "%s:\n%s\n" % (rec["log"], rec["cmd1"])
-
-
-def update_ext_db(ssh, rec):
-    rid = rec["id"]
-    host = ssh["hostname"]
-    user = ssh["username"]
-    key = ssh["key"]
-    cmd = ssh["cmd"] % rid
-    log.debug("Updating remote DB record with the id: %s" % rid)
-    remote_cmd({"hostname": host, "username": user, "key": key, "cmd": cmd})
-    return True
-
-
-def extension():
-    log.info("Processing project extensions")
-    init = get_config("Extension")
-    hostname = init.get("hostname")
-    username = init.get("username")
-    key = init.get("key")
-    cmd = init.get("command")
-    log.debug("hostname: %s, username: %s, key: %s, command: %s" %
-              (hostname, username, key, cmd))
-
-    dirty = remote_cmd({"hostname": hostname, "username": username, "key": key,
-                        "cmd": cmd})
-
-    data_dirty = list(map(lambda x: x.strip(), dirty))
-    log.debug("Stripped data: %s" % data_dirty)
-    data = list(filter(lambda x: len(x) > 0, data_dirty))
-    log.debug("Positive length data: %s" % data)
-    recs = list(filter(lambda x: x.split()[0].isdigit(), data))
-    if not recs:
-        log.info("No project extensions found")
-        return
-    log.debug("Meaningful data: %s" % recs)
-    todo_dirty = list(map(lambda x: extract_ext_data(x), recs))
-    log.debug("Extracted dirty data: %s" % todo_dirty)
-    todo = list(filter(lambda x: x, todo_dirty))
-    log.debug("Extracted clean data: %s" % todo)
-    new_dirty = list(map(lambda x: new_ext_limit(x), todo))
-    log.debug("Dirty new limits: %s" % new_dirty)
-    new = list(filter(lambda x: x, new_dirty))
-    log.debug("Clean  new limits: %s" % new)
-    result = list(map(lambda x: enforce_limit(x), new))
-    filter_result = list(filter(lambda x: x, result))
-    if not filter_result:
-        log.error("Seems there was an error during project extension")
-        return
-    log_message = "\n".join(list(map(lambda x: ext_log(x), filter_result)))
-    send_mail("Extension report", "Project extension \n\n" + log_message)
-    cmd = init.get("update")
-    ssh = {"hostname": hostname, "username": username, "key": key, "cmd": cmd}
-    list(map(lambda x: update_ext_db(ssh, x), filter_result))
-    log.info("Done with project extension processing")
-    return
-
-
-def add_user(user, project):
-    log.info("Adding user '%s' to project '%s'" % (user, project))
-    pass
-
-
-def assign_user(user, project):
-    log.info("Assigning user '%s' to project '%s'" % (user, project))
-    pass
-
-
-def update_user(user, data):
-    log.info("Updating user '%s' information '%s'" % (user, data))
-    pass
-
-
-def remove_user(user, project):
-    log.info("Removing user '%s' from project '%s'" % (user, project))
-    pass
-
-
-def execute_task(rec):
-    log.debug("Parsing and executing task: %s" % rec)
-    try:
-        tid, action, user, proj_or_data = rec.split("|")
-    except Exception as err:
-        log.error("Failed to extract data from record %s: %s" % (rec, err))
-        return None
-    tid = tid.strip()
-    act = action.strip()
-    user = user.strip()
-    proj_or_data = proj_or_data.strip()
-    if act not in ["add", "assign", "update", "remove"]:
-        log.error("Action '%s' from task record '%s' is unknown" % (act, rec))
-        return None
-    if act == "add":
-        result = add_user(user, proj_or_data)
-    elif act == "assign":
-        result = assign_user(user, proj_or_data)
-    elif act == "update":
-        result = update_user(user, proj_or_data)
-    else:  # Default action is to remove a user :)
-        result = remove_user(user, proj_or_data)
-    return {"id": tid, "result": result}
-
-
-def tasks():
-    log.info("Processing project tasks")
-    init = get_config("Tasks")
-    hostname = init.get("hostname")
-    username = init.get("username")
-    key = init.get("key")
-    cmd = init.get("command")
-    log.debug("hostname: %s, username: %s, key: %s, command: %s" %
-              (hostname, username, key, cmd))
-
-    dirty = remote_cmd({"hostname": hostname, "username": username, "key": key,
-                        "cmd": cmd})
-
-    dirty_tasks = list(map(lambda x: x.strip(), dirty))
-    log.debug("Stripped data: %s" % dirty_tasks)
-    data = list(filter(lambda x: len(x) > 0, dirty_tasks))
-    log.debug("Positive length data: %s" % data)
-    recs = list(filter(lambda x: x.split()[0].isdigit(), data))
-    if not recs:
-        log.info("No tasks found")
-        return
-    log.debug("Meaningful tasks: %s" % recs)
-    result = list(map(lambda x: execute_task(x), recs))
-    filter_result = list(filter(lambda x: x, result))
-    if not filter_result:
-        log.error("Seems there was an error during task execution")
-        return
-    log_message = "\n".join(list(map(lambda x: ext_log(x), filter_result)))
-    #send_mail("Extension report", "Project extension \n\n" + log_message)
-    #cmd = init.get("update")
-    #ssh = {"hostname": hostname, "username": username, "key": key, "cmd": cmd}
-    #list(map(lambda x: update_ext_db(ssh, x), filter_result))
-    log.info("Done with project tasks")
-    return
-
-
-def get_config(section):
-    if not CONFIG.has_section(section):
-        log.critical("Expect to have section %s in config file" % section)
-        return
-    return dict(CONFIG.items(section))
+def init_db(cfg):
+    log.debug("Initiating database from configuration file")
+    if not cfg.has_section("DB"):
+        log.error("DB section absent in config")
+        medium = ":memory:"
+    else:
+        medium = cfg("DB", "path", ":memory:")
+    log.info("Database initiated at %s" % medium)
+    conn = connect(medium)
+    log.debug("Connected to the database")
+    c = conn.cursor()
+    log.debug("Got DB cursor")
+    c.execute("""CREATE TABLE IF NOT EXISTS tasks
+                 (rollno real, name text, class real)""")
+    return conn
 
 
 class Watchdog:
@@ -391,14 +118,32 @@ class Watchdog:
 
 
 def run():
-    if not is_master():
-        log.critical("Running on not master instance. Terminating")
-        return
-    log.debug("Running on a master instance")
-#    extension()
-    tasks()
-    if ERRORS:
-        send_mail("Error report", "\n".join(ERRORS))
+    log.debug("Starting cycle")
+#    if not is_master():
+#        log.critical("Running on a slave instance. Terminating")
+#        return True
+    log.debug("Running on a master instance. All good")
+    config = Config()
+    config.read(cfg_file)
+    log.debug("Configuration read successful")
+    db = init_db(config)
+    log.debug("Database connection established")
+    tasks = Tasks(db, config)
+    try:
+        tasks.upload()
+        log.debug("Upload tasks step is done")
+        tasks.new()
+        log.debug("New tasks step is done")
+        tasks.execute()
+        log.debug("Execute tasks step is done")
+    except Exception as err:
+        log.error("Failure during tasks processing: %s" % err)
+        return False
+    finally:
+        db.close()
+        log.debug("Closing database connection")
+    log.info("Finishing cycle")
+    return True
 
 
 run()
