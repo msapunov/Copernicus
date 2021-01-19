@@ -9,6 +9,12 @@
 {% endblock %}
 {% block main %}
 
+<div class="uk-width-1-1">
+    <a class="uk-button uk-align-right" href="projects.csv" download>
+        <span class="uk-icon-download uk-margin-small-right"></span>Download
+    </a>
+</div>
+
 <table class="uk-table uk-table-hover uk-table-striped uk-table-condensed" id="stat">
     <thead>
         <tr>
@@ -16,9 +22,13 @@
             <th>Start</th>
             <th>End</th>
             <th>Responsible</th>
+            <!--
             <th>Use</th>
+            -->
             <th>Total</th>
+            <!--
             <th>Usage</th>
+            -->
         </tr>
     </thead>
     <tbody>
@@ -46,13 +56,16 @@
                         {{project.responsible.name[0]|upper}}{{project.responsible.name[1:]|lower}} {{project.responsible.surname[0]|upper}}{{project.responsible.surname[1:]|lower}} <{{project.responsible.login}}>
                     {% endif %}
                 </td>
+                <!--
                 <td>{{project.consumed}}</td>
+                -->
                 <td>{{project.resources.cpu}}</td>
+                <!--
                 <td>{{project.consumed_use}}%</td>
+                -->
             </tr>
         {% endfor %}
     </tbody>
 </table>
-
 
 {% endblock %}
