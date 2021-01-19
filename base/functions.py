@@ -98,7 +98,7 @@ def projects_consumption(projects):
     return projects
 
 
-def project_get_info(every=None, user_is_responsible=None):
+def project_get_info(every=None, user_is_responsible=None, usage=True):
     if every:
         projects = Project.query.all()
     else:
@@ -114,9 +114,9 @@ def project_get_info(every=None, user_is_responsible=None):
         else:
             raise ValueError("No projects found for user '%s'" %
                              current_user.login)
-    info = projects_consumption(projects)
-    debug(info)
-    return info
+    if not usage:
+        return projects
+    return projects_consumption(projects)
 
 
 def slurm_parse_project_conso(slurm_raw_output):
