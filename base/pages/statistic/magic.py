@@ -16,7 +16,8 @@ def dump_projects_database(extension_type):
         if not project.ref:
             continue
         projects.append(project)
-    output = sorted(list(map(lambda x: x.to_dict(), projects)), key=lambda x: x["id"])
+    output = sorted(list(map(lambda x: x.pretty_dict(), projects)),
+                    key=lambda x: x["id"])
     excel.init_excel(current_app)
     filename = "projects." + extension_type
     return excel.make_response_from_records(output, file_type=extension_type, file_name=filename)
