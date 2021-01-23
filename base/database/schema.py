@@ -126,7 +126,7 @@ class Project(db.Model):
         rec["resources"] = rec["resources"]["cpu"]
         tmp = []
         for user in rec["users"]:
-            tmp.append(user["fullname"])
+            tmp.append("%s <%s>" % (user["fullname"], user["email"]))
         rec["users"] = tmp
         return rec
 
