@@ -1,5 +1,6 @@
 from flask_login import current_user
 from base.pages import check_str, check_json, calculate_ttl, ProjectLog
+from base.functions import projects_consumption
 from base.database.schema import Extend, Resources
 from operator import attrgetter
 from base import db
@@ -27,7 +28,21 @@ class Extensions:
         return sorted(records, key=attrgetter("created"), reverse=reverse)
 
     def unprocessed(self):
-        return self.queue.filter_by(processed=False).all()
+        records = self.queue.filter_by(processed=False).all()
+        projects = list(map(lambda x: x.project, records))
+        consumption = projects_consumption(projects)
+        for i in records:
+            project = list(filter(lambda x: i.project.name == x.name, consumption))
+            if len(project) < 1:
+                continue
+            i.project = project[0]
+#            if len(project) < 1:
+#                i.consumed = "Undefined"
+#                i.consumed_use = "Undefined"
+#            else:
+#                i.consumed = str(project[0].consumed)
+#                i.consumed_use = str(project[0].consumed_use) + "%"
+        return records
 
     def pending(self):
         recs = self.queue.filter_by(processed=True).filter_by(accepted=True)\
