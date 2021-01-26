@@ -228,6 +228,14 @@ class Extend(db.Model):
         start = self.created.strftime("%Y-%m-%d %X %Z") if self.created else ""
         mod = self.modified.strftime("%Y-%m-%d %X %Z") if self.modified else ""
         approve = self.approve.full_name() if self.approve else ""
+        if hasattr(self.project, "consumed"):
+            conso = self.project.consumed
+        else:
+            conso = ""
+        if hasattr(self.project, "consumed_use"):
+            use = self.project.consumed_use
+        else:
+            use = ""
         return {
             "id": self.id,
             "extension": self.extend,
@@ -240,14 +248,14 @@ class Extend(db.Model):
             "processed": self.processed,
             "decision": self.decision,
             "done": self.done,
-            "present_use": self.present_use,
-            "present_total": self.present_total,
             "activate": self.activate,
             "transform": self.transform,
             "project": self.project.id,
             "total": self.present_total,
-            "use": self.present_use,
-            "usage": self.usage_percent,
+            "initial_use": self.present_use,
+            "initial_usage": self.usage_percent,
+            "present_use": conso,
+            "present_usage": use,
             "project_name": self.project.get_name(),
             "approve": approve,
             "responsible": self.project.responsible.full_name(),
