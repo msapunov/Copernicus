@@ -165,8 +165,14 @@ def get_arguments(trans=False):
     if cpu < 0:
         raise ValueError("CPU can't be a negative value!")
 
-    ext = bool(data["extension"].lower()) if "extension" in data else None
-    debug("Extension flag is set to: %s" % ext)
+    extension = str(data["extension"].lower()) if "extension" in data else None
+    debug("Extension flag value: %s" % extension)
+    if extension == "true":
+        ext = True
+    elif extension == "false":
+        ext = False
+    else:
+        ext = None
     if not trans and ext is None:
         raise ValueError("Failed to get value of extension variable")
 
