@@ -176,7 +176,7 @@ def renew_project(id, ext, date):
     ext.project.resources = create_resource(ext.project, ext.hours)
     msg = "Created based on renewal request ID %s on %s" % (id, date)
     ext.project.resources.comment = msg
-    return ProjectLog(ext.project).renew(ext)
+    return ProjectLog(ext.project).renewed(ext)
 
 
 def extend_project(id, ext, date):
