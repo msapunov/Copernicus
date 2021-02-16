@@ -314,6 +314,7 @@ class Resources(db.Model):
     treated = db.Column(db.Boolean, default=False)
     consumption_ts = db.Column(db.DateTime(True))
     consumption = db.Column(db.Integer, db.CheckConstraint("consumption>=0"))
+    consumption_raw = db.Column(db.Text)
 
     def to_dict(self):
         start = self.created.strftime("%Y-%m-%d %X %Z") if self.created else ""
