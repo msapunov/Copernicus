@@ -22,13 +22,9 @@
             <th>Start</th>
             <th>End</th>
             <th>Responsible</th>
-            <!--
             <th>Use</th>
-            -->
             <th>Total</th>
-            <!--
             <th>Usage</th>
-            -->
         </tr>
     </thead>
     <tbody>
@@ -56,13 +52,9 @@
                         {{project.responsible.name[0]|upper}}{{project.responsible.name[1:]|lower}} {{project.responsible.surname[0]|upper}}{{project.responsible.surname[1:]|lower}} <{{project.responsible.login}}>
                     {% endif %}
                 </td>
-                <!--
                 <td>{{project.consumed}}</td>
-                -->
                 <td>{{project.resources.cpu}}</td>
-                <!--
                 <td>{{project.consumed_use}}%</td>
-                -->
             </tr>
         {% endfor %}
     </tbody>
