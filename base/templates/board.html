@@ -33,6 +33,7 @@
         </div>
         <div class="uk-panel uk-width-1-1 uk-panel-space uk-overflow-container">
             <div class="container" role="main">
+                {% if data %}
                 <table id="ext_projects_table" class="uk-table uk-table-striped uk-table-condensed">
                     <thead>
                         <tr>
@@ -43,6 +44,7 @@
                             <th>Present</th>
                             <th>Use</th>
                             <th>Extension</th>
+                            <th>Renewal</th>
                             <th>Activate</th>
                             <th>Transform</th>
                             <th>Date</th>
@@ -65,7 +67,16 @@
                             <td class="uk-width-1-10 uk-text-nowrap">{{ record.responsible }}</td>
                             <td class="uk-width-1-10">{{ record.total }}</td>
                             <td class="uk-width-1-10 uk-text-nowrap">{{record.present_usage}}% [{{ record.initial_usage }}%]</td>
-                            <td class="uk-width-1-10">{{ record.hours }}</td>
+                            <td class="uk-width-1-10">
+                                {% if record.extension %}
+                                    {{ record.hours }}
+                                {% endif %}
+                            </td>
+                            <td class="uk-width-1-10">
+                                {% if not record.extension %}
+                                    {{ record.hours }}
+                                {% endif %}
+                            </td>
                             <td class="uk-width-1-10">
                                 {% if record.activate %}
                                     <span class="uk-icon-plus"></span>
@@ -145,8 +156,25 @@
                         </tr>
                     {% endfor %}
                 </tbody>
-            </table>
+                </table>
+                {% endif %}
             </div>
+            <!--
+            <div class="uk-button-group uk-float-right">
+                {% if data %}
+                    {% set ids=[] %}
+                    {% set names=[] %}
+                    {% for record in data %}
+                        {{ ids.append(record.id | string()) }}
+                        {{ names.append(record.project_name | string()) }}
+                    {% endfor %}
+                    {% set ids=",".join(ids) %}
+                    {% set names=", ".join(names) %}
+                    <button class="uk-button bulk_renew" type="button" data-id='{{ids}}' data-name='{{names}}'><span class="uk-icon-repeat uk-margin-small-right"></span>Bulk renew</button>
+                    <button class="uk-button bulk_extend" type="button" data-id='{{ids}}' data-name='{{names}}'><span class="uk-icon-arrows-h uk-margin-small-right"></span>Bulk extend</button>
+                {% endif %}
+            </div>
+            -->
         </div>
     {% endif %}
 {% endblock %}
