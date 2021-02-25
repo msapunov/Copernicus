@@ -441,6 +441,7 @@
 //        if ($(this).hasClass("user_edit")) {
 //            window.render.user_edit(this);
 //        }
+        window.render.reg_edit(this);
         var modal = UIkit.modal("#register_edit");
         if ( modal.isActive() ) {
             modal.hide();
