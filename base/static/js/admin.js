@@ -447,6 +447,29 @@
             modal.show();
         }
     };
+    window.render.reg_edit=function(btn){
+        var id = $.trim( $(btn).data("id") );
+        var url = window.admin.url.reg_details + "/" + id;
+        json_send(url, false, false).done(function(reply) {
+            if(! reply.data){
+                UIkit.notify("No data returned by service", {timeout: 2000, status:"danger"});
+                return
+            }
+            var data = reply.data;
+            $("#re_id").val(data.id ? data.id : '');
+            $("#re_title").val(data.title ? data.title : '');
+            $("#re_cpu").val(data.cpu ? data.cpu : '');
+            $("#re_type").val(data.type ? data.type : '');
+            $("#re_resp_name").val(data.responsible_first_name ? data.responsible_first_name : '');
+            $("#re_resp_surname").val(data.responsible_last_name ? data.responsible_last_name : '');
+            $("#re_resp_email").val(data.responsible_email ? data.responsible_email : '');
+            $("#re_resp_position").val(data.responsible_position ? data.responsible_position : '');
+            $("#re_resp_lab").val(data.responsible_lab ? data.responsible_lab : '');
+            $("#re_resp_phone").val(data.responsible_phone ? data.responsible_phone : '');
+//            $("#re_current").text(data.projects.join(", "));
+//            $("#re_project").val(data.projects).multiselect("refresh");
+        });
+    };
     window.render.new_ignore=function(){
         var id = $.trim( $(this).data("id") );
         var mid = $.trim( $(this).data("meso") );
@@ -692,6 +715,7 @@
         } else {
             modal.show();
         }
+    window.render.ue_buttons=function(id, login){
     };
     window.render.user_edit=function(btn){
         var id = $.trim( $(btn).data("id") );
@@ -716,7 +740,6 @@
             $("#ua_project").val(data.projects).multiselect("refresh");
         });
     };
-    window.render.ue_buttons=function(id, login){
         var s_reset = $("<span/>").addClass("uk-icon-eraser");
         var btn_reset = $("<button/>").attr({"data-id": id, "type": "button"}).append(s_reset);
         btn_reset.addClass("uk-button uk-button-mini user_password_reset");
