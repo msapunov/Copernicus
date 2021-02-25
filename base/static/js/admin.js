@@ -434,6 +434,19 @@
             });
         });
     };
+
+    window.render.new_edit=function(){
+//        window.render.form_reset_register();
+//        if ($(this).hasClass("user_edit")) {
+//            window.render.user_edit(this);
+//        }
+        var modal = UIkit.modal("#register_edit");
+        if ( modal.isActive() ) {
+            modal.hide();
+        } else {
+            modal.show();
+        }
+    };
     window.render.new_ignore=function(){
         var id = $.trim( $(this).data("id") );
         var mid = $.trim( $(this).data("meso") );
@@ -655,7 +668,7 @@
         name_el.val(surname);
         surname_el.val(name);
     };
-    window.render.form_reset=function(){
+    window.render.form_reset_user=function(){
         var ids;
         ids = ["#ua_id","#ua_login","#ua_name","#ua_surname","#ua_email"];
         $.each(ids, function(idx, name){
@@ -669,7 +682,7 @@
         $("#ua_project").val('').trigger('chosen');
     };
     window.render.user_add=function() {
-        window.render.form_reset();
+        window.render.form_reset_user();
         if ($(this).hasClass("user_edit")) {
             window.render.user_edit(this);
         }
@@ -881,6 +894,7 @@
     $(document).on("click", ".message", window.render.message);
 
     $(document).on("click", ".new_project", window.render.new_project);
+    $(document).on("click", ".new_edit", window.render.new_edit);
     $(document).on("click", ".new_create", window.render.new_create);
     $(document).on("click", ".new_approve", window.render.new_approve);
     $(document).on("click", ".new_visa", window.render.new_visa);
