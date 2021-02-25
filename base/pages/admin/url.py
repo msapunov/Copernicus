@@ -149,6 +149,14 @@ def admin_user_details(uid):
     return jsonify(data=user.details())
 
 
+@bp.route("/admin/registration/details/get/<int:rid>", methods=["POST"])
+@login_required
+@grant_access("admin")
+def admin_registration_details_get(rid):
+    registration = get_registration_record(rid)
+    return jsonify(data=registration.to_dict())
+
+
 @bp.route("/admin/registration/ignore/<int:pid>", methods=["POST"])
 @login_required
 @grant_access("admin")
@@ -351,4 +359,6 @@ def web_admin():
     result["users"] = group_users()
     result["events"] = event_log()
     form = UserEditForm()
-    return render_template("admin.html", data=result, form = form)
+    register_edit = RegistrationEditForm()
+    return render_template("admin.html", data=result, form = form,
+                           re_form=register_edit)
