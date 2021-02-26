@@ -495,6 +495,21 @@
         }
         UIkit.modal("#register_edit").hide();
     };
+    window.render.update_re=function(reply){
+        if(!reply.data) {
+            return false;
+        }
+        var data = reply.data;
+        var pid = data.id;
+        var ids = ["title","cpu","type","meso_id","responsible_full_name","responsible_position", "responsible_lab", "responsible_email", "responsible_phone","responsible_name","responsible_surname"];
+        $.each(ids, function(idx, id){
+            var id_short = "#{0}-{1}-short".f(pid, id);
+            var id_long = "#{0}-{1}-full".f(pid, id);
+            var val = data[id];
+            $(id_short).text(val);
+            $(id_long).text(val);
+        });
+    };
     window.render.new_ignore=function(){
         var id = $.trim( $(this).data("id") );
         var mid = $.trim( $(this).data("meso") );
