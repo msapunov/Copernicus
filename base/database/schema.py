@@ -503,6 +503,14 @@ class Register(db.Model):
         year = dt.now().year
         return "meso-%s-%s-%s" % (year, self.id, self.project_type())
 
+    def responsible_full_name(self):
+        first = self.responsible_first_name
+        last = self.responsible_last_name
+        if first and last:
+            return "%s %s" % (first.capitalize(), last.capitalize())
+        if first: return first.capitalize()
+        if last: return last.capitalize()
+
     def get_users(self):
         users = self.users.split("\n")
         result = []
@@ -519,6 +527,7 @@ class Register(db.Model):
             "id": self.id,
             "ts": self.ts.strftime("%Y-%m-%d %X %Z"),
             "title": self.title,
+            "responsible_full_name": self.responsible_full_name(),
             "responsible_first_name": self.responsible_first_name,
             "responsible_last_name": self.responsible_last_name,
             "responsible_position": self.responsible_position,
