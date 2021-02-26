@@ -117,7 +117,7 @@
         </div>
 
         {% if data.extension %}
-        <h3 class="uk-accordion-title">Pending projects [{{ data.extension | length }}]</h3>
+        <h3 class="uk-accordion-title">Pending projects [{{ data.extension | length }}] <button class="uk-button uk-float-right uk-button-small slurm_reload"><span class="uk-icon-refresh"></span></button></h3>
         <div class="uk-accordion-content uk-overflow-container" id="pending_content">
             <table id="new_projects_table" class="uk-table uk-table-striped uk-table-condensed">
                 <tbody id="ext_result_records">
@@ -125,22 +125,22 @@
                         <tr id="{{record.id}}">
                             <td class="uk-width-1-10 uk-text-middle"><button class="uk-button uk-button-mini new_project" type="button" data-id='{{record.id}}-info'><span class="uk-icon-plus"></span></button>
                                 {% if "A" in record.type %}
-                                    <span class="uk-text-bold uk-text-success">A</span>
+                                    <span id="{{record.id}}-type-short" class="uk-text-bold uk-text-success">A</span>
                                 {% elif "B" in record.type %}
-                                    <span class="uk-text-bold uk-text-primary">B</span>
+                                    <span id="{{record.id}}-type-short" class="uk-text-bold uk-text-primary">B</span>
                                 {% elif "C" in record.type %}
-                                    <span>C</span>
+                                    <span id="{{record.id}}-type-short">C</span>
                                 {% elif "E" in record.type %}
-                                    <span>E</span>
+                                    <span id="{{record.id}}-type-short">E</span>
                                 {% elif "H" in record.type %}
-                                    <span class="uk-text-bold uk-text-warning">H</span>
+                                    <span id="{{record.id}}-type-short" class="uk-text-bold uk-text-warning">H</span>
                                 {% else %}
-                                    {{record.type}}
+                                    <span id="{{record.id}}-type-short">{{record.type}}</span>
                                 {% endif %}
                             </td>
-                            <td class="uk-width-4-10">{{record.title}}</td>
-                            <td class="uk-width-2-10">{{record.responsible_first_name}}&nbsp;{{record.responsible_last_name}}</td>
-                            <td class="uk-width-1-10">{{record.cpu}}</td>
+                            <td id="{{record.id}}-title-short" class="uk-width-4-10">{{record.title}}</td>
+                            <td id="{{record.id}}-fullname-short" class="uk-width-2-10">{{record.responsible_full_name}}</td>
+                            <td id="{{record.id}}-cpu-short" class="uk-width-1-10">{{record.cpu}}</td>
                             <td class="uk-width-2-10">{{record.ts}}</td>
                             <td style="width: 20px;">
                                 {% if record.approve and not record.accepted %}
@@ -159,27 +159,29 @@
                                         <tr class="ext_info">
                                             <td class="uk-width-1-10 uk-text-right">Project type:</td>
                                             <td class="uk-width-9-10 uk-text-left">
-                                                <strong>{{record.type}}</strong>
+                                                <strong id="{{record.id}}-type-full">{{record.type}}</strong>
                                             </td>
                                         </tr>
                                         <tr class="ext_info">
                                             <td class="uk-width-1-10 uk-text-right">Mesocentre ID:</td>
-                                            <td class="uk-width-9-10 uk-text-left">{{record.meso_id}}</td>
+                                            <td id="{{record.id}}-meso_id-full" class="uk-width-9-10 uk-text-left">{{record.meso_id}}</td>
                                         </tr>
                                         <tr class="ext_info">
                                             <td class="uk-width-1-10 uk-text-right">CPU:</td>
-                                            <td class="uk-width-9-10 uk-text-left">{{record.cpu}}</td>
+                                            <td id="{{record.id}}-cpu-full" class="uk-width-9-10 uk-text-left">{{record.cpu}}</td>
                                         </tr>
                                         <tr class="ext_info">
                                             <td class="uk-width-1-10 uk-text-right">Responsible:</td>
                                             <td class="uk-width-9-10 uk-text-left">
                                                 <ul>
+                                                    <!--
                                                     {% if record.responsible_first_name and record.responsible_last_name %}
-                                                        <li>{{record.responsible_first_name}} {{record.responsible_last_name}}</li>
+                                                        <li id="{{record.id}}-fullname-full">{{record.responsible_first_name}} {{record.responsible_last_name}}</li>
                                                     {% endif %}
-                                                    {% for i in [record.responsible_position, record.responsible_lab, record.responsible_email, record.responsible_phone] %}
-                                                        {% if i %}
-                                                            <li>{{i}}</li>
+                                                    -->
+                                                    {% for i in ["responsible_full_name","responsible_position", "responsible_lab", "responsible_email", "responsible_phone"] %}
+                                                        {% if record[i] %}
+                                                            <li id="{{record.id}}-{{i}}-full">{{ record[i] }}</li>
                                                         {% endif %}
                                                     {% endfor %}
                                                 </ul>
@@ -253,11 +255,14 @@
                                     <button class="uk-button new_ignore" type="button" data-id='{{record.id}}' data-meso='{{record.meso_id}}' data-title='{{record.title}}'><span class="uk-icon-thumbs-o-down uk-margin-small-right"></span>Ignore</button>
                                     <button class="uk-button new_reject uk-button-danger" type="button" data-id='{{record.id}}' data-meso='{{record.meso_id}}' data-title='{{record.title}}'><span class="uk-icon-thumbs-down uk-margin-small-right"></span>Reject</button>
                                 </div>
-                                {% if record.responsible_email %}
+
                                 <div class="uk-button-group uk-float-left">
-                                    <button class="uk-button message" type="button" data-id='{{record.id}}' data-addr='{{record.responsible_email}}'><span class="uk-icon-send uk-margin-small-right"></span>Contact</button>
+                                    {% if record.responsible_email %}
+                                        <button class="uk-button message" type="button" data-id='{{record.id}}' data-addr='{{record.responsible_email}}'><span class="uk-icon-send uk-margin-small-right"></span>Contact</button>
+                                    {% endif %}
+                                    <button class="uk-button new_edit" type="button" data-id='{{record.id}}'><span class="uk-icon-edit uk-margin-small-right"></span>Edit</button>
                                 </div>
-                                {% endif %}
+
                             </td>
                         </tr>
                     {% endfor %}
@@ -283,6 +288,7 @@
             <div class="uk-width-8-10">
             <h3 class="uk-accordion-title">
                 Users
+                <button class="uk-button uk-float-right uk-button-small slurm_reload"><span class="uk-icon-refresh"></span></button>
             </h3>
             </div>
             <div class="uk-width-2-10">
@@ -351,7 +357,7 @@
                 </div>
             </div>
         </div>
-        <h3 class="uk-accordion-title">Event log</h3>
+        <h3 class="uk-accordion-title">Event log <button class="uk-button uk-float-right uk-button-small slurm_reload"><span class="uk-icon-refresh"></span></button></h3>
         <div class="uk-accordion-content">
             <div class="uk-grid">
                 <div class="uk-width-small-1-1">
@@ -457,6 +463,86 @@
             <div class="uk-text-right">
                 <button class="uk-button js-modal-confirm-cancel ue_cancel">Cancel</button>
                 <button class="uk-button uk-button-primary js-modal-confirm ue_submit">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="register_edit" class="uk-modal fade" tabindex="-1" role="dialog" aria-labelledby="confirm-modal" aria-hidden="true">
+    <div class="uk-modal-dialog">
+        <a class="uk-modal-close uk-close"></a>
+        <div class="uk-overflow-container">
+            <form id="re_form" action="test" method="post" class="uk-panel uk-panel-box uk-form uk-form-horizontal">
+                {{ re_form.csrf_token }}
+                {{ re_form.rid(id="re_id") }}
+                <div class="uk-form-row">
+                    <label class="uk-form-label" for="re_title">Title:</label>
+                    <div class="uk-form-controls">
+                        {{ re_form.title(placeholder="Project title", class_="uk-width-1-1 uk-form-large", id="re_title") }}
+                    </div>
+                </div>
+                <div class="uk-form-row">
+                    <label class="uk-form-label" for="re_cpu">CPU:</label>
+                    <div class="uk-form-controls">
+                        {{ re_form.cpu(placeholder="5000", class_="uk-width-1-1 uk-form-large uk-text-capitalize", id="re_cpu") }}
+                    </div>
+                </div>
+                <div class="uk-form-row">
+                    <label class="uk-form-label" for="re_type">Project type:</label>
+                    <div class="uk-form-controls">
+                        {{ re_form.type(placeholder="A", class_="uk-width-1-1 uk-form-large uk-text-capitalize", id="re_type") }}
+                    </div>
+                </div>
+                <div class="uk-form-row">
+                    <label class="uk-form-label" for="re_resp_name">Responsible name:</label>
+                    <div class="uk-form-controls">
+                        {{ re_form.responsible_first_name(placeholder="Jhon", class_="uk-width-1-1 uk-form-large", id="re_resp_name") }}
+                    </div>
+                </div>
+                <div class="uk-form-row">
+                    <label class="uk-form-label" for="re_resp_surname">Responsible surname:</label>
+                    <div class="uk-form-controls">
+                        {{ re_form.responsible_last_name(placeholder="Smith", class_="uk-width-1-1 uk-form-large uk-text-capitalize", id="re_resp_surname") }}
+                    </div>
+                </div>
+                <div class="uk-form-row">
+                    <label class="uk-form-label" for="re_resp_email">Responsible e-mail:</label>
+                    <div class="uk-form-controls">
+                        {{ re_form.responsible_email(placeholder="john.smith@univ-amu.fr", class_="uk-width-1-1 uk-form-large", id="re_resp_email") }}
+                    </div>
+                </div>
+                <div class="uk-form-row">
+                    <label class="uk-form-label" for="re_resp_position">Responsible position:</label>
+                    <div class="uk-form-controls">
+                        {{ re_form.responsible_position(placeholder="Professor", class_="uk-width-1-1 uk-form-large", id="re_resp_position") }}
+                    </div>
+                </div>
+                <div class="uk-form-row">
+                    <label class="uk-form-label" for="re_resp_lab">Responsible lab/institution:</label>
+                    <div class="uk-form-controls">
+                        {{ re_form.responsible_lab(placeholder="Aix-Marseille Universite", class_="uk-width-1-1 uk-form-large", id="re_resp_lab") }}
+                    </div>
+                </div>
+                <div class="uk-form-row">
+                    <label class="uk-form-label" for="re_resp_phone">Responsible phone:</label>
+                    <div class="uk-form-controls">
+                        {{ re_form.responsible_phone(placeholder="12345", class_="uk-width-1-1 uk-form-large", id="re_resp_phone") }}
+                    </div>
+                </div>
+
+
+            </form>
+        </div>
+        <div class="uk-modal-footer">
+            <div class="uk-text-left">
+                <button class="uk-button uk-align-left name_swap" type="button" title="Swap name and surname">
+                    <span class="uk-icon-retweet"></span>
+                </button>
+            </div>
+            <div class="uk-text-right">
+                <button class="uk-button js-modal-confirm-cancel re_cancel">Cancel</button>
+                <button class="uk-button uk-button-primary js-modal-confirm re_submit">Submit</button>
             </div>
         </div>
     </div>
