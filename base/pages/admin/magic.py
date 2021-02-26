@@ -519,6 +519,31 @@ def user_info_update_new(form):
     return user.details(), result
 
 
+def registration_info_update(form):
+    props = ["title", "cpu", "type", "responsible_first_name",
+             "responsible_last_name", "responsible_email",
+             "responsible_position", "responsible_lab", "responsible_phone"]
+    rid = form.rid.data
+    rec = get_registration_record(rid)
+    msg = ["Updated"]
+    for name in props:
+        if name not in form:
+            continue
+        old = getattr(rec, name)
+        item = getattr(form, name)
+        new = item.data
+        if isinstance(new, str):
+            new = new.strip()
+            if name is not "title": new = new.lower()
+        if old != new:
+            setattr(rec, name, new)
+            msg.append("%s: %s -> %s" % (item.label.text, old, new))
+    if db.session.dirty:
+        db.session.commit()
+        return rec.to_dict(), "\n".join(msg)
+    return rec.to_dict(), "No modifications has been detected"
+
+
 def user_info_update(form):
     uid = form.uid.data
     user = user_by_id(uid)
