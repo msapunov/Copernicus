@@ -472,6 +472,28 @@
 //            $("#re_project").val(data.projects).multiselect("refresh");
         });
     };
+    window.render.re_submit_or_cancel=function(){
+        if($(this).hasClass("re_submit")){
+            var data = {};
+            /*
+            var ids = ["#csrf_token","#re_id","#re_title","#re_cpu","#re_type","#re_resp_name","#re_resp_surname","#re_resp_email","#re_resp_position","#re_resp_lab","#re_resp_phone"];
+            $.each(ids, function(idx, id){
+                var name = $(id).prop("name");
+                data[name] = $(id).val();
+            });
+            */
+            var data = $("form#re_form").serializeArray().map(function(x){this[x.name] = x.value; return this;}.bind({}))[0];
+            var id = data.rid;
+            var url = window.admin.url.reg_edit + "/" + id;
+            json_send(url, data, false).done(function(reply){
+                if(reply.message){
+                    UIkit.notify(reply.message, {timeout: 2000, status:"success"});
+                }
+                window.render.update_re(reply);
+            })
+        }
+        UIkit.modal("#register_edit").hide();
+    };
     window.render.new_ignore=function(){
         var id = $.trim( $(this).data("id") );
         var mid = $.trim( $(this).data("meso") );
