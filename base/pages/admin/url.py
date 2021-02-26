@@ -157,6 +157,18 @@ def admin_registration_details_get(rid):
     return jsonify(data=registration.to_dict())
 
 
+@bp.route("/admin/registration/details/set/<int:rid>", methods=["POST"])
+@login_required
+@grant_access("admin")
+def admin_registration_details_set(rid):
+    form = RegistrationEditForm()
+    if not form.validate_on_submit():
+        raise ValueError(form.errors)
+    result, msg = registration_info_update(form)
+    return jsonify(data=result, message=msg)
+
+
+
 @bp.route("/admin/registration/ignore/<int:pid>", methods=["POST"])
 @login_required
 @grant_access("admin")
