@@ -377,5 +377,6 @@ def web_admin():
     result["events"] = event_log()
     form = UserEditForm()
     register_edit = RegistrationEditForm()
+    new_user_edit = NewUserEditForm()
     return render_template("admin.html", data=result, form = form,
-                           re_form=register_edit)
+                           nu_form = new_user_edit, re_form=register_edit)
