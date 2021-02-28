@@ -25,12 +25,16 @@ from base.pages.admin.magic import (
     user_delete,
     registration_info_update,
     get_registration_record,
+    new_user_update_info,
     reg_ignore,
     reg_reject,
     reg_accept,
     reg_approve)
 from base.functions import slurm_nodes_status
-from base.pages.admin.form import UserEditForm, RegistrationEditForm
+from base.pages.admin.form import (
+    UserEditForm,
+    RegistrationEditForm,
+    NewUserEditForm)
 from base.pages.project.magic import process_extension
 from base.pages.board.magic import Extensions
 from base.database.schema import Project
