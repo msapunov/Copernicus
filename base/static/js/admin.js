@@ -513,6 +513,9 @@
             $(id_long).text(val);
         });
     };
+    window.render.responsible_swap=function(){
+        window.render.swap("#re_resp_name", "#re_resp_surname");
+    };
     window.render.new_ignore=function(){
         var id = $.trim( $(this).data("id") );
         var mid = $.trim( $(this).data("meso") );
@@ -726,9 +729,12 @@
         btn.html(span.outerHTML + "Send Visa");
     };
     window.render.name_swap=function(){
+        window.render.swap("#ua_name", "#ua_surname");
+    };
+    window.render.swap=function(name_id, surname_id){
         var name_el, surname_el, name, surname;
-        name_el = $("#ua_name");
-        surname_el = $("#ua_surname");
+        name_el = $(name_id);
+        surname_el = $(surname_id);
         name = name_el.val();
         surname = surname_el.val();
         name_el.val(surname);
