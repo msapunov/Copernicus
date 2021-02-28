@@ -189,16 +189,21 @@
                                         </tr><tr class="ext_info">
                                             <td class="uk-width-1-10 uk-text-right">Users:</td>
                                             <td class="uk-width-9-10 uk-text-left">
-                                                <ul>
+                                                <ul class="uk-list uk-list-line" id="{{record.id}}-user-list">
                                                 {% for user in record.users %}
-                                                    <li>
+                                                    <li id='{{user["uid"]}}'>
                                                         {{user["name"]}} {{user["last"]}} &lt;{{user["mail"]}}&gt;
                                                         {% if user["login"] %}
-                                                        [{{user["login"]}}]
+                                                            [{{user["login"]}}]
                                                         {% endif %}
+                                                        <div class="uk-button-group uk-margin-small-left">
+                                                            <button class="uk-button uk-button-small uk-button-link nu_edit uk-icon-justify" type="button" data-pid='{{record.id}}' data-uid='{{user["uid"]}}' data-name='{{user["name"]}}' data-surname='{{user["last"]}}' data-email='{{user["mail"]}}' data-login='{{user["login"]}}'><span class="uk-icon-edit"></span></button>
+                                                            <button class="uk-button uk-button-small uk-button-link uk-text-danger nu_remove uk-icon-justify" type="button" data-pid='{{record.id}}' data-uid='{{user["uid"]}}' data-name='{{user["name"]}}' data-surname='{{user["last"]}}' data-email='{{user["mail"]}}' data-login='{{user["login"]}}'><span class="uk-icon-close"></span></button>
+                                                        </div>
                                                     </li>
                                                 {% endfor %}
                                                 </ul>
+                                                <button class="uk-button uk-button-small new_user_add" type="button" data-id='{{record.id}}'><span class="uk-icon-user-plus uk-margin-small-right"></span>Add user</button>
                                             </td>
                                         </tr><tr class="ext_info">
                                             <td class="uk-width-1-10 uk-text-right">Description:</td>
@@ -536,7 +541,7 @@
         </div>
         <div class="uk-modal-footer">
             <div class="uk-text-left">
-                <button class="uk-button uk-align-left name_swap" type="button" title="Swap name and surname">
+                <button class="uk-button uk-align-left resp_name_swap" type="button" title="Swap name and surname">
                     <span class="uk-icon-retweet"></span>
                 </button>
             </div>
