@@ -26,6 +26,7 @@ from base.pages.admin.magic import (
     registration_info_update,
     get_registration_record,
     new_user_update_info,
+    register_new_user,
     reg_ignore,
     reg_reject,
     reg_accept,
@@ -123,6 +124,16 @@ def admin_user_purge(uid):
 @grant_access("admin")
 def admin_user_delete(uid):
     return jsonify(message=user_delete(uid), data=True)
+
+
+@bp.route("/admin/user/new/add", methods=["POST"])
+@login_required
+@grant_access("admin")
+def admin_user_new_add():
+    form = NewUserEditForm()
+    if not form.validate_on_submit():
+        raise ValueError(form.errors)
+    return jsonify(data=register_new_user(form))
 
 
 @bp.route("/admin/user/new/update", methods=["POST"])
