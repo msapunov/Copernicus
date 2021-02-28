@@ -440,6 +440,88 @@
         });
     };
 
+    window.render.nu_edit=function(){
+//        window.render.form_reset_register();
+//        if ($(this).hasClass("user_edit")) {
+//            window.render.user_edit(this);
+//        }
+        window.render.new_user_edit(this);
+        var modal = UIkit.modal("#new_user_edit");
+        if ( modal.isActive() ) {
+            modal.hide();
+        } else {
+            modal.show();
+        }
+    };
+
+    window.render.create_new_user_tr=function(pid, user){
+    //< type="button" data-pid='{{record.id}}' data-uid='{{user["uid"]}}' data-name='{{user["name"]}}' data-surname='{{user["last"]}}' data-email='{{user["mail"]}}' data-login='{{user["loin"]}}'><span class="uk-icon-edit"></span></button>
+    //< type="button" data-pid='{{record.id}}' data-uid='{{user["uid"]}}' data-name='{{user["name"]}}' data-surname='{{user["last"]}}' data-email='{{user["mail"]}}' data-login='{{user["login"]}}'><span class="uk-icon-close"></span></button>
+        var txt = "{0} {1} <{2}>".f(user.name, user.last, user.mail);
+        var li = $("<li/>").attr({"id": user.uid});
+        var btn_div = $("<div/>").attr({"class": "uk-button-group uk-margin-small-left"});
+        var btn = $("<button/>").attr({
+            "class": "uk-button uk-button-small uk-button-link uk-icon-justify",
+            "type": "button",
+            "data-pid": pid,
+            "data-uid": user.uid ? user.uid : "",
+            "data-name": user.name ? user.name : "",
+            "data-surname": user.last ? user.last : "",
+            "data-email": user.mail ? user.mail : "",
+            "data-login": user.login ? user.login : ""
+        });
+        var span_edit = $("<span/>").addClass("uk-icon-edit");
+        var span_close = $("<span/>").addClass("uk-icon-close");
+        var btn_edit = btn.clone().addClass("nu_edit").append(span_edit);
+        var btn_cancel = btn.clone().addClass("uk-text-danger nu_remove").append(span_close);
+        btn_edit.appendTo(btn_div).trigger( 'create' );
+        btn_cancel.appendTo(btn_div).trigger( 'create' );
+        return li.text(txt).append(btn_div);
+    };
+
+    window.render.update_new_user=function(pid, reply){
+        var ul = $("#{0}-user-list".f(pid));
+        var users = reply.data.users;
+        ul.empty();
+        $.each(users, function(id, user){
+            var li = window.render.create_new_user_tr(pid, user);
+            ul.append(li);
+        });
+    };
+
+    window.render.nu_submit_or_cancel=function(btn){
+        if($(this).hasClass("new_user_submit")){
+            var data = {};
+            var data = $("form#new_user_form").serializeArray().map(function(x){this[x.name] = x.value; return this;}.bind({}))[0];
+            var id = data.pid;
+            var url = window.admin.url.new_user_edit;
+            json_send(url, data, false).done(function(reply){
+                window.render.update_new_user(id, reply);
+            })
+        }
+        UIkit.modal("#new_user_edit").hide();
+    }
+
+    window.render.new_user_swap=function(btn){
+        window.render.swap("#new_user_name", "#new_user_surname");
+    };
+
+    window.render.new_user_edit=function(btn){
+        var id = $.trim( $(btn).data("pid") );
+        var uid = $.trim( $(btn).data("uid") );
+        var name = $.trim( $(btn).data("name") );
+        var surname = $.trim( $(btn).data("surname") );
+        var email = $.trim( $(btn).data("email") );
+        var login = $.trim( $(btn).data("login") );
+
+        $("#new_user_id").val(id);
+        $("#new_user_uid").val(uid);
+        $("#new_user_name").val(name);
+        $("#new_user_surname").val(surname);
+        $("#new_user_email").val(email);
+        $("#new_user_login").val(login ? login : '');
+    };
+
     window.render.new_edit=function(){
 //        window.render.form_reset_register();
 //        if ($(this).hasClass("user_edit")) {
