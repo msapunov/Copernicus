@@ -503,6 +503,28 @@ def user_project_update(user, projects):
     return "Project change task%s with id%s has been created: %s" % (s, s, ids)
 
 
+def new_user_update_info(form):
+    pid = form.pid.data
+    uid = form.uid.data
+    rec = get_registration_record(pid)
+    name = form.user_first_name.data
+    surname = form.user_last_name.data
+    email = form.user_email.data
+    login = form.user_login.data if getattr(form, "user_login", None) else ""
+    users = rec.users.split("\n")
+    for user in users:
+        tmp = md5(user.encode()).hexdigest()
+        if tmp != uid:
+            continue
+        users.remove(user)
+        new_user = 'First Name: %s; Last Name: %s; E-mail: %s; Login: %s' % \
+                   (name, surname, email, login)
+        users.append(new_user)
+    rec.users = "\n".join(users)
+    db.session.commit()
+    return rec.to_dict()
+
+
 def user_info_update_new(form):
     uid = form.uid.data
     user = user_by_id(uid)
