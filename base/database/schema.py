@@ -1,6 +1,7 @@
 from flask_login import UserMixin
 from base import db
 from datetime import datetime as dt
+from hashlib import md5
 
 
 __author__ = "Matvey Sapunov"
