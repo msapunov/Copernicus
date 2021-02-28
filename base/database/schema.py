@@ -483,7 +483,7 @@ class Register(db.Model):
         return "<Registration request {}>".format(self.id)
 
     def _parse_user_rec(self, record):
-        tmp = {}
+        tmp = {"uid": md5(record.encode()).hexdigest()}
         info = record.split(";")
         for i in info:
             j = i.split(":")
