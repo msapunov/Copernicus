@@ -125,6 +125,16 @@ def admin_user_delete(uid):
     return jsonify(message=user_delete(uid), data=True)
 
 
+@bp.route("/admin/user/new/update", methods=["POST"])
+@login_required
+@grant_access("admin")
+def admin_user_new_update():
+    form = NewUserEditForm()
+    if not form.validate_on_submit():
+        raise ValueError(form.errors)
+    return jsonify(data=new_user_update_info(form))
+
+
 @bp.route("/admin/user/details/set", methods=["POST"])
 @login_required
 @grant_access("admin")
