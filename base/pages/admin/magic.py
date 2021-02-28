@@ -1,3 +1,4 @@
+from hashlib import md5
 from flask import request, render_template, current_app as app
 from flask_login import current_user
 from base import db
