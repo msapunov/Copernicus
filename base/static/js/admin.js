@@ -956,6 +956,11 @@
     $(document).on("click", ".slurm_reload", window.render.partition);
     $(document).on("click", ".message", window.render.message);
 
+    $(document).on("click", ".nu_edit", window.render.nu_edit);
+    $(document).on("click", ".nu_remove", window.render.nu_remove);
+    $(document).on("click", ".new_user_submit", window.render.nu_submit_or_cancel);
+    $(document).on("click", ".new_user_cancel", window.render.nu_submit_or_cancel);
+    $(document).on("click", ".new_user_swap", window.render.new_user_swap);
     $(document).on("click", ".new_project", window.render.new_project);
     $(document).on("click", ".new_edit", window.render.new_edit);
     $(document).on("click", ".new_create", window.render.new_create);
@@ -967,6 +972,7 @@
     $(document).on("click", ".new_reject", window.render.new_reject);
     $(document).on("click", ".re_submit", window.render.re_submit_or_cancel);
     $(document).on("click", ".re_cancel", window.render.re_submit_or_cancel);
+    $(document).on("click", ".resp_name_swap", window.render.responsible_swap);
 
     $(document).on("click", ".task_show", window.render.tasks);
     $(document).on("click", ".task_info", window.render.new_project);
