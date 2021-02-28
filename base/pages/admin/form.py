@@ -27,6 +27,15 @@ class RegistrationEditForm(Form):
     responsible_phone = StringField("Responsible phone", validators=[DataRequired()])
 
 
+class NewUserEditForm(Form):
+    pid = HiddenField()
+    uid = HiddenField()
+    user_first_name = StringField("Name", validators=[DataRequired()])
+    user_last_name = StringField("Surname", validators=[DataRequired()])
+    user_email = EmailField("E-mail", validators=[DataRequired(), Email()])
+    user_login = StringField("Login")
+
+
 class UserEditForm(Form):
     uid = HiddenField()
     login = StringField("Login", validators=[DataRequired()])
