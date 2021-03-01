@@ -506,10 +506,13 @@ def user_project_update(user, projects):
 def register_new_user(form):
     pid = form.pid.data
     rec = get_registration_record(pid)
-    name = form.user_first_name.data
-    surname = form.user_last_name.data
-    email = form.user_email.data
-    login = form.user_login.data if getattr(form, "user_login", None) else ""
+    name = form.user_first_name.data.strip()
+    surname = form.user_last_name.data.strip()
+    email = form.user_email.data.strip()
+    if getattr(form, "user_login", None):
+        login = form.user_login.data.strip()
+    else:
+        login = ""
     new_user = "First Name: %s; Last Name: %s; E-mail: %s; Login: %s" % \
                (name, surname, email, login)
     users = rec.users.split("\n")
