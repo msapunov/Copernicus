@@ -470,6 +470,23 @@
         }
     };
 
+    window.render.nu_remove=function(){
+        var pid = $(this).data("pid");
+        var uid = $(this).data("uid");
+        var name = $(this).data("name");
+        var last = $(this).data("surname");
+        var mail = $(this).data("email");
+        var login = $(this).data("login") ? "[{0}]".f($(this).data("login")) : "";
+        var user = $.trim("{0} {1} &lt;{2}&gt; {3}".f(name, last, mail, login));
+        var msg = "Remove user '{0}'? Are you sure?".f(user);
+        UIkit.modal.confirm(msg, function(){
+            var url = window.admin.url.new_user_del + "/" + pid;
+            json_send(url, {"uid": uid}, false).done(function(reply){
+                window.render.update_new_user(pid, reply);
+            })
+        });
+    };
+
     window.render.nu_edit=function(){
 //        window.render.form_reset_register();
 //        if ($(this).hasClass("user_edit")) {
