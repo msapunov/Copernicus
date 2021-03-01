@@ -440,6 +440,36 @@
         });
     };
 
+    window.render.nu_add_submit_or_cancel=function(btn){
+        if($(this).hasClass("add_new_user_submit")){
+            var data = {};
+            var data = $("form#add_new_user_form").serializeArray().map(function(x){this[x.name] = x.value; return this;}.bind({}))[0];
+            var id = data.pid;
+            var url = window.admin.url.new_user_add;
+            json_send(url, data, false).done(function(reply){
+                window.render.update_new_user(id, reply);
+            })
+        }
+
+        UIkit.modal("#new_user_add").hide();
+    };
+
+    window.render.nu_add=function(){
+        var pid = $(this).data("id");
+        var modal = UIkit.modal("#new_user_add");
+        var ids;
+        ids = ["#add_new_user_name","#add_new_user_surname","#add_new_user_email","#add_new_user_login"];
+        $.each(ids, function(idx, name){
+            $(name).val("");
+        });
+        $("#add_new_user_id").val(pid);
+        if ( modal.isActive() ) {
+            modal.hide();
+        } else {
+            modal.show();
+        }
+    };
+
     window.render.nu_edit=function(){
 //        window.render.form_reset_register();
 //        if ($(this).hasClass("user_edit")) {
