@@ -503,6 +503,19 @@ def user_project_update(user, projects):
     return "Project change task%s with id%s has been created: %s" % (s, s, ids)
 
 
+def delete_new_project_user(pid, uid):
+    rec = get_registration_record(pid)
+    users = rec.users.split("\n")
+    for user in users:
+        tmp = md5(user.encode()).hexdigest()
+        if tmp != uid:
+            continue
+        users.remove(user)
+    rec.users = "\n".join(users)
+    db.session.commit()
+    return rec.to_dict()
+
+
 def register_new_user(form):
     pid = form.pid.data
     rec = get_registration_record(pid)
