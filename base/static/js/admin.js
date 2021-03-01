@@ -1077,6 +1077,8 @@
     $(document).on("click", ".slurm_reload", window.render.partition);
     $(document).on("click", ".message", window.render.message);
 
+    $(document).on("click", ".add_new_user_submit", window.render.nu_add_submit_or_cancel);
+    $(document).on("click", ".new_user_add", window.render.nu_add);
     $(document).on("click", ".nu_edit", window.render.nu_edit);
     $(document).on("click", ".nu_remove", window.render.nu_remove);
     $(document).on("click", ".new_user_submit", window.render.nu_submit_or_cancel);
