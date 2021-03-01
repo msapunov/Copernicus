@@ -600,4 +600,47 @@
         </div>
     </div>
 </div>
+
+<div id="new_user_add" class="uk-modal fade" tabindex="-1" role="dialog" aria-labelledby="confirm-modal" aria-hidden="true">
+    <div class="uk-modal-dialog">
+        <a class="uk-modal-close uk-close"></a>
+        <div class="uk-overflow-container">
+            <form id="add_new_user_form" action="test" method="post" class="uk-panel uk-panel-box uk-form uk-form-horizontal">
+                {{ nu_form.csrf_token }}
+                {{ nu_form.pid(id="add_new_user_id") }}
+                {{ nu_form.uid(id="add_new_user_uid") }}
+                <div class="uk-form-row">
+                    <label class="uk-form-label" for="add_new_user_name">Name:</label>
+                    <div class="uk-form-controls">
+                        {{ nu_form.user_first_name(placeholder="Jhon", class_="uk-width-1-1 uk-form-large uk-text-capitalize", id="add_new_user_name") }}
+                    </div>
+                </div>
+                <div class="uk-form-row">
+                    <label class="uk-form-label" for="add_new_user_surname">Surname:</label>
+                    <div class="uk-form-controls">
+                        {{ nu_form.user_last_name(placeholder="Smith", class_="uk-width-1-1 uk-form-large uk-text-capitalize", id="add_new_user_surname") }}
+                    </div>
+                </div>
+                <div class="uk-form-row">
+                    <label class="uk-form-label" for="add_new_user_email">E-mail:</label>
+                    <div class="uk-form-controls">
+                        {{ nu_form.user_email(placeholder="john.smith@univ-amu.fr", class_="uk-width-1-1 uk-form-large", id="add_new_user_email") }}
+                    </div>
+                </div>
+                <div class="uk-form-row">
+                    <label class="uk-form-label" for="add_new_user_login">Login name:</label>
+                    <div class="uk-form-controls">
+                        {{ nu_form.user_login(placeholder="jsmith", class_="uk-width-1-1 uk-form-large", id="add_new_user_login") }}
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="uk-modal-footer">
+            <div class="uk-text-right">
+                <button class="uk-button js-modal-confirm-cancel add_new_user_cancel">Cancel</button>
+                <button class="uk-button uk-button-primary js-modal-confirm add_new_user_submit">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
