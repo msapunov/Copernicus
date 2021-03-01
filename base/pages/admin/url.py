@@ -26,6 +26,7 @@ from base.pages.admin.magic import (
     registration_info_update,
     get_registration_record,
     new_user_update_info,
+    delete_new_project_user,
     register_new_user,
     reg_ignore,
     reg_reject,
@@ -134,6 +135,18 @@ def admin_user_new_add():
     if not form.validate_on_submit():
         raise ValueError(form.errors)
     return jsonify(data=register_new_user(form))
+
+
+@bp.route("/admin/user/new/del/<int:pid>", methods=["POST"])
+@login_required
+@grant_access("admin")
+def admin_user_new_del(pid):
+    data = request.get_json()
+    if not data:
+        raise ValueError("Expecting application/json requests")
+    if "uid" not in data:
+        raise ValueError("UID is required")
+    return jsonify(data=delete_new_project_user(pid, data["uid"]))
 
 
 @bp.route("/admin/user/new/update", methods=["POST"])
