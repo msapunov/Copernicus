@@ -2,9 +2,9 @@
     "use strict";
     window.admin = {};
     window.admin.url = {
-        new_user_add: "/admin/user/new/add",
-        new_user_del: "/admin/user/new/del",
-        new_user_edit: "/admin/user/new/update",
+        new_user_add: "admin/user/new/add",
+        new_user_del: "admin/user/new/del",
+        new_user_edit: "admin/user/new/update",
         reg_details: "admin/registration/details/get",
         reg_edit: "admin/registration/details/set",
         accept: "admin/registration/accept",  // Temporary handler to be removed
