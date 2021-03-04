@@ -592,6 +592,9 @@ class LogDB(db.Model):
     resources_id = db.Column(db.Integer, db.ForeignKey("project_resources.id"))
     resources = db.relationship("Resources", foreign_keys=resources_id)
 
+    register_id = db.Column(db.Integer, db.ForeignKey("register.id"))
+    register = db.relationship("Register", foreign_keys=register_id)
+
     def __repr__(self):
         return "<Log event for project {}>".format(self.project.get_name())
 
@@ -599,8 +602,17 @@ class LogDB(db.Model):
         event = self.event[0].upper() + self.event[1:]
         creator = self.author.full_name() if self.author else "Author is unknown"
         msg = "%s by %s" % (event, creator)
+        if self.project:
+            item = self.project.name
+        elif self.register:
+            item = self.register.project_id()
+        elif self.user:
+            item = self.user.full_name()
+        else:
+            item = ""
         return {
             "project": self.project.name if self.project else "",
+            "item": item,
             "date": self.created.strftime("%Y-%m-%d %X %Z"),
             "message": msg
         }
