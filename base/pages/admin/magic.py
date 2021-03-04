@@ -503,7 +503,7 @@ def user_project_update(user, projects):
     return "Project change task%s with id%s has been created: %s" % (s, s, ids)
 
 
-def delete_new_project_user(pid, uid):
+def registration_user_del(pid, uid):
     rec = get_registration_record(pid)
     users = rec.users.split("\n")
     for user in users:
@@ -516,7 +516,7 @@ def delete_new_project_user(pid, uid):
     return rec.to_dict()
 
 
-def register_new_user(form):
+def registration_user_new(form):
     pid = form.pid.data
     rec = get_registration_record(pid)
     name = form.user_first_name.data.strip()
@@ -535,7 +535,7 @@ def register_new_user(form):
     return rec.to_dict()
 
 
-def new_user_update_info(form):
+def registration_user_update(form):
     pid = form.pid.data
     uid = form.uid.data
     rec = get_registration_record(pid)
