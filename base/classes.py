@@ -20,6 +20,59 @@ class Log:
         return self.log.event
 
 
+class RequestLog(Log):
+
+    def __init__(self, project):
+        super().__init__()
+        self.pending = project
+        self.log = LogDB(author=current_user, register=project)
+        self.send = True
+
+    def visa_sent(self):
+        self.log.event = "Visa sent to %s" % self.pending.responsible_email
+        return self._commit()
+
+    def visa_skip(self):
+        self.log.event = "Visa sending step has been skipped"
+        return self._commit()
+
+    def approve(self):
+        self.log.event = "Project software requirements approved"
+        return self._commit()
+
+    def create(self):
+        self.log.event = "Project created out of this request"
+        return self._commit()
+
+    def user_del(self, user):
+        self.log.event = "Remove user %s" % user
+        return self._commit()
+
+    def user_add(self, user):
+        self.log.event = "Add user %s" % user
+        return self._commit()
+
+    def user_change(self, info):
+        self.log.event = "Change user info: %s" % info
+        return self._commit()
+
+    def request_change(self, info):
+        self.log.event = "Change request info: %s" % info
+        return self._commit()
+
+    def accept(self):
+        self.log.event = "Project creation request accepted"
+        return self._commit()
+
+    def reject(self):
+        self.log.event = "Project creation request rejected"
+        return self._commit()
+
+    def ignore(self):
+        self.log.event = "Project creation request ignored"
+        return self._commit()
+
+
 class UserLog(Log):
 
     def __init__(self, user):
