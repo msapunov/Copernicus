@@ -82,6 +82,7 @@ def skip_visa(pid):
     record.accepted_ts = dt.now()
     record.comment = reg_msg(record, "visa_skip")
     db.session.commit()
+    RequestLog(record).visa_skip()
     return record.comment
 
 
@@ -106,6 +107,7 @@ def create_visa(pid, force=False):
     record.accepted_ts = dt.now()
     record.comment = reg_msg(record, "visa_sent")
     db.session.commit()
+    RequestLog(record).visa_sent()
     return record.comment
 
 
@@ -266,6 +268,7 @@ def reg_approve(pid):
     rec.approve_ts = dt.now()
     rec.comment = reg_message(rec.comment, "approve")
     db.session.commit()
+    RequestLog(rec).approve()
     return approve_message(rec)
 
 
@@ -284,6 +287,7 @@ def reg_accept(pid, note):
     rec.processed = True
     rec.accepted_ts = created
     db.session.commit()
+    RequestLog(rec).accept()
     return accept_message(rec, note)
 
 
@@ -295,6 +299,7 @@ def reg_reject(pid, note):
     rec.accepted_ts = dt.now()
     rec.processed_ts = dt.now()
     db.session.commit()
+    RequestLog(rec).reject()
     return reject_message(rec, note)
 
 
@@ -306,6 +311,7 @@ def reg_ignore(pid):
     rec.accepted_ts = dt.now()
     rec.processed_ts = dt.now()
     db.session.commit()
+    RequestLog(rec).ignore()
     return rec.comment
 
 
@@ -511,6 +517,7 @@ def registration_user_del(pid, uid):
         if tmp != uid:
             continue
         users.remove(user)
+        RequestLog(rec).user_del(user)
     rec.users = "\n".join(users)
     db.session.commit()
     return rec.to_dict()
@@ -532,6 +539,7 @@ def registration_user_new(form):
     users.append(new_user)
     rec.users = "\n".join(users)
     db.session.commit()
+    RequestLog(rec).user_add(new_user)
     return rec.to_dict()
 
 
@@ -552,6 +560,7 @@ def registration_user_update(form):
         new_user = 'First Name: %s; Last Name: %s; E-mail: %s; Login: %s' % \
                    (name, surname, email, login)
         users.append(new_user)
+        RequestLog(rec).user_change(new_user)
     rec.users = "\n".join(users)
     db.session.commit()
     return rec.to_dict()
@@ -578,7 +587,9 @@ def registration_info_update(form):
             msg.append("%s: %s -> %s" % (item.label.text, old, new))
     if db.session.dirty:
         db.session.commit()
-        return rec.to_dict(), "\n".join(msg)
+        msg = "\n".join(msg)
+        RequestLog(rec).request_change(msg)
+        return rec.to_dict(), msg
     return rec.to_dict(), "No modifications has been detected"
 
 
