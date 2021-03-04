@@ -23,11 +23,11 @@ from base.pages.admin.magic import (
     user_create_by_admin,
     user_reset_pass,
     user_delete,
+    registration_user_del,
+    registration_user_new,
+    registration_user_update,
     registration_info_update,
     get_registration_record,
-    new_user_update_info,
-    delete_new_project_user,
-    register_new_user,
     reg_ignore,
     reg_reject,
     reg_accept,
@@ -134,7 +134,7 @@ def admin_user_new_add():
     form = NewUserEditForm()
     if not form.validate_on_submit():
         raise ValueError(form.errors)
-    return jsonify(data=register_new_user(form))
+    return jsonify(data=registration_user_new(form))
 
 
 @bp.route("/admin/user/new/del/<int:pid>", methods=["POST"])
@@ -146,7 +146,7 @@ def admin_user_new_del(pid):
         raise ValueError("Expecting application/json requests")
     if "uid" not in data:
         raise ValueError("UID is required")
-    return jsonify(data=delete_new_project_user(pid, data["uid"]))
+    return jsonify(data=registration_user_del(pid, data["uid"]))
 
 
 @bp.route("/admin/user/new/update", methods=["POST"])
@@ -156,7 +156,7 @@ def admin_user_new_update():
     form = NewUserEditForm()
     if not form.validate_on_submit():
         raise ValueError(form.errors)
-    return jsonify(data=new_user_update_info(form))
+    return jsonify(data=registration_user_update(form))
 
 
 @bp.route("/admin/user/details/set", methods=["POST"])
