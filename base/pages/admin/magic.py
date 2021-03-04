@@ -557,23 +557,6 @@ def registration_user_update(form):
     return rec.to_dict()
 
 
-def user_info_update_new(form):
-    uid = form.uid.data
-    user = user_by_id(uid)
-    info, acl, project, active = user_changed_prop(user, form)
-    if not info and not acl and not project and not active:
-        return user.details(), "No modifications has been detected"
-    msg = []
-    if acl:
-        msg.append(user_acl_update(user, acl))
-    if project:
-        msg.append(user_project_update(user, project))
-    if info:
-        msg.append("User information has been updated in the DB")
-    result = "\n".join(msg)
-    return user.details(), result
-
-
 def registration_info_update(form):
     props = ["title", "cpu", "type", "responsible_first_name",
              "responsible_last_name", "responsible_email",
@@ -597,6 +580,23 @@ def registration_info_update(form):
         db.session.commit()
         return rec.to_dict(), "\n".join(msg)
     return rec.to_dict(), "No modifications has been detected"
+
+
+def user_info_update_new(form):
+    uid = form.uid.data
+    user = user_by_id(uid)
+    info, acl, project, active = user_changed_prop(user, form)
+    if not info and not acl and not project and not active:
+        return user.details(), "No modifications has been detected"
+    msg = []
+    if acl:
+        msg.append(user_acl_update(user, acl))
+    if project:
+        msg.append(user_project_update(user, project))
+    if info:
+        msg.append("User information has been updated in the DB")
+    result = "\n".join(msg)
+    return user.details(), result
 
 
 def user_info_update(form):
