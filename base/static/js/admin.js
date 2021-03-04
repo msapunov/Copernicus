@@ -893,7 +893,6 @@
         } else {
             modal.show();
         }
-    window.render.ue_buttons=function(id, login){
     };
     window.render.user_edit=function(btn){
         var id = $.trim( $(btn).data("id") );
@@ -918,6 +917,7 @@
             $("#ua_project").val(data.projects).multiselect("refresh");
         });
     };
+    window.render.ue_buttons=function(id, login){
         var s_reset = $("<span/>").addClass("uk-icon-eraser");
         var btn_reset = $("<button/>").attr({"data-id": id, "type": "button"}).append(s_reset);
         btn_reset.addClass("uk-button uk-button-mini user_password_reset");
