@@ -627,6 +627,24 @@ def update_user_acl(user, form):
     return None
 
 
+def update_user_project(user, form):
+    names = filter(lambda x: True if x != "None" else False, form.project.data)
+    new = list(set(user.project_names()) ^ set(list(names)))
+    old = user.project_names()
+    idz = []
+    for name in new:
+        project = Project.query.filter_by(name=name).first()
+        if not project:
+            continue
+        if name in old:
+            task = TaskQueue().project(project).user_remove(user)
+        else:
+            task = TaskQueue().project(project).user_assign(user)
+        idz.append(task.task.id)
+    s, ids = "s" if len(idz) > 1 else "", ", ".join(map(str, idz))
+    return "Project change task%s with id%s has been created: %s" % (s, s, ids)
+
+
 def user_info_update(form):
     uid = form.uid.data
     user = user_by_id(uid)
