@@ -645,6 +645,27 @@ def update_user_project(user, form):
     return "Project change task%s with id%s has been created: %s" % (s, s, ids)
 
 
+def update_user_details(user, form):
+    info = {}
+    for name in ["login", "name", "surname", "email", "activate"]:
+        if name not in form:
+            continue
+        data = getattr(form, name).data.strip().lower()
+        if getattr(user, name).lower() == data:
+            continue
+        setattr(user, name, data)
+        info[name] = data
+    if not db.session.dirty:
+        return None
+    if info["activate"]:
+        task = TaskQueue().user(user).user_activate(info)
+    else:
+        task = TaskQueue().user(user).user_update(info)
+    db.session.commit()
+    UserLog(user).info_update(info=info)
+    return "User info update with id '%s' has been created" % (task.id)
+
+
 def user_info_update(form):
     uid = form.uid.data
     user = user_by_id(uid)
