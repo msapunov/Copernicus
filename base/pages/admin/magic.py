@@ -610,6 +610,23 @@ def user_info_update_new(form):
     return user.details(), result
 
 
+def update_user_acl(user, form):
+    acl = {}
+    for i in ["user", "responsible", "manager", "tech", "committee", "admin"]:
+        name = "is_%s" % i
+        if name not in form:
+            continue
+        data = getattr(form, name).data
+        if getattr(user.acl, name) != data:
+            setattr(user, name, data)
+            acl[name] = data
+    if db.session.dirty:
+        db.session.commit()
+        UserLog(user).acl(acl)
+        return "ACL modifications has been saved to the database"
+    return None
+
+
 def user_info_update(form):
     uid = form.uid.data
     user = user_by_id(uid)
