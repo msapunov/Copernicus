@@ -625,15 +625,16 @@ def update_user_acl(user, form):
         name = "is_%s" % i
         if name not in form:
             continue
-        data = getattr(form, name).data
-        if getattr(user.acl, name) != data:
-            setattr(user, name, data)
-            acl[name] = data
-    if db.session.dirty:
-        db.session.commit()
-        UserLog(user).acl(acl)
-        return "ACL modifications has been saved to the database"
-    return None
+        new = getattr(form, name).data
+        old = getattr(user.acl, name)
+        if old != new:
+            setattr(user.acl, name, new)
+            acl[name] = new
+    if not acl:
+        return
+    db.session.commit()
+    UserLog(user).acl(acl)
+    return "ACL modifications has been saved to the database"
 
 
 def update_user_project(user, form):
