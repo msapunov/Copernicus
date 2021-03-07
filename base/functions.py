@@ -155,9 +155,9 @@ def slurm_consumption_raw(name, start, finish):
     data, err = ssh_wrapper(run)
     if not data:
         debug("No data received, nothing to return")
-        return None
+        return None, run
     debug("Got raw consumption values for project %s: %s" % (name, data))
-    return data
+    return data, run
 
 
 def resource_consumption(project, start=None, end=None):
