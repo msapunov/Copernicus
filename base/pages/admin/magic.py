@@ -27,7 +27,6 @@ from pathlib import Path
 from base.utils import image_string
 import locale
 
-
 __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
 
@@ -423,7 +422,6 @@ class TmpUser:
 
 
 def user_create_by_admin(form):
-
     email = form.email.data.strip().lower()
     if User.query.filter(User.email == email).first():
         raise ValueError("User with e-mail %s has been registered already"
@@ -757,7 +755,6 @@ def task_update_user(login, user_data):
 
 
 def _parse_acl_info(raw):
-
     tmp = {}
     roles = ["user", "responsible", "manager", "tech", "committee", "admin"]
     data = raw.split(", ")
