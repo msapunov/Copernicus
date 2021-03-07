@@ -228,12 +228,43 @@ def resources_update_statistics(pid=None, force=False):
     end = dt.now(tz=None).replace(microsecond=0)
     if not force:
         resources = filter(lambda x: x.resources, projects)
-        projects = list(filter(lambda x: x.resources.ttl > now, resources))
-    for project in projects:
-        project.resources.consumption = resource_consumption(project, end=now)
-        project.resources.consumption_ts = now
-    if db.session.dirty:
-        db.session.commit()
+        projects = list(filter(lambda x: x.resources.ttl > end, resources))
+
+    dates = resources_group_by_date(projects)
+    for start, value in dates.items():
+        names = list(filter(lambda x: True if x.name else False, value))
+        accounts = ",".join(list(map(lambda x: x.name, names)))
+        result, cmd = slurm_consumption_raw(accounts, start, end)
+        if not result:
+            continue
+        conso_by_project = slurm_parse_project_conso(result)
+        for project in value:
+            name = project.name
+            out = list(filter(lambda x: True if name in x else False, result))
+            out.append("\n").append(cmd)
+            project.resources.consumption_raw = "".join(out)
+            project.resources.consumption_ts = end
+            if name in conso_by_project:
+                conso = conso_by_project[name]
+            else:
+                conso = 0
+            previous = project.resources.consumption
+            if previous and previous > 0:
+                project.resources.consumption = previous + conso
+            else:
+                project.resources.consumption = conso
+
+#            if name not in conso_by_project:
+#                conso = 0
+#            else:
+#                conso = conso_by_project[project]
+#            if
+
+#    for project in projects:
+#        project.resources.consumption = resource_consumption(project, end=end)
+#        project.resources.consumption_ts = end
+#    if db.session.dirty:
+#        db.session.commit()
     return "", 200
 
 
