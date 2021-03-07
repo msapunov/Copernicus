@@ -665,13 +665,13 @@ def update_user_details(user, form):
             continue
         setattr(user, name, data)
         info[name] = data
-    if not db.session.dirty:
-        return None
-    if info["activate"]:
+    if not info:
+        return
+    db.session.commit()
+    if "activate" in info.keys():
         task = TaskQueue().user(user).user_activate(info)
     else:
         task = TaskQueue().user(user).user_update(info)
-    db.session.commit()
     UserLog(user).info_update(info=info)
     return "User info update with id '%s' has been created" % (task.id)
 
