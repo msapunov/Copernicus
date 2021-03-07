@@ -421,5 +421,5 @@ def web_admin():
     form = UserEditForm()
     register_edit = RegistrationEditForm()
     new_user_edit = NewUserEditForm()
-    return render_template("admin.html", data=result, form = form,
-                           nu_form = new_user_edit, re_form=register_edit)
+    return render_template("admin.html", data=result, form=form,
+                           nu_form=new_user_edit, re_form=register_edit)
