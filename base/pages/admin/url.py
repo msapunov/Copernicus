@@ -166,7 +166,7 @@ def admin_user_update():
     form = UserEditForm()
     if not form.validate_on_submit():
         raise ValueError(form.errors)
-    result, msg = user_info_update_new(form)
+    result, msg = user_info_update(form)
     return jsonify(data=result, message=msg)
 
 
