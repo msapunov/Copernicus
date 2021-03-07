@@ -189,6 +189,31 @@ def resource_consumption(project, start=None, end=None):
     return result[name]
 
 
+def resources_group_by_date(projects):
+    """
+    Grouping projects by last update time. If no last update time found,
+    resources creation date is used
+    :param projects: List of projects
+    :return: Dict where keys are last update time and value is the list of
+    project names
+    """
+    if not isinstance(projects, list):
+        projects = [projects]
+    dates = {}
+    for project in projects:
+        if not project.resources:
+            error("No resources attached to project", project)
+            continue
+        if project.resources.consumption_ts:
+            start = project.resources.consumption_ts.strftime("%Y-%m-%dT%H:%M")
+        else:
+            start = project.resources.created.strftime("%Y-%m-%dT%H:%M")
+        if start not in dates:
+            dates[start] = []
+        dates[start].append(project)
+    return dates
+
+
 def resources_update_statistics(pid=None, force=False):
     """
     Updates the total consumption of the projects with valid resources.
