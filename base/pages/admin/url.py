@@ -19,6 +19,7 @@ from base.pages.admin.magic import (
     slurm_partition_info,
     process_task,
     group_users,
+    user_info_update,
     user_info_update_new,
     user_create_by_admin,
     user_reset_pass,
