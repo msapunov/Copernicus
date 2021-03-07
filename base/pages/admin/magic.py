@@ -669,26 +669,14 @@ def update_user_details(user, form):
 def user_info_update(form):
     uid = form.uid.data
     user = user_by_id(uid)
-
-    user.name = form.name.data.strip().lower()
-    user.surname = form.surname.data.strip().lower()
-    user.email = form.email.data.strip().lower()
-    user.active = True if form.active.data else False
-    user.acl.is_user = True if form.is_user.data else False
-    user.acl.is_responsible = True if form.is_responsible.data else False
-    user.acl.is_manager = True if form.is_manager.data else False
-    user.acl.is_tech = True if form.is_tech.data else False
-    user.acl.is_committee = True if form.is_committee.data else False
-    user.acl.is_admin = True if form.is_admin.data else False
-
-    names = filter(lambda x: True if x != "None" else False, form.project.data)
-    if names:
-        user.project = list(map(lambda x: get_project_by_name(x), names))
-    else:
-        user.project = []
-
-    db.session.commit()
-    return user.details(),"Modifications has been saved to the database"
+    msg = []
+    for result in [update_user_acl(user, form), update_user_project(user, form),
+                   update_user_details(user, form)]:
+        if not result:
+            continue
+        msg.append(result)
+    result = "\n".join(msg)
+    return user.details(), result
 
 
 def user_delete(uid):
