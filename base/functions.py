@@ -225,7 +225,7 @@ def resources_update_statistics(pid=None, force=False):
         projects = [Project.query.filter_by(id=pid).first()]
     else:
         projects = Project.query.all()
-    now = dt.now(tz=None).replace(microsecond=0)
+    end = dt.now(tz=None).replace(microsecond=0)
     if not force:
         resources = filter(lambda x: x.resources, projects)
         projects = list(filter(lambda x: x.resources.ttl > now, resources))
