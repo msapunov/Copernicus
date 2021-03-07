@@ -83,9 +83,9 @@ def projects_consumption(projects):
     slurm = {}
     for key, value in result.items():
         name = ",".join(value)
-        start = key.strftime("%Y-%m-%d-%H:%M:%S")
-        finish = dt.now().strftime("%Y-%m-%d-%H:%M:%S")
-        slurm_raw = slurm_consumption_raw(name, start, finish)
+        start = key.strftime("%Y-%m-%dT%H:%M")
+        finish = dt.now().strftime("%Y-%m-%dT%H:%M")
+        slurm_raw, cmd = slurm_consumption_raw(name, start, finish)
         slurm.update(slurm_parse_project_conso(slurm_raw))
     for project in projects:
         name = project.get_name()
