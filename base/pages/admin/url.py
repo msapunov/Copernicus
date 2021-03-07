@@ -163,6 +163,10 @@ def admin_user_new_update():
 @login_required
 @grant_access("admin")
 def admin_user_update():
+    """
+    Update user's information
+    :return: jsonified user_info_update_new and messages
+    """
     form = UserEditForm()
     if not form.validate_on_submit():
         raise ValueError(form.errors)
@@ -350,6 +354,12 @@ def web_admin_partition_info():
 @login_required
 @grant_access("admin")
 def web_admin_user_info():
+    """
+    Executes linux w command on a remote server and parse the result to be
+    returned as JSON
+    :return: List of dictionaries with user information like:
+    {"username": login, "from": host, "process": cmd}
+    """
 
     data = request.get_json()
     if not data:
