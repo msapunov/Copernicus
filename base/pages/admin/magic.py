@@ -652,7 +652,7 @@ def update_user_project(user, form):
             task = TaskQueue().project(project).user_assign(user)
         idz.append(task.task.id)
     s, ids = "s" if len(idz) > 1 else "", ", ".join(map(str, idz))
-    return "Project change task%s with id%s has been created: %s" % (s, s, ids)
+    return "Project change task%s with id%s %s has been created" % (s, s, ids)
 
 
 def update_user_details(user, form):
