@@ -647,10 +647,15 @@ def update_user_project(user, form):
         if not project:
             continue
         if name in old:
+            project.users.remove(user)
             task = TaskQueue().project(project).user_remove(user)
         else:
+            project.users.append(user)
             task = TaskQueue().project(project).user_assign(user)
         idz.append(task.task.id)
+    if not idz:
+        return
+    db.session.commit()
     s, ids = "s" if len(idz) > 1 else "", ", ".join(map(str, idz))
     return "Project change task%s with id%s %s has been created" % (s, s, ids)
 
