@@ -457,6 +457,12 @@ def user_create_by_admin(form):
 
 
 def user_changed_prop(obj, frm):
+    """
+
+    :param obj:
+    :param frm:
+    :return:
+    """
     info, acl, act = {}, {}, None
     for name in ["login", "name", "surname", "email", "test"]:
         if name not in frm:
@@ -592,6 +598,11 @@ def registration_info_update(form):
 
 
 def user_info_update_new(form):
+    """
+
+    :param form:
+    :return:
+    """
     uid = form.uid.data
     user = user_by_id(uid)
     info, acl, project, active = user_changed_prop(user, form)
