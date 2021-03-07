@@ -133,8 +133,8 @@ def slurm_parse_project_conso(slurm_raw_output):
         if "||" not in item:  # skip user consumption
             continue
         items = item.strip().split("||")
-        project_name = items[0]
-        conso = int(items[1])
+        project_name = items[0].strip()
+        conso = int(items[1].strip())
         debug("SLURM account '%s' consumption: %s" % (project_name, conso))
         output[project_name] = conso
     return output
