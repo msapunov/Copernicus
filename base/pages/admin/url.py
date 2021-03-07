@@ -118,7 +118,6 @@ def admin_user_password(uid):
 @grant_access("admin")
 def admin_user_purge(uid):
     raise ValueError("This sensitive code is not tested yet! Sorry!!!")
-    #return jsonify(message=user_purge(uid), data=True)
 
 
 @bp.route("/admin/user/delete/<int:uid>", methods=["POST"])
@@ -206,7 +205,6 @@ def admin_registration_details_set(rid):
         raise ValueError(form.errors)
     result, msg = registration_info_update(form)
     return jsonify(data=result, message=msg)
-
 
 
 @bp.route("/admin/registration/ignore/<int:pid>", methods=["POST"])
