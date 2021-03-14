@@ -1,63 +1,68 @@
 {% extends "base.html" %}
 {% block head %}
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.10.21/b-1.6.2/b-html5-1.6.2/r-2.2.5/datatables.min.css"/>
+
     <script src="{{ url_for('static', filename='js/datatables.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/statistic.js') }}"></script>
     <style>
-        $(document).ready(function(){
-            $("#stat").DataTable();
-        });
+        .ws {
+            white-space: normal !important;
+        }
+        td.details-control {
+            text-align:center;
+            cursor: pointer;
+        }
+        tr.shown td.details-control {
+            text-align:center;
+        }
     </style>
 {% endblock %}
 {% block main %}
 
 <div class="uk-width-1-1">
-    <a class="uk-button uk-align-right" href="projects.csv" download>
-        <span class="uk-icon-download uk-margin-small-right"></span>Download
-    </a>
-</div>
-
-<table class="uk-table uk-table-hover uk-table-striped uk-table-condensed" id="stat">
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Start</th>
-            <th>End</th>
-            <th>Responsible</th>
-            <th>Use</th>
-            <th>Total</th>
-            <th>Usage</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for project in data %}
+    <div class="uk-grid uk-margin-bottom">
+        <div data-uk-button-radio class="uk-button-group uk-width-1-3">
+            <button class="uk-button uk-active project-type" data-type="">All</button>
+            {% for type in project_types|sort %}
+                <button class="uk-button project-type" data-type="{{type}}">{{type.capitalize()}}</button>
+            {% endfor %}
+        </div>
+        <div data-uk-button-radio class="uk-button-group uk-width-1-3">
+            <button class="uk-button uk-active project-state" data-state="">All</button>
+            <button class="uk-button project-state" data-state="true">Active</button>
+            <button class="uk-button project-state" data-state="false">Suspended</button>
+        </div>
+        <div class="uk-width-1-3 uk-form">
+            <input type="text" class="uk-width-1-1" id="table_search">
+        </div>
+    </div>
+    <table id="statistics" style="width:100%" class="display nowrap">
+        <thead>
             <tr>
-                <td>
-                    {% if project.name %}
-                        {{project.name}}
-                    {% else %}
-                        No name
-                    {% endif %}
-                </td>
-                <td>
-                    {% if project.resources.created %}
-                        {{project.resources.created.strftime("%Y-%m-%d")}}
-                    {% endif %}
-                </td>
-                <td>
-                    {% if project.resources.ttl %}
-                        {{project.resources.ttl.strftime("%Y-%m-%d")}}
-                    {% endif %}
-                </td>
-                <td>
-                    {% if project.responsible.name and project.responsible.surname and project.responsible.login %}
-                        {{project.responsible.name[0]|upper}}{{project.responsible.name[1:]|lower}} {{project.responsible.surname[0]|upper}}{{project.responsible.surname[1:]|lower}} <{{project.responsible.login}}>
-                    {% endif %}
-                </td>
-                <td>{{project.consumed}}</td>
-                <td>{{project.resources.cpu}}</td>
-                <td>{{project.consumed_use}}%</td>
+                <th></th>
+                <th>Name</th>
+                <th>Start</th>
+                <th>End</th>
+                <th>Responsible</th>
+                <th>Consumption</th>
+                <th>Total</th>
+                <th>Usage</th>
+                <th>Genci</th>
+                <th>Users</th>
+                <th>Title</th>
+                <th>Status</th>
+                <th>Scientific fields</th>
             </tr>
-        {% endfor %}
-    </tbody>
-</table>
+        </thead>
+    </table>
+    <div class="uk-grid uk-margin-bottom">
+        <div class="uk-width-1-2 uk-text-left" id="table_info">
 
+        </div>
+        <div class="uk-width-1-2 uk-text-right" id="table_total">
+
+        </div>
+
+    </div>
+</div>
 {% endblock %}
