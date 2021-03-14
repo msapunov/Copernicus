@@ -39,6 +39,15 @@ def web_statistic_update():
     return "", 200
 
 
+@bp.route("/statistic/list", methods=["POST"])
+@login_required
+@grant_access("admin")
+def web_statistic_list():
+    projects = list(filter(lambda x: x, project_get_info(every=True)))
+    stat = list(map(lambda x: x.with_usage(), projects)) if projects else []
+    return jsonify(data=stat)
+
+
 @bp.route("/statistic.html", methods=["GET"])
 @login_required
 @grant_access("admin")
