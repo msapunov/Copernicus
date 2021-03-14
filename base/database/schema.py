@@ -131,6 +131,18 @@ class Project(db.Model):
         rec["users"] = tmp
         return rec
 
+    def with_usage(self):
+        result = self.to_dict()
+        if self.consumed:
+            result["consumed"] = self.consumed
+        else:
+            result["consumed"] = ""
+        if self.consumed_use:
+            result["consumed_use"] = self.consumed_use
+        else:
+            result["consumed_use"] = ""
+        return result
+
     def to_dict(self):
         if self.created:
             created = self.created.strftime("%Y-%m-%d %X %Z")
