@@ -1,4 +1,4 @@
-from flask import render_template
+from flask import render_template, jsonify
 from flask_login import login_required
 from base.functions import resources_update_statistics, project_get_info
 from base.pages import grant_access
