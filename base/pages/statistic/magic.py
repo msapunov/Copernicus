@@ -1,7 +1,9 @@
-import logging as log
+from logging import debug
 import flask_excel as excel
 
 from flask import current_app
+from base import db
+from base.database.schema import Project
 from base.functions import project_get_info
 
 
