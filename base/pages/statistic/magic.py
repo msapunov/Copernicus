@@ -23,3 +23,18 @@ def dump_projects_database(extension_type):
     excel.init_excel(current_app)
     filename = "projects." + extension_type
     return excel.make_response_from_records(output, file_type=extension_type, file_name=filename)
+
+
+def project_types():
+    """
+    Get distinct values of Project.type
+    :return: list of distinct types
+    """
+    types = []
+    for t in db.session.query(Project.type).distinct():
+        tmp = t.type.strip()
+        if not tmp:
+            continue
+        types.append(tmp)
+    debug("Got project types: %s" % types)
+    return types
