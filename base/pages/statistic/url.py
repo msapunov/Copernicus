@@ -3,7 +3,7 @@ from flask_login import login_required
 from base.functions import resources_update_statistics, project_get_info
 from base.pages import grant_access
 from base.pages.user import bp
-from base.pages.statistic.magic import dump_projects_database
+from base.pages.statistic.magic import dump_projects_database, project_types
 
 
 __author__ = "Matvey Sapunov"
