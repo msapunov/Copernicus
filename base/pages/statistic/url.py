@@ -43,4 +43,5 @@ def web_statistic_update():
 @login_required
 @grant_access("admin")
 def web_statistic_index():
-    return render_template("statistic.html", data=project_get_info(every=True))
+    types = project_types()
+    return render_template("statistic.html", project_types=types)
