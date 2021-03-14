@@ -161,6 +161,16 @@ class Project(db.Model):
             end = self.resources.ttl.strftime("%Y-%m-%d %X %Z")
         else:
             end = ""
+        if self.responsible:
+            responsible = self.responsible.to_dict()
+            responsible_login = self.responsible.login
+        else:
+            responsible = ""
+            responsible_login = ""
+        if self.ref:
+            ref = self.ref.id
+        else:
+            ref = ""
         return {
             "id": self.id,
             "title": self.title,
@@ -179,8 +189,8 @@ class Project(db.Model):
             "privileged": self.privileged,
             "name": self.get_name(),
             "type": self.type,
-            "responsible": self.responsible.to_dict(),
-            "responsible_login": self.responsible.login,
+            "responsible": responsible,
+            "responsible_login": responsible_login,
             "files": list(map(lambda x: x.path, self.files)),
             "articles": list(map(lambda x: x.info, self.articles)),
             "users": list(map(lambda x: x.to_dict(), self.users)),
@@ -188,7 +198,7 @@ class Project(db.Model):
             "resources": self.resources.to_dict(),
             "allocation_start": start,
             "allocation_end": end,
-            "ref": self.ref.id
+            "ref": ref
         }
 
 
