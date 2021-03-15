@@ -585,7 +585,8 @@ def registration_info_update(form):
         new = item.data
         if isinstance(new, str):
             new = new.strip()
-            if name is not "title": new = new.lower()
+            if name is not "title":
+                new = new.lower()
         if old != new:
             setattr(rec, name, new)
             msg.append("%s: %s -> %s" % (item.label.text, old, new))
@@ -678,7 +679,7 @@ def update_user_details(user, form):
     else:
         task = TaskQueue().user(user).user_update(info)
     UserLog(user).info_update(info=info)
-    return "User info update with id '%s' has been created" % (task.id)
+    return "User info update with id '%s' has been created" % task.id
 
 
 def user_info_update(form):
@@ -824,7 +825,7 @@ def task_create_user(p_name, user_data, responsible=None):
 
     acl_part, active_part = service_part.split(" WITH STATUS ")
     is_user, is_responsible, is_manager, is_tech, is_committee,\
-    is_admin = _parse_acl_info(acl_part)
+        is_admin = _parse_acl_info(acl_part)
     active = True if active_part == "True" else False
 
     acl = ACLDB(is_user=is_user, is_responsible=is_responsible, is_tech=is_tech,
