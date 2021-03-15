@@ -1051,6 +1051,39 @@ def parse_memory(result):
     return tmp
 
 
+def space_info():
+    """
+    Run df -h command on a remote server and return parsed information as a list
+    of dictionaries. Dictionary format is:
+    {"filesystem": ...,
+        "size": ...,
+        "used": ...,
+        "available": ...,
+        "use": ...,
+        "mountpoint": ...}
+    :return: List of dict
+    """
+    result, err = ssh_wrapper("df -h")
+    if not result:
+        raise ValueError("Error getting disk space information: %s" % err)
+
+    space = []
+    for record in result:
+        if "Filesystem" in record:
+            continue
+        keywords = ["/home", "/save", "/trinity/shared", "/scratch", "/scratchw"]
+        filesystem, size, used, avail, use, mountpoint = record.split()
+        if mountpoint.strip() not in keywords:
+            continue
+        space.append({"filesystem": filesystem.strip(),
+                      "size": size.strip(),
+                      "used": used.strip(),
+                      "available": avail.strip(),
+                      "use": use.strip(),
+                      "mountpoint": mountpoint.strip()})
+    return space
+
+
 def slurm_partition_info():
     result, err = ssh_wrapper("sinfo -s")
     if not result:
