@@ -17,6 +17,7 @@
         message: "admin/message/register",
         new_users: "admin/registration/users",
         sinfo: "admin/slurm/nodes/list",
+        space: "admin/space/info",
         system: "admin/sys/info",
         tasks: "admin/tasks/list",
         tasks_accept: "admin/tasks/accept",
@@ -1072,6 +1073,24 @@
         };
         window.admin.sys();
         $("#events").DataTable();
+        $("#disk_space").DataTable({
+            "ajax": {"type": "POST", "url": window.admin.url.space},
+            dom: 'tiB',
+            buttons: {
+                className: 'copyButton',
+                buttons: [ 'refresh' ]
+            },
+            "paging": false,
+            "searching": false,
+            "columns": [
+                {"data": "mountpoint"},
+                {"data": "size"},
+                {"data": "used"},
+                {"data": "available"},
+                {"data": "use"},
+                {"data": "filesystem"}
+            ]
+        });
         $("#sinfo").DataTable({
             "ajax": {"type": "POST", "url": window.admin.url.sinfo},
             dom: 'tiB',
