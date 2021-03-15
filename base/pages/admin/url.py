@@ -29,6 +29,7 @@ from base.pages.admin.magic import (
     registration_user_update,
     registration_info_update,
     get_registration_record,
+    space_info,
     reg_ignore,
     reg_reject,
     reg_accept,
@@ -400,6 +401,13 @@ def web_admin_sys_info():
     for server in servers:
         uptime.append(get_server_info(server))
     return jsonify(data=uptime)
+
+
+@bp.route("/admin/space/info", methods=["POST"])
+@login_required
+@grant_access("admin")
+def web_admin_space_info():
+    return jsonify(data=space_info())
 
 
 @bp.route("/admin", methods=["GET", "POST"])
