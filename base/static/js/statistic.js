@@ -26,6 +26,32 @@
         var type = $.trim( $(btn).data("type") );
         table.columns(1).search(type).draw();
     };
+    window.stat.set_state = function set_state(state, dt, btn){
+        // activate - true
+        // suspend - false
+        var name = $.trim( $(btn).data("name") );
+        var id = $.trim( $(btn).data("pid") );
+        var rid = $.trim( $(btn).data("row") );
+        if(state){
+            var text = "Activate project " + name + "? ";
+            var url = window.stat.url.activate + id;
+        }else{
+            var text = "Suspend project " + name + "? ";
+            var url = window.stat.url.suspend + id;
+        }
+        text = text + "That change affects database only.";
+        UIkit.modal.confirm(text, function(){
+            json_send(url).done(function(reply){
+                var row = dt.row(rid);
+                row.data(reply.data).draw();
+                row.child.hide();
+                row.child(window.stat.expand(row.data(), row)).show();
+                var tdi = $(row.node()).find("span.btn");
+                tdi.first().removeClass("uk-icon-plus");
+                tdi.first().addClass("uk-icon-minus");
+            })
+        });
+    };
     window.stat.project_state = function project_state(btn, table){
         if(!$(btn).hasClass("uk-active")){
             return;
