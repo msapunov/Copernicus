@@ -205,7 +205,7 @@
                 render: $.fn.dataTable.render.number( ',', '')
             },{
                 data: "resources.cpu",
-                render: $.fn.dataTable.render.number( ',', '')
+                render: $.fn.dataTable.render.number( '.', '')
             },{
                 data: "consumed_use",
                 render: function ( data, type, row ) {
