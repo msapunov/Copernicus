@@ -4,6 +4,7 @@ from base.functions import resources_update_statistics, project_get_info
 from base.pages import grant_access
 from base.pages.user import bp
 from base.pages.statistic.magic import dump_projects_database, project_types
+from base.pages.project.magic import set_state
 
 
 __author__ = "Matvey Sapunov"
