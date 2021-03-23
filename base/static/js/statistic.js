@@ -266,6 +266,8 @@
 
         $(document).on("click", ".project-state", function(){ window.stat.project_state(this, table)});
         $(document).on("click", ".project-type", function(){ window.stat.project_type(this, table)});
+        $(document).on("click", ".suspend", function(){ window.stat.set_state(false, table, this)});
+        $(document).on("click", ".activate", function(){ window.stat.set_state(true, table, this)});
     });
 
 })(window, document, jQuery);
