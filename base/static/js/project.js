@@ -110,7 +110,7 @@ function reduce_to_names(initial, object){
         var surname = $("<input/>").addClass("uk-width-1-1").attr({
             "name": "surname",
             "type": "text",
-            "placeholder": "Surname (Nom)"
+            "placeholder": "Family name (Nom de famille)"
         });
         var mail = $("<input/>").addClass("uk-width-1-1").attr({
             "name": "email",
@@ -234,18 +234,26 @@ function reduce_to_names(initial, object){
     window.render.transform_project = function(e){
         var name = $(this).data("name");
         var id = $(this).data("project");
-        var title = "Transform existing project {0} to type B ?".f(name);
+        var title = "Transform existing project {0}?".f(name);
+        var project_select = $("<select>").addClass("uk-width-1-1");
+        project_select.append($("<option/>").text("B"));
+        project_select.append($("<option/>").text("H"));
+        var cpu = $("<input/>").addClass("uk-width-1-1").attr({
+            "name": "cpu",
+            "type": "text",
+            "placeholder": "CPU hours for the new project"
+        });
         var placeholder = "Motivation:\nShort description of the request";
         var motiv = $("<textarea/>").addClass("uk-width-1-1").attr({
             "rows": "4",
             "name": "note",
             "placeholder": placeholder
         });
-        var form = $("<form/>").addClass("uk-form").append(
-            $("<legend/>").text(title)
-        ).append(
-            $("<div/>").addClass("uk-form-row").append(motiv)
-        );
+        var form = $("<form/>").addClass("uk-form");
+        form.append($("<legend/>").text(title));
+        form.append($("<div/>").addClass("uk-form-row").append(project_select));
+        form.append($("<div/>").addClass("uk-form-row").append(cpu));
+        form.append($("<div/>").addClass("uk-form-row").append(motiv));
         var pop = dialog(form.prop("outerHTML"), function(){
             var data = {
                 "note": $("textarea[name=note]").val(),
