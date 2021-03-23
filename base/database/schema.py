@@ -133,14 +133,8 @@ class Project(db.Model):
 
     def with_usage(self):
         result = self.to_dict()
-        if self.consumed:
-            result["consumed"] = self.consumed
-        else:
-            result["consumed"] = ""
-        if self.consumed_use:
-            result["consumed_use"] = self.consumed_use
-        else:
-            result["consumed_use"] = ""
+        result["consumed"] =  getattr(self, "consumed", 0)
+        result["consumed_use"] = getattr(self, "consumed_use", 0)
         return result
 
     def to_dict(self):
