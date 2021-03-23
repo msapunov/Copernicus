@@ -254,7 +254,7 @@
                 tdi.first().addClass('uk-icon-plus');
             }else {
                 // Open this row
-                row.child(window.stat.expand(row.data())).show();
+                row.child(window.stat.expand(row.data(), row)).show();
                 tr.addClass('shown');
                 tdi.first().removeClass('uk-icon-plus');
                 tdi.first().addClass('uk-icon-minus');
