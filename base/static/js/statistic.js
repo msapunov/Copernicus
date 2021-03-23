@@ -86,10 +86,13 @@
     }
     window.stat.expand = function format(d, row){
         // `d` is the original data object for the row
-        var stat = (d.active) ? 'Active' : 'Postponed';
+        var stat = (d.active) ? 'Active' : 'Suspended';
         var resp = (d.responsible) ? d.responsible.fullname + ' &lt;' + d.responsible.email + '&gt;' + ' [' + d.responsible.login + ']' : "-";
         var proc = (d.consumed_use > 0) ? d.consumed_use+"%" : "-" ;
-        return '<div class="uk-panel uk-margin-top uk-margin-bottom" style="padding-left:50px;padding-right:50px;">' +
+        var rid = row.index();
+        var btnState = window.stat.btnState(d.id, d.name, d.active, rid);
+        return '<div class="uk-grid"><div class="uk-width-3-4 uk-panel uk-margin-top uk-margin-bottom" style="padding-left:50px;padding-right:50px;">' +
+                '<div>ID: <b>' + d.id + '</b></div>' +
                 '<div>Name: <b>' + d.name + '</b></div>' +
                 '<div>Title: ' + d.title + '</div>' +
                 '<div>Status: <b>' + stat + '</b></div>' +
@@ -104,7 +107,10 @@
                 '<div>Genci: ' + d.genci_committee + '</div>' +
                 '<div>Scientific fields: ' + d.scientific_fields + '</div>' +
             '</div>' +
-            '<div class="uk-panel" style="padding-left:50px;padding-right:50px;">' +
+            '<div class="uk-width-1-4">' +
+            btnState +
+            '</div>' +
+            '<div class="uk-width-1-1 uk-panel" style="padding-left:50px;padding-right:50px;">' +
                 '<ul class="uk-subnav uk-subnav-pill" data-uk-switcher="{connect:\'#' + d.name + '-additional-info\'}">' +
                     '<li class="uk-active"><a href="">Description</a></li>' +
                     '<li><a href="">Methods</a></li>' +
@@ -119,7 +125,7 @@
                     '<li><article class="ws">' + d.project_management + '</article></li>' +
                     '<li><article class="ws">' + d.project_motivation + '</article></li>' +
                 '</ul>' +
-            '</div>';
+            '</div></div>';
     };
 
     $(document).ready(function(){
