@@ -65,7 +65,26 @@
         }
         return ((percent * 100) / total).toFixed(2);
     }
-    window.stat.expand = function format(d){
+    window.stat.btnState = function btnState(pid, name, state, rid){
+        if(state){
+            return '<button class="uk-button suspend uk-width-1-1 uk-margin-small-bottom" data-pid=' +
+            pid +
+            ' data-name=' +
+            name +
+            ' data-row=' +
+            rid +
+            ' type="button">Suspend project</button>';
+        }else{
+            return '<button class="uk-button activate uk-width-1-1 uk-margin-small-bottom" data-pid=' +
+            pid +
+            ' data-name=' +
+            name +
+            ' data-row=' +
+            rid +
+            ' type="button">Activate project</button>';
+        }
+    }
+    window.stat.expand = function format(d, row){
         // `d` is the original data object for the row
         var stat = (d.active) ? 'Active' : 'Postponed';
         var resp = (d.responsible) ? d.responsible.fullname + ' &lt;' + d.responsible.email + '&gt;' + ' [' + d.responsible.login + ']' : "-";
