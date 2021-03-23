@@ -3,6 +3,8 @@
     window.stat = {};
     window.stat.url = {
         list: "statistic/list",
+        suspend: "statistic/suspend/",
+        activate: "statistic/activate/"
     };
     window.stat.users = function users(users){
         if(users.length < 1){
