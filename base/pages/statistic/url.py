@@ -39,6 +39,13 @@ def web_statistic_update():
     return "", 200
 
 
+@bp.route("/statistic/activate/<int:pid>", methods=["POST"])
+@login_required
+@grant_access("admin")
+def web_admin_project_activate(pid):
+    return jsonify(data=set_state(pid, True).with_usage())
+
+
 @bp.route("/statistic/suspend/<int:pid>", methods=["POST"])
 @login_required
 @grant_access("admin")
