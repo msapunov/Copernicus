@@ -171,19 +171,19 @@ def clean_activity(name):
     return True
 
 
-def renew_project(id, ext, date):
+def renew_project(pid, ext, date):
     ext.project.resources.valid = False
     ext.project.resources = create_resource(ext.project, ext.hours)
-    msg = "Created based on renewal request ID %s on %s" % (id, date)
+    msg = "Created based on renewal request ID %s on %s" % (pid, date)
     ext.project.resources.comment = msg
     return ProjectLog(ext.project).renewed(ext)
 
 
-def extend_project(id, ext, date):
+def extend_project(pid, ext, date):
     ext.project.resources.cpu += ext.hours
     ext.project.resources.valid = True
     msg = "CPU value has been extended to %s hours on %s based upon "\
-          "extension request ID %s" % (ext.hours, date, id)
+          "extension request ID %s" % (ext.hours, date, pid)
     if ext.project.resources.comment:
         ext.project.resources.comment = ext.project.resources.comment \
                                         + "\n" + msg
@@ -192,12 +192,12 @@ def extend_project(id, ext, date):
     return ProjectLog(ext.project).extended(ext)
 
 
-def transform_project(id, ext, date):
+def transform_project(pid, ext, date):
     ext.project.type = ext.transform
     ext.project.name = "%s%s" % (ext.transform, str(ext.project.id).zfill(3))
     ext.project.resources.valid = False
     ext.project.resources = create_resource(ext.project, ext.hours)
-    msg = "Created based on transformation request ID %s on %s" % (id, date)
+    msg = "Created based on transformation request ID %s on %s" % (pid, date)
     ext.project.resources.comment = msg
     return ProjectLog(ext.project).transformed(ext)
 
