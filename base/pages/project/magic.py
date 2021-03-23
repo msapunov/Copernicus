@@ -528,3 +528,18 @@ def get_project_conso(name, start, finish):
             result[login] = int(conso)
     debug("Project '%s' consumption: %s" % (name, result))
     return result
+
+
+def set_state(pid, state):
+    """
+    Set active state for a project
+    :param pid: Integer. ID of a project
+    :param state: Boolean. Set state of a project
+    :return: Project record
+    """
+    project = get_project_record(pid)
+    if type(state) != bool:
+        ValueError("Argument state is not boolean: %s" % state)
+    project.active = state
+    db.session.commit()
+    return project
