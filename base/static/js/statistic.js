@@ -65,6 +65,15 @@
         }
         return ((percent * 100) / total).toFixed(2);
     }
+    window.stat.btnAddUser = function btnAddUser(d.id, d.name, rid){
+        return '<button class="uk-button add-user uk-width-1-1 uk-margin-small-bottom" data-pid=' +
+        pid +
+        ' data-name=' +
+        name +
+        ' data-row=' +
+        rid +
+        ' type="button">Add user</button>';
+    };
     window.stat.btnState = function btnState(pid, name, state, rid){
         if(state){
             return '<button class="uk-button suspend uk-width-1-1 uk-margin-small-bottom" data-pid=' +
