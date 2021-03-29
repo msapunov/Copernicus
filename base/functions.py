@@ -77,6 +77,12 @@ def projects_consumption(projects):
     projects = list(filter(lambda x: project_check_resources(x), projects))
     result = {}
     for project in projects:
+        if not project.resources.consumption_ts:
+            project.resources.consumption_ts = dt.now(tz=None).replace(
+                hour=0,
+                minute=0,
+                second=0,
+                microsecond=0)
         if project.resources.consumption_ts not in result:
             result[project.resources.consumption_ts] = []
         result[project.resources.consumption_ts].append(project.get_name())
