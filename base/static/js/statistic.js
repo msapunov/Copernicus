@@ -26,6 +26,24 @@
         var type = $.trim( $(btn).data("type") );
         table.columns(1).search(type).draw();
     };
+    window.stat.change_responsible = function change_responsible(btn, dt){
+        var name = $.trim( $(btn).data("name") );
+        var pid = $.trim( $(btn).data("pid") );
+        var rid = $.trim( $(btn).data("row") );
+        var text = "Please select new responsible for the project '";
+        text += name + "' from the list";
+        UIkit.modal.confirm(text, function(){
+            json_send(url).done(function(reply){
+                var row = dt.row(rid);
+                row.data(reply.data).draw();
+                row.child.hide();
+                row.child(window.stat.expand(row.data(), row)).show();
+                var tdi = $(row.node()).find("span.btn");
+                tdi.first().removeClass("uk-icon-plus");
+                tdi.first().addClass("uk-icon-minus");
+            })
+        });
+    };
     window.stat.set_state = function set_state(state, dt, btn){
         // activate - true
         // suspend - false
@@ -64,15 +82,15 @@
             return "0";
         }
         return ((percent * 100) / total).toFixed(2);
-    }
-    window.stat.btnAddUser = function btnAddUser(d.id, d.name, rid){
+    };
+    window.stat.btnAddUser = function btnAddUser(pid, name, rid){
         return '<button class="uk-button add-user uk-width-1-1 uk-margin-small-bottom" data-pid=' +
-        pid +
-        ' data-name=' +
-        name +
-        ' data-row=' +
-        rid +
-        ' type="button">Add user</button>';
+            pid +
+            ' data-name=' +
+            name +
+            ' data-row=' +
+            rid +
+            ' type="button">Add user</button>';
     };
     window.stat.btnState = function btnState(pid, name, state, rid){
         if(state){
@@ -92,7 +110,16 @@
             rid +
             ' type="button">Activate project</button>';
         }
-    }
+    };
+    window.stat.btnChangeResp = function btnChangeResp(pid, name, rid){
+        return '<button class="uk-button change-responsible uk-width-1-1 uk-margin-small-bottom" data-pid=' +
+        pid +
+        ' data-name=' +
+        name +
+        ' data-row=' +
+        rid +
+        ' type="button">Change responsible</button>';
+    };
     window.stat.expand = function format(d, row){
         // `d` is the original data object for the row
         var stat = (d.active) ? 'Active' : 'Suspended';
@@ -100,6 +127,8 @@
         var proc = (d.consumed_use > 0) ? d.consumed_use+"%" : "-" ;
         var rid = row.index();
         var btnState = window.stat.btnState(d.id, d.name, d.active, rid);
+        var btnChangeResp = window.stat.btnChangeResp(d.id, d.name, rid);
+        var btnAddUser = window.stat.btnAddUser(d.id, d.name, rid);
         return '<div class="uk-grid"><div class="uk-width-3-4 uk-panel uk-margin-top uk-margin-bottom" style="padding-left:50px;padding-right:50px;">' +
                 '<div>ID: <b>' + d.id + '</b></div>' +
                 '<div>Name: <b>' + d.name + '</b></div>' +
@@ -117,7 +146,17 @@
                 '<div>Scientific fields: ' + d.scientific_fields + '</div>' +
             '</div>' +
             '<div class="uk-width-1-4">' +
-            btnState +
+                '<div>' +
+                    btnState +
+                '</div>' +
+                /*
+                '<div>' +
+                    btnChangeResp +
+                '</div>' +
+                '<div>' +
+                    btnAddUser +
+                '</div>' +
+                */
             '</div>' +
             '<div class="uk-width-1-1 uk-panel" style="padding-left:50px;padding-right:50px;">' +
                 '<ul class="uk-subnav uk-subnav-pill" data-uk-switcher="{connect:\'#' + d.name + '-additional-info\'}">' +
@@ -289,6 +328,7 @@
         $(document).on("click", ".project-type", function(){ window.stat.project_type(this, table)});
         $(document).on("click", ".suspend", function(){ window.stat.set_state(false, table, this)});
         $(document).on("click", ".activate", function(){ window.stat.set_state(true, table, this)});
+        $(document).on("click", ".change-responsible", function(){ window.stat.change_responsible(this, table)});
     });
 
 })(window, document, jQuery);
