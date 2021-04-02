@@ -277,7 +277,7 @@
                 render: function ( data, type, row ) {
                     var users = "";
                     $.each(data, function(idx, v){
-                        var user = v.fullname + " <" + v.email + "> [" + v.login +"] ";
+                        var user = v.fullname + " " + v.email + " " + v.login + " ";
                         users += user;
                     });
                     return users
