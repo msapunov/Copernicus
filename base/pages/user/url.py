@@ -19,14 +19,14 @@ __copyright__ = "Aix Marseille University"
 @login_required
 def user_list(active=True):
     term = request.args.get("term")
-    query = User.query.filter(User.active==active)
+    query = User.query.filter(User.active == active)
     if term:
         term = "%%%s%%" % term.lower()
         users_obj = query.filter(User.surname.like(term)
                                  | User.name.like(term)
                                  | User.login.like(term)).all()
     else:
-        users_obj = query.filter(User.surname!="").all()
+        users_obj = query.filter(User.surname != "").all()
     users_obj = sorted(users_obj, key=attrgetter("login"))
 
     users = map(lambda x: {"id": x.id, "login": x.login,
