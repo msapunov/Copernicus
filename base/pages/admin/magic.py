@@ -762,6 +762,8 @@ def task_update_user(login, user_data):
         old_email = None
 
     for key, value in info.items():
+        if not value:
+            continue
         if hasattr(user, key):
             setattr(user, key, value)
 
