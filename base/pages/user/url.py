@@ -61,12 +61,9 @@ def user_edit_info():
     if not c_dict:
         return jsonify(data="No changes in user's information found")
 
-    from base.pages import TaskQueue
     TaskQueue().user(user).user_update(c_dict)
-    title = "User's information change request"
     msg = "Your request for personal information change (%s) has been " \
           "registered" % changes_to_string(c_dict)
-    send_message(user.email, title=title, message=msg)
     return jsonify(data=msg)
 
 
