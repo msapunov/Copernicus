@@ -395,6 +395,9 @@ class User(UserMixin, db.Model):
             perm.append("admin")
         return perm
 
+    def brief_info(self):
+        return "%s <%s> [%s]" % (self.full_name(), self.email, self.login)
+
     def project_names(self):
         projects = list(self.project)
         names = map(lambda x: x.get_name(), projects)
