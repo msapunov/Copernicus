@@ -28,12 +28,11 @@ def user_list(active=True):
     else:
         users_obj = query.filter(User.surname != "").all()
     users_obj = sorted(users_obj, key=attrgetter("login"))
-
-    users = map(lambda x: {"id": x.id, "login": x.login,
-                           "text": "%s <%s>" % (x.full_name(), x.login)},
+    users = map(lambda x:
+                {"id": x.id, "login": x.login, "text": x.brief_info()},
                 users_obj)
-    user_list = list(users)
-    return jsonify(results=user_list)
+    users_list = list(users)
+    return jsonify(results=users_list)
 
 
 @bp.route("/user/edit/info", methods=["POST"])
