@@ -1074,7 +1074,8 @@ def space_info():
     for record in result:
         if "Filesystem" in record:
             continue
-        keywords = ["/home", "/save", "/trinity/shared", "/scratch", "/scratchw"]
+        keywords = ["/home", "/save", "/trinity/shared", "/scratch",
+                    "/scratchfast", "/scratchw"]
         filesystem, size, used, avail, use, mountpoint = record.split()
         if mountpoint.strip() not in keywords:
             continue
