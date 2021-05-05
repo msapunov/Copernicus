@@ -790,7 +790,7 @@
                     UIkit.notify(reply.data, {timeout: 2000, status:"success"});
                 }
                 var app_id = "#approval_msg_{0}".f(id);
-                var dt = moment().format('YYYY-MM-DD HH:m:s');
+                var dt = moment().format('YYYY-MM-DD HH:m');
                 if(resend===true){
                     var sent = "re-sent";
                 }else{
