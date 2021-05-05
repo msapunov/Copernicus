@@ -20,7 +20,6 @@ from base.pages.admin.magic import (
     process_task,
     group_users,
     user_info_update,
-    user_info_update_new,
     user_create_by_admin,
     user_reset_pass,
     user_delete,
@@ -258,6 +257,16 @@ def admin_registration_accept(pid):
 @grant_access("admin", "tech")
 def admin_registration_approve(pid):
     return jsonify(data=reg_approve(pid))
+
+
+@bp.route("/admin/registration/visa/resend/<int:pid>", methods=["POST", "GET"])
+@login_required
+@grant_access("admin", "tech")
+def admin_registration_visa_resend(pid):
+    data = request.get_json()
+    if data["visa"]:
+        return jsonify(data=skip_visa(pid))
+    return jsonify(data=create_visa(pid, True))
 
 
 @bp.route("/admin/registration/visa/<int:pid>", methods=["POST", "GET"])
