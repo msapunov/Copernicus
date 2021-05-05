@@ -257,10 +257,18 @@
                                 </table>
                                 <div id="approval_msg_{{record.id}}" class="uk-width-1-1 uk-margin-bottom">
                                     {% if record.approve %}
-                                        <div class="uk-badge uk-badge-success">Technical approval granted</div>
+                                        {% if record.approve_ts %}
+                                            <div class="uk-badge uk-badge-success">Technical approval granted [{{record.approve_ts.strftime("%Y-%m-%d %H:%M")}}]</div>
+                                        {% else %}
+                                            <div class="uk-badge uk-badge-success">Technical approval granted</div>
+                                        {% endif %}
                                     {% endif %}
                                     {% if record.accepted %}
-                                        <div class="uk-badge uk-badge-success">Visa done</div>
+                                        {% if record.accepted_ts %}
+                                            <div class="uk-badge uk-badge-success">Visa sent [{{record.accepted_ts.strftime("%Y-%m-%d %H:%M")}}]</div>
+                                        {% else %}
+                                            <div class="uk-badge uk-badge-success">Visa sent</div>
+                                        {% endif %}
                                     {% endif %}
                                 </div>
                                 <div class="uk-button-group uk-float-right">
