@@ -33,6 +33,7 @@
         user_purge: "admin/user/purge",
         user_p_reset: "admin/user/password",
         visa: "admin/registration/visa",
+        visa_resend: "admin/registration/visa/resend"
     };
     window.admin.sys = function(){
         json_send(window.admin.url.system).done(function(data){
@@ -750,10 +751,17 @@
             });
         });
     };
+    window.render.new_resend_visa=function(){
+        return window.render.send_visa(true, this);
+    };
     window.render.new_visa=function(){
-        var id = $.trim( $(this).data("id") );
-        var mid = $.trim( $(this).data("meso") );
-        var project_title = $.trim( $(this).data("title") );
+        return window.render.send_visa(false, this);
+    };
+
+    window.render.send_visa=function(resend, btn){
+        var id = $.trim( $(btn).data("id") );
+        var mid = $.trim( $(btn).data("meso") );
+        var project_title = $.trim( $(btn).data("title") );
         var title = "Project: {0}".f(project_title);
         var name = "Registration ID: {0}".f(mid);
         var text = "Create and send visa to responsible person?";
@@ -770,7 +778,11 @@
         express.append(checkbox).append(label);
 
         var conf = [title, name, text, express.prop("outerHTML")].join("<br>");
-        var url = window.admin.url.visa + "/" + id;
+        if(resend===true){
+            var url = window.admin.url.visa_resend + "/" + id;
+        }else{
+            var url = window.admin.url.visa + "/" + id;
+        }
         UIkit.modal.confirm(conf, function(){
             var exception = $("input[name=visa_exception]").is(':checked') ? true : false;
             json_send(url, {"visa": exception}).done(function(reply){
@@ -778,8 +790,15 @@
                     UIkit.notify(reply.data, {timeout: 2000, status:"success"});
                 }
                 var app_id = "#approval_msg_{0}".f(id);
+                var dt = moment().format('YYYY-MM-DD HH:m:s');
+                if(resend===true){
+                    var sent = "re-sent";
+                }else{
+                    var sent = "sent";
+                }
+                var sent_text = "Visa {1} [{0}]".f(dt, sent);
                 $(app_id).append(
-                    $("<div/>").addClass("uk-badge uk-badge-success").html("Visa done")
+                    $("<div/>").addClass("uk-badge uk-badge-success").html(sent_text)
                 );
                 var ico_id = "#approval_ico_{0}".f(id);
                 $(ico_id).addClass("uk-icon-edit").addClass("uk-text-warning");
@@ -788,6 +807,7 @@
             });
         });
     };
+
     window.render.new_approve=function(){
         var btn = $(this);
         var id = $.trim( $(this).data("id") );
@@ -1125,6 +1145,7 @@
     $(document).on("click", ".new_create", window.render.new_create);
     $(document).on("click", ".new_approve", window.render.new_approve);
     $(document).on("click", ".new_visa", window.render.new_visa);
+    //$(document).on("click", ".new_resend_visa", window.render.new_visa);
     $(document).on("click", ".new_resend_visa", window.render.new_resend_visa);
     $(document).on("click", ".new_accept", window.render.new_accept);
     $(document).on("click", ".new_ignore", window.render.new_ignore);
