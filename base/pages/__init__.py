@@ -8,6 +8,7 @@ from logging import debug, error
 from re import compile
 from functools import wraps
 from base import mail
+from base.email import Mail
 from base.database.schema import LogDB, User
 from base.utils import normalize_word
 from string import ascii_letters
@@ -139,44 +140,6 @@ def send_message(to_who, by_who=None, cc=None, title=None, message=None,
     if current_app.config.get("MAIL_SEND", False):
         smtp.send_message(msg)
     smtp.quit()
-    return "Message was sent to %s successfully" % ", ".join(to_who)
-
-
-def send_message_old(to_who, by_who=None, cc=None, title=None, message=None,
-                 attach=None):
-    if isinstance(to_who, str):
-        to_who = to_who.split(";")
-    if not by_who:
-        by_who = current_app.config["EMAIL_TECH"]
-    if not title:
-        title = "Mesocentre reporting"
-    if not cc:
-        cc = [current_app.config["EMAIL_TECH"]]
-    if isinstance(cc, str):
-        cc = cc.split(";")
-    if not message:
-        debug("Message body is empty")
-
-    title = "[TEST MODE] "+title
-    tech = current_app.config["EMAIL_TECH"]
-    msg = Message(title, sender=by_who, recipients=to_who, cc=cc)
-    if attach:
-        attach_file = Path(attach)
-        if not attach_file.exists():
-            raise ValueError("Failed to attach %s to the mail. "
-                             "File doesn't exists" % attach)
-        if not attach_file.is_file():
-            raise ValueError("Failed to attach %s to the mail. It's not a file"
-                             % attach)
-        mime = from_file(attach, True)
-        with current_app.open_resource(attach) as fp:
-            msg.attach(attach_file.name, mime, fp.read())
-    postfix = "If this email has been sent to you by mistake, please report " \
-              "to: %s" % tech
-    if message:
-        msg.body = message + "\n" + postfix
-    if current_app.config["MAIL_SEND"]:
-        mail.send(msg)
     return "Message was sent to %s successfully" % ", ".join(to_who)
 
 
@@ -527,14 +490,17 @@ class ProjectLog:
         mail.send(email)
         return "E-mail has been sent successfully"
 
-    def _commit(self):
+    def _commit(self, mail=None):
         from base import db
         db.session.add(self.log)
         db.session.commit()
         message = "%s: %s" % (self.project.get_name(), self.log.event)
-        if self.send:
-            self._send_email(message)
-        return message
+        try:
+            if mail: mail.send()
+        finally:
+            return message
+#        if self.send:
+#            self._send_email(message)
 
     def _commit_user(self, user):
         self.log.user = user
@@ -584,42 +550,42 @@ class ProjectLog:
         self.log.event = "Made %s request to renew project for %s hour(s)"\
                          % (article, extension.hours)
         self.log.extension = extension
-        return self._commit()
+        return self._commit(Mail().project_renew(extension))
 
     def renewed(self, extension):
         self.log.event = "Renewal request for %s hour(s) has been processed"\
                          % extension.hours
         self.log.extension = extension
-        return self._commit()
+        return self._commit(Mail().project_renewed(extension))
 
     def extend(self, extension):
         article = "an exceptional" if extension.exception else "a"
         self.log.event = "Made %s request to extend project for %s hour(s)"\
                          % (article, extension.hours)
         self.log.extension = extension
-        return self._commit()
+        return self._commit(Mail().project_extend(extension))
 
     def extended(self, extension):
         self.log.event = "Extension request for %s hour(s) has been processed"\
                          % extension.hours
         self.log.extension = extension
-        return self._commit()
+        return self._commit(Mail().project_extended(extension))
+
+    def transform(self, extension):
+        self.log.event = "Transformation request has been registered"
+        self.log.extension = extension
+        return self._commit(Mail().project_transform(extension))
 
     def transformed(self, extension):
         self.log.event = "Transformation to type %s finished successfully"\
                             % extension.transform
         self.log.extension = extension
-        return self._commit()
+        return self._commit(Mail().project_transformed(extension))
 
     def activate(self, extension):
         self.log.event = "Activation request has been registered"
         self.log.extension = extension
-        return self._commit()
-
-    def transform(self, extension):
-        self.log.event = "Transformation request has been registered"
-        self.log.extension = extension
-        return self._commit()
+        return self._commit(Mail().project_activate(extension))
 
     def accept(self, extension):
         new = "Extension" if extension.extend else "Renewal"
@@ -627,7 +593,7 @@ class ProjectLog:
                          % (new, extension.hours)
 
         self.log.extension = extension
-        return self._commit()
+        return self._commit(Mail().extension_accepted(extension, new))
 
     def ignore(self, extension):
         new = "Extension" if extension.extend else "Renewal"
@@ -635,14 +601,14 @@ class ProjectLog:
                          % (new, extension.hours)
         self.log.extension = extension
         self.send = False
-        return self._commit()
+        return self._commit(Mail().extension_ignored(extension, new))
 
     def reject(self, extension):
         new = "Extension" if extension.extend else "Renewal"
         self.log.event = "%s request for %s hours is rejected"\
                          % (new, extension.hours)
         self.log.extension = extension
-        return self._commit()
+        return self._commit(Mail().extension_rejected(extension, new))
 
     def event(self, message):
         self.log.event = message.lower()
