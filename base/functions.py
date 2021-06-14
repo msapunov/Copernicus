@@ -62,10 +62,6 @@ def project_check_resources(project):
         err.append("No resources attached to project %s" % project)
     if not project.resources.cpu:
         err.append("No CPU set in project resources for %s" % project)
-    if not project.resources.consumption:
-        err.append("No consumption information found for %s" % project)
-    if not project.resources.consumption_ts:
-        err.append("No consumption timestamp found in %s" % project)
     if err:
         error("; ".join(err))
         flash("<br>".join(err))
