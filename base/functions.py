@@ -243,7 +243,8 @@ def resources_update_statistics(pid=None, force=False):
         for project in value:
             name = project.name
             out = list(filter(lambda x: True if name in x else False, result))
-            out.append("\n").append(cmd)
+            out.append("\n")
+            out.append(cmd)
             project.resources.consumption_raw = "".join(out)
             project.resources.consumption_ts = end
             if name in conso_by_project:
