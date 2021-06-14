@@ -1,7 +1,7 @@
 from pathlib import Path
 from flask import current_app as app
 from logging import warning
-from configparser import ConfigParser
+from configparser import ConfigParser, ExtendedInterpolation
 from os.path import join as path_join, exists
 from email.mime.application import MIMEApplication
 from email.mime.multipart import MIMEMultipart
@@ -27,6 +27,8 @@ class Mail:
         self.password = None
         self.working_object = None
         self.cfg = None
+        self.signature = None
+        self.greetings = None
         self.configure()
 
     def attach_file(self, path=None):
@@ -50,13 +52,25 @@ class Mail:
             self.attach_file(path)
         return self
 
+    def populate(self, name):
+        self.destination = self.cfg.get(name, "TO", fallback=None)
+        self.cc = [self.cfg.get(name, "CC", fallback=None)]
+        self.sender = self.cfg.get(name, "FROM", fallback=None)
+        self.title = self.cfg.get(name, "TITLE", fallback=None)
+        self.greetings = self.cfg.get(name, "GREETINGS", fallback=None)
+        self.message = self.cfg.get(name, "MESSAGE", fallback=None)
+        self.signature = self.cfg.get(name, "SIGNATURE", fallback=None)
+        return self
+#        if not self.message:
+#            raise ValueError("Message text not found")
+
     def configure(self):
         cfg_file = app.config.get("EMAIL_CONFIG", "mail.cfg")
         cfg_path = path_join(app.instance_path, cfg_file)
         if not exists(cfg_path):
             warning("E-mail configuration file doesn't exists. Using defaults")
             return
-        self.cfg = ConfigParser()
+        self.cfg = ConfigParser(interpolation=ExtendedInterpolation())
         self.cfg.read(cfg_path, encoding="utf-8")
         self.server = self.cfg.get("SERVER", "HOST")
         self.port = self.cfg.getint("SERVER", "PORT", fallback=25)
@@ -67,12 +81,16 @@ class Mail:
         return self
 
     def send(self):
+        if self.title:
+            self.title = self.title[0].upper() + self.title[1:].lower()
         self.msg["Subject"] = self.title
         self.msg["From"] = self.sender
         self.msg["To"] = self.destination
         self.msg["Date"] = formatdate(localtime=True)
         self.msg["Cc"] = COMMASPACE.join(self.cc)
         if self.message:
+            if self.greetings: self.message = self.greetings + self.message
+            if self.signature: self.message = self.message + self.signature
             self.msg.attach(MIMEText(self.message))
         if self.use_ssl:
             smtp = smtplib.SMTP_SSL(self.server, self.port)
@@ -112,3 +130,102 @@ class Mail:
         if self.send():
             return "Sent email with visa to %s" % self.destination
         return "Failed to send email with visa to %s" % self.destination
+
+    def responsible_add(self):
+        pass
+
+    def responsible_assign(self):
+        pass
+
+    def user_add(self):
+        pass
+
+    def user_assign(self):
+        pass
+
+    def user_assigned(self):
+        pass
+
+    def user_delete(self, user):
+        pass
+
+    def user_deleted(self, user):
+        pass
+
+    def _project_(self, project):
+        if not project.responsible.email:
+            raise ValueError("Responsible has no email")
+        if not self.destination:
+            self.destination = project.responsible.email
+        full = project.responsible.full_name()
+        self.title = self.title.replace("%FULLNAME", full)
+        return self
+
+    def project_renew(self, project):
+        pass
+
+    def project_renewed(self, project):
+        pass
+
+    def project_extend(self, record):
+        self.populate("PROJECT EXTEND")
+        self._project_(record.project)
+        name = record.project.get_name()
+        cpu = str(record.hours)
+        self.title = self.title.replace("%NAME", name)
+        self.message = self.message.replace("%NAME", name)
+        self.message = self.message.replace("%CPU", cpu)
+        return self
+
+    def project_extended(self, project):
+        pass
+
+    def project_transform(self, project):
+        pass
+
+    def project_transformed(self, project):
+        pass
+
+    def project_activate(self, record):
+        self.populate("PROJECT ACTIVATE")
+        name = record.project.get_name()
+        self.title = self.title.replace("%NAME", name)
+        self.message = self.message.replace("%NAME", name)
+        return self
+
+    def _extension_action(self, section, record, ext):
+        self.populate(section)
+        self._project_(record.project)
+        name = record.project.get_name()
+        cpu = str(record.hours)
+        reason = record.decision if record.decision else None
+        full = record.project.responsible.full_name()
+        self.title = self.title.replace("%EXT", ext)
+        self.title = self.title.replace("%NAME", name)
+        if self.greetings:
+            self.greetings = self.greetings.replace("%FULLNAME", full)
+        self.message = self.message.replace("%EXT", ext)
+        self.message = self.message.replace("%CPU", cpu)
+        self.message = self.message.replace("%NAME", name)
+        self.message = self.message.replace("%REASON", reason)
+        return self
+
+    def extension_accepted(self, record, ext):
+        return self._extension_action("EXTENSION ACCEPTED", record, ext)
+
+    def extension_ignored(self, record, type):
+        self.populate("EXTENSION IGNORED")
+        id = str(record.id)
+        name = record.project.get_name()
+        full = record.project.responsible.full_name()
+        created = str(record.created)
+        self.title = self.title.replace("%EXT", type)
+        self.title = self.title.replace("%NAME", name)
+        self.message = self.message.replace("%EXT", type)
+        self.message = self.message.replace("%ID", id)
+        self.message = self.message.replace("%NAME", name)
+        self.message = self.message.replace("%CREATED", created)
+        return self
+
+    def extension_rejected(self, record, ext):
+        return self._extension_action("EXTENSION REJECTED", record, ext)
