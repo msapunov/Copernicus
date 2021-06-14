@@ -3,8 +3,19 @@
     window.stat = {};
     window.stat.url = {
         list: "statistic/list",
+        set_responsible: "project/set/responsible/",
+        user_list: "user/list",
         suspend: "statistic/suspend/",
         activate: "statistic/activate/"
+    };
+    window.stat.update = function update(dt, rid, data){
+        var row = dt.row(rid);
+        row.data(data).draw();
+        row.child.hide();
+        row.child(window.stat.expand(row.data(), row)).show();
+        var tdi = $(row.node()).find("span.btn");
+        tdi.first().removeClass("uk-icon-plus");
+        tdi.first().addClass("uk-icon-minus");
     };
     window.stat.users = function users(users){
         if(users.length < 1){
@@ -26,12 +37,32 @@
         var type = $.trim( $(btn).data("type") );
         table.columns(1).search(type).draw();
     };
+    window.stat.resp_submit = function resp_submit(btn, dt){
+        var pid = $(".change-responsible").data("pid");
+        var rid = $(".change-responsible").data("row");
+        var uid = $("#form_responsible").serialize().replace("change_responsible=", "");
+        var url = window.stat.url.set_responsible + pid;
+        json_send(url, {"uid": uid}).done(function(reply){
+            if(reply.data){
+                UIkit.notify(reply.data, {timeout: 2000, status:"success"});
+                window.stat.update(dt, rid, reply.data);
+            }
+        });
+    };
     window.stat.change_responsible = function change_responsible(btn, dt){
         var name = $.trim( $(btn).data("name") );
         var pid = $.trim( $(btn).data("pid") );
         var rid = $.trim( $(btn).data("row") );
-        var text = "Please select new responsible for the project '";
-        text += name + "' from the list";
+        var resp = $.trim( $(btn).data("responsible") );
+        $(".change_resp_project_placeholder").text(name);
+        $(".change_resp_current_placeholder").text(resp);
+        var modal = UIkit.modal("#change_responsible");
+        if ( modal.isActive() ) {
+            modal.hide();
+        } else {
+            modal.show();
+        }
+/*
         UIkit.modal.confirm(text, function(){
             json_send(url).done(function(reply){
                 var row = dt.row(rid);
@@ -43,6 +74,7 @@
                 tdi.first().addClass("uk-icon-minus");
             })
         });
+*/
     };
     window.stat.set_state = function set_state(state, dt, btn){
         // activate - true
@@ -111,13 +143,15 @@
             ' type="button">Activate project</button>';
         }
     };
-    window.stat.btnChangeResp = function btnChangeResp(pid, name, rid){
+    window.stat.btnChangeResp = function btnChangeResp(pid, name, rid, full){
         return '<button class="uk-button change-responsible uk-width-1-1 uk-margin-small-bottom" data-pid=' +
         pid +
         ' data-name=' +
         name +
         ' data-row=' +
         rid +
+        ' data-responsible="' +
+        full + '"' +
         ' type="button">Change responsible</button>';
     };
     window.stat.expand = function format(d, row){
@@ -127,7 +161,7 @@
         var proc = (d.consumed_use > 0) ? d.consumed_use+"%" : "-" ;
         var rid = row.index();
         var btnState = window.stat.btnState(d.id, d.name, d.active, rid);
-        var btnChangeResp = window.stat.btnChangeResp(d.id, d.name, rid);
+        var btnChangeResp = window.stat.btnChangeResp(d.id, d.name, rid, resp);
         var btnAddUser = window.stat.btnAddUser(d.id, d.name, rid);
         return '<div class="uk-grid"><div class="uk-width-3-4 uk-panel uk-margin-top uk-margin-bottom" style="padding-left:50px;padding-right:50px;">' +
                 '<div>ID: <b>' + d.id + '</b></div>' +
@@ -149,10 +183,10 @@
                 '<div>' +
                     btnState +
                 '</div>' +
-                /*
                 '<div>' +
                     btnChangeResp +
                 '</div>' +
+                /*
                 '<div>' +
                     btnAddUser +
                 '</div>' +
@@ -177,7 +211,14 @@
     };
 
     $(document).ready(function(){
-
+        $(".change_responsible_selector").select2({
+            ajax: {
+                delay: 250,
+                url: window.stat.url.user_list,
+                dataType: "json"
+            }
+        });
+        $('.add_user').select2();
         var table = $("#statistics").DataTable({
             ajax: {type: "POST", url: window.stat.url.list},
             dom: 't',
@@ -324,11 +365,13 @@
             table.search( this.value ).draw();
         } );
 
-        $(document).on("click", ".project-state", function(){ window.stat.project_state(this, table)});
-        $(document).on("click", ".project-type", function(){ window.stat.project_type(this, table)});
-        $(document).on("click", ".suspend", function(){ window.stat.set_state(false, table, this)});
-        $(document).on("click", ".activate", function(){ window.stat.set_state(true, table, this)});
-        $(document).on("click", ".change-responsible", function(){ window.stat.change_responsible(this, table)});
+        $(document).on("click", ".change_responsible_cancel", window.stat.cancel);
+        $(document).on("click", ".change_responsible_submit", function(){ window.stat.resp_submit(this, table) });
+        $(document).on("click", ".project-state", function(){ window.stat.project_state(this, table) });
+        $(document).on("click", ".project-type", function(){ window.stat.project_type(this, table) });
+        $(document).on("click", ".suspend", function(){ window.stat.set_state(false, table, this) });
+        $(document).on("click", ".activate", function(){ window.stat.set_state(true, table, this) });
+        $(document).on("click", ".change-responsible", function(){ window.stat.change_responsible(this, table) });
     });
 
 })(window, document, jQuery);
