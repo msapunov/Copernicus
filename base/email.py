@@ -1,6 +1,6 @@
 from pathlib import Path
 from flask import current_app as app
-from logging import warning
+from logging import warning, debug
 from configparser import ConfigParser, ExtendedInterpolation
 from os.path import join as path_join, exists
 from email.mime.application import MIMEApplication
@@ -103,6 +103,7 @@ class Mail:
         if app.config.get("MAIL_SEND", False):
             smtp.send_message(self.msg)
         smtp.quit()
+        debug("Sent mail %s" % self.msg)
         return True
 
     def registration(self, registration_obj):
