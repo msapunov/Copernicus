@@ -160,6 +160,8 @@ class Mail:
             self.destination = project.responsible.email
         full = project.responsible.full_name()
         self.title = self.title.replace("%FULLNAME", full)
+        if self.greetings:
+            self.greetings = self.greetings.replace("%FULLNAME", full)
         return self
 
     def project_renew(self, project):
