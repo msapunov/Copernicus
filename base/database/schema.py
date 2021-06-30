@@ -273,7 +273,7 @@ class Extend(db.Model):
             "initial_usage": self.usage_percent,
             "present_use": conso,
             "present_usage": use,
-            "project_name": self.project.get_name(),
+            "name": self.project.get_name(),
             "approve": approve,
             "responsible": self.project.responsible.full_name(),
             "responsible_login": self.project.responsible.login
