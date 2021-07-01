@@ -126,6 +126,24 @@ def web_project_assign_user():
     return jsonify(message="<br>".join(logs), data=get_users(pid))
 
 
+@bp.route("/project/set/responsible/<int:pid>", methods=["POST"])
+@login_required
+def web_project_set_responsible(pid):
+    data = request.get_json()
+    if not data:
+        raise ValueError("Expecting application/json requests")
+    project = get_project_record(pid)
+    user = user_by_id(check_int(data["uid"]))
+    if user == project.responsible:
+        raise ValueError("User %s is already responsible for the project %s" %
+                         (user.full_name(), project.get_name()))
+    project.responsible = user
+    db.session.commit()
+    #TaskQueue().project(project).responsible_assign(user)
+    return jsonify(message=ProjectLog(project).responsible_assign(user),
+                   data=project.with_usage())
+
+
 @bp.route("/project/assign/responsible", methods=["POST"])
 @login_required
 def web_project_assign_responsible():
