@@ -1,4 +1,4 @@
-from flask import Flask, g, request, current_app
+from flask import Flask, g, request
 from flask_login import current_user
 
 from base.extensions import mail, cache, db, login_manager
@@ -21,7 +21,6 @@ from traceback import format_exc
 from tempfile import gettempdir
 from pathlib import Path
 from shutil import rmtree
-from configparser import ConfigParser
 
 import logging
 import logging.config
@@ -34,7 +33,6 @@ def create_app(config_filename):
     register_blueprints(app)
     register_decor(app)
     configure_logger(app)
-    configure_project(app)
     cleanup(app)
     return app
 
@@ -133,24 +131,3 @@ def configure_logger(app):
         logging.config.fileConfig(cfg_path)
     else:
         print("No config found! Using default logger")
-
-
-def configure_project(app):
-    cfg_file = app.config.get("PROJECT_CONFIG", "project.cfg")
-    cfg_path = path_join(app.instance_path, cfg_file)
-    if not exists(cfg_path):
-        logging.warning("Projects configuration file doesn't exists. Using "
-                        "defaults")
-        return
-    cfg = ConfigParser()
-    cfg.read(cfg_path)
-    ctx = app.app_context()
-    ctx.g.project = {}
-    projects = cfg.sections()
-    for project in projects:
-        duration = cfg.get(project, "duration", fallback=None)
-        end = cfg.get(project, "end_date", fallback=None)
-        cpu = cfg.get(project, "cpu", fallback=None)
-        name = project.lower()
-        ctx.g.project[name] = {"duration": duration, "end": end, "cpu": cpu}
-    logging.debug("Project configuration: %s" % ctx.g.project)
