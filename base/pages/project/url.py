@@ -1,6 +1,7 @@
 from flask import render_template, request, jsonify, flash
 from flask_login import login_required, current_user
 from base import db
+from base.database.schema import LimboUser, User
 from base.database.schema import LogDB
 from base.pages import (
     ProjectLog,
@@ -93,9 +94,6 @@ def web_project_add_user():
     pid = check_int(data["project"])
     project = get_project_record(pid)
 
-    from base import db
-    from base.database.schema import LimboUser, User
-
     if User.query.filter(User.email == email).first():
         raise ValueError("User with e-mail %s has been registered already"
                          % email)
@@ -176,8 +174,6 @@ def web_project_transform():
 @bp.route("/project/reactivate", methods=["POST"])
 @login_required
 def web_project_reactivate():
-    from base import db
-
     record = extend_update()
     record.activate = True
     db.session.add(record)
