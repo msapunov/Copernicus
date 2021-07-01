@@ -10,8 +10,10 @@ from base.pages import (
     TaskQueue,
     generate_login)
 from base.pages.user import bp
-from base.pages.user.magic import get_user_record
+from base.pages.user.magic import get_user_record, user_by_id
+from base.pages.project.form import Transform, TransForm, getTransformationOptions
 from base.pages.project.magic import (
+    extend_transform,
     project_info_by_name,
     is_activity_report,
     report_activity,
@@ -165,12 +167,9 @@ def web_project_delete_user():
 @bp.route("/project/transform", methods=["POST"])
 @login_required
 def web_project_transform():
-    from base import db
-
-    record = extend_update()
-    record.transform = "b"
-    db.session.add(record)
-    db.session.commit()
+    form = TransForm()
+    form.new.choices = getTransformationOptions()
+    record = extend_transform(form)
     return jsonify(message=ProjectLog(record.project).transform(record))
 
 
@@ -236,4 +235,6 @@ def web_project_index():
         renew = now.year
     get_limbo_users(projects)
     data = {"projects": projects, "renew": renew}
-    return render_template("project.html", data=data)
+    active = filter(lambda x: x.active, projects)
+    trans = [Transform(project) for project in active]
+    return render_template("project.html", data=data, transform=trans)

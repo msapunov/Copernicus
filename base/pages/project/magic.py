@@ -1,8 +1,10 @@
 import logging as log
 from datetime import datetime as dt
+from configparser import ConfigParser
 from pathlib import Path
+from os.path import join as path_join, exists
 
-from flask import flash, current_app, jsonify, request, render_template
+from flask import current_app, jsonify, request, render_template
 from flask_login import current_user
 from owncloud import Client as OwnClient
 from pdfkit import from_string
@@ -12,11 +14,38 @@ from base.database.schema import Extend, File, Project, Tasks
 from base.pages import ProjectLog, calculate_usage
 from base.pages import ssh_wrapper, check_int, check_str, send_message
 from base.pages.board.magic import create_resource
-from base.utils import accounting_start, save_file, get_tmpdir
+from base.utils import accounting_start, save_file, get_tmpdir, form_error_string
 from logging import error, debug, warning
 
 __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
+
+
+def project_config():
+    result = {}
+    cfg_file = current_app.config.get("PROJECT_CONFIG", "project.cfg")
+    cfg_path = path_join(current_app.instance_path, cfg_file)
+    if not exists(cfg_path):
+        warning("Projects configuration file doesn't exists. Using defaults")
+        return result
+    cfg = ConfigParser()
+    cfg.read(cfg_path)
+    projects = cfg.sections()
+    for project in projects:
+        duration = cfg.get(project, "duration", fallback=None)
+        end = cfg.get(project, "end_date", fallback=None)
+        cpu = cfg.get(project, "cpu", fallback=None)
+        trans = cfg.get(project, "transform", fallback=None)
+        descr = cfg.get(project, "description", fallback=None)
+        if trans:
+            transform = list(map(lambda x: x.strip(), trans.split(",")))
+        else:
+            transform = []
+        name = project.lower()
+        result[name] = {"duration": duration, "end": end, "cpu": cpu,
+                               "transform": transform, "description": descr}
+    debug("Project configuration: %s" % result)
+    return result
 
 
 def upload_file_cloud(path, remote=None):
@@ -295,6 +324,25 @@ def is_extension():
         return False
     else:
         return True
+
+
+def extend_transform(form):
+    if not form.validate_on_submit():
+        raise ValueError(form_error_string(form.errors))
+    pid = form.pid.data
+    new = form.new.data
+    cpu = form.cpu.data
+    note = form.note.data
+    project = get_project_record(pid)
+    project = get_project_consumption(project)
+    record = Extend(project=project, hours=cpu, reason=note, extend=True,
+                  present_use=project.consumed, transform = new,
+                  usage_percent=project.consumed_use,
+                  present_total=project.resources.cpu,
+                  exception=False)
+    db.session.add(record)
+    db.session.commit()
+    return record
 
 
 def extend_update():

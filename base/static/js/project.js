@@ -73,6 +73,15 @@ function reduce_to_names(initial, object){
     };
 
     window.render = {};
+
+    window.render.window_hide = function(e){
+        var name = $.trim( $(this).data("name") );
+        var modal = UIkit.modal("#" + name);
+        if ( modal.isActive() ) {
+            modal.hide();
+        }
+    };
+
     window.render.input_empty = function(){
         $(this).val().length < 1 ? $(this).addClass("uk-form-danger") : $(this).removeClass("uk-form-danger");
     };
@@ -221,6 +230,28 @@ function reduce_to_names(initial, object){
         });
     };
 
+    window.render.transform = function(e){
+        var name = $.trim( $(this).data("name") );
+        var form = $("#" + name + "_form");
+        $.ajax({
+            data: $(form).serialize(), // serializes the form's elements.
+            timeout: 60000,
+            type: "POST",
+            url: window.proj.url.transform
+        }).done(function(reply){
+            if (reply.message) {
+                UIkit.notify(reply.message, {
+                    timeout: 3000,
+                    status: "success"
+                });
+            }
+            UIkit.modal("#" + name + "_trans").hide();
+        }).fail(function(reply){
+            show_error(reply);
+        });
+        e.preventDefault();
+    };
+
     window.render.renew_extend = function(e){
         var name = $(this).data("name");
         var id = $(this).data("project");
@@ -231,45 +262,15 @@ function reduce_to_names(initial, object){
         }
     };
 
-    window.render.transform_project = function(e){
-        var name = $(this).data("name");
-        var id = $(this).data("project");
-        var title = "Transform existing project {0}?".f(name);
-        var project_select = $("<select>").addClass("uk-width-1-1");
-        project_select.append($("<option/>").text("B"));
-        project_select.append($("<option/>").text("H"));
-        var cpu = $("<input/>").addClass("uk-width-1-1").attr({
-            "name": "cpu",
-            "type": "text",
-            "placeholder": "CPU hours for the new project"
-        });
-        var placeholder = "Motivation:\nShort description of the request";
-        var motiv = $("<textarea/>").addClass("uk-width-1-1").attr({
-            "rows": "4",
-            "name": "note",
-            "placeholder": placeholder
-        });
-        var form = $("<form/>").addClass("uk-form");
-        form.append($("<legend/>").text(title));
-        form.append($("<div/>").addClass("uk-form-row").append(project_select));
-        form.append($("<div/>").addClass("uk-form-row").append(cpu));
-        form.append($("<div/>").addClass("uk-form-row").append(motiv));
-        var pop = dialog(form.prop("outerHTML"), function(){
-            var data = {
-                "note": $("textarea[name=note]").val(),
-                "project": id
-            };
-            if(!window.render.paint_red(data)){
-                return false;
-            }
-            json_send(window.proj.url["transform"], data).done(function(reply){
-                $(".trans").attr("disabled", true);
-                if(reply.message){
-                    UIkit.notify(reply.message, {timeout: 2000, status:"success"});
-                }
-                pop.hide();
-            });
-        });
+    window.render.transform_window = function(e){
+        var name = $.trim( $(this).data("name") );
+        var id = "#" + name + "_trans";
+        var modal = UIkit.modal(id);
+        if ( modal.isActive() ) {
+            modal.hide();
+        } else {
+            modal.show();
+        }
     };
 
     window.render.activate_project = function(e){
@@ -644,7 +645,9 @@ function reduce_to_names(initial, object){
     $(document).on("click", ".renew", window.render.renew_extend);
     $(document).on("click", ".history", window.render.project_history);
     $(document).on("click", ".react", window.render.activate_project);
-    $(document).on("click", ".trans", window.render.transform_project);
+    $(document).on("click", ".trans", window.render.transform_window);
+    $(document).on("click", ".transform_submit", window.render.transform);
+    $(document).on("click", ".window_hide", window.render.window_hide);
     $(document).on("click", ".remove", window.render.remove_user); //the buttons could be created on the fly
 
     $(document).on("blur", "input,textarea", window.render.input_empty);
