@@ -92,7 +92,7 @@ json_send = function(url, data, show_modal){
     modal.show();
     return $.ajax({
         contentType: "application/json",
-        data: data ? JSON.stringify(data): undefined,
+        data: data ? JSON.stringify(data) : undefined,
         dataType: "json",
         timeout: 60000,
         type: "POST",
