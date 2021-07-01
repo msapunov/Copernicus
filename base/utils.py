@@ -8,6 +8,14 @@ from base64 import b64encode
 import logging as log
 
 
+def form_error_string(err_dict):
+    result = []
+    for key, value in err_dict.items():
+        for err in value:
+            result.append("%s: %s" % (key, err))
+    return "\n".join(result)
+
+
 def image_string(name):
     img_path = join_dir(current_app.instance_path, name)
     if not exists(img_path):
