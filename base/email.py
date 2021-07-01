@@ -153,52 +153,60 @@ class Mail:
     def user_deleted(self, user):
         pass
 
-    def _project_(self, project):
-        if not project.responsible.email:
+    def __project_init(self, record, section_name):
+        self.populate(section_name)
+
+        if not record.project.responsible.email:
             raise ValueError("Responsible has no email")
         if not self.destination:
-            self.destination = project.responsible.email
-        full = project.responsible.full_name()
-        self.title = self.title.replace("%FULLNAME", full)
-        if self.greetings:
-            self.greetings = self.greetings.replace("%FULLNAME", full)
+            self.destination = record.project.responsible.email
+        cpu = str(record.hours)
+        name = record.project.get_name()
+        full = record.project.responsible.full_name()
+        self.__populate_values({"%FULLNAME": full, "%NAME": name, "%CPU": cpu})
         return self
 
-    def project_renew(self, project):
-        pass
+    def __populate_values(self, values):
+        for attr in ["title", "greetings", "message", "signature"]:
+            for key, value in values.items():
+                val = getattr(self, attr, "").replace(key, value)
+                setattr(self, attr, val)
+        return self
 
-    def project_renewed(self, project):
-        pass
+    def project_renew(self, record):
+        self.__project_init(record.project, "PROJECT RENEW")
+        return self
+
+    def project_renewed(self, record):
+        self.__project_init(record.project, "PROJECT RENEWED")
+        return self
 
     def project_extend(self, record):
-        self.populate("PROJECT EXTEND")
-        self._project_(record.project)
-        name = record.project.get_name()
-        cpu = str(record.hours)
-        self.title = self.title.replace("%NAME", name)
-        self.message = self.message.replace("%NAME", name)
-        self.message = self.message.replace("%CPU", cpu)
+        self.__project_init(record, "PROJECT EXTEND")
         return self
 
-    def project_extended(self, project):
-        pass
+    def project_extended(self, record):
+        self.__project_init(record.project, "PROJECT EXTENDED")
+        return self
 
-    def project_transform(self, project):
-        pass
+    def project_transform(self, record):
+        self.__project_init(record, "PROJECT TRANSFORM")
+        self.__populate_values({"%TYPE_BEFORE": record.project.type,
+                                "%TYPE_AFTER": record.transform})
+        return self
 
-    def project_transformed(self, project):
-        pass
+    def project_transformed(self, record):
+        self.__project_init(record.project, "PROJECT TRANSFORMED")
+        self.__populate_values({"%TYPE_BEFORE": record.project.type,
+                                "%TYPE_AFTER": record.transform})
+        return self
 
     def project_activate(self, record):
-        self.populate("PROJECT ACTIVATE")
-        name = record.project.get_name()
-        self.title = self.title.replace("%NAME", name)
-        self.message = self.message.replace("%NAME", name)
+        self.__project_init(record.project, "PROJECT ACTIVATE")
         return self
 
     def _extension_action(self, section, record, ext):
-        self.populate(section)
-        self._project_(record.project)
+        self._project_(record.project, section)
         name = record.project.get_name()
         cpu = str(record.hours)
         reason = record.decision if record.decision else None
