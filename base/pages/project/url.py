@@ -43,7 +43,7 @@ def project_activity_remove(project, file_name):
     return jsonify(data=remove_activity(project, file_name))
 
 
-@bp.route("/project/activity/clean/<string:project_name>", methods=["POST"])
+@bp.route("/project/activity/clean/<string:name>", methods=["POST"])
 @login_required
 def project_activity_clean(project_name):
     return jsonify(data=clean_activity(project_name))
@@ -55,13 +55,13 @@ def project_activity_upload():
     return jsonify(data=save_activity(request))
 
 
-@bp.route("/project/activity/<string:project_name>", methods=["POST"])
+@bp.route("/project/activity/<string:name>", methods=["POST"])
 @login_required
 def project_activity(project_name):
     return jsonify(message=report_activity(project_name, request))
 
 
-@bp.route("/project/info/<string:project_name>", methods=["POST"])
+@bp.route("/project/info/<string:name>", methods=["POST"])
 @login_required
 def project_info(project_name):
     return jsonify(data=project_info_by_name(project_name))
