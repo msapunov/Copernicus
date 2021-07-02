@@ -204,7 +204,7 @@ class Mail:
         return self
 
     def _extension_action(self, section, record, ext):
-        self._project_(record.project, section)
+        self.__project_init(record.project, section)
         name = record.project.get_name()
         cpu = str(record.hours)
         reason = record.decision if record.decision else None
