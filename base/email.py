@@ -114,7 +114,7 @@ class Mail:
         else:
             self.attach_file(visa)
         to = self.working_object.responsible_email
-        self.destination = self.cfg.get("PROJECT VISA", "TO",fallback=to)
+        self.destination = self.cfg.get("PROJECT VISA", "TO", fallback=to)
         self.cc = [self.cfg.get("PROJECT VISA", "CC", fallback="")]
         self.sender = self.cfg.get("PROJECT VISA", "FROM", fallback="")
         ttl = "Visa for your project registration id: %s"\
