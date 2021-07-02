@@ -81,8 +81,6 @@ class Mail:
         return self
 
     def send(self):
-        if self.title:
-            self.title = self.title[0].upper() + self.title[1:].lower()
         self.msg["Subject"] = self.title
         self.msg["From"] = self.sender
         self.msg["To"] = self.destination
