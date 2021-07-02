@@ -6,7 +6,7 @@ from os.path import join as path_join, exists
 from email.mime.application import MIMEApplication
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-from email.utils import COMMASPACE, formatdate
+from email.utils import formatdate
 import smtplib
 
 
@@ -87,7 +87,7 @@ class Mail:
         self.msg["From"] = self.sender
         self.msg["To"] = self.destination
         self.msg["Date"] = formatdate(localtime=True)
-        self.msg["Cc"] = COMMASPACE.join(self.cc)
+        self.msg["Cc"] = ",".join(self.cc)
         if self.message:
             if self.greetings: self.message = self.greetings + self.message
             if self.signature: self.message = self.message + self.signature
