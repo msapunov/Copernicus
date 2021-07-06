@@ -108,27 +108,12 @@ class Mail:
         self.working_object = registration_obj
         return self
 
-    def send_visa(self, visa):
+    def attach_visa(self, visa):
         if type(visa) is list:
             [self.attach_file(x) for x in visa]
         else:
             self.attach_file(visa)
-        to = self.working_object.responsible_email
-        self.destination = self.cfg.get("PROJECT VISA", "TO", fallback=to)
-        self.cc = [self.cfg.get("PROJECT VISA", "CC", fallback="")]
-        self.sender = self.cfg.get("PROJECT VISA", "FROM", fallback="")
-        ttl = "Visa for your project registration id: %s"\
-              % self.working_object.project_id()
-        self.title = self.cfg.get("PROJECT VISA", "TITLE", fallback=ttl)
-        name = self.working_object.responsible_first_name
-        surname = self.working_object.responsible_last_name
-        message = """Dear %s %s
-        You have to sign the visa in order to have your project activated
-        """ % (name, surname)
-        self.message = self.cfg.get("PROJECT VISA", "MESSAGE", fallback=message)
-        if self.send():
-            return "Sent email with visa to %s" % self.destination
-        return "Failed to send email with visa to %s" % self.destination
+        return self
 
     def responsible_add(self):
         pass
