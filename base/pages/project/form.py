@@ -5,6 +5,16 @@ from wtforms.validators import DataRequired, NumberRange
 from base.pages.project.magic import project_config
 
 
+class ActivateForm(Form):
+    pid_err = "Project id is missing"
+    cpu_err = "CPU value must be 0 or any other positive number"
+    err = "Motivation field is empty"
+
+    pid = HiddenField(validators=[DataRequired(message=pid_err)])
+    cpu = IntegerField("CPU", validators=[NumberRange(min=0, message=cpu_err)])
+    note = TextAreaField("Motivation", validators=[DataRequired(message=err)])
+
+
 class TransForm(Form):
 
     pid_err = "Project id is missing"
