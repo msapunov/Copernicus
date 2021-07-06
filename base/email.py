@@ -104,8 +104,19 @@ class Mail:
         debug("Sent mail %s" % self.msg)
         return True
 
-    def registration(self, registration_obj):
-        self.working_object = registration_obj
+    def registration(self, rec):
+        cfg = self.cfg["PROJECT VISA"]
+        self.destination = cfg.get("TO", fallback=rec.responsible_email)
+        self.cc = [cfg.get("CC", fallback="")]
+        self.sender = cfg.get("FROM", fallback="")
+        self.title = cfg.get("TITLE", fallback="Visa for: %s" % rec.project_id())
+        self.greetings = cfg.get("GREETINGS", fallback="Hi,")
+        message = """Dear %s,
+        You have to sign the visa in order to have your project activated
+        """ % rec.responsible_full_name()
+        self.message = cfg.get("MESSAGE", fallback=message)
+        self.signature = cfg.get("SIGNATURE", fallback="Truly Yours, Robot")
+        self.__populate_values({"%FULLNAME": rec.responsible_full_name()})
         return self
 
     def attach_visa(self, visa):
