@@ -101,7 +101,8 @@ class Mail:
         if app.config.get("MAIL_SEND", False):
             smtp.send_message(self.msg)
         smtp.quit()
-        debug("Sent mail %s" % self.msg)
+        for header in self.msg.items():
+            debug("%s: %s" % (header[0], header[1]))
         return True
 
     def registration(self, rec):
