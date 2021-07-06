@@ -273,7 +273,7 @@ function reduce_to_names(initial, object){
         }
     };
 
-    window.render.activate_project = function(e){
+    window.render.activate_project_old = function(e){
         var name = $(this).data("name");
         var id = $(this).data("project");
         var title = "Re-activate existing project {0}?".f(name);
