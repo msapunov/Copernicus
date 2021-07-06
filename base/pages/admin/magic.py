@@ -99,7 +99,7 @@ def create_visa(pid, force=False):
     for i in ["fr_visa", "en_visa"]:
         html = render_template("%s.html" % i, data=result)
         path.append(generate_pdf(html, "%s_%s" % (name, i)))
-    Mail().registration(record).send_visa(path)
+    Mail().registration(record).attach_visa(path).send()
     map(lambda x: Path(x).unlink(), path)
     debug("Temporary file(s) %s was deleted" % ",".join(path))
     record.accepted = True
