@@ -25,7 +25,6 @@ class Mail:
         self.use_ssl = None
         self.username = None
         self.password = None
-        self.working_object = None
         self.cfg = None
         self.signature = None
         self.greetings = None
