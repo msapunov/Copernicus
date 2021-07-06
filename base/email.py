@@ -6,7 +6,7 @@ from os.path import join as path_join, exists
 from email.mime.application import MIMEApplication
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-from email.utils import formatdate
+from email.utils import formatdate, make_msgid
 import smtplib
 
 
@@ -86,6 +86,7 @@ class Mail:
         self.msg["To"] = self.destination
         self.msg["Date"] = formatdate(localtime=True)
         self.msg["Cc"] = ",".join(self.cc)
+        self.msg["Message-ID"] = make_msgid()
         if self.message:
             if self.greetings: self.message = self.greetings + self.message
             if self.signature: self.message = self.message + self.signature
