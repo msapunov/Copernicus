@@ -196,7 +196,8 @@ def web_project_transform():
 @bp.route("/project/reactivate", methods=["POST"])
 @login_required
 def web_project_reactivate():
-    record = extend_update()
+    form = ActivateForm()
+    record = extend_update(form)
     record.activate = True
     return jsonify(message=ProjectLog(record.project).activate(record))
 
@@ -204,7 +205,8 @@ def web_project_reactivate():
 @bp.route("/project/renew", methods=["POST"])
 @login_required
 def web_project_renew():
-    record = extend_update()
+    form = ExtendForm()
+    record = extend_update(form)
     if not is_activity_report(record):
         raise ValueError("Please upload an activity report first!")
     return jsonify(message=ProjectLog(record.project).renew(record))
@@ -213,9 +215,8 @@ def web_project_renew():
 @bp.route("/project/extend", methods=["POST"])
 @login_required
 def web_project_extend():
-    record = extend_update()
-    db.session.add(record)
-    db.session.commit()
+    form = ExtendForm()
+    record = extend_update(form)
     return jsonify(message=ProjectLog(record.project).extend(record))
 
 
