@@ -75,10 +75,20 @@ function reduce_to_names(initial, object){
     window.render = {};
 
     window.render.window_hide = function(e){
-        var name = $.trim( $(this).data("name") );
+        var name = $.trim( $(this).data("modal") );
         var modal = UIkit.modal("#" + name);
         if ( modal.isActive() ) {
             modal.hide();
+        }
+    };
+
+    window.render.window_show = function(e){
+        var name = $.trim( $(this).data("modal") );
+        var modal = UIkit.modal("#" + name);
+        if ( modal.isActive() ) {
+            modal.hide();
+        } else {
+            modal.show();
         }
     };
 
@@ -156,7 +166,28 @@ function reduce_to_names(initial, object){
             });
         });
     };
-
+    window.render.extend = function(e){
+        var modal = $.trim( $(this).data("modal") );
+        var form = $.trim( $(this).data("form") );
+        $.ajax({
+            data: $("#" + form).serialize(), // serializes the form's elements.
+            timeout: 60000,
+            type: "POST",
+            url: window.proj.url.extend
+        }).done(function(reply){
+            if (reply.message) {
+                UIkit.notify(reply.message, {
+                    timeout: 3000,
+                    status: "success"
+                });
+            }
+            UIkit.modal("#" + modal).hide();
+        }).fail(function(reply){
+            show_error(reply);
+        });
+        e.preventDefault();
+    }
+    /*
     window.render.extend = function(name, id, renew){
         var title, url;
         if(renew){
@@ -166,11 +197,13 @@ function reduce_to_names(initial, object){
         }
         var placeholder = "Motivation:\nShort description of the request";
         var cpu = $("<input/>").addClass("uk-width-1-1").attr({
+            "id": name+"_cpu",
             "name": "cpu",
             "type": "text",
             "placeholder": "CPU hours"
         });
         var motiv = $("<textarea/>").addClass("uk-width-1-1").attr({
+            "id": name + "_motivation",
             "rows": "4",
             "name": "note",
             "placeholder": placeholder
@@ -208,10 +241,17 @@ function reduce_to_names(initial, object){
             url = window.proj.url["extend"]
         }
         var pop = dialog(form.prop("outerHTML"), function(){
-            var exception = $("input[name=exception]").is(':checked') ? "yes" : "no";
+            var exception = $("#exception_checkbox").is(':checked') ? "yes" : "no";
+            var cid = name+"_cpu";
+            var cpu_id = "#" + name+"_cpu";
+            var tt = $(form).find(cpu_id).val();
+            var xxx = $(form);
+            var ppp = xxx.serialize();
+            var kkk = xxx.serializeArray();
+            var pp = document.getElementById(name+"_cpu").value;
             var data = {
-                "cpu": $("input[name=cpu]").val(),
-                "note": $("textarea[name=note]").val(),
+                "cpu": $("#" + name+"_cpu").val(),
+                "note": $("#" + name+"_motivation").val(),
                 "exception": exception,
                 "project": id
             };
@@ -229,6 +269,7 @@ function reduce_to_names(initial, object){
             });
         });
     };
+    */
 
     window.render.transform = function(e){
         var name = $.trim( $(this).data("name") );
@@ -253,6 +294,15 @@ function reduce_to_names(initial, object){
     };
 
     window.render.renew_extend = function(e){
+        var name = $.trim( $(this).data("name") );
+        var id = "#" + name + "_extend";
+        var modal = UIkit.modal(id);
+        if ( modal.isActive() ) {
+            modal.hide();
+        } else {
+            modal.show();
+        }
+    /*
         var name = $(this).data("name");
         var id = $(this).data("project");
         if( $(this).hasClass("renew") ){
@@ -260,11 +310,23 @@ function reduce_to_names(initial, object){
         }else{
             window.render.extend(name, id, false);
         }
+        */
     };
 
     window.render.transform_window = function(e){
         var name = $.trim( $(this).data("name") );
         var id = "#" + name + "_trans";
+        var modal = UIkit.modal(id);
+        if ( modal.isActive() ) {
+            modal.hide();
+        } else {
+            modal.show();
+        }
+    };
+
+    window.render.activate_project = function(e){
+        var name = $.trim( $(this).data("name") );
+        var id = "#" + name + "_activate";
         var modal = UIkit.modal(id);
         if ( modal.isActive() ) {
             modal.hide();
@@ -640,12 +702,14 @@ function reduce_to_names(initial, object){
     $(document).on("click", ".user_ass", window.render.assign_user);
     $(document).on("click", ".user_add", window.render.new_user);
     $(document).on("click", ".responsible_ass", window.render.assign_responsible);
-    $(document).on("click", ".extend", window.render.renew_extend);
     $(document).on("click", ".activity", window.render.activity);
-    $(document).on("click", ".renew", window.render.renew_extend);
     $(document).on("click", ".history", window.render.project_history);
-    $(document).on("click", ".react", window.render.activate_project);
-    $(document).on("click", ".trans", window.render.transform_window);
+    $(document).on("click", ".renew", window.render.window_show);
+    $(document).on("click", ".extend", window.render.window_show);
+    $(document).on("click", ".react", window.render.window_show);
+    $(document).on("click", ".transform", window.render.window_show);
+    $(document).on("click", ".activate_submit", window.render.activate);
+    $(document).on("click", ".extension_submit", window.render.extend);
     $(document).on("click", ".transform_submit", window.render.transform);
     $(document).on("click", ".window_hide", window.render.window_hide);
     $(document).on("click", ".remove", window.render.remove_user); //the buttons could be created on the fly
