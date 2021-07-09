@@ -15,6 +15,13 @@ class ActivateForm(Form):
     note = TextAreaField("Motivation", validators=[DataRequired(message=err)])
 
 
+def Activate(project):
+    form = ActivateForm()
+    form.name = project.name
+    form.pid.data = project.id
+    return form
+
+
 class TransForm(Form):
 
     pid_err = "Project id is missing"
