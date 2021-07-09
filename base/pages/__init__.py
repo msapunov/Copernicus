@@ -20,7 +20,7 @@ import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.application import MIMEApplication
 from email.mime.text import MIMEText
-from email.utils import COMMASPACE, formatdate
+from email.utils import formatdate
 
 
 def grant_access(*roles):
@@ -101,9 +101,9 @@ def send_message(to_who, by_who=None, cc=None, title=None, message=None,
     msg = MIMEMultipart()
     msg["Subject"] = title
     msg["From"] = by_who
-    msg["To"] = COMMASPACE.join(to_who)
+    msg["To"] = ", ".join(to_who)
     msg["Date"] = formatdate(localtime=True)
-    msg["Cc"] = COMMASPACE.join(cc)
+    msg["Cc"] = ", ".join(cc)
     if message:
         msg.attach(MIMEText(message))
 
@@ -136,7 +136,7 @@ def send_message(to_who, by_who=None, cc=None, title=None, message=None,
     if username and password:
         smtp.login(username, password)
 
-    to = COMMASPACE.join(to_who) + COMMASPACE.join(cc)
+    to = ", ".join(to_who) + ", ".join(cc)
     if current_app.config.get("MAIL_SEND", False):
         smtp.send_message(msg)
     smtp.quit()
