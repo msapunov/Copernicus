@@ -345,27 +345,13 @@ def extend_transform(form):
     return record
 
 
-def extend_update():
-    data = request.get_json()
-    if not data:
-        raise ValueError("Expecting application/json requests")
-    if "project" in data:
-        pid = check_int(data["project"])
-    else:
-        raise ValueError("Project ID is missing")
-    if "cpu" in data:
-        cpu = check_int(data["cpu"])
-    else:
-        cpu = 0
-    if "note" in data:
-        note = check_str(data["note"])
-    else:
-        raise ValueError("Comment is absent")
-
-    if ("exception" in data) and (check_str(data["exception"]) == "yes"):
-        exception = True
-    else:
-        exception = False
+def extend_update(form):
+    if not form.validate_on_submit():
+        raise ValueError(form_error_string(form.errors))
+    pid = form.pid.data
+    exception = form.exception.data
+    cpu = form.cpu.data
+    note = form.note.data
 
     extend = is_extension()
     # Make sure that exceptional extension are extension no matter when
@@ -374,11 +360,14 @@ def extend_update():
 
     project = get_project_record(pid)
     project = get_project_consumption(project)
-    return Extend(project=project, hours=cpu, reason=note, extend=extend,
-                  present_use=project.consumed,
-                  usage_percent=project.consumed_use,
-                  present_total=project.resources.cpu,
-                  exception=exception)
+    record = Extend(project=project, hours=cpu, reason=note, extend=extend,
+                    present_use=project.consumed,
+                    usage_percent=project.consumed_use,
+                    present_total=project.resources.cpu,
+                    exception=exception)
+    db.session.add(record)
+    db.session.commit()
+    return record
 
 
 def is_activity_report(rec):
