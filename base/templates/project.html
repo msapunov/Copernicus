@@ -123,17 +123,17 @@
                         <button class="uk-button uk-width-1-1 responsible_ass uk-button-danger uk-margin-small-bottom" data-project='{{project.id}}' data-name='{{project.name}}' type="button">Assign responsible</button>
                         -->
 
-                        <button class="uk-button uk-width-1-1 trans uk-margin-small-bottom uk-button-primary" data-project='{{project.id}}' data-name='{{project.name}}' type="button">Transform</button>
+                        <button class="uk-button uk-width-1-1 transform uk-margin-small-bottom uk-button-primary" data-modal='{{project.name}}_transform' type="button">Transform</button>
                         {% if data.renew %}
-                            <button class="uk-button uk-width-1-1 renew uk-margin-small-bottom uk-button-primary" data-project='{{project.id}}' data-name='{{project.name}}' type="button">Renew&nbsp;project&nbsp;for&nbsp;{{data.renew}}</button>
+                            <button class="uk-button uk-width-1-1 renew uk-margin-small-bottom uk-button-primary" data-modal="{{project.name}}_renew" type="button">Renew&nbsp;project&nbsp;for&nbsp;{{data.renew}}</button>
                         {% endif %}
                         <button class="uk-button uk-width-1-1 activity uk-margin-small-bottom uk-button-primary" data-project='{{project.id}}' data-name='{{project.name}}' type="button">Activity report</button>
-                        <button class="uk-button uk-width-1-1 extend uk-margin-small-bottom" data-project='{{project.id}}' data-name='{{project.name}}' type="button">Extend&nbsp;CPU&nbsp;allocation</button>
+                        <button class="uk-button uk-width-1-1 extend uk-margin-small-bottom" data-modal="{{project.name}}_extend" type="button">Extend&nbsp;CPU&nbsp;allocation</button>
                         <button class="uk-button uk-width-1-1 user_add uk-margin-small-bottom" data-project='{{project.id}}' data-name='{{project.name}}' type="button">Add user</button>
                         <button class="uk-button uk-width-1-1 user_ass uk-margin-small-bottom" data-project='{{project.id}}' data-name='{{project.name}}' type="button">Attach user</button>
                         <button class="uk-button uk-width-1-1 history uk-margin-small-bottom" data-project='{{project.id}}' data-name='{{project.name}}' type="button">History</button>
                     {% else %}
-                        <button class="uk-button uk-width-1-1 react uk-margin-small-bottom" data-project='{{project.id}}' data-name='{{project.name}}' type="button">Activate project</button>
+                        <button class="uk-button uk-width-1-1 react uk-margin-small-bottom" data-modal='{{project.name}}_activate' type="button">Activate project</button>
                     {% endif %}
                 </div>
             </div>
@@ -181,41 +181,117 @@
 {% endblock %}
 
 {% block last %}
-{% for trans in transform %}
-<div class="uk-modal fade" tabindex="-1" role="dialog" aria-labelledby="confirm-modal" aria-hidden="true" id="{{trans.name}}_trans">
+{% for project in allocate %}
+<div class="uk-modal fade" tabindex="-1" role="dialog" aria-labelledby="confirm-modal" aria-hidden="true" id="{{project.name}}_extend">
     <div class="uk-modal-dialog">
         <button type="button" class="uk-modal-close uk-close"></button>
         <div class="uk-modal-header">
-            <h3>Transform existing project {{trans.name}}?</h3>
+            <h3>Request additional CPU hours for the project {{project.name}}?</h3>
         </div>
         <div class="uk-overflow-container">
-            <form action="test" method="post" class="uk-panel uk-form uk-form-stacked" id="{{trans.name}}_form">
-                {{ trans.csrf_token }}
-                {{ trans.pid(id=trans.name+"_pid") }}
+            <form action="test" method="post" class="uk-panel uk-form" id="{{project.name}}_extension_form">
+                {{ project.csrf_token }}
+                {{ project.pid(id=project.name+"_pid") }}
+                <div class="uk-form-row uk-alert">
+                    <div>
+                        Request submitted before the 30th of September will be examined the 15th of October 2021.
+                    </div>
+                    <div>
+                        Additional resources must be used before the end of February 2022.
+                    </div>
+                </div>
+                <div class="uk-form-row uk-alert uk-alert-danger">
+                    {{ project.exception(class_="uk-margin-small-right uk-form-danger") }}
+                    <label for="exception_checkbox">
+                        Select this checkbox only in case you would need an exceptional extension! Will only be considered for a project running out of CPU time way before the next application deadline (see the date above).
+                    </label>
+                </div>
                 <div class="uk-form-row">
-                    <label class="uk-form-label" for="{{trans.name}}_type">Project type:</label>
                     <div class="uk-form-controls">
-                        {{ trans.new(id=trans.name+"_type",class_="uk-width-1-1") }}
+                        {{ project.cpu(placeholder="CPU hours: New allocation for the project", class_="uk-width-1-1") }}
                     </div>
                 </div>
                 <div class="uk-form-row">
-                    <label class="uk-form-label" for="{{trans.name}}_cpu">CPU hours:</label>
                     <div class="uk-form-controls">
-                        {{ trans.cpu(id=trans.name+"_cpu", placeholder="New allocation for the project", class_="uk-width-1-1") }}
-                    </div>
-                </div>
-                <div class="uk-form-row">
-                    <label class="uk-form-label" for="{{trans.name}}_note">Motivation:</label>
-                    <div class="uk-form-controls">
-                        {{ trans.note(id=trans.name+"_note", placeholder="Short description of the request", class_="uk-width-1-1") }}
+                        {{ project.note(placeholder="Motivation:\nShort description of the request", class_="uk-width-1-1") }}
                     </div>
                 </div>
             </form>
         </div>
         <div class="uk-modal-footer">
             <div class="uk-text-right">
-                <button class="uk-button window_hide" data-name="{{trans.name}}_trans">Cancel</button>
-                <button class="uk-button uk-button-primary transform_submit" data-name="{{trans.name}}">Submit</button>
+                <button class="uk-button window_hide" data-modal="{{project.name}}_extend">Cancel</button>
+                <button class="uk-button uk-button-primary extension_submit" data-modal="{{project.name}}_extend" data-form="{{project.name}}_extension_form">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+{% for project in transform %}
+<div class="uk-modal fade" tabindex="-1" role="dialog" aria-labelledby="confirm-modal" aria-hidden="true" id="{{project.name}}_transform">
+    <div class="uk-modal-dialog">
+        <button type="button" class="uk-modal-close uk-close"></button>
+        <div class="uk-modal-header">
+            <h3>Transform existing project {{project.name}}?</h3>
+        </div>
+        <div class="uk-overflow-container">
+            <form action="test" method="post" class="uk-panel uk-form" id="{{project.name}}_transform_form">
+                {{ project.csrf_token }}
+                {{ project.pid(id=project.name+"_pid") }}
+                <div class="uk-form-row uk-form-horizontal">
+                    <label class="uk-form-label" for="{{project.name}}_type">Project type:</label>
+                    <div class="uk-form-controls">
+                        {{ project.new(id=project.name+"_type",class_="uk-width-1-1") }}
+                    </div>
+                </div>
+                <div class="uk-form-row">
+                    <div class="uk-form-controls">
+                        {{ project.cpu(id=project.name+"_cpu", placeholder="CPU hours: New allocation for the project", class_="uk-width-1-1") }}
+                    </div>
+                </div>
+                <div class="uk-form-row">
+                    <div class="uk-form-controls">
+                        {{ project.note(id=project.name+"_note", placeholder="Motivation:\nShort description of the request", class_="uk-width-1-1") }}
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="uk-modal-footer">
+            <div class="uk-text-right">
+                <button class="uk-button window_hide" data-modal="{{project.name}}_transform">Cancel</button>
+                <button class="uk-button uk-button-primary transform_submit" data-name="{{project.name}}">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+{% for project in activate %}
+<div class="uk-modal fade" tabindex="-1" role="dialog" aria-labelledby="confirm-modal" aria-hidden="true" id="{{project.name}}_activate">
+    <div class="uk-modal-dialog">
+        <button type="button" class="uk-modal-close uk-close"></button>
+        <div class="uk-modal-header">
+            <h3>Re-activate existing project {{project.name}}?</h3>
+        </div>
+        <div class="uk-overflow-container">
+            <form action="test" method="post" class="uk-panel uk-form uk-form-stacked" id="{{project.name}}_form">
+                {{ project.csrf_token }}
+                {{ project.pid(id=project.name+"_pid") }}
+                <div class="uk-form-row">
+                    <div class="uk-form-controls">
+                        {{ project.cpu(id=project.name+"_cpu", placeholder="CPU hours: New allocation for the project", class_="uk-width-1-1") }}
+                    </div>
+                </div>
+                <div class="uk-form-row">
+                    <div class="uk-form-controls">
+                        {{ project.note(id=project.name+"_note", placeholder="Motivation:\nShort description of the request", class_="uk-width-1-1") }}
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="uk-modal-footer">
+            <div class="uk-text-right">
+                <button class="uk-button window_hide" data-modal="{{project.name}}_activate">Cancel</button>
+                <button class="uk-button uk-button-primary activate_submit" data-name="{{project.name}}">Submit</button>
             </div>
         </div>
     </div>
