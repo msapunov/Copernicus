@@ -1,5 +1,5 @@
 from flask_wtf import Form
-from wtforms import HiddenField, IntegerField
+from wtforms import HiddenField, IntegerField, BooleanField
 from wtforms import TextAreaField, SelectField
 from wtforms.validators import DataRequired, NumberRange
 from base.pages.project.magic import project_config
@@ -61,4 +61,29 @@ def Transform(project):
     form.name = project.name
     form.pid.data = project.id
     form.new.choices = getTransformationOptions(project.type)
+    return form
+
+
+class ExtendForm(Form):
+    pid_err = "Project id is missing"
+    cpu_err = "CPU value must be 0 or any other positive number"
+    err = "Motivation field is empty"
+
+    pid = HiddenField(validators=[DataRequired(message=pid_err)])
+    exception = BooleanField()
+    cpu = IntegerField("CPU", validators=[NumberRange(min=0, message=cpu_err)])
+    note = TextAreaField("Motivation", validators=[DataRequired(message=err)])
+
+def Allocate(project):
+    config = project_config()
+    type = project.type.lower()
+    if type not in config.keys():
+        return
+#    if not config[type].get("extendable", None):
+#        return
+
+    form = ExtendForm()
+    form.name = project.name
+    form.pid.data = project.id
+    form.legend = "Test"
     return form
