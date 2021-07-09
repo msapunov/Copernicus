@@ -12,7 +12,11 @@ from base.pages import (
     generate_login)
 from base.pages.user import bp
 from base.pages.user.magic import get_user_record, user_by_id
-from base.pages.project.form import Transform, TransForm, getTransformationOptions
+from base.pages.project.form import (
+    Transform, TransForm,
+    Activate, ActivateForm,
+    Allocate, ExtendForm,
+    getTransformationOptions)
 from base.pages.project.magic import (
     extend_transform,
     project_info_by_name,
