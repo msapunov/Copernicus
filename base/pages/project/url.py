@@ -194,8 +194,6 @@ def web_project_transform():
 def web_project_reactivate():
     record = extend_update()
     record.activate = True
-    db.session.add(record)
-    db.session.commit()
     return jsonify(message=ProjectLog(record.project).activate(record))
 
 
@@ -205,8 +203,6 @@ def web_project_renew():
     record = extend_update()
     if not is_activity_report(record):
         raise ValueError("Please upload an activity report first!")
-    db.session.add(record)
-    db.session.commit()
     return jsonify(message=ProjectLog(record.project).renew(record))
 
 
