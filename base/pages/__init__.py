@@ -1,15 +1,13 @@
 from paramiko import SSHClient, AutoAddPolicy, AuthenticationException, RSAKey
 from flask import current_app, request, flash, redirect, url_for, g
 from flask_login import current_user, logout_user
-from flask_mail import Message
-from magic import from_file
 from pathlib import Path
 from logging import debug, error
 from re import compile
 from functools import wraps
-from base import mail
+from base import db
 from base.email import Mail
-from base.database.schema import LogDB, User
+from base.database.schema import LogDB, User, Tasks
 from base.utils import normalize_word
 from string import ascii_letters
 from dateutil.relativedelta import relativedelta as rd
@@ -260,7 +258,6 @@ class ResponsibleMailingList(MailingList):
 class Task:
 
     def __init__(self, tid):
-        from base.database.schema import Tasks
         task = Tasks().query.filter_by(id=tid).first()
         if not task:
             raise ValueError("No task with id %s found" % tid)
@@ -268,9 +265,6 @@ class Task:
         self.id = task.id
 
     def _update_user(self):
-        from base import db
-        from base.database.schema import User
-
         limbo = self.task.limbo_user
         user = User().query.filter_by(id=limbo.ref_id).one()
 
@@ -353,14 +347,12 @@ class Task:
 
     @staticmethod
     def _commit():
-        from base import db
         db.session.commit()
 
 
 class TaskQueue:
 
     def __init__(self):
-        from base.database.schema import Tasks
         self.task = Tasks(author=current_user, processed=False, done=False)
         self.u_name = None  # User login name. String
         self.p_name = None  # Project name. String
@@ -449,7 +441,6 @@ class TaskQueue:
         return self
 
     def _commit(self):
-        from base import db
         db.session.add(self.task)
         db.session.commit()
 
@@ -461,37 +452,7 @@ class ProjectLog:
         self.log = LogDB(author=current_user, project=project)
         self.send = True
 
-    def _send_email(self, message):
-        email = current_app.config.get("EMAIL_PROJECT", None)
-        if not email:
-            raise ValueError("")
-        sender = ("Automatic messaging system", email)
-        cc = [email]
-        if not self.project.responsible:
-            raise ValueError("")
-        if not self.project.responsible.email:
-            raise ValueError("")
-        to = [self.project.responsible.email]
-        # full_name = self.project.responsible.full_name()
-        tech = current_app.config.get("EMAIL_TECH", None)
-        if tech:
-            postfix = "If you believe that this email has been sent to you by" \
-                      " mistake, please report to: %s" % tech
-        else:
-            postfix = "If you believe that this email has been sent to you by" \
-                      " mistake, please delete it!"
-        title = "[%s] %s" % (self.project.get_name(), self.log.event)
-        email = Message(title, sender=sender, recipients=to, cc=cc)
-        if self.log.extension and self.log.extension.decision:
-            message = self.log.extension.decision
-        email.body = message + "\n" + postfix
-        if not current_app.config.get("MAIL_SEND", None):
-            return "E-mail submission has been blocked in configuration file"
-        mail.send(email)
-        return "E-mail has been sent successfully"
-
-    def _commit(self, mail=None):
-        from base import db
+    def __commit(self, mail=None):
         db.session.add(self.log)
         db.session.commit()
         message = "%s: %s" % (self.project.get_name(), self.log.event)
@@ -504,13 +465,13 @@ class ProjectLog:
 
     def _commit_user(self, user):
         self.log.user = user
-        return self._commit()
+        return self.__commit()
 
     def created(self, date):
         self.log.event = "Project created"
         if date:
             self.log.created = date
-        return self._commit()
+        return self.__commit()
 
     def responsible_added(self, user):
         self.log.event = "Added a new project responsible %s with login %s" % (
@@ -550,50 +511,49 @@ class ProjectLog:
         self.log.event = "Made %s request to renew project for %s hour(s)"\
                          % (article, extension.hours)
         self.log.extension = extension
-        return self._commit(Mail().project_renew(extension))
+        return self.__commit(Mail().project_renew(extension))
 
     def renewed(self, extension):
         self.log.event = "Renewal request for %s hour(s) has been processed"\
                          % extension.hours
         self.log.extension = extension
-        return self._commit(Mail().project_renewed(extension))
+        return self.__commit(Mail().project_renewed(extension))
 
     def extend(self, extension):
         article = "an exceptional" if extension.exception else "a"
         self.log.event = "Made %s request to extend project for %s hour(s)"\
                          % (article, extension.hours)
         self.log.extension = extension
-        return self._commit(Mail().project_extend(extension))
+        return self.__commit(Mail().project_extend(extension))
 
     def extended(self, extension):
         self.log.event = "Extension request for %s hour(s) has been processed"\
                          % extension.hours
         self.log.extension = extension
-        return self._commit(Mail().project_extended(extension))
+        return self.__commit(Mail().project_extended(extension))
 
     def transform(self, extension):
         self.log.event = "Transformation request has been registered"
         self.log.extension = extension
-        return self._commit(Mail().project_transform(extension))
+        return self.__commit(Mail().project_transform(extension))
 
     def transformed(self, extension):
         self.log.event = "Transformation to type %s finished successfully"\
                             % extension.transform
         self.log.extension = extension
-        return self._commit(Mail().project_transformed(extension))
+        return self.__commit(Mail().project_transformed(extension))
 
     def activate(self, extension):
         self.log.event = "Activation request has been registered"
         self.log.extension = extension
-        return self._commit(Mail().project_activate(extension))
+        return self.__commit(Mail().project_activate(extension))
 
     def accept(self, extension):
-        new = "Extension" if extension.extend else "Renewal"
+        ext_or_new = "Extension" if extension.extend else "Renewal"
         self.log.event = "%s request for %s hours is accepted"\
-                         % (new, extension.hours)
-
+                         % (ext_or_new, extension.hours)
         self.log.extension = extension
-        return self._commit(Mail().extension_accepted(extension, new))
+        return self.__commit(Mail().allocation_accepted(extension, ext_or_new))
 
     def ignore(self, extension):
         new = "Extension" if extension.extend else "Renewal"
@@ -601,15 +561,15 @@ class ProjectLog:
                          % (new, extension.hours)
         self.log.extension = extension
         self.send = False
-        return self._commit(Mail().extension_ignored(extension, new))
+        return self.__commit(Mail().allocation_ignored(extension, new))
 
     def reject(self, extension):
-        new = "Extension" if extension.extend else "Renewal"
+        ext_or_new = "Extension" if extension.extend else "Renewal"
         self.log.event = "%s request for %s hours is rejected"\
-                         % (new, extension.hours)
+                         % (ext_or_new, extension.hours)
         self.log.extension = extension
-        return self._commit(Mail().extension_rejected(extension, new))
+        return self.__commit(Mail().allocation_rejected(extension, ext_or_new))
 
     def event(self, message):
         self.log.event = message.lower()
-        return self._commit()
+        return self.__commit()
