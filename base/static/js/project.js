@@ -273,9 +273,8 @@ function reduce_to_names(initial, object){
 
     window.render.transform = function(e){
         var name = $.trim( $(this).data("name") );
-        var form = $("#" + name + "_form");
         $.ajax({
-            data: $(form).serialize(), // serializes the form's elements.
+            data: $("#" + name + "_transformation_form").serialize(), // serializes the form's elements.
             timeout: 60000,
             type: "POST",
             url: window.proj.url.transform
@@ -286,7 +285,8 @@ function reduce_to_names(initial, object){
                     status: "success"
                 });
             }
-            UIkit.modal("#" + name + "_trans").hide();
+            window.render.window_show(e);
+            //UIkit.modal("#" + name + "_trans").hide();
         }).fail(function(reply){
             show_error(reply);
         });
