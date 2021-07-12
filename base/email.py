@@ -169,11 +169,11 @@ class Mail:
         return self
 
     def project_renew(self, record):
-        self.__project_init(record.project, "PROJECT RENEW")
+        self.__project_init(record, "PROJECT RENEW")
         return self
 
     def project_renewed(self, record):
-        self.__project_init(record.project, "PROJECT RENEWED")
+        self.__project_init(record, "PROJECT RENEWED")
         return self
 
     def project_extend(self, record):
@@ -181,7 +181,7 @@ class Mail:
         return self
 
     def project_extended(self, record):
-        self.__project_init(record.project, "PROJECT EXTENDED")
+        self.__project_init(record, "PROJECT EXTENDED")
         return self
 
     def project_transform(self, record):
@@ -191,47 +191,30 @@ class Mail:
         return self
 
     def project_transformed(self, record):
-        self.__project_init(record.project, "PROJECT TRANSFORMED")
+        self.__project_init(record, "PROJECT TRANSFORMED")
         self.__populate_values({"%TYPE_BEFORE": record.project.type,
                                 "%TYPE_AFTER": record.transform})
         return self
 
     def project_activate(self, record):
-        self.__project_init(record.project, "PROJECT ACTIVATE")
+        self.__project_init(record, "PROJECT ACTIVATE")
         return self
 
-    def _extension_action(self, section, record, ext):
-        self.__project_init(record.project, section)
-        name = record.project.get_name()
-        cpu = str(record.hours)
+    def allocation_accepted(self, record, extend_or_renew):
+        self.__project_init(record, "ALLOCATION ACCEPTED")
         reason = record.decision if record.decision else None
-        full = record.project.responsible.full_name()
-        self.title = self.title.replace("%EXT", ext)
-        self.title = self.title.replace("%NAME", name)
-        if self.greetings:
-            self.greetings = self.greetings.replace("%FULLNAME", full)
-        self.message = self.message.replace("%EXT", ext)
-        self.message = self.message.replace("%CPU", cpu)
-        self.message = self.message.replace("%NAME", name)
-        self.message = self.message.replace("%REASON", reason)
+        self.__populate_values({"%EXT": extend_or_renew, "%REASON": reason})
         return self
 
-    def extension_accepted(self, record, ext):
-        return self._extension_action("EXTENSION ACCEPTED", record, ext)
-
-    def extension_ignored(self, record, type):
-        self.populate("EXTENSION IGNORED")
+    def allocation_ignored(self, record, type):
+        self.__project_init(record, "ALLOCATION IGNORED")
         id = str(record.id)
-        name = record.project.get_name()
-        full = record.project.responsible.full_name()
         created = str(record.created)
-        self.title = self.title.replace("%EXT", type)
-        self.title = self.title.replace("%NAME", name)
-        self.message = self.message.replace("%EXT", type)
-        self.message = self.message.replace("%ID", id)
-        self.message = self.message.replace("%NAME", name)
-        self.message = self.message.replace("%CREATED", created)
+        self.__populate_values({"%EXT": type, "%CREATED": created, "ID": id})
         return self
 
-    def extension_rejected(self, record, ext):
-        return self._extension_action("EXTENSION REJECTED", record, ext)
+    def allocation_rejected(self, record, extend_or_renew):
+        self.__project_init(record, "ALLOCATION REJECTED")
+        reason = record.decision if record.decision else None
+        self.__populate_values({"%EXT": extend_or_renew, "%REASON": reason})
+        return self
