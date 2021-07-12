@@ -457,11 +457,9 @@ class ProjectLog:
         db.session.commit()
         message = "%s: %s" % (self.project.get_name(), self.log.event)
         try:
-            if mail: mail.send()
+            if mail and self.send: mail.send()
         finally:
             return message
-#        if self.send:
-#            self._send_email(message)
 
     def _commit_user(self, user):
         self.log.user = user
