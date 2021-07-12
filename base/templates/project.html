@@ -235,7 +235,7 @@
             <h3>Transform existing project {{project.name}}?</h3>
         </div>
         <div class="uk-overflow-container">
-            <form action="test" method="post" class="uk-panel uk-form" id="{{project.name}}_transform_form">
+            <form action="test" method="post" class="uk-panel uk-form" id="{{project.name}}_transformation_form">
                 {{ project.csrf_token }}
                 {{ project.pid(id=project.name+"_pid") }}
                 <div class="uk-form-row uk-form-horizontal">
