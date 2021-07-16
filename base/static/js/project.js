@@ -335,39 +335,6 @@ function reduce_to_names(initial, object){
         }
     };
 
-    window.render.activate_project_old = function(e){
-        var name = $(this).data("name");
-        var id = $(this).data("project");
-        var title = "Re-activate existing project {0}?".f(name);
-        var placeholder = "Motivation:\nShort description of the request";
-        var motiv = $("<textarea/>").addClass("uk-width-1-1").attr({
-            "rows": "4",
-            "name": "note",
-            "placeholder": placeholder
-        });
-        var form = $("<form/>").addClass("uk-form").append(
-            $("<legend/>").text(title)
-        ).append(
-            $("<div/>").addClass("uk-form-row").append(motiv)
-        );
-        var pop = dialog(form.prop("outerHTML"), function(){
-            var data = {
-                "note": $("textarea[name=note]").val(),
-                "project": id
-            };
-            if(!window.render.paint_red(data)){
-                return false;
-            }
-            json_send(window.proj.url["activate"], data).done(function(reply){
-                $(".react").attr("disabled", true);
-                if(reply.message){
-                    UIkit.notify(reply.message, {timeout: 2000, status:"success"});
-                }
-                pop.hide();
-            });
-        });
-    };
-
     window.render.remove_user = function(e){
         var id = $(this).data("pid");
         var full = $(this).data("name");
