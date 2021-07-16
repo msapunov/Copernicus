@@ -274,12 +274,4 @@ def web_project_index():
         renew = now.year
     get_limbo_users(projects)
     data = {"projects": projects, "renew": renew}
-#    active = list(filter(lambda x: x.active, projects))
-#    stalled = list(filter(lambda x: not x.active, projects))
-    transform = [Transform(project) for project in projects if project.active]
-    allocate = [Allocate(project) for project in projects if project.active]
-    activate = [Activate(project) for project in projects if not project.active]
-    return render_template("project.html", data=data,
-                           transform=transform,
-                           allocate = list(filter(None, allocate)),
-                           activate=activate)
+    return render_template("project.html", data=data)
