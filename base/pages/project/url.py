@@ -234,6 +234,30 @@ def web_project_history():
     return jsonify(result)
 
 
+@bp.route("/project/modal/transform/<int:pid>", methods=["POST"])
+@login_required
+def web_modal_transform(pid):
+    project = get_project_record(pid)
+    form = Transform(project)
+    return jsonify(render_template("modal_transform.html", form=form))
+
+
+@bp.route("/project/modal/allocate/<int:pid>", methods=["GET", "POST"])
+@login_required
+def web_modal_allocate(pid):
+    project = get_project_record(pid)
+    form = Allocate(project)
+    return jsonify(render_template("modal_allocate.html", form=form))
+
+
+@bp.route("/project/modal/activate/<int:pid>", methods=["GET", "POST"])
+@login_required
+def web_modal_activate(pid):
+    project = get_project_record(pid)
+    form = Activate(project)
+    return jsonify(render_template("modal_activate.html", form=form))
+
+
 @bp.route("/project.html", methods=["GET"])
 @login_required
 def web_project_index():
