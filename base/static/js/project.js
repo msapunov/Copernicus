@@ -566,6 +566,18 @@ function reduce_to_names(initial, object){
         });
     };
 
+    window.render.modal = function(url, btn){
+        $.ajax({
+            timeout: 60000,
+            type: "POST",
+            url: url,
+            success: function(data){
+                 $("body").append(data);
+                 $("button."+btn).prop("disabled", false);
+            }
+        });
+    };
+
     window.render.activity = function(e){
         var name = $(this).data("name");
         window.render.clean_activity(name);
