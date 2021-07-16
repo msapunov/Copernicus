@@ -699,6 +699,18 @@ function reduce_to_names(initial, object){
         }
     };
 
+    $(document).on("ready", function(){
+        var active = $.trim( $("#active_project").data("ids") ).split(",");
+        $.each(active, function(key, value){
+            window.render.modal("{0}/{1}".f(window.proj.url.modal_allocate, value), "renew");
+            window.render.modal("{0}/{1}".f(window.proj.url.modal_transform, value), "transform");
+        });
+        var inactive = $.trim( $("#inactive_project").data("ids") ).split(",");
+        $.each(inactive, function(key, value){
+            window.render.modal("{0}/{1}".f(window.proj.url.modal_activate, value), "activate");
+        });
+    });
+
     $(document).on("click", ".user_ass", window.render.assign_user);
     $(document).on("click", ".user_add", window.render.new_user);
     $(document).on("click", ".responsible_ass", window.render.assign_responsible);
