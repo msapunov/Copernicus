@@ -39,7 +39,9 @@
     </style>
 {% endblock %}
 {% block main %}
-    {% if data.projects %}
+    {% if data and data.projects %}
+        <meta id="active_project" data-ids="{{ data.projects | selectattr('active', 'equalto', true) | map(attribute='id') | list | join(',') }}">
+        <meta id="inactive_project" data-ids="{{ data.projects | selectattr('active', 'equalto', false) | map(attribute='id') | list | join(',') }}">
         {% for project in data.projects|sort(attribute='name') %}
             <div class="uk-panel uk-width-1-1 uk-width-small-1-1 uk-panel-divider">
                 <h3 class="uk-panel-title {% if project.active != True %}uk-text-muted{% endif %}">{{project.title}}</h3>
