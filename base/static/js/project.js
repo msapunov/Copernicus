@@ -56,7 +56,10 @@ function reduce_to_names(initial, object){
         activity: "project/activity",
         activity_upload: "project/activity/upload",
         activity_clean: "project/activity/clean",
-        activity_delete: "project/activity/remove"
+        activity_delete: "project/activity/remove",
+        modal_allocate: "/project/modal/allocate",
+        modal_transform: "/project/modal/transform",
+        modal_activate: "/project/modal/activate"
     };
 
     window.error = function(req){
