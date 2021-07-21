@@ -21,6 +21,34 @@ __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
 
 
+def project_add_user(form):
+    """
+    Function which creates a temporary user based on provide info and add a
+    create user task in the task queue
+    :param form: instance of WTForm
+    :return: Instance of a project to which a new user has to be attached and an
+    instance of TmpUser class
+    """
+    pid = form.pid.data
+    name = form.prenom.data.strip().lower()
+    surname = form.surname.data.strip().lower()
+    email = form.email.data.strip().lower()
+    project = get_project_record(pid)
+    if User.query.filter(User.email == email).first():
+        raise ValueError("User with e-mail %s has been registered already"
+                         % email)
+    login = generate_login(name, surname)
+    user = TmpUser()
+    user.login = login
+    user.name = name
+    user.surname = surname
+    user.email = email
+    tid = TaskQueue().user(user).user_create(user).task.id
+    if current_user.login and "admin" in current_user.permissions():
+        Task(tid).accept()
+    return project, user
+
+
 def project_config():
     result = {}
     cfg_file = current_app.config.get("PROJECT_CONFIG", "project.cfg")
