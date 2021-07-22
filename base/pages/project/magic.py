@@ -22,6 +22,30 @@ __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
 
 
+def project_attach_user(form):
+    """
+    Function which attach an existing user to a given project
+    :param form: Instance of WTForm
+    :return: Instance of a project to which a new user has to be attached and an
+    instance of User class
+    """
+    try:
+        pid = int(form.pid.data)
+    except ValueError:
+        raise ValueError("Not a valid integer value for project ID")
+    project = get_project_record(pid)
+    uid = form.assign.data
+    user = User.query.filter(User.id == uid).first()
+    if not user:
+        raise ValueError("Failed to find user with ID '%s' in database" % uid)
+    if user in project.users:
+        raise ValueError("User %s has been already attached to project %s"
+                         % (user.very_brief_info(), project.get_name()))
+    tid = TaskQueue().project(project).user_assign(user).task.id
+    if current_user.login and "admin" in current_user.permissions():
+        Task(tid).accept()
+    return project, user
+
 def project_add_user(form):
     """
     Function which creates a temporary user based on provide info and add a
