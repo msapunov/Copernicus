@@ -394,6 +394,9 @@ class User(UserMixin, db.Model):
             perm.append("admin")
         return perm
 
+    def very_brief_info(self):
+        return "%s [%s]" % (self.full_name(), self.login)
+
     def brief_info(self):
         return "%s <%s> [%s]" % (self.full_name(), self.email, self.login)
 
