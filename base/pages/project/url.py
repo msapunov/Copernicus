@@ -88,26 +88,16 @@ def project_overview_annie():
 @bp.route("/project/add/user", methods=["POST"])
 @login_required
 def web_project_add_user():
-    data = request.get_json()
-    if not data:
-        raise ValueError("Expecting application/json requests")
-    name = check_str(data["name"].strip().lower())
-    surname = check_str(data["surname"].strip().lower())
-    auto = generate_login(name, surname)
-
-    email = check_mail(data["email"].strip().lower())
-    pid = check_int(data["project"])
-    project = get_project_record(pid)
-
-    if User.query.filter(User.email == email).first():
-        raise ValueError("User with e-mail %s has been registered already"
-                         % email)
-    user = LimboUser(name=name, surname=surname, email=email, login=auto,
-                     active=False)
-    db.session.commit()
-    TaskQueue().project(project).user_create(user)
-    msg = "Request to add a new user: %s %s <%s>" % (name, surname, email)
-    return jsonify(message=ProjectLog(project).event(msg), data=get_users(pid))
+    form = UserForm()
+    if not form.validate_on_submit():
+        raise ValueError(form.errors)
+    if form.create_user:
+        project, user = project_add_user(form)
+        response = ProjectLog(project).user_add(user)
+    else:
+        project, user = project_attach_user(form)
+        response = ProjectLog(project).user_assign(user)
+    return jsonify(message=response, data=get_users(project.id))
 
 
 @bp.route("/project/assign/user", methods=["POST"])
