@@ -134,8 +134,7 @@
                         {% endif %}
                         <button class="uk-button uk-width-1-1 activity uk-margin-small-bottom uk-button-primary" data-project='{{project.id}}' data-name='{{project.name}}' type="button">Activity report</button>
                         <button class="uk-button uk-width-1-1 extend uk-margin-small-bottom" data-modal="{{project.name}}_extend" type="button">Extend&nbsp;CPU&nbsp;allocation</button>
-                        <button class="uk-button uk-width-1-1 user_add uk-margin-small-bottom" data-project='{{project.id}}' data-name='{{project.name}}' type="button">Add user</button>
-                        <button class="uk-button uk-width-1-1 user_ass uk-margin-small-bottom" data-project='{{project.id}}' data-name='{{project.name}}' type="button">Attach user</button>
+                        <button class="uk-button uk-width-1-1 assign uk-margin-small-bottom" data-modal="{{project.name}}_assign" disabled>Add user</button>
                         <button class="uk-button uk-width-1-1 history uk-margin-small-bottom" data-project='{{project.id}}' data-name='{{project.name}}' type="button">History</button>
                     {% else %}
                         <button class="uk-button uk-width-1-1 activate uk-margin-small-bottom" data-modal='{{project.name}}_activate' disabled>Activate project</button>
