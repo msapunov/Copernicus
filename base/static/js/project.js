@@ -121,54 +121,27 @@ function reduce_to_names(initial, object){
     };
 
     window.render.new_user = function(e){
-        var p_name = $(this).data("name");
-        var id = $(this).data("project");
-        var title = "Add a new user to the project {0}?".f(p_name);
-        var name = $("<input/>").addClass("uk-width-1-1").attr({
-            "name": "name",
-            "type": "text",
-            "placeholder": "Name (Prénom)"
-        });
-        var surname = $("<input/>").addClass("uk-width-1-1").attr({
-            "name": "surname",
-            "type": "text",
-            "placeholder": "Family name (Nom de famille)"
-        });
-        var mail = $("<input/>").addClass("uk-width-1-1").attr({
-            "name": "email",
-            "type": "email",
-            "placeholder": "e-mail"
-        });
-        var form = $("<form/>").addClass("uk-form").append(
-            $("<legend/>").text(title)
-        ).append(
-            $("<div/>").addClass("uk-form-row").append(name)
-        ).append(
-            $("<div/>").addClass("uk-form-row").append(surname)
-        ).append(
-            $("<div/>").addClass("uk-form-row").append(mail)
-        ).append(
-            $("<div>Please double check if indicated e-mail is correct</div>").addClass("uk-form-row uk-alert")
-        );
-        var pop = dialog(form.prop("outerHTML"), function(){
-            var data = {
-                "name": $("input[name=name]").val(),
-                "surname": $("input[name=surname]").val(),
-                "email": $("input[name=email]").val(),
-                "project": id
-            };
-            if(!window.render.paint_red(data)){
-                return false;
-            }
-            json_send(window.proj.url["add"], data).done(function(reply){
-                if(reply.message){
-                    UIkit.notify(reply.message, {timeout: 2000, status:"success"});
+            var modal = $.trim( $(this).data("modal") );
+            var form = $.trim( $(this).data("form") );
+            $.ajax({
+                data: $("#" + form).serialize(), // serializes the form's elements.
+                timeout: 60000,
+                type: "POST",
+                url: window.proj.url.add
+            }).done(function(reply){
+                if (reply.message) {
+                    UIkit.notify(reply.message, {
+                        timeout: 3000,
+                        status: "success"
+                    });
                 }
-                pop.hide();
-                window.render.user_reshuffle(reply, {"name": p_name, "id": id})
+                UIkit.modal("#" + modal).hide();
+            }).fail(function(reply){
+                show_error(reply);
             });
-        });
+            e.preventDefault();
     };
+
     window.render.extend = function(e){
         var modal = $.trim( $(this).data("modal") );
         var form = $.trim( $(this).data("form") );
