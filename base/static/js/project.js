@@ -686,6 +686,7 @@ function reduce_to_names(initial, object){
         $.each(active, function(key, value){
             window.render.modal("{0}/{1}".f(window.proj.url.modal_allocate, value), "renew");
             window.render.modal("{0}/{1}".f(window.proj.url.modal_transform, value), "transform");
+            window.render.modal("{0}/{1}".f(window.proj.url.modal_assign, value), "assign", window.render.user_list);
         });
         var inactive = $.trim( $("#inactive_project").data("ids") ).split(",");
         $.each(inactive, function(key, value){
