@@ -236,6 +236,15 @@ def web_project_history():
     return jsonify(result)
 
 
+@bp.route("/project/modal/attach/user/<int:pid>", methods=["POST"])
+@login_required
+@grant_access("admin", "responsible")
+def web_modal_user(pid):
+    project = get_project_record(pid)
+    form = NewUser(project)
+    return jsonify(render_template("modals/modal_new_user.html", form=form))
+
+
 @bp.route("/project/modal/transform/<int:pid>", methods=["POST"])
 @login_required
 @grant_access("admin", "responsible")
