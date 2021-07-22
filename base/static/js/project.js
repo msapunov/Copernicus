@@ -45,7 +45,6 @@ function reduce_to_names(initial, object){
         add: "project/add/user",
         assign: "project/assign/user",
         new_resp: "project/assign/responsible",
-        user_assign: "project/assign/user",
         user_list: "user/list",
         extend: "project/extend",
         renew: "project/renew",
@@ -59,7 +58,8 @@ function reduce_to_names(initial, object){
         activity_delete: "project/activity/remove",
         modal_allocate: "/project/modal/allocate",
         modal_transform: "/project/modal/transform",
-        modal_activate: "/project/modal/activate"
+        modal_activate: "/project/modal/activate",
+        modal_assign: "/project/modal/attach/user"
     };
 
     window.error = function(req){
