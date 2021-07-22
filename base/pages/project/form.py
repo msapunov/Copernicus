@@ -1,7 +1,8 @@
 from flask_wtf import Form
 from wtforms import HiddenField, IntegerField, BooleanField
-from wtforms import TextAreaField, SelectField
-from wtforms.validators import DataRequired, NumberRange
+from wtforms import TextAreaField, SelectField, StringField
+from wtforms.fields.html5 import EmailField
+from wtforms.validators import DataRequired, NumberRange, ValidationError, Email
 from base.pages.project.magic import project_config
 
 
@@ -74,16 +75,52 @@ class ExtendForm(Form):
     cpu = IntegerField("CPU", validators=[NumberRange(min=0, message=cpu_err)])
     note = TextAreaField("Motivation", validators=[DataRequired(message=err)])
 
+
 def Allocate(project):
     config = project_config()
     type = project.type.lower()
     if type not in config.keys():
         return
-#    if not config[type].get("extendable", None):
-#        return
-
     form = ExtendForm()
     form.name = project.name
     form.pid.data = project.id
     form.legend = "Test"
+    return form
+
+
+class UserForm(Form):
+    pid_err = "Project id is missing"
+    pid = HiddenField(validators=[DataRequired(message=pid_err)])
+    prenom = StringField("Name")  # Can't use "name" cause it cause conflict
+    surname = StringField("Surname")
+    email = EmailField("E-mail")
+    assign = SelectField("Assign", choices=[])
+    create_user = False
+
+    def validate(self):
+        """
+        Method which replaces standard validate method because of usage custom
+        select2 field
+        :return: Boolean
+        """
+        if not self.csrf_token.validate(self):
+            return False
+        if not self.pid.data:
+            return ValidationError("Project ID expecting")
+        if self.assign.data is "None": self.assign.data = False
+        if self.assign.data:
+            self.assign.validate(self, [DataRequired()])
+            return True
+        if self.prenom.data and self.surname.data and self.email.data:
+            self.prenom.validate(self, [DataRequired()])
+            self.surname.validate(self, [DataRequired()])
+            self.email.validate(self, [DataRequired(), Email()])
+            self.create_user = True
+            return True
+        return ValidationError("Assign an existing user or add a new one")
+
+def NewUser(project):
+    form =UserForm()
+    form.name = project.name
+    form.pid.data = project.id
     return form
