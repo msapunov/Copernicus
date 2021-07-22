@@ -4,17 +4,18 @@ from configparser import ConfigParser
 from pathlib import Path
 from os.path import join as path_join, exists
 
-from flask import current_app, jsonify, request, render_template
+from flask import current_app, jsonify, render_template
 from flask_login import current_user
 from owncloud import Client as OwnClient
 from pdfkit import from_string
 
 from base import db
-from base.database.schema import Extend, File, Project, Tasks
-from base.pages import ProjectLog, calculate_usage
-from base.pages import ssh_wrapper, check_int, check_str, send_message
+from base.classes import TmpUser
+from base.database.schema import Extend, File, Project, Tasks, User
+from base.pages import ProjectLog, calculate_usage, generate_login, TaskQueue
+from base.pages import ssh_wrapper, send_message, Task
 from base.pages.board.magic import create_resource
-from base.utils import accounting_start, save_file, get_tmpdir, form_error_string
+from base.utils import save_file, get_tmpdir, form_error_string
 from logging import error, debug, warning
 
 __author__ = "Matvey Sapunov"
