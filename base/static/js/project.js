@@ -541,7 +541,10 @@ function reduce_to_names(initial, object){
             success: function(data){
                  $("body").append(data);
                  $("button."+btn).prop("disabled", false);
+                if (typeof fn === "function") fn();
             }
+        }).fail(function(request){
+            show_error(request);
         });
     };
 
