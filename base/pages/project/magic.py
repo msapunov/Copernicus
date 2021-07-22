@@ -25,7 +25,7 @@ def project_add_user(form):
     """
     Function which creates a temporary user based on provide info and add a
     create user task in the task queue
-    :param form: instance of WTForm
+    :param form: Instance of WTForm
     :return: Instance of a project to which a new user has to be attached and an
     instance of TmpUser class
     """
@@ -43,7 +43,7 @@ def project_add_user(form):
     user.name = name
     user.surname = surname
     user.email = email
-    tid = TaskQueue().user(user).user_create(user).task.id
+    tid = TaskQueue().project(project).user_create(user).task.id
     if current_user.login and "admin" in current_user.permissions():
         Task(tid).accept()
     return project, user
