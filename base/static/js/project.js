@@ -533,7 +533,19 @@ function reduce_to_names(initial, object){
         });
     };
 
-    window.render.modal = function(url, btn){
+    window.render.user_list = function(){
+        $(".select2_users").select2({
+            ajax: {
+                delay: 250,
+                url: window.proj.url.user_list,
+                dataType: "json"
+            },
+            width: 'resolve',
+            name: "users[]"
+        });
+    };
+
+    window.render.modal = function(url, btn, fn){
         $.ajax({
             timeout: 60000,
             type: "POST",
