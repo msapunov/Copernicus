@@ -481,6 +481,11 @@ class ProjectLog:
                          % user.full_name()
         return self._commit_user(user)
 
+    def user_add(self, user):
+        self.log.event = "Request to add a new user: %s %s <%s>" % (
+            user.name, user.surname, user.email)
+        return self.__commit()
+
     def user_added(self, user):
         self.log.event = "Added a new user %s with login %s" % (
             user.full_name(), user.login)
