@@ -1,23 +1,24 @@
 from flask import render_template, request, jsonify, flash
 from flask_login import login_required, current_user
 from base import db
-from base.database.schema import LimboUser, User
 from base.database.schema import LogDB
 from base.pages import (
     ProjectLog,
     check_int,
     check_str,
-    check_mail,
     TaskQueue,
-    generate_login)
+    grant_access)
 from base.pages.user import bp
 from base.pages.user.magic import get_user_record, user_by_id
 from base.pages.project.form import (
     Transform, TransForm,
     Activate, ActivateForm,
     Allocate, ExtendForm,
+    NewUser, UserForm,
     getTransformationOptions)
 from base.pages.project.magic import (
+    project_add_user,
+    project_attach_user,
     extend_transform,
     project_info_by_name,
     is_activity_report,
@@ -34,7 +35,7 @@ from base.pages.project.magic import (
     get_users)
 from datetime import datetime as dt
 from operator import attrgetter
-from logging import warning, debug
+from logging import debug
 
 
 __author__ = "Matvey Sapunov"
