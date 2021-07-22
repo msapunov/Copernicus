@@ -223,6 +223,7 @@ def web_project_extend():
 
 @bp.route("/project/history", methods=["POST"])
 @login_required
+@grant_access("admin", "responsible")
 def web_project_history():
     data = request.get_json()
     if not data:
@@ -237,6 +238,7 @@ def web_project_history():
 
 @bp.route("/project/modal/transform/<int:pid>", methods=["POST"])
 @login_required
+@grant_access("admin", "responsible")
 def web_modal_transform(pid):
     project = get_project_record(pid)
     form = Transform(project)
@@ -245,6 +247,7 @@ def web_modal_transform(pid):
 
 @bp.route("/project/modal/allocate/<int:pid>", methods=["GET", "POST"])
 @login_required
+@grant_access("admin", "responsible")
 def web_modal_allocate(pid):
     project = get_project_record(pid)
     form = Allocate(project)
@@ -253,6 +256,7 @@ def web_modal_allocate(pid):
 
 @bp.route("/project/modal/activate/<int:pid>", methods=["GET", "POST"])
 @login_required
+@grant_access("admin", "responsible")
 def web_modal_activate(pid):
     project = get_project_record(pid)
     form = Activate(project)
@@ -261,6 +265,7 @@ def web_modal_activate(pid):
 
 @bp.route("/project.html", methods=["GET"])
 @login_required
+@grant_access("admin", "responsible")
 def web_project_index():
     projects = get_project_info(user_is_responsible=True)
     debug(projects)
