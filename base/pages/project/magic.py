@@ -34,7 +34,7 @@ def project_attach_user(form):
     except ValueError:
         raise ValueError("Not a valid integer value for project ID")
     project = get_project_record(pid)
-    uid = form.assign.data
+    uid = form.login.data
     user = User.query.filter(User.id == uid).first()
     if not user:
         raise ValueError("Failed to find user with ID '%s' in database" % uid)

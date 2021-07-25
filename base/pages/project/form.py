@@ -94,7 +94,7 @@ class UserForm(Form):
     prenom = StringField("Name")  # Can't use "name" cause it cause conflict
     surname = StringField("Surname")
     email = EmailField("E-mail")
-    assign = SelectField("Assign", choices=[])
+    login = SelectField("Login", choices=[])
     create_user = False
 
     def validate(self):
@@ -107,9 +107,9 @@ class UserForm(Form):
             return False
         if not self.pid.data:
             return ValidationError("Project ID expecting")
-        if self.assign.data is "None": self.assign.data = False
-        if self.assign.data:
-            self.assign.validate(self, [DataRequired()])
+        if self.login.data is "None": self.login.data = False
+        if self.login.data:
+            self.login.validate(self, [DataRequired()])
             return True
         if self.prenom.data and self.surname.data and self.email.data:
             self.prenom.validate(self, [DataRequired()])
