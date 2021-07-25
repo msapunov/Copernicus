@@ -513,6 +513,8 @@ function reduce_to_names(initial, object){
                 url: window.proj.url.user_list,
                 dataType: "json"
             },
+            placeholder: "Select already registered user",
+            allowClear: true,
             width: 'resolve',
             name: "users[]"
         });
@@ -667,5 +669,9 @@ function reduce_to_names(initial, object){
     $(document).on("click", ".remove", window.render.remove_user); //the buttons could be created on the fly
 
     $(document).on("blur", "input,textarea", window.render.input_empty);
-
+    $(document).on("focus blur", ".assign_form", window.render.shadow);
+//    $(document).on("focus blur", ".user_name", window.render.shadow);
+//    $(document).on("focus blur", ".user_surname", window.render.shadow);
+//    $(document).on("focus blur", ".user_email", window.render.shadow);
+//    $(document).on("change", ".select2_users", window.render.shadow);
 })(window, document, jQuery);
