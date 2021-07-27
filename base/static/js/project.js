@@ -277,15 +277,6 @@ function reduce_to_names(initial, object){
         } else {
             modal.show();
         }
-    /*
-        var name = $(this).data("name");
-        var id = $(this).data("project");
-        if( $(this).hasClass("renew") ){
-            window.render.extend(name, id, true);
-        }else{
-            window.render.extend(name, id, false);
-        }
-        */
     };
 
     window.render.transform_window = function(e){
