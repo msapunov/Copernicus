@@ -1,0 +1,36 @@
+<div class="uk-modal fade" tabindex="-1" role="dialog" aria-labelledby="confirm-modal" aria-hidden="true" id="{{form.name}}_transform">
+  <div class="uk-modal-dialog">
+    <button type="button" class="uk-modal-close uk-close"></button>
+    <div class="uk-modal-header">
+      <h3>Transform existing project {{form.name}}?</h3>
+    </div>
+    <div class="uk-overflow-container">
+      <form action="test" method="post" class="uk-panel uk-form" id="{{form.name}}_transformation_form">
+        {{ form.csrf_token }}
+        {{ form.pid(id=form.name+"_pid") }}
+        <div class="uk-form-row uk-form-horizontal">
+          <label class="uk-form-label" for="{{form.name}}_type">Project type:</label>
+          <div class="uk-form-controls">
+            {{ form.new(id=form.name+"_type",class_="uk-width-1-1") }}
+          </div>
+        </div>
+        <div class="uk-form-row">
+          <div class="uk-form-controls">
+            {{ form.cpu(id=form.name+"_cpu", placeholder="CPU hours: New allocation for the project", class_="uk-width-1-1") }}
+          </div>
+        </div>
+        <div class="uk-form-row">
+          <div class="uk-form-controls">
+            {{ form.note(id=form.name+"_note", placeholder="Motivation:\nShort description of the request", class_="uk-width-1-1") }}
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="uk-modal-footer">
+      <div class="uk-text-right">
+        <button class="uk-button window_hide" data-modal="{{form.name}}_transform">Cancel</button>
+        <button class="uk-button uk-button-primary transform_submit" data-modal="{{form.name}}_transform" data-form="{{form.name}}_transformation_form">Submit</button>
+      </div>
+    </div>
+  </div>
+</div>
