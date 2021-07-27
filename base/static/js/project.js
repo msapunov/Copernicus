@@ -506,7 +506,13 @@ function reduce_to_names(initial, object){
             },
             placeholder: "Select already registered user",
             allowClear: true,
+            cache: true,
             width: 'resolve',
+            language: {
+                searching: function() {
+                    return "Searching...";
+                }
+            },
             name: "users[]"
         });
     };
