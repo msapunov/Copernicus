@@ -268,39 +268,6 @@ function reduce_to_names(initial, object){
         e.preventDefault();
     };
 
-    window.render.renew_extend = function(e){
-        var name = $.trim( $(this).data("name") );
-        var id = "#" + name + "_extend";
-        var modal = UIkit.modal(id);
-        if ( modal.isActive() ) {
-            modal.hide();
-        } else {
-            modal.show();
-        }
-    };
-
-    window.render.transform_window = function(e){
-        var name = $.trim( $(this).data("name") );
-        var id = "#" + name + "_trans";
-        var modal = UIkit.modal(id);
-        if ( modal.isActive() ) {
-            modal.hide();
-        } else {
-            modal.show();
-        }
-    };
-
-    window.render.activate_project = function(e){
-        var name = $.trim( $(this).data("name") );
-        var id = "#" + name + "_activate";
-        var modal = UIkit.modal(id);
-        if ( modal.isActive() ) {
-            modal.hide();
-        } else {
-            modal.show();
-        }
-    };
-
     window.render.remove_user = function(e){
         var id = $(this).data("pid");
         var full = $(this).data("name");
