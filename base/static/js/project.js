@@ -162,7 +162,7 @@ function reduce_to_names(initial, object){
             show_error(reply);
         });
         e.preventDefault();
-    }
+    };
     /*
     window.render.extend = function(name, id, renew){
         var title, url;
