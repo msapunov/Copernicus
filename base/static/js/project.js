@@ -85,7 +85,7 @@ function reduce_to_names(initial, object){
         }
     };
 
-    window.render.window_show = function(e){
+    window.render.window_visibility_control = function(e){
         var name = $.trim( $(this).data("modal") );
         var modal = UIkit.modal("#" + name);
         if ( modal.isActive() ) {
@@ -261,7 +261,7 @@ function reduce_to_names(initial, object){
                     status: "success"
                 });
             }
-            window.render.window_show(e);
+            window.render.window_visibility_control(e);
         }).fail(function(reply){
             show_error(reply);
         });
@@ -677,17 +677,17 @@ function reduce_to_names(initial, object){
     $(document).on("click", ".activity", window.render.activity);
     $(document).on("click", ".history", window.render.project_history);
 
-    $(document).on("click", ".assign", window.render.window_show);
-    $(document).on("click", ".renew", window.render.window_show);
-    $(document).on("click", ".extend", window.render.window_show);
-    $(document).on("click", ".activate", window.render.window_show);
-    $(document).on("click", ".transform", window.render.window_show);
+    $(document).on("click", ".assign", window.render.window_visibility_control);
+    $(document).on("click", ".renew", window.render.window_visibility_control);
+    $(document).on("click", ".extend", window.render.window_visibility_control);
+    $(document).on("click", ".activate", window.render.window_visibility_control);
+    $(document).on("click", ".transform", window.render.window_visibility_control);
 
     $(document).on("click", ".assign_submit", window.render.new_user);
     $(document).on("click", ".activate_submit", window.render.activate);
     $(document).on("click", ".extension_submit", window.render.extend);
     $(document).on("click", ".transform_submit", window.render.transform);
-    $(document).on("click", ".window_hide", window.render.window_hide);
+    $(document).on("click", ".window_hide", window.render.window_visibility_control);
     $(document).on("click", ".remove", window.render.remove_user); //the buttons could be created on the fly
 
     $(document).on("blur", "input,textarea", window.render.input_empty);
