@@ -517,6 +517,31 @@ function reduce_to_names(initial, object){
         });
     };
 
+    window.render.shadow = function(e){
+        var project = $(this)[0].id.split("_")[0];
+        var select2 = $("#" + project + "_login");
+        var name = $("#" + project + "_name");
+        var surname = $("#" + project + "_surname");
+        var mail = $("#" + project + "_email");
+        var gg = $(select2).select2('data');
+        var hh = $(select2).find(':selected');
+
+        if( $(name).val().length > 0 || $(surname).val().length > 0 || $(mail).val().length > 0 ){
+            $(select2).prop("disabled", true);
+        }else if( $(name).val().length == 0 && $(surname).val().length == 0 && $(mail).val().length == 0 ){
+            $(select2).prop("disabled", false);
+        }
+        if( $(select2).select2('data').length > 0 ){
+            $(name).prop("disabled", true);
+            $(surname).prop("disabled", true);
+            $(mail).prop("disabled", true);
+        }else if( $(select2).select2('data').length == 0 ){
+            $(name).prop("disabled", false);
+            $(surname).prop("disabled", false);
+            $(mail).prop("disabled", false);
+        }
+    };
+
     window.render.modal = function(url, btn, fn){
         $.ajax({
             timeout: 60000,
