@@ -160,6 +160,11 @@ def ssh_wrapper(cmd, host=None):
               % (host, login, key_file))
         client.close()
         return [], []
+    except Exception as e:
+        error("Failed to establish a connection to %s due following error: %s"
+              % (host, e))
+        client.close()
+        return [], []
     stdin, stdout, stderr = client.exec_command(cmd)
     output = stdout.readlines()
     errors = stderr.readlines()
