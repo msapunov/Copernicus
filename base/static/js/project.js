@@ -77,14 +77,6 @@ function reduce_to_names(initial, object){
 
     window.render = {};
 
-    window.render.window_hide = function(e){
-        var name = $.trim( $(this).data("modal") );
-        var modal = UIkit.modal("#" + name);
-        if ( modal.isActive() ) {
-            modal.hide();
-        }
-    };
-
     window.render.window_visibility_control = function(e){
         var name = $.trim( $(this).data("modal") );
         var modal = UIkit.modal("#" + name);
