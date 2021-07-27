@@ -94,7 +94,7 @@ class UserForm(Form):
     prenom = StringField("Name")  # Can't use "name" cause it cause conflict
     surname = StringField("Surname")
     email = EmailField("E-mail")
-    login = SelectField("Login", choices=[])
+    login = SelectField("Login", choices=[], coerce=int, default=0)
     create_user = False
 
     def validate(self):
