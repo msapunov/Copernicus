@@ -107,7 +107,6 @@ class UserForm(Form):
             return False
         if not self.pid.data:
             return ValidationError("Project ID expecting")
-        if self.login.data is "None": self.login.data = False
         if self.login.data:
             self.login.validate(self, [DataRequired()])
             return True
