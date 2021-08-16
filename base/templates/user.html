@@ -28,8 +28,9 @@
             <meta id="user_login" data-login="{{ data.user.login }}">
             <div class="uk-panel uk-width-1-1 uk-panel-space uk-text-center uk-panel-hover user_info" style="height: 120px;">
                 <p class="uk-h2 uk-text-nowrap">{{data.user.full}} &lt;{{data.user.email}}&gt;</p>
-                <p class="uk-h4 uk-text-nowrap">User ID: {{data.user.uid}}</p>
-                <button class="uk-button uk-button-small uk-button-success user_info_edit uk-hidden" type="button" data-login='{{data.user.login}}' data-name='{{data.user.name}}' data-surname='{{data.user.surname}}' data-email='{{data.user.email}}'><span class="uk-icon-edit uk-margin-small-right"></span>Edit</button>
+                <p class="uk-h4 uk-text-nowrap">User ID: {{data.user.uid}}
+                    <button class="uk-button uk-button-small edit" data-modal="{{data.user.login}}_edit" disabled>Edit</button>
+                </p>
             </div>
         {% endif %}
         {% if data and data.jobs %}
