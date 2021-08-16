@@ -5,6 +5,7 @@ from base.pages import check_str, TaskQueue
 from base.pages.user import bp
 from base.pages.user.magic import get_user_record, changes_to_string, get_jobs
 from base.pages.user.magic import get_scratch, get_project_info
+from base.pages.user.form import EditInfo
 from base.utils import accounting_start
 from datetime import datetime as dt
 from operator import attrgetter
