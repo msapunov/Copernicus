@@ -1,7 +1,10 @@
 (function(window, document, $, undefined){
     "use strict";
     window.user = {};
-    window.user.url = "user/edit/info";
+    window.user.url = {
+        modal: "user/modal/edit",
+        edit: "user/edit"
+    };
 
     window.user.edit=function(){
         var login = $.trim( $(this).data("login") );
