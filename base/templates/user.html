@@ -25,6 +25,7 @@
     {% endblock %}
     {% block main %}
         {% if data and data.user %}
+            <meta id="user_login" data-login="{{ data.user.login }}">
             <div class="uk-panel uk-width-1-1 uk-panel-space uk-text-center uk-panel-hover user_info" style="height: 120px;">
                 <p class="uk-h2 uk-text-nowrap">{{data.user.full}} &lt;{{data.user.email}}&gt;</p>
                 <p class="uk-h4 uk-text-nowrap">User ID: {{data.user.uid}}</p>
