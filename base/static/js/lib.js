@@ -84,6 +84,41 @@ show_error = function(req){
     alert(msg);
 };
 
+modal = function(url, btn, fn){
+    $.ajax({
+        timeout: 60000,
+        type: "POST",
+        url: url,
+        success: function(data){
+             $("body").append(data);
+             $("button."+btn).prop("disabled", false);
+            if (typeof fn === "function") fn();
+        }
+    }).fail(function(request){
+        show_error(request);
+    });
+};
+
+ajax_send = function(url, data, show_modal){
+    $.ajax({
+        data: data,
+        timeout: 60000,
+        type: "POST",
+        url: url
+    }).done(function(reply){
+        if (reply.message) {
+            UIkit.notify(reply.message, {
+                timeout: 3000,
+                status: "success"
+            });
+        }
+        UIkit.modal("#" + show_modal).hide();
+    }).fail(function(reply){
+        show_error(reply);
+    });
+
+};
+
 json_send = function(url, data, show_modal){
     var modal = {show: function(){}, hide: function(){}};
     if(typeof(show_modal)==='undefined'){
@@ -104,6 +139,16 @@ json_send = function(url, data, show_modal){
     });
 };
 
+trigger_modal = function(e){
+    var name = $.trim( $(this).data("modal") );
+    var modal = UIkit.modal("#" + name);
+    if ( modal.isActive() ) {
+        modal.hide();
+    } else {
+        modal.show();
+    }
+};
+/*
 trigger_modal = function(modal){
     if( modal.isActive() ){
         modal.hide();
@@ -111,7 +156,7 @@ trigger_modal = function(modal){
         modal.show();
     }
 };
-
+*/
 data_check = function(data){
     var result = true;
     $.each(data, function(key, value){
