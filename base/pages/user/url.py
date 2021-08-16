@@ -36,6 +36,14 @@ def user_list(active=True):
     return jsonify(results=users_list)
 
 
+@bp.route("/user/modal/edit/<login>", methods=["POST"])
+@login_required
+def web_modal_edit(login):
+    user = get_user_record(login)
+    form = EditInfo(user)
+    return jsonify(render_template("modals/modal_info_user.html", form=form))
+
+
 @bp.route("/user/edit/info", methods=["POST"])
 @login_required
 def user_edit_info():
