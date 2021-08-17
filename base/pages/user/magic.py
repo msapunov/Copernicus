@@ -146,3 +146,28 @@ def changes_to_string(c_dict):
     c_pairs = list(zip(c_dict.keys(), c_dict.values()))
     c_list = list(map(lambda x: "new %s: %s" % (x[0], x[1]), c_pairs))
     return ", ".join(c_list)
+
+
+def user_edit(form):
+    if not form.validate_on_submit():
+        raise ValueError(form_error_string(form.errors))
+    login = form.login.data
+
+    user = get_user_record(login)
+    old = {"name": user.name, "surname": user.surname, "email": user.email,
+           "login": user.login}
+    new = {"name": form.prenom.data, "surname": form.surname.data,
+           "email": form.email.data, "login": login}
+
+    c_dict = {}
+    for key in ["name", "surname", "email", "login"]:
+        old_value = old[key].lower()
+        new_value = new[key].lower()
+        if old_value == new_value:
+            continue
+        c_dict[key] = new_value
+
+    if not c_dict:
+        raise ValueError("No changes in submitted user information found")
+    TaskQueue().user(user).user_update(c_dict)
+    return UserLog(user).info_update(info=c_dict)
