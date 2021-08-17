@@ -1,0 +1,43 @@
+<div class="uk-modal fade" tabindex="-1" role="dialog" aria-labelledby="confirm-modal" aria-hidden="true" id="{{form.username}}_edit">
+    <div class="uk-modal-dialog">
+        <button type="button" class="uk-modal-close uk-close"></button>
+        <div class="uk-modal-header">
+            <h3>Change personal information for the account {{form.username}}?</h3>
+        </div>
+        <div class="uk-overflow-container">
+            <form action="test" method="post" class="uk-panel uk-form" id="{{form.username}}_edit_form">
+                {{ form.csrf_token }}
+                {{ form.login() }}
+                <div class="uk-form-row">
+                    <div class="uk-form-controls">
+                        {{ form.prenom(class_="uk-width-1-1 uk-text-capitalize") }}
+                    </div>
+                </div>
+                <div class="uk-form-row">
+                    <div class="uk-form-controls">
+                        {{ form.surname(class_="uk-width-1-1 uk-text-capitalize") }}
+                    </div>
+                </div>
+                <div class="uk-form-row">
+                    <div class="uk-form-controls">
+                        {{ form.email(class_="uk-width-1-1") }}
+                    </div>
+                </div>
+                <div class="uk-form-row uk-alert">
+                    <div>
+                        Please, double check if provided data is correct
+                    </div>
+                    <div>
+                        All provided data will be stored in lower case with special symbols striped out
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="uk-modal-footer">
+            <div class="uk-text-right">
+                <button class="uk-button window_hide" data-modal="{{form.username}}_edit">Cancel</button>
+                <button class="uk-button uk-button-primary extension_submit" data-modal="{{form.username}}_edit" data-form="{{form.username}}_edit_form">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
