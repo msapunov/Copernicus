@@ -51,47 +51,6 @@ def web_user_edit():
     return jsonify(message=user_edit(form))
 
 
-@bp.route("/user/edit/info", methods=["POST"])
-@login_required
-def user_edit_info():
-    data = request.get_json()
-    if not data:
-        raise ValueError("Expecting application/json requests")
-    for arg in ["name", "surname", "email", "login"]:
-        if arg not in data:
-            raise ValueError("Expecting to have '%s' in the request" % arg)
-
-    user = get_user_record(data["login"])
-    old = {"name": user.name, "surname": user.surname, "email": user.email,
-           "login": user.login}
-
-    c_dict = {}
-    for key in ["name", "surname", "email", "login"]:
-        old_value = old[key].lower()
-        new_value = check_str(data[key]).lower()
-        if old_value == new_value:
-            continue
-        c_dict[key] = new_value
-
-    if not c_dict:
-        return jsonify(data="No changes in user's information found")
-
-    TaskQueue().user(user).user_update(c_dict)
-    msg = "Your request for personal information change (%s) has been " \
-          "registered" % changes_to_string(c_dict)
-    return jsonify(data=msg)
-
-
-@bp.route("/exception_test", methods=["GET", "POST"])
-@login_required
-def exception_test():
-    log.error("Error level")
-    log.warning("Warning level")
-    log.info("Info level")
-    log.debug("Debug level")
-    raise ValueError("This is a test exception")
-
-
 @bp.route("/", methods=["GET"])
 @bp.route("/index", methods=["GET"])
 @bp.route("/user.html", methods=["GET"])
