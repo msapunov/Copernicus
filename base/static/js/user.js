@@ -19,6 +19,7 @@
         modal("{0}/{1}".f(window.user.url.modal, login), "edit");
     });
 
+    $(document).on("click", ".window_hide", trigger_modal);
     $(document).on("click", ".edit", trigger_modal);
     $(document).on("click", ".user_info_edit", window.user.edit);
     $(document).on({
