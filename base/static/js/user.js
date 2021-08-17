@@ -21,7 +21,7 @@
 
     $(document).on("click", ".window_hide", trigger_modal);
     $(document).on("click", ".edit", trigger_modal);
-    $(document).on("click", ".user_info_edit", window.user.edit);
+    $(document).on("click", ".edit_submit", window.user.edit);
     $(document).on({
         mouseenter: function () {
             $(".user_info_edit").toggleClass("uk-hidden");
