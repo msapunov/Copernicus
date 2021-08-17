@@ -1,9 +1,8 @@
 from flask import render_template, request, jsonify, flash
 from flask_login import login_required
 from base.database.schema import User
-from base.pages import check_str, TaskQueue
 from base.pages.user import bp
-from base.pages.user.magic import get_user_record, changes_to_string, get_jobs
+from base.pages.user.magic import get_user_record, get_jobs
 from base.pages.user.magic import get_scratch, get_project_info, user_edit
 from base.pages.user.form import EditInfo, InfoForm
 from base.utils import accounting_start
