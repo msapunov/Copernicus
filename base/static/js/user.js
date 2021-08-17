@@ -24,10 +24,10 @@
     $(document).on("click", ".edit_submit", window.user.edit);
     $(document).on({
         mouseenter: function () {
-            $(".user_info_edit").toggleClass("uk-hidden");
+            $(".edit").toggleClass("uk-hidden");
         },
         mouseleave: function () {
-            $(".user_info_edit").toggleClass("uk-hidden");
+            $(".edit").toggleClass("uk-hidden");
         }
     }, ".user_info");
 
