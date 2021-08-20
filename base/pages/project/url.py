@@ -232,7 +232,7 @@ def web_project_history():
 def web_modal_user(pid):
     project = get_project_record(pid)
     form = NewUser(project)
-    return jsonify(render_template("modals/modal_new_user.html", form=form))
+    return jsonify(render_template("modals/project_add_user.html", form=form))
 
 
 @bp.route("/project/modal/transform/<int:pid>", methods=["POST"])
@@ -250,7 +250,7 @@ def web_modal_transform(pid):
 def web_modal_allocate(pid):
     project = get_project_record(pid)
     form = Allocate(project)
-    return jsonify(render_template("modals/modal_allocate.html", form=form))
+    return jsonify(render_template("modals/project_extend_renew.html", form=form))
 
 
 @bp.route("/project/modal/activate/<int:pid>", methods=["GET", "POST"])
@@ -259,7 +259,7 @@ def web_modal_allocate(pid):
 def web_modal_activate(pid):
     project = get_project_record(pid)
     form = Activate(project)
-    return jsonify(render_template("modals/modal_activate.html", form=form))
+    return jsonify(render_template("modals/project_activate_suspended.html", form=form))
 
 
 @bp.route("/project/modal/history/<int:pid>", methods=["GET", "POST"])
