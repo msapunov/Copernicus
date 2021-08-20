@@ -3,7 +3,8 @@ from flask_login import login_required
 from base.database.schema import User
 from base.pages.user import bp
 from base.pages.user.magic import get_user_record, get_jobs
-from base.pages.user.magic import get_scratch, get_project_info, user_edit
+from base.pages.user.magic import get_scratch, user_edit
+from base.pages.project.magic import get_project_info
 from base.pages.user.form import EditInfo, InfoForm
 from base.utils import accounting_start
 from datetime import datetime as dt
