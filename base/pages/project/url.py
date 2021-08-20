@@ -241,7 +241,7 @@ def web_modal_user(pid):
 def web_modal_transform(pid):
     project = get_project_record(pid)
     form = Transform(project)
-    return jsonify(render_template("modals/modal_transform.html", form=form))
+    return jsonify(render_template("modals/project_transform_type.html", form=form))
 
 
 @bp.route("/project/modal/allocate/<int:pid>", methods=["GET", "POST"])
