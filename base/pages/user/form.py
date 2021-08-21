@@ -1,10 +1,10 @@
-from flask_wtf import Form
+from flask_wtf import FlaskForm
 from wtforms import HiddenField, StringField
 from wtforms.fields.html5 import EmailField
 from wtforms.validators import DataRequired
 
 
-class InfoForm(Form):
+class InfoForm(FlaskForm):
     login_err = "User login name is missing"
     name_err = "CPU value must be 0 or any other positive number"
     surname_err = ""
