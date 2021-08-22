@@ -11,11 +11,11 @@
         <div class="uk-form-row uk-alert">
           {% if form.eval_date < form.end_date %}
           <div>
-            Request submitted before {{form.eval_note | datetime_format("%A, %d of %B") }} will be examined {{form.eval_date | datetime_format("%A, %d of %B %Y")}}.
+            Request submitted before {{form.eval_note | datetime_format("%A, %B %d") }} will be examined {{form.eval_date | datetime_format("%A, %B %d, %Y")}}.
           </div>
           {% endif %}
           <div>
-            Additional resources must be used before {{form.end_date | datetime_format("%A, %d of %B %Y") }}.
+            Additional resources must be used before {{form.end_date | datetime_format("%A, %B %d, %Y") }}.
           </div>
         </div>
         <div class="uk-form-row uk-alert uk-alert-danger">
