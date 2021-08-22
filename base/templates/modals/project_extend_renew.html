@@ -10,10 +10,10 @@
         {{ form.pid(id=form.name+"_pid") }}
         <div class="uk-form-row uk-alert">
           <div>
-            Request submitted before the 30th of September will be examined the 15th of October 2021.
+            Request submitted before {{form.eval_note | datetime_format("%A, %d of %B") }} will be examined {{form.eval_date | datetime_format("%A, %d of %B %Y")}}.
           </div>
           <div>
-            Additional resources must be used before the end of February 2022.
+            Additional resources must be used before {{form.end_date | datetime_format("%A, %d of %B %Y") }}.
           </div>
         </div>
         <div class="uk-form-row uk-alert uk-alert-danger">
