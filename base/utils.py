@@ -34,9 +34,9 @@ def get_tmpdir(app):
     """
     prefix = get_tmpdir_prefix(app)
     dirs = [x[0] for x in walk(gettempdir())]
-    exists = list(filter(lambda x: True if prefix in x else False, dirs))
-    if exists:
-        dir_name = exists[0]
+    is_exists = list(filter(lambda x: True if prefix in x else False, dirs))
+    if is_exists:
+        dir_name = is_exists[0]
         log.debug("Found existing directory: %s" % dir_name)
     else:
         dir_name = mkdtemp(prefix=prefix)
@@ -102,16 +102,16 @@ License: MIT
 
 # see: http://goo.gl/kTQMs
 SYMBOLS = {
-    'customary'     : ('B', 'K', 'M', 'G', 'T', 'P', 'E', 'Z', 'Y'),
-    'customary_ext' : ('byte', 'kilo', 'mega', 'giga', 'tera', 'peta', 'exa',
-                       'zetta', 'iotta'),
-    'iec'           : ('Bi', 'Ki', 'Mi', 'Gi', 'Ti', 'Pi', 'Ei', 'Zi', 'Yi'),
-    'iec_ext'       : ('byte', 'kibi', 'mebi', 'gibi', 'tebi', 'pebi', 'exbi',
-                       'zebi', 'yobi'),
+    'customary': ('B', 'K', 'M', 'G', 'T', 'P', 'E', 'Z', 'Y'),
+    'customary_ext': ('byte', 'kilo', 'mega', 'giga', 'tera', 'peta', 'exa',
+                      'zetta', 'iotta'),
+    'iec': ('Bi', 'Ki', 'Mi', 'Gi', 'Ti', 'Pi', 'Ei', 'Zi', 'Yi'),
+    'iec_ext': ('byte', 'kibi', 'mebi', 'gibi', 'tebi', 'pebi', 'exbi', 'zebi',
+                'yobi'),
 }
 
 
-def bytes2human(n, format='%(value).1f %(symbol)s', symbols='customary'):
+def bytes2human(n, arrangment='%(value).1f %(symbol)s', symbols='customary'):
     """
     Convert n bytes into a human readable string based on format.
     symbols can be either "customary", "customary_ext", "iec" or "iec_ext",
@@ -145,7 +145,7 @@ def bytes2human(n, format='%(value).1f %(symbol)s', symbols='customary'):
       '9.8 K/sec'
 
       >>> # precision can be adjusted by playing with %f operator
-      >>> bytes2human(10000, format="%(value).5f %(symbol)s")
+      >>> bytes2human(10000, arrangment="%(value).5f %(symbol)s")
       '9.76562 K'
     """
     n = int(n)
@@ -158,20 +158,21 @@ def bytes2human(n, format='%(value).1f %(symbol)s', symbols='customary'):
     for symbol in reversed(symbols[1:]):
         if n >= prefix[symbol]:
             value = float(n) / prefix[symbol]
-            return format % locals()
-    return format % dict(symbol=symbols[0], value=n)
+            return arrangment % locals()
+    return arrangment % dict(symbol=symbols[0], value=n)
+
 
 def accounting_start():
-    DAY = current_app.config["ACC_START_DAY"]
-    MONTH = current_app.config["ACC_START_MONTH"]
+    cfg_day = current_app.config["ACC_START_DAY"]
+    cfg_month = current_app.config["ACC_START_MONTH"]
 
     now = dt.now()
     year = now.year
     month = now.month
     day = now.day
-    if (month < MONTH) or ((month == MONTH) and (day <= DAY)):
+    if (month < cfg_month) or ((month == cfg_month) and (day <= cfg_day)):
         year -= 1
     year -= 2000
-    mth = str(MONTH).zfill(2)
-    day = str(DAY).zfill(2)
+    mth = str(cfg_month).zfill(2)
+    day = str(cfg_day).zfill(2)
     return "%s/%s/%s-00:00" % (mth, day, year)
