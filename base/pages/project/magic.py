@@ -8,6 +8,7 @@ from flask import current_app, jsonify, render_template
 from flask_login import current_user
 from owncloud import Client as OwnClient
 from pdfkit import from_string
+from recurrent.event_parser import RecurringEvent
 
 from base import db
 from base.classes import TmpUser
