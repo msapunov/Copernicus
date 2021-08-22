@@ -66,6 +66,9 @@ def Transform(project):
 
 
 class ExtendForm(Form):
+    end_date = None
+    eval_date = None
+    eval_note = None
     pid_err = "Project id is missing"
     cpu_err = "CPU value must be 0 or any other positive number"
     err = "Motivation field is empty"
