@@ -17,6 +17,7 @@ from base.pages.project.form import (
     NewUser, UserForm,
     get_transformation_options)
 from base.pages.project.magic import (
+    is_project_renewable,
     project_add_user,
     project_attach_user,
     extend_transform,
@@ -280,11 +281,6 @@ def web_project_index():
         flash("No projects associated with %s" % current_user.full_name())
         return render_template("project.html", data={})
     list(map(lambda x: clean_activity(x.get_name()), projects))
-    now = dt.now()
-    if now.month != 1:
-        renew = False
-    else:
-        renew = now.year
     get_limbo_users(projects)
-    data = {"projects": projects, "renew": renew}
+    data = {"projects": projects, "renew": is_project_renewable(projects)}
     return render_template("project.html", data=data)
