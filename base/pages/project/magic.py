@@ -46,6 +46,7 @@ def project_attach_user(form):
         Task(tid).accept()
     return project, user
 
+
 def project_add_user(form):
     """
     Function which creates a temporary user based on provide info and add a
@@ -389,10 +390,10 @@ def extend_transform(form):
     project = get_project_record(pid)
     project = get_project_consumption(project)
     record = Extend(project=project, hours=cpu, reason=note, extend=True,
-                  present_use=project.consumed, transform = new,
-                  usage_percent=project.consumed_use,
-                  present_total=project.resources.cpu,
-                  exception=False)
+                    present_use=project.consumed, transform=new,
+                    usage_percent=project.consumed_use,
+                    present_total=project.resources.cpu,
+                    exception=False)
     db.session.add(record)
     db.session.commit()
     return record
