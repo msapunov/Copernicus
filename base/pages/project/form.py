@@ -36,17 +36,17 @@ class TransForm(Form):
     note = TextAreaField("Motivation", validators=[DataRequired(message=err)])
 
 
-def getTransformationOptions(type=None):
+def get_transformation_options(project_type=None):
     config = project_config()
     options = []
     for name in config.keys():
         desc = config[name].get("description", None)
         options.append((name.lower(), desc if desc else name))
 
-    if (not type) or (type not in config.keys()):
+    if (not project_type) or (project_type not in config.keys()):
         return options
 
-    trans = config[type].get("transform", None)
+    trans = config[project_type].get("transform", None)
     if not trans:
         return options
 
@@ -61,7 +61,7 @@ def Transform(project):
     form = TransForm()
     form.name = project.name
     form.pid.data = project.id
-    form.new.choices = getTransformationOptions(project.type)
+    form.new.choices = get_transformation_options(project.type)
     return form
 
 
@@ -78,9 +78,9 @@ class ExtendForm(Form):
 
 def Allocate(project):
     config = project_config()
-    type = project.type.lower()
-    if type not in config.keys():
-        return
+    project_type = project.type.lower()
+    if project_type not in config.keys():
+        return  # TODO: Check what to return in this case
     form = ExtendForm()
     form.name = project.name
     form.pid.data = project.id
@@ -118,8 +118,9 @@ class UserForm(Form):
             return True
         return ValidationError("Assign an existing user or add a new one")
 
+
 def NewUser(project):
-    form =UserForm()
+    form = UserForm()
     form.name = project.name
     form.pid.data = project.id
     return form
