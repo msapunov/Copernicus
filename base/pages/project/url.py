@@ -15,7 +15,7 @@ from base.pages.project.form import (
     Activate, ActivateForm,
     Allocate, ExtendForm,
     NewUser, UserForm,
-    getTransformationOptions)
+    get_transformation_options)
 from base.pages.project.magic import (
     project_add_user,
     project_attach_user,
@@ -179,7 +179,7 @@ def web_project_delete_user():
 @login_required
 def web_project_transform():
     form = TransForm()
-    form.new.choices = getTransformationOptions()
+    form.new.choices = get_transformation_options()
     record = extend_transform(form)
     return jsonify(message=ProjectLog(record.project).transform(record))
 
