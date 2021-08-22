@@ -87,7 +87,17 @@ def Allocate(project):
     form = ExtendForm()
     form.name = project.name
     form.pid.data = project.id
-    form.legend = "Test"
+    end = config[project_type].get("finish_dt", None)
+    if end:
+        form.end_date = end
+    evaluation_date = config[project_type].get("evaluation_dt", None)
+    if evaluation_date:
+        evaluation_date.sort()
+        form.eval_date = evaluation_date[0]
+    evaluation_notice = config[project_type].get("evaluation_notice_dt", None)
+    if evaluation_notice:
+        evaluation_notice.sort()
+        form.eval_note = evaluation_notice[0]
     return form
 
 
