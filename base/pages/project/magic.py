@@ -76,6 +76,66 @@ def project_add_user(form):
     return project, user
 
 
+def project_parse_cfg_options(cfg, section):
+    """
+    Parse project configuration. Use of recurrent lib to parse fuzzy time values
+    :param cfg: Configuration object
+    :param section: Section in the configuration object, i.e. project type
+    :return: Dictionary. Dictonary's keys are: "duration_text", "duration_dt",
+            "finish_text", "finish_dt", "cpu", "finish_notice_text",
+            "finish_notice_dt", "transform", "description", "evaluation_text",
+            "evaluation_dt", "evaluation_notice_text", "evaluation_notice_dt"
+    """
+    r = RecurringEvent()
+    cpu = cfg.getint(section, "cpu", fallback=None)
+    description = cfg.get(section, "description", fallback=None)
+    duration = cfg.get(section, "duration", fallback=None)
+    if duration:
+        duration_dt = r.parse(duration)
+    else:
+        duration_dt = None
+    end = cfg.get(section, "finish_date", fallback=None)
+    if end:
+        end_dt = r.parse(end)
+    else:
+        end_dt = None
+    end_notice = cfg.get(section, "finish_notice", fallback=None)
+    if end_notice and end_dt:
+        end_notice_dt = RecurringEvent(end_dt).parse(end_notice)
+    else:
+        end_notice_dt = None
+    trans = cfg.get(section, "transform", fallback=None)
+    if trans:
+        transform = list(map(lambda x: x.strip(), trans.split(",")))
+    else:
+        transform = []
+
+    eva = cfg.get(section, "evaluation_date", fallback=None)
+    if eva:
+        evaluation = list(map(lambda x: x.strip(), eva.split(",")))
+    else:
+        evaluation = []
+    if evaluation:
+        eva_dt = list(map(lambda x: r.parse(x), evaluation))
+    else:
+        eva_dt = None
+
+    eva_notice = cfg.get(section, "evaluation_notice", fallback=None)
+    if eva_notice and eva_dt:
+        eva_text_dt = list(map(lambda x: RecurringEvent(x).parse(eva_notice), eva_dt))
+    else:
+        eva_text_dt = None
+
+    return {"duration_text": duration, "duration_dt": duration_dt,
+            "finish_text": end, "finish_dt": end_dt, "cpu": cpu,
+            "finish_notice_text": end_notice,
+            "finish_notice_dt": end_notice_dt,
+            "transform": transform, "description": description,
+            "evaluation_text": evaluation, "evaluation_dt": eva_dt,
+            "evaluation_notice_text": eva_notice,
+            "evaluation_notice_dt": eva_text_dt}
+
+
 def project_config():
     result = {}
     cfg_file = current_app.config.get("PROJECT_CONFIG", "project.cfg")
@@ -87,18 +147,8 @@ def project_config():
     cfg.read(cfg_path)
     projects = cfg.sections()
     for project in projects:
-        duration = cfg.get(project, "duration", fallback=None)
-        end = cfg.get(project, "end_date", fallback=None)
-        cpu = cfg.get(project, "cpu", fallback=None)
-        trans = cfg.get(project, "transform", fallback=None)
-        descr = cfg.get(project, "description", fallback=None)
-        if trans:
-            transform = list(map(lambda x: x.strip(), trans.split(",")))
-        else:
-            transform = []
         name = project.lower()
-        result[name] = {"duration": duration, "end": end, "cpu": cpu,
-                               "transform": transform, "description": descr}
+        result[name] = project_parse_cfg_options(cfg, project)
     debug("Project configuration: %s" % result)
     return result
 
