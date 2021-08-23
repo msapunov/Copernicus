@@ -687,6 +687,22 @@ def set_state(pid, state):
     return project
 
 
+def is_project_extendable(project):
+    """
+    Check if project type has evaluation_dt option in config file and set
+    is_extendable property True if evaluation_dt present or False otherwise.
+    :param project: Object. Project object
+    :return: Object. Project object
+    """
+    cfg = project_config()
+    ext = cfg[project.type].get("evaluation_dt", None)
+    if ext:
+        project.is_extendable = True
+    else:
+        project.is_extendable = False
+    return project
+
+
 def is_project_renewable(projects):
     """
     Function to determine if any of project in the list have finish date and if
