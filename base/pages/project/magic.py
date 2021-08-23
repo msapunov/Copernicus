@@ -599,8 +599,8 @@ def get_project_info(every=None, user_is_responsible=None):
     else:
         pids = current_user.project_ids()
         if user_is_responsible:
-            query = Project.query.filter(Project.id.in_(pids))
-            projects = query.filter(Project.responsible == current_user).all()
+            projects = Project.query.filter(
+                Project.responsible == current_user).all()
         else:
             projects = Project.query.filter(Project.id.in_(pids)).all()
     if not projects:
