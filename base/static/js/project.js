@@ -412,11 +412,11 @@
     $(document).on("click", ".activity", window.render.activity);
     $(document).on("click", ".history", window.render.project_history);
 
-    $(document).on("click", ".assign", window.render.window_visibility_control);
-    $(document).on("click", ".renew", window.render.window_visibility_control);
-    $(document).on("click", ".extend", window.render.window_visibility_control);
-    $(document).on("click", ".activate", window.render.window_visibility_control);
-    $(document).on("click", ".transform", window.render.window_visibility_control);
+    $(document).on("click", ".attach", trigger_modal);
+    $(document).on("click", ".renew", trigger_modal);
+    $(document).on("click", ".extend", trigger_modal);
+    $(document).on("click", ".activate", trigger_modal);
+    $(document).on("click", ".transform", trigger_modal);
 
     $(document).on("click", ".assign_submit", window.render.new_user);
     $(document).on("click", ".activate_submit", window.render.activate);
@@ -426,5 +426,5 @@
     $(document).on("click", ".remove", window.render.remove_user); //the buttons could be created on the fly
 
     $(document).on("blur", "input,textarea", window.render.input_empty);
-    $(document).on("focus blur keyup open close", ".assign_form", window.render.shadow);
+    $(document).on("focus blur keyup open close", ".attach_form", window.render.shadow);
 })(window, document, jQuery);
