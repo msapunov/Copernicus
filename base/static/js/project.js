@@ -1,41 +1,3 @@
-var DATES = ["January", "April", "September"];
-var EXAM_MTH = "January";
-var EXAM_DAY = 15;
-
-function date_warning(){
-    moment.locale("en");
-
-    for (i in DATES){
-        var month = DATES[i];
-        var day = moment().month(month).daysInMonth();
-        var end = moment().month(month).date(day);
-        if(moment().isSameOrBefore(end)){
-            break;
-        }
-    }
-    var end_date = end.format("Do of MMMM");
-    var exam_date = end.add(EXAM_DAY, "days").format("Do of MMMM YYYY");
-    return "Request submitted before the {0} will be examined the {1}.".f(end_date, exam_date);
-}
-
-function end_warning(){
-    var start = moment().month(1).date(15).format(); // First session in February
-    var end = moment().month(9).date(30).format(); // Last session in Septembre
-    var between = moment().isBetween(start, end);
-    var prefix = (between) ? "Additional" : "Allocated";
-    var year = moment().add(1, "years").format("YYYY");
-    return prefix + " resources must be used before the end of February {0}.".f(year);
-}
-
-function reduce_to_names(initial, object){
-    if(initial.length > 0){
-        return initial + ", " + object.text;
-    }else{
-        return object.text;
-    }
-}
-
-
 (function(window, document, $, undefined){
     "use strict";
     Dropzone.autoDiscover = false;
@@ -62,30 +24,7 @@ function reduce_to_names(initial, object){
         modal_assign: "/project/modal/attach/user"
     };
 
-    window.error = function(req){
-        var text = $.trim(req.responseText);
-        var status = $.trim(req.status);
-        var statText = $.trim(req.statusText);
-        if((text) && (text.length > 0)){
-            var msg = "Status code: {0}\nMessage: {1}\n".f(status, text);
-        }else{
-            var msg = "Server return {0}: {1}\n".f(status, statText);
-        }
-        msg += "Please contact technical team: {0}".f(window.contact);
-        alert(msg);
-    };
-
     window.render = {};
-
-    window.render.window_visibility_control = function(e){
-        var name = $.trim( $(this).data("modal") );
-        var modal = UIkit.modal("#" + name);
-        if ( modal.isActive() ) {
-            modal.hide();
-        } else {
-            modal.show();
-        }
-    };
 
     window.render.input_empty = function(){
         $(this).val().length < 1 ? $(this).addClass("uk-form-danger") : $(this).removeClass("uk-form-danger");
@@ -155,48 +94,6 @@ function reduce_to_names(initial, object){
         });
         e.preventDefault();
     };
-    /*
-    window.render.extend = function(name, id, renew){
-        var title, url;
-        if(renew){
-            title = "Request to renew CPU hours for the project {0}?".f(name);
-        }else {
-            title = "Request additional CPU hours for the project {0}?".f(name);
-        }
-        var placeholder = "Motivation:\nShort description of the request";
-        var cpu = $("<input/>").addClass("uk-width-1-1").attr({
-            "id": name+"_cpu",
-            "name": "cpu",
-            "type": "text",
-            "placeholder": "CPU hours"
-        });
-        var motiv = $("<textarea/>").addClass("uk-width-1-1").attr({
-            "id": name + "_motivation",
-            "rows": "4",
-            "name": "note",
-            "placeholder": placeholder
-        });
-        var checkbox = $("<input>").attr({
-            "id": "exception_checkbox",
-            "name": "exception",
-            "type": "checkbox"
-        }).addClass("uk-margin-small-right uk-form-danger");
-        var label = $("<label/>").attr('for', "exception_checkbox");
-        label.text("Select this checkbox only in case you would need an exceptional extension! Will only be considered for a project running out of CPU time way before the next application deadline (see the date above).");
-        //label.text("Select checkbox for an exceptional extension request only! Apply for a project running out of CPU time way before the next session.");
-        var express = $("<div/>").addClass(
-            "uk-form-row uk-alert uk-alert-danger"
-        );
-        express.append(checkbox).append(label);
-        var warn = "<div>" + date_warning() + "</div><div>" + end_warning() + "</div>";
-        var form = $("<form/>").addClass("uk-form");
-        form.append($("<legend/>").text(title));
-        form.append($("<div>{0}</div>".f(warn)).addClass("uk-form-row uk-alert"));
-        if(!renew){
-            form.append(express);
-        }
-        form.append($("<div/>").addClass("uk-form-row").append(cpu));
-        form.append($("<div/>").addClass("uk-form-row").append(motiv));
 
 
         var report = $("<div>{0}</div>".f("Make sure that you have uploaded project activity report first!")).addClass("uk-form-row uk-alert uk-alert-warning");
@@ -237,7 +134,6 @@ function reduce_to_names(initial, object){
             });
         });
     };
-    */
 
     window.render.transform = function(e){
         var name = $.trim( $(this).data("name") );
@@ -371,17 +267,6 @@ function reduce_to_names(initial, object){
         });
     };
 
-    window.render.btn_reshuffle = function(proj, login){
-        var id = "#{0}_{1}".f(proj, login);
-        var prnt = $(id).parent("div");
-        $(id).remove();
-
-        var btns = prnt.find("button");
-        if(btns.length == 1){
-            btns[0].remove();
-        }
-    };
-
     window.render.user_reshuffle = function(reply, p_object){
         var name = p_object.name;
         var pid = p_object.id;
@@ -499,21 +384,6 @@ function reduce_to_names(initial, object){
             $(surname).prop("disabled", false);
             $(mail).prop("disabled", false);
         }
-    };
-
-    window.render.modal = function(url, btn, fn){
-        $.ajax({
-            timeout: 60000,
-            type: "POST",
-            url: url,
-            success: function(data){
-                 $("body").append(data);
-                 $("button."+btn).prop("disabled", false);
-                if (typeof fn === "function") fn();
-            }
-        }).fail(function(request){
-            show_error(request);
-        });
     };
 
     window.render.activity = function(e){
