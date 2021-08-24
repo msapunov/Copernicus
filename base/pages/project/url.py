@@ -15,9 +15,11 @@ from base.pages.project.form import (
     Activate, ActivateForm,
     Allocate, ExtendForm,
     NewUser, UserForm,
+    RenewForm, renew,
     get_transformation_options)
 from base.pages.project.magic import (
     is_project_renewable,
+    is_project_extendable,
     project_add_user,
     project_attach_user,
     extend_transform,
@@ -34,7 +36,6 @@ from base.pages.project.magic import (
     extend_update,
     get_limbo_users,
     get_users)
-from datetime import datetime as dt
 from operator import attrgetter
 from logging import debug
 
