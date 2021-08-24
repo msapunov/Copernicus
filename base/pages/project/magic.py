@@ -514,56 +514,6 @@ def send_activity_report(project, report):
     return project_email(project.responsible.email, subj, msg, attach=report)
 
 
-def send_renew_mail(project, extend):
-    subj = "Request renew project %s" % project.name
-    msg = """
-    Dear %s
-    You have requested to renew your project %s with %s hours
-    Renew reason is:
-      %s
-    Your request will be examined shortly
-    """ % (project.responsible.full_name(), project.name, extend.hours,
-           extend.reason)
-    project_email(project.responsible.email, subj, msg)
-
-
-def send_extend_mail(project, extend):
-    subj = "Request extend project %s" % project.name
-    msg = """
-    Dear %s
-    You have requested to extend your project %s with %s hours
-    Extension reason is:
-      %s
-    Your request will be examined shortly
-    """ % (project.responsible.full_name(), project.name, extend.hours,
-           extend.reason)
-    project_email(project.responsible.email, subj, msg)
-
-
-def send_activate_mail(project, extend):
-    subj = "Request to activate project %s" % project.name
-    msg = """
-    Dear %s
-    You have requested to activate your suspended project %s
-    The reason for activation is:
-      %s
-    Your request will be examined shortly
-    """ % (project.responsible.full_name(), project.name, extend.reason)
-    project_email(project.responsible.email, subj, msg)
-
-
-def send_transform_mail(project, extend):
-    subj = "Request to transform project %s" % project.name
-    msg = """
-    Dear %s
-    You have requested to transform your project %s of type A to type B
-    The reason for transformation is:
-      %s
-    Your request will be examined shortly
-    """ % (project.responsible.full_name(), project.name, extend.reason)
-    project_email(project.responsible.email, subj, msg)
-
-
 def project_email(to, title, msg, attach=None):
     by_who = current_app.config["EMAIL_PROJECT"]
     return jsonify(data=send_message(to, by_who=by_who, title=title,
