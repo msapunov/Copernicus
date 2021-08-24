@@ -361,12 +361,6 @@ def process_extension(eid):
     return extend_project(eid, ext, date)
 
 
-def pending_resources():
-    projects = Project.query.all()
-    pending = list(filter(lambda x: x.resources.treated == False, projects))
-    return list(map(lambda x: x.api_resources(), pending))
-
-
 def get_users(pid):
     project = get_project_record(pid)
     get_limbo_users([project])
