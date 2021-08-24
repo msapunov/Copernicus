@@ -95,14 +95,14 @@ class ExtendForm(Form):
     end_date = None
     eval_date = None
     eval_note = None
-    pid_err = "Project id is missing"
-    cpu_err = "CPU value must be 0 or any other positive number"
-    err = "Motivation field is empty"
 
-    pid = HiddenField(validators=[DataRequired(message=pid_err)])
+    pid = HiddenField(validators=[DataRequired(
+        message="Project id is missing")])
     exception = BooleanField()
-    cpu = IntegerField("CPU", validators=[NumberRange(min=0, message=cpu_err)])
-    note = TextAreaField("Motivation", validators=[DataRequired(message=err)])
+    cpu = IntegerField("CPU", validators=[NumberRange(
+        min=0, message="CPU value must be 0 or any other positive number")])
+    note = TextAreaField("Motivation",validators=[DataRequired(
+        message="Motivation field is empty")])
 
 
 def Allocate(project):
