@@ -65,6 +65,31 @@ def Transform(project):
     return form
 
 
+class RenewForm(Form):
+    pid = HiddenField(validators=[DataRequired(
+        message="Project id is missing")])
+    cpu = IntegerField("CPU", validators=[NumberRange(
+        min=0, message="CPU value must be 0 or any other positive number")])
+    note = TextAreaField("Motivation", validators=[DataRequired(
+        message="Motivation field is empty")])
+
+
+def renew(project):
+    config = project_config()
+    project_type = project.type.lower()
+    if project_type not in config.keys():
+        error("Type %s is not found in config" % project_type)
+        return None
+    form = RenewForm()
+    form.name = project.name
+    form.pid.data = project.id
+    end = config[project_type].get("finish_dt", None)
+    if not end:
+        error("Type %s has no end option and not renewable" % project_type)
+        return None
+    return form
+
+
 class ExtendForm(Form):
     end_date = None
     eval_date = None
