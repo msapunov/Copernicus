@@ -418,11 +418,11 @@
     $(document).on("click", ".activate", trigger_modal);
     $(document).on("click", ".transform", trigger_modal);
 
-    $(document).on("click", ".assign_submit", window.render.new_user);
-    $(document).on("click", ".activate_submit", window.render.activate);
-    $(document).on("click", ".extension_submit", window.render.extend);
-    $(document).on("click", ".transform_submit", window.render.transform);
-    $(document).on("click", ".window_hide", window.render.window_visibility_control);
+    $(document).on("click", ".attach_submit", window.render.assign_submit);
+    $(document).on("click", ".activate_submit", window.render.activate_submit);
+    $(document).on("click", ".extension_submit", window.render.extension_submit);
+    $(document).on("click", ".transform_submit", window.render.transform_submit);
+    $(document).on("click", ".window_hide", trigger_modal);
     $(document).on("click", ".remove", window.render.remove_user); //the buttons could be created on the fly
 
     $(document).on("blur", "input,textarea", window.render.input_empty);
