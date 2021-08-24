@@ -246,7 +246,18 @@ def web_modal_transform(pid):
     return jsonify(render_template("modals/project_transform_type.html", form=form))
 
 
-@bp.route("/project/modal/allocate/<int:pid>", methods=["GET", "POST"])
+@bp.route("/project/modal/renew/<int:pid>", methods=["GET", "POST"])
+@login_required
+@grant_access("admin", "responsible")
+def web_modal_renew(pid):
+    project = get_project_record(pid)
+    form = renew(project)
+    if not form:
+        return jsonify("<div>Error processing the form</div>")
+    return jsonify(render_template("modals/project_renew_cpu.html", form=form))
+
+
+@bp.route("/project/modal/extend/<int:pid>", methods=["GET", "POST"])
 @login_required
 @grant_access("admin", "responsible")
 def web_modal_allocate(pid):
