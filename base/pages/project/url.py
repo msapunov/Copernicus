@@ -260,10 +260,10 @@ def web_modal_renew(pid):
 @bp.route("/project/modal/extend/<int:pid>", methods=["GET", "POST"])
 @login_required
 @grant_access("admin", "responsible")
-def web_modal_allocate(pid):
+def web_modal_extend(pid):
     project = get_project_record(pid)
     form = Allocate(project)
-    return jsonify(render_template("modals/project_extend_renew.html", form=form))
+    return jsonify(render_template("modals/project_extend_cpu.html", form=form))
 
 
 @bp.route("/project/modal/activate/<int:pid>", methods=["GET", "POST"])
