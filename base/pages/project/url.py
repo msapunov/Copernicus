@@ -294,5 +294,6 @@ def web_project_index():
         return render_template("project.html", data={})
     list(map(lambda x: clean_activity(x.get_name()), projects))
     get_limbo_users(projects)
-    data = {"projects": projects, "renew": is_project_renewable(projects)}
-    return render_template("project.html", data=data)
+    list(map(lambda x: is_project_extendable(x), projects))
+    list(map(lambda x: is_project_renewable(x), projects))
+    return render_template("project.html", data={"projects": projects})
