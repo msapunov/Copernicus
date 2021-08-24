@@ -31,68 +31,11 @@
         $(this).val().length < 1 ? $(this).addClass("uk-form-danger") : $(this).removeClass("uk-form-danger");
     };
 
-    window.render.check_positive = function(is_num, message){
-        var msg = "{0} must be a positive number".f(message);
-        if(!/^\d+$/.test(is_num)){
-            alert(msg);
-            return false;
-        }
-        return true;
-    };
-
-    window.render.paint_red = function(data){
-        var regex = new RegExp("^[\\s\\0\\n\\r\\t\\v]+$");
-        var result = true;
-        $.each(data, function(key, value){
-            if( (!value) || (value.length < 1) || (regex.test(value)) ){
-                $("[name={0}]".f(key)).addClass("uk-form-danger");
-                result = false;
-            }
-        });
-        return result
-    };
-
-    window.render.new_user = function(e){
-            var modal = $.trim( $(this).data("modal") );
-            var form = $.trim( $(this).data("form") );
-            $.ajax({
-                data: $("#" + form).serialize(), // serializes the form's elements.
-                timeout: 60000,
-                type: "POST",
-                url: window.proj.url.add
-            }).done(function(reply){
-                if (reply.message) {
-                    UIkit.notify(reply.message, {
-                        timeout: 3000,
-                        status: "success"
-                    });
-                }
-                UIkit.modal("#" + modal).hide();
-            }).fail(function(reply){
-                show_error(reply);
-            });
-            e.preventDefault();
-    };
-
-    window.render.extend = function(e){
+    window.render.submit = function(url, e){
         var modal = $.trim( $(this).data("modal") );
         var form = $.trim( $(this).data("form") );
-        $.ajax({
-            data: $("#" + form).serialize(), // serializes the form's elements.
-            timeout: 60000,
-            type: "POST",
-            url: window.proj.url.extend
-        }).done(function(reply){
-            if (reply.message) {
-                UIkit.notify(reply.message, {
-                    timeout: 3000,
-                    status: "success"
-                });
-            }
-            UIkit.modal("#" + modal).hide();
-        }).fail(function(reply){
-            show_error(reply);
-        });
+        var data = $("#" + form).serialize()
+        ajax_send(url, data, modal);
         e.preventDefault();
     };
 
