@@ -4,6 +4,7 @@ from wtforms import TextAreaField, SelectField, StringField
 from wtforms.fields.html5 import EmailField
 from wtforms.validators import DataRequired, NumberRange, ValidationError, Email
 from base.pages.project.magic import project_config
+from logging import error
 
 
 class ActivateForm(Form):
