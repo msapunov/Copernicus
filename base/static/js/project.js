@@ -18,10 +18,11 @@
         activity_upload: "project/activity/upload",
         activity_clean: "project/activity/clean",
         activity_delete: "project/activity/remove",
-        modal_allocate: "/project/modal/allocate",
+        modal_extend: "/project/modal/extend",
+        modal_renew: "/project/modal/renew",
         modal_transform: "/project/modal/transform",
         modal_activate: "/project/modal/activate",
-        modal_assign: "/project/modal/attach/user"
+        modal_attach: "/project/modal/attach/user"
     };
 
     window.render = {};
