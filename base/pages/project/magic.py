@@ -703,26 +703,26 @@ def is_project_extendable(project):
     return project
 
 
-def is_project_renewable(projects):
+def is_project_renewable(project):
     """
-    Function to determine if any of project in the list have finish date and if
-    now is between project's finish time and finish notice. In case if now is
-    exactly in the interval between notice and end date then project consider
-    to be renewable. In case if there is no renewable project, function returns
-    None and empty list; or a year as a string and list of project otherwise
-    :param projects: List of projects
-    :return: String, List
+    Check if project type has finish_dt option in config file and set
+    is_renewable property True if finish_dt present or False otherwise. But
+    if finish_notice_dt is in configuration file the code actually check if
+    dt.now() is in between time interval finish_notice_dt - now - finish_dt
+    :param project: Object. Project object
+    :return: Object. Project object
     """
-    all_genres = list(map(lambda x: x.type, projects))
-    genres = list(set(all_genres))
-    if not genres:
-        return False, []
-    now = dt.now()
     cfg = project_config()
-    for genre in genres:
-        end = cfg[genre].get("finish_dt", None)
-        pre_end = cfg[genre].get("finish_notice_dt", None)
-        if (end and pre_end) and (pre_end > now < end):
-            renewables = list(filter(lambda x: x.type == genre, projects))
-            return now.year, renewables
-    return False, []
+    finish = cfg[project.type].get("finish_dt", None)
+    pre_end = cfg[project.type].get("finish_notice_dt", None)
+    if finish and pre_end:
+        now = dt.now()
+        if pre_end > now < finish:
+            project.is_renewable = True
+        else:
+            project.is_renewable = False
+    elif finish and not pre_end:
+        project.is_renewable = True
+    else:
+        project.is_renewable = False
+    return project
