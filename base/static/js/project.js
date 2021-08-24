@@ -39,65 +39,20 @@
         e.preventDefault();
     };
 
-
-        var report = $("<div>{0}</div>".f("Make sure that you have uploaded project activity report first!")).addClass("uk-form-row uk-alert uk-alert-warning");
-        if(renew) {
-            form.append(report);
-        }
-        if(renew){
-            url = window.proj.url["renew"];
-        }else{
-            url = window.proj.url["extend"]
-        }
-        var pop = dialog(form.prop("outerHTML"), function(){
-            var exception = $("#exception_checkbox").is(':checked') ? "yes" : "no";
-            var cid = name+"_cpu";
-            var cpu_id = "#" + name+"_cpu";
-            var tt = $(form).find(cpu_id).val();
-            var xxx = $(form);
-            var ppp = xxx.serialize();
-            var kkk = xxx.serializeArray();
-            var pp = document.getElementById(name+"_cpu").value;
-            var data = {
-                "cpu": $("#" + name+"_cpu").val(),
-                "note": $("#" + name+"_motivation").val(),
-                "exception": exception,
-                "project": id
-            };
-            if(!window.render.paint_red(data)){
-                return false;
-            }
-            if(!window.render.check_positive(data["cpu"], "CPU hours")){
-                return false;
-            }
-            json_send(url, data).done(function(reply){
-                if(reply.message){
-                    UIkit.notify(reply.message, {timeout: 2000, status:"success"});
-                }
-                pop.hide();
-            });
-        });
+    window.render.extension_submit = function(e){
+        return window.render.submit(window.proj.url.extend, e);
     };
 
-    window.render.transform = function(e){
-        var name = $.trim( $(this).data("name") );
-        $.ajax({
-            data: $("#" + name + "_transformation_form").serialize(), // serializes the form's elements.
-            timeout: 60000,
-            type: "POST",
-            url: window.proj.url.transform
-        }).done(function(reply){
-            if (reply.message) {
-                UIkit.notify(reply.message, {
-                    timeout: 3000,
-                    status: "success"
-                });
-            }
-            window.render.window_visibility_control(e);
-        }).fail(function(reply){
-            show_error(reply);
-        });
-        e.preventDefault();
+    window.render.renew_submit = function(e){
+        return window.render.submit(window.proj.url.renew, e);
+    };
+
+    window.render.transform_submit = function(e){
+        return window.render.submit(window.proj.url.transform, e);
+    };
+
+    window.render.new_user = function(e){
+        return window.render.submit(window.proj.url.add, e);
     };
 
     window.render.remove_user = function(e){
