@@ -22,7 +22,7 @@ from base.pages.project.magic import (
     is_project_extendable,
     project_add_user,
     project_attach_user,
-    extend_transform,
+    project_transform,
     project_info_by_name,
     is_activity_report,
     report_activity,
@@ -182,7 +182,7 @@ def web_project_delete_user():
 def web_project_transform():
     form = TransForm()
     form.new.choices = get_transformation_options()
-    record = extend_transform(form)
+    record = project_transform(form)
     return jsonify(message=ProjectLog(record.project).transform(record))
 
 
