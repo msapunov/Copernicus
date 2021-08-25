@@ -97,7 +97,7 @@
                     </div>
                 </div>
             </div>
-            <div class="uk-width-medium-2-5 uk-width-small-1-1 {% if project.active != True %}uk-text-muted{% endif %}">
+            <div class="uk-width-medium-2-5 uk-width-small-1-2 {% if project.active != True %}uk-text-muted{% endif %}">
                 <div class="uk-panel uk-margin-top uk-margin-bottom" id="{{project.name}}_project_users">
                 {% for user in project.users|sort(attribute='login')%}
                     <div class="uk-panel" id="{{project.name}}_{{user.login}}">
@@ -123,7 +123,7 @@
                 {% endfor %}
                 </div>
             </div>
-            <div class="uk-width-medium-1-5 uk-width-small-1-1">
+            <div class="uk-width-medium-1-5 uk-width-small-1-2">
                 <div class="uk-panel uk-margin-top uk-margin-bottom">
                     {% if project.active %}
                         <!--
