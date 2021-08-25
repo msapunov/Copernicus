@@ -37,27 +37,6 @@ class TransForm(Form):
     note = TextAreaField("Motivation", validators=[DataRequired(message=err)])
 
 
-def get_transformation_options(project_type=None):
-    config = project_config()
-    options = []
-    for name in config.keys():
-        desc = config[name].get("description", None)
-        options.append((name.lower(), desc if desc else name))
-
-    if (not project_type) or (project_type not in config.keys()):
-        return options
-
-    trans = config[project_type].get("transform", None)
-    if not trans:
-        return options
-
-    options_copy = options.copy()
-    for option in options_copy:
-        if option[0] not in trans:
-            options.remove(option)
-    return options
-
-
 def Transform(project):
     form = TransForm()
     form.name = project.name
