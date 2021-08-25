@@ -6,22 +6,22 @@
     </div>
     <div class="uk-overflow-container">
       <form action="test" method="post" class="uk-panel uk-form" id="{{form.name}}_transformation_form">
-        {{ form.csrf_token }}
-        {{ form.pid(id=form.name+"_pid") }}
+        {{ form.csrf_token(id=form.name+"_csrf_transformation") }}
+        {{ form.pid(id=form.name+"_pid_transformation") }}
         <div class="uk-form-row uk-form-horizontal">
           <label class="uk-form-label" for="{{form.name}}_type">Project type:</label>
           <div class="uk-form-controls">
-            {{ form.new(id=form.name+"_type",class_="uk-width-1-1") }}
+            {{ form.new(id=form.name+"_type_transformation",class_="uk-width-1-1") }}
           </div>
         </div>
         <div class="uk-form-row">
           <div class="uk-form-controls">
-            {{ form.cpu(id=form.name+"_cpu", placeholder="CPU hours: New allocation for the project", class_="uk-width-1-1") }}
+            {{ form.cpu(id=form.name+"_cpu_transformation", placeholder="CPU hours: New allocation for the project", class_="uk-width-1-1") }}
           </div>
         </div>
         <div class="uk-form-row">
           <div class="uk-form-controls">
-            {{ form.note(id=form.name+"_note", placeholder="Motivation:\nShort description of the request", class_="uk-width-1-1") }}
+            {{ form.note(id=form.name+"_note_transformation", placeholder="Motivation:\nShort description of the request", class_="uk-width-1-1") }}
           </div>
         </div>
       </form>

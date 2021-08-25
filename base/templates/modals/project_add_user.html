@@ -6,28 +6,28 @@
     </div>
     <div class="uk-overflow-container">
       <form action="test" method="post" class="uk-panel uk-form attach_form" id="{{form.name}}_attach_form">
-        {{ form.csrf_token }}
-        {{ form.pid(id=form.name+"_pid") }}
+        {{ form.csrf_token(id=form.name+"_csrf_attach") }}
+        {{ form.pid(id=form.name+"_pid_attach") }}
         <div class="uk-form-row">
           <div class="uk-form-controls">
-            {{ form.prenom(id=form.name+"_name", placeholder="Name (Prenom)", class_="uk-width-1-1 user_name") }}
+            {{ form.prenom(id=form.name+"_name_attach", placeholder="Name (Prenom)", class_="uk-width-1-1 user_name") }}
           </div>
         </div>
         <div class="uk-form-row">
           <div class="uk-form-controls">
-            {{ form.surname(id=form.name+"_surname", placeholder="Family name (Nom de famille)", class_="uk-width-1-1 user_surname") }}
+            {{ form.surname(id=form.name+"_surname_attach", placeholder="Family name (Nom de famille)", class_="uk-width-1-1 user_surname") }}
           </div>
         </div>
         <div class="uk-form-row">
           <div class="uk-form-controls">
-            {{ form.email(id=form.name+"_email", placeholder="E-mail", class_="uk-width-1-1 user_email") }}
+            {{ form.email(id=form.name+"_email_attach", placeholder="E-mail", class_="uk-width-1-1 user_email") }}
           </div>
         </div>
         <div class="uk-form-row uk-alert">
           <div>
             If user has already an account in Mesocentre, please select this user using dropdown select list below:
             <div class="uk-form-controls select2_hack">
-              {{ form.login(id=form.name+"_login", placeholder="E-mail", class_="uk-width-1-1 select2_users") }}
+              {{ form.login(id=form.name+"_login_attach", placeholder="E-mail", class_="uk-width-1-1 select2_users") }}
             </div>
           </div>
         </div>

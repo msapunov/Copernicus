@@ -6,8 +6,8 @@
     </div>
     <div class="uk-overflow-container">
       <form action="test" method="post" class="uk-panel uk-form" id="{{form.name}}_extension_form">
-        {{ form.csrf_token }}
-        {{ form.pid(id=form.name+"_pid") }}
+        {{ form.csrf_token(id=form.name+"_csrf_extend") }}
+        {{ form.pid(id=form.name+"_pid_extend") }}
         {% if form.eval_date and form.end_date and form.eval_note and form.eval_date %}
           <div class="uk-form-row uk-alert">
             {% if form.eval_date < form.end_date %}
@@ -21,19 +21,19 @@
           </div>
         {% endif %}
         <div class="uk-form-row uk-alert uk-alert-danger">
-          {{ form.exception(class_="uk-margin-small-right uk-form-danger") }}
+          {{ form.exception(id=form.name+"_exception_extend", class_="uk-margin-small-right uk-form-danger") }}
           <label for="exception_checkbox">
             Select this checkbox only in case you would need an exceptional extension! Will only be considered for a project running out of CPU time way before the next application deadline (see the date above).
           </label>
         </div>
         <div class="uk-form-row">
           <div class="uk-form-controls">
-            {{ form.cpu(placeholder="CPU hours: New allocation for the project", class_="uk-width-1-1") }}
+            {{ form.cpu(id=form.name+"_cpu_extend", placeholder="CPU hours: New allocation for the project", class_="uk-width-1-1") }}
           </div>
         </div>
         <div class="uk-form-row">
           <div class="uk-form-controls">
-            {{ form.note(placeholder="Motivation:\nShort description of the request", class_="uk-width-1-1") }}
+            {{ form.note(id=form.name+"_note_extend", placeholder="Motivation:\nShort description of the request", class_="uk-width-1-1") }}
           </div>
         </div>
       </form>
