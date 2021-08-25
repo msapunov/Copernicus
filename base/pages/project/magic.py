@@ -474,7 +474,7 @@ def project_extend(form):
     if not project.is_extendable and "admin" not in g.permissions:
         raise ValueError("Project %s is not extendable" % project.name)
     project = get_project_consumption(project)
-    record = Extend(project=project, hours=cpu, reason=note, extend=extend,
+    record = Extend(project=project, hours=cpu, reason=note, extend=True,
                     present_use=project.consumed,
                     usage_percent=project.consumed_use,
                     present_total=project.resources.cpu,
