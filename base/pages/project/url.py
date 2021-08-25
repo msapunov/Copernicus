@@ -34,6 +34,7 @@ from base.pages.project.magic import (
     get_project_overview,
     list_of_projects,
     project_extend,
+    project_renew,
     get_limbo_users,
     get_users)
 from operator import attrgetter
@@ -190,7 +191,7 @@ def web_project_transform():
 @login_required
 def web_project_reactivate():
     form = ActivateForm()
-    record = extend_update(form)
+    record = project_renew(form, activate=True)
     record.activate = True
     return jsonify(message=ProjectLog(record.project).activate(record))
 
@@ -198,8 +199,8 @@ def web_project_reactivate():
 @bp.route("/project/renew", methods=["POST"])
 @login_required
 def web_project_renew():
-    form = ExtendForm()
-    record = extend_update(form)
+    form = RenewForm()
+    record = project_renew(form)
     if not is_activity_report(record):
         raise ValueError("Please upload an activity report first!")
     return jsonify(message=ProjectLog(record.project).renew(record))
