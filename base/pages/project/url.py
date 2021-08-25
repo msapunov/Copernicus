@@ -11,10 +11,10 @@ from base.pages import (
 from base.pages.user import bp
 from base.pages.user.magic import get_user_record, user_by_id
 from base.pages.project.form import (
-    Transform, TransForm,
-    Activate, ActivateForm,
-    Allocate, ExtendForm,
-    NewUser, UserForm,
+    transform, TransForm,
+    activate, ActivateForm,
+    extend, ExtendForm,
+    new_user, UserForm,
     RenewForm, renew,
     get_transformation_options)
 from base.pages.project.magic import (
@@ -233,7 +233,7 @@ def web_project_history():
 @grant_access("admin", "responsible")
 def web_modal_user(pid):
     project = get_project_record(pid)
-    form = NewUser(project)
+    form = new_user(project)
     return jsonify(render_template("modals/project_add_user.html", form=form))
 
 
@@ -242,7 +242,7 @@ def web_modal_user(pid):
 @grant_access("admin", "responsible")
 def web_modal_transform(pid):
     project = get_project_record(pid)
-    form = Transform(project)
+    form = transform(project)
     return jsonify(render_template("modals/project_transform_type.html", form=form))
 
 
@@ -262,7 +262,7 @@ def web_modal_renew(pid):
 @grant_access("admin", "responsible")
 def web_modal_extend(pid):
     project = get_project_record(pid)
-    form = Allocate(project)
+    form = extend(project)
     return jsonify(render_template("modals/project_extend_cpu.html", form=form))
 
 
@@ -271,7 +271,7 @@ def web_modal_extend(pid):
 @grant_access("admin", "responsible")
 def web_modal_activate(pid):
     project = get_project_record(pid)
-    form = Activate(project)
+    form = activate(project)
     return jsonify(render_template("modals/project_activate_suspended.html", form=form))
 
 

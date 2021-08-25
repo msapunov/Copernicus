@@ -16,7 +16,7 @@ class ActivateForm(Form):
         message="Motivation field is empty")])
 
 
-def Activate(project):
+def activate(project):
     form = ActivateForm()
     form.name = project.name
     form.pid.data = project.id
@@ -34,7 +34,7 @@ class TransForm(Form):
         message="Motivation field is empty")])
 
 
-def Transform(project):
+def transform(project):
     form = TransForm()
     form.name = project.name
     form.pid.data = project.id
@@ -81,7 +81,7 @@ class ExtendForm(Form):
         message="Motivation field is empty")])
 
 
-def Allocate(project):
+def extend(project):
     config = project_config()
     project_type = project.type.lower()
     if project_type not in config.keys():
@@ -134,7 +134,7 @@ class UserForm(Form):
         return ValidationError("Assign an existing user or add a new one")
 
 
-def NewUser(project):
+def new_user(project):
     form = UserForm()
     form.name = project.name
     form.pid.data = project.id
