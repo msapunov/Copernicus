@@ -438,6 +438,29 @@ def project_transform(form):
     return record
 
 
+def project_renew(form, activate=False):
+    if not form.validate_on_submit():
+        raise ValueError(form_error_string(form.errors))
+    pid = form.pid.data
+    cpu = form.cpu.data
+    note = form.note.data
+
+    project = get_project_record(pid)
+    if activate and project.active:
+        raise ValueError("Project %s already active" % project.name)
+    project = is_project_renewable(project)
+    if not project.is_renewable and "admin" not in g.permissions:
+        raise ValueError("Project %s is not renewable" % project.name)
+    record = Extend(project=project, hours=cpu, reason=note, extend=False,
+                    present_use=project.consumed,
+                    usage_percent=project.consumed_use,
+                    present_total=project.resources.cpu,
+                    exception=False)
+    db.session.add(record)
+    db.session.commit()
+    return record
+
+
 def project_extend(form):
     if not form.validate_on_submit():
         raise ValueError(form_error_string(form.errors))
