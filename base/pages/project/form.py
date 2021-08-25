@@ -8,13 +8,12 @@ from logging import error
 
 
 class ActivateForm(Form):
-    pid_err = "Project id is missing"
-    cpu_err = "CPU value must be 0 or any other positive number"
-    err = "Motivation field is empty"
-
-    pid = HiddenField(validators=[DataRequired(message=pid_err)])
-    cpu = IntegerField("CPU", validators=[NumberRange(min=0, message=cpu_err)])
-    note = TextAreaField("Motivation", validators=[DataRequired(message=err)])
+    pid = HiddenField(validators=[DataRequired(
+        message="Project id is missing")])
+    cpu = IntegerField("CPU", validators=[NumberRange(
+        min=0, message="CPU value must be 0 or any other positive number")])
+    note = TextAreaField("Motivation", validators=[DataRequired(
+        message="Motivation field is empty")])
 
 
 def Activate(project):
@@ -25,16 +24,14 @@ def Activate(project):
 
 
 class TransForm(Form):
-
-    pid_err = "Project id is missing"
-    new_err = "New type is missing"
-    cpu_err = "CPU value must be 0 or any other positive number"
-    err = "Motivation field is empty"
-
-    pid = HiddenField(validators=[DataRequired(message=pid_err)])
-    new = SelectField("New type", validators=[DataRequired(message=new_err)])
-    cpu = IntegerField("CPU", validators=[NumberRange(min=0, message=cpu_err)])
-    note = TextAreaField("Motivation", validators=[DataRequired(message=err)])
+    pid = HiddenField(validators=[DataRequired(
+        message="Project id is missing")])
+    new = SelectField("New type", validators=[DataRequired(
+        message="New type is missing")])
+    cpu = IntegerField("CPU", validators=[NumberRange(
+        min=0, message="CPU value must be 0 or any other positive number")])
+    note = TextAreaField("Motivation", validators=[DataRequired(
+        message="Motivation field is empty")])
 
 
 def Transform(project):
@@ -107,8 +104,8 @@ def Allocate(project):
 
 
 class UserForm(Form):
-    pid_err = "Project id is missing"
-    pid = HiddenField(validators=[DataRequired(message=pid_err)])
+    pid = HiddenField(validators=[DataRequired(
+        message="Project id is missing")])
     prenom = StringField("Name")  # Can't use "name" cause it cause conflict
     surname = StringField("Surname")
     email = EmailField("E-mail")
