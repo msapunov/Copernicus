@@ -676,3 +676,31 @@ def is_project_renewable(project):
     else:
         project.is_renewable = False
     return project
+
+
+def get_transformation_options(project_type=None):
+    """
+    Checking what transformation options are available in configuration file for
+    giving type of project.
+    :param project_type: String. Type of the project (i.e. subsection in project
+                         configuration file.
+    :return: List. List of types to which this project type can be transformed
+    """
+    config = project_config()
+    options = []
+    for name in config.keys():
+        desc = config[name].get("description", None)
+        options.append((name.lower(), desc if desc else name))
+
+    if (not project_type) or (project_type not in config.keys()):
+        return options
+
+    trans = config[project_type].get("transform", None)
+    if not trans:
+        return options
+
+    options_copy = options.copy()
+    for option in options_copy:
+        if option[0] not in trans:
+            options.remove(option)
+    return options
