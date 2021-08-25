@@ -3,7 +3,7 @@ from wtforms import HiddenField, IntegerField, BooleanField
 from wtforms import TextAreaField, SelectField, StringField
 from wtforms.fields.html5 import EmailField
 from wtforms.validators import DataRequired, NumberRange, ValidationError, Email
-from base.pages.project.magic import project_config
+from base.pages.project.magic import project_config, get_transformation_options
 from logging import error
 
 
