@@ -469,11 +469,6 @@ def project_extend(form):
     cpu = form.cpu.data
     note = form.note.data
 
-    extend = is_extension()
-    # Make sure that exceptional extension are extension no matter when
-    if not extend and exception:
-        extend = True
-
     project = get_project_record(pid)
     project = get_project_consumption(project)
     record = Extend(project=project, hours=cpu, reason=note, extend=extend,
