@@ -7,16 +7,16 @@ if(!String.prototype.f){
             return str;
         var args = typeof arguments[0],
             args = (("string" === args || "number" === args) ? arguments : arguments[0]);
-        for(arg in args)
+        for(var arg in args)
             str = str.replace(RegExp("\\{" + arg + "\\}", "gi"), args[arg]);
         return str;
-    }
+    };
 }
 
 if(!String.prototype.capitalize){
     String.prototype.capitalize = function() {
         return this.charAt(0).toUpperCase() + this.slice(1);
-    }
+    };
 }
 if(!String.prototype.idfy){
     String.prototype.idfy = function(){
@@ -25,7 +25,7 @@ if(!String.prototype.idfy){
         }else{
             return this;
         }
-    }
+    };
 }
 if(!String.prototype.hashCode){
     // SOURCE: http://stackoverflow.com/questions/7616461/generate-a-hash-from-string-in-javascript-jquery
@@ -68,17 +68,18 @@ dialog=function(content, onconfirm, oncancel){
         }, 50);
     });
     modal.show();
-    return modal
+    return modal;
 };
 
 show_error = function(req){
     var text = $.trim(req.responseText);
     var status = $.trim(req.status);
     var statText = $.trim(req.statusText);
+    var msg;
     if((text) && (text.length > 0)){
-        var msg = "Status code: {0}\nMessage: {1}\n".f(status, text);
+        msg = "Status code: {0}\nMessage: {1}\n".f(status, text);
     }else{
-        var msg = "Server return {0}: {1}\n".f(status, statText);
+        msg = "Server return {0}: {1}\n".f(status, statText);
     }
     msg += "Please contact technical team: {0}".f(contact);
     alert(msg);

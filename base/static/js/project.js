@@ -186,7 +186,7 @@
             var btn_rndr = (value.active == "Suspended");
             var btn = window.render.del_button({id: pid, name: name}, value, btn_rndr);
             var id = "{0}_{1}".f(name, value.login);
-            var info
+            var info;
             if(value.consumption){
                 info = "{0}: {1}".f(value.fullname, value.consumption);
             }else{
@@ -226,11 +226,11 @@
     };
 
     window.render.clean_activity = function(project_name){
-        $.post("{0}/{1}".f(window.proj.url["activity_clean"], project_name));
+        $.post("{0}/{1}".f(window.proj.url.activity_clean, project_name));
     };
 
     window.render.delete_activity = function(project, name){
-        let url = "{0}/{1}/{2}".f(window.proj.url["activity_delete"], project, name);
+        let url = "{0}/{1}/{2}".f(window.proj.url.activity_delete, project, name);
         json_send(url).done(function(reply){
             if(reply.data === true){
                 UIkit.notify("File {0} has been removed from the server".f(name), {
