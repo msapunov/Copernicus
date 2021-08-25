@@ -438,7 +438,7 @@ def project_transform(form):
     return record
 
 
-def extend_update(form):
+def project_extend(form):
     if not form.validate_on_submit():
         raise ValueError(form_error_string(form.errors))
     pid = form.pid.data
