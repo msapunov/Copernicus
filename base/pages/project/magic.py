@@ -424,6 +424,9 @@ def project_transform(form):
     cpu = form.cpu.data
     note = form.note.data
     project = get_project_record(pid)
+    possible_types = get_transformation_options(project.type)
+    if new not in possible_types and "admin" not in g.permissions:
+        raise ValueError("Configuration forbids transformation to %s" % new)
     project = get_project_consumption(project)
     record = Extend(project=project, hours=cpu, reason=note, extend=True,
                     present_use=project.consumed, transform=new,
