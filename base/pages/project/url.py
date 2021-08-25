@@ -33,7 +33,7 @@ from base.pages.project.magic import (
     get_project_record,
     get_project_overview,
     list_of_projects,
-    extend_update,
+    project_extend,
     get_limbo_users,
     get_users)
 from operator import attrgetter
@@ -209,7 +209,7 @@ def web_project_renew():
 @login_required
 def web_project_extend():
     form = ExtendForm()
-    record = extend_update(form)
+    record = project_extend(form)
     return jsonify(message=ProjectLog(record.project).extend(record))
 
 
