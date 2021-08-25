@@ -4,7 +4,7 @@ from configparser import ConfigParser
 from pathlib import Path
 from os.path import join as path_join, exists
 
-from flask import current_app, jsonify, render_template
+from flask import current_app, jsonify, render_template, g
 from flask_login import current_user
 from owncloud import Client as OwnClient
 from pdfkit import from_string
