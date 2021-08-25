@@ -34,7 +34,7 @@
     window.render.submit = function(url, e){
         var modal = $.trim( $(this).data("modal") );
         var form = $.trim( $(this).data("form") );
-        var data = $("#" + form).serialize()
+        var data = $("#" + form).serialize();
         ajax_send(url, data, modal);
         e.preventDefault();
     };
@@ -103,7 +103,7 @@
                     UIkit.notify(reply.message, {timeout: 2000, status:"success"});
                 }
                 pop.hide();
-                window.render.user_reshuffle(reply, p_object)
+                window.render.user_reshuffle(reply, p_object);
             });
         });
     };
@@ -123,7 +123,7 @@
             btn.addClass("uk-button uk-button-mini uk-button-link uk-text-danger remove uk-icon-justify");
             btn.append($("<span/>").addClass("uk-icon-close"));
         }
-        return btn
+        return btn;
     };
 
     window.render.history = function(data, title){
@@ -157,7 +157,7 @@
         var id = $(this).data("project");
         var title = "History for project {0}".f(name);
         var data = {"project": id};
-        json_send(window.proj.url["history"], data).done(function(reply){
+        json_send(window.proj.url.history, data).done(function(reply){
             if(reply.length > 0){
                 window.render.history(reply, title);
             }else{
@@ -186,10 +186,11 @@
             var btn_rndr = (value.active == "Suspended");
             var btn = window.render.del_button({id: pid, name: name}, value, btn_rndr);
             var id = "{0}_{1}".f(name, value.login);
+            var info
             if(value.consumption){
-                var info = "{0}: {1}".f(value.fullname, value.consumption);
+                info = "{0}: {1}".f(value.fullname, value.consumption);
             }else{
-                var info = "{0}".f(value.fullname);
+                info = "{0}".f(value.fullname);
             }
             var txt = $("<span/>").addClass("uk-margin-small-left").attr("title", value.email).text(info);
             if(btn_rndr){
@@ -218,10 +219,10 @@
             var value = $("input[name=image_{0}]".f(i)).val();
             if(! value){
                 $("input[name=image_{0}]".f(i)).val(saved);
-                break
+                break;
             }
         }
-        return saved
+        return saved;
     };
 
     window.render.clean_activity = function(project_name){
@@ -367,17 +368,17 @@
                 maxFiles: 3,
                 //autoProcessQueue: false,
                 addRemoveLinks: true,
-                acceptedFiles: 'image/*'
-                ,maxfilesexceeded: function(file) {
+                acceptedFiles: 'image/*',
+                maxfilesexceeded: function(file) {
                     this.removeFile(file);
-                }
-                ,success: function(image, response){
+                },
+                success: function(image, response){
                     image.server_name = window.render.hidden_field(response);
-                }
-                ,canceled: function(file){
+                },
+                canceled: function(file){
                     this.removeFile(file);
-                }
-                ,removedfile: function(file){
+                },
+                removedfile: function(file){
                     if(file.server_name){
                         window.render.delete_activity(name, file.server_name);
                     }
