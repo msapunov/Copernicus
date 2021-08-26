@@ -286,6 +286,36 @@
         }
     };
 
+    window.render.dropzone = function(e){
+        var name = $.trim( $(this).data("modal").split("_")[0] );
+        $.post("{0}/{1}".f(window.proj.url.activity_clean, name));
+        trigger_modal.call(this);
+        $("div#upload").dropzone({
+            url: window.proj.url.activity_upload,
+            params: {"project": name},
+            withCredentials: true,
+            maxFilesize: 3, // 3 Mb maximum file size
+            maxFiles: 3,
+            addRemoveLinks: true,
+            acceptedFiles: 'image/*',
+            maxfilesexceeded: function(file) {
+                this.removeFile(file);
+            },
+            success: function(image, response){
+                image.server_name = window.render.hidden_field(response);
+            },
+            canceled: function(file){
+                this.removeFile(file);
+            },
+            removedfile: function(file){
+                if(file.server_name){
+                    window.render.delete_activity(name, file.server_name);
+                }
+                $(file.previewElement).remove();
+            }
+        });
+    };
+
     window.render.activity = function(e){
         var name = $(this).data("name");
         window.render.clean_activity(name);
