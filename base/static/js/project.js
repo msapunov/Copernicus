@@ -1,7 +1,6 @@
 (function(window, document, $, undefined){
     "use strict";
     Dropzone.autoDiscover = false;
-    window.contact = "mesocentre-techn@univ-amu.fr";
     window.proj = {};
     window.proj.url = {
         add: "project/add/user",
@@ -225,10 +224,6 @@
         return saved;
     };
 
-    window.render.clean_activity = function(project_name){
-        $.post("{0}/{1}".f(window.proj.url.activity_clean, project_name));
-    };
-
     window.render.delete_activity = function(project, name){
         let url = "{0}/{1}/{2}".f(window.proj.url.activity_delete, project, name);
         json_send(url).done(function(reply){
@@ -267,8 +262,6 @@
         var name = $("#" + project + "_name");
         var surname = $("#" + project + "_surname");
         var mail = $("#" + project + "_email");
-        var gg = $(select2).select2('data');
-        var hh = $(select2).find(':selected');
 
         if( $(name).val().length > 0 || $(surname).val().length > 0 || $(mail).val().length > 0 ){
             $(select2).prop("disabled", true);
