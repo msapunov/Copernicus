@@ -223,23 +223,17 @@ class Mail:
         return self
 
     def task_accepted(self, task):
-        name = "DEFAULT"
+        self.populate("TECH")
         self.destination = task.author.email
-        self.cc = [self.cfg.get(name, "CC", fallback="")]
-        self.sender = self.cfg.get(name, "EMAIL_TECH", fallback=None)
-        self.title = "Task id '%s' has been accepted" % task.id
-        self.signature = "Copernicus reporting"
-        self.message = "Task '%s' with id '%s' has been accepted" \
-                       % (task.description(), task.id)
+        title = "Task id '%s' has been accepted" % task.id
+        message = "Task '%s' has been accepted" % task.description()
+        self.__populate_values({"%TITLE": title, "%MESSAGE": message})
         return self
 
     def task_rejected(self, task):
-        name = "DEFAULT"
+        self.populate("TECH")
         self.destination = task.author.email
-        self.cc = [self.cfg.get(name, "CC", fallback="")]
-        self.sender = self.cfg.get(name, "EMAIL_TECH", fallback=None)
-        self.title = "Task id '%s' has been rejected" % task.id
-        self.signature = "Copernicus reporting"
-        self.message = "Task '%s' with id '%s' has been rejected"\
-                       % (task.description(), task.id)
+        title = "Task id '%s' has been rejected" % task.id
+        message = "Task '%s' has been rejected" % task.description()
+        self.__populate_values({"%TITLE": title, "%MESSAGE": message})
         return self
