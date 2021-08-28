@@ -32,22 +32,6 @@
         e.preventDefault();
     };
 
-    window.render.extension_submit = function(e){
-        return window.render.submit(window.proj.url.extend, e);
-    };
-
-    window.render.renew_submit = function(e){
-        return window.render.submit(window.proj.url.renew, e);
-    };
-
-    window.render.transform_submit = function(e){
-        return window.render.submit(window.proj.url.transform, e);
-    };
-
-    window.render.new_user = function(e){
-        return window.render.submit(window.proj.url.add, e);
-    };
-
     window.render.remove_user = function(e){
         var id = $(this).data("pid");
         var full = $(this).data("name");
