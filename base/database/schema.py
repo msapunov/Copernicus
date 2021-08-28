@@ -695,11 +695,11 @@ class Tasks(db.Model):
     def description(self):
         act, entity, login, project, task = self.action.split("|")
         if act in ["create"]:
-            act += " a user with %s for the project %s" % (task, entity)
+            act += " a user with %s for the project %s" % (task, project)
         if act in ["assign", "remove"]:
             return task
         elif act in ["update"]:
-            act += " %s user's info with following data: %s" % (entity, task)
+            act += " user info for %s with following data: %s" % (login, task)
         act = act[0].upper() + act[1:]
         return act
 
