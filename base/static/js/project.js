@@ -3,12 +3,8 @@
     Dropzone.autoDiscover = false;
     window.proj = {};
     window.proj.url = {
-        add: "project/add/user",
-        assign: "project/assign/user",
         new_resp: "project/assign/responsible",
         user_list: "user/list",
-        extend: "project/extend",
-        renew: "project/renew",
         delete: "project/delete/user",
         history: "project/history",
         activate: "project/reactivate",
