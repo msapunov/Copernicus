@@ -323,7 +323,6 @@
     });
 
     $(document).on("click", ".responsible_ass", window.render.assign_responsible);
-    $(document).on("click", ".activity", window.render.activity);
     $(document).on("click", ".history", window.render.project_history);
 
     $(document).on("click", ".attach", trigger_modal);
