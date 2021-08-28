@@ -331,6 +331,7 @@
     $(document).on("click", ".extend", trigger_modal);
     $(document).on("click", ".activate", trigger_modal);
     $(document).on("click", ".transform", trigger_modal);
+    $(document).on("click", ".activity", window.render.dropzone);
 
     $(document).on("click", ".attach_submit", window.render.submit);
     $(document).on("click", ".activate_submit", window.render.submit);
