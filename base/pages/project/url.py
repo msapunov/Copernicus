@@ -284,6 +284,15 @@ def web_modal_history(pid):
     return jsonify(render_template("modals/modal_history.html", form=project))
 
 
+@bp.route("/project/modal/activity/<int:pid>", methods=["GET", "POST"])
+@login_required
+@grant_access("admin", "responsible")
+def web_modal_activity(pid):
+    project = get_project_record(pid)
+    form = activity(project)
+    return jsonify(render_template("modals/project_upload_activity.html", form=form))
+
+
 @bp.route("/project.html", methods=["GET"])
 @login_required
 @grant_access("admin", "responsible")
