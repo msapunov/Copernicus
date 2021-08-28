@@ -409,22 +409,27 @@
     };
 
     $(document).on("ready", function(){
+        // Loading modal windows for active projects
         var active = $.trim( $("#active_project").data("ids") ).split(",");
         $.each(active, function(key, value){
             modal("{0}/{1}".f(window.proj.url.modal_transform, value), "transform");
             modal("{0}/{1}".f(window.proj.url.modal_attach, value), "attach", window.render.user_list);
         });
+        // Loading modal window for inactive projects ("Activate")
         var inactive = $.trim( $("#inactive_project").data("ids") ).split(",");
         $.each(inactive, function(key, value){
             modal("{0}/{1}".f(window.proj.url.modal_activate, value), "activate");
         });
+        // Loading modal windows for the projects which could be renewed
         var renew = $.trim( $("#renew_project").data("ids") ).split(",");
         $.each(renew, function(key, value){
             modal("{0}/{1}".f(window.proj.url.modal_renew, value), "renew");
         });
+        // Loading modal windows for the extendable projects
         var ext = $.trim( $("#extend_project").data("ids") ).split(",");
         $.each(ext, function(key, value){
             modal("{0}/{1}".f(window.proj.url.modal_extend, value), "extend");
+            //modal("{0}/{1}".f(window.proj.url.modal_activity, value), "activity");
         });
     });
 
