@@ -274,10 +274,13 @@
     };
 
     window.render.dropzone = function(e){
-        var name = $.trim( $(this).data("modal").split("_")[0] );
-        $.post("{0}/{1}".f(window.proj.url.activity_clean, name));
+        let name = $.trim( $(this).data("modal").split("_")[0] );
         trigger_modal.call(this);
-        $("div#upload").dropzone({
+        let dz = $("div#"+name+"_upload");
+        if( $(dz)[0].dropzone ){
+            return;
+        };
+        dz.dropzone({
             url: window.proj.url.activity_upload,
             params: {"project": name},
             withCredentials: true,
