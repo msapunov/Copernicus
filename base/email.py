@@ -206,11 +206,11 @@ class Mail:
         self.__populate_values({"%EXT": extend_or_renew, "%REASON": reason})
         return self
 
-    def allocation_ignored(self, record, type):
+    def allocation_ignored(self, record, e_type):
         self.__project_init(record, "ALLOCATION IGNORED")
-        id = str(record.id)
+        rid = str(record.id)
         created = str(record.created)
-        self.__populate_values({"%EXT": type, "%CREATED": created, "ID": id})
+        self.__populate_values({"%EXT": e_type, "%CREATED": created, "ID": rid})
         return self
 
     def allocation_rejected(self, record, extend_or_renew):
