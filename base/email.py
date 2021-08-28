@@ -218,3 +218,6 @@ class Mail:
         reason = record.decision if record.decision else None
         self.__populate_values({"%EXT": extend_or_renew, "%REASON": reason})
         return self
+
+    def task_rejected(self, task):
+        return self
