@@ -221,5 +221,16 @@ class Mail:
         self.__populate_values({"%EXT": extend_or_renew, "%REASON": reason})
         return self
 
+    def task_accepted(self, task):
+        name = "DEFAULT"
+        self.destination = task.author.email
+        self.cc = [self.cfg.get(name, "CC", fallback=None)]
+        self.sender = self.cfg.get(name, "EMAIL_TECH", fallback=None)
+        self.title = "Task id '%s' has been accepted" % task.id
+        self.signature = self.cfg.get(name, "SIGNATURE", fallback=None)
+        self.message = "Task '%s' with id '%s' has been accepted" \
+                       % (task.description(), task.id)
+        return self
+
     def task_rejected(self, task):
         return self
