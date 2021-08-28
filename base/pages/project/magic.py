@@ -160,6 +160,13 @@ def project_config():
 
 
 def upload_file_cloud(path, remote=None):
+    """
+    Function which uploads a file to OwnCloud instance
+    :param path: String. Path to file to upload.
+    :param remote: String. Name of the remote directory to store files in.
+    :return: Boolean. Return result of put_file() function call for OwnCloud
+             instance. Result of this function call is boolean
+    """
     url = current_app.config.get("OWN_CLOUD_URL", None)
     if not url:
         log.error("No url to the cloud given")
