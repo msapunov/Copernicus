@@ -187,6 +187,11 @@ def upload_file_cloud(path, remote=None):
 
 
 def check_responsible(name):
+    """
+    Check if current user is responsible of a project given in argument
+    :param name: String. Name of a project
+    :return: Object. Object of a project under given project name
+    """
     project = get_project_by_name(name)
     if current_user != project.get_responsible():
         raise ValueError("User %s is not register as the responsible person "
