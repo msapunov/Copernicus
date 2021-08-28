@@ -69,7 +69,8 @@ class Mail:
         if not exists(cfg_path):
             warning("E-mail configuration file doesn't exists. Using defaults")
             return
-        self.cfg = ConfigParser(interpolation=ExtendedInterpolation())
+        self.cfg = ConfigParser(interpolation=ExtendedInterpolation(),
+                                allow_no_value=True)
         self.cfg.read(cfg_path, encoding="utf-8")
         self.server = self.cfg.get("SERVER", "HOST")
         self.port = self.cfg.getint("SERVER", "PORT", fallback=25)
