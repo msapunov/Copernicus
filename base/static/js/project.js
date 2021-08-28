@@ -27,6 +27,7 @@
     window.render.submit = function(url, e){
         var modal = $.trim( $(this).data("modal") );
         var form = $.trim( $(this).data("form") );
+        var url = $.trim( $(this).data("url") );
         var data = $("#" + form).serialize();
         ajax_send(url, data, modal);
         e.preventDefault();
