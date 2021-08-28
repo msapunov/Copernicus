@@ -101,6 +101,8 @@ modal = function(url, btn, fn){
 };
 
 ajax_send = function(url, data, show_modal){
+    let mask = UIkit.modal("#ajax_call");
+    mask.show();
     $.ajax({
         data: data,
         timeout: 60000,
@@ -116,6 +118,8 @@ ajax_send = function(url, data, show_modal){
         UIkit.modal("#" + show_modal).hide();
     }).fail(function(reply){
         show_error(reply);
+    }).always(function() {
+        mask.hide();
     });
 
 };
