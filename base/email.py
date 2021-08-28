@@ -225,7 +225,7 @@ class Mail:
     def task_accepted(self, task):
         name = "DEFAULT"
         self.destination = task.author.email
-        self.cc = [self.cfg.get(name, "CC", fallback=None)]
+        self.cc = [self.cfg.get(name, "CC", fallback="")]
         self.sender = self.cfg.get(name, "EMAIL_TECH", fallback=None)
         self.title = "Task id '%s' has been accepted" % task.id
         self.signature = self.cfg.get(name, "SIGNATURE", fallback=None)
@@ -236,7 +236,7 @@ class Mail:
     def task_rejected(self, task):
         name = "DEFAULT"
         self.destination = task.author.email
-        self.cc = [self.cfg.get(name, "CC", fallback=None)]
+        self.cc = [self.cfg.get(name, "CC", fallback="")]
         self.sender = self.cfg.get(name, "EMAIL_TECH", fallback=None)
         self.title = "Task id '%s' has been rejected" % task.id
         self.signature = self.cfg.get(name, "SIGNATURE", fallback=None)
