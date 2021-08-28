@@ -228,7 +228,7 @@ class Mail:
         self.cc = [self.cfg.get(name, "CC", fallback="")]
         self.sender = self.cfg.get(name, "EMAIL_TECH", fallback=None)
         self.title = "Task id '%s' has been accepted" % task.id
-        self.signature = self.cfg.get(name, "SIGNATURE", fallback=None)
+        self.signature = "Copernicus reporting"
         self.message = "Task '%s' with id '%s' has been accepted" \
                        % (task.description(), task.id)
         return self
@@ -239,7 +239,7 @@ class Mail:
         self.cc = [self.cfg.get(name, "CC", fallback="")]
         self.sender = self.cfg.get(name, "EMAIL_TECH", fallback=None)
         self.title = "Task id '%s' has been rejected" % task.id
-        self.signature = self.cfg.get(name, "SIGNATURE", fallback=None)
+        self.signature = "Copernicus reporting"
         self.message = "Task '%s' with id '%s' has been rejected"\
                        % (task.description(), task.id)
         return self
