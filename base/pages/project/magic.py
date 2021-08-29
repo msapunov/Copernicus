@@ -170,7 +170,7 @@ def upload_file_cloud(path, remote=None):
     """
     url = current_app.config.get("OWN_CLOUD_URL", None)
     if not url:
-        log.error("No url to the cloud given")
+        error("No url to the cloud given")
         return False
     oc = OwnClient(url)
     login = current_app.config.get("OWN_CLOUD_LOGIN", None)
@@ -178,19 +178,19 @@ def upload_file_cloud(path, remote=None):
     try:
         oc.login(login, password)
     except Exception as err:
-        log.error("Failed to connect to the cloud: %s" % err)
+        error("Failed to connect to the cloud: %s" % err)
         return False
     po = Path(path)
     if not po.exists() or not po.is_file():
-        log.error("Can't upload a file to a cloud. '%s' doesn't exists or not "
-                  "a file" % path)
+        error("Can't upload a file to a cloud. '%s' doesn't exists or not "
+              "a file" % path)
         return False
     if not remote:
         remote_dir = current_app.config.get("ACTIVITY_DIR", "/")
         if remote_dir[-1] is not "/":
             remote_dir += "/"
         remote = remote_dir + po.name
-    log.debug("Uploading file %s to %s" % (path, remote))
+    debug("Uploading file %s to %s" % (path, remote))
     return oc.put_file(remote, path)
 
 
@@ -210,11 +210,11 @@ def check_responsible(name):
 def get_activity_files(name):
     check_responsible(name)
     temp_dir = get_tmpdir(current_app)
-    log.debug("Using temporary directory to store files: %s" % temp_dir)
+    debug("Using temporary directory to store files: %s" % temp_dir)
     pattern = "*%s*" % name
-    log.debug("Pattern %s to get associated files for %s" % (pattern, name))
+    debug("Pattern %s to get associated files for %s" % (pattern, name))
     already = list(Path(temp_dir).glob(pattern))
-    log.debug("List of existing files: %s" % already)
+    debug("List of existing files: %s" % already)
     return already
 
 
@@ -230,7 +230,7 @@ def save_activity(req):
     ts = str(dt.now().replace(microsecond=0).isoformat("_")).replace(":", "-")
     image_name = "%s_activity_report_%s" % (project, ts)
     name = save_file(req, get_tmpdir(current_app), image_name)
-    log.debug("Returning result: %s" % name)
+    debug("Returning result: %s" % name)
     return name
 
 
@@ -240,14 +240,14 @@ def save_report(project):
     ts = str(dt.now().replace(microsecond=0).isoformat("_")).replace(":", "-")
     name = "%s_activity_report_%s.pdf" % (project_name, ts)
     path = str(Path(get_tmpdir(current_app), name))
-    log.debug("The resulting PDF will be saved to: %s" % path)
+    debug("The resulting PDF will be saved to: %s" % path)
     pdf = from_string(html, path)
-    log.debug("If PDF converted successfully: %s" % pdf)
+    debug("If PDF converted successfully: %s" % pdf)
     if not pdf:
         return False
 
     if current_app.config.get("ACTIVITY_UPLOAD", False):
-        log.debug("Uploading report to a cloud storage")
+        debug("Uploading report to a cloud storage")
         if current_app.config.get("ACTIVITY_UPLOAD_IMG", False):
             for i in ["image_1", "image_2", "image_3"]:
                 tmp = getattr(project, i, None)
@@ -255,9 +255,9 @@ def save_report(project):
         upload_file_cloud(path)
 
     if current_app.config.get("ACTIVITY_SEND", False):
-        log.debug("Sending report by mail to project's responsible")
+        debug("Sending report by mail to project's responsible")
         result = send_activity_report(project, path)
-        log.debug(result)
+        debug(result)
 
     report = File(path=name,
                   size=Path(path).stat().st_size,
@@ -267,7 +267,7 @@ def save_report(project):
                   created=dt.now())
     project.resources.file = report
     db.session.commit()
-    log.debug("Activity report saved to the file %s" % path)
+    debug("Activity report saved to the file %s" % path)
     return "Activity report saved on the server to the file %s" % name
 
 
@@ -301,26 +301,26 @@ def remove_activity(name, file_name):
     temp_dir = get_tmpdir(current_app)
     path = Path(temp_dir) / file_name
     if not path.exists():
-        log.debug("Path doesn't exists: %s" % str(path))
+        debug("Path doesn't exists: %s" % str(path))
         return True
     if path.is_file():
         path.unlink()
-        log.debug("File deleted: %s" % file_name)
+        debug("File deleted: %s" % file_name)
         return True
     if path.is_dir():
-        log.error("Path %s is a directory and can't be removed" % str(path))
+        error("Path %s is a directory and can't be removed" % str(path))
         return False
 
 
 def clean_activity(name):
-    log.debug("Cleaning activity files for project %s" % name)
+    debug("Cleaning activity files for project %s" % name)
     project = check_responsible(name)
     files = get_activity_files(project.get_name())
     if len(files) < 1:
         return True
     for x in files:
         x.unlink()
-        log.debug("File deleted: %s" % str(x))
+        debug("File deleted: %s" % str(x))
     return True
 
 
@@ -517,7 +517,7 @@ def is_activity_report(rec):
     if remote_dir[-1] is not "/":
         remote_dir += "/"
     remote = remote_dir + path
-    log.debug("Checking is file %s exists" % remote)
+    debug("Checking is file %s exists" % remote)
     try:
         oc.file_info(remote)
     except Exception as e:
