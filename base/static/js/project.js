@@ -309,6 +309,8 @@
         $.each(active, function(key, value){
             modal("{0}/{1}".f(window.proj.url.modal_transform, value), "transform");
             modal("{0}/{1}".f(window.proj.url.modal_attach, value), "attach", window.render.user_list);
+            modal("{0}/{1}".f(window.proj.url.modal_activity, value), "activity");
+            modal("{0}/{1}".f(window.proj.url.modal_history, value), "history");
         });
         // Loading modal window for inactive projects ("Activate")
         var inactive = $.trim( $("#inactive_project").data("ids") ).split(",");
