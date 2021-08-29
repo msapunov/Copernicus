@@ -15,7 +15,8 @@ from base.pages.project.form import (
     activate, ActivateForm,
     extend, ExtendForm,
     new_user, UserForm,
-    RenewForm, renew,
+    renew, RenewForm,
+    activity, ActivityForm,
     get_transformation_options)
 from base.pages.project.magic import (
     is_project_renewable,
