@@ -39,7 +39,6 @@ from base.pages.project.magic import (
     project_renew,
     get_limbo_users,
     get_users)
-from operator import attrgetter
 from logging import debug
 
 
