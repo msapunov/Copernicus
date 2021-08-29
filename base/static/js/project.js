@@ -316,6 +316,7 @@
         var inactive = $.trim( $("#inactive_project").data("ids") ).split(",");
         $.each(inactive, function(key, value){
             modal("{0}/{1}".f(window.proj.url.modal_activate, value), "activate");
+            modal("{0}/{1}".f(window.proj.url.modal_history, value), "history");
         });
         // Loading modal windows for the projects which could be renewed
         var renew = $.trim( $("#renew_project").data("ids") ).split(",");
