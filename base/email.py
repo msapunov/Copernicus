@@ -168,7 +168,9 @@ class Mail:
     def __populate_values(self, values):
         for attr in ["title", "greetings", "message", "signature"]:
             for key, value in values.items():
-                val = getattr(self, attr, "").replace(key, value)
+                val = getattr(self, attr, "")
+                if val:
+                    val = val.replace(key, value)
                 setattr(self, attr, val)
         return self
 
