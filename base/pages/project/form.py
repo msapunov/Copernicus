@@ -17,7 +17,6 @@ class ActivateForm(FlaskForm):
 def activate(project):
     form = ActivateForm()
     form.name = project.name
-    form.pid.data = project.id
     return form
 
 
@@ -33,7 +32,6 @@ class TransForm(FlaskForm):
 def transform(project):
     form = TransForm()
     form.name = project.name
-    form.pid.data = project.id
     form.new.choices = get_transformation_options(project.type)
     return form
 
@@ -53,7 +51,6 @@ def renew(project):
         return None
     form = RenewForm()
     form.name = project.name
-    form.pid.data = project.id
     end = config[project_type].get("finish_dt", None)
     if not end:
         error("Type %s has no end option and not renewable" % project_type)
@@ -66,8 +63,6 @@ class ExtendForm(FlaskForm):
     eval_date = None
     eval_note = None
 
-    pid = HiddenField(validators=[DataRequired(
-        message="Project id is missing")])
     exception = BooleanField()
     cpu = IntegerField("CPU", validators=[NumberRange(
         min=0, message="CPU value must be 0 or any other positive number")])
@@ -82,7 +77,6 @@ def extend(project):
         return  # TODO: Check what to return in this case
     form = ExtendForm()
     form.name = project.name
-    form.pid.data = project.id
     end = config[project_type].get("finish_dt", None)
     if end:
         form.end_date = end
@@ -112,8 +106,6 @@ class UserForm(FlaskForm):
         """
         if not self.csrf_token.validate(self):
             return False
-        if not self.pid.data:
-            return ValidationError("Project ID expecting")
         if self.login.data:
             self.login.validate(self, [DataRequired()])
             return True
