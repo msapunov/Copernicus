@@ -437,7 +437,11 @@ class TaskQueue:
         return self
 
     def _commit(self):
-        double = Tasks().query.filter_by(action=self.task.action).first()
+        double = Tasks().query.filter_by(
+            action=self.task.action
+        ).filter_by(
+            processed=False
+        ).first()
         if double:
             raise ValueError("Same previous task found ID: %s" % double.id)
         db.session.add(self.task)
