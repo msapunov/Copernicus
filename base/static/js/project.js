@@ -328,7 +328,6 @@
         var ext = $.trim( $("#extend_project").data("ids") ).split(",");
         $.each(ext, function(key, value){
             modal("{0}/{1}".f(window.proj.url.modal_extend, value), "extend");
-            //modal("{0}/{1}".f(window.proj.url.modal_activity, value), "activity");
         });
     });
 
