@@ -69,7 +69,8 @@ def project_activity_upload():
 @bp.route("/project/activity/<string:project_name>", methods=["POST"])
 @login_required
 def project_activity(project_name):
-    return jsonify(message=report_activity(project_name, request))
+    form = ActivityForm()
+    return jsonify(message=report_activity(project_name, form))
 
 
 @bp.route("/project/info/<string:project_name>", methods=["POST"])
