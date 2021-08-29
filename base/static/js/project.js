@@ -104,30 +104,35 @@
         return btn;
     };
 
-    window.render.history = function(data, title){
-        var info = $("<table/>").addClass("uk-table uk-table-striped uk-table-condensed");
-        data.sort(function(a,b){
-            return new Date(b.date) - new Date(a.date);
-        });
-        data.forEach(function(user){
-            var tr = $("<tr>");
-            ["date", "message"].forEach(function(attr){
-                var txt = user[attr];
-                txt = txt.replace(/</g, "&lt;");
-                txt = txt.replace(/>/g, "&gt;");
-                tr.append("<td>" + txt + "</td>");
-            });
-            info.append(tr);
-        });
-
-        $("#modal_body").html(info.prop("outerHTML"));
-
-        var modal = UIkit.modal("#modal");
-        if ( modal.isActive() ) {
-            modal.hide();
-        } else {
-            modal.show();
+    window.render.history = function(){
+        trigger_modal.call(this);
+        let name = $.trim( $(this).data("modal").split("_")[0] );
+        let div = $("table#"+name+"_datatable");
+        if ( $.fn.DataTable.isDataTable( div )){
+            $(div).DataTable().ajax.reload();
+            return;
         }
+        let url = "{0}/{1}".f(window.proj.url.history, name);
+        $(div).DataTable({
+            "ajax": {"type": "POST", "url": url},
+            dom: 't',
+            "paging": false,
+            "searching": false,
+            "columns": [{
+                "data": "date",
+                render: function ( date, type, row ) {
+                    let dateSplit = date.split(' ');
+                    let full = row.date_full
+                    return type === "display" || type === "filter" ? '<div title="' + full + '">' + dateSplit[0] : date;
+                }
+            },{
+                "data": "message",
+                render: function ( message, type, row ) {
+                    let full = row.message_full
+                    return type === "display" || type === "filter" ? '<div title="' + full + '">' + message : message;
+                }
+            }]
+        });
     };
 
     window.render.project_history = function(e){
