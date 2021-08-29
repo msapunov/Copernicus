@@ -470,7 +470,6 @@ def project_renew(form, activate=False):
 def project_extend(form):
     if not form.validate_on_submit():
         raise ValueError(form_error_string(form.errors))
-    pid = form.pid.data
     exception = form.exception.data
     cpu = form.cpu.data
     note = form.note.data
