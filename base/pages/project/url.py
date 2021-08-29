@@ -90,7 +90,7 @@ def project_overview_annie():
     return jsonify(data=get_project_overview())
 
 
-@bp.route("/project/add/user", methods=["POST"])
+@bp.route("/project/<string:project_name>/add/user", methods=["POST"])
 @login_required
 def web_project_add_user():
     form = UserForm()
@@ -180,7 +180,7 @@ def web_project_delete_user():
     return jsonify(message=ProjectLog(project).user_del(user))
 
 
-@bp.route("/project/transform", methods=["POST"])
+@bp.route("/project/transform/<string:project_name>", methods=["POST"])
 @login_required
 def web_project_transform():
     form = TransForm()
@@ -189,7 +189,7 @@ def web_project_transform():
     return jsonify(message=ProjectLog(record.project).transform(record))
 
 
-@bp.route("/project/reactivate", methods=["POST"])
+@bp.route("/project/activate/<string:project_name>", methods=["POST"])
 @login_required
 def web_project_reactivate():
     form = ActivateForm()
@@ -198,7 +198,7 @@ def web_project_reactivate():
     return jsonify(message=ProjectLog(record.project).activate(record))
 
 
-@bp.route("/project/renew", methods=["POST"])
+@bp.route("/project/renew/<string:project_name>", methods=["POST"])
 @login_required
 def web_project_renew():
     form = RenewForm()
@@ -208,7 +208,7 @@ def web_project_renew():
     return jsonify(message=ProjectLog(record.project).renew(record))
 
 
-@bp.route("/project/extend", methods=["POST"])
+@bp.route("/project/extend/<string:project_name>", methods=["POST"])
 @login_required
 def web_project_extend():
     form = ExtendForm()
@@ -216,7 +216,7 @@ def web_project_extend():
     return jsonify(message=ProjectLog(record.project).extend(record))
 
 
-@bp.route("/project/history", methods=["POST"])
+@bp.route("/project/history/<string:project_name>", methods=["POST"])
 @login_required
 @grant_access("admin", "responsible")
 def web_project_history():
