@@ -681,7 +681,7 @@ def is_project_renewable(project):
     pre_end = cfg[project.type].get("finish_notice_dt", None)
     if finish and pre_end:
         now = dt.now()
-        if pre_end > now < finish:
+        if pre_end < now < finish:
             project.is_renewable = True
         else:
             project.is_renewable = False
