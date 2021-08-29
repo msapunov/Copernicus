@@ -1,6 +1,7 @@
 from flask_login import UserMixin
 from base import db
 from datetime import datetime as dt
+from textwrap import shorten
 from hashlib import md5
 
 __author__ = "Matvey Sapunov"
@@ -642,6 +643,7 @@ class LogDB(db.Model):
         event = self.event[0].upper() + self.event[1:]
         creator = self.author.full_name() if self.author else "Author is unknown"
         msg = "%s by %s" % (event, creator)
+        short = shorten(msg, width=50, placeholder="...")
         return {
             "date": self.created.strftime("%Y-%m-%d %X %Z"),
             "message": msg
