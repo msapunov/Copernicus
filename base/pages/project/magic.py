@@ -23,9 +23,10 @@ __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
 
 
-def project_attach_user(form):
+def project_attach_user(name, form):
     """
     Function which attach an existing user to a given project
+    :param name: String. Name of the project to which user should be attached
     :param form: Instance of WTForm
     :return: Instance of a project to which a new user has to be attached and an
     instance of User class
@@ -48,10 +49,11 @@ def project_attach_user(form):
     return project, user
 
 
-def project_add_user(form):
+def project_add_user(name, form):
     """
     Function which creates a temporary user based on provide info and add a
     create user task in the task queue
+    :param name: String. Name of the project where a use should be created
     :param form: Instance of WTForm
     :return: Instance of a project to which a new user has to be attached and an
     instance of TmpUser class
