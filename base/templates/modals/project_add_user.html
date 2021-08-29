@@ -7,7 +7,6 @@
     <div class="uk-overflow-container">
       <form action="test" method="post" class="uk-panel uk-form attach_form" id="{{form.name}}_attach_form">
         {{ form.csrf_token(id=form.name+"_csrf_attach") }}
-        {{ form.pid(id=form.name+"_pid_attach") }}
         <div class="uk-form-row">
           <div class="uk-form-controls">
             {{ form.prenom(id=form.name+"_name_attach", placeholder="Name (Prenom)", class_="uk-width-1-1 user_name") }}

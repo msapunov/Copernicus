@@ -7,7 +7,6 @@
     <div class="uk-overflow-container">
       <form action="test" method="post" class="uk-panel uk-form" id="{{form.name}}_renew_form">
         {{ form.csrf_token(id=form.name+"_csrf_renew") }}
-        {{ form.pid(id=form.name+"_pid") }}
         <div class="uk-form-row">
           <div class="uk-form-controls">
             {{ form.cpu(id=form.name+"_cpu_renew", placeholder="CPU hours: New allocation for the project", class_="uk-width-1-1") }}

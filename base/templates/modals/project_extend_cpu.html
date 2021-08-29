@@ -7,7 +7,6 @@
     <div class="uk-overflow-container">
       <form action="test" method="post" class="uk-panel uk-form" id="{{form.name}}_extension_form">
         {{ form.csrf_token(id=form.name+"_csrf_extend") }}
-        {{ form.pid(id=form.name+"_pid_extend") }}
         {% if form.eval_date and form.end_date and form.eval_note and form.eval_date %}
           <div class="uk-form-row uk-alert">
             {% if form.eval_date < form.end_date %}

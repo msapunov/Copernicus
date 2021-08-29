@@ -7,7 +7,6 @@
         <div class="uk-overflow-container">
             <form action="test" method="post" class="uk-panel uk-form uk-form-stacked" id="{{form.name}}_activate_form">
                 {{ form.csrf_token(id=form.name+"_csrf_activate") }}
-                {{ form.pid(id=form.name+"_pid_activate") }}
                 <div class="uk-form-row">
                     <div class="uk-form-controls">
                         {{ form.cpu(id=form.name+"_cpu_activate", placeholder="CPU hours: New allocation for the project", class_="uk-width-1-1") }}

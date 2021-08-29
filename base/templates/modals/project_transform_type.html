@@ -7,7 +7,6 @@
     <div class="uk-overflow-container">
       <form action="test" method="post" class="uk-panel uk-form" id="{{form.name}}_transformation_form">
         {{ form.csrf_token(id=form.name+"_csrf_transformation") }}
-        {{ form.pid(id=form.name+"_pid_transformation") }}
         <div class="uk-form-row uk-form-horizontal">
           <label class="uk-form-label" for="{{form.name}}_type">Project type:</label>
           <div class="uk-form-controls">
