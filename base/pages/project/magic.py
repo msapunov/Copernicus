@@ -266,28 +266,28 @@ def save_report(project):
     return "Activity report saved on the server to the file %s" % name
 
 
-def report_activity(name, req):
+def report_activity(name, form):
+    if not form.validate_on_submit():
+        raise ValueError(form_error_string(form.errors))
     project = check_responsible(name)
-    data = req.get_json()
-    if not data:
-        raise ValueError("Expecting application/json requests")
-
     result = get_project_consumption(project)
     if not result:
         raise ValueError("No information found for project '%s' Failure during "
-                         "report generation" % project.get_name())
-    result.report = data["report"]
-    result.doi = data["doi"]
-    result.training = data["training"]
-    result.hiring = data["hiring"]
-    result.generated = dt.strftime(dt.now(), "%c")
+                         "report generation" % name)
 
+    result.report = form.report.data
+    result.doi = form.doi.data
+    result.training = form.training.data
+    result.hiring = form.hiring.data
+    result.generated = dt.strftime(dt.now(), "%c")
     tmp = get_tmpdir(current_app)
     for i in ["image_1", "image_2", "image_3"]:
-        path = Path(tmp, data[i])
+        path = Path(tmp, form[i].data)
         if path.exists() and path.is_file():
             setattr(result, i, str(path.resolve()))
-    log.debug(result)
+        else:
+            error("Path for image doesn't exists: %s" % path.resolve())
+    debug(result)
     return save_report(result)
 
 
