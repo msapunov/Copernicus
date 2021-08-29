@@ -30,11 +30,7 @@ def project_attach_user(name, form):
     :return: Instance of a project to which a new user has to be attached and an
     instance of User class
     """
-    try:
-        pid = int(form.pid.data)
-    except ValueError:
-        raise ValueError("Not a valid integer value for project ID")
-    project = get_project_record(pid)
+    project = check_responsible(name)
     uid = form.login.data
     user = User.query.filter(User.id == uid).first()
     if not user:
@@ -57,8 +53,8 @@ def project_add_user(name, form):
     :return: Instance of a project to which a new user has to be attached and an
     instance of TmpUser class
     """
-    pid = form.pid.data
-    name = form.prenom.data.strip().lower()
+    project = check_responsible(name)
+    prenom = form.prenom.data.strip().lower()
     surname = form.surname.data.strip().lower()
     email = form.email.data.strip().lower()
     project = get_project_record(pid)
@@ -432,11 +428,10 @@ def get_project_record(pid):
 def project_transform(form):
     if not form.validate_on_submit():
         raise ValueError(form_error_string(form.errors))
-    pid = form.pid.data
     new = form.new.data
     cpu = form.cpu.data
     note = form.note.data
-    project = get_project_record(pid)
+    project = check_responsible(name)
     possible_types = get_transformation_options(project.type)
     if new not in possible_types and "admin" not in g.permissions:
         raise ValueError("Configuration forbids transformation to %s" % new)
@@ -454,11 +449,9 @@ def project_transform(form):
 def project_renew(form, activate=False):
     if not form.validate_on_submit():
         raise ValueError(form_error_string(form.errors))
-    pid = form.pid.data
     cpu = form.cpu.data
     note = form.note.data
-
-    project = get_project_record(pid)
+    project = check_responsible(name)
     if activate and project.active:
         raise ValueError("Project %s already active" % project.name)
     project = is_project_renewable(project)
@@ -481,8 +474,7 @@ def project_extend(form):
     exception = form.exception.data
     cpu = form.cpu.data
     note = form.note.data
-
-    project = get_project_record(pid)
+    project = check_responsible(name)
     project = is_project_extendable(project)
     if not project.is_extendable and "admin" not in g.permissions:
         raise ValueError("Project %s is not extendable" % project.name)
