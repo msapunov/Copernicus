@@ -60,10 +60,10 @@ def project_add_user(name, form):
     if User.query.filter(User.email == email).first():
         raise ValueError("User with e-mail %s has been registered already"
                          % email)
-    login = generate_login(name, surname)
+    login = generate_login(prenom, surname)
     user = TmpUser()
     user.login = login
-    user.name = name
+    user.name = prenom
     user.surname = surname
     user.email = email
     tid = TaskQueue().project(project).user_create(user).task.id
