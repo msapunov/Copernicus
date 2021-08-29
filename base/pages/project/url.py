@@ -19,6 +19,7 @@ from base.pages.project.form import (
     activity, ActivityForm,
     get_transformation_options)
 from base.pages.project.magic import (
+    get_project_by_name,
     is_project_renewable,
     is_project_extendable,
     project_add_user,
