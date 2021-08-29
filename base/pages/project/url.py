@@ -92,15 +92,15 @@ def project_overview_annie():
 
 @bp.route("/project/<string:project_name>/add/user", methods=["POST"])
 @login_required
-def web_project_add_user():
+def web_project_add_user(project_name):
     form = UserForm()
     if not form.validate_on_submit():
         raise ValueError(form.errors)
     if form.create_user:
-        project, user = project_add_user(form)
+        project, user = project_add_user(project_name, form)
         response = ProjectLog(project).user_add(user)
     else:
-        project, user = project_attach_user(form)
+        project, user = project_attach_user(project_name, form)
         response = ProjectLog(project).user_assign(user)
     return jsonify(message=response, data=get_users(project.id))
 
