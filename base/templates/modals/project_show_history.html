@@ -2,10 +2,17 @@
     <div class="uk-modal-dialog">
         <button type="button" class="uk-modal-close uk-close"></button>
         <div class="uk-modal-header">
-            <h3>History of actions for project {{form.name}}?</h3>
+            <h3>Event history for the project {{form.name}}</h3>
         </div>
         <div class="uk-overflow-container history_table">
-
+            <table id="{{form.name}}_datatable" style="width:100%" class="display compact nowrap" data-order='[[ 0, "desc" ]]'>
+                <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Event</th>
+                </tr>
+                </thead>
+            </table>
         </div>
         <div class="uk-modal-footer">
             <div class="uk-text-right">
