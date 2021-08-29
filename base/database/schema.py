@@ -646,7 +646,9 @@ class LogDB(db.Model):
         short = shorten(msg, width=50, placeholder="...")
         return {
             "date": self.created.strftime("%Y-%m-%d %X %Z"),
-            "message": msg
+            "date_full": self.created.strftime("%c"),
+            "message": short,
+            "message_full": msg
         }
 
 
