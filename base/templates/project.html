@@ -144,17 +144,20 @@
 
                         <button class="uk-button uk-width-1-1 transform uk-margin-small-bottom uk-button-primary" data-modal="{{project.name}}_transform" disabled>Transform</button>
                         {% if project.is_renewable %}
-                            <button class="uk-button uk-width-1-1 renew uk-margin-small-bottom uk-button-primary" data-modal="{{project.name}}_renew" type="button">Renew&nbsp;project&nbsp;for&nbsp;a year</button>
+                            <button class="uk-button uk-width-1-1 renew uk-margin-small-bottom uk-button-primary" data-modal="{{project.name}}_renew" type="button" disabled>Renew&nbsp;project&nbsp;for&nbsp;a year</button>
+                        {% endif %}
+                        {% if project.is_renewable or project.is_extendable %}
+                            <button class="uk-button uk-width-1-1 activity uk-margin-small-bottom uk-button-primary" data-modal="{{project.name}}_activity" type="button" disabled>Activity report</button>
                         {% endif %}
                         {% if project.is_extendable %}
-                            <button class="uk-button uk-width-1-1 activity uk-margin-small-bottom uk-button-primary" data-project='{{project.id}}' data-name='{{project.name}}' type="button">Activity report</button>
-                            <button class="uk-button uk-width-1-1 extend uk-margin-small-bottom" data-modal="{{project.name}}_extend" type="button">Extend&nbsp;CPU&nbsp;allocation</button>
+                            <button class="uk-button uk-width-1-1 extend uk-margin-small-bottom" data-modal="{{project.name}}_extend" type="button" disabled>Extend&nbsp;CPU&nbsp;allocation</button>
                         {% endif %}
                         <button class="uk-button uk-width-1-1 attach uk-margin-small-bottom" data-modal="{{project.name}}_attach" disabled>Add user</button>
-                        <button class="uk-button uk-width-1-1 history uk-margin-small-bottom" data-project='{{project.id}}' data-name='{{project.name}}' type="button">History</button>
+
                     {% else %}
                         <button class="uk-button uk-width-1-1 activate uk-margin-small-bottom" data-modal='{{project.name}}_activate' disabled>Activate project</button>
                     {% endif %}
+                    <button class="uk-button uk-width-1-1 history uk-margin-small-bottom" data-modal="{{project.name}}_history" disabled>History</button>
                 </div>
             </div>
             <div class="uk-panel uk-width-medium-1-1 uk-width-small-1-1 {% if project.active != True %}uk-text-muted{% endif %}">
