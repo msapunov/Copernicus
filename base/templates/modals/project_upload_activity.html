@@ -1,0 +1,58 @@
+<div class="uk-modal fade" tabindex="-1" role="dialog" aria-labelledby="confirm-modal" aria-hidden="true" id="{{form.name}}_activity">
+  <div class="uk-modal-dialog">
+    <button type="button" class="uk-modal-close uk-close"></button>
+    <div class="uk-modal-header">
+      <h3>Activity report for the project {{form.name}}?</h3>
+    </div>
+    <div>
+      <form action="test" method="post" class="uk-panel uk-form" id="{{form.name}}_activity_form">
+        {{ form.csrf_token(id=form.name+"_csrf_activity") }}
+        <div class="uk-form-row">
+        <div class="uk-panel uk-form-controls uk-width-medium-1-1 uk-width-small-1-1">
+          <ul class="uk-subnav uk-subnav-pill" data-uk-switcher="{connect:'#{{form.name}}-activity-info'}">
+            <li class="uk-active"><a href="">Activity report</a></li>
+            <li><a href="">List of publications*</a></li>
+            <li><a href="">Training activity*</a></li>
+            <li><a href="">Hiring*</a></li>
+          </ul>
+          <ul id="{{form.name}}-activity-info" class="uk-switcher">
+            <li><article>
+              {{ form.report(id=form.name+"_activity_report", placeholder="50 lines maximum", class_="uk-width-1-1") }}
+            </article></li>
+            <li><article>
+              {{ form.doi(id=form.name+"_doi_report", placeholder="List of publications (DOI) for last activity period", class_="uk-width-1-1") }}
+            </article></li>
+            <li><article>
+              {{ form.training(id=form.name+"_training_report", placeholder="List of students (licence, master, doctorat) trained recently", class_="uk-width-1-1") }}
+            </article></li>
+            <li><article>
+              {{ form.hiring(id=form.name+"_hiring_report", placeholder="List of people hired during last activity period", class_="uk-width-1-1") }}
+            </article></li>
+          </ul>
+        </div>
+        </div>
+        <div class="uk-form-row uk-alert uk-alert-warning">
+          (*) List of publications, Training activity and Hiring fields are optional
+        </div>
+        <div class="uk-form-row">
+          <div id="{{form.name}}_upload" class="dropzone uk-alert uk-text-center dz-clickable">
+            <div class="dz-default dz-message">
+              Drop files to upload (or click here). Total 3 images are allowed, limited by 3 Mb per image. Supported formats are jpeg, png and gif
+            </div>
+          </div>
+        </div>
+
+        {{ form.image_1(id=form.name+"_image_1") }}
+        {{ form.image_2(id=form.name+"_image_2") }}
+        {{ form.image_3(id=form.name+"_image_3") }}
+
+      </form>
+    </div>
+    <div class="uk-modal-footer">
+      <div class="uk-text-right">
+        <button class="uk-button window_hide" data-modal="{{form.name}}_activity">Cancel</button>
+        <button class="uk-button uk-button-primary activity_submit" data-modal="{{form.name}}_activity" data-form="{{form.name}}_activity_form" data-url="project/activity/{{form.name}}">Submit</button>
+      </div>
+    </div>
+  </div>
+</div>
