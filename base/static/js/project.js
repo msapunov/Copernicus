@@ -10,6 +10,7 @@
         activity_upload: "project/activity/upload",
         activity_clean: "project/activity/clean",
         activity_delete: "project/activity/remove",
+        modal_history: "project/modal/history",
         modal_extend: "/project/modal/extend",
         modal_activity: "/project/modal/activity",
         modal_renew: "/project/modal/renew",
