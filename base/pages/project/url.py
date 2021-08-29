@@ -192,9 +192,9 @@ def web_project_transform(project_name):
 
 @bp.route("/project/activate/<string:project_name>", methods=["POST"])
 @login_required
-def web_project_reactivate():
+def web_project_reactivate(project_name):
     form = ActivateForm()
-    record = project_renew(form, activate=True)
+    record = project_renew(project_name, form, activate=True)
     record.activate = True
     return jsonify(message=ProjectLog(record.project).activate(record))
 
