@@ -183,10 +183,10 @@ def web_project_delete_user():
 
 @bp.route("/project/transform/<string:project_name>", methods=["POST"])
 @login_required
-def web_project_transform():
+def web_project_transform(project_name):
     form = TransForm()
     form.new.choices = get_transformation_options()
-    record = project_transform(form)
+    record = project_transform(project_name, form)
     return jsonify(message=ProjectLog(record.project).transform(record))
 
 
