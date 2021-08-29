@@ -121,5 +121,21 @@ class UserForm(FlaskForm):
 def new_user(project):
     form = UserForm()
     form.name = project.name
-    form.pid.data = project.id
+    return form
+
+
+class ActivityForm(FlaskForm):
+    report = TextAreaField("report", validators=[DataRequired(
+        message="Report field is empty")])
+    doi = TextAreaField("list_of_publications")
+    training = TextAreaField("training_activity")
+    hiring = TextAreaField("Hiring")
+    image_1 = HiddenField("image_1")
+    image_2 = HiddenField("image_2")
+    image_3 = HiddenField("image_3")
+
+
+def activity(project):
+    form = ActivityForm()
+    form.name = project.name
     return form
