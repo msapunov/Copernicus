@@ -1,4 +1,4 @@
-from flask_wtf import Form
+from flask_wtf import FlaskForm
 from wtforms import HiddenField, IntegerField, BooleanField
 from wtforms import TextAreaField, SelectField, StringField
 from wtforms.fields.html5 import EmailField
@@ -7,9 +7,7 @@ from base.pages.project.magic import project_config, get_transformation_options
 from logging import error
 
 
-class ActivateForm(Form):
-    pid = HiddenField(validators=[DataRequired(
-        message="Project id is missing")])
+class ActivateForm(FlaskForm):
     cpu = IntegerField("CPU", validators=[NumberRange(
         min=0, message="CPU value must be 0 or any other positive number")])
     note = TextAreaField("Motivation", validators=[DataRequired(
@@ -23,9 +21,7 @@ def activate(project):
     return form
 
 
-class TransForm(Form):
-    pid = HiddenField(validators=[DataRequired(
-        message="Project id is missing")])
+class TransForm(FlaskForm):
     new = SelectField("New type", validators=[DataRequired(
         message="New type is missing")])
     cpu = IntegerField("CPU", validators=[NumberRange(
@@ -42,9 +38,7 @@ def transform(project):
     return form
 
 
-class RenewForm(Form):
-    pid = HiddenField(validators=[DataRequired(
-        message="Project id is missing")])
+class RenewForm(FlaskForm):
     cpu = IntegerField("CPU", validators=[NumberRange(
         min=0, message="CPU value must be 0 or any other positive number")])
     note = TextAreaField("Motivation", validators=[DataRequired(
@@ -67,7 +61,7 @@ def renew(project):
     return form
 
 
-class ExtendForm(Form):
+class ExtendForm(FlaskForm):
     end_date = None
     eval_date = None
     eval_note = None
@@ -103,9 +97,7 @@ def extend(project):
     return form
 
 
-class UserForm(Form):
-    pid = HiddenField(validators=[DataRequired(
-        message="Project id is missing")])
+class UserForm(FlaskForm):
     prenom = StringField("Name")  # Can't use "name" cause it cause conflict
     surname = StringField("Surname")
     email = EmailField("E-mail")
