@@ -53,7 +53,7 @@ class Mail:
 
     def populate(self, name):
         self.destination = self.cfg.get(name, "TO", fallback=None)
-        self.cc = [self.cfg.get(name, "CC", fallback=None)]
+        self.cc = self.cfg.get(name, "CC", fallback=[])
         self.sender = self.cfg.get(name, "FROM", fallback=None)
         self.title = self.cfg.get(name, "TITLE", fallback=None)
         self.greetings = self.cfg.get(name, "GREETINGS", fallback=None)
@@ -112,7 +112,7 @@ class Mail:
     def registration(self, rec):
         cfg = self.cfg["PROJECT VISA"]
         self.destination = cfg.get("TO", fallback=rec.responsible_email)
-        self.cc = [cfg.get("CC", fallback="")]
+        self.cc = cfg.get("CC", fallback=[])
         self.sender = cfg.get("FROM", fallback="")
         self.title = cfg.get("TITLE", fallback="Visa for: %s" % rec.project_id())
         self.greetings = cfg.get("GREETINGS", fallback="Hi,")
