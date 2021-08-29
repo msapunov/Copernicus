@@ -306,7 +306,7 @@ class Task:
 
     def accept(self):
         self.task.decision = "accept"
-        self.notify()
+        Mail().task_accepted(self.task).send()
         return self._action()
 
     def ignore(self):
@@ -315,7 +315,7 @@ class Task:
 
     def reject(self):
         self.task.decision = "reject"
-        self.notify()
+        Mail().task_rejected(self.task).send()
         return self._action()
 
     def action(self):
@@ -334,15 +334,6 @@ class Task:
             setattr(self.task, prop, value)
         self._commit()
         return self.task
-
-    def notify(self):
-        description = self.description()
-        tid = self.id
-        to = self.task.author.email
-        action = self.task.decision
-        title = "Task id '%s' has been %sed" % (tid, action)
-        msg = "Task '%s' with id '%s' has been %s" % (description, tid, action)
-        return send_message(to, title=title, message=msg)
 
     def _action(self):
         self.task.processed = True
