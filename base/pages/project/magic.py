@@ -452,10 +452,11 @@ def project_renew(name, form, activate=False):
     note = form.note.data
     project = check_responsible(name)
     if activate and project.active:
-        raise ValueError("Project %s already active" % project.name)
+        raise ValueError("Project %s already active" % name)
     project = is_project_renewable(project)
     if not project.is_renewable and "admin" not in g.permissions:
-        raise ValueError("Project %s is not renewable" % project.name)
+        raise ValueError("Project %s is not renewable" % name)
+    project = get_project_consumption(project)
     record = Extend(project=project, hours=cpu, reason=note, extend=False,
                     present_use=project.consumed,
                     usage_percent=project.consumed_use,
@@ -475,7 +476,7 @@ def project_extend(name, form):
     project = check_responsible(name)
     project = is_project_extendable(project)
     if not project.is_extendable and "admin" not in g.permissions:
-        raise ValueError("Project %s is not extendable" % project.name)
+        raise ValueError("Project %s is not extendable" % name)
     project = get_project_consumption(project)
     record = Extend(project=project, hours=cpu, reason=note, extend=True,
                     present_use=project.consumed,
