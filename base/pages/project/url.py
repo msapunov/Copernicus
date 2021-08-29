@@ -277,7 +277,7 @@ def web_modal_activate(pid):
 @grant_access("admin", "responsible")
 def web_modal_history(pid):
     project = get_project_record(pid)
-    return jsonify(render_template("modals/modal_history.html", form=project))
+    return jsonify(render_template("modals/project_show_history.html", form=project))
 
 
 @bp.route("/project/modal/activity/<int:pid>", methods=["GET", "POST"])
