@@ -201,9 +201,9 @@ def web_project_reactivate(project_name):
 
 @bp.route("/project/renew/<string:project_name>", methods=["POST"])
 @login_required
-def web_project_renew():
+def web_project_renew(project_name):
     form = RenewForm()
-    record = project_renew(form)
+    record = project_renew(project_name, form)
     if not is_activity_report(record):
         raise ValueError("Please upload an activity report first!")
     return jsonify(message=ProjectLog(record.project).renew(record))
