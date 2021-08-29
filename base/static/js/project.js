@@ -329,7 +329,6 @@
     });
 
     $(document).on("click", ".responsible_ass", window.render.assign_responsible);
-    $(document).on("click", ".history", window.render.project_history);
 
     $(document).on("click", ".attach", trigger_modal);
     $(document).on("click", ".renew", trigger_modal);
@@ -337,6 +336,7 @@
     $(document).on("click", ".activate", trigger_modal);
     $(document).on("click", ".transform", trigger_modal);
     $(document).on("click", ".activity", window.render.dropzone);
+    $(document).on("click", ".history", window.render.history);
 
     $(document).on("click", ".attach_submit", window.render.submit);
     $(document).on("click", ".activate_submit", window.render.submit);
