@@ -211,9 +211,9 @@ def web_project_renew(project_name):
 
 @bp.route("/project/extend/<string:project_name>", methods=["POST"])
 @login_required
-def web_project_extend():
+def web_project_extend(project_name):
     form = ExtendForm()
-    record = project_extend(form)
+    record = project_extend(project_name, form)
     return jsonify(message=ProjectLog(record.project).extend(record))
 
 
