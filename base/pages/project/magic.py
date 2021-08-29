@@ -425,7 +425,7 @@ def get_project_record(pid):
     return project
 
 
-def project_transform(form):
+def project_transform(name, form):
     if not form.validate_on_submit():
         raise ValueError(form_error_string(form.errors))
     new = form.new.data
@@ -446,7 +446,7 @@ def project_transform(form):
     return record
 
 
-def project_renew(form, activate=False):
+def project_renew(name, form, activate=False):
     if not form.validate_on_submit():
         raise ValueError(form_error_string(form.errors))
     cpu = form.cpu.data
@@ -467,7 +467,7 @@ def project_renew(form, activate=False):
     return record
 
 
-def project_extend(form):
+def project_extend(name, form):
     if not form.validate_on_submit():
         raise ValueError(form_error_string(form.errors))
     exception = form.exception.data
