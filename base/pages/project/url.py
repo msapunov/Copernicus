@@ -219,16 +219,10 @@ def web_project_extend(project_name):
 @bp.route("/project/history/<string:project_name>", methods=["POST"])
 @login_required
 @grant_access("admin", "responsible")
-def web_project_history():
-    data = request.get_json()
-    if not data:
-        raise ValueError("Expecting application/json requests")
-    pid = check_int(data["project"])
-    recs = LogDB().query.filter(LogDB.project_id == pid).all()
-
-    sorted_recs = sorted(recs, key=attrgetter("created"), reverse=True)
-    result = list(map(lambda x: x.to_dict(), sorted_recs))
-    return jsonify(result)
+def web_project_history(project_name):
+    project = get_project_by_name(project_name)
+    recs = LogDB().query.filter_by(project_id=project.id).all()
+    return jsonify(data=list(map(lambda x: x.to_dict(), recs)))
 
 
 @bp.route("/project/modal/attach/user/<int:pid>", methods=["POST"])
