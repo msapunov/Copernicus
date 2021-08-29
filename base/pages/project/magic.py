@@ -57,7 +57,6 @@ def project_add_user(name, form):
     prenom = form.prenom.data.strip().lower()
     surname = form.surname.data.strip().lower()
     email = form.email.data.strip().lower()
-    project = get_project_record(pid)
     if User.query.filter(User.email == email).first():
         raise ValueError("User with e-mail %s has been registered already"
                          % email)
