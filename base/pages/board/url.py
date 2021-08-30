@@ -13,6 +13,7 @@ __copyright__ = "Aix Marseille University"
 @bp.route("/board", methods=["GET", "POST"])
 @bp.route("/board.html", methods=["GET", "POST"])
 @login_required
+@grant_access("admin")
 def web_board():
     extensions_list = Extensions().unprocessed()
     if not extensions_list:
@@ -24,6 +25,7 @@ def web_board():
 
 @bp.route("/board/history", methods=["POST"])
 @login_required
+@grant_access("admin")
 def web_board_history():
     extensions_list = Extensions().history()
     if not extensions_list:
