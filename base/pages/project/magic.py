@@ -77,7 +77,7 @@ def project_parse_cfg_options(cfg, section):
     Parse project configuration. Use of recurrent lib to parse fuzzy time values
     :param cfg: Configuration object
     :param section: Section in the configuration object, i.e. project type
-    :return: Dictionary. Dictonary's keys are: "duration_text", "duration_dt",
+    :return: Dictionary. Keys are: "duration_text", "duration_dt",
             "finish_text", "finish_dt", "cpu", "finish_notice_text",
             "finish_notice_dt", "transform", "description", "evaluation_text",
             "evaluation_dt", "evaluation_notice_text", "evaluation_notice_dt"
