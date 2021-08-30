@@ -677,6 +677,9 @@ def is_project_renewable(project):
     """
     cfg = project_config()
     finish = cfg[project.type].get("finish_dt", None)
+    resource_end = project.resources.ttl
+    if resource_end > finish:
+        finish = resource_end
     pre_end = cfg[project.type].get("finish_notice_dt", None)
     if finish and pre_end:
         now = dt.now()
