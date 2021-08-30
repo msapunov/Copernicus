@@ -49,24 +49,28 @@ __copyright__ = "Aix Marseille University"
 @bp.route("/project/activity/remove/<string:project>/<string:file_name>",
           methods=["POST"])
 @login_required
+@grant_access("admin", "responsible")
 def project_activity_remove(project, file_name):
     return jsonify(data=remove_activity(project, file_name))
 
 
 @bp.route("/project/activity/clean/<string:project_name>", methods=["POST"])
 @login_required
+@grant_access("admin", "responsible")
 def project_activity_clean(project_name):
     return jsonify(data=clean_activity(project_name))
 
 
 @bp.route("/project/activity/upload", methods=["POST"])
 @login_required
+@grant_access("admin", "responsible")
 def project_activity_upload():
     return jsonify(data=save_activity(request))
 
 
 @bp.route("/project/activity/<string:project_name>", methods=["POST"])
 @login_required
+@grant_access("admin", "responsible")
 def project_activity(project_name):
     form = ActivityForm()
     return jsonify(message=report_activity(project_name, form))
@@ -74,6 +78,7 @@ def project_activity(project_name):
 
 @bp.route("/project/info/<string:project_name>", methods=["POST"])
 @login_required
+@grant_access("admin", "responsible")
 def project_info(project_name):
     return jsonify(data=project_info_by_name(project_name))
 
@@ -92,6 +97,7 @@ def project_overview_annie():
 
 @bp.route("/project/<string:project_name>/add/user", methods=["POST"])
 @login_required
+@grant_access("admin", "responsible")
 def web_project_add_user(project_name):
     form = UserForm()
     if not form.validate_on_submit():
@@ -107,6 +113,7 @@ def web_project_add_user(project_name):
 
 @bp.route("/project/assign/user", methods=["POST"])
 @login_required
+@grant_access("admin", "responsible")
 def web_project_assign_user():
     data = request.get_json()
     if not data:
@@ -128,6 +135,7 @@ def web_project_assign_user():
 
 @bp.route("/project/set/responsible/<int:pid>", methods=["POST"])
 @login_required
+@grant_access("admin", "responsible")
 def web_project_set_responsible(pid):
     data = request.get_json()
     if not data:
@@ -146,6 +154,7 @@ def web_project_set_responsible(pid):
 
 @bp.route("/project/assign/responsible", methods=["POST"])
 @login_required
+@grant_access("admin", "responsible")
 def web_project_assign_responsible():
     data = request.get_json()
     if not data:
@@ -164,6 +173,7 @@ def web_project_assign_responsible():
 
 @bp.route("/project/delete/user", methods=["POST"])
 @login_required
+@grant_access("admin", "responsible")
 def web_project_delete_user():
     data = request.get_json()
     if not data:
@@ -182,6 +192,7 @@ def web_project_delete_user():
 
 @bp.route("/project/transform/<string:project_name>", methods=["POST"])
 @login_required
+@grant_access("admin", "responsible")
 def web_project_transform(project_name):
     form = TransForm()
     form.new.choices = get_transformation_options()
@@ -191,6 +202,7 @@ def web_project_transform(project_name):
 
 @bp.route("/project/activate/<string:project_name>", methods=["POST"])
 @login_required
+@grant_access("admin", "responsible")
 def web_project_reactivate(project_name):
     form = ActivateForm()
     record = project_renew(project_name, form, activate=True)
@@ -200,6 +212,7 @@ def web_project_reactivate(project_name):
 
 @bp.route("/project/renew/<string:project_name>", methods=["POST"])
 @login_required
+@grant_access("admin", "responsible")
 def web_project_renew(project_name):
     form = RenewForm()
     record = project_renew(project_name, form)
@@ -210,6 +223,7 @@ def web_project_renew(project_name):
 
 @bp.route("/project/extend/<string:project_name>", methods=["POST"])
 @login_required
+@grant_access("admin", "responsible")
 def web_project_extend(project_name):
     form = ExtendForm()
     record = project_extend(project_name, form)
