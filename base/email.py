@@ -131,6 +131,10 @@ class Mail:
             self.attach_file(visa)
         return self
 
+    def report_uploaded(self, record):
+        self.__project_init(record, "REPORT UPLOADED")
+        return self
+
     def responsible_add(self):
         pass
 
