@@ -33,7 +33,6 @@ from base.pages.project.magic import (
     save_activity,
     get_project_info,
     get_project_record,
-    get_project_overview,
     list_of_projects,
     project_extend,
     project_renew,
@@ -87,12 +86,6 @@ def project_info(project_name):
 @login_required
 def project_list():
     return jsonify(data=list_of_projects())
-
-
-@bp.route("/project/overview/annie", methods=["POST"])
-@login_required
-def project_overview_annie():
-    return jsonify(data=get_project_overview())
 
 
 @bp.route("/project/<string:project_name>/add/user", methods=["POST"])

@@ -541,19 +541,6 @@ def list_of_projects():
     return sorted(list(projects))
 
 
-def get_project_overview():
-    def extract_info(rec):
-        name = rec.get_name()
-        start = rec.resources.created.strftime("%Y-%m-%d")
-        finish = rec.resources.ttl.strftime("%Y-%m-%d")
-        total = rec.resources.cpu
-        responsible = rec.responsible.login
-        return "%s %s %s %s %s" % (name, start, finish, total, responsible)
-
-    projects = Project.query.all()
-    return list(map(lambda x: extract_info(x), projects))
-
-
 def project_info_by_name(name):
     project = get_project_by_name(name)
     return project.to_dict()
