@@ -15,7 +15,7 @@ class Mail:
     def __init__(self):
         self. destination = None
         self.sender = None
-        self.cc = []
+        self.cc = None
         self.title = "Mesocentre reporting"
         self.message = None
         self.msg = MIMEMultipart()
@@ -53,7 +53,7 @@ class Mail:
 
     def populate(self, name):
         self.destination = self.cfg.get(name, "TO", fallback=None)
-        self.cc = self.cfg.get(name, "CC", fallback=[])
+        self.cc = self.cfg.get(name, "CC", fallback=None)
         self.sender = self.cfg.get(name, "FROM", fallback=None)
         self.title = self.cfg.get(name, "TITLE", fallback=None)
         self.greetings = self.cfg.get(name, "GREETINGS", fallback=None)
