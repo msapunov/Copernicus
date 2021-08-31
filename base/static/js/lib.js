@@ -101,9 +101,8 @@ modal = function(url, btn, fn){
 };
 
 ajax_send = function(url, data, show_modal){
-    let mask = UIkit.modal("#ajax_call");
-    mask.show();
-    $.ajax({
+    UIkit.modal("#ajax_call", {modal: false}).show();
+    return $.ajax({
         data: data,
         timeout: 60000,
         type: "POST",
@@ -119,7 +118,7 @@ ajax_send = function(url, data, show_modal){
     }).fail(function(reply){
         show_error(reply);
     }).always(function() {
-        mask.hide();
+        UIkit.modal("#ajax_call", {modal: false}).hide();
     });
 
 };
@@ -127,7 +126,7 @@ ajax_send = function(url, data, show_modal){
 json_send = function(url, data, show_modal){
     var modal = {show: function(){}, hide: function(){}};
     if(typeof(show_modal)==='undefined'){
-        modal = UIkit.modal("#ajax_call");
+        modal = UIkit.modal("#ajax_call", {modal: false});
     }
     modal.show();
     return $.ajax({
