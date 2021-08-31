@@ -86,7 +86,10 @@ class Mail:
         self.msg["To"] = self.destination
         self.msg["Date"] = formatdate(localtime=True)
         if self.cc:
-            self.msg["Cc"] = ",".join(self.cc)
+            if isinstance(self.cc, list):
+                self.msg["Cc"] = ",".join(self.cc)
+            else:
+                self.msg["Cc"] = self.cc
         self.msg["Message-ID"] = make_msgid()
         if self.message:
             if self.greetings:
