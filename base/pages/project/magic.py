@@ -242,7 +242,7 @@ def save_report(project):
     pdf = from_string(html, path)
     debug("If PDF converted successfully: %s" % pdf)
     if not pdf:
-        return False
+        raise ValueError("")
 
     if current_app.config.get("ACTIVITY_UPLOAD", False):
         debug("Uploading report to a cloud storage")
