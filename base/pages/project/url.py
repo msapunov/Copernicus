@@ -72,7 +72,8 @@ def project_activity_upload():
 @grant_access("admin", "responsible")
 def project_activity(project_name):
     form = ActivityForm()
-    return jsonify(message=report_activity(project_name, form))
+    report = report_activity(project_name, form)
+    return jsonify(message=ProjectLog(report.project).activity_report(report))
 
 
 @bp.route("/project/info/<string:project_name>", methods=["POST"])
