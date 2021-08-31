@@ -257,13 +257,12 @@ def save_report(project):
         result = send_activity_report(project, path)
         debug(result)
 
-    report = File(path=name,
+    report = File(path=path,
                   size=Path(path).stat().st_size,
                   comment="Activity report",
                   user=current_user,
-                  project_id=project.id,
-                  created=dt.now())
-    project.resources.file = report
+                  project=project,
+                  created=dt.now(timezone.utc))
     db.session.commit()
     debug("Activity report saved to the file %s" % path)
     return "Activity report saved on the server to the file %s" % name
