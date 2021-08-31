@@ -136,20 +136,6 @@
         });
     };
 
-    window.render.project_history = function(e){
-        var name = $(this).data("name");
-        var id = $(this).data("project");
-        var title = "History for project {0}".f(name);
-        var data = {"project": id};
-        json_send(window.proj.url.history, data).done(function(reply){
-            if(reply.length > 0){
-                window.render.history(reply, title);
-            }else{
-                UIkit.modal.alert("No history found for project {0}".f(name));
-            }
-        });
-    };
-
     window.render.user_reshuffle = function(reply, p_object){
         var name = p_object.name;
         var pid = p_object.id;
