@@ -576,6 +576,13 @@ class ProjectLog:
         self.log.extension = extension
         return self.__commit(Mail().allocation_rejected(extension, ext_or_new))
 
+    def activity_report(self, file_rec):
+        file_name = file_rec.path
+        self.log.event = "Activity report saved on the server in the file %s" \
+                         % file_name
+        mail = Mail().report_uploaded(file_rec).attach_file(file_name)
+        return self.__commit(mail)
+
     def event(self, message):
         self.log.event = message.lower()
         return self.__commit()
