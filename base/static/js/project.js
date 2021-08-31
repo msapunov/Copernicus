@@ -353,6 +353,6 @@
     $(document).on("blur", "input,textarea", window.render.input_empty);
     $(document).on("focus blur keyup open close", ".attach_form", window.render.shadow);
 
-    $(document).on("hide.uk.modal", window.render.dz_reset);
+    $(document).on("hide.uk.modal", window.render.reset);
 
 })(window, document, jQuery);
