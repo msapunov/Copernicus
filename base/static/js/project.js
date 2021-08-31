@@ -286,11 +286,15 @@
         });
     };
 
-    window.render.dz_reset = function(e){
-        var dz_parent = $(e.target).find(".dropzone");
-        if(dz_parent.length > 0){
-            $(dz_parent)[0].dropzone.removeAllFiles(true);
-        }
+    window.render.reset = function(e){
+        let form = $(e.target).find("form");
+        $.each(form, function(key, value){
+            value.reset();
+        });
+        let dz = $(e.target).find(".dropzone");
+        $.each(dz, function(key, value){
+            value.dropzone.removeAllFiles(true);
+        });
     };
 
     $(document).on("ready", function(){
