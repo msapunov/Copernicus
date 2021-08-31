@@ -1,4 +1,4 @@
-from flask_wtf import Form
+from flask_wtf import FlaskForm
 from wtforms import StringField, BooleanField, HiddenField, SelectMultipleField, IntegerField
 from wtforms.fields.html5 import EmailField
 from wtforms.validators import DataRequired, Email
@@ -27,7 +27,7 @@ class SelectMultipleProjects(SelectMultipleField):
                 raise ValueError("Project %s doesn't register in the DB" % i)
 
 
-class RegistrationEditForm(Form):
+class RegistrationEditForm(FlaskForm):
     rid = HiddenField()
     title = StringField("Title", validators=[DataRequired()])
     cpu = IntegerField("CPU", validators=[DataRequired()])
@@ -40,7 +40,7 @@ class RegistrationEditForm(Form):
     responsible_phone = StringField("Responsible phone", validators=[DataRequired()])
 
 
-class NewUserEditForm(Form):
+class NewUserEditForm(FlaskForm):
     pid = HiddenField()
     uid = HiddenField()
     user_first_name = StringField("Name", validators=[DataRequired()])
@@ -49,7 +49,7 @@ class NewUserEditForm(Form):
     user_login = StringField("Login")
 
 
-class UserEditForm(Form):
+class UserEditForm(FlaskForm):
     uid = HiddenField()
     login = StringField("Login", validators=[DataRequired()])
     name = StringField("Name", validators=[DataRequired()])
