@@ -175,7 +175,7 @@
         });
     };
 
-    window.render.hidden_field = function(resp){
+    window.render.hidden_field = function(resp, name){
         if(!resp.data){
             alert("Server response is corrupted!");
             return false;
@@ -186,7 +186,7 @@
         }
         var saved = resp.data.saved_name;
         for(var i of [1, 2, 3]) {
-            var value = $("input[name=image_{0}]".f(i)).val();
+            var value = $("input[id={0}_image_{1}]".f(name, i)).val();
             if(! value){
                 $("input[name=image_{0}]".f(i)).val(saved);
                 break;
@@ -269,7 +269,7 @@
                 this.removeFile(file);
             },
             success: function(image, response){
-                image.server_name = window.render.hidden_field(response);
+                image.server_name = window.render.hidden_field(response, name);
             },
             canceled: function(file){
                 this.removeFile(file);
