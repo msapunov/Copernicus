@@ -113,6 +113,7 @@ class Mail:
         return True
 
     def registration(self, rec):
+        self.populate("PROJECT VISA")
         cfg = self.cfg["PROJECT VISA"]
         self.destination = cfg.get("TO", fallback=rec.responsible_email)
         self.cc = cfg.get("CC", fallback=[])
