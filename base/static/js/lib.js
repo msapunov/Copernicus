@@ -114,7 +114,9 @@ ajax_send = function(url, data, show_modal){
                 status: "success"
             });
         }
-        UIkit.modal("#" + show_modal).hide();
+        if(show_modal){
+            UIkit.modal("#" + show_modal).hide();
+        }
     }).fail(function(reply){
         show_error(reply);
     }).always(function() {
