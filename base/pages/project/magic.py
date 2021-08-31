@@ -264,8 +264,8 @@ def save_report(project):
                   project=project,
                   created=dt.now(timezone.utc))
     db.session.commit()
-    debug("Activity report saved to the file %s" % path)
-    return "Activity report saved on the server to the file %s" % name
+    debug("Activity report saved to the file %s" % report.path)
+    return report
 
 
 def report_activity(name, form):
