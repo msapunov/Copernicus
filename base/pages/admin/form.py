@@ -5,6 +5,19 @@ from wtforms.validators import DataRequired, Email
 from base.pages.project.magic import list_of_projects
 
 
+
+class CreateProjectForm(FlaskForm):
+    title = StringField("Title", validators=[DataRequired()])
+    cpu = IntegerField("CPU", validators=[DataRequired()])
+    type = StringField("Type", validators=[DataRequired()])
+    responsible_first_name = StringField("Responsible name", validators=[DataRequired()])
+    responsible_last_name = StringField("Responsible surname", validators=[DataRequired()])
+    responsible_email = EmailField("Responsible e-mail", validators=[DataRequired(), Email()])
+    responsible_position = StringField("Responsible position", validators=[DataRequired()])
+    responsible_lab = StringField("Responsible lab", validators=[DataRequired()])
+    responsible_phone = StringField("Responsible phone", validators=[DataRequired()])
+
+
 class SelectMultipleProjects(SelectMultipleField):
     def pre_validate(self, form):
         projects = list_of_projects()
