@@ -163,7 +163,7 @@ class Mail:
             raise ValueError("Responsible has no email")
         if not self.destination:
             self.destination = record.project.responsible.email
-        cpu = str(record.hours)
+        cpu = str(record.hours) if getattr(self, "hours", None) else ""
         name = record.project.get_name()
         full = record.project.responsible.full_name()
         self.__populate_values({"%FULLNAME": full, "%NAME": name, "%CPU": cpu})
