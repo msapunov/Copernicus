@@ -1,5 +1,5 @@
 from configparser import ConfigParser
-from datetime import datetime as dt
+from datetime import datetime as dt, timezone
 from logging import error, debug, warning
 from os.path import join as path_join, exists
 from pathlib import Path
@@ -87,17 +87,18 @@ def project_parse_cfg_options(cfg, section):
     description = cfg.get(section, "description", fallback=None)
     duration = cfg.get(section, "duration", fallback=None)
     if duration:
-        duration_dt = r.parse(duration)
+        duration_dt = r.parse(duration).replace(tzinfo=timezone.utc)
     else:
         duration_dt = None
     end = cfg.get(section, "finish_date", fallback=None)
     if end:
-        end_dt = r.parse(end)
+        end_dt = r.parse(end).replace(tzinfo=timezone.utc)
     else:
         end_dt = None
     end_notice = cfg.get(section, "finish_notice", fallback=None)
     if end_notice and end_dt:
-        end_notice_dt = RecurringEvent(end_dt).parse(end_notice)
+        tmp = RecurringEvent(end_dt).parse(end_notice)
+        end_notice_dt = tmp.replace(tzinfo=timezone.utc)
     else:
         end_notice_dt = None
     trans = cfg.get(section, "transform", fallback=None)
@@ -112,13 +113,15 @@ def project_parse_cfg_options(cfg, section):
     else:
         evaluation = []
     if evaluation:
-        eva_dt = list(map(lambda x: r.parse(x), evaluation))
+        tmp = list(map(lambda x: r.parse(x), evaluation))
+        eva_dt = list(map(lambda x: x.replace(tzinfo=timezone.utc), tmp))
     else:
         eva_dt = None
 
     eva_notice = cfg.get(section, "evaluation_notice", fallback=None)
     if eva_notice and eva_dt:
-        eva_text_dt = list(map(lambda x: RecurringEvent(x).parse(eva_notice), eva_dt))
+        tmp = list(map(lambda x: RecurringEvent(x).parse(eva_notice), eva_dt))
+        eva_text_dt = list(map(lambda x: x.replace(tzinfo=timezone.utc), tmp))
     else:
         eva_text_dt = None
 
@@ -279,7 +282,7 @@ def report_activity(name, form):
     result.doi = form.doi.data
     result.training = form.training.data
     result.hiring = form.hiring.data
-    result.generated = dt.strftime(dt.now(), "%c")
+    result.generated = dt.strftime(dt.now(timezone.utc), "%c")
     tmp = get_tmpdir(current_app)
     for i in ["image_1", "image_2", "image_3"]:
         path = Path(tmp, form[i].data)
@@ -590,7 +593,7 @@ def get_project_consumption(project, start=None, end=None):
         start = project.resources.created
     start = start.strftime("%m/%d/%y-%H:%M")
     if not end:
-        end = dt.now()
+        end = dt.now(timezone.utc)
     finish = end.strftime("%m/%d/%y-%H:%M")
     conso = get_project_conso(name, start, finish)
     if not conso:
@@ -678,11 +681,11 @@ def is_project_renewable(project):
     cfg = project_config()
     finish = cfg[project.type].get("finish_dt", None)
     resource_end = project.resources.ttl
-    if resource_end > finish:
+    if finish and (resource_end > finish):
         finish = resource_end
     pre_end = cfg[project.type].get("finish_notice_dt", None)
     if finish and pre_end:
-        now = dt.now()
+        now = dt.now(timezone.utc)
         if pre_end < now < finish:
             project.is_renewable = True
         else:
