@@ -25,7 +25,7 @@
         $(this).val().length < 1 ? $(this).addClass("uk-form-danger") : $(this).removeClass("uk-form-danger");
     };
 
-    window.render.submit = function(url, e){
+    window.render.submit = function(e){
         var modal = $.trim( $(this).data("modal") );
         var form = $.trim( $(this).data("form") );
         var url = $.trim( $(this).data("url") );
