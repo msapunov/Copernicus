@@ -275,6 +275,9 @@
                 this.removeFile(file);
             },
             removedfile: function(file){
+                for(var i of [1, 2, 3]) {
+                    $("input[id={0}_image_{1}]".f(name, i)).val("");
+                };
                 if(file.server_name){
                     window.render.delete_activity(name, file.server_name);
                 }
