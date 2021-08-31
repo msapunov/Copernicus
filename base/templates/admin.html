@@ -194,7 +194,8 @@
                                                         <li id="{{record.id}}-fullname-full">{{record.responsible_first_name}} {{record.responsible_last_name}}</li>
                                                     {% endif %}
                                                     -->
-                                                    {% for i in ["responsible_full_name","responsible_position", "responsible_lab", "responsible_email", "responsible_phone"] %}
+                                                    <li id="{{record.id}}-full-full">{{ record.responsible_full_name }} &lt;{{record.responsible_email}}&gt;</li>
+                                                    {% for i in ["responsible_position", "responsible_lab", "responsible_phone"] %}
                                                         {% if record[i] %}
                                                             <li id="{{record.id}}-{{i}}-full">{{ record[i] }}</li>
                                                         {% endif %}
