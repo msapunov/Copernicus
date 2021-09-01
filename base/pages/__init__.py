@@ -184,13 +184,6 @@ def check_json():
     return data
 
 
-def check_mail(raw_mail):
-    email_regex = compile("[^@]+@[^@]+\.[^@]+")
-    if not email_regex.match(raw_mail):
-        raise ValueError("Provided e-mail '%s' seems invalid" % raw_mail)
-    return str(raw_mail)
-
-
 def check_int(raw_int):
     if not str(raw_int).isdigit():
         raise ValueError("Number expected: %s" % raw_int)
@@ -202,18 +195,6 @@ def check_str(raw_note):
     if len(note) < 1:
         raise ValueError("Non empty string expected: %s" % raw_note)
     return note
-
-
-def check_word(raw_input):
-    if not str(raw_input).isalpha():
-        raise ValueError("String expected: %s" % raw_input)
-    return str(raw_input)
-
-
-def check_alnum(raw_note):
-    if not str(raw_note).isalnum():
-        raise ValueError("Alphanumeric characters expected: %s" % raw_note)
-    return str(raw_note)
 
 
 class MailingList:
