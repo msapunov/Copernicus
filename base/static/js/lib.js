@@ -100,6 +100,13 @@ modal = function(url, btn, fn){
     });
 };
 
+form_reset = function(e){
+    let form = $(e.target).find("form");
+    $.each(form, function(key, value){
+        value.reset();
+    });
+};
+
 submit = function(e){
     var modal = $.trim( $(this).data("modal") );
     var form = $.trim( $(this).data("form") );
