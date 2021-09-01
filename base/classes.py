@@ -4,7 +4,6 @@ from operator import attrgetter
 from base import db
 from base.database.schema import LogDB, User
 
-
 __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
 
@@ -136,7 +135,7 @@ class Extensions:
         return self.queue.filter_by(processed=False).all()
 
     def pending(self):
-        recs = self.queue.filter_by(processed=True).filter_by(accepted=True)\
+        recs = self.queue.filter_by(processed=True).filter_by(accepted=True) \
             .filter_by(done=False).all()
         return list(map(lambda x: x.api(), recs))
 
@@ -182,7 +181,7 @@ class Extensions:
         if (self.extend is True or self.extend is False) and \
                 self.rec.extend is not self.extend:
             self.rec.extend = self.extend
-            self.rec.decision += "\nExtension option was manually set to %s"\
+            self.rec.decision += "\nExtension option was manually set to %s" \
                                  % self.extend
         if self.cpu and (self.rec.hours != self.cpu):
             self.rec.hours = self.cpu
@@ -216,4 +215,3 @@ class TmpUser:
                                                self.is_manager, self.is_tech,
                                                self.is_committee, self.is_admin)
         return "%s WITH ACL %s WITH STATUS %s" % (u_part, a_part, self.active)
-
