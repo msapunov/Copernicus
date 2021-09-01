@@ -18,5 +18,6 @@
             $(".edit").toggleClass("uk-hidden");
         }
     }, ".user_info");
+    $(document).on("hide.uk.modal", form_reset);
 
 })(window, document, jQuery);
