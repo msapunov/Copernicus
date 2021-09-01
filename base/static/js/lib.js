@@ -100,6 +100,15 @@ modal = function(url, btn, fn){
     });
 };
 
+submit = function(e){
+    var modal = $.trim( $(this).data("modal") );
+    var form = $.trim( $(this).data("form") );
+    var url = $.trim( $(this).data("url") );
+    var data = $("#" + form).serialize();
+    ajax_send(url, data, modal);
+    e.preventDefault();
+};
+
 ajax_send = function(url, data, show_modal){
     UIkit.modal("#ajax_call", {modal: false}).show();
     return $.ajax({
