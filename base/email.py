@@ -59,8 +59,6 @@ class Mail:
         self.message = self.cfg.get(name, "MESSAGE", fallback=None)
         self.signature = self.cfg.get(name, "SIGNATURE", fallback=None)
         return self
-#        if not self.message:
-#            raise ValueError("Message text not found")
 
     def configure(self):
         cfg_file = app.config.get("EMAIL_CONFIG", "mail.cfg")
