@@ -434,14 +434,13 @@ class ProjectLog:
     def __init__(self, project):
         self.project = project
         self.log = LogDB(author=current_user, project=project)
-        self.send = True
 
     def __commit(self, mail=None):
         db.session.add(self.log)
         db.session.commit()
         message = "%s: %s" % (self.project.get_name(), self.log.event)
         try:
-            if mail and self.send: mail.send()
+            if mail: mail.send()
         finally:
             return message
 
@@ -547,7 +546,6 @@ class ProjectLog:
         self.log.event = "%s request for %s hours is ignored"\
                          % (new, extension.hours)
         self.log.extension = extension
-        self.send = False
         return self.__commit(Mail().allocation_ignored(extension, new))
 
     def reject(self, extension):
