@@ -14,10 +14,13 @@ class Log:
     def __init__(self):
         self.log = LogDB(author=current_user)
 
-    def _commit(self):
+    def _commit(self, mail=None):
         db.session.add(self.log)
         db.session.commit()
-        return self.log.event
+        try:
+            if mail: mail.send()
+        finally:
+            return self.log.event
 
 
 class RequestLog(Log):
