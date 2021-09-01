@@ -148,11 +148,9 @@ def changes_to_string(c_dict):
     return ", ".join(c_list)
 
 
-def user_edit(form):
+def user_edit(login, form):
     if not form.validate_on_submit():
         raise ValueError(form_error_string(form.errors))
-    login = form.login.data
-
     user = get_user_record(login)
     old = {"name": user.name, "surname": user.surname, "email": user.email,
            "login": user.login}
