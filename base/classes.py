@@ -2,7 +2,7 @@ from flask_login import current_user
 from base.database.schema import Extend
 from operator import attrgetter
 from base import db
-from base.database.schema import LogDB, User
+from base.database.schema import LogDB
 
 __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
