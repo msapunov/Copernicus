@@ -442,7 +442,6 @@ def web_admin():
         result["extension"] = list(map(lambda x: x.to_dict(), reg_list))
     result["tasks"] = TaskManager().list()
     result["users"] = group_users()
-    result["events"] = event_log()
     form = UserEditForm()
     register_edit = RegistrationEditForm()
     new_user_edit = NewUserEditForm()
