@@ -79,7 +79,6 @@ class UserLog(Log):
         super().__init__()
         self.user = user
         self.log = LogDB(author=current_user, user=user)
-        self.send = True
 
     def acl(self, acl):
         result = []
