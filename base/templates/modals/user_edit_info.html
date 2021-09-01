@@ -7,7 +7,6 @@
         <div class="uk-overflow-container">
             <form action="test" method="post" class="uk-panel uk-form" id="{{form.username}}_edit_form">
                 {{ form.csrf_token }}
-                {{ form.login() }}
                 <div class="uk-form-row">
                     <div class="uk-form-controls">
                         {{ form.prenom(class_="uk-width-1-1 uk-text-capitalize") }}

@@ -12,7 +12,6 @@ class InfoForm(FlaskForm):
 def EditInfo(user):
     form = InfoForm()
     form.username = user.login
-    form.login.data = user.login
     form.prenom.data = user.name
     form.surname.data = user.surname
     form.email.data = user.email
