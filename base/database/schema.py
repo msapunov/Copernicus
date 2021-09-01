@@ -636,6 +636,7 @@ class LogDB(db.Model):
             "project": self.project.name if self.project else "",
             "item": item,
             "date": self.created.strftime("%Y-%m-%d %X %Z"),
+            "date_full": self.created.strftime("%c"),
             "message": msg
         }
 
