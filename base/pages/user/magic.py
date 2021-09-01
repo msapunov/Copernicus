@@ -168,4 +168,4 @@ def user_edit(login, form):
     if not c_dict:
         raise ValueError("No changes in submitted user information found")
     TaskQueue().user(user).user_update(c_dict)
-    return UserLog(user).info_update(info=c_dict)
+    return UserLog(user).user_update(info=c_dict)
