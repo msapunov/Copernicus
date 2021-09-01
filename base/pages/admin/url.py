@@ -423,7 +423,7 @@ def web_admin_space_info():
 @bp.route("/log.html", methods=["GET", "POST"])
 @login_required
 @grant_access("admin")
-def log():
+def web_log():
     return render_template("log.html", data=event_log())
 
 
