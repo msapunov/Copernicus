@@ -2,6 +2,7 @@ from flask_login import current_user
 from base.database.schema import Extend
 from operator import attrgetter
 from base import db
+from base.email import Mail
 from base.database.schema import LogDB
 
 __author__ = "Matvey Sapunov"
@@ -89,6 +90,15 @@ class UserLog(Log):
         self.log.event = "Set ACL permissions: %s" % "; ".join(result)
         return self._commit()
 
+    def user_update(self, info):
+        changes = []
+        for name, value in info.items():
+            old = getattr(self.user, name)
+            prop = name.capitalize()
+            changes.append("%s change: %s -> %s" % (prop, old, value))
+        self.log.event = "; ".join(changes)
+        return self._commit(Mail().user_update(self))
+
     def info_update(self, info=None, acl=None, projects=None, active=None):
         changes = []
         if info is not None:
@@ -112,7 +122,7 @@ class UserLog(Log):
                     changes.append("Remove from project %s" % name)
         result = "; ".join(changes)
         self.log.event = "User information changes requested: %s" % result
-        return self._commit()
+        return self._commit(Mail().user_update(self))
 
 
 class Extensions:
