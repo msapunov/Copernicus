@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block head %}
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.10.21/b-1.6.2/b-html5-1.6.2/r-2.2.5/datatables.min.css"/>
+
+    <script src="{{ url_for('static', filename='js/datatables.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/log.js') }}"></script>
+    <style>
+        .ws {
+            white-space: normal !important;
+        }
+        td.details-control {
+            text-align:center;
+            cursor: pointer;
+        }
+        tr.shown td.details-control {
+            text-align:center;
+        }
+    </style>
+{% endblock %}
+{% block main %}
+
+<div class="uk-width-1-1 uk-margin-bottom">
+    <table id="events" class="display compact" data-order='[[ 2, "desc" ]]'>
+        <thead>
+            <tr>
+                <th data-priority="1">Entity</th>
+                <th data-priority="2">Event</th>
+                <th data-priority="3">Date</th>
+                <th data-priority="4">Date</th>
+            </tr>
+        </thead>
+        <tbody id="events_body">
+        {% for event in data %}
+            <tr>
+                <td>{{event.item}}</td>
+                <td>{{event.message}}</td>
+                <td>{{event.date}}</td>
+                <td>{{event.date_full}}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+
+{% endblock %}
