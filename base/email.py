@@ -135,6 +135,14 @@ class Mail:
         self.__project_init(record, "REPORT UPLOADED")
         return self
 
+    def user_update(self, record):
+        self.populate("USER UPDATE")
+        self.destination = record.user.email
+        full = record.user.full_name()
+        changes = record.log.event
+        self.__populate_values({"%FULLNAME": full, "%CHANGES": changes})
+        return self
+
     def responsible_add(self):
         pass
 
