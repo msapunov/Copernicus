@@ -56,7 +56,6 @@ class Mail:
         self.cc = self.cfg.get(name, "CC", fallback=None)
         self.sender = self.cfg.get(name, "FROM", fallback=None)
         self.title = self.cfg.get(name, "TITLE", fallback=None)
-        self.greetings = self.cfg.get(name, "GREETINGS", fallback=None)
         self.message = self.cfg.get(name, "MESSAGE", fallback=None)
         self.signature = self.cfg.get(name, "SIGNATURE", fallback=None)
         return self
@@ -119,7 +118,6 @@ class Mail:
         self.cc = cfg.get("CC", fallback=[])
         self.sender = cfg.get("FROM", fallback="")
         self.title = cfg.get("TITLE", fallback="Visa for: %s" % rec.project_id())
-        self.greetings = cfg.get("GREETINGS", fallback="Hi,")
         message = """Dear %s,
         You have to sign the visa in order to have your project activated
         """ % rec.responsible_full_name()
