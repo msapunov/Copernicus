@@ -25,15 +25,6 @@
         $(this).val().length < 1 ? $(this).addClass("uk-form-danger") : $(this).removeClass("uk-form-danger");
     };
 
-    window.render.submit = function(e){
-        var modal = $.trim( $(this).data("modal") );
-        var form = $.trim( $(this).data("form") );
-        var url = $.trim( $(this).data("url") );
-        var data = $("#" + form).serialize();
-        ajax_send(url, data, modal);
-        e.preventDefault();
-    };
-
     window.render.remove_user = function(e){
         var id = $(this).data("pid");
         var full = $(this).data("name");
@@ -342,11 +333,11 @@
     $(document).on("click", ".activity", window.render.dropzone);
     $(document).on("click", ".history", window.render.history);
 
-    $(document).on("click", ".attach_submit", window.render.submit);
-    $(document).on("click", ".activate_submit", window.render.submit);
-    $(document).on("click", ".extension_submit", window.render.submit);
-    $(document).on("click", ".transform_submit", window.render.submit);
-    $(document).on("click", ".activity_submit", window.render.submit);
+    $(document).on("click", ".attach_submit", submit);
+    $(document).on("click", ".activate_submit", submit);
+    $(document).on("click", ".extension_submit", submit);
+    $(document).on("click", ".transform_submit", submit);
+    $(document).on("click", ".activity_submit", submit);
     $(document).on("click", ".window_hide", trigger_modal);
     $(document).on("click", ".remove", window.render.remove_user); //the buttons could be created on the fly
 
