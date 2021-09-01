@@ -419,6 +419,14 @@ def web_admin_space_info():
     return jsonify(data=space_info())
 
 
+@bp.route("/log", methods=["GET", "POST"])
+@bp.route("/log.html", methods=["GET", "POST"])
+@login_required
+@grant_access("admin")
+def log():
+    return render_template("log.html", data=event_log())
+
+
 @bp.route("/admin", methods=["GET", "POST"])
 @bp.route("/admin.html", methods=["GET", "POST"])
 @login_required
