@@ -1092,7 +1092,6 @@
             }
         };
         window.admin.sys();
-        $("#events").DataTable();
         $("#disk_space").DataTable({
             "ajax": {"type": "POST", "url": window.admin.url.space},
             dom: 'tiB',
