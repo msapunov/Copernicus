@@ -11,12 +11,12 @@
         activity_clean: "project/activity/clean",
         activity_delete: "project/activity/remove",
         modal_history: "project/modal/history",
-        modal_extend: "/project/modal/extend",
-        modal_activity: "/project/modal/activity",
-        modal_renew: "/project/modal/renew",
-        modal_transform: "/project/modal/transform",
-        modal_activate: "/project/modal/activate",
-        modal_attach: "/project/modal/attach/user"
+        modal_extend: "project/modal/extend",
+        modal_activity: "project/modal/activity",
+        modal_renew: "project/modal/renew",
+        modal_transform: "project/modal/transform",
+        modal_activate: "project/modal/activate",
+        modal_attach: "project/modal/attach/user"
     };
 
     window.render = {};
