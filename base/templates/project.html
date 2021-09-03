@@ -145,12 +145,10 @@
                         {% if project.is_renewable %}
                             <button class="uk-button uk-width-1-1 renew uk-margin-small-bottom uk-button-primary" data-modal="{{project.name}}_renew" disabled>Renew&nbsp;project&nbsp;for&nbsp;a year</button>
                         {% endif %}
-                        {% if project.is_renewable or project.is_extendable %}
-                            <button class="uk-button uk-width-1-1 activity uk-margin-small-bottom uk-button-primary" data-modal="{{project.name}}_activity" type="button" disabled>Activity report</button>
-                        {% endif %}
                         {% if project.is_extendable %}
                             <button class="uk-button uk-width-1-1 extend uk-margin-small-bottom" data-modal="{{project.name}}_extend" disabled>Extend&nbsp;CPU&nbsp;allocation</button>
                         {% endif %}
+                        <button class="uk-button uk-width-1-1 activity uk-margin-small-bottom uk-button-primary" data-modal="{{project.name}}_activity" disabled>Activity report</button>
                         <button class="uk-button uk-width-1-1 attach uk-margin-small-bottom" data-modal="{{project.name}}_attach" disabled>Add user</button>
 
                     {% else %}
