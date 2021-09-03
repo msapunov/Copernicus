@@ -252,11 +252,6 @@ def save_report(project):
                 upload_file_cloud(tmp) if tmp else False
         upload_file_cloud(path)
 
-    if current_app.config.get("ACTIVITY_SEND", False):
-        debug("Sending report by mail to project's responsible")
-        result = send_activity_report(project, path)
-        debug(result)
-
     report = File(path=path,
                   size=Path(path).stat().st_size,
                   comment="Activity report",
@@ -517,22 +512,6 @@ def is_activity_report(rec):
         raise ValueError("Failed to find activity report %s on the cloud:"
                          " %s\nProbably you should re-upload it" % (path, e))
     return True
-
-
-def send_activity_report(project, report):
-    subj = "Activity report for the project %s" % project.name
-    msg = """
-    Dear %s
-    Thank you for submitting the activity report for the project %s
-    You can find a copy of the report in the attachment 
-    """ % (project.responsible.full_name(), project.get_name())
-    return project_email(project.responsible.email, subj, msg, attach=report)
-
-
-def project_email(to, title, msg, attach=None):
-    by_who = current_app.config["EMAIL_PROJECT"]
-    return jsonify(data=send_message(to, by_who=by_who, title=title,
-                                     message=msg, attach=attach))
 
 
 def list_of_projects():
