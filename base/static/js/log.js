@@ -1,10 +1,16 @@
 (function(window, document, $, undefined){
     "use strict";
-
+    window.log = {};
+    window.log.items = function project_state(btn, table){
+        if(!$(btn).hasClass("uk-active")){
+            return;
+        }
+        let items = $.trim( $(btn).data("items") );
+        table.page.len( items ).draw();
+    };
     $(document).on("ready", function(){
-        $("#events").DataTable({
-            dom: "ftip",
-            lengthMenu: [ 100, 250, 500, 1000 ],
+        var table = $("#events").DataTable({
+            dom: "tip",
             pageLength: 100,
             columns: [{
                 data: "item"
@@ -22,5 +28,9 @@
                 visible: false
             }]
         });
+        $("#table_search").on( "keyup", function () {
+            table.search( this.value ).draw();
+        });
+        $(document).on("click", ".items", function(){ window.log.items(this, table) });
     });
 })(window, document, jQuery);
