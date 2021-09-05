@@ -40,7 +40,7 @@ from base.pages.admin.form import (
     NewUserEditForm)
 from base.pages.project.magic import process_extension
 from base.pages.board.magic import Extensions
-from base.database.schema import Project
+from base.database.schema import Project, Register
 
 
 __author__ = "Matvey Sapunov"
