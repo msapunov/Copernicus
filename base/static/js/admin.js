@@ -17,6 +17,7 @@
         message: "admin/message/register",
         new_users: "admin/registration/users",
         sinfo: "admin/slurm/nodes/list",
+        partition: "admin/partition/info",
         space: "admin/space/info",
         system: "admin/sys/info",
         tasks: "admin/tasks/list",
