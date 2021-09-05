@@ -394,6 +394,14 @@ def web_admin_user_info():
     return jsonify(data=users)
 
 
+@bp.route("/admin/pending/list", methods=["POST"])
+@login_required
+@grant_access("admin")
+def web_admin_pending_list():
+    pending = Register.query.filter_by(processed=False).all()
+    return jsonify(data=list(map(lambda x: x.to_dict(), pending)) if pending else [])
+
+
 @bp.route("/admin/slurm/nodes/list", methods=["POST"])
 @login_required
 @grant_access("admin")
