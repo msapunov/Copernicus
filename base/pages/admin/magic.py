@@ -110,10 +110,12 @@ def create_visa(pid, force=False):
     return record.comment
 
 
+def all_users():
+    return list(map(lambda x: x.info_acl(), User.query.all()))
+
+
 def event_log():
-    recs = LogDB().query.all()
-    sorted_recs = sorted(recs, key=attrgetter("created"), reverse=True)
-    return list(map(lambda x: x.to_web(), sorted_recs))
+    return list(map(lambda x: x.to_web(), LogDB.query.all()))
 
 
 def task_mail(action, task):
@@ -329,7 +331,7 @@ def get_registration_record(pid):
     if not register:
         raise ValueError("Project registration request with id %s not found"
                          % pid)
-    return register
+    return register.to_dict()
 
 
 def get_ltm(data):
@@ -662,7 +664,6 @@ def user_reset_pass(uid):
 def group_users():
     result = {}
 
-    from base.database.schema import User
     users_obj = User.query.all()
     users_obj = sorted(users_obj, key=attrgetter("login"))
     users = map(lambda x: {"id": x.id, "login": x.login, "name": x.name,

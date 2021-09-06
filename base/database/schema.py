@@ -443,6 +443,21 @@ class User(UserMixin, db.Model):
             "projects": self.project_names()
         }
 
+    def info_acl(self):
+        return {
+            "active": self.active,
+            "user": self.acl.is_user,
+            "responsible": self.acl.is_responsible,
+            "manager": self.acl.is_manager,
+            "tech": self.acl.is_tech,
+            "committee": self.acl.is_committee,
+            "admin": self.acl.is_admin,
+            "login": self.login,
+            "name": self.name,
+            "surname": self.surname,
+            "email": self.email
+        }
+
     def to_dict(self):
         return {
             "id": self.id,
@@ -550,6 +565,7 @@ class Register(db.Model):
         return {
             "id": self.id,
             "ts": self.ts.strftime("%Y-%m-%d %X %Z"),
+            "ts_full": self.ts.strftime("%c"),
             "title": self.title,
             "responsible_full_name": self.responsible_full_name(),
             "responsible_first_name": self.responsible_first_name,
