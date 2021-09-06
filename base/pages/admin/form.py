@@ -18,6 +18,13 @@ class CreateProjectForm(FlaskForm):
     responsible_phone = StringField("Responsible phone", validators=[DataRequired()])
 
 
+class AddUserForm(FlaskForm):
+    prenom = StringField("Name", validators=[DataRequired()])
+    surname = StringField("Surname", validators=[DataRequired()])
+    email = EmailField("E-mail", validators=[DataRequired(), Email()])
+    login = StringField("Login")
+
+
 class SelectMultipleProjects(SelectMultipleField):
     def pre_validate(self, form):
         projects = list_of_projects()
