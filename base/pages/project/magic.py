@@ -37,7 +37,7 @@ def project_attach_user(name, form):
         raise ValueError("Failed to find user with ID '%s' in database" % uid)
     if user in project.users:
         raise ValueError("User %s has been already attached to project %s"
-                         % (user.very_brief_info(), project.get_name()))
+                         % (user.name_login(), project.get_name()))
     tid = TaskQueue().project(project).user_assign(user).task.id
     if current_user.login and "admin" in current_user.permissions():
         Task(tid).accept()
