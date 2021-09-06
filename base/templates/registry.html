@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+{% block head %}
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.10.21/b-1.6.2/b-html5-1.6.2/r-2.2.5/datatables.min.css"/>
+
+    <script src="{{ url_for('static', filename='js/datatables.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/registry.js') }}"></script>
+    <style>
+        .ws {
+            white-space: normal !important;
+        }
+        td.details-control {
+            text-align:center;
+            cursor: pointer;
+        }
+        tr.shown td.details-control {
+            text-align:center;
+        }
+    </style>
+{% endblock %}
+{% block main %}
+<div class="uk-width-1-1">
+    <div class="uk-grid uk-margin-bottom">
+        <div class="uk-width-1-4 uk-form">
+            <button class="uk-button user_add" data-modal="add_user">
+                <span class="uk-icon-user-plus"></span>
+                Add user
+            </button>
+        </div>
+        <div data-uk-button-radio class="uk-button-group uk-width-1-4">
+            <button class="uk-button uk-active user-status" data-status="">All</button>
+            <button class="uk-button user-status" data-status="True">Active</button>
+            <button class="uk-button user-status" data-status="False">Suspended</button>
+        </div>
+        <div data-uk-button-radio class="uk-button-group uk-width-1-4">
+            <button class="uk-button uk-active acl-type" data-type="">All</button>
+            <button class="uk-button acl-type" data-type=8 title="Users">U</button>
+            <button class="uk-button acl-type uk-button-primary" data-type=10 title="Project Responsables">R</button>
+            <button class="uk-button acl-type" data-type=12 title="Managers">M</button>
+            <button class="uk-button acl-type" data-type=14 title="Technical accounts">T</button>
+            <button class="uk-button acl-type uk-text-bold uk-text-danger" data-type=16 title="Scientific Committee">C</button>
+            <button class="uk-button acl-type uk-button-danger" data-type=18 title="Administrators">A</button>
+        </div>
+        <div class="uk-width-1-4 uk-form">
+            <input type="text" class="uk-width-1-1" id="table_search">
+        </div>
+    </div>
+    <table id="registry" class="display compact" data-order='[[ 3, "desc" ]]'>
+        <thead>
+            <tr>
+                <th></th>
+                <th>Active</th>
+                <th></th>
+                <th>Login</th>
+                <th>Name</th>
+                <th>Surname</th>
+                <th>Email</th>
+                <th>User</th>
+                <th></th>
+                <th>Responsible</th>
+                <th></th>
+                <th>Manager</th>
+                <th></th>
+                <th>Tech</th>
+                <th></th>
+                <th>Committee</th>
+                <th></th>
+                <th>Admin</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody id="events_body">
+        {% for user in data %}
+            <tr>
+                <td></td>
+                <td></td>
+                <td>{{user.active}}</td>
+                <td>{{user.login}}</td>
+                <td>{{user.name}}</td>
+                <td>{{user.surname}}</td>
+                <td>{{user.email}}</td>
+                <td></td>
+                <td>{{user.user}}</td>
+                <td></td>
+                <td>{{user.responsible}}</td>
+                <td></td>
+                <td>{{user.manager}}</td>
+                <td></td>
+                <td>{{user.tech}}</td>
+                <td></td>
+                <td>{{user.committee}}</td>
+                <td></td>
+                <td>{{user.admin}}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% include "modals/registry_add_user.html" %}
+{% endblock %}
+
+<!--
+    <table class="display compact" data-order='[[ 2, "desc" ]]'>
+        <thead>
+            <tr>
+                <th></th>
+                <th>ID</th>
+                <th>Active</th>
+                <th>Person</th>
+                <th>User</th>
+                <th>Responsible</th>
+                <th>Manager</th>
+                <th>Tech</th>
+                <th>Committee</th>
+                <th>Admin</th>
+                <th>Login</th>
+                <th>Name</th>
+                <th>Surname</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Lab</th>
+                <th>Position</th>
+                <th>Comment</th>
+                <th>Created</th>
+                <th>UID</th>
+                <th>Projects</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for user in data %}
+            <tr>
+                <td></td>
+                <td>{{user.id}}</td>
+                <td>{{user.active}}</td>
+                <td>{{user.brief}}</td>
+                <td>{{user.user}}</td>
+                <td>{{user.responsible}}</td>
+                <td>{{user.manager}}</td>
+                <td>{{user.tech}}</td>
+                <td>{{user.committee}}</td>
+                <td>{{user.admin}}</td>
+                <td>{{user.login}}</td>
+                <td>{{user.name}}</td>
+                <td>{{user.surname}}</td>
+                <td>{{user.email}}</td>
+                <td>{{user.phone}}</td>
+                <td>{{user.lab}}</td>
+                <td>{{user.position}}</td>
+                <td>{{user.comment}}</td>
+                <td>{{user.created}}</td>
+                <td>{{user.uid}}</td>
+                <td>{{user.projects}}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+-->
