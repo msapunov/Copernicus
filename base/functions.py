@@ -48,11 +48,15 @@ def slurm_nodes_status():
             error("Wrong format: %s" % line)
             continue
         reason = info[0].strip()
-        date = info[1].replace("T"," ").strip()
+        date = dt.strptime(info[1].strip(), "%Y-%m-%dT%H:%M:%S")
         node = info[2].strip()
         stat = info[3].strip()
         result.append({
-            "date": date, "reason": reason, "status": stat, "node": node})
+            "date": date.strftime("%Y-%m-%d %X %Z"),
+            "date_full": date.strftime("%c"),
+            "reason": reason,
+            "status": stat,
+            "node": node})
     return result
 
 
