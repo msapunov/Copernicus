@@ -398,7 +398,7 @@ class User(UserMixin, db.Model):
     def name_login(self):
         return "%s [%s]" % (self.full_name(), self.login)
 
-    def brief_info(self):
+    def name_login_email(self):
         return "%s <%s> [%s]" % (self.full_name(), self.email, self.login)
 
     def project_names(self):
@@ -439,6 +439,7 @@ class User(UserMixin, db.Model):
             "acl_created": start,
             "acl_modified": mod,
             "uid": self.uid,
+            "brief": self.name_login_email(),
             "projects": self.project_names()
         }
 
