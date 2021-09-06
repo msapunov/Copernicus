@@ -1,0 +1,47 @@
+<div class="uk-modal fade" tabindex="-1" role="dialog" aria-labelledby="confirm-modal" aria-hidden="true" id="add_user">
+    <div class="uk-modal-dialog">
+        <button type="button" class="uk-modal-close uk-close"></button>
+        <div class="uk-modal-header">
+            <h3>Add new user</h3>
+        </div>
+        <div class="uk-overflow-container">
+            <form action="test" method="post" class="uk-panel uk-form" id="add_form">
+                {{ form.csrf_token }}
+                <div class="uk-form-row">
+                    <div class="uk-form-controls">
+                        {{ form.prenom(placeholder="Jhon", class_="uk-width-1-1 uk-form-large uk-text-capitalize") }}
+                    </div>
+                </div>
+                <div class="uk-form-row">
+                    <div class="uk-form-controls">
+                        {{ form.surname(placeholder="Smith", class_="uk-width-1-1 uk-form-large uk-text-capitalize") }}
+                    </div>
+                </div>
+                <div class="uk-form-row">
+                    <div class="uk-form-controls">
+                        {{ form.email(placeholder="john.smith@univ-amu.fr", class_="uk-width-1-1 uk-form-large") }}
+                    </div>
+                </div>
+                <div class="uk-form-row uk-alert">
+                    <div>
+                        Please, double check if provided data is correct
+                    </div>
+                    <div>
+                        All provided data will be stored in lower case with special symbols striped out
+                    </div>
+                </div>
+                <div class="uk-form-row">
+                    <div class="uk-form-controls">
+                        {{ form.login(class_="uk-width-1-1 uk-form-large") }}
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="uk-modal-footer">
+            <div class="uk-text-right">
+                <button class="uk-button window_hide" data-modal="add_user">Cancel</button>
+                <button class="uk-button uk-button-primary add_submit" data-modal="add_user" data-form="add_form" data-url="admin/user/new/add">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
