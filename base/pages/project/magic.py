@@ -429,6 +429,7 @@ def project_transform(name, form):
     note = form.note.data
     project = check_responsible(name)
     possible_types = get_transformation_options(project.type)
+    possible_types = list(map(lambda x: x[0], possible_types))
     if new not in possible_types and "admin" not in g.permissions:
         raise ValueError("Configuration forbids transformation to %s" % new)
     project = get_project_consumption(project)
@@ -668,7 +669,9 @@ def get_transformation_options(project_type=None):
     giving type of project.
     :param project_type: String. Type of the project (i.e. subsection in project
                          configuration file.
-    :return: List. List of types to which this project type can be transformed
+    :return: List. List of tuples, first item in tuple is type to which this
+             project type can be transformed, second item is type's
+             description
     """
     config = project_config()
     options = []
