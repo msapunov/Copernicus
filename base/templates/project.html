@@ -54,6 +54,13 @@
     </style>
 {% endblock %}
 {% block main %}
+    {% if err %}
+        <div class="uk-alert uk-alert-large uk-alert-danger uk-width-1-1">
+            <h1 class="uk-text-center">
+                {{ err }}
+            </h1>
+        </div>
+    {% endif %}
     {% if data and data.projects %}
         <meta id="active_project" data-ids="{{ data.projects | selectattr('active', 'equalto', true) | map(attribute='id') | list | join(',') }}">
         <meta id="inactive_project" data-ids="{{ data.projects | selectattr('active', 'equalto', false) | map(attribute='id') | list | join(',') }}">
