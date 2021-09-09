@@ -303,9 +303,9 @@ def web_modal_activity(pid):
 def web_project_index():
     try:
         projects = get_project_info(user_is_responsible=True)
+        debug(projects)
     except ValueError as err:
         return render_template("project.html", data={"projects": []}, err=err)
-    debug(projects)
     if not projects:
         flash("No projects associated with %s" % current_user.full_name())
         return render_template("project.html", data={})
