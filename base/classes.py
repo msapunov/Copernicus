@@ -29,7 +29,6 @@ class RequestLog(Log):
         super().__init__()
         self.pending = project
         self.log = LogDB(author=current_user, register=project)
-        self.send = True
 
     def visa_sent(self):
         self.log.event = "Visa sent to %s" % self.pending.responsible_email
