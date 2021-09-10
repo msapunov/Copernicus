@@ -15,7 +15,7 @@ class Mail(Thread):
 
     def __init__(self):
         self.sending = app.config.get("MAIL_SEND", False)
-        self. destination = None
+        self.destination = None
         self.sender = None
         self.cc = None
         self.title = "Mesocentre reporting"
@@ -79,6 +79,9 @@ class Mail(Thread):
         self.username = self.cfg.get("SERVER", "USERNAME", fallback=None)
         self.password = self.cfg.get("SERVER", "PASSWORD", fallback=None)
         return self
+
+    def run(self):
+        self.send()
 
     def send(self):
         debug("Sending mail to %s" % self.destination)
