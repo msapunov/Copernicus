@@ -3,6 +3,7 @@ from flask import current_app as app
 from logging import warning, debug
 from configparser import ConfigParser, ExtendedInterpolation
 from os.path import join as path_join, exists
+from threading import Thread
 from email.mime.application import MIMEApplication
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -10,9 +11,10 @@ from email.utils import formatdate, make_msgid
 import smtplib
 
 
-class Mail:
+class Mail(Thread):
 
     def __init__(self):
+        self.send = app.config.get("MAIL_SEND", False)
         self. destination = None
         self.sender = None
         self.cc = None
@@ -29,6 +31,7 @@ class Mail:
         self.signature = None
         self.greetings = None
         self.configure()
+        Thread.__init__(self)
 
     def attach_file(self, path=None):
         if not path:
@@ -102,12 +105,11 @@ class Mail:
             smtp.starttls()
         if self.username and self.password:
             smtp.login(self.username, self.password)
-        if app.config.get("MAIL_SEND", False):
+        if self.send:
             smtp.send_message(self.msg)
         smtp.quit()
         for header in self.msg.items():
             debug("%s: %s" % (header[0], header[1]))
-        return True
 
     def registration(self, rec):
         self.populate("PROJECT VISA")
