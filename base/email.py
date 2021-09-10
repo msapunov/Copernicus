@@ -14,7 +14,7 @@ import smtplib
 class Mail(Thread):
 
     def __init__(self):
-        self.send = app.config.get("MAIL_SEND", False)
+        self.sending = app.config.get("MAIL_SEND", False)
         self. destination = None
         self.sender = None
         self.cc = None
@@ -106,7 +106,7 @@ class Mail(Thread):
             smtp.starttls()
         if self.username and self.password:
             smtp.login(self.username, self.password)
-        if self.send:
+        if self.sending:
             smtp.send_message(self.msg)
         smtp.quit()
         for header in self.msg.items():
