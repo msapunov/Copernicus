@@ -14,7 +14,7 @@ class Log:
     def __init__(self):
         self.log = LogDB(author=current_user)
 
-    def _commit(self, mail=None):
+    def __commit(self, mail=None):
         db.session.add(self.log)
         db.session.commit()
         try:
@@ -33,47 +33,47 @@ class RequestLog(Log):
 
     def visa_sent(self):
         self.log.event = "Visa sent to %s" % self.pending.responsible_email
-        return self._commit()
+        return self.__commit()
 
     def visa_skip(self):
         self.log.event = "Visa sending step has been skipped"
-        return self._commit()
+        return self.__commit()
 
     def approve(self):
         self.log.event = "Project software requirements approved"
-        return self._commit()
+        return self.__commit()
 
     def create(self):
         self.log.event = "Project created out of this request"
-        return self._commit()
+        return self.__commit()
 
     def user_del(self, user):
         self.log.event = "Remove user %s" % user
-        return self._commit()
+        return self.__commit()
 
     def user_add(self, user):
         self.log.event = "Add user %s" % user
-        return self._commit()
+        return self.__commit()
 
     def user_change(self, info):
         self.log.event = "Change user info: %s" % info
-        return self._commit()
+        return self.__commit()
 
     def request_change(self, info):
         self.log.event = "Change request info: %s" % info
-        return self._commit()
+        return self.__commit()
 
     def accept(self):
         self.log.event = "Project creation request accepted"
-        return self._commit()
+        return self.__commit()
 
     def reject(self):
         self.log.event = "Project creation request rejected"
-        return self._commit()
+        return self.__commit()
 
     def ignore(self):
         self.log.event = "Project creation request ignored"
-        return self._commit()
+        return self.__commit()
 
 
 class UserLog(Log):
@@ -88,7 +88,7 @@ class UserLog(Log):
         for name, value in acl.items():
             result.append("%s to %s" % (name, value))
         self.log.event = "Set ACL permissions: %s" % "; ".join(result)
-        return self._commit()
+        return self.__commit()
 
     def user_update(self, info):
         changes = []
@@ -97,7 +97,7 @@ class UserLog(Log):
             prop = name.capitalize()
             changes.append("%s change: %s -> %s" % (prop, old, value))
         self.log.event = "; ".join(changes)
-        return self._commit(Mail().user_update(self))
+        return self.__commit(Mail().user_update(self))
 
     def info_update(self, info=None, acl=None, projects=None, active=None):
         changes = []
@@ -122,7 +122,7 @@ class UserLog(Log):
                     changes.append("Remove from project %s" % name)
         result = "; ".join(changes)
         self.log.event = "User information changes requested: %s" % result
-        return self._commit(Mail().user_update(self))
+        return self.__commit(Mail().user_update(self))
 
 
 class Extensions:
