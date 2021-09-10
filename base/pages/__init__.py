@@ -440,7 +440,7 @@ class ProjectLog:
         db.session.commit()
         message = "%s: %s" % (self.project.get_name(), self.log.event)
         try:
-            if mail: mail.send()
+            if mail: mail.start()
         finally:
             return message
 
