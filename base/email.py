@@ -81,6 +81,7 @@ class Mail(Thread):
         return self
 
     def send(self):
+        debug("Sending mail to %s" % self.destination)
         self.msg["Subject"] = self.title
         self.msg["From"] = self.sender
         self.msg["To"] = self.destination
