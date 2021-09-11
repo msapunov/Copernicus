@@ -3,7 +3,10 @@ from wtforms import HiddenField, IntegerField, BooleanField
 from wtforms import TextAreaField, SelectField, StringField
 from wtforms.fields.html5 import EmailField
 from wtforms.validators import DataRequired, NumberRange, ValidationError, Email
-from base.pages.project.magic import project_config, get_transformation_options
+from base.pages.project.magic import (
+    project_config,
+    get_transformation_options,
+    get_users)
 from logging import error
 
 
@@ -88,6 +91,22 @@ def extend(project):
     if evaluation_notice:
         evaluation_notice.sort()
         form.eval_note = evaluation_notice[0]
+    return form
+
+
+class ResponsibleForm(FlaskForm):
+    login = SelectField("Login", choices=[], coerce=int, default=0)
+
+    def validate(self):
+        if self.login.data:
+            self.login.validate(self, [DataRequired()])
+            return True
+
+
+def new_responsible(project):
+    form = ResponsibleForm()
+    form.name = project.name
+    form.login.choices = get_users(project)
     return form
 
 
