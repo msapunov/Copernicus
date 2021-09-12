@@ -145,23 +145,21 @@
             <div class="uk-width-medium-1-5 uk-width-small-1-2">
                 <div class="uk-panel uk-margin-top uk-margin-bottom">
                     {% if project.active %}
-                        <!--
-                        <button class="uk-button uk-width-1-1 responsible_ass uk-button-danger uk-margin-small-bottom" data-modal="{{project.name}}_responsible" disabled>Assign responsible</button>
-                        -->
-                        <button class="uk-button uk-width-1-1 transform uk-margin-small-bottom uk-button-primary" data-modal="{{project.name}}_transform" disabled>Transform</button>
+                        <button class="uk-button uk-width-1-1 uk-margin-small-bottom uk-button-danger responsible_ass" data-modal="{{project.name}}_responsible" disabled>Assign responsible</button>
+                        <button class="uk-button uk-width-1-1 uk-margin-small-bottom uk-button-primary transform" data-modal="{{project.name}}_transform" disabled>Transform</button>
                         {% if project.is_renewable %}
-                            <button class="uk-button uk-width-1-1 renew uk-margin-small-bottom uk-button-primary" data-modal="{{project.name}}_renew" disabled>Renew&nbsp;project&nbsp;for&nbsp;a year</button>
+                            <button class="uk-button uk-width-1-1 uk-margin-small-bottom uk-button-primary renew" data-modal="{{project.name}}_renew" disabled>Renew&nbsp;project&nbsp;for&nbsp;a year</button>
                         {% endif %}
                         {% if project.is_extendable %}
-                            <button class="uk-button uk-width-1-1 extend uk-margin-small-bottom" data-modal="{{project.name}}_extend" disabled>Extend&nbsp;CPU&nbsp;allocation</button>
+                            <button class="uk-button uk-width-1-1 uk-margin-small-bottom extend" data-modal="{{project.name}}_extend" disabled>Extend&nbsp;CPU&nbsp;allocation</button>
                         {% endif %}
-                        <button class="uk-button uk-width-1-1 activity uk-margin-small-bottom uk-button-primary" data-modal="{{project.name}}_activity" disabled>Activity report</button>
-                        <button class="uk-button uk-width-1-1 attach uk-margin-small-bottom" data-modal="{{project.name}}_attach" disabled>Add user</button>
+                        <button class="uk-button uk-width-1-1 uk-margin-small-bottom uk-button-primary activity" data-modal="{{project.name}}_activity" disabled>Activity report</button>
+                        <button class="uk-button uk-width-1-1 uk-margin-small-bottom attach" data-modal="{{project.name}}_attach" disabled>Add user</button>
 
                     {% else %}
-                        <button class="uk-button uk-width-1-1 activate uk-margin-small-bottom" data-modal='{{project.name}}_activate' disabled>Activate project</button>
+                        <button class="uk-button uk-width-1-1 uk-margin-small-bottom activate" data-modal='{{project.name}}_activate' disabled>Activate project</button>
                     {% endif %}
-                    <button class="uk-button uk-width-1-1 history uk-margin-small-bottom" data-modal="{{project.name}}_history" disabled>History</button>
+                    <button class="uk-button uk-width-1-1 uk-margin-small-bottom history" data-modal="{{project.name}}_history" disabled>History</button>
                 </div>
             </div>
             <div class="uk-panel uk-width-medium-1-1 uk-width-small-1-1 {% if project.active != True %}uk-text-muted{% endif %}">
