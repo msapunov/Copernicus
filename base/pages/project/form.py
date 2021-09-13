@@ -96,6 +96,7 @@ def extend(project):
 
 class ResponsibleForm(FlaskForm):
     login = SelectField("Login", choices=[], coerce=int, default=0)
+    send = BooleanField(default="checked")
 
     def validate(self):
         if self.login.data:
