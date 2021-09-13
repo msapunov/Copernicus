@@ -409,9 +409,6 @@ def get_users(pid):
 
 
 def get_limbo_users(projects):
-    if not projects:
-        return projects
-
     for project in projects:
         pid = project.id
         tasks = Tasks.query.filter(
