@@ -206,6 +206,36 @@ def check_responsible(name):
     return project
 
 
+def assign_responsible(name, form):
+    """
+    Assigning a responsible to a project. Admins do that without check with any
+    users. For non admins several conditions has to be satisfied:
+    1) New responsible has to be different user.
+    2) New responsible should be one of project's users
+    :param name: String. Name of the project
+    :param form: WTForm. Form with data
+    :return: object. Instance of ProjectLog object
+    """
+    if not form.validate_on_submit():
+        raise ValueError(form_error_string(form.errors))
+    uid = form.login.data
+    send = form.send.data
+    user = user_by_id(uid)
+    if "admin" in current_user.permissions():
+        project = get_project_by_name(name)
+        tid = TaskQueue().project(project).responsible_assign(user).task.id
+        Task(tid).accept()
+        return ProjectLog(project).responsible_assign(user).send_message(send)
+    project = check_responsible(name)
+    if user == project.responsible:
+        raise ValueError("User %s is already responsible for the project %s" %
+                         (user.full_name(), project.get_name()))
+    if user not in project.users:
+        raise ValueError("New responsible has to be one of the project users")
+    TaskQueue().project(project).responsible_assign(user)
+    return ProjectLog(project).responsible_assign(user).send_message(True)
+
+
 def get_activity_files(name):
     check_responsible(name)
     temp_dir = get_tmpdir(current_app)
