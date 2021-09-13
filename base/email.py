@@ -254,3 +254,10 @@ class Mail(Thread):
         message = "Task '%s' has been rejected" % task.description()
         self.__populate_values({"%TITLE": title, "%MESSAGE": message})
         return self
+
+    def log(self, log):
+        self.populate("TECH")
+        self.destination = log.author.email
+        title = "Log entry ID: %s" % log.id
+        self.__populate_values({"%TITLE": title, "%MESSAGE": log.event})
+        return self
