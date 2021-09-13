@@ -17,6 +17,7 @@ class Log:
     def __commit(self, mail=None):
         db.session.add(self.log)
         db.session.commit()
+        Mail().log(self.log).start()
         try:
             if mail: mail.send()
         finally:
