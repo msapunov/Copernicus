@@ -397,10 +397,9 @@ def process_extension(eid):
     return extend_project(eid, ext, date)
 
 
-def get_users(pid):
-    project = get_project_record(pid)
+def get_users(project):
     get_limbo_users([project])
-    users = list(map(lambda x: x.to_dict(), project.users))
+    users = list(map(lambda x: x.to_dict(), project.users))  # Probably should be using details method
     debug(users)
     for user in users:
         if user["login"] == project.responsible.login:
