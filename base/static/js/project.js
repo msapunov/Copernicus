@@ -10,6 +10,7 @@
         activity_upload: "project/activity/upload",
         activity_clean: "project/activity/clean",
         activity_delete: "project/activity/remove",
+        modal_responsible: "project/modal/assign/responsible",
         modal_history: "project/modal/history",
         modal_extend: "project/modal/extend",
         modal_activity: "project/modal/activity",
@@ -198,6 +199,10 @@
         });
     };
 
+    window.render.responsible_list = function(){
+        $(".select2_responsible").select2();
+    };
+
     window.render.user_list = function(){
         $(".select2_users").select2({
             ajax: {
@@ -290,6 +295,12 @@
 
     $(document).on("ready", function(){
         // Loading modal windows for active projects
+        var user_length = $.trim( $("#many_users").data("ids") ).split(",");
+        $.each(user_length, function(key, value){
+            if(value != ""){
+                modal("{0}/{1}".f(window.proj.url.modal_responsible, value), "responsible", window.render.responsible_list);
+            }
+        });
         var active = $.trim( $("#active_project").data("ids") ).split(",");
         $.each(active, function(key, value){
             if(value != ""){
@@ -323,8 +334,7 @@
         });
     });
 
-    $(document).on("click", ".responsible_ass", window.render.assign_responsible);
-
+    $(document).on("click", ".responsible", trigger_modal);
     $(document).on("click", ".attach", trigger_modal);
     $(document).on("click", ".renew", trigger_modal);
     $(document).on("click", ".extend", trigger_modal);
@@ -333,6 +343,7 @@
     $(document).on("click", ".activity", window.render.dropzone);
     $(document).on("click", ".history", window.render.history);
 
+    $(document).on("click", ".responsible_submit", submit);
     $(document).on("click", ".attach_submit", submit);
     $(document).on("click", ".activate_submit", submit);
     $(document).on("click", ".extension_submit", submit);
