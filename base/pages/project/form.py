@@ -105,9 +105,14 @@ class ResponsibleForm(FlaskForm):
 
 
 def new_responsible(project):
+    def format_user(rec):
+        res = "%s <%s>" % (rec["fullname"], rec["email"])
+        return rec["id"], res
     form = ResponsibleForm()
     form.name = project.name
-    form.login.choices = get_users(project)
+    tmp = get_users(project)
+    users = list(filter(lambda x: "responsible" not in x.keys(), tmp))
+    form.login.choices = list(map(lambda x: format_user(x), users))
     return form
 
 
