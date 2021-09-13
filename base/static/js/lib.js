@@ -91,8 +91,8 @@ modal = function(url, btn, fn){
         type: "POST",
         url: url,
         success: function(data){
-             $("body").append(data);
-             $("button."+btn).prop("disabled", false);
+            $("body").append(data);
+            $("button."+btn).prop("disabled", false);
             if (typeof fn === "function") fn();
         }
     }).fail(function(request){
