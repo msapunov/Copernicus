@@ -19,7 +19,7 @@ class Log:
         db.session.commit()
         Mail().log(self.log).start()
         try:
-            if mail: mail.send()
+            if mail: mail.start()
         finally:
             return self.log.event
 
