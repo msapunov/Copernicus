@@ -15,6 +15,7 @@ from base.classes import TmpUser
 from base.database.schema import Extend, File, Project, Tasks, User
 from base.pages import ProjectLog, calculate_usage, generate_login, TaskQueue
 from base.pages import ssh_wrapper, Task
+from base.pages.user.magic import user_by_id
 from base.pages.board.magic import create_resource
 from base.utils import save_file, get_tmpdir, form_error_string
 
