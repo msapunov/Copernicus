@@ -3,11 +3,10 @@ from flask import current_app, request, flash, redirect, url_for, g
 from flask_login import current_user, logout_user
 from pathlib import Path
 from logging import debug, error
-from re import compile
 from functools import wraps
 from base import db
 from base.email import Mail
-from base.database.schema import LogDB, User, Tasks
+from base.database.schema import User, Tasks
 from base.utils import normalize_word
 from string import ascii_letters
 from dateutil.relativedelta import relativedelta as rd
