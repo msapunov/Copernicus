@@ -381,7 +381,7 @@ def transform_project(pid, ext, date):
 def process_extension(eid):
     ext = Extend.query.filter_by(id=eid).first()
     if not ext:
-        raise ValueError("Failed to find extension record with id '%s'" % ext)
+        raise ValueError("Failed to find extension record with id '%s'" % eid)
     ext.done = True
     date = dt.now().replace(microsecond=0).isoformat(" ")
     never_extend = current_app.config.get("NO_EXTENSION_TYPE", [])
