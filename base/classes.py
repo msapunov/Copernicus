@@ -24,6 +24,152 @@ class Log:
             return self.log.event
 
 
+class ProjectLog(Log):
+
+    def __init__(self, project):
+        super().__init__(project=project)
+        self.project = project
+        self.send = True
+
+    def __commit(self, mail=None):
+        db.session.add(self.log)
+        db.session.commit()
+        message = "%s: %s" % (self.project.get_name(), self.log.event)
+        try:
+            if mail and self.send: mail.start()
+        finally:
+            return message
+
+    def commit_user(self, user):
+        self.log.user = user
+        return self.commit()
+
+    def send_message(self, send=True):
+        if send:
+            self.send = True
+        else:
+            self.send = False
+        return self
+
+    def created(self, date):
+        self.log.event = "Project created"
+        if date:
+            self.log.created = date
+        return self.commit()
+
+    def responsible_added(self, user):
+        self.log.event = "Added a new project responsible %s with login %s" % (
+            user.full_name(), user.login)
+        return self.commit_user(user)
+
+    def responsible_assign(self, user):
+        self.log.event = "Made a request to assign new responsible %s" \
+                         % user.full_name()
+        return self.commit_user(user)
+
+    def user_add(self, user):
+        self.log.event = "Request to add a new user: %s %s <%s>" % (
+            user.name, user.surname, user.email)
+        return self.commit()
+
+    def user_added(self, user):
+        self.log.event = "Added a new user %s with login %s" % (
+            user.full_name(), user.login)
+        return self.commit_user(user)
+
+    def user_assign(self, user):
+        self.log.event = "Made a request to assign a new user %s" \
+                         % user.full_name()
+        return self.commit_user(user)
+
+    def user_assigned(self, user):
+        self.log.event = "User %s has been attached" % user.full_name()
+        return self.commit_user(user)
+
+    def user_deleted(self, user):
+        self.log.event = "User %s (%s) has been deleted" % (
+            user.full_name(), user.login)
+        return self.commit_user(user)
+
+    def user_del(self, user):
+        self.log.event = "Made a request to delete user %s" % user.full_name()
+        return self.commit_user(user)
+
+    def renew(self, extension):
+        article = "an exceptional" if extension.exception else "a"
+        self.log.event = "Made %s request to renew project for %s hour(s)" \
+                         % (article, extension.hours)
+        self.log.extension = extension
+        return self.commit(Mail().project_renew(extension))
+
+    def renewed(self, extension):
+        self.log.event = "Renewal request for %s hour(s) has been processed" \
+                         % extension.hours
+        self.log.extension = extension
+        return self.commit(Mail().project_renewed(extension))
+
+    def extend(self, extension):
+        article = "an exceptional" if extension.exception else "a"
+        self.log.event = "Made %s request to extend project for %s hour(s)" \
+                         % (article, extension.hours)
+        self.log.extension = extension
+        return self.commit(Mail().project_extend(extension))
+
+    def extended(self, extension):
+        self.log.event = "Extension request for %s hour(s) has been processed" \
+                         % extension.hours
+        self.log.extension = extension
+        return self.commit(Mail().project_extended(extension))
+
+    def transform(self, extension):
+        self.log.event = "Transformation request has been registered"
+        self.log.extension = extension
+        return self.commit(Mail().project_transform(extension))
+
+    def transformed(self, extension):
+        self.log.event = "Transformation to type %s finished successfully" \
+                         % extension.transform
+        self.log.extension = extension
+        return self.commit(Mail().project_transformed(extension))
+
+    def activate(self, extension):
+        self.log.event = "Activation request has been registered"
+        self.log.extension = extension
+        return self.commit(Mail().project_activate(extension))
+
+    def accept(self, extension):
+        ext_or_new = "Extension" if extension.extend else "Renewal"
+        self.log.event = "%s request for %s hours is accepted" \
+                         % (ext_or_new, extension.hours)
+        self.log.extension = extension
+        return self.commit(Mail().allocation_accepted(extension, ext_or_new))
+
+    def ignore(self, extension):
+        new = "Extension" if extension.extend else "Renewal"
+        self.log.event = "%s request for %s hours is ignored" \
+                         % (new, extension.hours)
+        self.log.extension = extension
+        return self.commit(Mail().allocation_ignored(extension, new))
+
+    def reject(self, extension):
+        ext_or_new = "Extension" if extension.extend else "Renewal"
+        self.log.event = "%s request for %s hours is rejected" \
+                         % (ext_or_new, extension.hours)
+        self.log.extension = extension
+        return self.commit(Mail().allocation_rejected(extension, ext_or_new))
+
+    def activity_report(self, file_rec):
+        file_name = file_rec.path
+        self.log.event = "Activity report saved on the server in the file %s" \
+                         % file_name
+        mail = Mail().report_uploaded(file_rec).attach_file(file_name)
+        return self.commit(mail)
+
+    def event(self, message):
+        self.log.event = message.lower()
+        return self.commit()
+
+
 class RequestLog(Log):
 
     def __init__(self, project):
