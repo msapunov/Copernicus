@@ -55,8 +55,12 @@ def calculate_ttl(project):
 
 
 def calculate_usage(use, total):
-    use = "{0:.1%}".format(float(use) / float(total))
-    return float(use.replace("%", ""))
+    try:
+        use = "{0:.1%}".format(float(use) / float(total))
+        return float(use.replace("%", ""))
+    except TypeError as err:
+        error("Failed to calculate project usage: %s" % err)
+        return ""
 
 
 def generate_login(name, surname):
