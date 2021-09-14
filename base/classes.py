@@ -14,7 +14,7 @@ class Log:
     def __init__(self):
         self.log = LogDB(author=current_user)
 
-    def __commit(self, mail=None):
+    def commit(self, mail=None):
         db.session.add(self.log)
         db.session.commit()
         Mail().log(self.log).start()
