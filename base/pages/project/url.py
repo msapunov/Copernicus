@@ -301,6 +301,9 @@ def web_modal_activity(pid):
 @login_required
 @grant_access("admin", "responsible")
 def web_project_index():
+    def set_users_len(x):
+        x.users_length = len(x.users)
+        return x
     try:
         projects = get_project_info(user_is_responsible=True)
         debug(projects)
@@ -313,4 +316,5 @@ def web_project_index():
     get_limbo_users(projects)
     list(map(lambda x: is_project_extendable(x), projects))
     list(map(lambda x: is_project_renewable(x), projects))
+    list(map(lambda x: set_users_len(x), projects))
     return render_template("project.html", data={"projects": projects})
