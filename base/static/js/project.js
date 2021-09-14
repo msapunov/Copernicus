@@ -200,7 +200,11 @@
     };
 
     window.render.responsible_list = function(){
-        $(".select2_responsible").select2();
+        $(".select2_responsible").select2({
+            placeholder: 'Select a new responsible',
+            sorter: data => data.sort((a, b) => a.text.localeCompare(b.text)),
+            allowClear: true
+        });
     };
 
     window.render.user_list = function(){
