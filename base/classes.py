@@ -177,7 +177,7 @@ class ProjectLog(Log):
 class RequestLog(Log):
 
     def __init__(self, project):
-        super().__init__()
+        super().__init__(register=project)
         self.pending = project
         self.log = LogDB(author=current_user, register=project)
 
@@ -229,7 +229,7 @@ class RequestLog(Log):
 class UserLog(Log):
 
     def __init__(self, user):
-        super().__init__()
+        super().__init__(user=user)
         self.user = user
         self.log = LogDB(author=current_user, user=user)
 
