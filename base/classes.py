@@ -179,7 +179,6 @@ class RequestLog(Log):
     def __init__(self, project):
         super().__init__(register=project)
         self.pending = project
-        self.log = LogDB(author=current_user, register=project)
 
     def visa_sent(self):
         self.log.event = "Visa sent to %s" % self.pending.responsible_email
@@ -231,7 +230,6 @@ class UserLog(Log):
     def __init__(self, user):
         super().__init__(user=user)
         self.user = user
-        self.log = LogDB(author=current_user, user=user)
 
     def acl(self, acl):
         result = []
