@@ -1,0 +1,29 @@
+<div class="uk-modal fade" tabindex="-1" role="dialog" aria-labelledby="confirm-modal" aria-hidden="true" id="{{form.name}}_responsible">
+  <div class="uk-modal-dialog">
+    <button type="button" class="uk-modal-close uk-close"></button>
+    <div class="uk-modal-header">
+      <h3>Assign a new responsible to the project {{form.name}}?</h3>
+    </div>
+    <div>
+      <form action="test" method="post" class="uk-panel uk-form responsible_form" id="{{form.name}}_responsible_form">
+        {{ form.csrf_token(id=form.name+"_csrf_responsible") }}
+        <p>Please assign a new responsible person from the users attached to your project. As soon as new responsible will be approved, you will be unsubscribed from responsible mailing list and will lose any ability to manage this project.</p>
+        <div class="uk-form-controls select2_hack">
+          {{ form.login(id=form.name+"_login_responsible", class_="uk-width-1-1 select2_responsible") }}
+        </div>
+        <div class="uk-form-row uk-alert uk-alert-danger{% if 'admin' not in current_user.permissions() %} uk-hidden{% endif %}">
+          {{ form.send(id=form.name+"_notify", class_="uk-margin-small-right uk-form-danger") }}
+          <label for={{form.name}}+"_notify">
+            Send notification to current project responsible?
+          </label>
+        </div>
+      </form>
+    </div>
+    <div class="uk-modal-footer">
+      <div class="uk-text-right">
+        <button class="uk-button window_hide" data-modal="{{form.name}}_responsible">Cancel</button>
+        <button class="uk-button uk-button-primary responsible_submit" data-modal="{{form.name}}_responsible" data-form="{{form.name}}_responsible_form" data-url="project/{{form.name}}/assign/responsible">Submit</button>
+      </div>
+    </div>
+  </div>
+</div>
