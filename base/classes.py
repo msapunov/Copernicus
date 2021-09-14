@@ -11,8 +11,12 @@ __copyright__ = "Aix Marseille University"
 
 class Log:
 
-    def __init__(self):
-        self.log = LogDB(author=current_user)
+    def __init__(self, project=None, register=None, user=None):
+        self.log = LogDB(
+            author=current_user,
+            project=project,
+            register=register,
+            user=user)
 
     def commit(self, mail=None):
         db.session.add(self.log)
