@@ -11,9 +11,9 @@ from pdfkit import from_string
 from recurrent.event_parser import RecurringEvent
 
 from base import db
-from base.classes import TmpUser
+from base.classes import TmpUser, ProjectLog
 from base.database.schema import Extend, File, Project, Tasks, User
-from base.pages import ProjectLog, calculate_usage, generate_login, TaskQueue
+from base.pages import calculate_usage, generate_login, TaskQueue
 from base.pages import ssh_wrapper, Task
 from base.pages.user.magic import user_by_id
 from base.pages.board.magic import create_resource

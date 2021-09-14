@@ -1,5 +1,6 @@
 from flask_login import current_user
-from base.pages import check_str, check_json, calculate_ttl, ProjectLog
+from base.classes import ProjectLog
+from base.pages import check_str, check_json, calculate_ttl
 from base.functions import projects_consumption
 from base.database.schema import Extend, Resources
 from operator import attrgetter

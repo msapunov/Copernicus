@@ -1,6 +1,7 @@
 from flask import render_template, jsonify
 from flask_login import login_required
-from base.pages import ProjectLog, grant_access
+from base.classes import ProjectLog
+from base.pages import grant_access
 from base.pages.board import bp
 from base.pages.board.magic import get_arguments, Extensions, reject_extension,\
     ignore_extension, transform

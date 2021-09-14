@@ -7,7 +7,6 @@ from base.pages import (check_int,
                         send_message,
                         check_str,
                         Task,
-                        ProjectLog,
                         TaskQueue,
                         ResponsibleMailingList,
                         UserMailingList,
@@ -18,7 +17,7 @@ from base.pages.user.magic import get_user_record, user_by_id
 from base.utils import get_tmpdir
 from base.database.schema import User, ACLDB, Register, LogDB, Project
 from base.email import Mail
-from base.classes import UserLog, RequestLog, TmpUser
+from base.classes import UserLog, RequestLog, TmpUser, ProjectLog
 from logging import error, debug
 from operator import attrgetter
 from datetime import datetime as dt
