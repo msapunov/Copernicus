@@ -35,16 +35,7 @@ class ProjectLog(Log):
         self.project = project
         self.send = True
 
-    def __commit(self, mail=None):
-        db.session.add(self.log)
-        db.session.commit()
-        message = "%s: %s" % (self.project.get_name(), self.log.event)
-        try:
-            if mail and self.send: mail.start()
-        finally:
-            return message
-
-    def commit_user(self, user):
+    def commit_user(self, user, mail):
         self.log.user = user
         return self.commit()
 
