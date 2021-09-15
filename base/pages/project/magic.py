@@ -368,12 +368,12 @@ def extend_project(pid, ext, date):
     return ProjectLog(ext.project).extended(ext)
 
 
-def transform_project(pid, ext, date):
+def transform_project(ext, date):
     ext.project.type = ext.transform
     ext.project.name = "%s%s" % (ext.transform, str(ext.project.id).zfill(3))
     ext.project.resources.valid = False
     ext.project.resources = create_resource(ext.project, ext.hours)
-    msg = "Created based on transformation request ID %s on %s" % (pid, date)
+    msg = "Created based on transformation request ID %s on %s" % (ext.id, date)
     ext.project.resources.comment = msg
     return ProjectLog(ext.project).transformed(ext)
 
