@@ -102,7 +102,7 @@ def web_project_add_user(project_name):
     else:
         project, user = project_attach_user(project_name, form)
         response = ProjectLog(project).user_assign(user)
-    return jsonify(message=response, data=get_users(project.id))
+    return jsonify(message=response, data=get_users(project))
 
 
 @bp.route("/project/assign/user", methods=["POST"])
@@ -124,7 +124,7 @@ def web_project_assign_user():
             ))
     list(map(lambda x: TaskQueue().project(project).user_assign(x), users))
     logs = list(map(lambda x: ProjectLog(project).user_assign(x), users))
-    return jsonify(message="<br>".join(logs), data=get_users(pid))
+    return jsonify(message="<br>".join(logs), data=get_users(project))
 
 
 @bp.route("/project/set/responsible/<int:pid>", methods=["POST"])
