@@ -411,9 +411,10 @@ def get_users(project=None):
     else:
         users = User.query.all()
     debug(users)
-    for user in users:
-        if user["login"] == project.responsible.login:
-            user["responsible"] = True
+    if project:
+        for user in users:
+            if user == project.responsible:
+                user.responsible = True
     return users
 
 
