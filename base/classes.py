@@ -373,3 +373,46 @@ class TmpUser:
                                                self.is_manager, self.is_tech,
                                                self.is_committee, self.is_admin)
         return "%s WITH ACL %s WITH STATUS %s" % (u_part, a_part, self.active)
+
+
+class Task:
+
+    def __init__(self, task):
+        self.task = task
+        self.id = task.id
+
+    def is_processed(self):
+        return self.task.processed
+
+    def done(self):
+        self.task.done = True
+        return self.commit()
+
+    def description(self):
+        return self.task.description()
+
+    def accept(self):
+        self.task.decision = "accept"
+        Mail().task_accepted(self.task).send()
+        return self.process()
+
+    def ignore(self):
+        self.task.decision = "ignore"
+        return self.process()
+
+    def reject(self):
+        self.task.decision = "reject"
+        Mail().task_rejected(self.task).send()
+        return self.process()
+
+    def action(self):
+        return self.task.action
+
+    def process(self):
+        self.task.processed = True
+        self.task.approve = current_user
+        return self.commit()
+
+    def commit(self):
+        db.session.commit()
+        return self.task
