@@ -233,7 +233,7 @@ def assign_responsible(name, form):
     if user not in project.users:
         raise ValueError("New responsible has to be one of the project users")
     TaskQueue().project(project).responsible_assign(user)
-    return ProjectLog(project).responsible_assign(user).send_message(True)
+    return ProjectLog(project).responsible_assign(user)
 
 
 def get_activity_files(name):
