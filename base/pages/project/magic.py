@@ -387,7 +387,7 @@ def process_extension(eid):
     never_extend = current_app.config.get("NO_EXTENSION_TYPE", [])
     never_renew = current_app.config.get("NO_RENEWAL_TYPE", [])
     if ext.transform.strip() != "":
-        return transform_project(eid, ext, date)
+        return transform_project(ext, date)
     if ext.project.type in never_extend:
         return renew_project(eid, ext, date)
     if ext.project.type in never_renew:
