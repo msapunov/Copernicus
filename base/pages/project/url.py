@@ -11,6 +11,7 @@ from base.pages import (
 from base.pages.user import bp
 from base.pages.user.magic import get_user_record, user_by_id
 from base.pages.project.form import (
+    new_responsible, ResponsibleForm,
     transform, TransForm,
     activate, ActivateForm,
     extend, ExtendForm,
@@ -19,6 +20,7 @@ from base.pages.project.form import (
     activity, ActivityForm,
     get_transformation_options)
 from base.pages.project.magic import (
+    assign_responsible,
     get_project_by_name,
     is_project_renewable,
     is_project_extendable,
