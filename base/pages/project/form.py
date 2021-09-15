@@ -104,10 +104,7 @@ class ResponsibleForm(FlaskForm):
             return True
 
 
-def new_responsible(project):
-    def format_user(rec):
-        res = "%s <%s>" % (rec["fullname"], rec["email"])
-        return rec["id"], res
+def new_responsible(project, is_admin):
     form = ResponsibleForm()
     form.name = project.name
     tmp = get_users(project)
