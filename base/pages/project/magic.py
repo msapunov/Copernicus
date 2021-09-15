@@ -11,10 +11,10 @@ from pdfkit import from_string
 from recurrent.event_parser import RecurringEvent
 
 from base import db
-from base.classes import TmpUser, ProjectLog
+from base.classes import TmpUser, ProjectLog, Task
 from base.database.schema import Extend, File, Project, Tasks, User
 from base.pages import calculate_usage, generate_login, TaskQueue
-from base.pages import ssh_wrapper, Task
+from base.pages import ssh_wrapper
 from base.pages.user.magic import user_by_id
 from base.pages.board.magic import create_resource
 from base.utils import save_file, get_tmpdir, form_error_string
@@ -39,9 +39,9 @@ def project_attach_user(name, form):
     if user in project.users:
         raise ValueError("User %s has been already attached to project %s"
                          % (user.name_login(), project.get_name()))
-    tid = TaskQueue().project(project).user_assign(user).task.id
-    if current_user.login and "admin" in current_user.permissions():
-        Task(tid).accept()
+    task = TaskQueue().project(project).user_assign(user).task
+    if "admin" in current_user.permissions():
+        Task(task).accept()
     return project, user
 
 
@@ -67,9 +67,9 @@ def project_add_user(name, form):
     user.name = prenom
     user.surname = surname
     user.email = email
-    tid = TaskQueue().project(project).user_create(user).task.id
+    task = TaskQueue().project(project).user_create(user).task
     if current_user.login and "admin" in current_user.permissions():
-        Task(tid).accept()
+        Task(task).accept()
     return project, user
 
 
@@ -223,9 +223,9 @@ def assign_responsible(name, form):
     user = user_by_id(uid)
     if "admin" in current_user.permissions():
         project = get_project_by_name(name)
-        tid = TaskQueue().project(project).responsible_assign(user).task.id
-        Task(tid).accept()
-        return ProjectLog(project).responsible_assign(user).send_message(send)
+        task = TaskQueue().project(project).responsible_assign(user).task
+        Task(task).accept()
+        return ProjectLog(project).send_message(send).responsible_assign(user)
     project = check_responsible(name)
     if user == project.responsible:
         raise ValueError("User %s is already responsible for the project %s" %
