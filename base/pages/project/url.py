@@ -233,6 +233,18 @@ def web_project_history(project_name):
     return jsonify(data=list(map(lambda x: x.to_dict(), recs)))
 
 
+@bp.route("/project/modal/assign/responsible/<int:pid>", methods=["POST"])
+@login_required
+@grant_access("admin", "responsible")
+def web_modal_responsible(pid):
+    project = get_project_record(pid)
+    if "admin" in current_user.permissions():
+        form = new_responsible(project, True)
+    else:
+        form = new_responsible(project, False)
+    return jsonify(render_template("modals/project_add_responsible.html", form=form))
+
+
 @bp.route("/project/modal/attach/user/<int:pid>", methods=["POST"])
 @login_required
 @grant_access("admin", "responsible")
