@@ -17,13 +17,14 @@ class Log:
             project=project,
             register=register,
             user=user)
+        self.send = True
 
     def commit(self, mail=None):
         db.session.add(self.log)
         db.session.commit()
         Mail().log(self.log).start()
         try:
-            if mail: mail.start()
+            if mail and self.send: mail.start()
         finally:
             return self.log.event
 
