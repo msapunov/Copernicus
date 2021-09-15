@@ -397,9 +397,19 @@ def process_extension(eid):
     return extend_project(eid, ext, date)
 
 
-def get_users(project):
-    get_limbo_users([project])
-    users = list(map(lambda x: x.to_dict(), project.users))  # Probably should be using details method
+def get_users(project=None):
+    """
+    This function suppose to return all users belonging to a project if project
+    record is provided as argument. Otherwise it'll returns the list of all
+    users registered in the system
+    :param project: Object or None. Record of a project or None
+    :return: List.
+    """
+    if project:
+        get_limbo_users([project])
+        users = project.users
+    else:
+        users = User.query.all()
     debug(users)
     for user in users:
         if user["login"] == project.responsible.login:
