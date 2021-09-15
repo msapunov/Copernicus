@@ -151,20 +151,9 @@ def web_project_set_responsible(pid):
 @bp.route("/project/<string:project_name>/assign/responsible", methods=["POST"])
 @login_required
 @grant_access("admin", "responsible")
-def web_project_assign_responsible():
-    data = request.get_json()
-    if not data:
-        raise ValueError("Expecting application/json requests")
-    pid = check_int(data["project"])
-    login = check_str(data["login"])
-    project = get_project_record(pid)
-    user = get_user_record(login)
-    if user == project.responsible:
-        raise ValueError("User %s is already responsible for the project %s" %
-                         (user.full_name(), project.get_name()))
-    TaskQueue().project(project).responsible_assign(user)
-    return jsonify(message=ProjectLog(project).responsible_assign(user),
-                   data=get_users(pid))
+def web_project_assign_responsible(project_name):
+    form = ResponsibleForm()
+    return jsonify(message=assign_responsible(project_name, form))
 
 
 @bp.route("/project/delete/user", methods=["POST"])
