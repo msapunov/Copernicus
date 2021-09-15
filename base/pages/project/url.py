@@ -146,7 +146,7 @@ def web_project_set_responsible(pid):
                    data=project.with_usage())
 
 
-@bp.route("/project/assign/responsible", methods=["POST"])
+@bp.route("/project/<string:project_name>/assign/responsible", methods=["POST"])
 @login_required
 @grant_access("admin", "responsible")
 def web_project_assign_responsible():
