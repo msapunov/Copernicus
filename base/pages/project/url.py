@@ -104,7 +104,7 @@ def web_project_add_user(project_name):
     else:
         project, user = project_attach_user(project_name, form)
         response = ProjectLog(project).user_assign(user)
-    return jsonify(message=response, data=get_users(project))
+    return jsonify(message=response)
 
 
 @bp.route("/project/assign/user", methods=["POST"])
