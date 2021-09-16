@@ -7,7 +7,14 @@
     <div>
       <form action="test" method="post" class="uk-panel uk-form responsible_form" id="{{form.name}}_responsible_form">
         {{ form.csrf_token(id=form.name+"_csrf_responsible") }}
-        <p>Please assign a new responsible person from the users attached to your project. As soon as new responsible will be approved, you will be unsubscribed from responsible mailing list and will lose any ability to manage this project.</p>
+        <div>
+          <p>As soon as new responsible will be approved, {{form.responsible}} will be unsubscribed from responsible mailing list and will lose any ability to manage {{form.name}} project.</p>
+        </div>
+        {% if 'admin' not in current_user.permissions() %}
+          <div class="uk-alert uk-alert-danger">
+            <p>Please assign a new responsible person from the users attached to your project. This user has to have a permanent position!</p>
+          </div>
+        {% endif %}
         <div class="uk-form-controls select2_hack">
           {{ form.login(id=form.name+"_login_responsible", class_="uk-width-1-1 select2_responsible") }}
         </div>

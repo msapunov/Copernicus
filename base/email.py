@@ -169,8 +169,15 @@ class Mail(Thread):
         self.__populate_values({"%FULLNAME": full, "%CHANGES": changes})
         return self
 
-    def responsible_assign(self, record):
+    def responsible_assign(self, task):
         self.populate("RESPONSIBLE ASSIGN")
+        self.destination = task.project.responsible.email
+        name = task.project.get_name()
+        full = task.project.responsible.full_name()
+        new_full = task.user.name_login_email()
+        self.__populate_values({"%FULLNAME": full, "%NEW_FULLNAME": new_full,
+                                "%NAME": name})
+        return self
 
     def user_add(self):
         pass

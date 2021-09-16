@@ -11,10 +11,10 @@ from pdfkit import from_string
 from recurrent.event_parser import RecurringEvent
 
 from base import db
-from base.classes import TmpUser, ProjectLog
+from base.classes import TmpUser, ProjectLog, Task
 from base.database.schema import Extend, File, Project, Tasks, User
 from base.pages import calculate_usage, generate_login, TaskQueue
-from base.pages import ssh_wrapper, Task
+from base.pages import ssh_wrapper
 from base.pages.user.magic import user_by_id
 from base.pages.board.magic import create_resource
 from base.utils import save_file, get_tmpdir, form_error_string
@@ -39,9 +39,9 @@ def project_attach_user(name, form):
     if user in project.users:
         raise ValueError("User %s has been already attached to project %s"
                          % (user.name_login(), project.get_name()))
-    tid = TaskQueue().project(project).user_assign(user).task.id
-    if current_user.login and "admin" in current_user.permissions():
-        Task(tid).accept()
+    task = TaskQueue().project(project).user_assign(user).task
+    if "admin" in current_user.permissions():
+        Task(task).accept()
     return project, user
 
 
@@ -67,9 +67,9 @@ def project_add_user(name, form):
     user.name = prenom
     user.surname = surname
     user.email = email
-    tid = TaskQueue().project(project).user_create(user).task.id
+    task = TaskQueue().project(project).user_create(user).task
     if current_user.login and "admin" in current_user.permissions():
-        Task(tid).accept()
+        Task(task).accept()
     return project, user
 
 
@@ -223,17 +223,17 @@ def assign_responsible(name, form):
     user = user_by_id(uid)
     if "admin" in current_user.permissions():
         project = get_project_by_name(name)
-        tid = TaskQueue().project(project).responsible_assign(user).task.id
-        Task(tid).accept()
-        return ProjectLog(project).responsible_assign(user).send_message(send)
+        task = TaskQueue().project(project).responsible_assign(user).task
+        Task(task).accept()
+        return ProjectLog(project).send_message(send).responsible_assign(task)
     project = check_responsible(name)
     if user == project.responsible:
         raise ValueError("User %s is already responsible for the project %s" %
                          (user.full_name(), project.get_name()))
     if user not in project.users:
         raise ValueError("New responsible has to be one of the project users")
-    TaskQueue().project(project).responsible_assign(user)
-    return ProjectLog(project).responsible_assign(user)
+    task = TaskQueue().project(project).responsible_assign(user).task
+    return ProjectLog(project).responsible_assign(task)
 
 
 def get_activity_files(name):
@@ -387,7 +387,7 @@ def process_extension(eid):
     never_extend = current_app.config.get("NO_EXTENSION_TYPE", [])
     never_renew = current_app.config.get("NO_RENEWAL_TYPE", [])
     if ext.transform.strip() != "":
-        return transform_project(eid, ext, date)
+        return transform_project(ext, date)
     if ext.project.type in never_extend:
         return renew_project(eid, ext, date)
     if ext.project.type in never_renew:
@@ -397,13 +397,24 @@ def process_extension(eid):
     return extend_project(eid, ext, date)
 
 
-def get_users(project):
-    get_limbo_users([project])
-    users = list(map(lambda x: x.to_dict(), project.users))  # Probably should be using details method
+def get_users(project=None):
+    """
+    This function suppose to return all users belonging to a project if project
+    record is provided as argument. Otherwise it'll returns the list of all
+    users registered in the system
+    :param project: Object or None. Record of a project or None
+    :return: List.
+    """
+    if project:
+        get_limbo_users([project])
+        users = project.users
+    else:
+        users = User.query.all()
     debug(users)
-    for user in users:
-        if user["login"] == project.responsible.login:
-            user["responsible"] = True
+    if project:
+        for user in users:
+            if user == project.responsible:
+                user.responsible = True
     return users
 
 

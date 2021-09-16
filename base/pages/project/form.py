@@ -107,6 +107,7 @@ class ResponsibleForm(FlaskForm):
 def new_responsible(project, is_admin):
     form = ResponsibleForm()
     form.name = project.name
+    form.responsible = project.responsible.name_login_email()
     if is_admin:
         users = get_users()
     else:
