@@ -407,15 +407,9 @@ def get_users(project=None):
     """
     if project:
         get_limbo_users([project])
-        users = project.users
+        return project.users
     else:
-        users = User.query.all()
-    debug(users)
-    if project:
-        for user in users:
-            if user == project.responsible:
-                user.responsible = True
-    return users
+        return User.query.all()
 
 
 def get_limbo_users(projects):
