@@ -95,7 +95,7 @@ def extend(project):
 
 
 class ResponsibleForm(FlaskForm):
-    login = SelectField("Login", choices=[], coerce=int, default=0)
+    login = SelectField("Login", choices=[("", "---")], default=0)
     send = BooleanField(default="checked")
 
     def validate(self):
@@ -104,15 +104,16 @@ class ResponsibleForm(FlaskForm):
             return True
 
 
-def new_responsible(project):
-    def format_user(rec):
-        res = "%s <%s>" % (rec["fullname"], rec["email"])
-        return rec["id"], res
+def new_responsible(project, is_admin):
     form = ResponsibleForm()
     form.name = project.name
-    tmp = get_users(project)
-    users = list(filter(lambda x: "responsible" not in x.keys(), tmp))
-    form.login.choices = list(map(lambda x: format_user(x), users))
+    if is_admin:
+        users = get_users()
+    else:
+        tmp = get_users(project)
+        users = list(filter(lambda x: "responsible" not in x.keys(), tmp))
+    for u in users:
+        form.login.choices.append((u.id, u.name_login_email()))
     return form
 
 

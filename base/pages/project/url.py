@@ -11,6 +11,7 @@ from base.pages import (
 from base.pages.user import bp
 from base.pages.user.magic import get_user_record, user_by_id
 from base.pages.project.form import (
+    new_responsible, ResponsibleForm,
     transform, TransForm,
     activate, ActivateForm,
     extend, ExtendForm,
@@ -19,6 +20,7 @@ from base.pages.project.form import (
     activity, ActivityForm,
     get_transformation_options)
 from base.pages.project.magic import (
+    assign_responsible,
     get_project_by_name,
     is_project_renewable,
     is_project_extendable,
@@ -102,7 +104,7 @@ def web_project_add_user(project_name):
     else:
         project, user = project_attach_user(project_name, form)
         response = ProjectLog(project).user_assign(user)
-    return jsonify(message=response, data=get_users(project.id))
+    return jsonify(message=response, data=get_users(project))
 
 
 @bp.route("/project/assign/user", methods=["POST"])
@@ -124,7 +126,7 @@ def web_project_assign_user():
             ))
     list(map(lambda x: TaskQueue().project(project).user_assign(x), users))
     logs = list(map(lambda x: ProjectLog(project).user_assign(x), users))
-    return jsonify(message="<br>".join(logs), data=get_users(pid))
+    return jsonify(message="<br>".join(logs), data=get_users(project))
 
 
 @bp.route("/project/set/responsible/<int:pid>", methods=["POST"])
@@ -146,23 +148,12 @@ def web_project_set_responsible(pid):
                    data=project.with_usage())
 
 
-@bp.route("/project/assign/responsible", methods=["POST"])
+@bp.route("/project/<string:project_name>/assign/responsible", methods=["POST"])
 @login_required
 @grant_access("admin", "responsible")
-def web_project_assign_responsible():
-    data = request.get_json()
-    if not data:
-        raise ValueError("Expecting application/json requests")
-    pid = check_int(data["project"])
-    login = check_str(data["login"])
-    project = get_project_record(pid)
-    user = get_user_record(login)
-    if user == project.responsible:
-        raise ValueError("User %s is already responsible for the project %s" %
-                         (user.full_name(), project.get_name()))
-    TaskQueue().project(project).responsible_assign(user)
-    return jsonify(message=ProjectLog(project).responsible_assign(user),
-                   data=get_users(pid))
+def web_project_assign_responsible(project_name):
+    form = ResponsibleForm()
+    return jsonify(message=assign_responsible(project_name, form))
 
 
 @bp.route("/project/delete/user", methods=["POST"])
@@ -231,6 +222,18 @@ def web_project_history(project_name):
     project = get_project_by_name(project_name)
     recs = LogDB().query.filter_by(project_id=project.id).all()
     return jsonify(data=list(map(lambda x: x.to_dict(), recs)))
+
+
+@bp.route("/project/modal/assign/responsible/<int:pid>", methods=["POST"])
+@login_required
+@grant_access("admin", "responsible")
+def web_modal_responsible(pid):
+    project = get_project_record(pid)
+    if "admin" in current_user.permissions():
+        form = new_responsible(project, True)
+    else:
+        form = new_responsible(project, False)
+    return jsonify(render_template("modals/project_add_responsible.html", form=form))
 
 
 @bp.route("/project/modal/attach/user/<int:pid>", methods=["POST"])

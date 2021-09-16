@@ -55,6 +55,13 @@ class Mail(Thread):
         return self
 
     def populate(self, name):
+        """
+        Takes a section in configuration file and fill Mail object with data
+        found in this section. Like destination, cc, sender, title, message body
+        and signature.
+        :param name: String. Name of a section
+        :return: Object. Instance of Mail object
+        """
         self.destination = self.cfg.get(name, "TO", fallback=None)
         self.cc = self.cfg.get(name, "CC", fallback=None)
         self.sender = self.cfg.get(name, "FROM", fallback=None)
@@ -64,6 +71,11 @@ class Mail(Thread):
         return self
 
     def configure(self):
+        """
+        Configure Mail object with the values found in SERVER section of
+        configuration file
+        :return: Object. Instance of Mail object
+        """
         cfg_file = app.config.get("EMAIL_CONFIG", "mail.cfg")
         cfg_path = path_join(app.instance_path, cfg_file)
         if not exists(cfg_path):
@@ -81,9 +93,17 @@ class Mail(Thread):
         return self
 
     def run(self):
+        """
+        Asynchronous sending of mail
+        :return: Nothing
+        """
         self.send()
 
     def send(self):
+        """
+        Synchronous sending of mail
+        :return: Nothing
+        """
         debug("Sending mail to %s" % self.destination)
         self.msg["Subject"] = self.title
         self.msg["From"] = self.sender
