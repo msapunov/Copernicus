@@ -225,15 +225,15 @@ def assign_responsible(name, form):
         project = get_project_by_name(name)
         task = TaskQueue().project(project).responsible_assign(user).task
         Task(task).accept()
-        return ProjectLog(project).send_message(send).responsible_assign(user)
+        return ProjectLog(project).send_message(send).responsible_assign(task)
     project = check_responsible(name)
     if user == project.responsible:
         raise ValueError("User %s is already responsible for the project %s" %
                          (user.full_name(), project.get_name()))
     if user not in project.users:
         raise ValueError("New responsible has to be one of the project users")
-    TaskQueue().project(project).responsible_assign(user)
-    return ProjectLog(project).responsible_assign(user)
+    task = TaskQueue().project(project).responsible_assign(user).task
+    return ProjectLog(project).responsible_assign(task)
 
 
 def get_activity_files(name):

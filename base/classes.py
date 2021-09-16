@@ -58,10 +58,10 @@ class ProjectLog(Log):
             user.full_name(), user.login)
         return self.commit_user(user)
 
-    def responsible_assign(self, user):
+    def responsible_assign(self, task):
         self.log.event = "Made a request to assign new responsible %s" \
-                         % user.full_name()
-        return self.commit_user(user)
+                         % task.user.full_name()
+        return self.commit_user(task.user, Mail().responsible_assign(task))
 
     def user_add(self, user):
         self.log.event = "Request to add a new user: %s %s <%s>" % (
