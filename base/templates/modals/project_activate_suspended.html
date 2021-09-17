@@ -17,6 +17,9 @@
                         {{ form.note(id=form.name+"_note_activate", placeholder="Motivation:\nShort description of the request", class_="uk-width-1-1") }}
                     </div>
                 </div>
+                <div class="uk-alert uk-alert-danger">
+                    <p>Please make sure that list of users for the project {{form.name}} is up to date!</p>
+                </div>
             </form>
         </div>
         <div class="uk-modal-footer">
