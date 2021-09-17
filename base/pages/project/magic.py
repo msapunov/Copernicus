@@ -223,13 +223,15 @@ def assign_responsible(name, form):
     user = user_by_id(uid)
     if "admin" in current_user.permissions():
         project = get_project_by_name(name)
-        task = TaskQueue().project(project).responsible_assign(user).task
-        Task(task).accept()
-        return ProjectLog(project).send_message(send).responsible_assign(task)
-    project = check_responsible(name)
+    else:
+        project = check_responsible(name)
     if user == project.responsible:
         raise ValueError("User %s is already responsible for the project %s" %
                          (user.full_name(), project.get_name()))
+    if "admin" in current_user.permissions():
+        task = TaskQueue().project(project).responsible_assign(user).task
+        Task(task).accept()
+        return ProjectLog(project).send_message(send).responsible_assign(task)
     if user not in project.users:
         raise ValueError("New responsible has to be one of the project users")
     task = TaskQueue().project(project).responsible_assign(user).task
