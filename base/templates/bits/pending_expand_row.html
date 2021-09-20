@@ -10,10 +10,18 @@
                     <td class="uk-width-1-10 uk-text-right">Mesocentre ID:</td>
                     <td class="uk-width-9-10 uk-text-left">{{pending.meso_id}}</td>
                 </tr>
+                {% if "cpu" in pending %}
                 <tr>
                     <td class="uk-width-1-10 uk-text-right">CPU:</td>
                     <td class="uk-width-9-10 uk-text-left">{{pending.cpu}}</td>
                 </tr>
+                {% endif %}
+                {% if "cloud_image" in pending %}
+                    <tr>
+                        <td class="uk-width-1-10 uk-text-right">Cloud image:</td>
+                        <td class="uk-width-9-10 uk-text-left">{{pending.cloud_image}}</td>
+                    </tr>
+                {% endif %}
                 <tr>
                     <td class="uk-width-1-10 uk-text-right">Responsible:</td>
                     <td class="uk-width-9-10 uk-text-left">
