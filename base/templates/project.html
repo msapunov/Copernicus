@@ -146,9 +146,11 @@
             <div class="uk-width-medium-1-5 uk-width-small-1-2">
                 <div class="uk-panel uk-margin-top uk-margin-bottom">
                     {% if project.active %}
+                    <!--
                         {% if project.users_length > 1 %}
                             <button class="uk-button uk-width-1-1 uk-margin-small-bottom uk-button-danger responsible" data-modal="{{project.name}}_responsible" disabled>Assign responsible</button>
                         {% endif %}
+                        -->
                         <button class="uk-button uk-width-1-1 uk-margin-small-bottom uk-button-primary transform" data-modal="{{project.name}}_transform" disabled>Transform</button>
                         {% if project.is_renewable %}
                             <button class="uk-button uk-width-1-1 uk-margin-small-bottom uk-button-primary renew" data-modal="{{project.name}}_renew" disabled>Renew&nbsp;project&nbsp;for&nbsp;a year</button>
