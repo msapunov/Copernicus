@@ -78,7 +78,7 @@ def project_parse_cfg_options(cfg, section):
     Parse project configuration. Use of recurrent lib to parse fuzzy time values
     :param cfg: Configuration object
     :param section: Section in the configuration object, i.e. project type
-    :return: Dictionary. Keys are: "duration_text", "duration_dt",
+    :return: Dictionary. Keys are: "duration_text", "duration_dt", "extendable",
             "finish_text", "finish_dt", "cpu", "finish_notice_text",
             "finish_notice_dt", "transform", "description", "evaluation_text",
             "evaluation_dt", "evaluation_notice_text", "evaluation_notice_dt"
@@ -125,10 +125,10 @@ def project_parse_cfg_options(cfg, section):
         eva_text_dt = list(map(lambda x: x.replace(tzinfo=timezone.utc), tmp))
     else:
         eva_text_dt = None
-
+    extendable = cfg.get(section, "extendable", fallback=False)
     return {"duration_text": duration, "duration_dt": duration_dt,
             "finish_text": end, "finish_dt": end_dt, "cpu": cpu,
-            "finish_notice_text": end_notice,
+            "finish_notice_text": end_notice, "extendable": extendable,
             "finish_notice_dt": end_notice_dt,
             "transform": transform, "description": description,
             "evaluation_text": evaluation, "evaluation_dt": eva_dt,
@@ -655,14 +655,15 @@ def set_state(pid, state):
 
 def is_project_extendable(project):
     """
-    Check if project type has evaluation_dt option in config file and set
-    is_extendable property True if evaluation_dt present or False otherwise.
+    Check if project type has evaluation_dt or extendable option in config file
+    and set is_extendable property True if one of the options is present or
+    False otherwise.
     :param project: Object. Project object
     :return: Object. Project object
     """
     cfg = project_config()
     eva = cfg[project.type].get("evaluation_dt", None)
-    ext = cfg[project.type].get("extendable", None)
+    ext = cfg[project.type].get("extendable", False)
     if eva or ext:
         project.is_extendable = True
     else:
