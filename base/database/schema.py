@@ -501,6 +501,7 @@ class Register(db.Model):
     approve = db.Column(db.Boolean)
     approve_ts = db.Column(db.DateTime(True))
     approve_skip = db.Column(db.Boolean)
+    cloud_image = db.Column(db.String)
 
     def __repr__(self):
         return "<Registration request {}>".format(self.id)
@@ -551,6 +552,7 @@ class Register(db.Model):
             "id": self.id,
             "ts": self.ts.strftime("%Y-%m-%d %X %Z"),
             "title": self.title,
+            "cloud_image": self.cloud_image,
             "responsible_full_name": self.responsible_full_name(),
             "responsible_first_name": self.responsible_first_name,
             "responsible_last_name": self.responsible_last_name,
