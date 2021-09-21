@@ -53,10 +53,11 @@ class ProjectLog(Log):
             self.log.created = date
         return self.commit()
 
-    def responsible_added(self, user):
+    def responsible_added(self, task):
         self.log.event = "Added a new project responsible %s with login %s" % (
-            user.full_name(), user.login)
-        return self.commit_user(user)
+            task.user.full_name(), task.user.login)
+        self.log.user = task.user
+        return self.commit(Mail().responsible_assigned(task))
 
     def responsible_assign(self, task):
         self.log.event = "Made a request to assign new responsible %s" \
@@ -71,16 +72,16 @@ class ProjectLog(Log):
     def user_added(self, user):
         self.log.event = "Added a new user %s with login %s" % (
             user.full_name(), user.login)
-        return self.commit_user(user)
+        return self.commit_user(user, Mail().responsible_assign(task))
 
     def user_assign(self, user):
         self.log.event = "Made a request to assign a new user %s" \
                          % user.full_name()
-        return self.commit_user(user)
+        return self.commit_user(user, Mail().responsible_assign(task))
 
     def user_assigned(self, user):
         self.log.event = "User %s has been attached" % user.full_name()
-        return self.commit_user(user)
+        return self.commit_user(user, Mail().responsible_assign(task))
 
     def user_deleted(self, user):
         self.log.event = "User %s (%s) has been deleted" % (
