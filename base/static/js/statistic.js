@@ -3,7 +3,6 @@
     window.stat = {};
     window.stat.url = {
         list: "statistic/list",
-        set_responsible: "project/set/responsible/",
         user_list: "user/list",
         suspend: "statistic/suspend/",
         activate: "statistic/activate/"
@@ -143,17 +142,6 @@
             ' type="button">Activate project</button>';
         }
     };
-    window.stat.btnChangeResp = function btnChangeResp(pid, name, rid, full){
-        return '<button class="uk-button change-responsible uk-width-1-1 uk-margin-small-bottom" data-pid=' +
-        pid +
-        ' data-name=' +
-        name +
-        ' data-row=' +
-        rid +
-        ' data-responsible="' +
-        full + '"' +
-        ' type="button">Change responsible</button>';
-    };
     window.stat.expand = function format(d, row){
         // `d` is the original data object for the row
         var stat = (d.active) ? 'Active' : 'Suspended';
@@ -161,7 +149,6 @@
         var proc = (d.consumed_use > 0) ? d.consumed_use+"%" : "-" ;
         var rid = row.index();
         var btnState = window.stat.btnState(d.id, d.name, d.active, rid);
-        var btnChangeResp = window.stat.btnChangeResp(d.id, d.name, rid, resp);
         var btnAddUser = window.stat.btnAddUser(d.id, d.name, rid);
         return '<div class="uk-grid"><div class="uk-width-3-4 uk-panel uk-margin-top uk-margin-bottom" style="padding-left:50px;padding-right:50px;">' +
                 '<div>ID: <b>' + d.id + '</b></div>' +
@@ -182,9 +169,6 @@
             '<div class="uk-width-1-4">' +
                 '<div>' +
                     btnState +
-                '</div>' +
-                '<div>' +
-                    btnChangeResp +
                 '</div>' +
                 /*
                 '<div>' +
