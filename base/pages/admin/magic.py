@@ -115,15 +115,6 @@ def event_log():
     return list(map(lambda x: x.to_web(), sorted_recs))
 
 
-def task_mail(action, task):
-    description = task.description()
-    tid = task.id
-    to = app.config["EMAIL_TECH"]
-    title = "Task id '%s' has been %sed" % (tid, action)
-    msg = "Task '%s' with id '%s' has been %s" % (description, tid, action)
-    return message(to, msg, title)
-
-
 #  Project registration logic below
 
 
@@ -850,15 +841,11 @@ def task_action(action):
 
     task = get_task()
     if action == "reject":
-        task_mail("reject", task)
         return task.reject()
     elif action == "ignore":
         return task.ignore()
-
-    task_mail("accept", task)
-    task.accept()
-
-    return task
+    else:
+        return task.accept()
 
 
 def get_task():
