@@ -296,7 +296,6 @@ class Mail(Thread):
 
     def log(self, log):
         self.populate("TECH")
-        self.destination = log.author.email
         title = "Log entry ID: %s" % log.id
         self.__populate_values({"%TITLE": title, "%MESSAGE": log.event})
         return self
