@@ -53,26 +53,29 @@ class ProjectLog(Log):
             self.log.created = date
         return self.commit()
 
+    def user(self, user):
+        self.log.user = user
+        return self
+
     def responsible_added(self, task):
         self.log.event = "Added a new project responsible %s with login %s" % (
             task.user.full_name(), task.user.login)
-        self.log.user = task.user
-        return self.commit(Mail().responsible_assigned(task))
+        return self.user(task.user).commit(Mail().responsible_assigned(task))
 
     def responsible_assign(self, task):
         self.log.event = "Made a request to assign new responsible %s" \
                          % task.user.full_name()
-        return self.commit_user(task.user, Mail().responsible_assign(task))
+        return self.user(task.user).commit(Mail().responsible_assign(task))
 
-    def user_add(self, user):
+    def user_add(self, task):
         self.log.event = "Request to add a new user: %s %s <%s>" % (
-            user.name, user.surname, user.email)
-        return self.commit()
+            task.user.name, task.user.surname, task.user.email)
+        return self.user(task.user).commit(Mail().user_added(task))
 
-    def user_added(self, user):
+    def user_added(self, task):
         self.log.event = "Added a new user %s with login %s" % (
-            user.full_name(), user.login)
-        return self.commit_user(user, Mail().responsible_assign(task))
+            task.user.full_name(), task.user.login)
+        return self.user(task.user).commit(Mail().user_added(task))
 
     def user_assign(self, user):
         self.log.event = "Made a request to assign a new user %s" \
