@@ -3,7 +3,6 @@
     Dropzone.autoDiscover = false;
     window.proj = {};
     window.proj.url = {
-        new_resp: "project/assign/responsible",
         user_list: "user/list",
         delete: "project/delete/user",
         history: "project/history",
@@ -39,30 +38,6 @@
                 var btn = $("#"+uid).find("button").css("visibility", "hidden");
                 $("#"+uid).find(".uk-margin-small-left").addClass("uk-text-muted");
             });
-        });
-    };
-
-    window.render.assign_responsible = function(e){
-        var name = $(this).data("name");
-        var id = $(this).data("project");
-        var list_id = "#"+id+"_assign_list";
-
-        var div = $(list_id).clone();
-        var rnd = list_id.hashCode();
-        dialog(div.addClass(rnd).show().prop("outerHTML"), function(){
-            var select = $("."+rnd).children(".admin_assign_select");
-            if(select.length < 1){
-                return true;
-            }
-            var full = $(select).find(":selected").text();
-
-            var data = {
-                "login": select.val(),
-                "project": id
-            };
-            var text = "You are about to assign {0} as the responsible person for the project {1}. Are you sure?".f(full, name);
-            window.render.user_confirmation(window.proj.url.new_resp, data, text, {"name": name, "id": id});
-            return true;
         });
     };
 
