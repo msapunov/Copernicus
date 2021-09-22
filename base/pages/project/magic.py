@@ -45,7 +45,7 @@ def project_attach_user(name, form):
     return project, user
 
 
-def project_add_user(name, form):
+def project_create_user(name, form):
     """
     Function which creates a temporary user based on provide info and add a
     create user task in the task queue
