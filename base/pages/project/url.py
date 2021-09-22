@@ -85,12 +85,6 @@ def project_info(project_name):
     return jsonify(data=project_info_by_name(project_name))
 
 
-@bp.route("/project/list", methods=["POST"])
-@login_required
-def project_list():
-    return jsonify(data=list_of_projects())
-
-
 @bp.route("/project/<string:project_name>/add/user", methods=["POST"])
 @login_required
 @grant_access("admin", "responsible")
@@ -100,52 +94,9 @@ def web_project_add_user(project_name):
         raise ValueError(form.errors)
     if form.create_user:
         project, user = project_add_user(project_name, form)
-        response = ProjectLog(project).user_add(user)
     else:
         project, user = project_attach_user(project_name, form)
-        response = ProjectLog(project).user_assign(user)
-    return jsonify(message=response)
-
-
-@bp.route("/project/assign/user", methods=["POST"])
-@login_required
-@grant_access("admin", "responsible")
-def web_project_assign_user():
-    data = request.get_json()
-    if not data:
-        raise ValueError("Expecting application/json requests")
-    pid = check_int(data["project"])
-    project = get_project_record(pid)
-    login = list(map(lambda x: check_str(x), data["users"]))
-    users = list(map(lambda x: get_user_record(x), login))
-
-    for user in users:
-        if user in project.users:
-            raise ValueError("User %s is already in the project %s!" % (
-                user.full_name(), project.get_name()
-            ))
-    list(map(lambda x: TaskQueue().project(project).user_assign(x), users))
-    logs = list(map(lambda x: ProjectLog(project).user_assign(x), users))
-    return jsonify(message="<br>".join(logs), data=get_users(project))
-
-
-@bp.route("/project/set/responsible/<int:pid>", methods=["POST"])
-@login_required
-@grant_access("admin", "responsible")
-def web_project_set_responsible(pid):
-    data = request.get_json()
-    if not data:
-        raise ValueError("Expecting application/json requests")
-    project = get_project_record(pid)
-    user = user_by_id(check_int(data["uid"]))
-    if user == project.responsible:
-        raise ValueError("User %s is already responsible for the project %s" %
-                         (user.full_name(), project.get_name()))
-    project.responsible = user
-    db.session.commit()
-    #TaskQueue().project(project).responsible_assign(user)
-    return jsonify(message=ProjectLog(project).responsible_assign(user),
-                   data=project.with_usage())
+    return jsonify(message=ProjectLog(project).user_assign(user))
 
 
 @bp.route("/project/<string:project_name>/assign/responsible", methods=["POST"])
@@ -171,8 +122,8 @@ def web_project_delete_user():
         raise ValueError("User '%s' seems not to be registered in project '%s'"
                          % (login, project.get_name()))
     user = get_user_record(login)
-    TaskQueue().project(project).user_remove(user)
-    return jsonify(message=ProjectLog(project).user_del(user))
+    task = TaskQueue().project(project).user_remove(user).task
+    return jsonify(message=ProjectLog(project).user_delete(task))
 
 
 @bp.route("/project/transform/<string:project_name>", methods=["POST"])
