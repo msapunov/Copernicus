@@ -112,7 +112,8 @@ def new_responsible(project, is_admin):
         users = get_users()
     else:
         users = get_users(project)
-        users.remove(project.responsible)
+        if project.responsible in users:
+            users.remove(project.responsible)
     for u in users:
         form.login.choices.append((u.id, u.full()))
     return form
