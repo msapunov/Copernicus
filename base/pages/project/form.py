@@ -107,14 +107,14 @@ class ResponsibleForm(FlaskForm):
 def new_responsible(project, is_admin):
     form = ResponsibleForm()
     form.name = project.name
-    form.responsible = project.responsible.name_login_email()
+    form.responsible = project.responsible.full()
     if is_admin:
         users = get_users()
     else:
         users = get_users(project)
         users.remove(project.responsible)
     for u in users:
-        form.login.choices.append((u.id, u.name_login_email()))
+        form.login.choices.append((u.id, u.full()))
     return form
 
 

@@ -174,7 +174,7 @@ class Mail(Thread):
         self.destination = task.project.responsible.email
         name = task.project.get_name()
         full = task.project.responsible.full_name()
-        new_full = task.user.name_login_email()
+        new_full = task.user.full()
         self.cc = task.user.email + "," + self.cc
         self.__populate_values({"%FULLNAME": full, "%NEW_FULLNAME": new_full,
                                 "%NAME": name})

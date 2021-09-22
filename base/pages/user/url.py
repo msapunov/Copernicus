@@ -30,7 +30,7 @@ def user_list(active=True):
         users_obj = query.filter(User.surname != "").all()
     users_obj = sorted(users_obj, key=attrgetter("login"))
     users = map(lambda x:
-                {"id": x.id, "login": x.login, "text": x.name_login_email()},
+                {"id": x.id, "login": x.login, "text": x.full()},
                 users_obj)
     users_list = list(users)
     return jsonify(results=users_list)
