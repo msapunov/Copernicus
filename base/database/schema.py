@@ -374,6 +374,9 @@ class User(UserMixin, db.Model):
     def __repr__(self):
         return '<User {}>'.format(self.login)
 
+    def full(self):
+        return "%s <%s> [%s]" % (self.full_name(), self.email, self.login)
+
     def full_name(self):
         if self.name and self.surname:
             return "%s %s" % (self.name.capitalize(), self.surname.capitalize())
@@ -394,12 +397,6 @@ class User(UserMixin, db.Model):
         if self.acl.is_admin:
             perm.append("admin")
         return perm
-
-    def name_login(self):
-        return "%s [%s]" % (self.full_name(), self.login)
-
-    def name_login_email(self):
-        return "%s <%s> [%s]" % (self.full_name(), self.email, self.login)
 
     def project_names(self):
         projects = list(self.project)
@@ -439,7 +436,7 @@ class User(UserMixin, db.Model):
             "acl_created": start,
             "acl_modified": mod,
             "uid": self.uid,
-            "brief": self.name_login_email(),
+            "brief": self.full(),
             "projects": self.project_names()
         }
 
