@@ -1,9 +1,10 @@
 from flask_login import current_user
-from base.database.schema import Extend
-from operator import attrgetter
 from base import db
-from base.email import Mail
-from base.database.schema import LogDB
+from base.email import Mail, UserMailingList, ResponsibleMailingList
+from base.database.schema import LogDB, User, ACLDB, Extend
+
+from operator import attrgetter
+from datetime import datetime as dt
 
 __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
