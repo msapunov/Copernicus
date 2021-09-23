@@ -299,3 +299,41 @@ class Mail(Thread):
         title = "Log entry ID: %s" % log.id
         self.__populate_values({"%TITLE": title, "%MESSAGE": log.event})
         return self
+
+
+class Sympa(Mail):
+
+    def __init__(self, list_name):
+        super().__init__()
+        self.configure()
+        self.list = self.cfg.get("LIST", list_name)
+        self.destination = self.cfg.get("LIST", "DESTINATION")
+
+    def subscribe(self, email, name=None):
+        self.sender = email
+        if name:
+            self.title = "SUBSCRIBE %s %s" % (self.list, name)
+        else:
+            self.title = "SUBSCRIBE %s" % self.list
+        return self.start()
+
+    def unsubscribe(self, email):
+        self.sender = email
+        self.title = "UNSUBSCRIBE %s" % self.list
+        return self.start()
+
+    def change(self, old_mail, new_mail, name=None):
+        if self.unsubscribe(old_mail):
+            return self.subscribe(new_mail, name=name)
+
+
+class UserMailingList(Sympa):
+
+    def __init__(self):
+        super().__init__("USER_LIST")
+
+
+class ResponsibleMailingList(Sympa):
+
+    def __init__(self):
+        super().__init__("RESPONSIBLE_LIST")
