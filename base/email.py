@@ -304,7 +304,7 @@ class Sympa(Mail):
         super().__init__()
         self.configure()
         self.list = self.cfg.get("LIST", list_name)
-        self.destination = self.cfg.get("LIST", "DESTINATION")
+        self.destination = self.cfg.get("LIST", "SYMPA")
 
     def subscribe(self, email, name=None):
         self.sender = email
