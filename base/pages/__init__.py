@@ -200,50 +200,6 @@ def check_str(raw_note):
     return note
 
 
-class MailingList:
-
-    def __init__(self, list_name):
-        email_list = current_app.config.get(list_name, None)
-        if email_list:
-            self.list = email_list
-            debug("Found emailing list '%s' for %s" % (email_list, list_name))
-        else:
-            self.list = None
-            debug("No emailing list found in configuration for %s" % list_name)
-
-    def subscribe(self, email, name=None):
-        if name:
-            title = "SUBSCRIBE %s %s" % (self.list, name)
-        else:
-            title = "SUBSCRIBE %s" % self.list
-        if self.list:
-            return self._send(email, title)
-
-    def unsubscribe(self, email):
-        if self.list:
-            return self._send(email, "UNSUBSCRIBE %s" % self.list)
-
-    def change(self, old_mail, new_mail, name=None):
-        if self.list:
-            if self.unsubscribe(old_mail):
-                return self.subscribe(new_mail, name=name)
-
-    def _send(self, address, title):
-        return send_message(self.list, by_who=address, title=title)
-
-
-class UserMailingList(MailingList):
-
-    def __init__(self):
-        super().__init__("USER_LIST")
-
-
-class ResponsibleMailingList(MailingList):
-
-    def __init__(self):
-        super().__init__("RESPONSIBLE_LIST")
-
-
 class Task:
 
     def __init__(self, tid):
