@@ -194,10 +194,10 @@ class Mail(Thread):
                                 "%NAME": name})
         return self
 
-    def user_assign(self):
+    def user_assign(self, task):
         pass
 
-    def user_assigned(self):
+    def user_assigned(self, task):
         pass
 
     def user_delete(self, task):
