@@ -191,19 +191,16 @@ class Mail(Thread):
                                 "%NAME": name})
         return self
 
-    def user_add(self):
-        pass
-
     def user_assign(self):
         pass
 
     def user_assigned(self):
         pass
 
-    def user_delete(self, user):
+    def user_delete(self, task):
         pass
 
-    def user_deleted(self, user):
+    def user_deleted(self, task):
         pass
 
     def __project_init(self, record, section_name):
