@@ -445,7 +445,7 @@ def web_admin():
     result = {"partition": slurm_partition_info()}
     reg_list = Register().query.filter(Register.processed == False).all()
     if not reg_list:
-        result["extension"] = False
+        result["extension"] = []
     else:
         result["extension"] = list(map(lambda x: x.to_dict(), reg_list))
     result["tasks"] = TaskManager().list()
