@@ -6,10 +6,8 @@ from base.pages import (check_int,
                         ssh_wrapper,
                         send_message,
                         check_str,
-                        Task,
+                        Task as TaskOld,
                         TaskQueue,
-                        ResponsibleMailingList,
-                        UserMailingList,
                         calculate_ttl)
 from base.pages.project.magic import get_project_by_name
 from base.pages.board.magic import create_resource
