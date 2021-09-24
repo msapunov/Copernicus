@@ -426,6 +426,15 @@ class Task:
         Mail().task_rejected(self.task).send()
         return self.process()
 
+    def get_action(self):
+        return self.task.action.split("|")[0]
+
+    def get_entity(self):
+        return self.task.action.split("|")[1]
+
+    def get_description(self):
+        return self.task.action.split("|")[-1]  # Or index is 4 not -1
+
     def action(self):
         return self.task.action
 
