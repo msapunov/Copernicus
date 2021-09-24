@@ -354,7 +354,38 @@ class TmpUser:
         self.is_committee = False
         self.is_admin = False
 
-    def task_ready(self):
+    def from_task(self, task):
+        description = task.get_description()
+        if "WITH ACL" not in description:
+            description += " WITH ACL user: True"
+        if " WITH STATUS " not in description:
+            description += " WITH STATUS True"
+
+        user_part, service_part = description.split(" WITH ACL ")
+        for i in user_part.split(" and "):
+            if "login" in i:
+                self.login = i.replace("login: ", "")
+            elif "surname" in i:
+                self.surname = i.replace("surname: ", "")
+            elif "name" in i:
+                self.name = i.replace("name: ", "")
+            elif "email" in i:
+                self.email = i.replace("email: ", "")
+
+        acl_part, active_part = service_part.split(" WITH STATUS ")
+        roles = ["user", "responsible", "manager", "tech", "committee", "admin"]
+        for acl in acl_part.split(", "):
+            for role in roles:
+                if role not in acl:
+                    continue
+                condition = "%s: True" % role
+                tmp = True if condition in acl.strip() else False
+                self.__setattr__("is_%s" % role, tmp)
+
+        self.active = True if active_part.strip() == "True" else False
+        return self
+
+    def ready_task(self):
         u_part = "login: %s and name: %s and surname: %s and email: %s" % (
             self.login, self.name, self.surname, self.email)
         a_part = "user: %s, responsible: %s, manager: %s, tech: %s, " \
