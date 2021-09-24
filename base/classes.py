@@ -396,6 +396,7 @@ class TmpUser:
         return "%s WITH ACL %s WITH STATUS %s" % (u_part, a_part, self.active)
 
 
+# noinspection PyArgumentList
 class Task:
 
     def __init__(self, task):
@@ -446,3 +447,67 @@ class Task:
     def commit(self):
         db.session.commit()
         return self.task
+
+    def user_create(self):
+        project = self.task.project
+        tmp_user = TmpUser().from_task(self.task)
+        acl = ACLDB(is_user=tmp_user.is_user,
+                    is_responsible=tmp_user.is_responsible,
+                    is_tech=tmp_user.is_tech,
+                    is_manager=tmp_user.is_manager,
+                    is_committee=tmp_user.is_committee,
+                    is_admin=tmp_user.is_admin)
+        user = User(login=tmp_user.login,
+                    name=tmp_user.name,
+                    surname=tmp_user.surname,
+                    email=tmp_user.email,
+                    active=tmp_user.active,
+                    acl=acl,
+                    project=[project],
+                    created=dt.now())
+        db.session.add(acl)
+        db.session.add(user)
+        project.users.append(user)
+        return ProjectLog(project).user_assigned(self.task)
+
+    def user_update(self):
+        description = self.get_description()
+        user = self.task.user
+        old_email = user.email if "email" in description else None
+
+        for i in description.split(" and "):
+            if "surname" in i and hasattr(user, "surname"):
+                setattr(user, "surname", i.replace("surname: ", "").strip())
+            elif "name" in i and hasattr(user, "name"):
+                setattr(user, "name", i.replace("name: ", "").strip())
+            elif "email" in i and hasattr(user, "email"):
+                setattr(user, "email", i.replace("email: ", "").strip())
+
+        if old_email:
+            UserMailingList().change(old_email, user.email, user.full_name())
+            if user.acl.is_responsible:
+                ResponsibleMailingList().change(old_email,
+                                                user.email,
+                                                user.full_name())
+        return UserLog(user).user_updated()
+
+    def user_assign(self):
+        project = self.task.project
+        user = self.task.user
+        project.users.append(user)
+        return ProjectLog(project).user_assigned(self.task)
+
+    def user_delete(self):
+        project = self.task.project
+        user = self.task.user
+        project.users.remove(user)
+        if not user.project:
+            user.active = False
+        return ProjectLog(project).user_deleted(user)
+
+    def responsible_assign(self):
+        project = self.task.project
+        user = self.task.user
+        user.acl.is_responsible = True
+        project.responsible = user
+        return ProjectLog(project).responsible_assigned(self.task)
