@@ -118,14 +118,6 @@ def event_log():
 #  Project registration logic below
 
 
-def remote_project_creation_magic(name, users):
-    task_file = app.config["TASKS_FILE"]
-    task = str({"project": name, "users": users})
-    with open(task_file, "w") as fd:
-        fd.write(task)
-    return True
-
-
 def accept_message(register, msg):
     to = register.responsible_email
     name = register.responsible_first_name
@@ -428,10 +420,6 @@ def user_acl_update(user, acl):
     return "ACL modifications has been saved to the database"
 
 
-def user_cluster_update(obj, frm):
-    pass
-
-
 def user_project_update(user, projects):
     old = user.project_names()
     idz = []
@@ -677,133 +665,6 @@ def group_users():
     return result
 
 
-def task_update_user(login, user_data):
-    data = user_data.split(" and ")
-
-    info = {"surname": "", "name": "", "email": ""}
-    for i in data:
-        if "surname" in i:
-            info["surname"] = i.replace("surname: ", "").strip()
-        elif "name" in i:
-            info["name"] = i.replace("name: ", "").strip()
-        elif "email" in i:
-            info["email"] = i.replace("email: ", "").strip()
-
-    user = get_user_record(login)
-
-    if "email" in info:
-        old_email = user.email
-    else:
-        old_email = None
-
-    for key, value in info.items():
-        if not value:
-            continue
-        if hasattr(user, key):
-            setattr(user, key, value)
-
-    if old_email:
-        UserMailingList().change(old_email, user.email, user.full_name())
-        if user.acl.is_responsible:
-            ResponsibleMailingList().change(old_email, user.email,
-                                            user.full_name())
-
-
-def _parse_acl_info(raw):
-    tmp = {}
-    roles = ["user", "responsible", "manager", "tech", "committee", "admin"]
-    data = raw.split(", ")
-    for i in data:
-        for j in roles:
-            if j not in i:
-                tmp[j] = False
-                continue
-            cond = i.replace("%s: " % j, "").strip()
-            tmp[j] = True if cond == "True" else False
-
-    return tmp["user"], tmp["responsible"], tmp["manager"], tmp["tech"],\
-           tmp["committee"], tmp["admin"]
-
-
-def _parse_user_info(raw):
-    data = raw.split(" and ")
-    login = surname = name = email = None
-    for i in data:
-        if "login" in i:
-            login = i.replace("login: ", "")
-        elif "surname" in i:
-            surname = i.replace("surname: ", "")
-        elif "name" in i:
-            name = i.replace("name: ", "")
-        elif "email" in i:
-            email = i.replace("email: ", "")
-    if not login:
-        raise ValueError("Failed to parse login value")
-    if not surname:
-        raise ValueError("Failed to parse surname value")
-    if not name:
-        raise ValueError("Failed to parse name value")
-    if not email:
-        raise ValueError("Failed to parse email value")
-    return login, surname, name, email
-
-
-def task_create_user(p_name, user_data, responsible=None):
-    project = get_project_by_name(p_name)
-
-    if "WITH ACL" not in user_data:
-        user_data += " WITH ACL user: True"
-
-    user_part, service_part = user_data.split(" WITH ACL ")
-    login, surname, name, email = _parse_user_info(user_part)
-
-    if " WITH STATUS " not in service_part:
-        service_part += " WITH STATUS True"
-
-    acl_part, active_part = service_part.split(" WITH STATUS ")
-    is_user, is_responsible, is_manager, is_tech, is_committee,\
-        is_admin = _parse_acl_info(acl_part)
-    active = True if active_part == "True" else False
-
-    acl = ACLDB(is_user=is_user, is_responsible=is_responsible, is_tech=is_tech,
-                is_manager=is_manager, is_committee=is_committee,
-                is_admin=is_admin)
-
-    user = User(login=login, name=name, surname=surname, email=email, acl=acl,
-                active=active, project=[project], created=dt.now())
-
-    db.session.add(acl)
-    db.session.add(user)
-    return ProjectLog(project).user_added(user)
-
-
-def task_remove_user(login, p_name):
-    project = get_project_by_name(p_name)
-    user = get_user_record(login)
-    if project not in user.project:
-        raise ValueError("Failed to find project %s among %s projects" % (
-            p_name, login))
-    user.project.remove(project)
-    if not user.project:
-        user.active = False
-    return ProjectLog(project).user_deleted(user)
-
-
-def task_assign_resp(login, p_name):
-    project = get_project_by_name(p_name)
-    user = get_user_record(login)
-    user.acl.is_responsible = True
-    project.responsible = user
-    return ProjectLog(project).responsible_added(user)
-
-
-def task_assign_user(login, p_name):
-    project = get_project_by_name(p_name)
-    user = get_user_record(login)
-    user.project.append(project)
-    return ProjectLog(project).user_assigned(user)
-
-
 def process_task(tid):
     task = Task(tid)
     act, entity, login, project, description = task.action().split("|")
@@ -832,7 +693,6 @@ def process_task(tid):
         pass
 
     return task.done()
-    #  TODO: return log.event
 
 
 def task_action(action):
