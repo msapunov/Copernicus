@@ -664,32 +664,31 @@ def group_users():
 
 
 def process_task(tid):
-    task = Task(tid)
-    act, entity, login, project, description = task.action().split("|")
+    task = Task( Tasks().query.filter_by(id=tid).first() )
+    act = task.get_action()
+    ent = task.get_entity()
+
     if act not in ["create", "assign", "update", "remove", "change"]:
         raise ValueError("The action '%s' is not supported" % act)
 
-    if act == "create" and entity == "user":
-        log = task_create_user(project, description)
-    elif act == "create" and entity == "resp":
-        log = task_create_user(project, act, True)
-    elif act == "create" and entity == "proj":
+    if act == "create" and ent == "user":
+        task.user_create()
+    elif act == "create" and ent == "resp":
+        task.user_create()
+    elif act == "create" and ent == "proj":
         #  After project creation, automatically create a task to create
         #  a responsible and users
         pass
-    elif act == "update" and entity == "user":
-        log = task_update_user(login, description)
-    elif act == "update" and entity == "proj":
+    elif act == "update" and ent == "user":
+        task.user_update()
+    elif act == "update" and ent == "proj":
         pass
-    elif act == "assign" and entity == "user":
-        log = task_assign_user(login, project)
-    elif act == "assign" and entity == "resp":
-        log = task_assign_resp(login, project)
-    elif act == "remove" and entity == "user":
-        log = task_remove_user(login, project)
-    elif act == "remove" and entity == "proj":
-        pass
-
+    elif act == "assign" and ent == "user":
+        task.user_assign()
+    elif act == "assign" and ent == "resp":
+        task.responsible_assign()
+    elif act == "remove" and ent == "user":
+        task.user_delete()
     return task.done()
 
 
