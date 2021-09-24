@@ -630,8 +630,8 @@ def user_delete(uid):
 
 def user_reset_pass(uid):
     user = user_by_id(uid)
-    tid = TaskQueue().user(user).password_reset().task.id
-    Task(tid).accept()
+    task = TaskQueue().user(user).password_reset().task
+    Task(task).accept()
     return "Password reset task has been added to execution queue"
 
 
