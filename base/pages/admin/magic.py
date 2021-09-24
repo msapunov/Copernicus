@@ -11,9 +11,9 @@ from base.pages import (check_int,
                         calculate_ttl)
 from base.pages.project.magic import get_project_by_name
 from base.pages.board.magic import create_resource
-from base.pages.user.magic import get_user_record, user_by_id
+from base.pages.user.magic import user_by_id
 from base.utils import get_tmpdir
-from base.database.schema import User, ACLDB, Register, LogDB, Project
+from base.database.schema import User, Register, LogDB, Project, Tasks
 from base.email import Mail
 from base.classes import UserLog, RequestLog, TmpUser, ProjectLog
 from logging import error, debug
