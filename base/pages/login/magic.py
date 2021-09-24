@@ -17,7 +17,7 @@ def ssh_login(login, password):
         warning("Option LOGIN_SERVER has to be a list")
         debug("Converting string to list with comma as separator")
         login_servers = login_servers.split(",")
-        debug("Server list: %s" % login_servers)
+    debug("Resulting server list: %s" % login_servers)
     for host in login_servers:
         host = host.strip()
         debug("Trying the host: %s" % host)
@@ -36,4 +36,5 @@ def ssh_login(login, password):
             continue
         finally:
             client.close()
+    debug("Authenticated: %s" % auth)
     return auth
