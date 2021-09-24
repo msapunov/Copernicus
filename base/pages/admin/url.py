@@ -443,7 +443,7 @@ def web_admin():
     from base.database.schema import Register
 
     result = {"partition": slurm_partition_info()}
-    reg_list = Register().query.filter(Register.processed == False).all()
+    reg_list = Register().query.filter_by(processed=False).all()
     if not reg_list:
         result["extension"] = []
     else:
