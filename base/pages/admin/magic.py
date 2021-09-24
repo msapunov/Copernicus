@@ -15,7 +15,7 @@ from base.pages.user.magic import user_by_id
 from base.utils import get_tmpdir
 from base.database.schema import User, Register, LogDB, Project, Tasks
 from base.email import Mail
-from base.classes import UserLog, RequestLog, TmpUser, ProjectLog
+from base.classes import UserLog, RequestLog, TmpUser, ProjectLog, Task
 from logging import error, debug
 from operator import attrgetter
 from datetime import datetime as dt
