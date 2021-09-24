@@ -56,7 +56,7 @@ class ProjectLog(Log):
 
     def responsible_assign(self, task):
         self.log.event = "Made a request to assign new responsible %s" \
-                         % task.user.full_name()
+                         % task.user.full()
         return self.user(task.user).commit(Mail().responsible_assign(task))
 
     def user_add(self, task):
