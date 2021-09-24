@@ -348,7 +348,7 @@ def is_user_exists(record):
 
 def user_create_by_admin(form):
     email = form.email.data.strip().lower()
-    if User.query.filter(User.email == email).first():
+    if User.query.filter_by(email=email).first():
         raise ValueError("User with e-mail %s has been registered already"
                          % email)
 
