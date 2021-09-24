@@ -228,6 +228,15 @@ class UserLog(Log):
         self.log.event = "; ".join(changes)
         return self.commit(Mail().user_update(self))
 
+    def user_updated(self, info):
+        changes = []
+        for name, value in info.items():
+            old = getattr(self.user, name)
+            prop = name.capitalize()
+            changes.append("%s change: %s -> %s" % (prop, old, value))
+        self.log.event = "; ".join(changes)
+        return self.commit(Mail().user_updated(self))
+
     def info_update(self, info=None, acl=None, projects=None, active=None):
         changes = []
         if info is not None:
