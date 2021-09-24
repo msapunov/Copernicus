@@ -373,7 +373,7 @@ def user_create_by_admin(form):
     for name in names:
         project = get_project_by_name(name)
         tid = TaskQueue().project(project).user_create(user).task.id
-        Task(tid).accept()
+        TaskOld(tid).accept()
         msg = "Add a new user: %s '%s %s <%s>'" % (
             user.login, user.name, user.surname, user.email)
         ProjectLog(project).event(msg)
@@ -712,7 +712,7 @@ def get_task():
         raise ValueError("Expecting application/json requests")
     tid = check_int(data["task"])
 
-    task = Task(tid)
+    task = TaskOld(tid)
     if not task:
         raise ValueError("No task with id %s found" % tid)
     if task.is_processed():
