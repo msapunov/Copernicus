@@ -59,33 +59,26 @@ class ProjectLog(Log):
                          % task.user.full()
         return self.user(task.user).commit(Mail().responsible_assign(task))
 
-    def user_add(self, task):
-        self.log.event = "Request to add a new user: %s %s <%s>" % (
-            task.user.name, task.user.surname, task.user.email)
-        return self.user(task.user).commit(Mail().user_added(task))
+    def responsible_assigned(self, task):
+        self.log.event = "Assigned a new project responsible %s" \
+                         % task.user.full()
+        return self.user(task.user).commit(Mail().responsible_assigned(task))
 
-    def user_added(self, task):
-        self.log.event = "Added a new user %s with login %s" % (
-            task.user.full_name(), task.user.login)
-        return self.user(task.user).commit(Mail().user_added(task))
+    def user_assign(self, task):
+        self.log.event = "Made a request to assign a user %s" % task.user.full()
+        return self.user(task.user).commit(Mail().user_assign(task))
 
-    def user_assign(self, user):
-        self.log.event = "Made a request to assign a new user %s" \
-                         % user.full_name()
-        return self.commit_user(user, Mail().responsible_assign(task))
+    def user_assigned(self, task):
+        self.log.event = "User %s has been assigned" % task.user.full()
+        return self.user(task.user).commit(Mail().user_assigned(task))
 
-    def user_assigned(self, user):
-        self.log.event = "User %s has been attached" % user.full_name()
-        return self.commit_user(user, Mail().responsible_assign(task))
+    def user_delete(self, task):
+        self.log.event = "Made a request to delete user %s" % task.user.full()
+        return self.user(task.user).commit(Mail().user_delete(task))
 
-    def user_deleted(self, user):
-        self.log.event = "User %s (%s) has been deleted" % (
-            user.full_name(), user.login)
-        return self.commit_user(user)
-
-    def user_del(self, user):
-        self.log.event = "Made a request to delete user %s" % user.full_name()
-        return self.commit_user(user)
+    def user_deleted(self, task):
+        self.log.event = "User %s has been deleted" % task.user.full()
+        return self.user(task.user).commit(Mail().user_deleted(task))
 
     def renew(self, extension):
         article = "an exceptional" if extension.exception else "a"
