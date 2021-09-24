@@ -508,6 +508,12 @@ class Task:
     def responsible_assign(self):
         project = self.task.project
         user = self.task.user
-        user.acl.is_responsible = True
+        if not user.acl.is_responsible:
+            user.acl.is_responsible = True
+        old_responsible = project.responsible
         project.responsible = user
+        resp = list(map(lambda x: x.get_responsible(), old_responsible.project))
+        if not resp:
+            old_responsible.acl.is_responsible = False
+            ResponsibleMailingList.unsubscribe(old_responsible.email)
         return ProjectLog(project).responsible_assigned(self.task)
