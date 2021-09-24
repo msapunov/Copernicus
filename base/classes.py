@@ -37,10 +37,6 @@ class ProjectLog(Log):
         self.project = project
         self.send = True
 
-    def commit_user(self, user, mail):
-        self.log.user = user
-        return self.commit(mail)
-
     def send_message(self, send=True):
         if send:
             self.send = True
