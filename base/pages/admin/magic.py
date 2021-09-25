@@ -668,9 +668,6 @@ def process_task(tid):
     act = task.get_action()
     ent = task.get_entity()
 
-    if act not in ["create", "assign", "update", "remove", "change"]:
-        raise ValueError("The action '%s' is not supported" % act)
-
     if act == "create" and ent == "user":
         task.user_create()
     elif act == "create" and ent == "resp":
