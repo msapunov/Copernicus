@@ -443,7 +443,8 @@ class Task:
         :return: Object. Task record
         """
         self.task.decision = "ignore"
-        return self.process()
+        self.process()
+        return self.done()
 
     def reject(self):
         """
@@ -454,7 +455,8 @@ class Task:
         """
         self.task.decision = "reject"
         Mail().task_rejected(self.task).send()
-        return self.process()
+        self.process()
+        return self.done()
 
     def get_action(self):
         """
