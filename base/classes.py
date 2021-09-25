@@ -425,9 +425,6 @@ class Task:
         self.task.done = True
         return self.commit()
 
-    def description(self):
-        return self.task.description()
-
     def accept(self):
         """
         Marking the task for execution in case of positive decision.
@@ -488,9 +485,6 @@ class Task:
         :return: String
         """
         return self.task.action.split("|")[-1]  # Or index is 4 not -1
-
-    def action(self):
-        return self.task.action
 
     def process(self):
         """
