@@ -402,7 +402,7 @@ def process_extension(eid):
 def get_users(project=None):
     """
     This function suppose to return all users belonging to a project if project
-    record is provided as argument. Otherwise it'll returns the list of all
+    record is provided as argument. Otherwise it'll return the list of all
     users registered in the system
     :param project: Object or None. Record of a project or None
     :return: List.
