@@ -40,7 +40,7 @@ def web_board_history():
 @grant_access("admin")
 def web_board_transform():
     pid, message = transform()
-    return jsonify(data={"id": pid}, message = message)
+    return jsonify(data={"id": pid}, message=message)
 
 
 @bp.route("/board/accept", methods=["POST"])
