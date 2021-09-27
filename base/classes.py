@@ -340,8 +340,14 @@ class Extensions:
 
 
 class TmpUser:
-
+    """
+    Class representing a user which has to be added to the system and doesn't
+    exists yet
+    """
     def __init__(self):
+        """
+        Init takes no argument
+        """
         self.login = None
         self.name = None
         self.surname = None
@@ -355,6 +361,12 @@ class TmpUser:
         self.is_admin = False
 
     def from_task(self, task):
+        """
+        Takes a task's action string and fill up the properties of TmpUser
+        object
+        :param task: Object. Instance of Task object
+        :return: Object. Instance of TmpUser class
+        """
         description = task.get_description()
         if "WITH ACL" not in description:
             description += " WITH ACL user: True"
@@ -386,6 +398,10 @@ class TmpUser:
         return self
 
     def ready_task(self):
+        """
+        Creates task's description out of instance of TmpUser
+        :return: String. Task's description
+        """
         u_part = "login: %s and name: %s and surname: %s and email: %s" % (
             self.login, self.name, self.surname, self.email)
         a_part = "user: %s, responsible: %s, manager: %s, tech: %s, " \

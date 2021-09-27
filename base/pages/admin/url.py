@@ -346,6 +346,13 @@ def web_admin_tasks_list():
     return jsonify(data=TaskManager().list())
 
 
+@bp.route("/admin/tasks/done", methods=["POST"])
+@login_required
+@grant_access("admin", "tech")
+def admin_tasks_donex(tid):
+    return jsonify(data=process_task(tid))
+
+
 @bp.route("/admin/tasks/done/<int:tid>", methods=["POST"])
 @login_required
 @grant_access("admin", "tech")
