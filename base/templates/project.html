@@ -191,23 +191,6 @@
             </div>
             <div class="uk-margin-large-bottom"></div>
 
-            {% if project.users|length > 1 %}
-                <div id="{{project.id}}_assign_list" class="uk-width-1-1" style="display: none;">
-                    <select class="admin_assign_select uk-width-1-1" data-placeholder="Select a user">
-                        {% for user in project.users|sort(attribute='login')%}
-                            {% if user.login != project.responsible_login and user.active == True %}
-                                <option value="{{user.login}}">{{user.full_name()}}</option>
-                            {% endif %}
-                        {% endfor %}
-                    </select>
-                </div>
-            {% else %}
-                <div id="{{project.id}}_assign_list" style="display: none;">
-                    <h3>You are the only user of this project. Please, add more users before re-assign the project's responsible</h3>
-                </div>
-            {% endif %}
-
-
         {% endfor %}
     {% endif %}
 {% endblock %}
