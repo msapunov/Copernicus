@@ -39,8 +39,8 @@ def web_board_history():
 @login_required
 @grant_access("admin")
 def web_board_transform():
-    id, message = transform()
-    return jsonify(data={"id": id}, message = message)
+    pid, message = transform()
+    return jsonify(data={"id": pid}, message = message)
 
 
 @bp.route("/board/accept", methods=["POST"])
