@@ -36,7 +36,6 @@ def load_user_from_request(urlpath):
         username, password = api_key.decode(encoding="UTF-8").split(":")
         if not ssh_login(username, password):
             return abort(401)
-        from base.database.schema import User
         user = User.query.filter_by(login=username).first()
         login_user(user, True)
         if ("SCRIPT_NAME" in request.environ) and request.environ["SCRIPT_NAME"]:
@@ -50,9 +49,6 @@ def load_user_from_request(urlpath):
 @bp.route("/login", methods=["GET", "POST"])
 @bp.route("/login.html", methods=["GET", "POST"])
 def login():
-
-    from base.database.schema import User
-
     if current_user.is_authenticated:
         return redirect(url_for("user.user_index"))
     form = LoginForm(request.form)
