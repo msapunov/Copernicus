@@ -452,7 +452,17 @@ class Pending:
             todo = [self.pending]
         return list(filter(lambda x: self.acl_filter(x), todo))
 
-    def process(self):
+    def ignore(self):
+        """
+
+        :return: List. List of processed register records
+        """
+        self.action = "ignore"
+        result = map(lambda x: self.process_record(x), self.pending)
+        self.commit()
+        return list(result)
+
+    def process_record(self, record):
         """
         Set processed field of the task record to True, so the task will be
         moved to the task ready to be executed.
