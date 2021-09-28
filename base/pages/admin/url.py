@@ -6,6 +6,7 @@ from base.pages import (
     send_message,
     Task,
     grant_access)
+from base.classes import Pending
 from base.pages.user.magic import get_user_record, user_by_id
 from base.pages.admin import bp
 from base.pages.admin.magic import (
@@ -408,9 +409,7 @@ def web_admin_bits_pending(rid):
 @login_required
 @grant_access("admin", "manager")
 def web_admin_pending_list():
-    pending = Register.query.filter_by(processed=False).all()
-    if "admin" not in g.permissions:
-        config = project_config()
+    pending = Pending().unprocessed()
     return jsonify(data=list(map(lambda x: x.to_dict(), pending)) if pending else [])
 
 
