@@ -665,7 +665,7 @@ def group_users():
 
 
 def process_task(tid):
-    task = Task( Tasks().query.filter_by(id=tid).first() )
+    task = Task(Tasks().query.filter_by(id=tid).first())
     act = task.get_action()
     ent = task.get_entity()
 
