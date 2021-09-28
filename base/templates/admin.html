@@ -56,6 +56,7 @@
 {% endblock %}
 {% block main %}
 
+{% if "admin" in g.permissions %}
             <div class="uk-panel uk-width-1-1 uk-panel-space uk-text-center uk-panel-hover uk-margin-bottom" style="height: 120px;" id="tasks_info">
                 <p class="uk-h2 uk-text-nowrap">Pending tasks:
                 {% if data.tasks and data.tasks|length > 0 %}
@@ -117,7 +118,7 @@
                     </thead>
                 </table>
             </div>
-
+{% endif %}
             <div class="uk-width-1-1 uk-padding-remove uk-margin-large">
                 <table id="pending_projects" class="stripe compact" data-order='[[ 5, "asc" ]]'>
                     <thead>
