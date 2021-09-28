@@ -116,6 +116,20 @@ submit = function(e){
     e.preventDefault();
 };
 
+ajax = function(url, data){
+    UIkit.modal("#ajax_call", {modal: false}).show();
+    return $.ajax({
+        data: data ? data : undefined,
+        timeout: 60000,
+        type: "POST",
+        url: url
+    }).fail(function(reply){
+        show_error(reply);
+    }).always(function() {
+        UIkit.modal("#ajax_call", {modal: false}).hide();
+    });
+};
+
 ajax_send = function(url, data, show_modal){
     UIkit.modal("#ajax_call", {modal: false}).show();
     return $.ajax({

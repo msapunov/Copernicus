@@ -135,7 +135,17 @@
                         <li {% if item == 'board' %}class="uk-active"{% endif %}><a href="board.html">Board</a></li>
                     {% endif %}
                     {% if admin %}
-                        <li {% if item == 'admin' %}class="uk-active"{% endif %}><a href="admin.html">Admin</a></li>
+                    <li {% if item == 'admin' or item == 'statistic' or item == 'directory' or item == 'log'%}class="uk-parent uk-active"{% endif %} data-uk-dropdown="" aria-haspopup="true" aria-expanded="false">
+                        <a href="admin.html">Admin <i class="uk-icon-caret-down"></i></a>
+                        <div class="uk-dropdown uk-dropdown-navbar uk-dropdown-bottom" aria-hidden="true" style="top: 40px; left: 0px;" tabindex="">
+                            <ul class="uk-nav uk-nav-navbar">
+                                <li><a href="admin.html">General Information</a></li>
+                                <li><a href="statistic.html">Project Statistic</a></li>
+                                <li><a href="registry.html">User Registry</a></li>
+                                <li><a href="log.html">Event Log</a></li>
+                            </ul>
+                        </div>
+                    </li>
                     {% endif %}
                 </ul>
 

@@ -20,12 +20,14 @@
         partition: "admin/partition/info",
         space: "admin/space/info",
         system: "admin/sys/info",
+        pending: "admin/pending/list",
         tasks: "admin/tasks/list",
         tasks_accept: "admin/tasks/accept",
         tasks_history: "admin/tasks/history",
         tasks_ignore: "admin/tasks/ignore",
         tasks_reject: "admin/tasks/reject",
         tasks_update: "admin/tasks/update",
+        expand_pending: "admin/bits/pending",
         user: "admin/user/info",
         user_details: "admin/user/details/get",
         user_create: "admin/user/create",
@@ -573,10 +575,6 @@
     };
 
     window.render.new_edit=function(){
-//        window.render.form_reset_register();
-//        if ($(this).hasClass("user_edit")) {
-//            window.render.user_edit(this);
-//        }
         window.render.reg_edit(this);
         var modal = UIkit.modal("#register_edit");
         if ( modal.isActive() ) {
@@ -1071,6 +1069,23 @@
             window.render.destroy(url, id);
         });
     };
+    window.render.expand_processing = function(tr, tdi, show){
+        if(show === true){
+            tr.removeClass('shown');
+            tdi.first().removeClass('uk-icon-minus');
+            tdi.first().removeClass('uk-icon-spin');
+            tdi.first().addClass('uk-icon-plus');
+        }else if(show === false){
+            tr.addClass('shown');
+            tdi.first().removeClass('uk-icon-plus');
+            tdi.first().removeClass('uk-icon-spin');
+            tdi.first().addClass('uk-icon-minus');
+        }else if(show === undefined){
+            tdi.first().removeClass('uk-icon-minus');
+            tdi.first().removeClass('uk-icon-plus');
+            tdi.first().addClass('uk-icon-spin');
+        }
+    };
     window.render.pass_reset=function(){
         var id = $.trim( $(this).data("id") );
         var login = $.trim( $(this).data("login") );
@@ -1078,6 +1093,19 @@
         var msg = "<p>Reset the login password for {0}?<p>An e-mail with the new password will be sent to {1}<p>Are you sure?".f(login, mail);
         var url = window.admin.url.user_p_reset + "/" + id;
         window.render.user_password_reset(msg, url);
+    };
+
+    window.render.expand = function format(d, row, tr, tdi){
+            // `d` is the original data object for the row
+            let id = d.id;
+            let url = "{0}/{1}".f(window.admin.url.expand_pending, id);
+            window.render.expand_processing(tr, tdi);
+            ajax(url).done(function(data){
+                row.child(data).show();
+                window.render.expand_processing(tr, tdi, false);
+            }).fail(function(request){
+                window.render.expand_processing(tr, tdi, true);
+            });
     };
 
     $(document).on("ready", function(){
@@ -1093,6 +1121,93 @@
             }
         };
         window.admin.sys();
+        let pending_table = $("#pending_projects").DataTable({
+            "ajax": {"type": "POST", "url": window.admin.url.pending},
+            dom: 'tiB',
+            buttons: {
+                className: 'copyButton',
+                buttons: [ 'refresh' ]
+            },
+            "paging": false,
+            "searching": false,
+            "columns": [{
+                className: 'details-control',
+                orderable: false,
+                data: null,
+                defaultContent: '',
+                render: function () {
+                    return '<span class="btn uk-icon-plus"></span>';
+                },
+                width:"15px"
+            },{
+                data: "type",
+                render: function (data, type, row) {
+                    if ( "A" == data ){
+                        return '<span class="uk-text-bold uk-text-success">A</span>'
+                    } else if( "B" == data ){
+                        return '<span class="uk-text-bold uk-text-primary">B</span>'
+                    } else if( "C" == data ){
+                        return '<span class="uk-text-bold uk-text-danger">C</span>'
+                    } else if( "E" == data ){
+                        return '<span>E</span>'
+                    } else if( "H" == data ){
+                        return '<span class="uk-text-bold uk-text-warning">H</span>'
+                    }else{
+                        return '<span>{{record.type}}</span>'
+                    }
+                },
+                width:"20px"
+            },{
+                data: "title"
+            },{
+                data: "responsible_full_name",
+                render: function ( data ) {
+                    return '<span class="uk-text-nowrap">' + data + '</span>';
+                }
+            },{
+                data: "cpu",
+                render: $.fn.dataTable.render.number( '.', '')
+            },{
+                data: "ts",
+                render: function ( date, type, row ) {
+                    let dateSplit = date.split(' ');
+                    let full = row.ts_full
+                    return type === "display" || type === "filter" ? '<div title="' + full + '">' + dateSplit[0] : date;
+                }
+            },{
+                className: 'pending_info',
+                orderable: false,
+                data: null,
+                defaultContent: '',
+                render: function ( data, type, row ) {
+                    if ( row.approve && ! row.accepted ) {
+                        return '<span class="uk-icon-wrench uk-text-success"></span>';
+                    }else if ( row.approve && row.accepted ) {
+                        return '<span class="uk-icon-edit uk-text-warning"></span>';
+                    }else{
+                        return '<span class="uk-icon-question uk-text-primary"></span>';
+                    }
+                },
+                width:"20px"
+            }]
+        });
+        $("#overview").DataTable({
+            "ajax": {"type": "POST", "url": window.admin.url.partition},
+            dom: 'tiB',
+            buttons: {
+                className: 'copyButton',
+                buttons: [ 'refresh' ]
+            },
+            "paging": false,
+            "searching": false,
+            "columns": [
+                {"data": "name"},
+                {"data": "allocated"},
+                {"data": "idle"},
+                {"data": "other"},
+                {"data": "total"}
+            ]
+        });
         $("#disk_space").DataTable({
             "ajax": {"type": "POST", "url": window.admin.url.space},
             dom: 'tiB',
@@ -1120,14 +1235,37 @@
             },
             "paging": false,
             "searching": false,
-            "columns": [
-                    {"data": "node"},
-                    {"data": "reason"},
-                    {"data": "date"},
-                    {"data": "status"}
-                ]
+            "columns": [{
+                data: "node"
+            },{
+                data: "reason"
+            },{
+                data: "date",
+                render: function ( date, type, row ) {
+                    let dateSplit = date.split(' ');
+                    let full = row.date_full
+                    return type === "display" || type === "filter" ? '<div title="' + full + '">' + dateSplit[0] : date;
+                }
+            },{
+                data: "status"
+            }]
+        });
+
+        $('#pending_projects tbody').on('click', 'td.details-control', function () {
+                var tr = $(this).closest('tr');
+                var tdi = tr.find("span.btn");
+                var row = pending_table.row(tr);
+                if (row.child.isShown()) {
+                    // This row is already open - close it
+                    row.child.hide();
+                    window.render.expand_processing(tr, tdi, true);
+                }else {
+                    // Open row in ajax callback in function window.render.expand
+                    window.render.expand(row.data(), row, tr, tdi);
+                }
         });
     });
+
     $(document).on("click", ".user_show", window.render.user);
     $(document).on("click", ".system_reload", window.admin.sys);
     $(document).on("click", ".slurm_reload", window.render.partition);

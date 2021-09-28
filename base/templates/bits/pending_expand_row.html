@@ -1,0 +1,119 @@
+<div class="uk-grid">
+    <div class="uk-width-2-4 uk-panel uk-margin-top uk-margin-bottom" style="padding-left:50px;padding-right:50px;">
+        <table id="info_table" class="uk-table uk-table-condensed">
+            <tbody>
+                <tr>
+                    <td class="uk-width-1-10 uk-text-right">Project type:</td>
+                    <td class="uk-width-9-10 uk-text-left"><strong>{{pending.type}}</strong></td>
+                </tr>
+                <tr>
+                    <td class="uk-width-1-10 uk-text-right">Mesocentre ID:</td>
+                    <td class="uk-width-9-10 uk-text-left">{{pending.meso_id}}</td>
+                </tr>
+                {% if "cpu" in pending %}
+                <tr>
+                    <td class="uk-width-1-10 uk-text-right">CPU:</td>
+                    <td class="uk-width-9-10 uk-text-left">{{pending.cpu}}</td>
+                </tr>
+                {% endif %}
+                {% if "cloud_image" in pending %}
+                    <tr>
+                        <td class="uk-width-1-10 uk-text-right">Cloud image:</td>
+                        <td class="uk-width-9-10 uk-text-left">{{pending.cloud_image}}</td>
+                    </tr>
+                {% endif %}
+                <tr>
+                    <td class="uk-width-1-10 uk-text-right">Responsible:</td>
+                    <td class="uk-width-9-10 uk-text-left">
+                        <ul class="uk-list">
+                            <li>{{ pending.responsible_full_name }} &lt;{{pending.responsible_email}}&gt;</li>
+                            {% for i in ["responsible_position", "responsible_lab", "responsible_phone"] %}
+                                {% if pending[i] %}
+                                    <li>{{ pending[i] }}</li>
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="uk-width-1-10 uk-text-right">Users:</td>
+                    <td class="uk-width-9-10 uk-text-left">
+                        <ul class="uk-list">
+                        {% for user in pending.users %}
+                            <li>
+                                {{user["name"]}} {{user["last"]}} &lt;{{user["mail"]}}&gt;
+                                {% if user["login"] %}
+                                    [{{user["login"]}}]
+                                {% endif %}
+                            </li>
+                        {% endfor %}
+                        </ul>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="uk-width-1-10 uk-text-right">Description:</td>
+                    <td class="uk-width-9-10 uk-text-left">{{pending.description}}</td>
+                </tr>
+                <tr>
+                    <td class="uk-width-1-10 uk-text-right">Scientific&nbsp;fields:</td>
+                    <td class="uk-width-9-10 uk-text-left">{{pending.scientific_fields}}</td>
+                </tr>
+                <tr>
+                    <td class="uk-width-1-10 uk-text-right">Genci:</td>
+                    <td class="uk-width-9-10 uk-text-left">{{pending.genci_committee}}</td>
+                </tr>
+                <tr>
+                    <td class="uk-width-1-10 uk-text-right">Methods:</td>
+                    <td class="uk-width-9-10 uk-text-left">{{pending.numerical_methods}}</td>
+                </tr>
+                <tr>
+                    <td class="uk-width-1-10 uk-text-right">Resources:</td>
+                    <td class="uk-width-9-10 uk-text-left">{{pending.computing_resources}}</td>
+                </tr>
+                <tr>
+                    <td class="uk-width-1-10 uk-text-right">Management:</td>
+                    <td class="uk-width-9-10 uk-text-left">{{pending.project_management}}</td>
+                </tr>
+                <tr>
+                    <td class="uk-width-1-10 uk-text-right">Motivation:</td>
+                    <td class="uk-width-9-10 uk-text-left">{{pending.project_motivation}}</td>
+                </tr>
+                <tr>
+                    <td class="uk-width-1-10 uk-text-right">Articles:</td>
+                    <td class="uk-width-9-10 uk-text-left">
+                        <ul class="uk-list">
+                        {% for i in [pending.article_1, pending.article_2, pending.article_3, pending.article_4, pending.article_5]%}
+                            {% if i %}
+                                <li>{{i}}</li>
+                            {% endif %}
+                        {% endfor %}
+                        </ul>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="uk-width-1-4 uk-margin-top uk-margin-bottom" id="{{pending.name}}_logs">
+
+    </div>
+    <div class="uk-width-1-4 uk-margin-top uk-margin-bottom">
+        {% if pending.approve and not pending.accepted %}
+            <button class="uk-button uk-width-1-1 uk-margin-small-bottom new_visa" type="button" data-id='{{pending.id}}' data-meso='{{pending.meso_id}}' data-title='{{pending.title}}'><span class="uk-icon-edit uk-margin-small-right"></span>Send Visa</button>
+        {% elif pending.approve and pending.accepted %}
+            <button class="uk-button uk-width-1-1 uk-margin-small-bottom new_create uk-button-success" type="button" data-id='{{pending.id}}' data-meso='{{pending.meso_id}}' data-title='{{pending.title}}' disabled><span class="uk-icon-cogs uk-margin-small-right"></span>Create Project!</button>
+            <button class="uk-button uk-width-1-1 uk-margin-small-bottom new_resend_visa" type="button" data-id='{{pending.id}}' data-meso='{{pending.meso_id}}' data-title='{{pending.title}}'><span class="uk-icon-edit uk-margin-small-right"></span>Re-send Visa</button>
+        {% else %}
+            <button class="uk-button uk-width-1-1 uk-margin-small-bottom new_approve" type="button" data-id='{{pending.id}}' data-meso='{{pending.meso_id}}' data-title='{{pending.title}}'><span class="uk-icon-wrench uk-margin-small-right"></span>Approve</button>
+        {% endif %}
+
+        <button class="uk-button uk-width-1-1 uk-margin-small-bottom edit uk-button-primary uk-margin-top" data-modal="{{pending.id}}_edit"><span class="uk-icon-edit uk-margin-small-right"></span>Edit</button>
+        <button class="uk-button uk-width-1-1 uk-margin-small-bottom edit_resposible" data-modal="{{pending.id}}_attach"><span class="uk-icon-edit uk-margin-small-right"></span>Edit responsible</button>
+        <button class="uk-button uk-width-1-1 uk-margin-small-bottom edit_resposible" data-modal="{{pending.id}}_attach"><span class="uk-icon-users uk-margin-small-right"></span>Edit users</button>
+        <button class="uk-button uk-width-1-1 uk-margin-small-bottom attach" data-modal="{{pending.id}}_attach"><span class="uk-icon-user-plus uk-margin-small-right"></span>Add user</button>
+        <button class="uk-button uk-width-1-1 uk-margin-small-bottom contact" data-modal="{{pending.id}}_contact"><span class="uk-icon-send uk-margin-small-right"></span>Contact</button>
+
+        <button class="uk-button uk-width-1-1 uk-margin-small-bottom new_ignore uk-margin-top" type="button" data-id='{{pending.id}}' data-meso='{{pending.meso_id}}' data-title='{{pending.title}}'><span class="uk-icon-thumbs-o-down uk-margin-small-right"></span>Ignore</button>
+        <button class="uk-button uk-width-1-1 uk-margin-small-bottom new_reject uk-button-danger" type="button" data-id='{{pending.id}}' data-meso='{{pending.meso_id}}' data-title='{{pending.title}}'><span class="uk-icon-thumbs-down uk-margin-small-right"></span>Reject</button>
+
+    </div>
+</div>

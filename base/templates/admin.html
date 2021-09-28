@@ -18,6 +18,9 @@
     <script defer type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.2/js/components/accordion.min.js"></script>
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.2/css/components/accordion.gradient.min.css" />
     <style>
+        .uk-table td, .uk-table th {
+            border-bottom: 0px !important;
+        }
         .ext_info{
           background-color: #ddd !important;
         }
@@ -41,16 +44,19 @@
         div.dt-buttons {
             float: right;
         }
+        td.details-control {
+            text-align:center;
+            cursor: pointer;
+        }
+        tr.shown td.details-control {
+            text-align:center;
+        }
     </style>
 
 {% endblock %}
 {% block main %}
-<div class="uk-panel uk-width-1-1 uk-panel-space uk-overflow-container">
-    <div class="uk-accordion" data-uk-accordion id="accordion">
 
-        <h3 class="uk-accordion-title">General information</h3>
-        <div class="uk-accordion-content">
-
+{% if "admin" in g.permissions %}
             <div class="uk-panel uk-width-1-1 uk-panel-space uk-text-center uk-panel-hover uk-margin-bottom" style="height: 120px;" id="tasks_info">
                 <p class="uk-h2 uk-text-nowrap">Pending tasks:
                 {% if data.tasks and data.tasks|length > 0 %}
@@ -64,58 +70,43 @@
                         <button class="uk-button task_manage uk-button-small uk-button-danger"><span class="uk-icon-edit uk-margin-small-right"></span>Edit</button>
                 </div>
             </div>
-            <div class="uk-grid">
-                <div class="uk-width-small-1-1 uk-width-medium-1-2 ">
-                    <table id="overvieww" class="uk-table uk-table-hover uk-table-striped uk-table-condensed">
-                        <thead>
-                            <tr>
-                                <th data-priority="1">Partition</th>
-                                <th data-priority="2">Allocated</th>
-                                <th data-priority="3">Idle</th>
-                                <th data-priority="4">Other</th>
-                                <th data-priority="5">Total</th>
-                            </tr>
-                        </thead>
-                        <tbody id="slurm">
-                            {% for part in data.partition|sort(attribute='total', reverse=True) %}
-                            <tr>
-                                <td>{{part.name}}</td>
-                                <td>{{part.allocated}}</td>
-                                <td>{{part.idle}}</td>
-                                <td>{{part.other}}</td>
-                                <td>{{part.total}}</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                    <button class="uk-button uk-width-1-1 uk-button-small uk-margin-small-bottom slurm_reload"><span class="uk-icon-refresh uk-margin-small-right"></span>&nbsp;Reload</button>
-                </div>
-                <div class="uk-margin-top uk-width-small-1-1 uk-hidden-medium uk-hidden-large">
-                </div>
-                <div class="uk-width-small-1-1 uk-width-medium-1-2">
-                    <div class="uk-panel uk-width-1-1 uk-panel-box uk-clearfix">
-                        <button class="uk-button uk-button-small uk-float-right system_reload"><span class="uk-icon-refresh uk-margin-small-right"></span>Reload</button>
-                        <div id="system_body">
-                        </div>
+
+            <div class="uk-width-small-1-1 uk-width-medium-1-2 uk-margin-top uk-padding-remove">
+                <table id="overview" class="display compact nowrap" data-order='[[ 4, "desc" ]]'>
+                    <thead>
+                    <tr>
+                        <th>Partition</th>
+                        <th>Allocated</th>
+                        <th>Idle</th>
+                        <th>Other</th>
+                        <th>Total</th>
+                    </tr>
+                    </thead>
+                </table>
+            </div>
+            <div class="uk-width-small-1-1 uk-width-medium-1-2 uk-margin-top">
+
+                    <button class="uk-button uk-button-small uk-float-right system_reload"><span class="uk-icon-refresh uk-margin-small-right"></span>Reload</button>
+                    <div id="system_body">
                     </div>
-                </div>
 
-                <div class="uk-width-small-1-1 uk-width-medium-1-2 ">
-                    <table id="sinfo" style="width:100%" class="display compact nowrap" data-order='[[ 0, "asc" ]]'>
-                        <thead>
-                            <tr>
-                                <th>Node</th>
-                                <th>Reason</th>
-                                <th>Since</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                    </table>
-                </div>
+            </div>
 
-                <div class="uk-width-small-1-1 uk-width-medium-1-2 ">
-                    <table id="disk_space" style="width:100%" class="display compact nowrap" data-order='[[ 0, "asc" ]]'>
-                        <thead>
+            <div class="uk-width-small-1-1 uk-width-medium-1-2 uk-margin-large-top uk-padding-remove">
+                <table id="sinfo" class="display compact nowrap" data-order='[[ 2, "desc" ]]'>
+                    <thead>
+                        <tr>
+                            <th>Node</th>
+                            <th>Reason</th>
+                            <th>Since</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+            <div class="uk-width-small-1-1 uk-width-medium-1-2 uk-margin-large-top">
+                <table id="disk_space" class="display compact nowrap" data-order='[[ 0, "asc" ]]'>
+                    <thead>
                         <tr>
                             <th>Mount</th>
                             <th>Size</th>
@@ -124,522 +115,24 @@
                             <th>Use</th>
                             <th>Filesystem</th>
                         </tr>
-                        </thead>
-                    </table>
-                </div>
-
+                    </thead>
+                </table>
             </div>
-        </div>
-
-        {% if data.extension %}
-        <h3 class="uk-accordion-title">Pending projects [{{ data.extension | length }}] <button class="uk-button uk-float-right uk-button-small slurm_reload"><span class="uk-icon-refresh"></span></button></h3>
-        <div class="uk-accordion-content uk-overflow-container" id="pending_content">
-            <table id="new_projects_table" class="uk-table uk-table-striped uk-table-condensed">
-                <tbody id="ext_result_records">
-                    {% for record in data.extension|sort(attribute='id', reverse=True) %}
-                        <tr id="{{record.id}}">
-                            <td class="uk-width-1-10 uk-text-middle"><button class="uk-button uk-button-mini new_project" type="button" data-id='{{record.id}}-info'><span class="uk-icon-plus"></span></button>
-                                {% if "A" in record.type %}
-                                    <span id="{{record.id}}-type-short" class="uk-text-bold uk-text-success">A</span>
-                                {% elif "B" in record.type %}
-                                    <span id="{{record.id}}-type-short" class="uk-text-bold uk-text-primary">B</span>
-                                {% elif "C" in record.type %}
-                                    <span id="{{record.id}}-type-short">C</span>
-                                {% elif "E" in record.type %}
-                                    <span id="{{record.id}}-type-short">E</span>
-                                {% elif "H" in record.type %}
-                                    <span id="{{record.id}}-type-short" class="uk-text-bold uk-text-warning">H</span>
-                                {% else %}
-                                    <span id="{{record.id}}-type-short">{{record.type}}</span>
-                                {% endif %}
-                            </td>
-                            <td id="{{record.id}}-title-short" class="uk-width-4-10">{{record.title}}</td>
-                            <td id="{{record.id}}-fullname-short" class="uk-width-2-10">{{record.responsible_full_name}}</td>
-                            <td id="{{record.id}}-cpu-short" class="uk-width-1-10">{{record.cpu}}</td>
-                            <td class="uk-width-2-10">{{record.ts}}</td>
-                            <td style="width: 20px;">
-                                {% if record.approve and not record.accepted %}
-                                    <span id="approval_ico_{{record.id}}" class="uk-icon-wrench uk-text-success"></span>
-                                {% elif record.approve and record.accepted %}
-                                    <span id="approval_ico_{{record.id}}" class="uk-icon-edit uk-text-warning"></span>
-                                {% else %}
-                                    <span id="approval_ico_{{record.id}}" class="uk-icon-question uk-text-primary"></span>
-                                {% endif %}
-                            </td>
+{% endif %}
+            <div class="uk-width-1-1 uk-padding-remove uk-margin-large">
+                <table id="pending_projects" class="stripe compact" data-order='[[ 5, "asc" ]]'>
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Type</th>
+                            <th>Title</th>
+                            <th>Name</th>
+                            <th>CPU</th>
+                            <th>Created</th>
+                            <th></th>
                         </tr>
-                        <tr id="{{record.id}}-info" class="ext_info uk-hidden uk-text-center">
-                            <td colspan="6">
-                                <table id="info_table" class="uk-table">
-                                    <tbody>
-                                        <tr class="ext_info">
-                                            <td class="uk-width-1-10 uk-text-right">Project type:</td>
-                                            <td class="uk-width-9-10 uk-text-left">
-                                                <strong id="{{record.id}}-type-full">{{record.type}}</strong>
-                                            </td>
-                                        </tr>
-                                        <tr class="ext_info">
-                                            <td class="uk-width-1-10 uk-text-right">Mesocentre ID:</td>
-                                            <td id="{{record.id}}-meso_id-full" class="uk-width-9-10 uk-text-left">{{record.meso_id}}</td>
-                                        </tr>
-                                        <tr class="ext_info">
-                                            <td class="uk-width-1-10 uk-text-right">CPU:</td>
-                                            <td id="{{record.id}}-cpu-full" class="uk-width-9-10 uk-text-left">{{record.cpu}}</td>
-                                        </tr>
-                                        <tr class="ext_info">
-                                            <td class="uk-width-1-10 uk-text-right">Responsible:</td>
-                                            <td class="uk-width-9-10 uk-text-left">
-                                                <ul>
-                                                    <!--
-                                                    {% if record.responsible_first_name and record.responsible_last_name %}
-                                                        <li id="{{record.id}}-fullname-full">{{record.responsible_first_name}} {{record.responsible_last_name}}</li>
-                                                    {% endif %}
-                                                    -->
-                                                    <li id="{{record.id}}-full-full">{{ record.responsible_full_name }} &lt;{{record.responsible_email}}&gt;</li>
-                                                    {% for i in ["responsible_position", "responsible_lab", "responsible_phone"] %}
-                                                        {% if record[i] %}
-                                                            <li id="{{record.id}}-{{i}}-full">{{ record[i] }}</li>
-                                                        {% endif %}
-                                                    {% endfor %}
-                                                </ul>
-                                            </td>
-                                        </tr><tr class="ext_info">
-                                            <td class="uk-width-1-10 uk-text-right">Users:</td>
-                                            <td class="uk-width-9-10 uk-text-left">
-                                                <ul class="uk-list uk-list-line" id="{{record.id}}-user-list">
-                                                {% for user in record.users %}
-                                                    <li id='{{user["uid"]}}'>
-                                                        {{user["name"]}} {{user["last"]}} &lt;{{user["mail"]}}&gt;
-                                                        {% if user["login"] %}
-                                                            [{{user["login"]}}]
-                                                        {% endif %}
-                                                        <div class="uk-button-group uk-margin-small-left">
-                                                            <button class="uk-button uk-button-small uk-button-link nu_edit uk-icon-justify" type="button" data-pid='{{record.id}}' data-uid='{{user["uid"]}}' data-name='{{user["name"]}}' data-surname='{{user["last"]}}' data-email='{{user["mail"]}}' data-login='{{user["login"]}}'><span class="uk-icon-edit"></span></button>
-                                                            <button class="uk-button uk-button-small uk-button-link uk-text-danger nu_remove uk-icon-justify" type="button" data-pid='{{record.id}}' data-uid='{{user["uid"]}}' data-name='{{user["name"]}}' data-surname='{{user["last"]}}' data-email='{{user["mail"]}}' data-login='{{user["login"]}}'><span class="uk-icon-close"></span></button>
-                                                        </div>
-                                                    </li>
-                                                {% endfor %}
-                                                </ul>
-                                                <button class="uk-button uk-button-small new_user_add" type="button" data-id='{{record.id}}'><span class="uk-icon-user-plus uk-margin-small-right"></span>Add user</button>
-                                            </td>
-                                        </tr><tr class="ext_info">
-                                            <td class="uk-width-1-10 uk-text-right">Description:</td>
-                                            <td class="uk-width-9-10 uk-text-left">{{record.description}}</td>
-                                        </tr><tr class="ext_info">
-                                            <td class="uk-width-1-10 uk-text-right">Scientific&nbsp;fields:</td>
-                                            <td class="uk-width-9-10 uk-text-left">{{record.scientific_fields}}</td>
-                                        </tr><tr class="ext_info">
-                                            <td class="uk-width-1-10 uk-text-right">Genci:</td>
-                                            <td class="uk-width-9-10 uk-text-left">{{record.genci_committee}}</td>
-                                        </tr><tr class="ext_info">
-                                            <td class="uk-width-1-10 uk-text-right">Methods:</td>
-                                            <td class="uk-width-9-10 uk-text-left">{{record.numerical_methods}}</td>
-                                        </tr><tr class="ext_info">
-                                            <td class="uk-width-1-10 uk-text-right">Resources:</td>
-                                            <td class="uk-width-9-10 uk-text-left">{{record.computing_resources}}</td>
-                                        </tr><tr class="ext_info">
-                                            <td class="uk-width-1-10 uk-text-right">Management:</td>
-                                            <td class="uk-width-9-10 uk-text-left">{{record.project_management}}</td>
-                                        </tr><tr class="ext_info">
-                                            <td class="uk-width-1-10 uk-text-right">Motivation:</td>
-                                            <td class="uk-width-9-10 uk-text-left">{{record.project_motivation}}</td>
-                                        </tr><tr class="ext_info">
-                                            <td class="uk-width-1-10 uk-text-right">Articles:</td>
-                                            <td class="uk-width-9-10 uk-text-left">
-                                                <ul>
-                                                {% for i in [record.article_1, record.article_2, record.article_3, record.article_4, record.article_5]%}
-                                                    {% if i %}
-                                                        <li>{{i}}</li>
-                                                    {% endif %}
-                                                {% endfor %}
-                                                </ul>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                                <div id="approval_msg_{{record.id}}" class="uk-width-1-1 uk-margin-bottom">
-                                    {% if record.approve %}
-                                        {% if record.approve_ts %}
-                                            <div class="uk-badge uk-badge-success">Technical approval granted [{{record.approve_ts.strftime("%Y-%m-%d %H:%M")}}]</div>
-                                        {% else %}
-                                            <div class="uk-badge uk-badge-success">Technical approval granted</div>
-                                        {% endif %}
-                                    {% endif %}
-                                    {% if record.accepted %}
-                                        {% if record.accepted_ts %}
-                                            <div class="uk-badge uk-badge-success">Visa sent [{{record.accepted_ts.strftime("%Y-%m-%d %H:%M")}}]</div>
-                                        {% else %}
-                                            <div class="uk-badge uk-badge-success">Visa sent</div>
-                                        {% endif %}
-                                    {% endif %}
-                                </div>
-                                <div class="uk-button-group uk-float-right">
-                                    {% if record.approve and not record.accepted %}
-                                        <button class="uk-button new_visa" type="button" data-id='{{record.id}}' data-meso='{{record.meso_id}}' data-title='{{record.title}}'><span class="uk-icon-edit uk-margin-small-right"></span>Send Visa</button>
-                                    {% elif record.approve and record.accepted %}
-                                        <button class="uk-button new_create" type="button" data-id='{{record.id}}' data-meso='{{record.meso_id}}' data-title='{{record.title}}' disabled><span class="uk-icon-cogs uk-margin-small-right"></span>Create Project!</button>
-                                        <button class="uk-button new_resend_visa" type="button" data-id='{{record.id}}' data-meso='{{record.meso_id}}' data-title='{{record.title}}'><span class="uk-icon-edit uk-margin-small-right"></span>Re-send Visa</button>
-                                    {% else %}
-                                        <button class="uk-button new_approve" type="button" data-id='{{record.id}}' data-meso='{{record.meso_id}}' data-title='{{record.title}}'><span class="uk-icon-wrench uk-margin-small-right"></span>Approve</button>
-                                    {% endif %}
-                                    <button class="uk-button new_ignore" type="button" data-id='{{record.id}}' data-meso='{{record.meso_id}}' data-title='{{record.title}}'><span class="uk-icon-thumbs-o-down uk-margin-small-right"></span>Ignore</button>
-                                    <button class="uk-button new_reject uk-button-danger" type="button" data-id='{{record.id}}' data-meso='{{record.meso_id}}' data-title='{{record.title}}'><span class="uk-icon-thumbs-down uk-margin-small-right"></span>Reject</button>
-                                </div>
-
-                                <div class="uk-button-group uk-float-left">
-                                    {% if record.responsible_email %}
-                                        <button class="uk-button message" type="button" data-id='{{record.id}}' data-addr='{{record.responsible_email}}'><span class="uk-icon-send uk-margin-small-right"></span>Contact</button>
-                                    {% endif %}
-                                    <button class="uk-button new_edit" type="button" data-id='{{record.id}}'><span class="uk-icon-edit uk-margin-small-right"></span>Edit</button>
-                                </div>
-
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-        {% endif %}
-
-        {% if data.users %}
-            {% set long=[] %}
-            {% set short=[] %}
-            {% for key in data.users.keys() %}
-                {% if key | length > 1 %}
-                    {{ long.append(key) or '' }}
-                {% else %}
-                    {{ short.append(key) or '' }}
-                {% endif %}
-            {% endfor %}
-            {% set long = long | sort %}
-            {% set short = short | sort %}
-            {% set every = long+short%}
-        <div class="uk-grid uk-grid-small uk-margin-bottom uk-grid-match" data-uk-grid-match="{target:'.uk-accordion-title'}">
-            <div class="uk-width-8-10">
-            <h3 class="uk-accordion-title">
-                Users
-                <button class="uk-button uk-float-right uk-button-small slurm_reload"><span class="uk-icon-refresh"></span></button>
-            </h3>
+                    </thead>
+                </table>
             </div>
-            <div class="uk-width-2-10">
-            <button class="uk-button user_add" type="button">
-                <span class="uk-icon-user-plus"></span>
-                Add user
-            </button>
-            </div>
-        </div>
-        <div class="uk-accordion-content">
-            <div class="uk-grid">
-                <div class="uk-width-small-1-1 uk-width-medium-1-3">
-                    <ul class="uk-nav uk-nav-side" data-uk-switcher="{connect:'#userz'}">
-                        {% for key in every %}
-                            {% if key in ["admin", "responsible", "user"] %}
-                                <li><a href="#" class="uk-text-capitalize">{{ key }}s</a></li>
-                            {% else %}
-                                <li><a href="#" class="uk-text-capitalize">{{ key }}</a></li>
-                            {% endif %}
-                        {% endfor %}
-                    </ul>
-                </div>
-                <div class="uk-width-small-1-1 uk-width-medium-2-3">
 
-                    <ul id="userz" class="uk-switcher">
-                        {% for key in every %}
-                            <li>
-                                <table class="uk-table uk-table-hover uk-table-striped uk-table-condensed">
-                                    <thead>
-                                        <tr>
-                                            <th data-priority="1">Login</th>
-                                            <th data-priority="5">Name</th>
-                                            <th data-priority="6">Surname</th>
-                                            <th data-priority="4">Active</th>
-                                            <th data-priority="2"></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {% for user in data.users[key] %}
-                                            <tr id="ue_rec_{{user.id}}">
-                                                <td>{{user.login}}</td>
-                                                <td class="uk-text-capitalize">{{user.name}}</td>
-                                                <td class="uk-text-capitalize">{{user.surname}}</td>
-                                                <td>
-                                                {% if user.status %}
-                                                    <span class="uk-icon-check"></span>
-                                                {% endif %}
-                                                </td>
-                                                <td>
-                                                    <div class="uk-button-group uk-float-right">
-                                                        <button class="uk-button uk-button-mini user_password_reset" type="button" data-id='{{user.id}}' data-login='{{user.login}}' data-mail="{{user.mail}}" title="User's password reset"><span class="uk-icon-eraser"></span></button>
-                                                        <button class="uk-button uk-button-mini user_edit" type="button" data-id='{{user.id}}' title="Change user's info"><span class="uk-icon-cogs"></span></button>
-                                                        <!--
-                                                        <button class="uk-button uk-button-mini user_block uk-text-danger" type="button" data-id='{{user.id}}' data-login='{{user.login}}'><span class="uk-icon-ban"></span></button>
-                                                        -->
-                                                        <button class="uk-button uk-button-mini user_purge uk-button-danger" type="button" data-id='{{user.id}}' data-login='{{user.login}}' title="Completely remove this user and the data from the cluster"><span class="uk-icon-close"></span></button>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        {% endfor %}
-                                    </tbody>
-                                    </table>
-                                </li>
-                        {% endfor %}
-                    </ul>
-                </div>
-            </div>
-        </div>
-        {% endif %}
-        <!--
-        <h3 class="uk-accordion-title">Endpoint Access Control List</h3>
-        <div class="uk-accordion-content">
-        </div>
-        -->
-    </div>
-</div>
-{% endblock %}
-
-{% block last %}
-<div id="user_change" class="uk-modal fade" tabindex="-1" role="dialog" aria-labelledby="confirm-modal" aria-hidden="true">
-    <div class="uk-modal-dialog">
-        <a class="uk-modal-close uk-close"></a>
-        <div class="uk-overflow-container">
-            <form id="ue_form" action="test" method="post" class="uk-panel uk-panel-box uk-form uk-form-horizontal">
-                {{ form.csrf_token }}
-                {{ form.uid(id="ua_id") }}
-                <div class="uk-form-row">
-                    <label class="uk-form-label" for="ua_login">Username:</label>
-                    <div class="uk-form-controls">
-                        {{ form.login(placeholder="jsmith", class_="uk-width-1-1 uk-form-large", id="ua_login") }}
-                    </div>
-                </div>
-                <div class="uk-form-row">
-                    <label class="uk-form-label" for="ua_name">Name:</label>
-                    <div class="uk-form-controls">
-                        {{ form.name(placeholder="John", class_="uk-width-1-1 uk-form-large uk-text-capitalize", id="ua_name") }}
-                    </div>
-                </div>
-                <div class="uk-form-row">
-                    <label class="uk-form-label" for="ua_surname">Surname:</label>
-                    <div class="uk-form-controls">
-                        {{ form.surname(placeholder="Smith", class_="uk-width-1-1 uk-form-large uk-text-capitalize", id="ua_surname") }}
-                    </div>
-                </div>
-                <div class="uk-form-row">
-                    <label class="uk-form-label" for="ua_email">E-mail:</label>
-                    <div class="uk-form-controls">
-                        {{ form.email(placeholder="john.smith@univ-amu.fr", class_="uk-width-1-1 uk-form-large", id="ua_email") }}
-                    </div>
-                </div>
-                <div class="uk-form-row">
-                    <span class="uk-form-label">Current project(s):</span>
-                    <div class="uk-form-controls uk-form-controls-text">
-                        <span id="ua_current" class="uk-form-label">None</span>
-                    </div>
-                </div>
-                <div class="uk-form-row">
-                    <span class="uk-form-label">Project(s):</span>
-                    <div class="uk-form-controls uk-form-controls-text">
-                        {{ form.project(id="ua_project", class_="uk-width-1-1 uk-form-large", size=5) }}
-                    </div>
-                </div>
-                <div class="uk-form-row">
-                    <span class="uk-form-label"></span>
-                    <div class="uk-form-controls uk-form-controls-text">
-                        {{ form.active(placeholder="active", id="ua_active") }} Active user?
-                    </div>
-                </div>
-
-                <div class="uk-form-row">
-                    <span class="uk-form-label">User roles:</span>
-                    <div class="uk-form-controls uk-form-controls-text">
-                        <div>{{ form.is_user(id="ua_user") }} User</div>
-                        <div>{{ form.is_responsible(id="ua_resp") }} Responsible</div>
-                        <div>{{ form.is_committee(id="ua_comm") }} Scientific committee</div>
-                        <div>{{ form.is_admin(id="ua_admn") }} Admin</div>
-                    </div>
-                </div>
-            </form>
-        </div>
-        <div class="uk-modal-footer">
-            <div class="uk-text-left">
-                <button class="uk-button uk-align-left name_swap" type="button" title="Swap name and surname">
-                    <span class="uk-icon-retweet"></span>
-                </button>
-            </div>
-            <div class="uk-text-right">
-                <button class="uk-button js-modal-confirm-cancel ue_cancel">Cancel</button>
-                <button class="uk-button uk-button-primary js-modal-confirm ue_submit">Submit</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-<div id="register_edit" class="uk-modal fade" tabindex="-1" role="dialog" aria-labelledby="confirm-modal" aria-hidden="true">
-    <div class="uk-modal-dialog">
-        <a class="uk-modal-close uk-close"></a>
-        <div class="uk-overflow-container">
-            <form id="re_form" action="test" method="post" class="uk-panel uk-panel-box uk-form uk-form-horizontal">
-                {{ re_form.csrf_token }}
-                {{ re_form.rid(id="re_id") }}
-                <div class="uk-form-row">
-                    <label class="uk-form-label" for="re_title">Title:</label>
-                    <div class="uk-form-controls">
-                        {{ re_form.title(placeholder="Project title", class_="uk-width-1-1 uk-form-large", id="re_title") }}
-                    </div>
-                </div>
-                <div class="uk-form-row">
-                    <label class="uk-form-label" for="re_cpu">CPU:</label>
-                    <div class="uk-form-controls">
-                        {{ re_form.cpu(placeholder="5000", class_="uk-width-1-1 uk-form-large uk-text-capitalize", id="re_cpu") }}
-                    </div>
-                </div>
-                <div class="uk-form-row">
-                    <label class="uk-form-label" for="re_type">Project type:</label>
-                    <div class="uk-form-controls">
-                        {{ re_form.type(placeholder="A", class_="uk-width-1-1 uk-form-large uk-text-capitalize", id="re_type") }}
-                    </div>
-                </div>
-                <div class="uk-form-row">
-                    <label class="uk-form-label" for="re_resp_name">Responsible name:</label>
-                    <div class="uk-form-controls">
-                        {{ re_form.responsible_first_name(placeholder="Jhon", class_="uk-width-1-1 uk-form-large uk-text-capitalize", id="re_resp_name") }}
-                    </div>
-                </div>
-                <div class="uk-form-row">
-                    <label class="uk-form-label" for="re_resp_surname">Responsible surname:</label>
-                    <div class="uk-form-controls">
-                        {{ re_form.responsible_last_name(placeholder="Smith", class_="uk-width-1-1 uk-form-large uk-text-capitalize", id="re_resp_surname") }}
-                    </div>
-                </div>
-                <div class="uk-form-row">
-                    <label class="uk-form-label" for="re_resp_email">Responsible e-mail:</label>
-                    <div class="uk-form-controls">
-                        {{ re_form.responsible_email(placeholder="john.smith@univ-amu.fr", class_="uk-width-1-1 uk-form-large", id="re_resp_email") }}
-                    </div>
-                </div>
-                <div class="uk-form-row">
-                    <label class="uk-form-label" for="re_resp_position">Responsible position:</label>
-                    <div class="uk-form-controls">
-                        {{ re_form.responsible_position(placeholder="Professor", class_="uk-width-1-1 uk-form-large", id="re_resp_position") }}
-                    </div>
-                </div>
-                <div class="uk-form-row">
-                    <label class="uk-form-label" for="re_resp_lab">Responsible lab/institution:</label>
-                    <div class="uk-form-controls">
-                        {{ re_form.responsible_lab(placeholder="Aix-Marseille Universite", class_="uk-width-1-1 uk-form-large", id="re_resp_lab") }}
-                    </div>
-                </div>
-                <div class="uk-form-row">
-                    <label class="uk-form-label" for="re_resp_phone">Responsible phone:</label>
-                    <div class="uk-form-controls">
-                        {{ re_form.responsible_phone(placeholder="12345", class_="uk-width-1-1 uk-form-large", id="re_resp_phone") }}
-                    </div>
-                </div>
-
-
-            </form>
-        </div>
-        <div class="uk-modal-footer">
-            <div class="uk-text-left">
-                <button class="uk-button uk-align-left resp_name_swap" type="button" title="Swap responsible's name and surname">
-                    <span class="uk-icon-retweet"></span>
-                </button>
-            </div>
-            <div class="uk-text-right">
-                <button class="uk-button js-modal-confirm-cancel re_cancel">Cancel</button>
-                <button class="uk-button uk-button-primary js-modal-confirm re_submit">Submit</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div id="new_user_edit" class="uk-modal fade" tabindex="-1" role="dialog" aria-labelledby="confirm-modal" aria-hidden="true">
-    <div class="uk-modal-dialog">
-        <a class="uk-modal-close uk-close"></a>
-        <div class="uk-overflow-container">
-            <form id="new_user_form" action="test" method="post" class="uk-panel uk-panel-box uk-form uk-form-horizontal">
-                {{ nu_form.csrf_token }}
-                {{ nu_form.pid(id="new_user_id") }}
-                {{ nu_form.uid(id="new_user_uid") }}
-                <div class="uk-form-row">
-                    <label class="uk-form-label" for="new_user_name">Name:</label>
-                    <div class="uk-form-controls">
-                        {{ nu_form.user_first_name(placeholder="Jhon", class_="uk-width-1-1 uk-form-large uk-text-capitalize", id="new_user_name") }}
-                    </div>
-                </div>
-                <div class="uk-form-row">
-                    <label class="uk-form-label" for="new_user_surname">Surname:</label>
-                    <div class="uk-form-controls">
-                        {{ nu_form.user_last_name(placeholder="Smith", class_="uk-width-1-1 uk-form-large uk-text-capitalize", id="new_user_surname") }}
-                    </div>
-                </div>
-                <div class="uk-form-row">
-                    <label class="uk-form-label" for="new_user_email">E-mail:</label>
-                    <div class="uk-form-controls">
-                        {{ nu_form.user_email(placeholder="john.smith@univ-amu.fr", class_="uk-width-1-1 uk-form-large", id="new_user_email") }}
-                    </div>
-                </div>
-                <div class="uk-form-row">
-                    <label class="uk-form-label" for="new_user_login">Login name:</label>
-                    <div class="uk-form-controls">
-                        {{ nu_form.user_login(placeholder="jsmith", class_="uk-width-1-1 uk-form-large", id="new_user_login") }}
-                    </div>
-                </div>
-            </form>
-        </div>
-        <div class="uk-modal-footer">
-            <div class="uk-text-left">
-                <button class="uk-button uk-align-left new_user_swap" type="button" title="Swap name and surname">
-                    <span class="uk-icon-retweet"></span>
-                </button>
-            </div>
-            <div class="uk-text-right">
-                <button class="uk-button js-modal-confirm-cancel new_user_cancel">Cancel</button>
-                <button class="uk-button uk-button-primary js-modal-confirm new_user_submit">Submit</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div id="new_user_add" class="uk-modal fade" tabindex="-1" role="dialog" aria-labelledby="confirm-modal" aria-hidden="true">
-    <div class="uk-modal-dialog">
-        <a class="uk-modal-close uk-close"></a>
-        <div class="uk-overflow-container">
-            <form id="add_new_user_form" action="test" method="post" class="uk-panel uk-panel-box uk-form uk-form-horizontal">
-                {{ nu_form.csrf_token }}
-                {{ nu_form.pid(id="add_new_user_id") }}
-                {{ nu_form.uid(id="add_new_user_uid") }}
-                <div class="uk-form-row">
-                    <label class="uk-form-label" for="add_new_user_name">Name:</label>
-                    <div class="uk-form-controls">
-                        {{ nu_form.user_first_name(placeholder="Jhon", class_="uk-width-1-1 uk-form-large uk-text-capitalize", id="add_new_user_name") }}
-                    </div>
-                </div>
-                <div class="uk-form-row">
-                    <label class="uk-form-label" for="add_new_user_surname">Surname:</label>
-                    <div class="uk-form-controls">
-                        {{ nu_form.user_last_name(placeholder="Smith", class_="uk-width-1-1 uk-form-large uk-text-capitalize", id="add_new_user_surname") }}
-                    </div>
-                </div>
-                <div class="uk-form-row">
-                    <label class="uk-form-label" for="add_new_user_email">E-mail:</label>
-                    <div class="uk-form-controls">
-                        {{ nu_form.user_email(placeholder="john.smith@univ-amu.fr", class_="uk-width-1-1 uk-form-large", id="add_new_user_email") }}
-                    </div>
-                </div>
-                <div class="uk-form-row">
-                    <label class="uk-form-label" for="add_new_user_login">Login name:</label>
-                    <div class="uk-form-controls">
-                        {{ nu_form.user_login(placeholder="jsmith", class_="uk-width-1-1 uk-form-large", id="add_new_user_login") }}
-                    </div>
-                </div>
-            </form>
-        </div>
-        <div class="uk-modal-footer">
-            <div class="uk-text-right">
-                <button class="uk-button js-modal-confirm-cancel add_new_user_cancel">Cancel</button>
-                <button class="uk-button uk-button-primary js-modal-confirm add_new_user_submit">Submit</button>
-            </div>
-        </div>
-    </div>
-</div>
 {% endblock %}

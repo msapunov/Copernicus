@@ -9,6 +9,7 @@ from base.pages import (
 from base.pages.user.magic import get_user_record, user_by_id
 from base.pages.admin import bp
 from base.pages.admin.magic import (
+    all_users,
     create_project,
     event_log,
     skip_visa,
@@ -35,6 +36,7 @@ from base.pages.admin.magic import (
     reg_approve)
 from base.functions import slurm_nodes_status
 from base.pages.admin.form import (
+    AddUserForm,
     UserEditForm,
     RegistrationEditForm,
     NewUserEditForm)
@@ -346,13 +348,6 @@ def web_admin_tasks_list():
     return jsonify(data=TaskManager().list())
 
 
-@bp.route("/admin/tasks/done", methods=["POST"])
-@login_required
-@grant_access("admin", "tech")
-def admin_tasks_donex(tid):
-    return jsonify(data=process_task(tid))
-
-
 @bp.route("/admin/tasks/done/<int:tid>", methods=["POST"])
 @login_required
 @grant_access("admin", "tech")
@@ -401,11 +396,21 @@ def web_admin_user_info():
     return jsonify(data=users)
 
 
+@bp.route("/admin/bits/pending/<int:rid>", methods=["POST"])
+@login_required
+@grant_access("admin", "manager")
+def web_admin_bits_pending(rid):
+    return render_template("bits/pending_expand_row.html",
+                           pending=get_registration_record(rid))
+
+
 @bp.route("/admin/pending/list", methods=["POST"])
 @login_required
-@grant_access("admin")
+@grant_access("admin", "manager")
 def web_admin_pending_list():
     pending = Register.query.filter_by(processed=False).all()
+    if "admin" not in g.permissions:
+        config = project_config()
     return jsonify(data=list(map(lambda x: x.to_dict(), pending)) if pending else [])
 
 
@@ -434,6 +439,15 @@ def web_admin_space_info():
     return jsonify(data=space_info())
 
 
+@bp.route("/registry", methods=["GET", "POST"])
+@bp.route("/registry.html", methods=["GET", "POST"])
+@login_required
+@grant_access("admin")
+def web_registry():
+    form = AddUserForm()
+    return render_template("registry.html", data=all_users(), form=form)
+
+
 @bp.route("/log", methods=["GET", "POST"])
 @bp.route("/log.html", methods=["GET", "POST"])
 @login_required
@@ -445,20 +459,8 @@ def web_log():
 @bp.route("/admin", methods=["GET", "POST"])
 @bp.route("/admin.html", methods=["GET", "POST"])
 @login_required
-@grant_access("admin")
+@grant_access("admin", "manager")
 def web_admin():
-    from base.database.schema import Register
-
-    result = {"partition": slurm_partition_info()}
-    reg_list = Register().query.filter_by(processed=False).all()
-    if not reg_list:
-        result["extension"] = []
-    else:
-        result["extension"] = list(map(lambda x: x.to_dict(), reg_list))
+    result = {}
     result["tasks"] = TaskManager().list()
-    result["users"] = group_users()
-    form = UserEditForm()
-    register_edit = RegistrationEditForm()
-    new_user_edit = NewUserEditForm()
-    return render_template("admin.html", data=result, form=form,
-                           nu_form=new_user_edit, re_form=register_edit)
+    return render_template("admin.html", data=result)
