@@ -216,14 +216,14 @@ def admin_registration_details_set(rid):
 
 @bp.route("/admin/registration/ignore/<int:pid>", methods=["POST"])
 @login_required
-@grant_access("admin")
+@grant_access("admin", "manager")
 def admin_registration_ignore(pid):
     return jsonify(data=reg_ignore(pid))
 
 
 @bp.route("/admin/registration/create/<int:pid>", methods=["POST"])
 @login_required
-@grant_access("admin")
+@grant_access("admin", "manager")
 def admin_registration_create(pid):
     data = request.get_json()
     if not data["safety"]:
@@ -233,7 +233,7 @@ def admin_registration_create(pid):
 
 @bp.route("/admin/registration/reject/<int:pid>", methods=["POST"])
 @login_required
-@grant_access("admin")
+@grant_access("admin", "manager")
 def admin_registration_reject(pid):
     data = request.get_json()
     if not data:
@@ -257,7 +257,7 @@ def admin_registration_accept(pid):
 
 @bp.route("/admin/registration/approve/<int:pid>", methods=["POST"])
 @login_required
-@grant_access("admin", "tech")
+@grant_access("admin", "tech", "manager")
 def admin_registration_approve(pid):
     return jsonify(data=reg_approve(pid))
 
