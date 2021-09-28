@@ -406,9 +406,11 @@ def web_admin_bits_pending(rid):
 
 @bp.route("/admin/pending/list", methods=["POST"])
 @login_required
-@grant_access("admin")
+@grant_access("admin", "manager")
 def web_admin_pending_list():
     pending = Register.query.filter_by(processed=False).all()
+    if "admin" not in g.permissions:
+        config = project_config()
     return jsonify(data=list(map(lambda x: x.to_dict(), pending)) if pending else [])
 
 
