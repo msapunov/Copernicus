@@ -690,33 +690,6 @@ def process_task(tid):
     return task.done()
 
 
-def task_action(action):
-    if action not in ["accept", "reject", "ignore"]:
-        raise ValueError("Action %s is unknown" % action)
-
-    task = get_task()
-    if action == "reject":
-        return task.reject()
-    elif action == "ignore":
-        return task.ignore()
-    else:
-        return task.accept()
-
-
-def get_task():
-    data = request.get_json()
-    if not data:
-        raise ValueError("Expecting application/json requests")
-    tid = check_int(data["task"])
-
-    task = TaskOld(tid)
-    if not task:
-        raise ValueError("No task with id %s found" % tid)
-    if task.is_processed():
-        raise ValueError("Task with id %s has been already processed" % tid)
-    return task
-
-
 class TaskManager:
 
     def __init__(self):
