@@ -872,6 +872,9 @@ def create_project(rid):
         raise ValueError("Project %s has to be approved first!" % reg_name)
     if not record.accepted:
         raise ValueError("Project %s has to be accepted first!" % reg_name)
+    record.processed = True
+    db.session.commit()
+    raise ValueError("Registration record marked as processed. Don't forget to create project!")
     project = Project(
         title=record.title,
         description=record.description,
