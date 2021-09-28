@@ -1120,7 +1120,7 @@
                 dt.ajax.reload();
             }
         };
-        window.admin.sys();
+        //window.admin.sys();
         let pending_table = $("#pending_projects").DataTable({
             "ajax": {"type": "POST", "url": window.admin.url.pending},
             dom: 'tiB',
