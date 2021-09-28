@@ -4,9 +4,9 @@ from wtforms import TextAreaField, SelectField, StringField
 from wtforms.fields.html5 import EmailField
 from wtforms.validators import DataRequired, NumberRange, ValidationError, Email
 from base.pages.project.magic import (
-    project_config,
     get_transformation_options,
     get_users)
+from base.functions import project_config
 from logging import error
 
 
