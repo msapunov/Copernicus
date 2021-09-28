@@ -1,8 +1,11 @@
+from flask import g
 from flask_login import current_user
 from base import db
+from base.functions import project_config
 from base.email import Mail, UserMailingList, ResponsibleMailingList
-from base.database.schema import LogDB, User, ACLDB, Extend
+from base.database.schema import LogDB, User, ACLDB, Extend, Register
 
+from logging import warning, debug
 from operator import attrgetter
 from datetime import datetime as dt
 
@@ -410,6 +413,65 @@ class TmpUser:
                                                self.is_manager, self.is_tech,
                                                self.is_committee, self.is_admin)
         return "%s WITH ACL %s WITH STATUS %s" % (u_part, a_part, self.active)
+
+
+class Pending:
+    """
+    Operations on pending projects, i.e. registration records which haven't been
+    processed yet
+    """
+    def __init__(self, id=None):
+        if id:
+            self.pending = Register.query.filter_by(id=id).first()
+        else:
+            self.pending = None
+
+    def acl_filter(self, reg):
+        if "admin" in g.permissions:
+            return True
+        config = project_config()
+        project_type = reg.type.lower()
+        if project_type not in config.keys():
+            warning("Type %s is not found in config" % project_type)
+            return False
+        acl = config[project_type].get("acl", [])
+        debug("ACL %s for register project type %s" % (acl, project_type))
+        if current_user.login in acl:
+            debug("Login %s is in register ACL: %s" % (current_user.login, acl))
+            return True
+        role = set(acl).intersection(set(g.permissions))
+        debug("Intersection of register ACL and user permissions: %s" % role)
+        if role:
+            return True
+        return False
+
+    def unprocessed(self):
+        if not self.pending:
+            todo = Register.query.filter_by(processed=False).all()
+        else:
+            todo = [self.pending]
+        return list(filter(lambda x: self.acl_filter(x), todo))
+
+    def process(self):
+        """
+        Set processed field of the task record to True, so the task will be
+        moved to the task ready to be executed.
+        Set approve field to current user and commit changes via self.commit()
+        :return: Object. Task record
+        """
+        if not self.pending:
+            raise ValueError("No pending project to process")
+#        self.pending.processed = True
+#        self.pending.approve = current_user
+        return self.commit()
+
+    def commit(self):
+        """
+        Commit changes to the database
+        :return: Object. Task record
+        """
+        db.session.commit()
+        return self.pending
 
 
 # noinspection PyArgumentList
