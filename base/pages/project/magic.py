@@ -1,17 +1,15 @@
-from configparser import ConfigParser
 from datetime import datetime as dt, timezone
 from logging import error, debug, warning
-from os.path import join as path_join, exists
 from pathlib import Path
 
 from flask import current_app, render_template, g
 from flask_login import current_user
 from owncloud import Client as OwnClient
 from pdfkit import from_string
-from recurrent.event_parser import RecurringEvent
 
 from base import db
 from base.classes import TmpUser, ProjectLog, Task
+from base.functions import project_config
 from base.database.schema import Extend, File, Project, Tasks, User
 from base.pages import calculate_usage, generate_login, TaskQueue
 from base.pages import ssh_wrapper
@@ -71,92 +69,6 @@ def project_create_user(name, form):
     if current_user.login and "admin" in current_user.permissions():
         Task(task).accept()
     return project, user
-
-
-def project_parse_cfg_options(cfg, section):
-    """
-    Parse project configuration. Use of recurrent lib to parse fuzzy time values
-    :param cfg: Configuration object
-    :param section: Section in the configuration object, i.e. project type
-    :return: Dictionary. Keys are: "duration_text", "duration_dt", "extendable",
-            "finish_text", "finish_dt", "cpu", "finish_notice_text",
-            "finish_notice_dt", "transform", "description", "evaluation_text",
-            "evaluation_dt", "evaluation_notice_text", "evaluation_notice_dt"
-    """
-    r = RecurringEvent()
-    cpu = cfg.getint(section, "cpu", fallback=None)
-    description = cfg.get(section, "description", fallback=None)
-    duration = cfg.get(section, "duration", fallback=None)
-    if duration:
-        duration_dt = r.parse(duration).replace(tzinfo=timezone.utc)
-    else:
-        duration_dt = None
-    end = cfg.get(section, "finish_date", fallback=None)
-    if end:
-        end_dt = r.parse(end).replace(tzinfo=timezone.utc)
-    else:
-        end_dt = None
-    end_notice = cfg.get(section, "finish_notice", fallback=None)
-    if end_notice and end_dt:
-        tmp = RecurringEvent(end_dt).parse(end_notice)
-        end_notice_dt = tmp.replace(tzinfo=timezone.utc)
-    else:
-        end_notice_dt = None
-    trans = cfg.get(section, "transform", fallback=None)
-    if trans:
-        transform = list(map(lambda x: x.strip(), trans.split(",")))
-    else:
-        transform = []
-
-    eva = cfg.get(section, "evaluation_date", fallback=None)
-    if eva:
-        evaluation = list(map(lambda x: x.strip(), eva.split(",")))
-    else:
-        evaluation = []
-    if evaluation:
-        tmp = list(map(lambda x: r.parse(x), evaluation))
-        eva_dt = list(map(lambda x: x.replace(tzinfo=timezone.utc), tmp))
-    else:
-        eva_dt = None
-
-    eva_notice = cfg.get(section, "evaluation_notice", fallback=None)
-    if eva_notice and eva_dt:
-        tmp = list(map(lambda x: RecurringEvent(x).parse(eva_notice), eva_dt))
-        eva_text_dt = list(map(lambda x: x.replace(tzinfo=timezone.utc), tmp))
-    else:
-        eva_text_dt = None
-    extendable = cfg.get(section, "extendable", fallback=False)
-    return {"duration_text": duration, "duration_dt": duration_dt,
-            "finish_text": end, "finish_dt": end_dt, "cpu": cpu,
-            "finish_notice_text": end_notice, "extendable": extendable,
-            "finish_notice_dt": end_notice_dt,
-            "transform": transform, "description": description,
-            "evaluation_text": evaluation, "evaluation_dt": eva_dt,
-            "evaluation_notice_text": eva_notice,
-            "evaluation_notice_dt": eva_text_dt}
-
-
-def project_config():
-    """
-    Parsing file defined in PROJECT_CONFIG option of main application config.
-    Otherwise trying to find project.cfg file
-    :return: Dict. Each project type (i.e. subsection in config file) having
-    options returned by project_parse_cfg_options function
-    """
-    result = {}
-    cfg_file = current_app.config.get("PROJECT_CONFIG", "project.cfg")
-    cfg_path = path_join(current_app.instance_path, cfg_file)
-    if not exists(cfg_path):
-        warning("Projects configuration file doesn't exists. Using defaults")
-        return result
-    cfg = ConfigParser()
-    cfg.read(cfg_path)
-    projects = cfg.sections()
-    for project in projects:
-        name = project.lower()
-        result[name] = project_parse_cfg_options(cfg, project)
-    debug("Project configuration: %s" % result)
-    return result
 
 
 def upload_file_cloud(path, remote=None):

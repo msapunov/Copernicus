@@ -1,27 +1,117 @@
 from flask import current_app as app, flash
-from datetime import datetime as dt
+from datetime import datetime as dt, timezone
 from unicodedata import normalize
 from tempfile import gettempdir, mkdtemp
 from os import walk
 from os.path import join as join_dir, exists
 from base64 import b64encode
-import logging as log
+from recurrent.event_parser import RecurringEvent
+from configparser import ConfigParser
+from logging import error, debug, warning
+
+from flask import current_app
 from flask_login import current_user
-from base import db
 from base.pages import (
     check_int,
     check_str,
     check_json,
-    calculate_ttl,
     calculate_usage)
-from base.database.schema import Resources, Project
-from base.classes import Extensions
+from base.database.schema import Project
 from base.pages import ssh_wrapper
-from logging import debug, error
 
 
 __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
+
+
+def project_parse_cfg_options(cfg, section):
+    """
+    Parse project configuration. Use of recurrent lib to parse fuzzy time values
+    :param cfg: Configuration object
+    :param section: Section in the configuration object, i.e. project type
+    :return: Dictionary. Keys are: "duration_text", "duration_dt", "extendable",
+            "finish_text", "finish_dt", "cpu", "finish_notice_text", "acl",
+            "finish_notice_dt", "transform", "description", "evaluation_text",
+            "evaluation_dt", "evaluation_notice_text", "evaluation_notice_dt"
+    """
+    r = RecurringEvent()
+    cpu = cfg.getint(section, "cpu", fallback=None)
+    description = cfg.get(section, "description", fallback=None)
+    duration = cfg.get(section, "duration", fallback=None)
+    if duration:
+        duration_dt = r.parse(duration).replace(tzinfo=timezone.utc)
+    else:
+        duration_dt = None
+    end = cfg.get(section, "finish_date", fallback=None)
+    if end:
+        end_dt = r.parse(end).replace(tzinfo=timezone.utc)
+    else:
+        end_dt = None
+    end_notice = cfg.get(section, "finish_notice", fallback=None)
+    if end_notice and end_dt:
+        tmp = RecurringEvent(end_dt).parse(end_notice)
+        end_notice_dt = tmp.replace(tzinfo=timezone.utc)
+    else:
+        end_notice_dt = None
+    trans = cfg.get(section, "transform", fallback=None)
+    if trans:
+        transform = list(map(lambda x: x.strip(), trans.split(",")))
+    else:
+        transform = []
+    acl = cfg.get(section, "acl", fallback=[])
+    if acl:
+        acl = list(map(lambda x: x.strip(), acl.split(",")))
+    acl.append("admin")
+
+    eva = cfg.get(section, "evaluation_date", fallback=None)
+    if eva:
+        evaluation = list(map(lambda x: x.strip(), eva.split(",")))
+    else:
+        evaluation = []
+    if evaluation:
+        tmp = list(map(lambda x: r.parse(x), evaluation))
+        eva_dt = list(map(lambda x: x.replace(tzinfo=timezone.utc), tmp))
+    else:
+        eva_dt = None
+
+    eva_notice = cfg.get(section, "evaluation_notice", fallback=None)
+    if eva_notice and eva_dt:
+        tmp = list(map(lambda x: RecurringEvent(x).parse(eva_notice), eva_dt))
+        eva_text_dt = list(map(lambda x: x.replace(tzinfo=timezone.utc), tmp))
+    else:
+        eva_text_dt = None
+    extendable = cfg.get(section, "extendable", fallback=False)
+    return {"duration_text": duration, "duration_dt": duration_dt, "acl": acl,
+            "finish_text": end, "finish_dt": end_dt, "cpu": cpu,
+            "finish_notice_text": end_notice, "extendable": extendable,
+            "finish_notice_dt": end_notice_dt,
+            "transform": transform, "description": description,
+            "evaluation_text": evaluation, "evaluation_dt": eva_dt,
+            "evaluation_notice_text": eva_notice,
+            "evaluation_notice_dt": eva_text_dt}
+
+
+def project_config():
+    """
+    Parsing file defined in PROJECT_CONFIG option of main application config.
+    Otherwise trying to find project.cfg file
+    :return: Dict. Each project type (i.e. subsection in config file) having
+    options returned by project_parse_cfg_options function
+    """
+    result = {}
+    cfg_file = current_app.config.get("PROJECT_CONFIG", "project.cfg")
+    cfg_path = join_dir(current_app.instance_path, cfg_file)
+    if not exists(cfg_path):
+        warning("Projects configuration file doesn't exists. Using defaults")
+        return result
+    cfg = ConfigParser()
+    cfg.read(cfg_path)
+    projects = cfg.sections()
+    for project in projects:
+        name = project.lower()
+        result[name] = project_parse_cfg_options(cfg, project)
+    debug("Project configuration: %s" % result)
+    return result
 
 
 def slurm_nodes_status():
@@ -275,31 +365,6 @@ def resources_update_statistics(pid=None, force=False):
     return "", 200
 
 
-def ignore_extension(eid):
-    return Extensions(eid).reject("Extension request has been ignored")
-
-
-def reject_extension(eid):
-    data = check_json()
-    note = check_str(data["comment"])
-    if not note:
-        raise ValueError("Please indicate reason for rejection extension")
-    record = Extensions(eid)
-    return record.reject(note)
-
-
-def create_resource(project, cpu):
-    return Resources(
-        approve=current_user,
-        valid=True,
-        cpu=cpu,
-        type=project.type,
-        project=project.get_name(),
-        ttl=calculate_ttl(project),
-        treated=False
-    )
-
-
 def get_arguments():
     data = check_json()
     eid = check_int(data["eid"])
@@ -338,10 +403,10 @@ def get_tmpdir(app):
     exists = list(filter(lambda x: True if prefix in x else False, dirs))
     if exists:
         dir_name = exists[0]
-        log.debug("Found existing directory: %s" % dir_name)
+        debug("Found existing directory: %s" % dir_name)
     else:
         dir_name = mkdtemp(prefix=prefix)
-        log.debug("Temporary directory created: %s" % dir_name)
+        debug("Temporary directory created: %s" % dir_name)
     return dir_name
 
 
@@ -370,7 +435,7 @@ def save_file(req, directory, file_name=False):
     file = req.files["file"]
     if file.filename == '':
         raise ValueError("No selected file")
-    log.debug("File name from incoming request: %s" % file.filename)
+    debug("File name from incoming request: %s" % file.filename)
     if not file_name:
         file_name = file.filename
     else:
@@ -378,10 +443,10 @@ def save_file(req, directory, file_name=False):
             file_name = "%s.unknown" % file_name
         elif "." not in file_name and "." in file.filename:
             ext = file.filename.rsplit('.', 1)[1].lower()
-            log.debug("Deducted file extensions: %s" % ext)
+            debug("Deducted file extensions: %s" % ext)
             file_name = "%s.%s" % (file_name, ext)
     name = join_dir(directory, file_name)
-    log.debug("Saving file from incoming request to: %s" % name)
+    debug("Saving file from incoming request to: %s" % name)
     file.save(name)
     return {"saved_name": file_name, "incoming_name": file.filename}
 
