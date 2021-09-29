@@ -656,10 +656,9 @@
                 "pid": id
             }).done(function(reply){
                 if(reply.data){
-                    UIkit.notify(reply.data, {timeout: 2000, status:"success"});
+                    UIkit.notify(reply.data.join("\n"), {timeout: 2000, status:"success"});
                 }
-                $("#"+id).remove();
-                $("#"+id+"-info").remove();
+
             });
         });
     };
