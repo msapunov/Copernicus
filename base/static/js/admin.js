@@ -1286,7 +1286,7 @@
     $(document).on("click", ".new_resend_visa", window.render.new_resend_visa);
     $(document).on("click", ".new_accept", window.render.new_accept);
     $(document).on("click", ".new_ignore", window.render.new_ignore);
-    $(document).on("click", ".new_reject", window.render.new_reject);
+    $(document).on("click", ".re_reject", trigger_modal);
     $(document).on("click", ".re_submit", window.render.re_submit_or_cancel);
     $(document).on("click", ".re_cancel", window.render.re_submit_or_cancel);
     $(document).on("click", ".resp_name_swap", window.render.responsible_swap);
