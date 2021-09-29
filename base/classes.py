@@ -472,6 +472,15 @@ class Pending:
         self.commit()
         return list(result)
 
+    def accept(self):
+        """
+        :return: List. List of processed register records
+        """
+        self.action = "accept"
+        result = map(lambda x: self.process_record(x), self.pending)
+        self.commit()
+        return list(result)
+
     def process_record(self, record):
         """
         Set processed field of the task record to True, so the task will be
