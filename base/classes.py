@@ -434,7 +434,16 @@ class Pending:
             self.pending = query.all()
         self.action = None
 
-    def acl_filter(self, reg):
+    @staticmethod
+    def acl_filter(reg):
+        """
+        Reads project configuration file and check if the type of project in
+        register record should be shown to current_user based on roles in
+        g.permissions and acl option value from config
+        If user has admin role always return True
+        :param reg: Object. Registration value
+        :return: Boolean
+        """
         if "admin" in g.permissions:
             return True
         config = project_config()
