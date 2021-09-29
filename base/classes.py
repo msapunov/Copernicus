@@ -433,6 +433,7 @@ class Pending:
         else:
             self.pending = query.all()
         self.action = None
+        self.result = None
 
     @staticmethod
     def acl_filter(reg):
@@ -524,15 +525,15 @@ class Pending:
         if self.action is "ignore":
             record.accepted = False
             record.comment = "Project creation request ignored by %s" % full
-            RequestLog(record).ignore()
+            self.result = RequestLog(record).ignore()
         elif self.action is "reject":
             record.accepted = False
             record.comment = "Project creation request rejected by %s" % full
-            RequestLog(record).reject()
+            self.result = RequestLog(record).reject()
         elif self.action is "accept":
             record.accepted = True
             record.comment = "Project creation request accepted by %s" % full
-            RequestLog(record).accept()
+            self.result = RequestLog(record).accept()
         else:
             raise ValueError("Action %s is not supported" % self.action)
         return self
