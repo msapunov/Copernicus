@@ -1266,6 +1266,12 @@
     $(document).on("click", ".re_cancel", window.render.re_submit_or_cancel);
     $(document).on("click", ".resp_name_swap", window.render.responsible_swap);
 
+    $(document).on("click", ".create_submit", submit);
+    $(document).on("click", ".approve_submit", submit);
+    $(document).on("click", ".visa_submit", submit);
+    $(document).on("click", ".ignore_submit", submit);
+    $(document).on("click", ".reject_submit", submit);
+
     $(document).on("click", ".task_show", window.render.tasks);
     $(document).on("click", ".task_info", window.render.new_project);
     $(document).on("click", ".task_history", window.render.tasks_history);
@@ -1299,5 +1305,5 @@
         }
     }, "#tasks_info");
 
-
+    $(document).on("click", ".window_hide", trigger_modal);
 })(window, document, jQuery);
