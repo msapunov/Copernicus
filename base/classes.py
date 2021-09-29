@@ -429,7 +429,7 @@ class Pending:
         """
         query = Register.query.filter_by(processed=False)
         if rid:
-            self.pending = [query.filter_by(id=id).first()]
+            self.pending = [query.filter_by(id=rid).first()]
         else:
             self.pending = query.all()
         self.action = None
