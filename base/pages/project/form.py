@@ -9,6 +9,9 @@ from base.pages.project.magic import (
 from base.functions import project_config
 from logging import error
 
+__author__ = "Matvey Sapunov"
+__copyright__ = "Aix Marseille University"
+
 
 class ActivateForm(FlaskForm):
     cpu = IntegerField("CPU", validators=[NumberRange(

@@ -5,6 +5,8 @@ from wtforms.fields.html5 import EmailField
 from wtforms.validators import DataRequired, Email
 from base.pages.project.magic import list_of_projects
 
+__author__ = "Matvey Sapunov"
+__copyright__ = "Aix Marseille University"
 
 
 class PendingActionForm(FlaskForm):
