@@ -31,8 +31,8 @@ class PendingActionForm(FlaskForm):
 def action_pending(register):
     form = PendingActionForm()
     form.id = register.id
-    form.name = register.project_id()
-    form.title = register.title
+    form.meso = register.project_id()
+    form.name = "'%s' (%s)" % (register.title, form.meso)
     return form
 
 class CreateProjectForm(FlaskForm):
