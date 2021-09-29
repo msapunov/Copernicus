@@ -510,8 +510,7 @@ class Pending:
         Set processed field of the task record to True, so the task will be
         moved to the task ready to be executed. Based on action property set
         the accepted property and comment value and execute correspondent
-        RequestLog method
-        Set approve field to current user and commit changes via self.commit()
+        RequestLog method. Commit changes via self.commit()
         :return: Object. Register record
         """
         if not self.acl_filter(record):
