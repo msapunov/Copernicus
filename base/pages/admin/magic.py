@@ -15,7 +15,7 @@ from base.pages.user.magic import user_by_id
 from base.utils import get_tmpdir
 from base.database.schema import User, Register, LogDB, Project, Tasks
 from base.email import Mail
-from base.classes import UserLog, RequestLog, TmpUser, ProjectLog, Task
+from base.classes import UserLog, RequestLog, TmpUser, ProjectLog, Task, Pending
 from logging import error, debug
 from operator import attrgetter
 from datetime import datetime as dt
@@ -179,40 +179,6 @@ def project_type(register):
         raise ValueError("Failed to determine project's type")
 
 
-def project_assign_resources(register, approve):
-    from base.database.schema import Resources
-    resource = Resources(
-        approve=approve,
-        valid=True,
-        cpu=register.cpu,
-        type=project_type(register),
-    )
-    return resource
-
-
-def project_creation_magic(register, users, approve):
-    from base.database.schema import Project
-
-    project = Project(
-        title=register.title,
-        description=register.description,
-        scientific_fields=register.scientific_fields,
-        genci_committee=register.genci_committee,
-        numerical_methods=register.numerical_methods,
-        computing_resources=register.computing_resources,
-        project_management=register.project_management,
-        project_motivation=register.project_motivation,
-        active=True,
-        type=project_type(register),
-        approve=approve,
-        ref=register,
-        privileged=True if project_type is "h" else False,
-        responsible=users["responsible"],
-        users=users["users"]
-    )
-    return project
-
-
 def reg_approve(pid):
     rec = get_registration_record(pid)
     rec.approve = True
@@ -252,18 +218,6 @@ def reg_reject(pid, note):
     db.session.commit()
     RequestLog(rec).reject()
     return reject_message(rec, note)
-
-
-def reg_ignore(pid):
-    rec = get_registration_record(pid)
-    rec.processed = True
-    rec.accepted = False
-    rec.comment = reg_message(rec.comment, "ignore")
-    rec.accepted_ts = dt.now()
-    rec.processed_ts = dt.now()
-    db.session.commit()
-    RequestLog(rec).ignore()
-    return rec.comment
 
 
 def reg_msg(rec, act):
