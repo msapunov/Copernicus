@@ -1,0 +1,24 @@
+<div class="uk-modal fade" tabindex="-1" role="dialog" aria-labelledby="confirm-modal" aria-hidden="true" id="{{form.name}}_reject">
+  <div class="uk-modal-dialog">
+    <button type="button" class="uk-modal-close uk-close"></button>
+    <div class="uk-modal-header">
+      <h3>Reject project {{form.name}}?</h3>
+    </div>
+    <div class="uk-overflow-container">
+      <form action="test" method="post" class="uk-panel uk-form" id="{{form.name}}_reject_form">
+        {{ form.csrf_token(id=form.name+"_csrf_renew") }}
+        <div class="uk-form-row">
+          <div class="uk-form-controls">
+            {{ form.note(id=form.name+"_note_renew", placeholder="Enter a reason for rejecting project '" + form.title + "' (" + form.name + ")", class_="uk-width-1-1") }}
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="uk-modal-footer">
+      <div class="uk-text-right">
+        <button class="uk-button window_hide" data-modal="{{form.name}}_reject">Cancel</button>
+        <button class="uk-button uk-button-primary extension_submit" data-modal="{{form.name}}_reject" data-form="{{form.name}}_reject_form" data-url="admin/registration/reject/{{form.name}}">Submit</button>
+      </div>
+    </div>
+  </div>
+</div>

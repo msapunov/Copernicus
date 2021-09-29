@@ -31,12 +31,13 @@ from base.pages.admin.magic import (
     registration_info_update,
     get_registration_record,
     space_info,
-    reg_ignore,
     reg_reject,
     reg_accept,
     reg_approve)
 from base.functions import slurm_nodes_status
 from base.pages.admin.form import (
+    RejectPendingForm,
+    reject_pending,
     AddUserForm,
     UserEditForm,
     RegistrationEditForm,
@@ -218,7 +219,7 @@ def admin_registration_details_set(rid):
 @login_required
 @grant_access("admin", "manager")
 def admin_registration_ignore(pid):
-    return jsonify(data=reg_ignore(pid))
+    return jsonify(data=list(map(lambda x: x.result, Pending(pid).ignore())))
 
 
 @bp.route("/admin/registration/create/<int:pid>", methods=["POST"])
@@ -401,8 +402,12 @@ def web_admin_user_info():
 @login_required
 @grant_access("admin", "manager")
 def web_admin_bits_pending(rid):
-    return render_template("bits/pending_expand_row.html",
-                           pending=get_registration_record(rid))
+    pending = Pending(rid).pending[0]
+    reject = render_template("modals/admin_reject_pending.html",
+                             form=reject_pending(pending))
+    row = render_template("bits/pending_expand_row.html",
+                          pending=pending.to_dict())
+    return row + reject
 
 
 @bp.route("/admin/pending/list", methods=["POST"])

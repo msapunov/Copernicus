@@ -530,6 +530,9 @@ class Pending:
             record.comment = "Project creation request rejected by %s" % full
             self.result = RequestLog(record).reject()
         elif self.action is "accept":
+            if not record.approve:
+                raise ValueError("Pending project %s must be approved first" %
+                                 record.project_id())
             record.accepted = True
             record.comment = "Project creation request accepted by %s" % full
             self.result = RequestLog(record).accept()
