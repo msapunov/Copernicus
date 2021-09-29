@@ -29,6 +29,23 @@ __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
 
 
+def render_pending(rec):
+    rec.meso = rec.project_id()
+    rec.name = "'%s' (%s)" % (rec.title, rec.meso)
+    if rec.approve and not rec.accepted:
+        top = render_template("modals/admin_visa_pending.html", rec=visa_pending(rec))
+    elif rec.approve and rec.accepted:
+        top = render_template("modals/admin_create_project.html", rec=rec)
+        top += render_template("modals/admin_visa_pending.html", rec=visa_pending(rec))
+    else:
+        top = render_template("modals/admin_approve_pending.html", rec=rec)
+    reject = render_template("modals/admin_reject_pending.html", form=action_pending(rec))
+    ignore = render_template("modals/admin_ignore_pending.html", rec=rec)
+
+    row = render_template("bits/pending_expand_row.html", pending=rec.to_dict())
+    return row + top + reject + ignore
+
+
 def parse_register_record(rec):
     result = rec.to_dict()
     result["dt"] = dt.now().strftime("%d/%m/%Y")
