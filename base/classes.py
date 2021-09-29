@@ -493,11 +493,30 @@ class Pending:
         Set approve field to current user and commit changes via self.commit()
         :return: Object. Task record
         """
-        if not self.pending:
-            raise ValueError("No pending project to process")
-#        self.pending.processed = True
-#        self.pending.approve = current_user
-        return self.commit()
+        if not self.acl_filter(record):
+            raise ValueError("")
+        record.processed = True
+        record.approve = current_user
+        record.processed_ts = dt.now()
+        record.accepted_ts = dt.now()
+
+        full = current_user.full_name()
+        debug("Action performed on project creation request: %s" % self.action)
+        if self.action is "ignore":
+            record.accepted = False
+            record.comment = "Project creation request ignored by %s" % full
+            RequestLog(record).ignore()
+        elif self.action is "reject":
+            record.accepted = False
+            record.comment = "Project creation request rejected by %s" % full
+            RequestLog(record).reject()
+        elif self.action is "accept":
+            record.accepted = True
+            record.comment = "Project creation request accepted by %s" % full
+            RequestLog(record).accept()
+        else:
+            raise ValueError("Action %s is not supported" % self.action)
+        return self
 
     def commit(self):
         """
