@@ -348,7 +348,6 @@ class TaskQueue:
         return self._user_action()
 
     def user_update(self, data):
-        print(data)
         if not self.task.user:
             raise ValueError("Can't update information of unset user")
         tmp_user = self.task.user
