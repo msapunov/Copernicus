@@ -516,7 +516,6 @@ class Pending:
         if not self.acl_filter(record):
             raise ValueError("")
         record.processed = True
-        record.approve = current_user
         record.processed_ts = dt.now()
         record.accepted_ts = dt.now()
 
