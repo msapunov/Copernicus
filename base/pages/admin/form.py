@@ -13,6 +13,16 @@ class VisaPendingForm(FlaskForm):
     exception = BooleanField()
 
 
+def visa_pending(register):
+    form = VisaPendingForm()
+    form.id = register.id
+    form.meso = register.project_id()
+    form.name = "'%s' (%s)" % (register.title, form.meso)
+    form.approve = register.approve
+    form.accepted = register.accepted
+    return form
+
+
 class PendingActionForm(FlaskForm):
     note = TextAreaField("Note", validators=[DataRequired(
         message="Note field is empty")])
