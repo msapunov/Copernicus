@@ -446,36 +446,43 @@ class Pending:
         return False
 
     def unprocessed(self):
-        if not self.pending:
-            todo = Register.query.filter_by(processed=False).all()
-        else:
-            todo = [self.pending]
-        return list(filter(lambda x: self.acl_filter(x), todo))
+        """
+        Filter unprocessed records based on value of acl option from project
+        configuration file
+        :return: List. List of unprocessed register project records
+        """
+        return list(filter(lambda x: self.acl_filter(x), self.pending))
 
     def ignore(self):
         """
-
-        :return: List. List of processed register records
+        Set self.action to ignore and process the records
+        :return: List. Result of self.process_records() method
         """
         self.action = "ignore"
         return self.process_records()
 
     def reject(self):
         """
-
-        :return: List. List of processed register records
+        Set self.action to reject and process the records
+        :return: List. Result of self.process_records() method
         """
         self.action = "reject"
         return self.process_records()
 
     def accept(self):
         """
-        :return: List. List of processed register records
+        Set self.action to accept and process the records
+        :return: List. Result of self.process_records() method
         """
         self.action = "accept"
         return self.process_records()
 
     def process_records(self):
+        """
+        Execute process_record method on each unprocessed record in self.pending
+        and commit the changes.
+        :return: List. List of processed register records
+        """
         result = map(lambda x: self.process_record(x), self.pending)
         self.commit()
         return list(result)
@@ -483,9 +490,11 @@ class Pending:
     def process_record(self, record):
         """
         Set processed field of the task record to True, so the task will be
-        moved to the task ready to be executed.
+        moved to the task ready to be executed. Based on action property set
+        the accepted property and comment value and execute correspondent
+        RequestLog method
         Set approve field to current user and commit changes via self.commit()
-        :return: Object. Task record
+        :return: Object. Register record
         """
         if not self.acl_filter(record):
             raise ValueError("")
