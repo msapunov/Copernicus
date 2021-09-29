@@ -1,0 +1,41 @@
+<div class="uk-modal" aria-hidden="true" id="{{rec.id}}_visa">
+  <div class="uk-modal-dialog">
+    <button type="button" class="uk-modal-close uk-close"></button>
+    <div class="uk-modal-header">
+      {% if rec.approve and rec.accepted %}
+        <h3>Re-send visa for request {{rec.meso}}?</h3>
+      {% else %}
+        <h3>Send visa for request {{rec.meso}}?</h3>
+      {% endif %}
+    </div>
+    <div class="uk-margin uk-modal-content">
+      <form method="post" class="uk-panel uk-form" id="{{rec.id}}_visa_form">
+        {{ rec.csrf_token(id=rec.name+"_csrf_extend") }}
+        <div>
+          Project: {{rec.name}}
+        </div>
+        <div>
+          {% if rec.approve and rec.accepted %}
+            Resend visa to responsible person once again?
+          {% else %}
+            Create and send visa to responsible person?
+          {% endif %}
+        </div>
+        <div class="uk-form-row uk-alert uk-alert-danger">
+          {{ rec.exception(id=rec.name+"_exception_extend", class_="uk-margin-small-right uk-form-danger") }}
+          <label for="exception_checkbox">
+            Select checkbox if project does not require a signed visa
+          </label>
+        </div>
+      </form>
+    </div>
+    <div class="uk-modal-footer uk-text-right">
+      <button class="uk-button window_hide" data-modal="{{rec.id}}_visa">Cancel</button>
+      {% if rec.approve and rec.accepted %}
+        <button class="uk-button uk-button-primary visa_submit" data-modal="{{rec.id}}_visa" data-form="{{rec.id}}_visa_form" data-url="admin/registration/visa/resend/{{rec.id}}">Submit</button>
+      {% else %}
+        <button class="uk-button uk-button-primary visa_submit" data-modal="{{rec.id}}_visa" data-form="{{rec.id}}_visa_form" data-url="admin/registration/visa/{{rec.id}}">Submit</button>
+      {% endif %}
+    </div>
+  </div>
+</div>
