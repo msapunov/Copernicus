@@ -1262,8 +1262,8 @@
     $(document).on("click", ".re_approve", trigger_modal);
     $(document).on("click", ".re_ignore", trigger_modal);
     $(document).on("click", ".re_reject", trigger_modal);
-    $(document).on("click", ".re_submit", window.render.re_submit_or_cancel);
-    $(document).on("click", ".re_cancel", window.render.re_submit_or_cancel);
+    $(document).on("click", ".new_resend_visa", window.render.new_resend_visa);
+    $(document).on("click", ".new_accept", window.render.new_accept);
     $(document).on("click", ".resp_name_swap", window.render.responsible_swap);
 
     $(document).on("click", ".create_submit", submit);
