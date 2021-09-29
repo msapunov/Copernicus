@@ -9,6 +9,10 @@ __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
 
 
+class VisaPendingForm(FlaskForm):
+    exception = BooleanField()
+
+
 class PendingActionForm(FlaskForm):
     note = TextAreaField("Note", validators=[DataRequired(
         message="Note field is empty")])
