@@ -215,6 +215,13 @@ def admin_registration_details_set(rid):
     return jsonify(data=result, message=msg)
 
 
+@bp.route("/admin/registration/approve/<int:pid>", methods=["POST"])
+@login_required
+@grant_access("admin", "tech", "manager")
+def admin_registration_approve(pid):
+    return jsonify(data=list(map(lambda x: x.result, Pending(pid).approve())))
+
+
 @bp.route("/admin/registration/ignore/<int:pid>", methods=["POST"])
 @login_required
 @grant_access("admin", "manager")
@@ -254,13 +261,6 @@ def admin_registration_accept(pid):
     if "note" not in data:
         raise ValueError("Parameter 'note' was not found in the client request")
     return jsonify(data=reg_accept(pid, data["note"]))
-
-
-@bp.route("/admin/registration/approve/<int:pid>", methods=["POST"])
-@login_required
-@grant_access("admin", "tech", "manager")
-def admin_registration_approve(pid):
-    return jsonify(data=reg_approve(pid))
 
 
 @bp.route("/admin/registration/visa/resend/<int:pid>", methods=["POST", "GET"])
