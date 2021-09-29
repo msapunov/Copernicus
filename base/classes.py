@@ -458,9 +458,7 @@ class Pending:
         :return: List. List of processed register records
         """
         self.action = "ignore"
-        result = map(lambda x: self.process_record(x), self.pending)
-        self.commit()
-        return list(result)
+        return self.process_records()
 
     def reject(self):
         """
@@ -468,18 +466,14 @@ class Pending:
         :return: List. List of processed register records
         """
         self.action = "reject"
-        result = map(lambda x: self.process_record(x), self.pending)
-        self.commit()
-        return list(result)
+        return self.process_records()
 
     def accept(self):
         """
         :return: List. List of processed register records
         """
         self.action = "accept"
-        result = map(lambda x: self.process_record(x), self.pending)
-        self.commit()
-        return list(result)
+        return self.process_records()
 
     def process_records(self):
         result = map(lambda x: self.process_record(x), self.pending)
