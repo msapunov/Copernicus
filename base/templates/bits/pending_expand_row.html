@@ -106,14 +106,16 @@
             <button class="uk-button uk-width-1-1 uk-margin-small-bottom new_approve" type="button" data-id='{{pending.id}}' data-meso='{{pending.meso_id}}' data-title='{{pending.title}}'><span class="uk-icon-wrench uk-margin-small-right"></span>Approve</button>
         {% endif %}
         {% if "admin" in g.permissions %}
+        <!--
         <button class="uk-button uk-width-1-1 uk-margin-small-bottom edit uk-button-primary uk-margin-top" data-modal="{{pending.id}}_edit"><span class="uk-icon-edit uk-margin-small-right"></span>Edit</button>
         <button class="uk-button uk-width-1-1 uk-margin-small-bottom edit_resposible" data-modal="{{pending.id}}_attach"><span class="uk-icon-edit uk-margin-small-right"></span>Edit responsible</button>
         <button class="uk-button uk-width-1-1 uk-margin-small-bottom edit_resposible" data-modal="{{pending.id}}_attach"><span class="uk-icon-users uk-margin-small-right"></span>Edit users</button>
         <button class="uk-button uk-width-1-1 uk-margin-small-bottom attach" data-modal="{{pending.id}}_attach"><span class="uk-icon-user-plus uk-margin-small-right"></span>Add user</button>
         <button class="uk-button uk-width-1-1 uk-margin-small-bottom contact" data-modal="{{pending.id}}_contact"><span class="uk-icon-send uk-margin-small-right"></span>Contact</button>
+        -->
         {% endif %}
         <button class="uk-button uk-width-1-1 uk-margin-small-bottom new_ignore uk-margin-top" type="button" data-id='{{pending.id}}' data-meso='{{pending.meso_id}}' data-title='{{pending.title}}'><span class="uk-icon-thumbs-o-down uk-margin-small-right"></span>Ignore</button>
-        <button class="uk-button uk-width-1-1 uk-margin-small-bottom new_reject uk-button-danger" type="button" data-id='{{pending.id}}' data-meso='{{pending.meso_id}}' data-title='{{pending.title}}'><span class="uk-icon-thumbs-down uk-margin-small-right"></span>Reject</button>
+        <button class="uk-button uk-width-1-1 uk-margin-small-bottom re_reject uk-button-danger" data-modal="{{pending.meso_id}}_reject"><span class="uk-icon-thumbs-down uk-margin-small-right"></span>Reject</button>
 
     </div>
 </div>
