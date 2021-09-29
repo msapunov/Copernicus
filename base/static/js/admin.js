@@ -1257,13 +1257,10 @@
     $(document).on("click", ".new_user_swap", window.render.new_user_swap);
     $(document).on("click", ".new_project", window.render.new_project);
     $(document).on("click", ".new_edit", window.render.new_edit);
-    $(document).on("click", ".new_create", window.render.new_create);
-    $(document).on("click", ".new_approve", window.render.new_approve);
-    $(document).on("click", ".new_visa", window.render.new_visa);
-    //$(document).on("click", ".new_resend_visa", window.render.new_visa);
-    $(document).on("click", ".new_resend_visa", window.render.new_resend_visa);
-    $(document).on("click", ".new_accept", window.render.new_accept);
-    $(document).on("click", ".new_ignore", window.render.new_ignore);
+    $(document).on("click", ".re_create", trigger_modal);
+    $(document).on("click", ".re_visa", trigger_modal);
+    $(document).on("click", ".re_approve", trigger_modal);
+    $(document).on("click", ".re_ignore", trigger_modal);
     $(document).on("click", ".re_reject", trigger_modal);
     $(document).on("click", ".re_submit", window.render.re_submit_or_cancel);
     $(document).on("click", ".re_cancel", window.render.re_submit_or_cancel);
