@@ -10,6 +10,7 @@ from base.classes import Pending
 from base.pages.user.magic import get_user_record, user_by_id
 from base.pages.admin import bp
 from base.pages.admin.magic import (
+    render_pending,
     all_users,
     create_project,
     event_log,
@@ -403,11 +404,7 @@ def web_admin_user_info():
 @grant_access("admin", "manager")
 def web_admin_bits_pending(rid):
     pending = Pending(rid).pending[0]
-    reject = render_template("modals/admin_reject_pending.html",
-                             form=reject_pending(pending))
-    row = render_template("bits/pending_expand_row.html",
-                          pending=pending.to_dict())
-    return row + reject
+    return render_pending(pending)
 
 
 @bp.route("/admin/pending/list", methods=["POST"])
