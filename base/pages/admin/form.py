@@ -7,6 +7,17 @@ from base.pages.project.magic import list_of_projects
 
 
 
+class RejectPendingForm(FlaskForm):
+    note = TextAreaField("Note", validators=[DataRequired(
+        message="Note field is empty")])
+
+
+def reject_pending(register):
+    form = RejectPendingForm()
+    form.name = register.project_id()
+    form.title = register.title
+    return form
+
 class CreateProjectForm(FlaskForm):
     title = StringField("Title", validators=[DataRequired()])
     cpu = IntegerField("CPU", validators=[DataRequired()])
