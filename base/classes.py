@@ -420,11 +420,19 @@ class Pending:
     Operations on pending projects, i.e. registration records which haven't been
     processed yet
     """
-    def __init__(self, id=None):
-        if id:
-            self.pending = Register.query.filter_by(id=id).first()
+    def __init__(self, rid=None):
+        """
+        self.pending is always a list.
+        If rid is provided set self.pending to the unprocessed record with
+        provided id. Otherwise it returns all unprocessed records.
+        :param rid: String. ID of registration record. Optional
+        """
+        query = Register.query.filter_by(processed=False)
+        if rid:
+            self.pending = [query.filter_by(id=id).first()]
         else:
-            self.pending = None
+            self.pending = query.all()
+        self.action = None
 
     def acl_filter(self, reg):
         if "admin" in g.permissions:
