@@ -37,15 +37,13 @@ from base.pages.admin.magic import (
     reg_approve)
 from base.functions import slurm_nodes_status
 from base.pages.admin.form import (
-    RejectPendingForm,
-    reject_pending,
     AddUserForm,
     UserEditForm,
     RegistrationEditForm,
     NewUserEditForm)
 from base.pages.project.magic import process_extension
 from base.pages.board.magic import Extensions
-from base.database.schema import Project, Register
+from base.database.schema import Project
 
 
 __author__ = "Matvey Sapunov"
