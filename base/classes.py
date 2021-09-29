@@ -471,6 +471,20 @@ class Pending:
         """
         return list(filter(lambda x: self.acl_filter(x), self.pending))
 
+    def approve(self):
+        """
+
+        :return:
+        """
+        full = current_user.full_name()
+        for rec in self.pending:
+            rec.approve = True
+            rec.approve_ts = dt.now()
+            rec.comment = "Project software requirements approved by %s" % full
+            self.result.append(RequestLog(rec).approve())
+        self.commit()
+        return self
+
     def ignore(self):
         """
         Set self.action to ignore and process the records
