@@ -711,7 +711,7 @@ class Task:
         db.session.add(acl)
         db.session.add(user)
         project.users.append(user)
-        return ProjectLog(project).user_assigned(self.task)
+        return ProjectLog(project).user_created(user)
 
     def user_update(self):
         """
