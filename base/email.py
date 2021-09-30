@@ -195,7 +195,14 @@ class Mail(Thread):
         return self
 
     def user_create(self, user):
-        pass
+        task = user.task
+        self.populate("USER CREATE")
+        self.destination = task.author.email
+        self.cc = user.email + "," + self.cc
+        self.__populate_values({"%FULLNAME": task.author.full_name(),
+                                "%MAIL": user.email, "%USER": user.full(),
+                                "%NAME": task.project.get_name()})
+        return self
 
     def user_created(self, user):
         pass
