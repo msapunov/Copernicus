@@ -371,6 +371,9 @@ class TmpUser:
         self.is_committee = False
         self.is_admin = False
 
+    def full(self):
+        return "%s %s" % (self.name, self.surname)
+
     def from_task(self, task):
         """
         Takes a task's action string and fill up the properties of TmpUser
