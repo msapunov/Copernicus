@@ -67,6 +67,14 @@ class ProjectLog(Log):
                          % task.user.full()
         return self.user(task.user).commit(Mail().responsible_assigned(task))
 
+    def user_create(self, user):
+        self.log.event = "Made a request to create a user %s" % user.full()
+        return self.commit(Mail().user_create(user))
+
+    def user_created(self, user):
+        self.log.event = "User %s has been created" % user.full()
+        return self.commit(Mail().user_created(user))
+
     def user_assign(self, task):
         self.log.event = "Made a request to assign a user %s" % task.user.full()
         return self.user(task.user).commit(Mail().user_assign(task))
