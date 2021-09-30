@@ -53,6 +53,15 @@
             system_body.html(tmp_div);
         });
     };
+    window.submit = function (){
+        submit().done(function(reply){
+            let div = $("table#pending_projects");
+            if ( $.fn.DataTable.isDataTable( div )){
+                $(div).DataTable().ajax.reload();
+            }
+        });
+
+    };
     window.render = {};
     window.sort_by = function(field, reverse, primer){
         var key = primer ?
@@ -1229,17 +1238,17 @@
         });
 
         $('#pending_projects tbody').on('click', 'td.details-control', function () {
-                var tr = $(this).closest('tr');
-                var tdi = tr.find("span.btn");
-                var row = pending_table.row(tr);
-                if (row.child.isShown()) {
-                    // This row is already open - close it
-                    row.child.hide();
-                    window.render.expand_processing(tr, tdi, true);
-                }else {
-                    // Open row in ajax callback in function window.render.expand
-                    window.render.expand(row.data(), row, tr, tdi);
-                }
+            let tr = $(this).closest('tr');
+            let tdi = tr.find("span.btn");
+            let row = pending_table.row(tr);
+            if (row.child.isShown()) {
+                // This row is already open - close it
+                row.child.hide();
+                window.render.expand_processing(tr, tdi, true);
+            }else {
+                // Open row in ajax callback in function window.render.expand
+                window.render.expand(row.data(), row, tr, tdi);
+            }
         });
     });
 
@@ -1266,11 +1275,11 @@
     $(document).on("click", ".new_accept", window.render.new_accept);
     $(document).on("click", ".resp_name_swap", window.render.responsible_swap);
 
-    $(document).on("click", ".create_submit", submit);
-    $(document).on("click", ".approve_submit", submit);
-    $(document).on("click", ".visa_submit", submit);
-    $(document).on("click", ".ignore_submit", submit);
-    $(document).on("click", ".reject_submit", submit);
+    $(document).on("click", ".create_submit", window.submit);
+    $(document).on("click", ".approve_submit", window.submit);
+    $(document).on("click", ".visa_submit", window.submit);
+    $(document).on("click", ".ignore_submit", window.submit);
+    $(document).on("click", ".reject_submit", window.submit);
 
     $(document).on("click", ".task_show", window.render.tasks);
     $(document).on("click", ".task_info", window.render.new_project);
