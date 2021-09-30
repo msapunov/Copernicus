@@ -40,7 +40,7 @@ def project_attach_user(name, form):
     task = TaskQueue().project(project).user_assign(user).task
     if "admin" in current_user.permissions():
         Task(task).accept()
-    return project, user
+    return ProjectLog(project).user_assign(task)
 
 
 def project_create_user(name, form):
@@ -68,7 +68,7 @@ def project_create_user(name, form):
     task = TaskQueue().project(project).user_create(user).task
     if current_user.login and "admin" in current_user.permissions():
         Task(task).accept()
-    return project, user
+    return ProjectLog(project).user_create(user)
 
 
 def upload_file_cloud(path, remote=None):
