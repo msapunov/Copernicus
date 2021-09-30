@@ -460,6 +460,5 @@ def web_log():
 @login_required
 @grant_access("admin", "manager")
 def web_admin():
-    result = {}
-    result["tasks"] = TaskManager().list()
+    result = {"tasks": TaskManager().list()}
     return render_template("admin.html", data=result)
