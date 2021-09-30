@@ -194,6 +194,12 @@ class Mail(Thread):
                                 "%NAME": name})
         return self
 
+    def user_create(self, user):
+        pass
+
+    def user_created(self, user):
+        pass
+
     def user_assign(self, task):
         pass
 
