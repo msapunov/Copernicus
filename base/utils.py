@@ -11,7 +11,7 @@ import logging as log
 def form_error_string(err_dict):
     result = []
     for key, value in err_dict.items():
-        if key == "csrf_token" and value == "The CSRF token has expired":
+        if key == "csrf_token" and value == ["The CSRF token has expired."]:
             result.append("Your session has expired! Please, reload the page")
             continue
         for err in value:
