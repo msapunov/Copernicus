@@ -37,12 +37,14 @@ from base.pages.admin.magic import (
     reg_approve)
 from base.functions import slurm_nodes_status
 from base.pages.admin.form import (
+    VisaPendingForm,
     AddUserForm,
     UserEditForm,
     RegistrationEditForm,
     NewUserEditForm)
 from base.pages.project.magic import process_extension
 from base.pages.board.magic import Extensions
+from base.utils import form_error_string
 from base.database.schema import Project
 
 
