@@ -31,10 +31,12 @@ def render_pending(rec):
     rec.meso = rec.project_id()
     rec.name = "'%s' (%s)" % (rec.title, rec.meso)
     if rec.approve and not rec.accepted:
-        top = render_template("modals/admin_visa_pending.html", rec=visa_pending(rec))
+        visa = visa_pending(rec)
+        top = render_template("modals/admin_visa_pending.html", rec=visa)
     elif rec.approve and rec.accepted:
+        visa = visa_pending(rec)
         top = render_template("modals/admin_create_project.html", rec=rec)
-        top += render_template("modals/admin_visa_pending.html", rec=visa_pending(rec))
+        top += render_template("modals/admin_visa_pending.html", rec=visa)
     else:
         top = render_template("modals/admin_approve_pending.html", rec=rec)
     reject = render_template("modals/admin_reject_pending.html", form=action_pending(rec))
