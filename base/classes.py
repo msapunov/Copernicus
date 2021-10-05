@@ -482,7 +482,8 @@ class Pending:
         configuration file
         :return: List. List of unprocessed register project records
         """
-        return list(filter(lambda x: self.acl_filter(x), self.pending))
+        records = Register.query.filter_by(processed=False).all()
+        return list(filter(lambda x: self.acl_filter(x), records))
 
     def approve(self):
         """
