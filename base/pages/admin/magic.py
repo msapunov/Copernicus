@@ -39,7 +39,8 @@ def render_pending(rec):
         top += render_template("modals/admin_visa_pending.html", rec=visa)
     else:
         top = render_template("modals/admin_approve_pending.html", rec=rec)
-    reject = render_template("modals/admin_reject_pending.html", form=action_pending(rec))
+    action = action_pending(rec)
+    reject = render_template("modals/admin_reject_pending.html", form=action)
     ignore = render_template("modals/admin_ignore_pending.html", rec=rec)
 
     row = render_template("bits/pending_expand_row.html", pending=rec.to_dict())
