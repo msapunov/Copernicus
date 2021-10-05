@@ -277,11 +277,13 @@ def admin_registration_visa_resend(pid):
 @bp.route("/admin/registration/visa/<int:pid>", methods=["POST", "GET"])
 @login_required
 @grant_access("admin", "tech")
-def admin_registration_visa(pid):
-    data = request.get_json()
-    if data["visa"]:
+def admin_registration_visa(pid, resend=False):
+    form = VisaPendingForm()
+    if not form.validate_on_submit():
+        raise ValueError(form_error_string(form.errors))
+    if form.exception.data:
         return jsonify(data=skip_visa(pid))
-    return jsonify(data=create_visa(pid))
+    return jsonify(data=create_visa(pid, resend))
 
 
 @bp.route("/admin/extension/processed/<int:pid>", methods=["POST"])
