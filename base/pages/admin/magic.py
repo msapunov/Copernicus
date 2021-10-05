@@ -42,8 +42,10 @@ def render_pending(rec):
     action = action_pending(rec)
     reject = render_template("modals/admin_reject_pending.html", form=action)
     ignore = render_template("modals/admin_ignore_pending.html", rec=rec)
-
-    row = render_template("bits/pending_expand_row.html", pending=rec.to_dict())
+    logs = RequestLog(rec).list()
+    row = render_template("bits/pending_expand_row.html",
+                          pending=rec.to_dict(),
+                          logs = logs)
     return row + top + reject + ignore
 
 
