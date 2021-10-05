@@ -286,7 +286,7 @@ def get_registration_record(pid):
     if not register:
         raise ValueError("Project registration request with id %s not found"
                          % pid)
-    return register.to_dict()
+    return register
 
 
 def get_ltm(data):
