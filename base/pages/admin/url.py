@@ -268,10 +268,7 @@ def admin_registration_accept(pid):
 @login_required
 @grant_access("admin", "tech")
 def admin_registration_visa_resend(pid):
-    data = request.get_json()
-    if data["visa"]:
-        return jsonify(data=skip_visa(pid))
-    return jsonify(data=create_visa(pid, True))
+    return admin_registration_visa(pid, True)
 
 
 @bp.route("/admin/registration/visa/<int:pid>", methods=["POST", "GET"])
