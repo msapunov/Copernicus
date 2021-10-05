@@ -1,4 +1,4 @@
-from flask import current_app as app, flash
+from flask import current_app as app, flash, request, render_template
 from datetime import datetime as dt, timezone
 from unicodedata import normalize
 from tempfile import gettempdir, mkdtemp
@@ -8,8 +8,9 @@ from base64 import b64encode
 from recurrent.event_parser import RecurringEvent
 from configparser import ConfigParser
 from logging import error, debug, warning
+from base.utils import image_string, get_tmpdir
+import locale
 
-from flask import current_app
 from flask_login import current_user
 from base.pages import (
     check_int,
@@ -22,6 +23,38 @@ from base.pages import ssh_wrapper
 
 __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
+
+
+def create_visa(record):
+    """
+    Generates html using as templates values from configuration file and
+    provided record and then convert it to pdf files
+    :param record: Object. Instance of project register class
+    :return: List. List of resulting files
+    """
+    config = project_config()
+    project_type = record.type.lower()
+    end = config[project_type].get("finish_dt", None)
+    duration = config[project_type].get("duration_dt", None)
+    if end and duration:
+        ttl = end if end > duration else duration
+    elif duration:
+        ttl = duration
+    elif end:
+        ttl = end
+    else:
+        ttl = None
+    record.dt = dt.now().strftime("%d/%m/%Y")
+    record.ttl = ttl.strftime("%d %B %Y")
+    record.signature = image_string("signature.png")
+    record.base_url = request.url_root
+    loc = app.config.get("LOCALE", "C.UTF-8")
+    locale.setlocale(locale.LC_ALL, loc)
+    path = []
+    for i in ["fr_visa", "en_visa"]:
+        html = render_template("%s.html" % i, data=record)
+        path.append(generate_pdf(html, "%s_%s" % (record.project_id(), i)))
+    return path
 
 
 def project_parse_cfg_options(cfg, section):
