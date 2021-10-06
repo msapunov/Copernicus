@@ -48,21 +48,6 @@ def render_pending(rec):
     return row + top + reject + ignore
 
 
-def parse_register_record(rec):
-    result = rec.to_dict()
-    result["dt"] = dt.now().strftime("%d/%m/%Y")
-    result["ttl"] = calculate_ttl(rec).strftime("%d %B %Y")
-    result["type"].upper()
-    result["signature"] = image_string("signature.png")
-    result["base_url"] = request.url_root
-    mail = Mail()
-    u_list = mail.cfg.get("DEFAULT", "USER_LIST", fallback=None)
-    r_list = mail.cfg.get("DEFAULT", "RESPONSIBLE_LIST", fallback=None)
-    result["user_list"] = "(%s)" % u_list if u_list else ""
-    result["resp_list"] = "(%s)" % r_list if r_list else ""
-    return result
-
-
 def visa_comment(rec, sent=True):
     visa_ts = rec.accepted_ts.replace(
         microsecond=0
@@ -75,44 +60,6 @@ def visa_comment(rec, sent=True):
     comment_list = list(map(lambda x: x.strip(), comments))
     comment_list.append(msg)
     return "\n".join(comment_list)
-
-
-def skip_visa(pid):
-    record = get_registration_record(pid)
-    name = record.project_id()
-    if not record.approve:
-        raise ValueError("Project %s has to be approved first!" % name)
-    record.accepted = True
-    record.accepted_ts = dt.now()
-    record.comment = reg_msg(record, "visa_skip")
-    db.session.commit()
-    RequestLog(record).visa_skip()
-    return record.comment
-
-
-def tmp_create(record, force = None):
-    name = record.project_id()
-    if not record.approve:
-        raise ValueError("Project %s has to be approved first!" % name)
-    if record.accepted and not force:
-        raise ValueError("Visa for the project %s has been already sent" % name)
-    result = parse_register_record(record)
-    loc = app.config.get("LOCALE", "C.UTF-8")
-    locale.setlocale(locale.LC_ALL, loc)
-    path = []
-    for i in ["fr_visa", "en_visa"]:
-        html = render_template("%s.html" % i, data=result)
-        path.append(generate_pdf(html, "%s_%s" % (name, i)))
-    Mail().registration(record).attach_visa(path).send()
-    map(lambda x: Path(x).unlink(), path)
-    debug("Temporary file(s) %s was deleted" % ",".join(path))
-    record.accepted = True
-    record.accepted_ts = dt.now()
-    record.comment = reg_msg(record, "visa_sent")
-    db.session.commit()
-    RequestLog(record).visa_sent()
-    return record.comment
-
 
 
 def all_users():
@@ -226,29 +173,6 @@ def reg_reject(pid, note):
     db.session.commit()
     RequestLog(rec).reject()
     return reject_message(rec, note)
-
-
-def reg_msg(rec, act):
-    ts = dt.now().replace(microsecond=0).isoformat("_").replace(":", "-")
-    if act == "accept":
-        msg = "Project creation request accepted"
-    elif act == "approve":
-        msg = "Project software requirements approved"
-    elif act == "reject":
-        msg = "Project creation request rejected"
-    elif act == "ignore":
-        msg = "Project creation request ignored"
-    elif act == "visa_sent":
-        msg = "Visa sent to %s" % rec.responsible_email
-    elif act == "visa_skip":
-        msg = "Visa sending step has been skipped"
-    else:
-        raise ValueError("Selector %s does not supported" % act)
-    msg = "%s: %s by %s" % (ts, msg, current_user.full_name())
-    comments = rec.comment.split("\n")
-    comment_list = list(map(lambda x: x.strip(), comments))
-    comment_list.append(msg)
-    return "\n".join(comment_list)
 
 
 def reg_message(txt, selector):
