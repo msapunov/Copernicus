@@ -157,6 +157,18 @@ class Mail(Thread):
             self.attach_file(visa)
         return self
 
+    def pending_reject(self, record, message):
+        self.populate("REGISTRATION REJECTED")
+        self.destination = record.responsible_email
+        pid = record.project_id()
+        title = record.title
+        first = record.responsible_first_name
+        last = record.responsible_last_name
+        full = "%s %s" % (first, last)
+        self.__populate_values({"%FULLNAME": full, "%MESO": pid,
+                                "%COMMENT": message, "%TITLE": title})
+        return self
+
     def pending_ignore(self, record):
         self.populate("TECH")
         pid = record.project_id()
