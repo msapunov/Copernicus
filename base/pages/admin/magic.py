@@ -18,7 +18,6 @@ from base.classes import UserLog, RequestLog, TmpUser, ProjectLog, Task
 from logging import error, debug
 from operator import attrgetter
 from datetime import datetime as dt
-from pdfkit import from_string
 from pathlib import Path
 from base.utils import image_string, get_tmpdir
 import locale
@@ -64,18 +63,6 @@ def parse_register_record(rec):
     return result
 
 
-def generate_pdf(html, name_root):
-    ts = str(dt.now().replace(second=0).replace(microsecond=0).isoformat("_")).replace(":", "-")
-    name = "%s_%s.pdf" % (name_root, ts)
-    path = str(Path(get_tmpdir(app), name))
-    debug("The resulting PDF will be saved to: %s" % path)
-    pdf = from_string(html, path)
-    debug("If PDF converted successfully: %s" % pdf)
-    if not pdf:
-        raise ValueError("Failed to convert a file to pdf")
-    return path
-
-
 def visa_comment(rec, sent=True):
     visa_ts = rec.accepted_ts.replace(
         microsecond=0
@@ -103,8 +90,7 @@ def skip_visa(pid):
     return record.comment
 
 
-def create_visa(pid, force=False):
-    record = get_registration_record(pid)
+def tmp_create(record, force = None):
     name = record.project_id()
     if not record.approve:
         raise ValueError("Project %s has to be approved first!" % name)
@@ -126,6 +112,7 @@ def create_visa(pid, force=False):
     db.session.commit()
     RequestLog(record).visa_sent()
     return record.comment
+
 
 
 def all_users():

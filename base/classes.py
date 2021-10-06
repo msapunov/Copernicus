@@ -1,13 +1,14 @@
 from flask import g
 from flask_login import current_user
 from base import db
-from base.functions import project_config
+from base.functions import project_config, create_visa
 from base.email import Mail, UserMailingList, ResponsibleMailingList
 from base.database.schema import LogDB, User, ACLDB, Extend, Register
 
 from logging import warning, debug
 from operator import attrgetter
 from datetime import datetime as dt
+from pathlib import Path
 
 __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
@@ -22,6 +23,16 @@ class Log:
             register=register,
             user=user)
         self.send = True
+
+    def list(self):
+        query = LogDB().query
+        if self.log.project:
+            query = query.filter_by(project=self.log.project)
+        if self.log.register:
+            query = query.filter_by(register=self.log.register)
+        if self.log.user:
+            query = query.filter_by(user=self.log.user)
+        return query.all()
 
     def commit(self, mail=None):
         db.session.add(self.log)
@@ -180,7 +191,7 @@ class RequestLog(Log):
 
     def visa_skip(self):
         self.log.event = "Visa sending step has been skipped"
-        return self.commit()
+        return self.commit(Mail().visa_skip())
 
     def approve(self):
         self.log.event = "Project software requirements approved"
@@ -442,11 +453,16 @@ class Pending:
         """
         query = Register.query.filter_by(processed=False)
         if rid:
-            self.pending = [query.filter_by(id=rid).first()]
+            self.pending = query.filter_by(id=rid).first()
         else:
-            self.pending = query.all()
+            self.pending = None
         self.action = None
-        self.result = []
+        self.result = None
+
+    def verify(self):
+        if not self.pending:
+            raise ValueError("Register project record is not set!")
+        return self.pending
 
     @staticmethod
     def acl_filter(reg):
@@ -485,17 +501,41 @@ class Pending:
         records = Register.query.filter_by(processed=False).all()
         return list(filter(lambda x: self.acl_filter(x), records))
 
+    def visa_create(self, resend=False):
+        record = self.verify()
+        name = record.project_id()
+        if not record.approve:
+            raise ValueError("Project %s has to be approved first!" % name)
+        if record.accepted and not resend:
+            raise ValueError("Visa for the project %s has been already sent" % name)
+        mail = Mail()
+        u_list = mail.cfg.get("DEFAULT", "USER_LIST", fallback=None)
+        r_list = mail.cfg.get("DEFAULT", "RESPONSIBLE_LIST", fallback=None)
+        record.user_list = "(%s)" % u_list if u_list else ""
+        record.resp_list = "(%s)" % r_list if r_list else ""
+        path = create_visa(record)
+        if not path:
+            raise ValueError("Failed to generate visa document")
+        mail.registration(record).visa_attach(path).start()
+        map(lambda x: Path(x).unlink(), path)
+        debug("Temporary file(s) %s was deleted" % ",".join(path))
+        record.accepted = True
+        record.accepted_ts = dt.now()
+        self.comment("Visa sent to %s" % record.responsible_email)
+        self.result = RequestLog(record).visa_sent()
+        self.commit()
+        return self
+
     def approve(self):
         """
 
         :return:
         """
         full = current_user.full_name()
-        for rec in self.pending:
-            rec.approve = True
-            rec.approve_ts = dt.now()
-            rec.comment = "Project software requirements approved by %s" % full
-            self.result.append(RequestLog(rec).approve())
+        self.pending.approve = True
+        self.pending.approve_ts = dt.now()
+        self.comment("Project software requirements approved by %s" % full)
+        self.result = RequestLog(self.pending).approve()
         self.commit()
         return self
 
@@ -505,7 +545,7 @@ class Pending:
         :return: List. Result of self.process_records() method
         """
         self.action = "ignore"
-        return self.process_records()
+        return self.process_record()
 
     def reject(self):
         """
@@ -513,7 +553,7 @@ class Pending:
         :return: List. Result of self.process_records() method
         """
         self.action = "reject"
-        return self.process_records()
+        return self.process_record()
 
     def accept(self):
         """
@@ -521,19 +561,9 @@ class Pending:
         :return: List. Result of self.process_records() method
         """
         self.action = "accept"
-        return self.process_records()
+        return self.process_record()
 
-    def process_records(self):
-        """
-        Execute process_record method on each unprocessed record in self.pending
-        and commit the changes.
-        :return: List. List of processed register records
-        """
-        result = map(lambda x: self.process_record(x), self.pending)
-        self.commit()
-        return list(result)
-
-    def process_record(self, record):
+    def process_record(self):
         """
         Set processed field of the task record to True, so the task will be
         moved to the task ready to be executed. Based on action property set
@@ -541,8 +571,9 @@ class Pending:
         RequestLog method. Commit changes via self.commit()
         :return: Object. Register record
         """
+        record = self.verify()
         if not self.acl_filter(record):
-            raise ValueError("")
+            raise ValueError("Process of new project record is not allowed")
         record.processed = True
         record.processed_ts = dt.now()
         record.accepted_ts = dt.now()
@@ -551,21 +582,27 @@ class Pending:
         debug("Action performed on project creation request: %s" % self.action)
         if self.action is "ignore":
             record.accepted = False
-            record.comment = "Project creation request ignored by %s" % full
-            self.result.append(RequestLog(record).ignore())
+            self.comment("Project creation request ignored by %s" % full)
+            self.result = RequestLog(record).ignore()
         elif self.action is "reject":
             record.accepted = False
-            record.comment = "Project creation request rejected by %s" % full
-            self.result.append(RequestLog(record).reject())
+            self.comment("Project creation request rejected by %s" % full)
+            self.result = RequestLog(record).reject()
         elif self.action is "accept":
             if not record.approve:
                 raise ValueError("Pending project %s must be approved first" %
                                  record.project_id())
             record.accepted = True
-            record.comment = "Project creation request accepted by %s" % full
-            self.result.append(RequestLog(record).accept())
+            self.comment("Project creation request accepted by %s" % full)
+            self.result = RequestLog(record).accept()
         else:
             raise ValueError("Action %s is not supported" % self.action)
+        return self
+
+    def comment(self, msg):
+        comment = self.pending.comment.split("\n")
+        comment.append(msg)
+        self.pending.comment = "\n".join(comment)
         return self
 
     def commit(self):

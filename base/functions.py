@@ -9,6 +9,8 @@ from recurrent.event_parser import RecurringEvent
 from configparser import ConfigParser
 from logging import error, debug, warning
 from base.utils import image_string, get_tmpdir
+from pdfkit import from_string
+from pathlib import Path
 import locale
 
 from flask_login import current_user
@@ -23,6 +25,19 @@ from base.pages import ssh_wrapper
 
 __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
+
+
+def generate_pdf(html, base):
+    ts = str(dt.now().isoformat(sep="-", timespec="minutes")).replace(":","-")
+    name = "%s_%s.pdf" % (base, ts)
+    name = name.replace("\\","-").replace("/", "-")
+    path = str(Path(get_tmpdir(app), name))
+    debug("The resulting PDF will be saved to: %s" % path)
+    pdf = from_string(html, path)
+    debug("If PDF converted successfully: %s" % pdf)
+    if not pdf:
+        raise ValueError("Failed to convert a file to pdf")
+    return path
 
 
 def create_visa(record):
@@ -51,8 +66,8 @@ def create_visa(record):
     loc = app.config.get("LOCALE", "C.UTF-8")
     locale.setlocale(locale.LC_ALL, loc)
     path = []
-    for i in ["fr_visa", "en_visa"]:
-        html = render_template("%s.html" % i, data=record)
+    for i in config[project_type].get("visa", []):
+        html = render_template("%s" % i, data=record)
         path.append(generate_pdf(html, "%s_%s" % (record.project_id(), i)))
     return path
 
@@ -114,8 +129,14 @@ def project_parse_cfg_options(cfg, section):
     else:
         eva_text_dt = None
     extendable = cfg.get(section, "extendable", fallback=False)
+
+    visa_names = cfg.get(section, "visa", fallback=None)
+    if visa_names:
+        visa = list(map(lambda x: x.strip(), visa_names.split(",")))
+    else:
+        visa = []
     return {"duration_text": duration, "duration_dt": duration_dt, "acl": acl,
-            "finish_text": end, "finish_dt": end_dt, "cpu": cpu,
+            "finish_text": end, "finish_dt": end_dt, "cpu": cpu, "visa": visa,
             "finish_notice_text": end_notice, "extendable": extendable,
             "finish_notice_dt": end_notice_dt,
             "transform": transform, "description": description,
@@ -132,8 +153,8 @@ def project_config():
     options returned by project_parse_cfg_options function
     """
     result = {}
-    cfg_file = current_app.config.get("PROJECT_CONFIG", "project.cfg")
-    cfg_path = join_dir(current_app.instance_path, cfg_file)
+    cfg_file = app.config.get("PROJECT_CONFIG", "project.cfg")
+    cfg_path = join_dir(app.instance_path, cfg_file)
     if not exists(cfg_path):
         warning("Projects configuration file doesn't exists. Using defaults")
         return result

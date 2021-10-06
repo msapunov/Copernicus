@@ -1,5 +1,6 @@
 (function(window, document, $, undefined){
     "use strict";
+    var pending_child = null;
     window.admin = {};
     window.admin.url = {
         new_user_add: "admin/user/new/add",
@@ -53,16 +54,18 @@
             system_body.html(tmp_div);
         });
     };
-    window.submit = function (){
-        submit().done(function(reply){
+    window.render = {};
+    window.sub = function (e){
+        var x = submit.call(this);
+        x.done(function(reply){
+            trigger_modal.call(this);
             let div = $("table#pending_projects");
             if ( $.fn.DataTable.isDataTable( div )){
+                pending_child = $(div).DataTable().rows($('.shown'));
                 $(div).DataTable().ajax.reload();
             }
         });
-
     };
-    window.render = {};
     window.sort_by = function(field, reverse, primer){
         var key = primer ?
         function(x) {return primer(x[field])} :
@@ -1177,6 +1180,21 @@
                 width:"20px"
             }]
         });
+        pending_table.on("draw", function(){
+            if (pending_child) {
+                pending_child.every(function ( rowIdx, tableLoop, rowLoop ) {
+                    let data = this.data()
+                    if(data === undefined){
+                        return;
+                    }
+                    var tr = $(this.node());
+                    let tdi = tr.find("span.btn");
+                    window.render.expand(data, this, tr, tdi);
+                });
+                // Reset childRows so loop is not executed each draw
+                pending_child = null;
+            }
+        });
         $("#overview").DataTable({
             "ajax": {"type": "POST", "url": window.admin.url.partition},
             dom: 'tiB',
@@ -1275,11 +1293,11 @@
     $(document).on("click", ".new_accept", window.render.new_accept);
     $(document).on("click", ".resp_name_swap", window.render.responsible_swap);
 
-    $(document).on("click", ".create_submit", window.submit);
-    $(document).on("click", ".approve_submit", window.submit);
-    $(document).on("click", ".visa_submit", window.submit);
-    $(document).on("click", ".ignore_submit", window.submit);
-    $(document).on("click", ".reject_submit", window.submit);
+    $(document).on("click", ".create_submit", window.sub);
+    $(document).on("click", ".approve_submit", window.sub);
+    $(document).on("click", ".visa_submit", window.sub);
+    $(document).on("click", ".ignore_submit", window.sub);
+    $(document).on("click", ".reject_submit", window.sub);
 
     $(document).on("click", ".task_show", window.render.tasks);
     $(document).on("click", ".task_info", window.render.new_project);

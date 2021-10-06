@@ -112,7 +112,6 @@ submit = function(e){
     var form = $.trim( $(this).data("form") );
     var url = $.trim( $(this).data("url") );
     var data = $("#" + form).serialize();
-    e.preventDefault();
     return ajax_send(url, data, modal);
 };
 

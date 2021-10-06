@@ -93,17 +93,47 @@
             </tbody>
         </table>
     </div>
-    <div class="uk-width-1-4 uk-margin-top uk-margin-bottom" id="{{pending.name}}_logs">
-
+    <div class="uk-width-1-4 uk-margin-top uk-margin-bottom" id="{{pending.id}}_logs">
+        {% if pending.accepted %}
+            <div class="uk-badge uk-badge-success">Visa sent</div>
+        {% endif %}
+        {% if pending.approve %}
+            <div class="uk-badge uk-badge-success">Technical approval granted</div>
+        {% endif %}
+        <!--
+        {% if pending.accepted %}
+            <div class="uk-badge uk-badge-success uk-display-block uk-margin-small">Visa sent</div>
+        {% endif %}
+        {% if pending.approve %}
+            <div class="uk-badge uk-badge-success uk-display-block uk-margin-small">Technical approval granted</div>
+        {% endif %}
+        -->
+        <table class="uk-table uk-table-condensed" style="table-layout: fixed;">
+            <tbody>
+            {% for log in logs | sort(attribute='created', reverse=True)%}
+                <tr>
+                    <td>
+                        <div class="uk-text-truncate" title='{{log.created.strftime("%Y-%m-%d %H:%M")}} {{log.event}}'>{{log.event}}</div>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
     </div>
     <div class="uk-width-1-4 uk-margin-top uk-margin-bottom">
-        {% if pending.approve and not pending.accepted %}
-            <button class="uk-button uk-width-1-1 uk-margin-small-bottom re_visa" data-modal="{{pending.id}}_visa"><span class="uk-icon-edit uk-margin-small-right"></span>Send Visa</button>
-        {% elif pending.approve and pending.accepted %}
-            <button class="uk-button uk-width-1-1 uk-margin-small-bottom re_create uk-button-success" data-modal="{{pending.id}}_create"><span class="uk-icon-cogs uk-margin-small-right"></span>Create Project!</button>
-            <button class="uk-button uk-width-1-1 uk-margin-small-bottom re_visa" data-modal="{{pending.id}}_visa"><span class="uk-icon-edit uk-margin-small-right"></span>Re-send Visa</button>
+        {% if "admin" in g.permissions %}
+            {% if pending.approve and not pending.accepted %}
+                <button class="uk-button uk-width-1-1 uk-margin-small-bottom re_visa" data-modal="{{pending.id}}_visa"><span class="uk-icon-edit uk-margin-small-right"></span>Send Visa</button>
+            {% elif pending.approve and pending.accepted %}
+                <button class="uk-button uk-width-1-1 uk-margin-small-bottom re_create uk-button-primary" data-modal="{{pending.id}}_create"><span class="uk-icon-cogs uk-margin-small-right"></span>Create Project!</button>
+                <button class="uk-button uk-width-1-1 uk-margin-small-bottom re_visa" data-modal="{{pending.id}}_visa"><span class="uk-icon-edit uk-margin-small-right"></span>Re-send Visa</button>
+            {% else %}
+                <button class="uk-button uk-width-1-1 uk-margin-small-bottom re_approve" data-modal="{{pending.id}}_approve"><span class="uk-icon-wrench uk-margin-small-right"></span>Approve</button>
+            {% endif %}
         {% else %}
-            <button class="uk-button uk-width-1-1 uk-margin-small-bottom re_approve" data-modal="{{pending.id}}_approve"><span class="uk-icon-wrench uk-margin-small-right"></span>Approve</button>
+            {% if not pending.approve  and not pending.accepted %}
+                <button class="uk-button uk-width-1-1 uk-margin-small-bottom re_approve" data-modal="{{pending.id}}_approve"><span class="uk-icon-wrench uk-margin-small-right"></span>Approve</button>
+            {% endif %}
         {% endif %}
         {% if "admin" in g.permissions %}
         <!--
@@ -113,9 +143,15 @@
         <button class="uk-button uk-width-1-1 uk-margin-small-bottom attach" data-modal="{{pending.id}}_attach"><span class="uk-icon-user-plus uk-margin-small-right"></span>Add user</button>
         <button class="uk-button uk-width-1-1 uk-margin-small-bottom contact" data-modal="{{pending.id}}_contact"><span class="uk-icon-send uk-margin-small-right"></span>Contact</button>
         -->
-        {% endif %}
+
         <button class="uk-button uk-width-1-1 uk-margin-small-bottom re_ignore uk-margin-top" data-modal="{{pending.id}}_ignore"><span class="uk-icon-thumbs-o-down uk-margin-small-right"></span>Ignore</button>
         <button class="uk-button uk-width-1-1 uk-margin-small-bottom re_reject uk-button-danger" data-modal="{{pending.id}}_reject"><span class="uk-icon-thumbs-down uk-margin-small-right"></span>Reject</button>
+        {% else %}
+            {% if not pending.approve  and not pending.accepted %}
+                <button class="uk-button uk-width-1-1 uk-margin-small-bottom re_ignore uk-margin-top" data-modal="{{pending.id}}_ignore"><span class="uk-icon-thumbs-o-down uk-margin-small-right"></span>Ignore</button>
+                <button class="uk-button uk-width-1-1 uk-margin-small-bottom re_reject uk-button-danger" data-modal="{{pending.id}}_reject"><span class="uk-icon-thumbs-down uk-margin-small-right"></span>Reject</button>
+            {% endif %}
+        {% endif %}
 
     </div>
 </div>

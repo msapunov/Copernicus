@@ -15,7 +15,6 @@ from base.pages.admin.magic import (
     create_project,
     event_log,
     skip_visa,
-    create_visa,
     get_server_info,
     get_ltm,
     TaskManager,
@@ -220,14 +219,14 @@ def admin_registration_details_set(rid):
 @login_required
 @grant_access("admin", "tech", "manager")
 def admin_registration_approve(pid):
-    return jsonify(data=list(map(lambda x: x.result, Pending(pid).approve())))
+    return jsonify(data=Pending(pid).approve().result)
 
 
 @bp.route("/admin/registration/ignore/<int:pid>", methods=["POST"])
 @login_required
 @grant_access("admin", "manager")
 def admin_registration_ignore(pid):
-    return jsonify(data=list(map(lambda x: x.result, Pending(pid).ignore())))
+    return jsonify(data=Pending(pid).ignore())
 
 
 @bp.route("/admin/registration/create/<int:pid>", methods=["POST"])
@@ -280,7 +279,7 @@ def admin_registration_visa(pid, resend=False):
         raise ValueError(form_error_string(form.errors))
     if form.exception.data:
         return jsonify(data=skip_visa(pid))
-    return jsonify(data=create_visa(pid, resend))
+    return jsonify(data=Pending(pid).visa_create(resend).result)
 
 
 @bp.route("/admin/extension/processed/<int:pid>", methods=["POST"])
@@ -402,8 +401,7 @@ def web_admin_user_info():
 @login_required
 @grant_access("admin", "manager")
 def web_admin_bits_pending(rid):
-    pending = Pending(rid).pending[0]
-    return render_pending(pending)
+    return render_pending(Pending(rid).pending)
 
 
 @bp.route("/admin/pending/list", methods=["POST"])
