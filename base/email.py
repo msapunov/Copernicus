@@ -157,8 +157,10 @@ class Mail(Thread):
             self.attach_file(visa)
         return self
 
-    def pending_approve(self, record):
-        self.populate("REGISTRATION APPROVED")
+    def __pending_init(self, record, section_name):
+        self.populate(section_name)
+        if not record.responsible_email:
+            raise ValueError("Responsible has no email")
         self.destination = record.responsible_email
         pid = record.project_id()
         title = record.title
@@ -169,16 +171,13 @@ class Mail(Thread):
                                 "%TITLE": title})
         return self
 
+    def pending_approve(self, record):
+        self.__pending_init(record, "REGISTRATION APPROVED")
+        return self
+
     def pending_reject(self, record, message):
-        self.populate("REGISTRATION REJECTED")
-        self.destination = record.responsible_email
-        pid = record.project_id()
-        title = record.title
-        first = record.responsible_first_name
-        last = record.responsible_last_name
-        full = "%s %s" % (first, last)
-        self.__populate_values({"%FULLNAME": full, "%MESO": pid,
-                                "%COMMENT": message, "%TITLE": title})
+        self.__pending_init(record, "REGISTRATION REJECTED")
+        self.__populate_values({"%COMMENT": message})
         return self
 
     def pending_ignore(self, record):
