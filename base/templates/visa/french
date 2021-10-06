@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <base href="{{ data.base_url }}">
+    <title>Visa for the project {{data.meso_id}}</title>
+    <style>
+        @media print {
+            ul, img, .border {
+                page-break-inside: avoid;
+            }
+        }
+        @media print {
+        	html, body{
+		        height: 297mm;
+		        width: 210mm;
+            }
+        }
+        .half {
+            width: 50%;
+        }
+        .uk-table td, .uk-table th {
+            border-bottom: 0!important;
+        }
+        .uk-margin-large-top {
+            margin-top: 50px!important;
+        }
+        .uk-table {
+            border-collapse: collapse;
+            border-spacing: 0;
+            width: 100%;
+            margin-bottom: 15px;
+        }
+        .uk-table td {
+            vertical-align: top;
+        }
+        .uk-table td, .uk-table th {
+            padding: 8px 8px;
+            border-bottom: 1px solid #E5E5E5;
+        }
+        .uk-text-nowrap {
+            white-space: nowrap;
+        }
+        .uk-text-left {
+            text-align: left!important;
+        }
+        .uk-text-right {
+            text-align: right!important;
+        }
+        .uk-text-bold {
+            font-weight: 700;
+        }
+        .large {
+            font-size:20px;
+            line-height:26px;
+            font-weight:300;
+        }
+        .text_centre {
+            text-align: center;
+        }
+        .text_left {
+            text-align: left;
+        }
+        ul {
+            list-style-type: none;
+        }
+        html {
+            /*font: 400 14px/20px "Helvetica Neue",Helvetica,Arial,sans-serif;*/
+            font: 12pt;
+            font-family: TimesNewRoman,Times New Roman,Times,Baskerville,Georgia,serif;
+            background: #fff;
+            color: #222;
+        }
+        figure {
+            width: 50%;
+            float: left;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+    <table class="uk-table uk-margin-large-top">
+        <tbody>
+            <tr>
+                <td><img src="{{ url_for('static', filename = 'img/logo.png') }}" width="48%"></td>
+                <td>
+                    <p>Marseille, le {{data.dt}}</p>
+                    <p class="uk-text-nowrap">{{data.responsible_first_name[0]|upper}}{{data.responsible_first_name[1:]|lower}} {{data.responsible_last_name[0]|upper}}{{data.responsible_last_name[1:]|lower}}</p>
+                    <p>{{data.responsible_lab}}</p>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <p>Objet : Allocation de ressources</p>
+                    <p>Référence : {{data.project_id()}}</p>
+                    <p>Le projet pour lequel vous avez déposé une demande d'accès aux ressources du Mésocentre a reçu un avis favorable.</p>
+                    <p>Titre : {{data.title}}</p>
+                    <p>Allocation accordée (sous réserve du retour sous 3 mois du présent courrier visé) : {{data.cpu}} heures CPU</p>
+                    <p>Utilisateur·trices : </p>
+                    <ul>
+                    {% for user in data.get_users()|sort(attribute='last')%}
+                        <li>{{user.name[0]|upper}}{{user.name[1:]|lower}} {{user.last[0]|upper}}{{user.last[1:]|lower}} - {{user.mail|lower}}</li>
+                    {% endfor %}
+                    </ul>
+                    <p>Pour les nouveaux comptes, les logins et mots de passe seront communiqués dans un message séparé.</p>
+                    <p>Une interface de gestion des projets vous est proposée à l’adresse https://mesocentre.univ-amu.fr/copernicus/. Elle permet en particulier de formuler les demandes d'ajout, de rattachement ou suppression de compte.</p>
+                    <p>En qualité de coordinateur·trice de projet, la signature de ce document vous engage, ainsi que les autres utilisateur·trices y participant, à respecter les termes de la charte d'utilisation du Mésocentre consultable à l'adresse https://mesocentre.univ-amu.fr/charte/.</p>
+                    <p>Même si vous n'en avez pas formulé la demande, un compte à votre nom sera créé et vous serez abonné·e à la liste de diffusion des responsables des projets {{ data.resp_list }} et à celle des utilisateurs du Mésocentre {{ data.user_list }}.</p>
+                    {% if data.type == "B" %}
+                        <p>L'allocation accordée est utilisable jusqu'au {{data.ttl}}, elle peut être augmentée ou diminuée lors de chaque session d'appel à projet. En particulier, au moment de la première session complémentaire (mai), les projets dont la consommation est inférieure à 15% verront leur allocation diminuée après concertation avec les coordinateurs concernés. La même procédure s'applique lors de la deuxième session complémentaire (octobre) pour une consommation inférieure à 50%.</p>
+                    {% elif data.type == "H" %}
+                        <p>Votre allocation relève du projet HPCboost (<a href="https://mesocentre.univ-amu.fr/hpcboost/">https://mesocentre.univ-amu.fr/hpcboost/</a>), financé avec le concours de l’Union européenne avec le Fonds Européen de Développement Régional. Elle est utilisable dans les 6 mois suivants la date du présent avis.</p>
+                    {% elif data.type == "A" %}
+                        <p>L'allocation accordée est utilisable dans les 6 mois suivants la date du présent avis.</p>
+                    {% endif %}
+                    <p>Un ensemble de tutoriaux sur l'utilisation des ressources du Mésocentre est proposé sur son site web https://mesocentre.univ-amu.fr/les-tutoriaux/.</p>
+                    <p>La signature de ce document couvre également toute modification du projet (allocations, comptes, espace disque, ...) qui pourrait survenir à votre demande ou à celle du Mésocentre, et ce pendant toute la durée du projet scientifique associé.</p>
+                </td>
+            </tr>
+            <tr class="border">
+                <td class="uk-text-bold uk-text-left uk-text-nowrap half">
+                    <p>Coordinateur·trice de projet</p>
+                    <figure class="text_left">
+                        <img src="data:image/jpeg;base64,{{ data.signature | safe }}" width="50%" style="opacity:0.0;">
+                        <figcaption>Date:</figcaption>
+                    </figure>
+                </td>
+                <td class="uk-text-bold uk-text-left uk-text-nowrap half">
+                    <p>Directeur du CCIAM</p>
+                    <figure class="text_centre">
+                        <img src="data:image/jpeg;base64,{{ data.signature | safe }}" width="50%">
+                        <figcaption>Nicolas Ferré</figcaption>
+                    </figure>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2"></td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>
