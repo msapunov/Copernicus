@@ -157,11 +157,13 @@ class Mail(Thread):
             self.attach_file(visa)
         return self
 
-    def visa_skip(self, visa):
-        if type(visa) is list:
-            [self.attach_file(x) for x in visa]
-        else:
-            self.attach_file(visa)
+    def pending_ignore(self, record):
+        self.populate("TECH")
+        pid = record.project_id()
+        title = "[%s] Project creation request has been ignored" % pid
+        message = "Project creation request with ID %s is ignored by %s" % \
+                  (pid, record.author)
+        self.__populate_values({"%TITLE": title, "%MESSAGE": message})
         return self
 
     def report_uploaded(self, record):
