@@ -150,7 +150,14 @@ class Mail(Thread):
         self.__populate_values({"%FULLNAME": rec.responsible_full_name()})
         return self
 
-    def attach_visa(self, visa):
+    def visa_attach(self, visa):
+        if type(visa) is list:
+            [self.attach_file(x) for x in visa]
+        else:
+            self.attach_file(visa)
+        return self
+
+    def visa_skip(self, visa):
         if type(visa) is list:
             [self.attach_file(x) for x in visa]
         else:
