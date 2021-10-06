@@ -501,6 +501,18 @@ class Pending:
         records = Register.query.filter_by(processed=False).all()
         return list(filter(lambda x: self.acl_filter(x), records))
 
+    def visa_skip(self):
+        record = self.verify()
+        name = record.project_id()
+        if not record.approve:
+            raise ValueError("Project %s has to be approved first!" % name)
+        record.accepted = True
+        record.accepted_ts = dt.now()
+        self.comment("Visa sending step has been skipped")
+        self.result = RequestLog(record).visa_skip()
+        self.commit()
+        return self
+
     def visa_create(self, resend=False):
         record = self.verify()
         name = record.project_id()
