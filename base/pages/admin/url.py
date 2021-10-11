@@ -226,7 +226,12 @@ def admin_registration_approve(pid):
 @login_required
 @grant_access("admin", "manager")
 def admin_registration_ignore(pid):
-    return jsonify(data=Pending(pid).ignore())
+    """
+    Ignoring request for new project. No mail will be send
+    :param pid: Int. ID of register record
+    :return: String. Message to display
+    """
+    return jsonify(data=Pending(pid).ignore().result)
 
 
 @bp.route("/admin/registration/create/<int:pid>", methods=["POST"])
