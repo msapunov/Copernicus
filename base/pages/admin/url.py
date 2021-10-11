@@ -14,7 +14,6 @@ from base.pages.admin.magic import (
     all_users,
     create_project,
     event_log,
-    skip_visa,
     get_server_info,
     get_ltm,
     TaskManager,
@@ -36,6 +35,7 @@ from base.pages.admin.magic import (
     reg_approve)
 from base.functions import slurm_nodes_status
 from base.pages.admin.form import (
+    PendingActionForm,
     VisaPendingForm,
     AddUserForm,
     UserEditForm,
