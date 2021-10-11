@@ -213,9 +213,9 @@ class RequestLog(Log):
         self.log.event = "Change request info: %s" % info
         return self.commit()
 
-    def accept(self):
-        self.log.event = "Project creation request accepted"
-        return self.commit()
+    def approve(self):
+        self.log.event = "Project software requirements approved"
+        return self.commit(Mail().pending_approve(self.pending))
 
     def reject(self, message):
         self.log.event = "Project creation request rejected"
