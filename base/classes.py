@@ -608,7 +608,10 @@ class Pending:
         return self
 
     def comment(self, msg):
-        comment = self.pending.comment.split("\n")
+        if self.pending.comment:
+            comment = self.pending.comment.split("\n")
+        else:
+            comment = []
         comment.append(msg)
         self.pending.comment = "\n".join(comment)
         return self
