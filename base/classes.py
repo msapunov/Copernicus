@@ -191,10 +191,6 @@ class RequestLog(Log):
 
     def visa_skip(self):
         self.log.event = "Visa sending step has been skipped"
-        return self.commit(Mail().visa_skip())
-
-    def approve(self):
-        self.log.event = "Project software requirements approved"
         return self.commit()
 
     def create(self):
