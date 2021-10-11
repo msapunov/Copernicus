@@ -217,13 +217,13 @@ class RequestLog(Log):
         self.log.event = "Project creation request accepted"
         return self.commit()
 
-    def reject(self):
+    def reject(self, message):
         self.log.event = "Project creation request rejected"
-        return self.commit()
+        return self.commit(Mail().pending_reject(self.pending, message))
 
     def ignore(self):
         self.log.event = "Project creation request ignored"
-        return self.commit()
+        return self.commit(Mail().pending_ignore(self.pending))
 
 
 class UserLog(Log):
