@@ -265,6 +265,11 @@ def admin_registration_accept(pid):
 @login_required
 @grant_access("admin", "tech")
 def admin_registration_visa_resend(pid):
+    """
+    Sometimes visa should be send once again
+    :param pid: Int. ID of register record
+    :return: String. Message to display. Result of admin_registration_visa()
+    """
     return admin_registration_visa(pid, True)
 
 
@@ -272,6 +277,12 @@ def admin_registration_visa_resend(pid):
 @login_required
 @grant_access("admin", "tech")
 def admin_registration_visa(pid, resend=False):
+    """
+    Sending visa for new project
+    :param pid: Int. ID of register record
+    :param resend: Boolean. Whether or not visa should be resent
+    :return: String. Message to display
+    """
     form = VisaPendingForm()
     if not form.validate_on_submit():
         raise ValueError(form_error_string(form.errors))
