@@ -563,15 +563,7 @@ class Pending:
         self.action = "reject"
         return self.process_record()
 
-    def accept(self):
-        """
-        Set self.action to accept and process the records
-        :return: List. Result of self.process_records() method
-        """
-        self.action = "accept"
-        return self.process_record()
-
-    def process_record(self):
+    def process_record(self, message=None):
         """
         Set processed field of the task record to True, so the task will be
         moved to the task ready to be executed. Based on action property set
