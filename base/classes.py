@@ -555,13 +555,13 @@ class Pending:
         self.action = "ignore"
         return self.process_record()
 
-    def reject(self):
+    def reject(self, message):
         """
         Set self.action to reject and process the records
         :return: List. Result of self.process_records() method
         """
         self.action = "reject"
-        return self.process_record()
+        return self.process_record(message)
 
     def process_record(self, message=None):
         """
@@ -577,26 +577,20 @@ class Pending:
         record.processed = True
         record.processed_ts = dt.now()
         record.accepted_ts = dt.now()
-
-        full = current_user.full_name()
+        record.accepted = False
+        record.author = current_user.full_name()
         debug("Action performed on project creation request: %s" % self.action)
         if self.action is "ignore":
-            record.accepted = False
-            self.comment("Project creation request ignored by %s" % full)
+            comment = "Project creation request ignored by %s" % record.author
             self.result = RequestLog(record).ignore()
         elif self.action is "reject":
-            record.accepted = False
-            self.comment("Project creation request rejected by %s" % full)
-            self.result = RequestLog(record).reject()
-        elif self.action is "accept":
-            if not record.approve:
-                raise ValueError("Pending project %s must be approved first" %
-                                 record.project_id())
-            record.accepted = True
-            self.comment("Project creation request accepted by %s" % full)
-            self.result = RequestLog(record).accept()
+            comment = "Project creation request rejected by %s" % record.author
+            self.result = RequestLog(record).reject(message)
         else:
             raise ValueError("Action %s is not supported" % self.action)
+        if message:
+            comment += " with following reason: %s" % message
+        self.comment(comment)
         return self
 
     def comment(self, msg):
