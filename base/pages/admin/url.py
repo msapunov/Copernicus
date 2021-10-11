@@ -219,6 +219,11 @@ def admin_registration_details_set(rid):
 @login_required
 @grant_access("admin", "tech", "manager")
 def admin_registration_approve(pid):
+    """
+    Approve technical requirements for the new project
+    :param pid: Int. ID of register record
+    :return: String. Message to display
+    """
     return jsonify(data=Pending(pid).approve().result)
 
 
