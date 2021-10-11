@@ -227,6 +227,21 @@ def admin_registration_approve(pid):
     return jsonify(data=Pending(pid).approve().result)
 
 
+@bp.route("/admin/registration/reject/<int:pid>", methods=["POST"])
+@login_required
+@grant_access("admin", "manager")
+def admin_registration_reject(pid):
+    """
+    Reject new project request because request is malformed or not correct.
+    :param pid: Int. ID of register record
+    :return: String. Message to display
+    """
+    form = PendingActionForm()
+    if not form.validate_on_submit():
+        raise ValueError(form_error_string(form.errors))
+    return jsonify(data=Pending(pid).reject(form.note.data).result)
+
+
 @bp.route("/admin/registration/ignore/<int:pid>", methods=["POST"])
 @login_required
 @grant_access("admin", "manager")
