@@ -287,7 +287,7 @@ def admin_registration_visa(pid, resend=False):
     if not form.validate_on_submit():
         raise ValueError(form_error_string(form.errors))
     if form.exception.data:
-        return jsonify(data=skip_visa(pid))
+        return jsonify(data=Pending(pid).visa_skip().result)
     return jsonify(data=Pending(pid).visa_create(resend).result)
 
 
