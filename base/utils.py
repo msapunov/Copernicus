@@ -162,19 +162,3 @@ def bytes2human(n, arrangment='%(value).1f %(symbol)s', symbols='customary'):
             value = float(n) / prefix[symbol]
             return arrangment % locals()
     return arrangment % dict(symbol=symbols[0], value=n)
-
-
-def accounting_start():
-    cfg_day = current_app.config["ACC_START_DAY"]
-    cfg_month = current_app.config["ACC_START_MONTH"]
-
-    now = dt.now()
-    year = now.year
-    month = now.month
-    day = now.day
-    if (month < cfg_month) or ((month == cfg_month) and (day <= cfg_day)):
-        year -= 1
-    year -= 2000
-    mth = str(cfg_month).zfill(2)
-    day = str(cfg_day).zfill(2)
-    return "%s/%s/%s-00:00" % (mth, day, year)
