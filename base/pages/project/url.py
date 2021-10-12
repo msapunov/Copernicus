@@ -263,7 +263,7 @@ def web_project_index():
     except ValueError as err:
         return render_template("project.html", data={"projects": []}, err=err)
     if not projects:
-        flash("No projects associated with %s" % current_user.full_name())
+        flash("No projects associated with %s found" % current_user.full_name())
         return render_template("project.html", data={})
     list(map(lambda x: clean_activity(x.get_name()), projects))
     get_limbo_users(projects)
