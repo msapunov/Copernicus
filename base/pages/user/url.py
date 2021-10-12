@@ -1,13 +1,12 @@
 from flask import render_template, request, jsonify, flash
-from flask_login import login_required
+from flask_login import login_required, current_user
 from base.database.schema import User
 from base.pages.user import bp
 from base.pages.user.magic import get_user_record, get_jobs
 from base.pages.user.magic import get_scratch, user_edit
 from base.pages.project.magic import get_project_info
 from base.pages.user.form import EditInfo, InfoForm
-from base.utils import accounting_start
-from datetime import datetime as dt
+from datetime import datetime as dt, timezone
 from operator import attrgetter
 import logging as log
 
@@ -58,17 +57,20 @@ def web_user_edit(login):
 @bp.route("/user.html", methods=["GET"])
 @login_required
 def user_index():
-    start = accounting_start()
-    end = dt.now().strftime("%m/%d/%y-%H:%M")
-    user_record = get_user_record()
-    user = {"full": user_record.full_name(),
-            "name": user_record.name,
-            "surname": user_record.surname,
-            "email": user_record.email,
-            "uid": user_record.uid,
-            "login": user_record.login}
+    start = dt.now(timezone.utc)
+    for project in current_user.project:
+        if project.resources.created < start:
+            start = project.resources.created
+    begin = start.strftime("%m/%d/%y-%H:%M")
+    finish = dt.now().strftime("%m/%d/%y-%H:%M")
+    user = {"full": current_user.full_name(),
+            "name": current_user.name,
+            "surname": current_user.surname,
+            "email": current_user.email,
+            "uid": current_user.uid,
+            "login": current_user.login}
     try:
-        jobs = get_jobs(start, end)
+        jobs = get_jobs(begin, finish)
     except ValueError as err:
         jobs = None
         flash(err)
