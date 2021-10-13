@@ -35,7 +35,7 @@ def web_projects_xls():
     return dump_projects_database("xls")
 
 
-@bp.route("/statistic/update", methods=["GET"])
+@bp.route("/statistic/update", methods=["POST"])
 @login_required
 @grant_access("admin", "tech")
 def web_statistic_update():
