@@ -472,21 +472,30 @@ def project_info_by_name(name):
 
 
 def get_project_info(every=None, user_is_responsible=None):
+    """
+    Function which make a call to remote server and parse returned values as
+    project consumption. The projects can be all projects, projects user is
+    responsible for and projects user are registered in
+    :param every: Boolean. If True returns consumption for all projects in the
+    system
+    :param user_is_responsible: Boolean. If True returns consumption for the
+    projects user is responsible in. False returns consumption for the projects
+    user registered in
+    :return: List. Return projects with project consumption
+    """
     if every:
         projects = Project.query.all()
     else:
-        pids = current_user.project_ids()
         if user_is_responsible:
-            projects = Project.query.filter(
-                Project.responsible == current_user).all()
+            projects = Project.query.filter_by(responsible = current_user).all()
         else:
-            projects = Project.query.filter(Project.id.in_(pids)).all()
+            projects = current_user.project
     if not projects:
         if every:
             raise ValueError("No projects found!")
         else:
             raise ValueError("No projects found for user '%s'" %
-                             current_user.login)
+                             current_user.full())
     info = list(map(lambda x: get_project_consumption(x), projects))
     debug(info)
     return info
