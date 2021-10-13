@@ -1,9 +1,12 @@
 from flask import render_template, jsonify
 from flask_login import login_required
-from base.functions import resources_update_statistics, project_get_info
+from base.functions import project_get_info
 from base.pages import grant_access
 from base.pages.user import bp
-from base.pages.statistic.magic import dump_projects_database, project_types
+from base.pages.statistic.magic import (
+    dump_projects_database,
+    project_types,
+    resources_update_midnight)
 from base.pages.project.magic import set_state
 
 
@@ -36,7 +39,7 @@ def web_projects_xls():
 @login_required
 @grant_access("admin", "tech")
 def web_statistic_update():
-    resources_update_statistics(force=True)
+    resources_update_midnight(force=True)
     return "", 200
 
 
