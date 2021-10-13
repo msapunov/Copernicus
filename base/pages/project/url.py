@@ -1,6 +1,5 @@
 from flask import render_template, request, jsonify, flash
 from flask_login import login_required, current_user
-from base import db
 from base.classes import ProjectLog
 from base.database.schema import LogDB
 from base.pages import (
@@ -9,7 +8,7 @@ from base.pages import (
     TaskQueue,
     grant_access)
 from base.pages.user import bp
-from base.pages.user.magic import get_user_record, user_by_id
+from base.pages.user.magic import get_user_record
 from base.pages.project.form import (
     new_responsible, ResponsibleForm,
     transform, TransForm,
@@ -35,11 +34,9 @@ from base.pages.project.magic import (
     save_activity,
     get_project_info,
     get_project_record,
-    list_of_projects,
     project_extend,
     project_renew,
-    get_limbo_users,
-    get_users)
+    get_limbo_users)
 from logging import debug
 
 
