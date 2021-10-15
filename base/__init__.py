@@ -110,13 +110,17 @@ def register_decor(app):
 
     @app.errorhandler(Exception)
     def handle_error(e):
+        if current_user.is_authenticated:
+            user = current_user.full()
+        else:
+            user = "anonymous"
         url = request.url
         tb = format_exc()
         code = 500
         if isinstance(e, HTTPException):
             code = e.code
         if tb:
-            logging.critical(tb + "Request URL: %s" % url)
+            logging.critical(tb + "User: %s, Request URL: %s" % (user, url))
         else:
             logging.critical(str(e))
         return str(e), code
