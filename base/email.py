@@ -232,7 +232,7 @@ class Mail(Thread):
         self.destination = task.author.email
         self.cc = user.email + "," + self.cc
         self.__populate_values({"%FULLNAME": task.author.full_name(),
-                                "%MAIL": user.email, "%USER": user.full(),
+                                "%MAIL": user.email, "%NEWUSER": user.full(),
                                 "%NAME": task.project.get_name()})
         return self
 
