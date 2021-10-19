@@ -379,6 +379,7 @@ class TmpUser:
         self.is_tech = False
         self.is_committee = False
         self.is_admin = False
+        self.password = None
 
     def full(self):
         return "%s %s" % (self.name, self.surname)
@@ -417,6 +418,9 @@ class TmpUser:
                 tmp = True if condition in acl.strip() else False
                 self.__setattr__("is_%s" % role, tmp)
 
+        if "PASSWORD" in active_part:
+            active_part, password = active_part.split("AND PASSWORD")
+            self.password = password.strip()
         self.active = True if active_part.strip() == "True" else False
         return self
 
@@ -432,6 +436,9 @@ class TmpUser:
                                                self.is_responsible,
                                                self.is_manager, self.is_tech,
                                                self.is_committee, self.is_admin)
+        if self.password:
+            return "%s WITH ACL %s WITH STATUS %s AND PASSWORD %s" % \
+                   (u_part, a_part, self.active, self.password)
         return "%s WITH ACL %s WITH STATUS %s" % (u_part, a_part, self.active)
 
 
