@@ -514,6 +514,7 @@ class Register(db.Model):
     approve_ts = db.Column(db.DateTime(True))
     approve_skip = db.Column(db.Boolean)
     cloud_image = db.Column(db.String)
+    status = db.Column(db.String)
 
     def __repr__(self):
         return "<Registration request {}>".format(self.id)
@@ -596,6 +597,7 @@ class Register(db.Model):
             "created_ts": self.created_ts,
             "approve": self.approve,
             "approve_ts": self.approve_ts,
+            "status": self.status,
             "type": self.project_type(),
             "meso_id": self.project_id()
         }
