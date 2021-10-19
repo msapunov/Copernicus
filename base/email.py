@@ -150,6 +150,13 @@ class Mail(Thread):
         self.__populate_values({"%FULLNAME": rec.responsible_full_name()})
         return self
 
+    def visa_received(self, pending):
+        self.populate("VISA RECEIVED")
+        details = "\n".join(pending.cloud())
+        name = pending.project_id()
+        self.__populate_values({"%NAME": name, "DETAILS": details})
+        return self
+
     def visa_attach(self, visa):
         if type(visa) is list:
             [self.attach_file(x) for x in visa]
@@ -226,7 +233,14 @@ class Mail(Thread):
                                 "%NAME": name})
         return self
 
-    def user_create(self, user):
+    def user_new(self, user):
+        self.populate("USER NEW")
+        self.destination = user.email
+        self.__populate_values({"%FULLNAME": user.full(), "%LOGIN": user.login,
+                                "%PASS": user.pasword})
+        return self
+
+    def user_create(self, user, done=False):
         task = user.task
         self.populate("USER CREATE")
         self.destination = task.author.email
