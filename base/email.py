@@ -254,7 +254,7 @@ class Mail(Thread):
         return self
 
     def user_created(self, user):
-        pass
+        return self.user_create(user, done=True)
 
     def user_assign(self, task, done=False):
         if done:
@@ -272,7 +272,7 @@ class Mail(Thread):
         return self
 
     def user_assigned(self, task):
-        pass
+        return self.user_assign(task, done=True)
 
     def user_delete(self, task, done=False):
         if done:
@@ -286,7 +286,7 @@ class Mail(Thread):
         return self
 
     def user_deleted(self, task):
-        pass
+        return self.user_delete(task, done=True)
 
     def __project_init(self, record, section_name):
         self.populate(section_name)
