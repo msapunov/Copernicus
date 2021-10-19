@@ -512,6 +512,7 @@ class Pending:
         record.accepted = True
         record.accepted_ts = dt.now()
         self.comment("Visa sending step has been skipped")
+        record.status = "visa skip"
         self.result = RequestLog(record).visa_skip()
         self.commit()
         return self
@@ -537,6 +538,7 @@ class Pending:
         record.accepted = True
         record.accepted_ts = dt.now()
         self.comment("Visa sent to %s" % record.responsible_email)
+        record.status = "visa send"
         self.result = RequestLog(record).visa_sent()
         self.commit()
         return self
@@ -547,8 +549,7 @@ class Pending:
         :return:
         """
         full = current_user.full_name()
-        self.pending.approve = True
-        self.pending.approve_ts = dt.now()
+        record.status = "approve"
         self.comment("Project software requirements approved by %s" % full)
         self.result = RequestLog(self.pending).approve()
         self.commit()
@@ -589,9 +590,11 @@ class Pending:
         debug("Action performed on project creation request: %s" % self.action)
         if self.action is "ignore":
             comment = "Project creation request ignored by %s" % record.author
+            record.status = "ignor"
             self.result = RequestLog(record).ignore()
         elif self.action is "reject":
             comment = "Project creation request rejected by %s" % record.author
+            record.status = "reject"
             self.result = RequestLog(record).reject(message)
         else:
             raise ValueError("Action %s is not supported" % self.action)
