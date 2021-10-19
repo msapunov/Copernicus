@@ -803,7 +803,7 @@ class Task:
         project.users.remove(user)
         if not user.project:
             user.active = False
-        return ProjectLog(project).user_deleted(user)
+        return ProjectLog(project).user_deleted(self.task)
 
     def responsible_assign(self):
         """
