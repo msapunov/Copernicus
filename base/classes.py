@@ -547,6 +547,13 @@ class Pending:
         self.commit()
         return self
 
+    def visa_received(self):
+        record = self.verify()
+        record.status = "visa receive"
+        self.result = RequestLog(record).visa_received()
+        self.commit()
+        return self
+
     def approve(self):
         """
 
