@@ -769,7 +769,8 @@ class Task:
         db.session.add(acl)
         db.session.add(user)
         project.users.append(user)
-        return ProjectLog(project).user_created(user)
+        Mail().user_new(tmp_user)
+        return ProjectLog(project).user_created(self.task)
 
     def user_update(self):
         """
