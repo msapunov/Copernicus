@@ -185,6 +185,10 @@ class RequestLog(Log):
         super().__init__(register=project)
         self.pending = project
 
+    def visa_received(self):
+        self.log.event = "Visa received"
+        return self.commit(Mail().visa_received(self.pending))
+
     def visa_sent(self):
         self.log.event = "Visa sent to %s" % self.pending.responsible_email
         return self.commit()
