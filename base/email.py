@@ -242,7 +242,10 @@ class Mail(Thread):
 
     def user_create(self, user, done=False):
         task = user.task
-        self.populate("USER CREATE")
+        if done:
+            self.populate("USER CREATED")
+        else:
+            self.populate("USER CREATE")
         self.destination = task.author.email
         self.cc = user.email + "," + self.cc
         self.__populate_values({"%FULLNAME": task.author.full_name(),
