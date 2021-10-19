@@ -9,7 +9,7 @@ from pdfkit import from_string
 
 from base import db
 from base.classes import TmpUser, ProjectLog, Task
-from base.functions import project_config
+from base.functions import project_config, generate_password
 from base.database.schema import Extend, File, Project, Tasks, User
 from base.pages import calculate_usage, generate_login, TaskQueue
 from base.pages import ssh_wrapper
@@ -59,9 +59,9 @@ def project_create_user(name, form):
     if User.query.filter(User.email == email).first():
         raise ValueError("User with e-mail %s has been registered already"
                          % email)
-    login = generate_login(prenom, surname)
     user = TmpUser()
-    user.login = login
+    user.login = generate_login(prenom, surname)
+    user.password = generate_password(16)
     user.name = prenom
     user.surname = surname
     user.email = email
