@@ -11,6 +11,9 @@ from logging import error, debug, warning
 from base.utils import image_string, get_tmpdir
 from pdfkit import from_string
 from pathlib import Path
+from string import ascii_letters, digits
+from struct import unpack
+from os import urandom
 import locale
 
 from flask_login import current_user
@@ -25,6 +28,19 @@ from base.pages import ssh_wrapper
 
 __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
+
+
+def generate_password(pass_len):
+    """
+    Create alphanumeric password of given length
+    :param pass_len: Int. Number of symbols password must consist of
+    :return: String. Password
+    """
+    symbols = ascii_letters + digits
+    password = []
+    for x in unpack('%dB' % (pass_len,), urandom(pass_len)):
+        password.append(symbols[x * len(symbols) / 256])
+    return ''.join(password)
 
 
 def generate_pdf(html, base):
