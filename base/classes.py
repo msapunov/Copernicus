@@ -559,10 +559,11 @@ class Pending:
 
         :return:
         """
+        record = self.verify()
         full = current_user.full_name()
         record.status = "approve"
         self.comment("Project software requirements approved by %s" % full)
-        self.result = RequestLog(self.pending).approve()
+        self.result = RequestLog(record).approve()
         self.commit()
         return self
 
