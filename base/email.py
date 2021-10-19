@@ -271,8 +271,16 @@ class Mail(Thread):
     def user_assigned(self, task):
         pass
 
-    def user_delete(self, task):
-        pass
+    def user_delete(self, task, done=False):
+        if done:
+            self.populate("USER DELETED")
+        else:
+            self.populate("USER DELETE")
+        self.destination = task.author.email
+        self.__populate_values({"%FULLNAME": task.author.full_name(),
+                                "%DELETE_USER": task.user.full(),
+                                "%NAME": task.project.get_name()})
+        return self
 
     def user_deleted(self, task):
         pass
