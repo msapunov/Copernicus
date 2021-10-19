@@ -258,9 +258,9 @@ class Mail(Thread):
 
     def user_assign(self, task, done=False):
         if done:
-            self.populate("USER DELETED")
+            self.populate("USER ASSIGNED")
         else:
-            self.populate("USER DELETE")
+            self.populate("USER ASSIGN")
         self.destination = task.author.email
         if self.cc:
             self.cc = task.user.email + ","  + self.cc
