@@ -350,7 +350,7 @@ def resource_consumption(project, start=None, end=None):
     if not end:
         end = dt.now()
     end = end.strftime("%Y-%m-%d-%H:%M:%S")
-    raw = slurm_consumption_raw(name, start, end)
+    raw, cmd = slurm_consumption_raw(name, start, end)
     if not raw:
         debug("Returning 0")
         return 0
