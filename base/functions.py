@@ -279,7 +279,7 @@ def project_get_info(every=None, user_is_responsible=None, usage=True):
             raise ValueError("No projects found!")
         else:
             raise ValueError("No projects found for user '%s'" %
-                             current_user.login)
+                             current_user.full())
     if not usage:
         return projects
     return projects_consumption(projects)
