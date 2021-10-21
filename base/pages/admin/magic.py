@@ -26,6 +26,22 @@ __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
 
 
+def unprocessed():
+    query = Register.query.filter_by(processed=False)
+    if "admin" in g.permissions:
+        return query.all()
+
+    approve = []
+    config = project_config()
+    for type in config.keys():
+        acl = config[type].get("acl", [])
+        if current_user.login in acl:
+            approve.append(type)
+        elif set(acl).intersection(set(g.permissions)):
+            approve.append(type)
+    return query.filter(Register.type.in_(approve)).all()
+
+
 def render_pending(rec):
     rec.meso = rec.project_id()
     rec.name = "'%s' (%s)" % (rec.title, rec.meso)
