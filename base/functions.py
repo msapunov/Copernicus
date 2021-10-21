@@ -291,16 +291,24 @@ def slurm_parse_project_conso(slurm_raw_output):
     :return: dictionary, where project name is the key, consumption is the value
     """
     output = {}
-    if not slurm_raw_output:
-        return output
     for item in slurm_raw_output:
         if "||" not in item:  # skip user consumption
-            continue
-        items = item.strip().split("||")
-        project_name = items[0].strip()
-        conso = int(items[1].strip())
-        debug("SLURM account '%s' consumption: %s" % (project_name, conso))
-        output[project_name] = conso
+            items = item.strip().split("|")
+        else:
+            items = item.strip().split("||")
+        name = items[0].strip()
+        if len(items) == 3:
+            login = items[1].strip()
+        else:
+            login = None
+        conso = int(items[-1].strip())
+        if name not in output:
+            output[name] = {}
+        if login:
+            output[name][login] = conso
+        else:
+            output[name]["total consumption"] = conso
+        debug("SLURM account '%s' consumption: %s" % (name, output))
     return output
 
 
