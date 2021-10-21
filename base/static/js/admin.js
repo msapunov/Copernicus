@@ -1288,6 +1288,7 @@
     $(document).on("click", ".new_project", window.render.new_project);
     $(document).on("click", ".new_edit", window.render.new_edit);
     $(document).on("click", ".re_create", trigger_modal);
+    $(document).on("click", ".re_received", trigger_modal);
     $(document).on("click", ".re_visa", trigger_modal);
     $(document).on("click", ".re_approve", trigger_modal);
     $(document).on("click", ".re_ignore", trigger_modal);
