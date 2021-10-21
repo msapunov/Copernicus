@@ -512,7 +512,7 @@ class Pending:
         record.accepted = True
         record.accepted_ts = dt.now()
         self.comment("Visa sent to %s" % record.responsible_email)
-        record.status = "visa send"
+        record.status = "visa sent"
         self.result = RequestLog(record).visa_sent()
         self.commit()
         return self
