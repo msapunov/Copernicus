@@ -473,43 +473,6 @@ class Pending:
             raise ValueError("Register project record is not set!")
         return self.pending
 
-    @staticmethod
-    def acl_filter(reg):
-        """
-        Reads project configuration file and check if the type of project in
-        register record should be shown to current_user based on roles in
-        g.permissions and acl option value from config
-        If user has admin role always return True
-        :param reg: Object. Registration value
-        :return: Boolean
-        """
-        if "admin" in g.permissions:
-            return True
-        config = project_config()
-        project_type = reg.type.lower()
-        if project_type not in config.keys():
-            warning("Type %s is not found in config" % project_type)
-            return False
-        acl = config[project_type].get("acl", [])
-        debug("ACL %s for register project type %s" % (acl, project_type))
-        if current_user.login in acl:
-            debug("Login %s is in register ACL: %s" % (current_user.login, acl))
-            return True
-        role = set(acl).intersection(set(g.permissions))
-        debug("Intersection of register ACL and user permissions: %s" % role)
-        if role:
-            return True
-        return False
-
-    def unprocessed(self):
-        """
-        Filter unprocessed records based on value of acl option from project
-        configuration file
-        :return: List. List of unprocessed register project records
-        """
-        records = Register.query.filter_by(processed=False).all()
-        return list(filter(lambda x: self.acl_filter(x), records))
-
     def visa_skip(self):
         record = self.verify()
         name = record.project_id()
