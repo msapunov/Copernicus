@@ -1169,10 +1169,13 @@
                 data: null,
                 defaultContent: '',
                 render: function ( data, type, row ) {
-                    if ( row.approve && ! row.accepted ) {
-                        return '<span class="uk-icon-wrench uk-text-success"></span>';
-                    }else if ( row.approve && row.accepted ) {
+                    let status = (row.status) ? row.status.toUpperCase() : "NONE";
+                    if ( "APPROVED" == status ) {
+                        return '<span class="uk-icon-wrench uk-text-danger"></span>';
+                    }else if ( "VISA SENT" == status ) {
                         return '<span class="uk-icon-edit uk-text-warning"></span>';
+                    }else if ( "VISA RECEIVED" == status ) {
+                        return '<span class="uk-icon-check uk-text-success"></span>';
                     }else{
                         return '<span class="uk-icon-question uk-text-primary"></span>';
                     }
