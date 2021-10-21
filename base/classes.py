@@ -531,7 +531,7 @@ class Pending:
         """
         record = self.verify()
         full = current_user.full_name()
-        record.status = "approve"
+        record.status = "approved"
         self.comment("Project software requirements approved by %s" % full)
         self.result = RequestLog(record).approve()
         self.commit()
@@ -570,7 +570,7 @@ class Pending:
         debug("Action performed on project creation request: %s" % self.action)
         if self.action is "ignore":
             comment = "Project creation request ignored by %s" % record.author
-            record.status = "ignor"
+            record.status = "ignore"
             self.result = RequestLog(record).ignore()
         elif self.action is "reject":
             comment = "Project creation request rejected by %s" % record.author
