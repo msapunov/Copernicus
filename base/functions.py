@@ -268,8 +268,6 @@ def project_get_info(every=None, user_is_responsible=None, usage=True):
     if every:
         projects = Project.query.all()
     else:
-        pids = current_user.project_ids()
-        query = Project.query.filter(Project.id.in_(pids))
         if user_is_responsible:
             projects = Project.query.filter_by(responsible = current_user).all()
         else:
