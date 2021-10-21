@@ -1,5 +1,5 @@
 from hashlib import md5
-from flask import request, render_template, current_app as app
+from flask import g, render_template, current_app as app
 from flask_login import current_user
 from base import db
 from base.pages import (ssh_wrapper,
@@ -12,15 +12,13 @@ from base.pages.project.magic import get_project_by_name
 from base.pages.admin.form import action_pending, visa_pending
 from base.pages.board.magic import create_resource
 from base.pages.user.magic import user_by_id
-from base.database.schema import User, Register, LogDB, Project, Tasks
+from base.database.schema import User, Register, LogDB, Project, Tasks, Register
 from base.email import Mail
 from base.classes import UserLog, RequestLog, TmpUser, ProjectLog, Task
 from logging import error, debug
 from operator import attrgetter
 from datetime import datetime as dt
-from pathlib import Path
-from base.utils import image_string, get_tmpdir
-import locale
+from base.functions import project_config
 
 __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
