@@ -43,10 +43,15 @@ def unprocessed():
 def render_pending(rec):
     rec.meso = rec.project_id()
     rec.name = "'%s' (%s)" % (rec.title, rec.meso)
-    if rec.approve and not rec.accepted:
+    status = rec.status.upper() if rec.status else "NONE"
+    if "APPROVED" in status:
         visa = visa_pending(rec)
         top = render_template("modals/admin_visa_pending.html", rec=visa)
-    elif rec.approve and rec.accepted:
+    elif "VISA SENT" in status:
+        visa = visa_pending(rec)
+#        top = render_template("modals/admin_create_project.html", rec=rec)
+        top = render_template("modals/admin_visa_pending.html", rec=visa)
+    elif "VISA RECEIVED" in status:
         visa = visa_pending(rec)
         top = render_template("modals/admin_create_project.html", rec=rec)
         top += render_template("modals/admin_visa_pending.html", rec=visa)
