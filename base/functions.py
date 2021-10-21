@@ -273,7 +273,7 @@ def project_get_info(every=None, user_is_responsible=None, usage=True):
         if user_is_responsible:
             projects = Project.query.filter_by(responsible = current_user).all()
         else:
-            projects = query.all()
+            projects = current_user.project
     if not projects:
         if every:
             raise ValueError("No projects found!")
