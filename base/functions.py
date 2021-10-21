@@ -358,7 +358,7 @@ def resource_consumption(project, start=None, end=None):
     if name not in result:
         debug("Failed to find consumption of %s in raw data: %s" % (name, raw))
         return 0
-    return result[name]
+    return result[name]["total consumption"]
 
 
 def resources_group_by_created(projects):
