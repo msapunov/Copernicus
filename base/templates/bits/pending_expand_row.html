@@ -143,7 +143,7 @@
                 </div>
             {% endif %}
         {% elif status == "VISA SENT" %}
-            <button class="uk-button uk-width-1-1 uk-margin-small-bottom re_create uk-button-primary" data-modal="{{pending.id}}_received"><span class="uk-icon-check uk-margin-small-right"></span>Visa received</button>
+            <button class="uk-button uk-width-1-1 uk-margin-small-bottom re_received uk-button-primary" data-modal="{{pending.id}}_received"><span class="uk-icon-check uk-margin-small-right"></span>Visa received</button>
             <button class="uk-button uk-width-1-1 uk-margin-small-bottom re_visa" data-modal="{{pending.id}}_visa"><span class="uk-icon-edit uk-margin-small-right"></span>Re-send Visa</button>
         {% elif status == "VISA RECEIVED" %}
             <button class="uk-button uk-width-1-1 uk-margin-small-bottom re_create uk-button-primary" data-modal="{{pending.id}}_create"><span class="uk-icon-cogs uk-margin-small-right"></span>Create Project!</button>
