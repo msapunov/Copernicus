@@ -461,10 +461,7 @@ class Pending:
         :param rid: String. ID of registration record. Optional
         """
         query = Register.query.filter_by(processed=False)
-        if rid:
-            self.pending = query.filter_by(id=rid).first()
-        else:
-            self.pending = None
+        self.pending = query.filter_by(id=rid).first()
         self.action = None
         self.result = None
 
