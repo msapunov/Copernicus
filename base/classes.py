@@ -565,8 +565,6 @@ class Pending:
         :return: Object. Register record
         """
         record = self.verify()
-        if not self.acl_filter(record):
-            raise ValueError("Process of new project record is not allowed")
         record.processed = True
         record.processed_ts = dt.now()
         record.accepted_ts = dt.now()
