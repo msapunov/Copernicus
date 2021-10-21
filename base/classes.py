@@ -471,6 +471,14 @@ class Pending:
     def verify(self):
         if not self.pending:
             raise ValueError("Register project record is not set!")
+        if "admin" in g.permissions:
+            return self.pending
+        config = project_config()
+        acl = config[self.pending.type].get("acl", [])
+        user_allowed = current_user.login in acl
+        role_allowed = set(acl).intersection(set(g.permissions))
+        if (not user_allowed) and (not role_allowed):
+            raise ValueError("Processing of new project record is not allowed")
         return self.pending
 
     def visa_skip(self):
