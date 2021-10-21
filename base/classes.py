@@ -494,9 +494,10 @@ class Pending:
     def visa_create(self, resend=False):
         record = self.verify()
         name = record.project_id()
-        if not record.approve:
+        status = record.status.upper()
+        if "APPROVED" not in status:
             raise ValueError("Project %s has to be approved first!" % name)
-        if record.accepted and not resend:
+        if "VISA SENT" in status:
             raise ValueError("Visa for the project %s has been already sent" % name)
         mail = Mail()
         u_list = mail.cfg.get("DEFAULT", "USER_LIST", fallback=None)
