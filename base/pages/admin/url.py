@@ -19,7 +19,7 @@ from base.pages.admin.magic import (
     TaskManager,
     slurm_partition_info,
     process_task,
-    group_users,
+    unprocessed,
     user_info_update,
     user_create_by_admin,
     user_reset_pass,
@@ -432,8 +432,7 @@ def web_admin_bits_pending(rid):
 @login_required
 @grant_access("admin", "manager")
 def web_admin_pending_list():
-    pending = Pending().unprocessed()
-    return jsonify(data=list(map(lambda x: x.to_dict(), pending)) if pending else [])
+    return jsonify(data=list(map(lambda x: x.to_dict(), unprocessed())))
 
 
 @bp.route("/admin/slurm/nodes/list", methods=["POST"])
