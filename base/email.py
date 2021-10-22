@@ -263,7 +263,7 @@ class Mail(Thread):
             self.populate("USER ASSIGN")
         self.destination = task.author.email
         if self.cc:
-            self.cc = task.user.email + ","  + self.cc
+            self.cc = task.user.email + "," + self.cc
         else:
             self.cc = task.user.email
         self.__populate_values({"%FULLNAME": task.author.full_name(),
