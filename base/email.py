@@ -362,7 +362,6 @@ class Mail(Thread):
 
     def task_accepted(self, task):
         self.populate("TECH")
-        self.destination = task.author.email
         title = "Task id '%s' has been accepted" % task.id
         message = "Task '%s' has been accepted" % task.description()
         self.__populate_values({"%TITLE": title, "%MESSAGE": message})
@@ -370,7 +369,6 @@ class Mail(Thread):
 
     def task_rejected(self, task):
         self.populate("TECH")
-        self.destination = task.author.email
         title = "Task id '%s' has been rejected" % task.id
         message = "Task '%s' has been rejected" % task.description()
         self.__populate_values({"%TITLE": title, "%MESSAGE": message})
