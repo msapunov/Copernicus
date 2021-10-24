@@ -223,6 +223,10 @@ class RequestLog(Log):
         self.log.event = "Project software requirements approved"
         return self.commit(Mail().pending_approve(self.pending))
 
+    def reset(self):
+        self.log.event = "Project creation process has been reset"
+        return self.commit(Mail().pending_reset(self.pending))
+
     def reject(self, message):
         self.log.event = "Project creation request rejected"
         return self.commit(Mail().pending_reject(self.pending, message))
