@@ -182,6 +182,15 @@ class Mail(Thread):
         self.__pending_init(record, "REGISTRATION APPROVED")
         return self
 
+    def pending_reset(self, record):
+        self.populate("TECH")
+        pid = record.project_id()
+        title = "[%s] Project creation process has been reset" % pid
+        message = "Creation process has been reset by %s for the new project " \
+                  "request %s" % (record.author, pid)
+        self.__populate_values({"%TITLE": title, "%MESSAGE": message})
+        return self
+
     def pending_reject(self, record, message):
         self.__pending_init(record, "REGISTRATION REJECTED")
         self.__populate_values({"%COMMENT": message})
