@@ -105,17 +105,6 @@ def accept_message(register, msg):
     return message(to, msg, title)
 
 
-def approve_message(register):
-    to = app.config["EMAIL_PROJECT"]
-    by_who = app.config["EMAIL_TECH"]
-    cc = app.config["EMAIL_TECH"]
-    mid = register.project_id()
-    title = "Project request '%s' has been approved by tech team" % mid
-    msg = "Software requirements of project request '%s' can be satisfied " \
-          "and required application(s) can be or already installed" % mid
-    return send_message(to, by_who, cc, title, msg)
-
-
 def reject_message(register, msg):
     to = register.responsible_email
     name = register.responsible_first_name
@@ -149,16 +138,6 @@ def project_type(register):
         return "p"
     else:
         raise ValueError("Failed to determine project's type")
-
-
-def reg_approve(pid):
-    rec = get_registration_record(pid)
-    rec.approve = True
-    rec.approve_ts = dt.now()
-    rec.comment = reg_message(rec.comment, "approve")
-    db.session.commit()
-    RequestLog(rec).approve()
-    return approve_message(rec)
 
 
 def reg_accept(pid, note):
