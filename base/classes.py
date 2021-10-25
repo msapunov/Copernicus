@@ -542,6 +542,22 @@ class Pending:
         self.commit()
         return self
 
+    def reset(self):
+        """
+        Set status field of register record to empty string and processed field
+        to False thus resetting project creation process
+        :return: Object. Copy of Pending object
+        """
+        record = self.verify()
+        record.processed = False
+        record.author = current_user.full_name()
+        record.status = ""
+        debug("Reset project creation process by %s" % record.author)
+        comment = "Project creation has been reset by %s" % record.author
+        self.result = RequestLog(record).reset()
+        self.comment(comment)
+        return self
+
     def ignore(self):
         """
         Set self.action to ignore and process the records
