@@ -1291,6 +1291,7 @@
     $(document).on("click", ".re_received", trigger_modal);
     $(document).on("click", ".re_visa", trigger_modal);
     $(document).on("click", ".re_approve", trigger_modal);
+    $(document).on("click", ".re_reset", trigger_modal);
     $(document).on("click", ".re_ignore", trigger_modal);
     $(document).on("click", ".re_reject", trigger_modal);
     $(document).on("click", ".new_resend_visa", window.render.new_resend_visa);
@@ -1300,6 +1301,7 @@
     $(document).on("click", ".create_submit", window.sub);
     $(document).on("click", ".approve_submit", window.sub);
     $(document).on("click", ".visa_submit", window.sub);
+    $(document).on("click", ".reset_submit", window.sub);
     $(document).on("click", ".ignore_submit", window.sub);
     $(document).on("click", ".reject_submit", window.sub);
 
