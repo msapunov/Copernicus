@@ -31,8 +31,7 @@ from base.pages.admin.magic import (
     get_registration_record,
     space_info,
     reg_reject,
-    reg_accept,
-    reg_approve)
+    reg_accept)
 from base.functions import slurm_nodes_status
 from base.pages.admin.form import (
     PendingActionForm,
