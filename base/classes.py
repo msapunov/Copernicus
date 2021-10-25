@@ -501,8 +501,8 @@ class Pending:
         status = record.status.upper()
         if "APPROVED" not in status:
             raise ValueError("Project %s has to be approved first!" % name)
-        if "VISA SENT" in status:
-            raise ValueError("Visa for the project %s has been already sent" % name)
+        if ("VISA SENT" in status) and not resend:
+            raise ValueError("Visa for project %s has been already sent" % name)
         mail = Mail()
         u_list = mail.cfg.get("DEFAULT", "USER_LIST", fallback=None)
         r_list = mail.cfg.get("DEFAULT", "RESPONSIBLE_LIST", fallback=None)
