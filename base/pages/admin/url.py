@@ -226,6 +226,18 @@ def admin_registration_approve(pid):
     return jsonify(data=Pending(pid).approve().result)
 
 
+@bp.route("/admin/registration/reset/<int:pid>", methods=["POST"])
+@login_required
+@grant_access("admin")
+def admin_registration_reset(pid):
+    """
+    Reset new project creation process. No mail will be send
+    :param pid: Int. ID of register record
+    :return: String. Message to display
+    """
+    return jsonify(data=Pending(pid).reset().result)
+
+
 @bp.route("/admin/registration/reject/<int:pid>", methods=["POST"])
 @login_required
 @grant_access("admin", "manager")
