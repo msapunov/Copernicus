@@ -244,7 +244,7 @@ def admin_registration_reject(pid):
 
 @bp.route("/admin/registration/ignore/<int:pid>", methods=["POST"])
 @login_required
-@grant_access("admin", "manager")
+@grant_access("admin")
 def admin_registration_ignore(pid):
     """
     Ignoring request for new project. No mail will be send
