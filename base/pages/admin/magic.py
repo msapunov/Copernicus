@@ -55,6 +55,7 @@ def render_pending(rec):
         top = render_template("modals/admin_create_project.html", rec=rec)
     else:
         top = render_template("modals/admin_approve_pending.html", rec=rec)
+    reset = render_template("modals/admin_reset_pending.html", rec=rec)
     action = action_pending(rec)
     reject = render_template("modals/admin_reject_pending.html", form=action)
     ignore = render_template("modals/admin_ignore_pending.html", rec=rec)
@@ -62,7 +63,7 @@ def render_pending(rec):
     row = render_template("bits/pending_expand_row.html",
                           pending=rec.to_dict(),
                           logs = logs)
-    return row + top + reject + ignore
+    return row + top + reset + reject + ignore
 
 
 def visa_comment(rec, sent=True):
