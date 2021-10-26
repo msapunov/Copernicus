@@ -168,8 +168,12 @@
         {% endif %}
 
         {% if "admin" in g.permissions %}
-            <button class="uk-button uk-width-1-1 uk-margin-small-bottom re_reset uk-margin-top" data-modal="{{pending.id}}_reset"><span class="uk-icon-backward uk-margin-small-right"></span>Reset</button>
-            <button class="uk-button uk-width-1-1 uk-margin-small-bottom re_ignore" data-modal="{{pending.id}}_ignore"><span class="uk-icon-thumbs-o-down uk-margin-small-right"></span>Ignore</button>
+            {% if status != "NONE" %}
+                <button class="uk-button uk-width-1-1 uk-margin-small-bottom re_reset uk-margin-top" data-modal="{{pending.id}}_reset"><span class="uk-icon-backward uk-margin-small-right"></span>Reset</button>
+                <button class="uk-button uk-width-1-1 uk-margin-small-bottom re_ignore" data-modal="{{pending.id}}_ignore"><span class="uk-icon-thumbs-o-down uk-margin-small-right"></span>Ignore</button>
+            {% else %}
+                <button class="uk-button uk-width-1-1 uk-margin-small-bottom re_ignore uk-margin-top" data-modal="{{pending.id}}_ignore"><span class="uk-icon-thumbs-o-down uk-margin-small-right"></span>Ignore</button>
+            {% endif %}
             <button class="uk-button uk-width-1-1 uk-margin-small-bottom re_reject uk-button-danger" data-modal="{{pending.id}}_reject"><span class="uk-icon-thumbs-down uk-margin-small-right"></span>Reject</button>
         {% endif %}
 
