@@ -490,7 +490,7 @@ class Pending:
         record = self.verify()
         name = record.project_id()
         status = record.status.upper()
-        if "APPROVED" not in status:
+        if ("APPROVED" not in status) and ("VISA SENT" not in status):
             raise ValueError("Project %s has to be approved first!" % name)
         self.comment("Visa sending step has been skipped")
         record.status = "visa skipped"
@@ -502,7 +502,7 @@ class Pending:
         record = self.verify()
         name = record.project_id()
         status = record.status.upper()
-        if "APPROVED" not in status:
+        if ("APPROVED" not in status) and ("VISA SENT" not in status):
             raise ValueError("Project %s has to be approved first!" % name)
         if ("VISA SENT" in status) and not resend:
             raise ValueError("Visa for project %s has been already sent" % name)
