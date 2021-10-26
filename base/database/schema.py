@@ -652,6 +652,11 @@ class LogDB(db.Model):
     def __repr__(self):
         return "<Log event for project {}>".format(self.project.get_name())
 
+    def brief(self):
+        event = self.event[0].upper() + self.event[1:]
+        creator = self.author.full_name() if self.author else "Unknown author"
+        return {"created": self.created, "event": "%s by %s" % (event, creator)}
+
     def to_web(self):
         event = self.event[0].upper() + self.event[1:]
         creator = self.author.full_name() if self.author else "Author is unknown"
