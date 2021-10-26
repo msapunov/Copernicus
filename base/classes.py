@@ -518,7 +518,12 @@ class Pending:
         map(lambda x: Path(x).unlink(), path)
         debug("Temporary file(s) %s was deleted" % ",".join(path))
         record.status = "visa sent"
-        self.result = RequestLog(record).visa_sent()
+        if resend:
+            self.comment("Visa re-sent to %s" % record.responsible_email)
+            self.result = RequestLog(record).visa_resent()
+        else:
+            self.comment("Visa sent to %s" % record.responsible_email)
+            self.result = RequestLog(record).visa_sent()
         self.commit()
         return self
 
