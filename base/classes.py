@@ -506,8 +506,7 @@ class Pending:
         record.status = "project created"
         self.result = RequestLog(record).create()
         record.processed = True
-        self.commit()
-        return self
+        return self.commit()
 
     def visa_skip(self):
         """
@@ -521,8 +520,7 @@ class Pending:
             raise ValueError("Project %s has to be approved first!" % name)
         record.status = "visa skipped"
         self.result = RequestLog(record).visa_skip()
-        self.commit()
-        return self
+        return self.commit()
 
     def visa_create(self, resend=False):
         """
@@ -554,8 +552,7 @@ class Pending:
             self.result = RequestLog(record).visa_resent()
         else:
             self.result = RequestLog(record).visa_sent()
-        self.commit()
-        return self
+        return self.commit()
 
     def visa_received(self):
         """
@@ -565,8 +562,7 @@ class Pending:
         record = self.verify()
         record.status = "visa received"
         self.result = RequestLog(record).visa_received()
-        self.commit()
-        return self
+        return self.commit()
 
     def approve(self):
         """
@@ -576,8 +572,7 @@ class Pending:
         record = self.verify()
         record.status = "approved"
         self.result = RequestLog(record).approve()
-        self.commit()
-        return self
+        return self.commit()
 
     def reset(self):
         """
@@ -589,9 +584,7 @@ class Pending:
         record.processed = False
         record.status = ""
         self.result = RequestLog(record).reset()
-        self.comment(comment)
-        self.commit()
-        return self
+        return self.commit()
 
     def ignore(self):
         """
@@ -633,25 +626,8 @@ class Pending:
         else:
             raise ValueError("Action %s is not supported" % self.action)
         if message:
-            comment += " with following reason: %s" % message
-        self.comment(comment)
-        self.commit()
-        return self
-
-    def comment(self, msg):
-        """
-        Keeping progress of project registration processing. If comment exists
-        it'll be split using newline as delimiter, then new line will be added
-        and joined with newline as a record separator
-        :return: Object. Pending record
-        """
-        if self.pending.comment:
-            comment = self.pending.comment.split("\n")
-        else:
-            comment = []
-        comment.append(msg)
-        self.pending.comment = "\n".join(comment)
-        return self
+            self.pending.comment = message
+        return self.commit()
 
     def commit(self):
         """
@@ -659,7 +635,7 @@ class Pending:
         :return: Object. Pending object
         """
         db.session.commit()
-        return self.pending
+        return self
 
 
 # noinspection PyArgumentList
