@@ -191,6 +191,10 @@ class RequestLog(Log):
         self.log.event = "Visa received"
         return self.commit(Mail().visa_received(self.pending))
 
+    def visa_resent(self):
+        self.log.event = "Visa re-sent to %s" % self.pending.responsible_email
+        return self.commit()
+
     def visa_sent(self):
         self.log.event = "Visa sent to %s" % self.pending.responsible_email
         return self.commit()
