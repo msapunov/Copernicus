@@ -485,12 +485,11 @@ class Pending:
     def visa_skip(self):
         record = self.verify()
         name = record.project_id()
-        if not record.approve:
+        status = record.status.upper()
+        if "APPROVED" not in status:
             raise ValueError("Project %s has to be approved first!" % name)
-        record.accepted = True
-        record.accepted_ts = dt.now()
         self.comment("Visa sending step has been skipped")
-        record.status = "visa skip"
+        record.status = "visa skipped"
         self.result = RequestLog(record).visa_skip()
         self.commit()
         return self
