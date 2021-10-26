@@ -517,9 +517,6 @@ class Pending:
         mail.registration(record).visa_attach(path).start()
         map(lambda x: Path(x).unlink(), path)
         debug("Temporary file(s) %s was deleted" % ",".join(path))
-        record.accepted = True
-        record.accepted_ts = dt.now()
-        self.comment("Visa sent to %s" % record.responsible_email)
         record.status = "visa sent"
         self.result = RequestLog(record).visa_sent()
         self.commit()
