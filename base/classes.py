@@ -490,7 +490,7 @@ class Pending:
         record = self.verify()
         name = record.project_id()
         status = record.status.upper()
-        if "VISA RECEIVED" not in status:
+        if "VISA RECEIVED" not in status and "VISA SKIPPED" not in status:
             raise ValueError("Visa for '%s' haven't been received yet!" % name)
         full = current_user.full_name()
         self.comment("Project has been created by %s" % full)
