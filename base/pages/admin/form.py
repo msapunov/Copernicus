@@ -18,8 +18,7 @@ def visa_pending(register):
     form.id = register.id
     form.meso = register.project_id()
     form.name = "'%s' (%s)" % (register.title, form.meso)
-    form.approve = register.approve
-    form.accepted = register.accepted
+    form.status = register.status
     return form
 
 
