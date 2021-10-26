@@ -1301,6 +1301,7 @@
     $(document).on("click", ".create_submit", window.sub);
     $(document).on("click", ".approve_submit", window.sub);
     $(document).on("click", ".visa_submit", window.sub);
+    $(document).on("click", ".received_submit", window.sub);
     $(document).on("click", ".reset_submit", window.sub);
     $(document).on("click", ".ignore_submit", window.sub);
     $(document).on("click", ".reject_submit", window.sub);
