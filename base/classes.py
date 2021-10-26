@@ -486,6 +486,20 @@ class Pending:
             raise ValueError("Processing of new project record is not allowed")
         return self.pending
 
+    def create(self):
+        record = self.verify()
+        name = record.project_id()
+        status = record.status.upper()
+        if "VISA RECEIVED" not in status:
+            raise ValueError("Visa for '%s' haven't been received yet!" % name)
+        full = current_user.full_name()
+        self.comment("Project has been created by %s" % full)
+        record.status = "project created"
+        self.result = RequestLog(record).create()
+        record.processed = True
+        self.commit()
+        return self
+
     def visa_skip(self):
         record = self.verify()
         name = record.project_id()
