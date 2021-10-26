@@ -629,6 +629,12 @@ class Pending:
         return self
 
     def comment(self, msg):
+        """
+        Keeping progress of project registration processing. If comment exists
+        it'll be split using newline as delimiter, then new line will be added
+        and joined with newline as a record separator
+        :return: Object. Pending record
+        """
         if self.pending.comment:
             comment = self.pending.comment.split("\n")
         else:
@@ -640,7 +646,7 @@ class Pending:
     def commit(self):
         """
         Commit changes to the database
-        :return: Object. Task record
+        :return: Object. Pending record
         """
         db.session.commit()
         return self.pending
