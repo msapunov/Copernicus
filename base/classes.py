@@ -555,6 +555,7 @@ class Pending:
         comment = "Project creation has been reset by %s" % record.author
         self.result = RequestLog(record).reset()
         self.comment(comment)
+        self.commit()
         return self
 
     def ignore(self):
@@ -601,6 +602,7 @@ class Pending:
         if message:
             comment += " with following reason: %s" % message
         self.comment(comment)
+        self.commit()
         return self
 
     def comment(self, msg):
