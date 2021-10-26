@@ -287,6 +287,18 @@ def admin_registration_accept(pid):
     return jsonify(data=reg_accept(pid, data["note"]))
 
 
+@bp.route("/admin/registration/visa/received/<int:pid>", methods=["POST", "GET"])
+@login_required
+@grant_access("admin", "tech")
+def admin_registration_visa_received(pid):
+    """
+    Set status for new project to "visa received".
+    :param pid: Int. ID of register record
+    :return: String. Message to display.
+    """
+    return jsonify(data=Pending(pid).visa_received().result)
+
+
 @bp.route("/admin/registration/visa/resend/<int:pid>", methods=["POST", "GET"])
 @login_required
 @grant_access("admin", "tech")
