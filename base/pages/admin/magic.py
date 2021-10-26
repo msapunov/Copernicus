@@ -62,7 +62,7 @@ def render_pending(rec):
     logs = list(map(lambda x: x.brief(), RequestLog(rec).list()))
     row = render_template("bits/pending_expand_row.html",
                           pending=rec.to_dict(),
-                          logs = logs)
+                          logs=logs)
     return row + top + reset + reject + ignore
 
 
