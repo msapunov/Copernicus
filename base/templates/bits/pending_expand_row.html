@@ -94,20 +94,6 @@
         </table>
     </div>
     <div class="uk-width-1-4 uk-margin-top uk-margin-bottom" id="{{pending.id}}_logs">
-        {% if pending.accepted %}
-            <div class="uk-badge uk-badge-success">Visa sent</div>
-        {% endif %}
-        {% if pending.approve %}
-            <div class="uk-badge uk-badge-success">Technical approval granted</div>
-        {% endif %}
-        <!--
-        {% if pending.accepted %}
-            <div class="uk-badge uk-badge-success uk-display-block uk-margin-small">Visa sent</div>
-        {% endif %}
-        {% if pending.approve %}
-            <div class="uk-badge uk-badge-success uk-display-block uk-margin-small">Technical approval granted</div>
-        {% endif %}
-        -->
         <table class="uk-table uk-table-condensed" style="table-layout: fixed;">
             <tbody>
             {% for log in logs | sort(attribute='created', reverse=True)%}
