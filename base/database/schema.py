@@ -562,7 +562,7 @@ class Register(db.Model):
 
     def cloud(self):
         return [
-            "id: " % self.id,
+            "id: %s" % self.id,
             "title: %s" % self.title,
             "type: %s" % self.project_type(),
             "cloud_image: %s" % self.cloud_image,
