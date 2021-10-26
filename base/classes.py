@@ -458,8 +458,9 @@ class TmpUser:
 
 class Pending:
     """
-    Operations on pending projects, i.e. registration records which haven't been
-    processed yet
+    Representation of RegisterDB record
+    Performs operations on pending projects, i.e. registration records which
+    haven't been processed yet
     """
     def __init__(self, rid=None):
         """
@@ -474,6 +475,11 @@ class Pending:
         self.result = None
 
     def verify(self):
+        """
+        Verify if record is exists and user or user's role has proper access
+        rights.
+        :return: Object. Register record
+        """
         if not self.pending:
             raise ValueError("Register project record is not set!")
         if "admin" in g.permissions:
@@ -487,6 +493,11 @@ class Pending:
         return self.pending
 
     def create(self):
+        """
+        Check if all requirements are satisfied and creates a project in the DB
+        and corresponding task for remote execution.
+        :return: Object. Pending object
+        """
         record = self.verify()
         name = record.project_id()
         status = record.status.upper()
@@ -501,6 +512,10 @@ class Pending:
         return self
 
     def visa_skip(self):
+        """
+        Set correct value to status field in case if visa is not required.
+        :return: Object. Pending object
+        """
         record = self.verify()
         name = record.project_id()
         status = record.status.upper()
@@ -514,6 +529,12 @@ class Pending:
         return self
 
     def visa_create(self, resend=False):
+        """
+        Creates visa files and attaches them to a mail for responsible person.
+        Afterwards delete files from disk and set proper status for register
+        record.
+        :return: Object. Pending object
+        """
         record = self.verify()
         name = record.project_id()
         status = record.status.upper()
@@ -543,6 +564,10 @@ class Pending:
         return self
 
     def visa_received(self):
+        """
+        Set correct value to status field if visa has been received.
+        :return: Object. Pending object
+        """
         record = self.verify()
         record.status = "visa received"
         full = current_user.full_name()
@@ -553,8 +578,8 @@ class Pending:
 
     def approve(self):
         """
-
-        :return:
+        Set approved value to status field. First step to project creation.
+        :return: Object. Pending object
         """
         record = self.verify()
         full = current_user.full_name()
@@ -568,7 +593,7 @@ class Pending:
         """
         Set status field of register record to empty string and processed field
         to False thus resetting project creation process
-        :return: Object. Copy of Pending object
+        :return: Object. Pending object
         """
         record = self.verify()
         record.processed = False
@@ -584,7 +609,7 @@ class Pending:
     def ignore(self):
         """
         Set self.action to ignore and process the records
-        :return: List. Result of self.process_records() method
+        :return: Result of self.process_records() method
         """
         self.action = "ignore"
         return self.process_record()
@@ -592,7 +617,7 @@ class Pending:
     def reject(self, message):
         """
         Set self.action to reject and process the records
-        :return: List. Result of self.process_records() method
+        :return: Result of self.process_records() method
         """
         self.action = "reject"
         return self.process_record(message)
@@ -603,7 +628,7 @@ class Pending:
         moved to the task ready to be executed. Based on action property set
         the accepted property and comment value and execute correspondent
         RequestLog method. Commit changes via self.commit()
-        :return: Object. Register record
+        :return: Object. Pending object
         """
         record = self.verify()
         record.processed = True
@@ -646,7 +671,7 @@ class Pending:
     def commit(self):
         """
         Commit changes to the database
-        :return: Object. Pending record
+        :return: Object. Pending object
         """
         db.session.commit()
         return self.pending
