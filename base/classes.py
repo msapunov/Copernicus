@@ -506,7 +506,8 @@ class Pending:
         status = record.status.upper()
         if ("APPROVED" not in status) and ("VISA SENT" not in status):
             raise ValueError("Project %s has to be approved first!" % name)
-        self.comment("Visa sending step has been skipped")
+        full = current_user.full_name()
+        self.comment("Visa sending step has been skipped by %s" % full)
         record.status = "visa skipped"
         self.result = RequestLog(record).visa_skip()
         self.commit()
@@ -544,6 +545,8 @@ class Pending:
     def visa_received(self):
         record = self.verify()
         record.status = "visa received"
+        full = current_user.full_name()
+        self.comment("Visa has been received by %s" % full)
         self.result = RequestLog(record).visa_received()
         self.commit()
         return self
