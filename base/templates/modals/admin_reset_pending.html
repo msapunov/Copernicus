@@ -1,0 +1,20 @@
+<div class="uk-modal" aria-hidden="true" id="{{rec.id}}_reset">
+  <div class="uk-modal-dialog">
+    <button type="button" class="uk-modal-close uk-close"></button>
+    <div class="uk-modal-header">
+      <h3>Reset creation of {{rec.meso}}?</h3>
+    </div>
+    <div class="uk-margin uk-modal-content">
+      <div>
+        Reset registration process for the project: {{rec.name}}? Are you sure?
+      </div>
+      <div>
+        No notification will be send
+      </div>
+    </div>
+    <div class="uk-modal-footer uk-text-right">
+      <button class="uk-button window_hide" data-modal="{{rec.id}}_reset">Cancel</button>
+      <button class="uk-button uk-button-primary reset_submit" data-modal="{{rec.id}}_reset" data-url="admin/registration/reset/{{rec.id}}">Submit</button>
+    </div>
+  </div>
+</div>
