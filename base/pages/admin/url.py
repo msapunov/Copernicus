@@ -269,10 +269,7 @@ def admin_registration_ignore(pid):
 @login_required
 @grant_access("admin", "manager")
 def admin_registration_create(pid):
-    data = request.get_json()
-    if not data["safety"]:
-        raise ValueError("You should confirm that everything is correct")
-    return jsonify(data=create_project(pid))
+    return jsonify(data=Pending(pid).create().result)
 
 
 @bp.route("/admin/registration/accept/<int:pid>", methods=["POST"])
