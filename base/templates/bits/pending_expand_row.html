@@ -115,6 +115,30 @@
                     <td>
                         <div class="uk-text-truncate" title='{{log.created.strftime("%Y-%m-%d %H:%M")}} {{log.event}}'>{{log.event}}</div>
                     </td>
+                    <td>
+                        <div class="uk-text-truncate">
+                            {% set event = log.event|lower %}
+                            {% if "approved" in event %}
+                                APPROVED
+                            {% elif "change" in event %}
+                                CHANGED
+                            {% elif "visa sent" in event %}
+                                SENT
+                            {% elif "visa re-sent" in event %}
+                                RESENT
+                            {% elif "visa received" in event %}
+                                RECEIVED
+                            {% elif "skipped" in event %}
+                                SKIPPED
+                            {% elif "reset" in event %}
+                                RESET
+                            {% elif "project created" in event %}
+                                CREATED!
+                            {% else %}
+                                {{log.event}}
+                            {% endif %}
+                        </div>
+                    </td>
                 </tr>
             {% endfor %}
             </tbody>
