@@ -1,8 +1,13 @@
+{% if not rec.status %}
+    {% set status = "NONE" %}
+{% else %}
+    {% set status = rec.status|upper %}
+{% endif %}
 <div class="uk-modal" aria-hidden="true" id="{{rec.id}}_visa">
   <div class="uk-modal-dialog">
     <button type="button" class="uk-modal-close uk-close"></button>
     <div class="uk-modal-header">
-      {% if rec.approve and rec.accepted %}
+      {% if status == "VISA SENT" %}
         <h3>Re-send visa for request {{rec.meso}}?</h3>
       {% else %}
         <h3>Send visa for request {{rec.meso}}?</h3>
@@ -15,7 +20,7 @@
           Project: {{rec.name}}
         </div>
         <div>
-          {% if rec.approve and rec.accepted %}
+          {% if status == "VISA SENT" %}
             Resend visa to responsible person once again?
           {% else %}
             Create and send visa to responsible person?
@@ -31,7 +36,7 @@
     </div>
     <div class="uk-modal-footer uk-text-right">
       <button class="uk-button window_hide" data-modal="{{rec.id}}_visa">Cancel</button>
-      {% if rec.approve and rec.accepted %}
+      {% if status == "VISA SENT" %}
         <button class="uk-button uk-button-primary visa_submit" data-modal="{{rec.id}}_visa" data-form="{{rec.id}}_visa_form" data-url="admin/registration/visa/resend/{{rec.id}}">Submit</button>
       {% else %}
         <button class="uk-button uk-button-primary visa_submit" data-modal="{{rec.id}}_visa" data-form="{{rec.id}}_visa_form" data-url="admin/registration/visa/{{rec.id}}">Submit</button>
