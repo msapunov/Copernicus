@@ -111,9 +111,9 @@
         <table class="uk-table uk-table-condensed" style="table-layout: fixed;">
             <tbody>
             {% for log in logs | sort(attribute='created', reverse=True)%}
-                <tr>
+                <tr title='[{{log.created.strftime("%c")}}] {{log.event}}'>
                     <td>
-                        <div class="uk-text-truncate" title='{{log.created.strftime("%Y-%m-%d %H:%M")}} {{log.event}}'>{{log.event}}</div>
+                        {{log.created.strftime("%Y-%m-%d %H:%M")}}
                     </td>
                     <td>
                         <div class="uk-text-truncate">
