@@ -130,11 +130,15 @@ class Mail(Thread):
             smtp.starttls()
         if self.username and self.password:
             smtp.login(self.username, self.password)
+        debug("Value of self.sending switch: %s" % self.sending)
         if self.sending:
+            debug("Submitting mail to SMTP server")
             smtp.send_message(self.msg)
+        debug("Quit SMTP server")
         smtp.quit()
         for header in self.msg.items():
             debug("%s: %s" % (header[0], header[1]))
+        debug("Message sent!")
 
     def registration(self, rec):
         self.populate("PROJECT VISA")
