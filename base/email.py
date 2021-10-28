@@ -47,6 +47,7 @@ class Mail(Thread):
             part = MIMEApplication(fd.read(), Name=str(attach_file.name))
         part['Content-Disposition'] = 'attachment; filename="%s"' % str(attach_file.name)
         self.msg.attach(part)
+        debug("File %s attached" % path)
         return self
 
     def attach(self, name=None):
