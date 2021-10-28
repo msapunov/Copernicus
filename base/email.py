@@ -108,7 +108,10 @@ class Mail(Thread):
         debug("Sending mail to %s" % self.destination)
         self.msg["Subject"] = self.title
         self.msg["From"] = self.sender
-        self.msg["To"] = self.destination
+        if self.destination and isinstance(self.destination, str):
+            self.msg["To"] = self.destination
+        else:
+            raise ValueError("Cannot send message to %s" % self.destination)
         self.msg["Date"] = formatdate(localtime=True)
         if self.cc:
             if isinstance(self.cc, list):
