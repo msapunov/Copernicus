@@ -120,8 +120,6 @@ class Mail(Thread):
                 self.msg["Cc"] = self.cc
         self.msg["Message-ID"] = make_msgid()
         if self.message:
-            if self.greetings:
-                self.message = self.greetings + self.message
             if self.signature:
                 self.message = self.message + self.signature
             self.msg.attach(MIMEText(self.message))
