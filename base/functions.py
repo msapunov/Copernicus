@@ -44,7 +44,7 @@ def generate_password(pass_len):
 
 
 def generate_pdf(html, base):
-    ts = str(dt.now().isoformat(sep="-", timespec="minutes")).replace(":","-")
+    ts = str(dt.now().isoformat(sep="-")).replace(":","-")
     name = "%s_%s.pdf" % (base, ts)
     name = name.replace("\\","-").replace("/", "-")
     path = str(Path(get_tmpdir(app), name))
