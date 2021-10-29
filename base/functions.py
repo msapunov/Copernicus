@@ -258,7 +258,8 @@ def projects_consumption(projects):
         if name not in slurm.keys():
             project.consumed = project.resources.consumption
         else:
-            project.consumed = project.resources.consumption + slurm[name]
+            conso = slurm[name]["total consumption"]
+            project.consumed = project.resources.consumption + conso
         cpu = project.resources.cpu
         project.consumed_use = calculate_usage(project.consumed, cpu)
     return projects
