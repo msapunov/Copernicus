@@ -30,6 +30,35 @@ __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
 
 
+def calculate_ttl(project):
+    """
+    Calculates time based on finish and duration options from project config.
+    Primary usage is to set a date until which resources will be available
+    :param project: Object. Copy of the Project object
+    :return: Datetime.
+    """
+    now = dt.now()
+    config = project_config()
+    project_type = project.project.type.lower()
+    end = config[project_type].get("finish_dt", None)
+    duration = config[project_type].get("duration_dt", None)
+    debug("Options values for Finish: %s and for Duration %s" % (end, duration))
+    if end and duration:
+        ttl = end if end > duration else duration
+    elif duration:
+        ttl = duration
+    elif end:
+        ttl = end
+    else:
+        error("Failed to calculate TTL no options found. Fallback to now()")
+        ttl = now
+    if now > ttl:
+        critical("Calculated time value is in the past!")
+        raise ValueError("Calculated time is in the past")
+    debug("Calculated time value for %s: %s" % (project, ttl))
+    return ttl
+
+
 def generate_password(pass_len):
     """
     Create alphanumeric password of given length
