@@ -397,7 +397,7 @@ def web_admin_tasks_list():
 @login_required
 @grant_access("admin", "tech")
 def admin_tasks_done(tid):
-    return jsonify(data=process_task(tid))
+    return jsonify(data=process_task(tid).brief())  # brief method of TaskDB rec
 
 
 @bp.route("/admin/partition/info", methods=["POST"])
