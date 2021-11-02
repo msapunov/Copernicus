@@ -120,7 +120,7 @@ def register_decor(app):
         if isinstance(e, HTTPException):
             code = e.code
         if tb:
-            logging.critical(tb + "User: %s, Request URL: %s" % (user, url))
+            logging.critical(tb + "User: %s \n Request URL: %s" % (user, url))
         else:
             logging.critical(str(e))
         return str(e), code
