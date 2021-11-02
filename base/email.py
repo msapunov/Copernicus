@@ -85,7 +85,7 @@ class Mail(Thread):
         self.cfg = ConfigParser(interpolation=ExtendedInterpolation(),
                                 allow_no_value=True)
         self.cfg.read(cfg_path, encoding="utf-8")
-        self.server = self.cfg.get("SERVER", "HOST")
+        self.server = self.cfg.get("SERVER", "HOST", fallback="localhost")
         self.port = self.cfg.getint("SERVER", "PORT", fallback=25)
         self.use_tls = self.cfg.getboolean("SERVER", "USE_TLS", fallback=False)
         self.use_ssl = self.cfg.getboolean("SERVER", "USE_SSL", fallback=False)
