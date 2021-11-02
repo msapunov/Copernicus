@@ -34,7 +34,7 @@
         var project = $(me).data("name");
         var trans = $(me).data("trans");
         var title = "Accept transformation of project {0} to type {1}?".f(project, trans);
-        var text = "Transformation accepted by CCAIM";
+        var text = "Transformation accepted by CCIAM";
         var motiv = $("<textarea/>").html(text).addClass("uk-width-1-1").attr({
             "rows": "4",
             "name": "note"
@@ -59,7 +59,7 @@
         var id = $(me).data("id");
         var project = $(me).data("name");
         var title = "Accept activation of project {0}?".f(project);
-        var text = "Activation accepted by CCAIM";
+        var text = "Activation accepted by CCIAM";
         var motiv = $("<textarea/>").html(text).addClass("uk-width-1-1").attr({
             "rows": "4",
             "name": "note"
@@ -119,7 +119,7 @@
         }
         var e_word = (is_extension) ? "extension" : "renewal";
         var title = "Accept {0} of project {1} by {2} hours?".f(e_word, project, hours);
-        var text = "{0} accepted by CCAIM".f(e_word).capitalize();
+        var text = "{0} accepted by CCIAM".f(e_word).capitalize();
         var cpu = $("<input/>").addClass("uk-width-1-1").attr({
             "name": "cpu",
             "type": "text",
