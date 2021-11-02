@@ -275,11 +275,10 @@ def extend_project(pid, ext, date):
     ext.project.resources.valid = True
     msg = "CPU value has been extended to %s hours on %s based upon "\
           "extension request ID %s" % (ext.hours, date, pid)
-    if ext.project.resources.comment:
-        ext.project.resources.comment = ext.project.resources.comment \
-                                        + "\n" + msg
-    else:
-        ext.project.resources.comment = msg
+    old_comment = ext.project.resources.comment
+    comment = old_comment.split("\n") if old_comment else []
+    comment.append(msg)
+    ext.project.resources.comment = "\n".join(comment)
     return ProjectLog(ext.project).extended(ext)
 
 
