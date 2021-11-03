@@ -21,7 +21,7 @@ __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
 
 
-def suspend_projects():
+def suspend_expired_projects():
     """
     Check end of life of resources for all the projects and if the EOL is less
     the now() the project gets suspended
