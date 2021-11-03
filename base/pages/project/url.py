@@ -19,6 +19,7 @@ from base.pages.project.form import (
     activity, ActivityForm,
     get_transformation_options)
 from base.pages.project.magic import (
+    sanity_check,
     assign_responsible,
     get_project_by_name,
     is_project_renewable,
@@ -42,6 +43,13 @@ from logging import debug
 
 __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
+
+
+@bp.route("/project/sanity", methods=["POST"])
+@login_required
+@grant_access("admin", "tech")
+def project_sanity():
+    return jsonify(data=sanity_check())
 
 
 @bp.route("/project/activity/remove/<string:project>/<string:file_name>",
