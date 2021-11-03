@@ -40,6 +40,13 @@ def suspend_expired_projects():
     return
 
 
+def sanity_check():
+    projects = db.session.query(Project).all()
+    suspend_expired_projects(projects)
+    check_gid_projects(projects)
+    return "Sanity check done"
+
+
 def project_attach_user(name, form):
     """
     Function which attach an existing user to a given project
