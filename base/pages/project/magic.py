@@ -21,6 +21,25 @@ __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
 
 
+def suspend_projects():
+    """
+    Check end of life of resources for all the projects and if the EOL is less
+    the now() the project gets suspended
+    :return: Nothing
+    """
+    now = dt.now().replace(tzinfo=timezone.utc)
+    records = db.session.query(Project).all()
+    for rec in records:
+        finish = rec.resources.ttl
+        is_active = rec.active
+        if now > finish and is_active:
+            rec.active = False
+            debug("Resource expired %s project suspended: %s" %
+                  (finish.isoformat(), rec.name))
+    db.session.commit()
+    return
+
+
 def project_attach_user(name, form):
     """
     Function which attach an existing user to a given project
