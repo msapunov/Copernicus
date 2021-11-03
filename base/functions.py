@@ -74,9 +74,9 @@ def generate_password(pass_len):
 
 
 def generate_pdf(html, base):
-    ts = str(dt.now().isoformat(sep="-")).replace(":","-")
+    ts = str(dt.now().isoformat(sep="-")).replace(":", "-")
     name = "%s_%s.pdf" % (base, ts)
-    name = name.replace("\\","-").replace("/", "-")
+    name = name.replace("\\", "-").replace("/", "-")
     path = str(Path(get_tmpdir(app), name))
     debug("The resulting PDF will be saved to: %s" % path)
     pdf = from_string(html, path)
@@ -300,7 +300,7 @@ def project_get_info(every=None, user_is_responsible=None, usage=True):
         projects = Project.query.all()
     else:
         if user_is_responsible:
-            projects = Project.query.filter_by(responsible = current_user).all()
+            projects = Project.query.filter_by(responsible=current_user).all()
         else:
             projects = current_user.project
     if not projects:
@@ -366,7 +366,7 @@ def slurm_consumption_raw(name, start, finish):
 def resource_consumption(project, start=None, end=None):
     """
     Parse the raw output of scontrol command to get a project's consumption
-    :param name: name of the project
+    :param project: Object. Instance of a project object
     :param start: starting date for accounting query
     :param end: end date for accounting query should be now by default
     :return: Return project's consumption as integer
@@ -438,15 +438,15 @@ def image_string(name):
         return b64encode(img_file.read()).decode("ascii")
 
 
-def get_tmpdir(app):
+def get_tmpdir(application):
     """
     Check if application specific directory has been already created and create
     said directory if it doesn't exists. If directory started with prefix is
     already there the function returns first element from the directory list
-    :param app: Current flask application
+    :param application: Current flask application
     :return: String. Name of the temporary application specific directory.
     """
-    prefix = get_tmpdir_prefix(app)
+    prefix = get_tmpdir_prefix(application)
     dirs = [x[0] for x in walk(gettempdir())]
     exists = list(filter(lambda x: True if prefix in x else False, dirs))
     if exists:
@@ -458,14 +458,14 @@ def get_tmpdir(app):
     return dir_name
 
 
-def get_tmpdir_prefix(app):
+def get_tmpdir_prefix(application):
     """
     Construct the prefix for the temporary directory based on SECRET_KEY
     parameter from configuration file
-    :param app: Current application
+    :param application: Current application
     :return: String
     """
-    return "%s_copernicus_" % app.config.get("SECRET_KEY", "XXX")[0:3]
+    return "%s_copernicus_" % application.config.get("SECRET_KEY", "XXX")[0:3]
 
 
 def save_file(req, directory, file_name=False):
