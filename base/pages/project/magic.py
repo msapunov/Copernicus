@@ -21,21 +21,22 @@ __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
 
 
-def suspend_expired_projects():
+def suspend_expired_projects(projects):
     """
     Check end of life of resources for all the projects and if the EOL is less
     the now() the project gets suspended
     :return: Nothing
     """
     now = dt.now().replace(tzinfo=timezone.utc)
-    records = db.session.query(Project).all()
-    for rec in records:
+    for rec in projects:
         finish = rec.resources.ttl
-        is_active = rec.active
-        if now > finish and is_active:
+        if not rec.active:
+            continue
+        if now > finish:
             rec.active = False
-            debug("Resource expired %s project suspended: %s" %
-                  (finish.isoformat(), rec.name))
+            debug("%s: suspended. Resource expired %s" %
+                  (rec.name, finish.isoformat()))
+
     db.session.commit()
     return
 
