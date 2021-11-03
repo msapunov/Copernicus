@@ -68,7 +68,8 @@ def generate_password(pass_len):
     symbols = ascii_letters + digits
     password = []
     for x in unpack('%dB' % (pass_len,), urandom(pass_len)):
-        password.append(symbols[x * len(symbols) / 256])
+        idx = round(x * len(symbols) / 256) - 1
+        password.append(symbols[idx])
     return ''.join(password)
 
 
