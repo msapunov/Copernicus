@@ -43,10 +43,11 @@ def show_configuration():
     text_files = list(filter(lambda x: is_text(x), files))
     config = ConfigParser(allow_no_value=True)
     for fichier in text_files:
+        nom = str(fichier)
         try:
-            config.read(str(fichier), encoding="utf-8")
+            config.read(nom, encoding="utf-8")
         except Exception as err:
-            error("%s - not a configuration file: %s" % (fichier, err))
+            error("%s - not a configuration file: %s" % (nom, err))
             text_files.remove(fichier)
     for cfg_file in text_files:
         name = cfg_file.name
