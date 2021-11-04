@@ -193,15 +193,15 @@ class RequestLog(Log):
 
     def visa_resent(self):
         self.log.event = "Visa re-sent to %s" % self.pending.responsible_email
-        return self.commit()
+        return self.commit(Mail().visa_resent(self))
 
     def visa_sent(self):
         self.log.event = "Visa sent to %s" % self.pending.responsible_email
-        return self.commit()
+        return self.commit(Mail().visa_sent(self))
 
     def visa_skip(self):
         self.log.event = "Visa sending step has been skipped"
-        return self.commit()
+        return self.commit(Mail().visa_skip(self))
 
     def create(self):
         self.log.event = "Project created out of this request"
@@ -225,19 +225,19 @@ class RequestLog(Log):
 
     def approve(self):
         self.log.event = "Project software requirements approved"
-        return self.commit(Mail().pending_approve(self.pending))
+        return self.commit(Mail().pending_approve(self))
 
     def reset(self):
         self.log.event = "Project creation process has been reset"
-        return self.commit(Mail().pending_reset(self.pending))
+        return self.commit(Mail().pending_reset(self))
 
     def reject(self, message):
         self.log.event = "Project creation request rejected"
-        return self.commit(Mail().pending_reject(self.pending, message))
+        return self.commit(Mail().pending_reject(self, message))
 
     def ignore(self):
         self.log.event = "Project creation request ignored"
-        return self.commit(Mail().pending_ignore(self.pending))
+        return self.commit(Mail().pending_ignore(self))
 
 
 class UserLog(Log):
