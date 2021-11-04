@@ -32,7 +32,7 @@ from base.pages.admin.magic import (
     space_info,
     reg_reject,
     reg_accept)
-from base.functions import slurm_nodes_status
+from base.functions import slurm_nodes_status, show_configuration
 from base.pages.admin.form import (
     PendingActionForm,
     VisaPendingForm,
@@ -504,7 +504,7 @@ def web_log():
 @login_required
 @grant_access("admin")
 def web_cfg():
-    return render_template("config.html", data=event_log())
+    return render_template("config.html", data=show_configuration())
 
 
 @bp.route("/admin", methods=["GET", "POST"])
