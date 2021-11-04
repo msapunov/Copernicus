@@ -51,7 +51,7 @@ def show_configuration():
     for cfg_file in text_files:
         name = cfg_file.name
         if name not in cfg:
-            with open(cfg_file) as fd:
+            with open(str(cfg_file)) as fd:
                 cfg[name] = fd.read()
     return cfg
 
