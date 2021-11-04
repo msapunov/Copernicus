@@ -24,10 +24,37 @@ from base.pages import (
     calculate_usage)
 from base.database.schema import Project
 from base.pages import ssh_wrapper
+from base.utils import image_string, get_tmpdir, is_text
 
 
 __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
+
+
+def show_configuration():
+    """
+    This function get tje instance path associated with the current app and
+    creates a dictionary where each cfg file is a key, And the value is the
+    content of that cfg file
+    :return: Dictionary. Content of cfg file(s)
+    """
+    cfg = {}
+    path = Path(app.instance_path)
+    files = list(filter(lambda x: x.is_file(), path.iterdir()))
+    text_files = list(filter(lambda x: is_text(x), files))
+    config = ConfigParser(allow_no_value=True)
+    for fichier in text_files:
+        try:
+            config.read(fichier, encoding="utf-8")
+        except Exception as err:
+            error("Not a configuration file: %s" % fichier)
+            text_files.remove(fichier)
+    for cfg_file in text_files:
+        name = cfg_file.name
+        if name not in cfg:
+            with open(cfg_file) as fd:
+                cfg[name] = fd.read()
+    return cfg
 
 
 def calculate_ttl(project):
