@@ -20,12 +20,12 @@
     <div class="uk-grid uk-margin-bottom">
         <div class="uk-panel uk-form-controls uk-width-small-1-1">
             <ul class="uk-subnav uk-subnav-pill" data-uk-switcher="{connect:'#config'}">
-                {% for name in data.keys() %}
+                {% for name in data.keys()|sort %}
                     <li><a href="#{{ name }}">{{ name }}</a></li>
                 {% endfor %}
             </ul>
             <ul id="config" class="uk-switcher">
-                {% for name in data.keys() %}
+                {% for name in data.keys()|sort %}
                     <li id="{{ name }}">
                         <pre><code>{{ data[name] }}</code></pre>
                     </li>
