@@ -497,6 +497,16 @@ def web_log():
     return render_template("log.html", data=event_log())
 
 
+@bp.route("/config", methods=["GET", "POST"])
+@bp.route("/configuration", methods=["GET", "POST"])
+@bp.route("/config.html", methods=["GET", "POST"])
+@bp.route("/configuration.html", methods=["GET", "POST"])
+@login_required
+@grant_access("admin")
+def web_cfg():
+    return render_template("config.html", data=event_log())
+
+
 @bp.route("/admin", methods=["GET", "POST"])
 @bp.route("/admin.html", methods=["GET", "POST"])
 @login_required
