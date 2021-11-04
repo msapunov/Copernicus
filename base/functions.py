@@ -44,7 +44,7 @@ def show_configuration():
     config = ConfigParser(allow_no_value=True)
     for fichier in text_files:
         try:
-            config.read(fichier, encoding="utf-8")
+            config.read(str(fichier), encoding="utf-8")
         except Exception as err:
             error("%s - not a configuration file: %s" % (fichier, err))
             text_files.remove(fichier)
