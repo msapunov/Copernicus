@@ -47,6 +47,7 @@ class Mail(Thread):
             part = MIMEApplication(fd.read(), Name=str(attach_file.name))
         part['Content-Disposition'] = 'attachment; filename="%s"' % str(attach_file.name)
         self.msg.attach(part)
+        debug("File %s attached" % path)
         return self
 
     def attach(self, name=None):
@@ -84,7 +85,7 @@ class Mail(Thread):
         self.cfg = ConfigParser(interpolation=ExtendedInterpolation(),
                                 allow_no_value=True)
         self.cfg.read(cfg_path, encoding="utf-8")
-        self.server = self.cfg.get("SERVER", "HOST")
+        self.server = self.cfg.get("SERVER", "HOST", fallback="localhost")
         self.port = self.cfg.getint("SERVER", "PORT", fallback=25)
         self.use_tls = self.cfg.getboolean("SERVER", "USE_TLS", fallback=False)
         self.use_ssl = self.cfg.getboolean("SERVER", "USE_SSL", fallback=False)
@@ -107,7 +108,10 @@ class Mail(Thread):
         debug("Sending mail to %s" % self.destination)
         self.msg["Subject"] = self.title
         self.msg["From"] = self.sender
-        self.msg["To"] = self.destination
+        if self.destination and isinstance(self.destination, str):
+            self.msg["To"] = self.destination
+        else:
+            raise ValueError("Cannot send message to %s" % self.destination)
         self.msg["Date"] = formatdate(localtime=True)
         if self.cc:
             if isinstance(self.cc, list):
@@ -116,8 +120,6 @@ class Mail(Thread):
                 self.msg["Cc"] = self.cc
         self.msg["Message-ID"] = make_msgid()
         if self.message:
-            if self.greetings:
-                self.message = self.greetings + self.message
             if self.signature:
                 self.message = self.message + self.signature
             self.msg.attach(MIMEText(self.message))
@@ -129,11 +131,15 @@ class Mail(Thread):
             smtp.starttls()
         if self.username and self.password:
             smtp.login(self.username, self.password)
+        debug("Value of self.sending switch: %s" % self.sending)
         if self.sending:
+            debug("Submitting mail to SMTP server")
             smtp.send_message(self.msg)
+        debug("Quit SMTP server")
         smtp.quit()
         for header in self.msg.items():
             debug("%s: %s" % (header[0], header[1]))
+        debug("Message sent!")
 
     def registration(self, rec):
         self.populate("PROJECT VISA")

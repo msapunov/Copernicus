@@ -7,7 +7,7 @@ from os.path import join as join_dir, exists
 from base64 import b64encode
 from recurrent.event_parser import RecurringEvent
 from configparser import ConfigParser
-from logging import error, debug, warning
+from logging import error, debug, warning, critical
 from base.utils import image_string, get_tmpdir
 from pdfkit import from_string
 from pathlib import Path
@@ -30,6 +30,35 @@ __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
 
 
+def calculate_ttl(project):
+    """
+    Calculates time based on finish and duration options from project config.
+    Primary usage is to set a date until which resources will be available
+    :param project: Object. Copy of the Project object
+    :return: Datetime.
+    """
+    now = dt.now()
+    config = project_config()
+    project_type = project.project.type.lower()
+    end = config[project_type].get("finish_dt", None)
+    duration = config[project_type].get("duration_dt", None)
+    debug("Options values for Finish: %s and for Duration %s" % (end, duration))
+    if end and duration:
+        ttl = end if end > duration else duration
+    elif duration:
+        ttl = duration
+    elif end:
+        ttl = end
+    else:
+        error("Failed to calculate TTL no options found. Fallback to now()")
+        ttl = now
+    if now > ttl:
+        critical("Calculated time value is in the past!")
+        raise ValueError("Calculated time is in the past")
+    debug("Calculated time value for %s: %s" % (project, ttl))
+    return ttl
+
+
 def generate_password(pass_len):
     """
     Create alphanumeric password of given length
@@ -39,14 +68,15 @@ def generate_password(pass_len):
     symbols = ascii_letters + digits
     password = []
     for x in unpack('%dB' % (pass_len,), urandom(pass_len)):
-        password.append(symbols[x * len(symbols) / 256])
+        idx = round(x * len(symbols) / 256) - 1
+        password.append(symbols[idx])
     return ''.join(password)
 
 
 def generate_pdf(html, base):
-    ts = str(dt.now().isoformat(sep="-", timespec="minutes")).replace(":","-")
+    ts = str(dt.now().isoformat(sep="-")).replace(":", "-")
     name = "%s_%s.pdf" % (base, ts)
-    name = name.replace("\\","-").replace("/", "-")
+    name = name.replace("\\", "-").replace("/", "-")
     path = str(Path(get_tmpdir(app), name))
     debug("The resulting PDF will be saved to: %s" % path)
     pdf = from_string(html, path)
@@ -258,7 +288,8 @@ def projects_consumption(projects):
         if name not in slurm.keys():
             project.consumed = project.resources.consumption
         else:
-            project.consumed = project.resources.consumption + slurm[name]
+            conso = slurm[name]["total consumption"]
+            project.consumed = project.resources.consumption + conso
         cpu = project.resources.cpu
         project.consumed_use = calculate_usage(project.consumed, cpu)
     return projects
@@ -269,7 +300,7 @@ def project_get_info(every=None, user_is_responsible=None, usage=True):
         projects = Project.query.all()
     else:
         if user_is_responsible:
-            projects = Project.query.filter_by(responsible = current_user).all()
+            projects = Project.query.filter_by(responsible=current_user).all()
         else:
             projects = current_user.project
     if not projects:
@@ -335,7 +366,7 @@ def slurm_consumption_raw(name, start, finish):
 def resource_consumption(project, start=None, end=None):
     """
     Parse the raw output of scontrol command to get a project's consumption
-    :param name: name of the project
+    :param project: Object. Instance of a project object
     :param start: starting date for accounting query
     :param end: end date for accounting query should be now by default
     :return: Return project's consumption as integer
@@ -407,15 +438,15 @@ def image_string(name):
         return b64encode(img_file.read()).decode("ascii")
 
 
-def get_tmpdir(app):
+def get_tmpdir(application):
     """
     Check if application specific directory has been already created and create
     said directory if it doesn't exists. If directory started with prefix is
     already there the function returns first element from the directory list
-    :param app: Current flask application
+    :param application: Current flask application
     :return: String. Name of the temporary application specific directory.
     """
-    prefix = get_tmpdir_prefix(app)
+    prefix = get_tmpdir_prefix(application)
     dirs = [x[0] for x in walk(gettempdir())]
     exists = list(filter(lambda x: True if prefix in x else False, dirs))
     if exists:
@@ -427,14 +458,14 @@ def get_tmpdir(app):
     return dir_name
 
 
-def get_tmpdir_prefix(app):
+def get_tmpdir_prefix(application):
     """
     Construct the prefix for the temporary directory based on SECRET_KEY
     parameter from configuration file
-    :param app: Current application
+    :param application: Current application
     :return: String
     """
-    return "%s_copernicus_" % app.config.get("SECRET_KEY", "XXX")[0:3]
+    return "%s_copernicus_" % application.config.get("SECRET_KEY", "XXX")[0:3]
 
 
 def save_file(req, directory, file_name=False):

@@ -9,7 +9,7 @@ from pdfkit import from_string
 
 from base import db
 from base.classes import TmpUser, ProjectLog, Task
-from base.functions import project_config, generate_password
+from base.functions import project_config, generate_password, calculate_ttl
 from base.database.schema import Extend, File, Project, Tasks, User
 from base.pages import calculate_usage, generate_login, TaskQueue
 from base.pages import ssh_wrapper
@@ -19,6 +19,33 @@ from base.utils import save_file, get_tmpdir, form_error_string
 
 __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
+
+
+def suspend_expired_projects(projects):
+    """
+    Check end of life of resources for all the projects and if the EOL is less
+    the now() the project gets suspended
+    :return: Nothing
+    """
+    now = dt.now().replace(tzinfo=timezone.utc)
+    for rec in projects:
+        finish = rec.resources.ttl
+        if not rec.active:
+            continue
+        if now > finish:
+            rec.active = False
+            debug("%s: suspended. Resource expired %s" %
+                  (rec.name, finish.isoformat()))
+
+    db.session.commit()
+    return
+
+
+def sanity_check():
+    projects = db.session.query(Project).all()
+    suspend_expired_projects(projects)
+    check_gid_projects(projects)
+    return "Sanity check done"
 
 
 def project_attach_user(name, form):
@@ -270,15 +297,15 @@ def renew_project(pid, ext, date):
 
 
 def extend_project(pid, ext, date):
+    ext.project.resources.ttl = calculate_ttl(ext.project)
     ext.project.resources.cpu += ext.hours
     ext.project.resources.valid = True
     msg = "CPU value has been extended to %s hours on %s based upon "\
           "extension request ID %s" % (ext.hours, date, pid)
-    if ext.project.resources.comment:
-        ext.project.resources.comment = ext.project.resources.comment \
-                                        + "\n" + msg
-    else:
-        ext.project.resources.comment = msg
+    old_comment = ext.project.resources.comment
+    comment = old_comment.split("\n") if old_comment else []
+    comment.append(msg)
+    ext.project.resources.comment = "\n".join(comment)
     return ProjectLog(ext.project).extended(ext)
 
 
