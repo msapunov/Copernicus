@@ -50,6 +50,9 @@ def show_configuration():
             text_files.remove(fichier)
     for cfg_file in text_files:
         name = cfg_file.name
+        if "ssh" in name:
+            warning("Skipping ssh key: %s" % cfg_file)
+            continue
         if name not in cfg:
             with open(str(cfg_file)) as fd:
                 cfg[name] = fd.read()
