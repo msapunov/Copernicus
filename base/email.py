@@ -184,30 +184,33 @@ class Mail(Thread):
                                 "%TITLE": title})
         return self
 
-    def pending_approve(self, record):
-        self.__pending_init(record, "REGISTRATION APPROVED")
-        return self
-
-    def pending_reset(self, record):
-        self.populate("TECH")
-        pid = record.project_id()
-        title = "[%s] Project creation process has been reset" % pid
-        message = "Creation process has been reset by %s for the new project " \
-                  "request %s" % (record.author, pid)
-        self.__populate_values({"%TITLE": title, "%MESSAGE": message})
-        return self
-
-    def pending_reject(self, record, message):
-        self.__pending_init(record, "REGISTRATION REJECTED")
+    def pending_reject(self, log, message):
+        self.__pending_init(log, "REGISTRATION REJECTED")
         self.__populate_values({"%COMMENT": message})
         return self
 
-    def pending_ignore(self, record):
+    def visa_resent(self, log):
+        return self.pending_log(log)
+
+    def visa_sent(self, log):
+        return self.pending_log(log)
+
+    def visa_skip(self, log):
+        return self.pending_log(log)
+
+    def pending_approve(self, log):
+        return self.pending_log(log)
+
+    def pending_reset(self, log):
+        return self.pending_log(log)
+
+    def pending_ignore(self, log):
+        return self.pending_log(log)
+
+    def pending_log(self, log):
         self.populate("TECH")
-        pid = record.project_id()
-        title = "[%s] Project creation request has been ignored" % pid
-        message = "Project creation request with ID %s is ignored by %s" % \
-                  (pid, record.author)
+        title = "[%s] %s" % (log.pending.project_id(), log.log.event)
+        message = log.log.brief()["event"]
         self.__populate_values({"%TITLE": title, "%MESSAGE": message})
         return self
 
