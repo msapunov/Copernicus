@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block head %}
+    <script src="{{ url_for('static', filename='js/statistic.js') }}"></script>
+    <style>
+        .ws {
+            white-space: normal !important;
+        }
+        td.details-control {
+            text-align:center;
+            cursor: pointer;
+        }
+        tr.shown td.details-control {
+            text-align:center;
+        }
+    </style>
+{% endblock %}
+{% block main %}
+
+<div class="uk-width-1-1">
+    <div class="uk-grid uk-margin-bottom">
+        <div class="uk-panel uk-form-controls uk-width-small-1-1">
+            <ul class="uk-subnav uk-subnav-pill" data-uk-switcher="{connect:'#config'}">
+                {% for name in data.keys() %}
+                    <li><a href="#{{ name }}">{{ name }}</a></li>
+                {% endfor %}
+            </ul>
+            <ul id="config" class="uk-switcher">
+                {% for name in data.keys() %}
+                    <li id="{{ name }}">
+                        <pre><code>{{ data[name] }}</code></pre>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}
