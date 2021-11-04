@@ -8,7 +8,6 @@ from base64 import b64encode
 from recurrent.event_parser import RecurringEvent
 from configparser import ConfigParser
 from logging import error, debug, warning, critical
-from base.utils import image_string, get_tmpdir
 from pdfkit import from_string
 from pathlib import Path
 from string import ascii_letters, digits
