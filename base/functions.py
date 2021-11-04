@@ -322,6 +322,8 @@ def slurm_parse_project_conso(slurm_raw_output):
     :return: dictionary, where project name is the key, consumption is the value
     """
     output = {}
+    if not slurm_raw_output:
+        return output
     for item in slurm_raw_output:
         if "||" not in item:  # skip user consumption
             items = item.strip().split("|")
