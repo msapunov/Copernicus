@@ -67,7 +67,7 @@ def calculate_ttl(project):
     :param project: Object. Copy of the Project object
     :return: Datetime.
     """
-    now = dt.now()
+    now = dt.now().replace(tzinfo=timezone.utc)
     config = project_config()
     project_type = project.type.lower()
     end = config[project_type].get("finish_dt", None)
