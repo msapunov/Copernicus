@@ -69,7 +69,7 @@ def calculate_ttl(project):
     """
     now = dt.now()
     config = project_config()
-    project_type = project.project.type.lower()
+    project_type = project.type.lower()
     end = config[project_type].get("finish_dt", None)
     duration = config[project_type].get("duration_dt", None)
     debug("Options values for Finish: %s and for Duration %s" % (end, duration))
