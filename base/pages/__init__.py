@@ -25,8 +25,11 @@ def grant_access(*roles):
             for role in roles:
                 if role in g.permissions:
                     return f(*args, **kwargs)
-            flash("permissions denied to access URL: %s" % url)
+            error("Available user roles doesn't permit to access URL: %s" % url)
+            flash("Permissions denied to access URL: %s" % url)
             logout_user()
+            if request.is_json():
+                return "Permissions denied based on user role", 403
             return redirect(url_for("login.login"))
         return decorated_function
     return log_required
