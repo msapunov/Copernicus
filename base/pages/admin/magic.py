@@ -6,8 +6,7 @@ from base.pages import (ssh_wrapper,
                         send_message,
                         check_str,
                         Task as TaskOld,
-                        TaskQueue,
-                        calculate_ttl)
+                        TaskQueue)
 from base.pages.project.magic import get_project_by_name
 from base.pages.admin.form import action_pending, visa_pending
 from base.pages.board.magic import create_resource
