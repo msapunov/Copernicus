@@ -757,7 +757,7 @@ class Task:
         :return: String. The log event associated with this action
         """
         project = self.task.project
-        tmp_user = TmpUser().from_task(self.task)
+        tmp_user = TmpUser().from_task(self)
         acl = ACLDB(is_user=tmp_user.is_user,
                     is_responsible=tmp_user.is_responsible,
                     is_tech=tmp_user.is_tech,
