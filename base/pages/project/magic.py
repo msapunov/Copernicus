@@ -29,9 +29,9 @@ def suspend_expired_projects(projects):
     """
     now = dt.now().replace(tzinfo=timezone.utc)
     for rec in projects:
-        finish = rec.resources.ttl
         if not rec.active:
             continue
+        finish = rec.resources.ttl
         if now > finish:
             rec.active = False
             debug("%s: suspended. Resource expired %s" %
