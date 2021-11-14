@@ -22,6 +22,7 @@ class Log:
             project=project,
             register=register,
             user=user)
+        self.query = LogDB().query
         self.send = True
 
     def list(self):
