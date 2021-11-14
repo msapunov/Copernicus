@@ -184,6 +184,10 @@ class ProjectLog(Log):
         mail = Mail().report_uploaded(file_rec).attach_file(file_name)
         return self.commit(mail)
 
+    def expired(self):
+        self.log.event = "Project is expired and deactivated. Notification sent"
+        return self.commit(Mail().project_expired(self.project))
+
     def expire_warning(self):
         self.log.event = "Expiring message sent"
         return self.commit(Mail().project_expiring(self.project))
