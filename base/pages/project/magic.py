@@ -41,6 +41,30 @@ def suspend_expired_projects(projects):
     return
 
 
+def warn_expired_projects(projects, config):
+    """
+    Check if end of life of a project resources within time intervale from
+    configuration option 'finish_notice' and if a warnign has been already sent.
+    Sent warning message if it's not done yet.
+    :return: Nothing
+    """
+    now = dt.now().replace(tzinfo=timezone.utc)
+    for rec in projects:
+        if not rec.active:
+            continue
+        finish = rec.resources.ttl
+        warn = config[rec.type].finish_notice_dt
+        if warn <= now < finish:
+            debug("Expiring %s, %s" % (rec.name, finish.isoformat()))
+            debug("If warning has been send already")
+            log = ProjectLog(rec)
+            was_sent = filter(lambda x: "Expiring" in x.event, log.after(warn).list())
+            if not was_sent:
+                log.expire_warning()
+    db.session.commit()
+    return
+
+
 def sanity_check():
     projects = db.session.query(Project).all()
     suspend_expired_projects(projects)
