@@ -25,6 +25,10 @@ class Log:
         self.query = LogDB().query
         self.send = True
 
+    def after(self, date):
+        self.query = self.query.filter_by(created >= date)
+        return self.list()
+
     def list(self):
         if self.log.project:
             query = self.query.filter_by(project=self.log.project)
