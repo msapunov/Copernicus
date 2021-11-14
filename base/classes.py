@@ -26,13 +26,12 @@ class Log:
         self.send = True
 
     def list(self):
-        query = LogDB().query
         if self.log.project:
-            query = query.filter_by(project=self.log.project)
+            query = self.query.filter_by(project=self.log.project)
         if self.log.register:
-            query = query.filter_by(register=self.log.register)
+            query = self.query.filter_by(register=self.log.register)
         if self.log.user:
-            query = query.filter_by(user=self.log.user)
+            query = self.query.filter_by(user=self.log.user)
         return query.all()
 
     def commit(self, mail=None):
