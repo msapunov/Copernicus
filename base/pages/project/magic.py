@@ -36,7 +36,7 @@ def suspend_expired_projects(projects):
             rec.active = False
             debug("%s: suspended. Resource expired %s" %
                   (rec.name, finish.isoformat()))
-
+            ProjectLog(rec).expired()
     db.session.commit()
     return
 
