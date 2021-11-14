@@ -355,6 +355,9 @@ class Mail(Thread):
                                 "%TYPE_AFTER": record.transform})
         return self
 
+    def project_expired(self, record):
+        return self
+
     def project_expiring(self, record):
         return self
 
