@@ -24,7 +24,8 @@ __copyright__ = "Aix Marseille University"
 def suspend_expired_projects(projects):
     """
     Check end of life of resources for all the projects and if the EOL is less
-    the now() the project gets suspended
+    the now() the project's active property set to False, project_suspend action
+    is created
     :return: Nothing
     """
     now = dt.now().replace(tzinfo=timezone.utc)
