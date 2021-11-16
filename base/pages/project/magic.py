@@ -70,11 +70,11 @@ def warn_expired_projects(projects, config):
     return
 
 
-def suspend_overconsumed_projects(projects, conf):
+def suspend_overconsumed_projects(projects):
     pass
 
 
-def warn_overconsumed_projects(projects, conf):
+def warn_overconsumed_projects(projects):
     pass
 
 
@@ -83,8 +83,8 @@ def sanity_check():
     projects = db.session.query(Project).all()
     suspend_expired_projects(projects)
     warn_expired_projects(projects, conf)
-    suspend_overconsumed_projects(projects, conf)
-    warn_overconsumed_projects(projects, conf)
+    suspend_overconsumed_projects(projects)
+    warn_overconsumed_projects(projects)
     return "Sanity check done"
 
 
