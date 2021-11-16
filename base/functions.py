@@ -555,14 +555,14 @@ def save_file(req, directory, file_name=False):
 
 """
 Bytes-to-human / human-to-bytes converter.
-Based on: http://goo.gl/kTQMs
+Based on: https://goo.gl/kTQMs
 Working with Python 2.x and 3.x.
 
 Author: Giampaolo Rodola' <g.rodola [AT] gmail [DOT] com>
 License: MIT
 """
 
-# see: http://goo.gl/kTQMs
+# see: https://goo.gl/kTQMs
 SYMBOLS = {
     'customary'     : ('B', 'K', 'M', 'G', 'T', 'P', 'E', 'Z', 'Y'),
     'customary_ext' : ('byte', 'kilo', 'mega', 'giga', 'tera', 'peta', 'exa',
@@ -577,7 +577,7 @@ def bytes2human(n, format='%(value).1f %(symbol)s', symbols='customary'):
     """
     Convert n bytes into a human readable string based on format.
     symbols can be either "customary", "customary_ext", "iec" or "iec_ext",
-    see: http://goo.gl/kTQMs
+    see: https://goo.gl/kTQMs
 
       >>> bytes2human(0)
       '0.0 B'
