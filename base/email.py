@@ -317,7 +317,7 @@ class Mail(Thread):
         full = record.project.responsible.full_name()
         self.__populate_values({"%FULLNAME": full, "%NAME": name, "%CPU": cpu})
         if getattr(record, "exception", None) and record.exception:
-            self.title = "[EXCEPTION]" + self.title
+            self.title = "[EXCEPTIONAL]" + self.title
         return self
 
     def __populate_values(self, values):
