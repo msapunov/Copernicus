@@ -68,6 +68,6 @@ def web_board_reject(eid):
 @login_required
 @grant_access("admin")
 def web_board_ignore(eid):
-    record = ignore_extension(eid)
+    record = Extensions(eid).ignore()
     return jsonify(message=ProjectLog(record.project).ignore(record),
                    data={"id": record.id})
