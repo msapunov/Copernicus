@@ -6,7 +6,7 @@ from base.pages import (
     send_message,
     Task,
     grant_access)
-from base.classes import Pending
+from base.classes import Pending, Extensions
 from base.pages.user.magic import get_user_record, user_by_id
 from base.pages.admin import bp
 from base.pages.admin.magic import (
@@ -41,7 +41,6 @@ from base.pages.admin.form import (
     RegistrationEditForm,
     NewUserEditForm)
 from base.pages.project.magic import process_extension
-from base.pages.board.magic import Extensions
 from base.utils import form_error_string
 from base.database.schema import Project
 
