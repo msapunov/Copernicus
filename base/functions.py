@@ -360,6 +360,20 @@ def projects_consumption_new(projects):
 
 
 def project_get_info(every=None, user_is_responsible=None, usage=True):
+    """
+    Function which make a call to remote server and parse returned values as
+    project consumption. The projects can be all projects, projects user is
+    responsible for and projects user are registered in
+    :param every: Boolean. If True returns consumption for all projects in the
+    system
+    :param user_is_responsible: Boolean. If True returns consumption for the
+    projects user is responsible in. False returns consumption for the projects
+    user registered in
+    :param usage: Boolean. If True project consumption will be added to projects
+    objects. If False projects objects will be returned without resource usage
+    information
+    :return: List. Return projects with project consumption
+    """
     if every:
         projects = Project.query.all()
     else:
