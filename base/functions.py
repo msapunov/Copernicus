@@ -479,24 +479,12 @@ def resources_group_by_created(projects):
     return dates
 
 
-def get_arguments():
-    data = check_json()
-    eid = check_int(data["eid"])
-    note = check_str(data["comment"])
-    ext = check_str(data["extension"]).lower()
-    debug("Extension flag is set to: %s" % ext)
-    extension = False
-    if ext == "true":
-        extension = True
-    cpu = check_int(data["cpu"])
-    debug("Got CPU value: %s" % cpu)
-    if cpu < 0:
-        raise ValueError("CPU value is absent, or a negative value!")
-
-    return eid, note, cpu, extension
-
-
-def image_string(name):
+def file_as_string(name):
+    """
+    Encoding a file to Base64 format
+    :param name: Name of a file to encode
+    :return: String. String in Base64 format
+    """
     img_path = join_dir(app.instance_path, name)
     if not exists(img_path):
         raise ValueError("Image %s doesn't exists" % img_path)
