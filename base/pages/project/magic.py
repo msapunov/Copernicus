@@ -57,10 +57,14 @@ def warn_expired_projects(projects, config):
         warn = config[rec.type].finish_notice_dt
         if warn <= now < finish:
             debug("Expiring %s, %s" % (rec.name, finish.isoformat()))
-            debug("If warning has been send already")
+            debug("Checking if warning has been send already")
             log = ProjectLog(rec)
-            was_sent = filter(lambda x: "Expiring" in x.event, log.after(warn).list())
+            logs = log.after(warn).list()
+            debug("List of log events found: %s" % logs)
+            was_sent = list(filter(lambda x: "Expiring" in x.event, logs))
+            debug("Events with word Expiring found: %s" % was_sent)
             if not was_sent:
+                debug("Sending warning cause no previous warning events found")
                 log.expire_warning()
     db.session.commit()
     return
