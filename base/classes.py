@@ -49,7 +49,8 @@ class Log:
         db.session.commit()
         Mail().log(self.log).start()
         try:
-            if mail and self.send: mail.start()
+            if mail and self.send:
+                mail.start()
         finally:
             return self.log.event
 
@@ -349,7 +350,7 @@ class Extensions:
         return records
 
     def pending(self):
-        recs = self.queue.filter_by(processed=True).filter_by(accepted=True)\
+        recs = self.queue.filter_by(processed=True).filter_by(accepted=True) \
             .filter_by(done=False).all()
         return list(map(lambda x: x.api(), recs))
 
@@ -420,6 +421,7 @@ class TmpUser:
     Class representing a user which has to be added to the system and doesn't
     exists yet
     """
+
     def __init__(self):
         """
         Init takes no argument
@@ -504,6 +506,7 @@ class Pending:
     Performs operations on pending projects, i.e. registration records which
     haven't been processed yet
     """
+
     def __init__(self, rid=None):
         """
         self.pending is always a list.
@@ -686,6 +689,7 @@ class Task:
     Methods of this class is used for processing task status and to perform
     actions associated with a task
     """
+
     def __init__(self, task):
         """
         Init takes one argument which is task record
