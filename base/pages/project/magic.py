@@ -74,6 +74,10 @@ def suspend_overconsumed_projects(projects, conf):
     pass
 
 
+def warn_overconsummed_projects(projects, conf):
+    pass
+
+
 def sanity_check():
     conf = project_config()
     projects = db.session.query(Project).all()
