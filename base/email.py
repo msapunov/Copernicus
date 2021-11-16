@@ -18,7 +18,7 @@ class Mail(Thread):
         self.destination = None
         self.sender = None
         self.cc = None
-        self.title = "Mesocentre reporting"
+        self.title = "Copernicus reporting"
         self.message = None
         self.msg = MIMEMultipart()
         self.server = None
@@ -316,6 +316,8 @@ class Mail(Thread):
         name = record.project.get_name()
         full = record.project.responsible.full_name()
         self.__populate_values({"%FULLNAME": full, "%NAME": name, "%CPU": cpu})
+        if getattr(record, "exception", None) and record.exception:
+            self.title = "[EXCEPTION]" + self.title
         return self
 
     def __populate_values(self, values):
