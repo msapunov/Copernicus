@@ -138,7 +138,7 @@ def create_visa(record):
         ttl = None
     record.dt = dt.now().strftime("%d/%m/%Y")
     record.ttl = ttl.strftime("%d %B %Y")
-    record.signature = image_string("signature.png")
+    record.signature = file_as_string("signature.png")
     record.base_url = request.url_root
     loc = app.config.get("LOCALE", "C.UTF-8")
     locale.setlocale(locale.LC_ALL, loc)
