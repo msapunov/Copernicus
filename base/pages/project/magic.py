@@ -70,12 +70,17 @@ def warn_expired_projects(projects, config):
     return
 
 
+def suspend_overconsumed_projects(projects, conf):
+    pass
+
+
 def sanity_check():
     conf = project_config()
     projects = db.session.query(Project).all()
     suspend_expired_projects(projects)
     warn_expired_projects(projects, conf)
-    check_gid_projects(projects)
+    suspend_overconsummed_projects(projects, conf)
+    warn_overconsummed_projects(projects, conf)
     return "Sanity check done"
 
 
