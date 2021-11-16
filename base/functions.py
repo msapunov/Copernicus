@@ -1,6 +1,5 @@
 from flask import current_app as app, flash, request, render_template
 from datetime import datetime as dt, timezone
-from unicodedata import normalize
 from tempfile import gettempdir, mkdtemp
 from os import walk
 from os.path import join as join_dir, exists
@@ -16,15 +15,10 @@ from os import urandom
 import locale
 
 from flask_login import current_user
-from base.pages import (
-    check_int,
-    check_str,
-    check_json,
-    calculate_usage)
+from base.pages import calculate_usage
 from base.database.schema import Project
 from base.pages import ssh_wrapper
-from base.utils import image_string, get_tmpdir, is_text
-
+from base.utils import is_text
 
 __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
