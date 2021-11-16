@@ -104,6 +104,13 @@ def generate_password(pass_len):
 
 
 def generate_pdf(html, base):
+    """
+    Convert html document to PDF and return file path where the document is
+    saved
+    :param html: String. HTML document to convert
+    :param base: String. Base template for name generation
+    :return: String. Path to a PDF file
+    """
     ts = str(dt.now().isoformat(sep="-")).replace(":", "-")
     name = "%s_%s.pdf" % (base, ts)
     name = name.replace("\\", "-").replace("/", "-")
