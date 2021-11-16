@@ -67,6 +67,7 @@ def warn_expired_projects(projects, config):
 
 
 def sanity_check():
+    conf = project_config()
     projects = db.session.query(Project).all()
     suspend_expired_projects(projects)
     check_gid_projects(projects)
