@@ -487,7 +487,7 @@ def file_as_string(name):
     """
     img_path = join_dir(app.instance_path, name)
     if not exists(img_path):
-        raise ValueError("Image %s doesn't exists" % img_path)
+        raise ValueError("File %s doesn't exists" % img_path)
     with open(img_path, "rb") as img_file:
         return b64encode(img_file.read()).decode("ascii")
 
