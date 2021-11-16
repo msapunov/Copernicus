@@ -18,7 +18,7 @@ class Mail(Thread):
         self.destination = None
         self.sender = None
         self.cc = None
-        self.title = "Mesocentre reporting"
+        self.title = "Copernicus reporting"
         self.message = None
         self.msg = MIMEMultipart()
         self.server = None
