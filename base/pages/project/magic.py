@@ -9,7 +9,10 @@ from pdfkit import from_string
 
 from base import db
 from base.classes import TmpUser, ProjectLog, Task
-from base.functions import project_config, generate_password, calculate_ttl
+from base.functions import (project_config,
+                            generate_password,
+                            calculate_ttl,
+                            project_get_info)
 from base.database.schema import Extend, File, Project, Tasks, User
 from base.pages import calculate_usage, generate_login, TaskQueue
 from base.pages import ssh_wrapper
@@ -44,8 +47,8 @@ def suspend_expired_projects(projects):
 
 def warn_expired_projects(projects, config):
     """
-    Check if end of life of a project resources within time intervale from
-    configuration option 'finish_notice' and if a warnign has been already sent.
+    Check if end of life of a project resources within time interval from
+    configuration option 'finish_notice' and if a warning has been already sent.
     Sent warning message if it's not done yet.
     :return: Nothing
     """
@@ -536,36 +539,6 @@ def list_of_projects():
 def project_info_by_name(name):
     project = get_project_by_name(name)
     return project.to_dict()
-
-
-def get_project_info(every=None, user_is_responsible=None):
-    """
-    Function which make a call to remote server and parse returned values as
-    project consumption. The projects can be all projects, projects user is
-    responsible for and projects user are registered in
-    :param every: Boolean. If True returns consumption for all projects in the
-    system
-    :param user_is_responsible: Boolean. If True returns consumption for the
-    projects user is responsible in. False returns consumption for the projects
-    user registered in
-    :return: List. Return projects with project consumption
-    """
-    if every:
-        projects = Project.query.all()
-    else:
-        if user_is_responsible:
-            projects = Project.query.filter_by(responsible = current_user).all()
-        else:
-            projects = current_user.project
-    if not projects:
-        if every:
-            raise ValueError("No projects found!")
-        else:
-            raise ValueError("No projects found for user '%s'" %
-                             current_user.full())
-    info = list(map(lambda x: get_project_consumption(x), projects))
-    debug(info)
-    return info
 
 
 def get_project_consumption(project, start=None, end=None):

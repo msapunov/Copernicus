@@ -1,6 +1,7 @@
 from flask import render_template, request, jsonify, flash
 from flask_login import login_required, current_user
 from base.classes import ProjectLog
+from base.functions import project_get_info
 from base.database.schema import LogDB
 from base.pages import (
     check_int,
@@ -33,7 +34,6 @@ from base.pages.project.magic import (
     remove_activity,
     clean_activity,
     save_activity,
-    get_project_info,
     get_project_record,
     project_extend,
     project_renew,
@@ -263,7 +263,7 @@ def web_project_index():
         x.users_length = len(x.users)
         return x
     try:
-        projects = get_project_info(user_is_responsible=True)
+        projects = project_get_info(user_is_responsible=True)
         debug(projects)
     except ValueError as err:
         return render_template("project.html", data={"projects": []}, err=err)

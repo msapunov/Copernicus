@@ -1,10 +1,10 @@
 from flask import render_template, request, jsonify, flash
 from flask_login import login_required, current_user
+from base.functions import project_get_info
 from base.database.schema import User
 from base.pages.user import bp
 from base.pages.user.magic import get_user_record, get_jobs
 from base.pages.user.magic import get_scratch, user_edit
-from base.pages.project.magic import get_project_info
 from base.pages.user.form import EditInfo, InfoForm
 from datetime import datetime as dt, timezone
 from operator import attrgetter
@@ -80,7 +80,7 @@ def user_index():
         scratch = None
         flash(str(err))
     try:
-        projects = get_project_info()
+        projects = project_get_info()
     except ValueError as err:
         projects = None
         flash(str(err))
