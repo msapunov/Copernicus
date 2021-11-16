@@ -281,13 +281,9 @@ class UserLog(Log):
         self.log.event = "; ".join(changes)
         return self.commit(Mail().user_update(self))
 
-    def user_updated(self, info):
-        changes = []
-        for name, value in info.items():
-            old = getattr(self.user, name)
-            prop = name.capitalize()
-            changes.append("%s change: %s -> %s" % (prop, old, value))
-        self.log.event = "; ".join(changes)
+    def user_updated(self, task):
+        full = task.user.full()
+        self.log.event = "Modifications for user %s has been applied" % full
         return self.commit(Mail().user_updated(self))
 
     def info_update(self, info=None, acl=None, projects=None, active=None):
@@ -847,7 +843,7 @@ class Task:
                 ResponsibleMailingList().change(old_email,
                                                 user.email,
                                                 user.full_name())
-        return UserLog(user).user_updated()
+        return UserLog(user).user_updated(self.task)
 
     def user_assign(self):
         """
