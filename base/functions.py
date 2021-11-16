@@ -325,6 +325,39 @@ def projects_consumption(projects):
     return projects
 
 
+def projects_consumption_new(projects):
+    projects = list(filter(lambda x: project_check_resources(x), projects))
+    result = {}
+    for project in projects:
+        if not project.resources.consumption_ts:
+            start = project.resources.created
+        else:
+            start = project.resources.consumption_ts
+        if start not in result:
+            result[start] = []
+        result[start].append(project.get_name())
+    conso = {}
+    for key, value in result.items():
+        name = ",".join(value)
+        start = key.strftime("%Y-%m-%dT%H:%M")
+        finish = dt.now().strftime("%Y-%m-%dT%H:%M")
+        slurm_raw, cmd = slurm_consumption_raw(name, start, finish)
+        conso.update(slurm_parse_project_conso(slurm_raw))
+    for project in projects:
+        name = project.get_name()
+        if name in conso.keys():
+            new_conso = conso[name]["total consumption"]
+        else:
+            new_conso = 0
+        if project.resources.consumption and new_conso:
+            project.consumed = project.resources.consumption + new_conso
+        else:
+            project.consumed = project.resources.consumption
+        cpu = project.resources.cpu
+        project.consumed_use = calculate_usage(project.consumed, cpu)
+    return projects
+
+
 def project_get_info(every=None, user_is_responsible=None, usage=True):
     if every:
         projects = Project.query.all()
