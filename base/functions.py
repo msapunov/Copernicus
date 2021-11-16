@@ -553,12 +553,6 @@ def save_file(req, directory, file_name=False):
     return {"saved_name": file_name, "incoming_name": file.filename}
 
 
-def normalize_word(word):
-    word = word.replace("'", "")
-    word = normalize("NFKD", word).encode("ascii", "ignore").decode("ascii")
-    return word
-
-
 """
 Bytes-to-human / human-to-bytes converter.
 Based on: http://goo.gl/kTQMs
