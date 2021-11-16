@@ -73,17 +73,17 @@ def user_index():
         jobs = get_jobs(begin, finish)
     except ValueError as err:
         jobs = None
-        flash(err)
+        flash(str(err))
     try:
         scratch = get_scratch()
     except ValueError as err:
         scratch = None
-        flash(err)
+        flash(str(err))
     try:
         projects = get_project_info()
     except ValueError as err:
         projects = None
-        flash(err)
+        flash(str(err))
 
     return render_template("user.html", data={"user": user,
                                               "jobs": jobs,
