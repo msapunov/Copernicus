@@ -12,14 +12,18 @@ from base.functions import (
     slurm_parse_project_conso)
 
 
-def resources_update_midnight(pid=None, force=False, every=False):
+def resources_update_midnight(pid=None, force=False, every=False, nightly=True):
     """
     Updates the total consumption of the projects with valid resources.
     Consumption start is time of resource creation, consumption finish is 00:00
     of current day
     :param pid: update just a single project with a given pid
-    :param force: update all registered projects
-    :param every: attempts to update every project
+    :param force: Boolean. Default False. If True then consumption will be
+    recalculated from resource creation date.
+    :param every: Boolean. Default False. Attempts to update every register
+    project, not only active
+    :param nightly: Boolean. Default True. Set end time to 00:00 pf everyday.
+    Otherwise end time sets to 00 minutes of current hour
     :return: HTTP 200 OK
     """
     if pid:
@@ -28,12 +32,14 @@ def resources_update_midnight(pid=None, force=False, every=False):
         projects = Project.query.all()
     else:
         projects = Project.query.filter_by(active=True).all()
-    end = dt.now().replace(hour=0, minute=0, second=0, microsecond=0, tzinfo=timezone.utc)
-    if not force:
-        resources = filter(lambda x: x.resources, projects)
-        projects = list(filter(lambda x: x.resources.ttl > end, resources))
+    if nightly:
+        end = dt.now().replace(hour=0, minute=0, second=0, microsecond=0,
+                               tzinfo=timezone.utc)
+    else:
+        end = dt.now().replace(minute=0, second=0, microsecond=0,
+                               tzinfo=timezone.utc)
 
-    dates = group_for_consumption(projects)
+    dates = group_for_consumption(projects, recalculate=force)
     for start, value in dates.items():
         accounts = ",".join(list(map(lambda x: x.get_name(), value)))
         result, cmd = slurm_consumption_raw(accounts, start, end.strftime("%Y-%m-%dT%H:%M"))
@@ -45,9 +51,13 @@ def resources_update_midnight(pid=None, force=False, every=False):
             name = project.get_name()
             if name not in names:
                 continue
-#            project.resources.consumption_ts = end
-#            project.resources.consumption = conso[name]["total consumption"]
-#            project.resources.consumption_raw = conso[name]
+            project.resources.consumption_ts = end
+            consumption = int(conso[name]["total consumption"])
+            if force:
+                project.resources.consumption = consumption
+            else:
+                project.resources.consumption += consumption
+            project.resources.consumption_raw = str(conso[name])
     db.session.commit()
     return "", 200
 
