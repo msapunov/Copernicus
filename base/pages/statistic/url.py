@@ -35,11 +35,11 @@ def web_projects_xls():
     return dump_projects_database("xls")
 
 
-@bp.route("/statistic/update", methods=["POST", "GET"])
+@bp.route("/statistic/update/nightly", methods=["POST", "GET"])
 @login_required
 @grant_access("admin", "tech")
 def web_statistic_update():
-    resources_update_midnight(every=True)
+    resources_update_midnight(every=True, force=True)
     return "Statistics updated", 200
 
 
