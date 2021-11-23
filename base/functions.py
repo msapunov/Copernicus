@@ -417,9 +417,10 @@ def slurm_parse_project_conso(slurm_raw_output):
             output[name] = {}
         if login:
             output[name][login] = conso
+            debug("SLURM consumption for %s - %s: %s" % (name, login, conso))
         else:
             output[name]["total consumption"] = conso
-        debug("SLURM account '%s' consumption: %s" % (name, output))
+            debug("SLURM consumption for %s: %s" % (name, conso))
     return output
 
 
@@ -472,7 +473,7 @@ def resource_consumption(project, start=None, end=None):
     return result[name]["total consumption"]
 
 
-def resources_group_by_created(projects):
+def group_for_consumption(projects, recheck=False):
     """
     Grouping projects by resource created time
     :param projects: List or String. List of projects is str converts to list
@@ -486,7 +487,10 @@ def resources_group_by_created(projects):
         if not project.resources:
             error("No resources attached to project", project)
             continue
-        start = project.resources.created.strftime("%Y-%m-%dT%H:%M")
+        if project.resources.consumption_ts and not recheck:
+            start = project.resources.consumption_ts.strftime("%Y-%m-%dT%H:%M")
+        else:
+            start = project.resources.created.strftime("%Y-%m-%dT%H:%M")
         if start not in dates:
             dates[start] = []
         dates[start].append(project)
