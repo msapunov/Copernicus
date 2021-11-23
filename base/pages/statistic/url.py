@@ -35,12 +35,12 @@ def web_projects_xls():
     return dump_projects_database("xls")
 
 
-@bp.route("/statistic/update", methods=["POST"])
+@bp.route("/statistic/update", methods=["POST", "GET"])
 @login_required
 @grant_access("admin", "tech")
 def web_statistic_update():
-    resources_update_midnight(force=True)
-    return "", 200
+    resources_update_midnight(every=True)
+    return "Statistics updated", 200
 
 
 @bp.route("/statistic/activate/<int:pid>", methods=["POST"])
