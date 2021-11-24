@@ -189,6 +189,12 @@ class Mail(Thread):
         self.__populate_values({"%COMMENT": message})
         return self
 
+    def pending_message(self, msg):
+        self.populate("REGISTRATION MESSAGE")
+        self.destination = msg["destination"]
+        self.__populate_values({"%TITLE": msg["title"], "%MESSAGE": msg["body"]})
+        return self.run()
+
     def visa_resent(self, log):
         return self.pending_log(log)
 
