@@ -8,7 +8,7 @@ from base.pages import (ssh_wrapper,
                         Task as TaskOld,
                         TaskQueue)
 from base.pages.project.magic import get_project_by_name
-from base.pages.admin.form import action_pending, visa_pending
+from base.pages.admin.form import action_pending, visa_pending, contact_pending
 from base.pages.board.magic import create_resource
 from base.pages.user.magic import user_by_id
 from base.database.schema import User, Register, LogDB, Project, Tasks, Register
@@ -21,6 +21,24 @@ from base.functions import project_config
 
 __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
+
+
+def register_message(rid, form):
+    """
+    Send message to new registered project responsible. Takes request record ID
+    and wtforms object as argument extract data from it and construct dict with
+    keys "title", "body" and "destination". Finally in calls pending_message
+    method of Mail object with email dict as an argument for this method.
+    :param rid: Int. ID of new project request record
+    :param form: Object. Copy of WTForms form object
+    :return:
+    """
+    record = get_registration_record(rid)
+    pid = record.project_id()
+    email = {"title": "[%s] %s" % (pid, form.title.data),
+             "body": form.message.data,
+             "destination": record.responsible_email}
+    return Mail().pending_message(email)
 
 
 def unprocessed():
@@ -60,11 +78,13 @@ def render_pending(rec):
     action = action_pending(rec)
     reject = render_template("modals/admin_reject_pending.html", form=action)
     ignore = render_template("modals/admin_ignore_pending.html", rec=rec)
+    form = contact_pending(rec)
+    mail = render_template("modals/common_send_message.html", form=form)
     logs = list(map(lambda x: x.brief(), RequestLog(rec).list()))
     row = render_template("bits/pending_expand_row.html",
                           pending=rec.to_dict(),
                           logs=logs)
-    return row + top + reset + reject + ignore
+    return row + top + reset + reject + ignore + mail
 
 
 def visa_comment(rec, sent=True):

@@ -4,9 +4,20 @@ from wtforms import IntegerField, TextAreaField
 from wtforms.fields.html5 import EmailField
 from wtforms.validators import DataRequired, Email
 from base.pages.project.magic import list_of_projects
+from base.pages.login.form import MessageForm
 
 __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
+
+
+def contact_pending(register):
+    form = MessageForm()
+    form.id = register.id
+    form.meso = register.project_id()
+    form.project_title = register.title
+    form.responsible = register.responsible_full_name()
+    form.destination = register.responsible_email
+    return form
 
 
 class VisaPendingForm(FlaskForm):
@@ -33,6 +44,7 @@ def action_pending(register):
     form.meso = register.project_id()
     form.name = "'%s' (%s)" % (register.title, form.meso)
     return form
+
 
 class CreateProjectForm(FlaskForm):
     title = StringField("Title", validators=[DataRequired()])
