@@ -78,11 +78,13 @@ def render_pending(rec):
     action = action_pending(rec)
     reject = render_template("modals/admin_reject_pending.html", form=action)
     ignore = render_template("modals/admin_ignore_pending.html", rec=rec)
+    form = contact_pending(rec)
+    mail = render_template("modals/common_send_message.html", form=form)
     logs = list(map(lambda x: x.brief(), RequestLog(rec).list()))
     row = render_template("bits/pending_expand_row.html",
                           pending=rec.to_dict(),
                           logs=logs)
-    return row + top + reset + reject + ignore
+    return row + top + reset + reject + ignore + mail
 
 
 def visa_comment(rec, sent=True):
