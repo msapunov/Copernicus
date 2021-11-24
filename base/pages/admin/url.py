@@ -74,7 +74,7 @@ def web_switch_user():
     return redirect(url_for("user.user_index"))
 
 
-@bp.route("/admin/message/register", methods=["POST"])
+@bp.route("/admin/message/register/<int:rid>", methods=["POST"])
 @login_required
 @grant_access("admin")
 def web_admin_message_register():
