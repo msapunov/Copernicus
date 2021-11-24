@@ -1,0 +1,27 @@
+<div class="uk-modal" aria-hidden="true" id="{{form.id}}_message">
+    <div class="uk-modal-dialog">
+        <button type="button" class="uk-modal-close uk-close"></button>
+        <div class="uk-modal-header">
+            <h3>Send message to {{form.destination}}?</h3>
+        </div>
+        <div class="uk-margin uk-modal-content">
+            <form action="test" method="post" class="uk-panel uk-form" id="{{form.id}}_message_form">
+                {{ form.csrf_token(id=form.meso+"_csrf_message") }}
+                <div class="uk-form-row">
+                    <div class="uk-form-controls">
+                        {{ form.title(id=form.meso+"_title", value=form.project_title, class_="uk-width-1-1") }}
+                    </div>
+                </div>
+                <div class="uk-form-row">
+                    <div class="uk-form-controls">
+                        {{ form.message(id=form.meso+"_body", placeholder="Write message to " + form.responsible + " <" + form.destination + ">, responsible of " + form.meso, class_="uk-width-1-1") }}
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="uk-modal-footer uk-text-right">
+            <button class="uk-button window_hide" data-modal="{{form.id}}_message">Cancel</button>
+            <button class="uk-button uk-button-primary message_submit" data-modal="{{form.id}}_message" data-form="{{form.id}}_message_form" data-url="admin/message/register/{{form.id}}">Submit</button>
+        </div>
+    </div>
+</div>
