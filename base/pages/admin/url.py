@@ -31,8 +31,10 @@ from base.pages.admin.magic import (
     get_registration_record,
     space_info,
     reg_reject,
+    register_message,
     reg_accept)
 from base.functions import slurm_nodes_status, show_configuration
+from base.pages.login.form import MessageForm
 from base.pages.admin.form import (
     PendingActionForm,
     VisaPendingForm,

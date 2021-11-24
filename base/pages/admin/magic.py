@@ -8,7 +8,7 @@ from base.pages import (ssh_wrapper,
                         Task as TaskOld,
                         TaskQueue)
 from base.pages.project.magic import get_project_by_name
-from base.pages.admin.form import action_pending, visa_pending
+from base.pages.admin.form import action_pending, visa_pending, contact_pending
 from base.pages.board.magic import create_resource
 from base.pages.user.magic import user_by_id
 from base.database.schema import User, Register, LogDB, Project, Tasks, Register
