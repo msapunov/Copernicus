@@ -139,7 +139,7 @@ class Mail(Thread):
         smtp.quit()
         for header in self.msg.items():
             debug("%s: %s" % (header[0], header[1]))
-        debug("Message sent!")
+        debug("Message sent to %s" % self.msg["To"])
 
     def registration(self, rec):
         self.populate("PROJECT VISA")
