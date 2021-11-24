@@ -34,6 +34,7 @@ def action_pending(register):
     form.name = "'%s' (%s)" % (register.title, form.meso)
     return form
 
+
 class CreateProjectForm(FlaskForm):
     title = StringField("Title", validators=[DataRequired()])
     cpu = IntegerField("CPU", validators=[DataRequired()])
