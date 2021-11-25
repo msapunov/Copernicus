@@ -477,6 +477,8 @@ def group_for_consumption(projects, recheck=False):
     """
     Grouping projects by resource created time
     :param projects: List or String. List of projects is str converts to list
+    :param recalculate: Boolean. Default False. If True take resource creation
+    date as start date for sreport command
     :return: Dict where keys are created time and value is the list of
     project records
     """
