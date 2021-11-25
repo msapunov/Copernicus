@@ -1276,7 +1276,7 @@
     $(document).on("click", ".user_show", window.render.user);
     $(document).on("click", ".system_reload", window.admin.sys);
     $(document).on("click", ".slurm_reload", window.render.partition);
-    $(document).on("click", ".message", window.render.message);
+
 
     $(document).on("click", ".add_new_user_submit", window.render.nu_add_submit_or_cancel);
     $(document).on("click", ".new_user_add", window.render.nu_add);
@@ -1294,10 +1294,12 @@
     $(document).on("click", ".re_reset", trigger_modal);
     $(document).on("click", ".re_ignore", trigger_modal);
     $(document).on("click", ".re_reject", trigger_modal);
+    $(document).on("click", ".contact", trigger_modal);
     $(document).on("click", ".new_resend_visa", window.render.new_resend_visa);
     $(document).on("click", ".new_accept", window.render.new_accept);
     $(document).on("click", ".resp_name_swap", window.render.responsible_swap);
 
+    $(document).on("click", ".message_submit", window.sub);
     $(document).on("click", ".create_submit", window.sub);
     $(document).on("click", ".approve_submit", window.sub);
     $(document).on("click", ".visa_submit", window.sub);

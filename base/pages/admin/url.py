@@ -31,8 +31,10 @@ from base.pages.admin.magic import (
     get_registration_record,
     space_info,
     reg_reject,
+    register_message,
     reg_accept)
 from base.functions import slurm_nodes_status, show_configuration
+from base.pages.login.form import MessageForm
 from base.pages.admin.form import (
     PendingActionForm,
     VisaPendingForm,
@@ -74,21 +76,14 @@ def web_switch_user():
     return redirect(url_for("user.user_index"))
 
 
-@bp.route("/admin/message/register", methods=["POST"])
+@bp.route("/admin/message/register/<int:rid>", methods=["POST"])
 @login_required
 @grant_access("admin")
-def web_admin_message_register():
-    data = request.get_json()
-    if not data:
-        raise ValueError("Expecting application/json requests")
-    message = data["note"]
-    rid = data["project"]
-    reg_rec = get_registration_record(rid)
-    pid = reg_rec.project_id()
-    title = "[%s] %s" % (pid, reg_rec.title)
-
-    emails = [reg_rec.responsible_email]
-    return jsonify(data=send_message(emails, message=message, title=title))
+def web_admin_message_register(rid):
+    form = MessageForm()
+    if not form.validate_on_submit():
+        raise ValueError(form.errors)
+    return jsonify(data=register_message(rid, form))
 
 
 @bp.route("/admin/message/send", methods=["POST"])

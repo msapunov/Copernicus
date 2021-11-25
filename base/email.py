@@ -139,7 +139,7 @@ class Mail(Thread):
         smtp.quit()
         for header in self.msg.items():
             debug("%s: %s" % (header[0], header[1]))
-        debug("Message sent!")
+        debug("Message sent to %s" % self.msg["To"])
 
     def registration(self, rec):
         self.populate("PROJECT VISA")
@@ -188,6 +188,12 @@ class Mail(Thread):
         self.__pending_init(log, "REGISTRATION REJECTED")
         self.__populate_values({"%COMMENT": message})
         return self
+
+    def pending_message(self, msg):
+        self.populate("REGISTRATION MESSAGE")
+        self.destination = msg["destination"]
+        self.__populate_values({"%TITLE": msg["title"], "%MESSAGE": msg["body"]})
+        return self.run()
 
     def visa_resent(self, log):
         return self.pending_log(log)
