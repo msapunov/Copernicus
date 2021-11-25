@@ -35,6 +35,14 @@ def web_projects_xls():
     return dump_projects_database("xls")
 
 
+@bp.route("/statistic/update/hourly", methods=["POST", "GET"])
+@login_required
+@grant_access("admin", "tech")
+def web_statistic_update_hourly():
+    resources_update_midnight(nightly=False)
+    return "Horly statistics updated", 200
+
+
 @bp.route("/statistic/update/nightly", methods=["POST", "GET"])
 @login_required
 @grant_access("admin", "tech")
