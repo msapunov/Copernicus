@@ -38,7 +38,7 @@ def web_projects_xls():
 @bp.route("/statistic/update/nightly", methods=["POST", "GET"])
 @login_required
 @grant_access("admin", "tech")
-def web_statistic_update():
+def web_statistic_update_nightly():
     resources_update_midnight(every=True, force=True)
     return "Statistics updated", 200
 
