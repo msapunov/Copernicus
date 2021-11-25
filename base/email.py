@@ -364,9 +364,15 @@ class Mail(Thread):
         return self
 
     def project_expired(self, record):
+        self.__project_init(record, "PROJECT EXPIRED")
+        self.__populate_values({"%TYPE_BEFORE": record.project.type,
+                                "%TYPE_AFTER": record.transform})
         return self
 
     def project_expiring(self, record):
+        self.__project_init(record, "PROJECT EXPIRING")
+        self.__populate_values({"%TYPE_BEFORE": record.project.type,
+                                "%TYPE_AFTER": record.transform})
         return self
 
     def project_activate(self, record):
