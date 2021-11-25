@@ -473,7 +473,7 @@ def resource_consumption(project, start=None, end=None):
     return result[name]["total consumption"]
 
 
-def group_for_consumption(projects, recheck=False):
+def group_for_consumption(projects, recalculate=False):
     """
     Grouping projects by resource created time
     :param projects: List or String. List of projects is str converts to list
