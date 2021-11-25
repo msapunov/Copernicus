@@ -489,10 +489,10 @@ def group_for_consumption(projects, recalculate=False):
         if not project.resources:
             error("No resources attached to project", project)
             continue
-        if project.resources.consumption_ts and not recheck:
-            start = project.resources.consumption_ts.strftime("%Y-%m-%dT%H:%M")
+        if project.resources.consumption_ts and not recalculate:
+            start = project.resources.consumption_ts
         else:
-            start = project.resources.created.strftime("%Y-%m-%dT%H:%M")
+            start = project.resources.created
         if start not in dates:
             dates[start] = []
         dates[start].append(project)
