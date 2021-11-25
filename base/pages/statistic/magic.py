@@ -41,9 +41,15 @@ def resources_update_midnight(pid=None, force=False, every=False, nightly=True):
 
     dates = group_for_consumption(projects, recalculate=force)
     for start, value in dates.items():
+        if start == end:
+            debug("Start date %s and finish %s is same" % (start, end))
+            continue
         accounts = ",".join(list(map(lambda x: x.get_name(), value)))
-        result, cmd = slurm_consumption_raw(accounts, start, end.strftime("%Y-%m-%dT%H:%M"))
+        begin = start.strftime("%Y-%m-%dT%H:%M")
+        finish = end.strftime("%Y-%m-%dT%H:%M")
+        result, cmd = slurm_consumption_raw(accounts, begin, finish)
         if not result:
+            debug("No result is no consumption? Should updated")
             continue
         conso = slurm_parse_project_conso(result)
         names = conso.keys()
@@ -58,6 +64,7 @@ def resources_update_midnight(pid=None, force=False, every=False, nightly=True):
             else:
                 project.resources.consumption += consumption
             project.resources.consumption_raw = str(conso[name])
+            debug("Updated resource with ID: %s" % project.resources.id)
     db.session.commit()
     return "", 200
 
