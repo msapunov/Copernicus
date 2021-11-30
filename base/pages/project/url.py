@@ -261,11 +261,7 @@ def web_project_index():
     def set_users_len(x):
         x.users_length = len(x.users)
         return x
-    try:
-        projects = project_get_info(user_is_responsible=True)
-        debug(projects)
-    except ValueError as err:
-        return render_template("project.html", data={"projects": []}, err=err)
+    projects = Project.query.filter_by(responsible=current_user).all()
     if not projects:
         flash("No projects associated with %s found" % current_user.full_name())
         return render_template("project.html", data={})
