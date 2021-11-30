@@ -92,6 +92,7 @@ def sanity_check():
     warn_expired_projects(projects, conf)
     suspend_overconsumed_projects(projects)
     warn_overconsumed_projects(projects)
+    consumption_check(projects)
     return "Sanity check done"
 
 
