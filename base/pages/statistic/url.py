@@ -41,16 +41,22 @@ def web_projects_xls():
 @login_required
 @grant_access("admin", "tech")
 def web_statistic_update_hourly():
-    resources_update_midnight(nightly=False)
-    return "Horly statistics updated", 200
+    end = dt.now().replace(minute=0, second=0, microsecond=0,
+                           tzinfo=timezone.utc)
+    projects = Project.query.filter_by(active=True).all()
+    resources_update(projects, end=end)
+    return "Hourly statistic update", 200
 
 
 @bp.route("/statistic/update/nightly", methods=["POST", "GET"])
 @login_required
 @grant_access("admin", "tech")
 def web_statistic_update_nightly():
-    resources_update_midnight(every=True, force=True)
-    return "Statistics updated", 200
+    end = dt.now().replace(hour=0, minute=0, second=0, microsecond=0,
+                           tzinfo=timezone.utc)
+    projects = Project.query.all()
+    resources_update(projects, force=True, end=end)
+    return "Nightly statistic update", 200
 
 
 @bp.route("/statistic/activate/<int:pid>", methods=["POST"])
