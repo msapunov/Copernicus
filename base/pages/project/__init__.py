@@ -9,4 +9,5 @@ def datetime_format(value, representation="%H:%M %d-%m-%y"):
         return None
     return value.strftime(representation)
 
+
 from base.pages.project import url
