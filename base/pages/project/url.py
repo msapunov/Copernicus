@@ -1,8 +1,7 @@
 from flask import render_template, request, jsonify, flash
 from flask_login import login_required, current_user
 from base.classes import ProjectLog
-from base.functions import project_get_info
-from base.database.schema import LogDB
+from base.database.schema import LogDB, Project
 from base.pages import (
     check_int,
     check_str,
