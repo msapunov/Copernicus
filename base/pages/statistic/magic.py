@@ -25,19 +25,6 @@ def resources_update(projects, force=False, end=dt.now()):
     :param end:
     :return: HTTP 200 OK
     """
-    if pid:
-        projects = [Project.query.filter_by(id=pid).first()]
-    elif every:
-        projects = Project.query.all()
-    else:
-        projects = Project.query.filter_by(active=True).all()
-    if nightly:
-        end = dt.now().replace(hour=0, minute=0, second=0, microsecond=0,
-                               tzinfo=timezone.utc)
-    else:
-        end = dt.now().replace(minute=0, second=0, microsecond=0,
-                               tzinfo=timezone.utc)
-
     dates = group_for_consumption(projects, recalculate=force)
     for start, value in dates.items():
         if start == end:
@@ -47,9 +34,6 @@ def resources_update(projects, force=False, end=dt.now()):
         begin = start.strftime("%Y-%m-%dT%H:%M")
         finish = end.strftime("%Y-%m-%dT%H:%M")
         result, cmd = slurm_consumption_raw(accounts, begin, finish)
-        if not result:
-            debug("No result is no consumption? Should updated")
-            continue
         conso = slurm_parse_project_conso(result)
         names = conso.keys()
         for project in value:
