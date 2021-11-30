@@ -40,9 +40,9 @@ def resources_update(projects, force=False, end=dt.now()):
             project.resources.consumption_ts = end
             name = project.get_name()
             if name not in names:
-                continue
-            project.resources.consumption_ts = end
-            consumption = int(conso[name]["total consumption"])
+                consumption = 0
+            else:
+                consumption = int(conso[name]["total consumption"])
             if force:
                 project.resources.consumption = consumption
             else:
