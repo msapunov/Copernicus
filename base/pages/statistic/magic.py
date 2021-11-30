@@ -37,6 +37,7 @@ def resources_update(projects, force=False, end=dt.now()):
         conso = slurm_parse_project_conso(result)
         names = conso.keys()
         for project in value:
+            project.resources.consumption_ts = end
             name = project.get_name()
             if name not in names:
                 continue
