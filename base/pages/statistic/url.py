@@ -6,8 +6,10 @@ from base.pages.user import bp
 from base.pages.statistic.magic import (
     dump_projects_database,
     project_types,
-    resources_update_midnight)
+    resources_update)
 from base.pages.project.magic import set_state
+from base.database.schema import Project
+from datetime import datetime as dt, timezone
 
 
 __author__ = "Matvey Sapunov"
