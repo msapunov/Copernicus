@@ -15,15 +15,14 @@ from base.functions import (
 def resources_update(projects, force=False, end=dt.now()):
     """
     Updates the total consumption of the projects with valid resources.
-    Consumption start is time of resource creation, consumption finish is 00:00
-    of current day
-    :param pid: update just a single project with a given pid
+    Consumption start is time of resource creation if force parameter is True.
+    If force is False then start time will be the value of consumption_ts field
+    associated with resource. If end date is not provided then current date and
+    time will be used.
+    :param projects: Object or List of Objects. Copy of Project object(s)
     :param force: Boolean. Default False. If True then consumption will be
     recalculated from resource creation date.
-    :param every: Boolean. Default False. Attempts to update every register
-    project, not only active
-    :param nightly: Boolean. Default True. Set end time to 00:00 pf everyday.
-    Otherwise end time sets to 00 minutes of current hour
+    :param end:
     :return: HTTP 200 OK
     """
     if pid:
