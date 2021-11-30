@@ -12,7 +12,7 @@ from base.functions import (
     slurm_parse_project_conso)
 
 
-def resources_update_midnight(pid=None, force=False, every=False, nightly=True):
+def resources_update(projects, force=False, end=dt.now()):
     """
     Updates the total consumption of the projects with valid resources.
     Consumption start is time of resource creation, consumption finish is 00:00
