@@ -1,6 +1,6 @@
 from flask import render_template, request, jsonify, flash
 from flask_login import login_required, current_user
-from base.functions import project_get_info
+from base.functions import projects_consumption
 from base.database.schema import User
 from base.pages.user import bp
 from base.pages.user.magic import get_user_record, get_jobs
@@ -79,11 +79,11 @@ def user_index():
     except ValueError as err:
         scratch = None
         flash(str(err))
-    try:
-        projects = project_get_info()
-    except ValueError as err:
+    if current_user.project:
+        projects = projects_consumption(current_user.project)
+    else:
         projects = None
-        flash(str(err))
+        flash("No projects found for user '%s'" % current_user.full())
 
     return render_template("user.html", data={"user": user,
                                               "jobs": jobs,
