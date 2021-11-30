@@ -47,7 +47,10 @@ def resources_update(projects, force=False, end=dt.now()):
                 project.resources.consumption = consumption
             else:
                 project.resources.consumption += consumption
-            project.resources.consumption_raw = str(conso[name])
+            if name in conso:
+                conso[name]["start time"] = begin
+                conso[name]["end time"] = finish
+                project.resources.consumption_raw = str(conso[name])
             debug("Updated resource with ID: %s" % project.resources.id)
     db.session.commit()
     return "", 200
