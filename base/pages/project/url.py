@@ -7,7 +7,8 @@ from base.pages import (
     check_str,
     TaskQueue,
     grant_access)
-from base.pages.user import bp
+from base.functions import projects_consumption
+from base.pages.project import bp
 from base.pages.user.magic import get_user_record
 from base.pages.project.form import (
     new_responsible, ResponsibleForm,
