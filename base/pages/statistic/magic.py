@@ -6,7 +6,6 @@ from flask import current_app
 from base import db
 from base.database.schema import Project
 from base.functions import (
-    project_get_info,
     group_for_consumption,
     slurm_consumption_raw,
     slurm_parse_project_conso)

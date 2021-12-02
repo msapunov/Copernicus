@@ -1,6 +1,5 @@
 from flask import render_template, jsonify
 from flask_login import login_required
-from base.functions import project_get_info
 from base.pages import grant_access
 from base.pages.user import bp
 from base.pages.statistic.magic import (

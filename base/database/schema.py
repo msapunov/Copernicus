@@ -3,6 +3,7 @@ from base import db
 from datetime import datetime as dt
 from textwrap import shorten
 from hashlib import md5
+from base.functions import calculate_usage
 
 __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
