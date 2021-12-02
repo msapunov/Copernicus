@@ -76,8 +76,9 @@ def web_admin_project_suspend(pid):
 @login_required
 @grant_access("admin")
 def web_statistic_list():
-    projects = list(filter(lambda x: x, project_get_info(every=True)))
-    stat = list(map(lambda x: x.with_usage(), projects)) if projects else []
+    all_projects = Project.query.all()
+    projects = resources_update(all_projects)
+    stat = list(map(lambda x: x.with_usage, projects)) if projects else []
     return jsonify(data=stat)
 
 
