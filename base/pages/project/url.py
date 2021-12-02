@@ -266,6 +266,7 @@ def web_project_index():
     if not my_projects:
         flash("No projects associated with %s found" % current_user.full_name())
         return render_template("project.html", data={})
+    projects = projects_consumption(my_projects)
     list(map(lambda x: clean_activity(x.get_name()), projects))
     get_limbo_users(projects)
     list(map(lambda x: is_project_extendable(x), projects))
