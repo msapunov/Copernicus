@@ -262,8 +262,8 @@ def web_project_index():
     def set_users_len(x):
         x.users_length = len(x.users)
         return x
-    projects = Project.query.filter_by(responsible=current_user).all()
-    if not projects:
+    my_projects = Project.query.filter_by(responsible=current_user).all()
+    if not my_projects:
         flash("No projects associated with %s found" % current_user.full_name())
         return render_template("project.html", data={})
     list(map(lambda x: clean_activity(x.get_name()), projects))
