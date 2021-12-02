@@ -58,7 +58,7 @@ def resources_update(projects, force=False, end=dt.now()):
 def dump_projects_database(extension_type):
     if extension_type not in ["csv", "ods", "xls", "xlsx"]:
         raise ValueError("Unsupported format: %s" % extension_type)
-    dirty_projects = project_get_info(every=True, usage=False)
+    dirty_projects = Project.query.all()
     projects = []
     for project in dirty_projects:
         if not project.responsible:
