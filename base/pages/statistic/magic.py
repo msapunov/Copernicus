@@ -52,7 +52,7 @@ def resources_update(projects, force=False, end=dt.now()):
                 project.resources.consumption_raw = str(conso[name])
             debug("Updated resource with ID: %s" % project.resources.id)
     db.session.commit()
-    return "", 200
+    return projects
 
 
 def dump_projects_database(extension_type):
