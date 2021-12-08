@@ -78,7 +78,8 @@ def dump_projects_database(extension_type):
                     key=lambda x: x["id"])
     excel.init_excel(current_app)
     filename = "projects." + extension_type
-    return excel.make_response_from_records(output, file_type=extension_type, file_name=filename)
+    return excel.make_response_from_records(output, file_type=extension_type,
+                                            file_name=filename)
 
 
 def project_types():
