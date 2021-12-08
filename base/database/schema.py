@@ -410,8 +410,14 @@ class User(UserMixin, db.Model):
         return list(ids)
 
     def details(self):
-        start = self.acl.created.strftime("%Y-%m-%d %X %Z") if self.acl.created else ""
-        mod = self.acl.modified.strftime("%Y-%m-%d %X %Z") if self.acl.modified else ""
+        if self.acl.created:
+            start = self.acl.created.strftime("%Y-%m-%d %X %Z")
+        else:
+            start = ""
+        if self.acl.modified:
+            mod = self.acl.modified.strftime("%Y-%m-%d %X %Z")
+        else:
+            mod = ""
         return {
             "id": self.id,
             "login": self.login,
@@ -660,7 +666,7 @@ class LogDB(db.Model):
 
     def to_web(self):
         event = self.event[0].upper() + self.event[1:]
-        creator = self.author.full_name() if self.author else "Author is unknown"
+        creator = self.author.full_name() if self.author else "Unknown author"
         msg = "%s by %s" % (event, creator)
         if self.project:
             item = self.project.name
@@ -680,7 +686,7 @@ class LogDB(db.Model):
 
     def to_dict(self):
         event = self.event[0].upper() + self.event[1:]
-        creator = self.author.full_name() if self.author else "Author is unknown"
+        creator = self.author.full_name() if self.author else "Unknown author"
         msg = "%s by %s" % (event, creator)
         short = shorten(msg, width=50, placeholder="...")
         return {
@@ -751,7 +757,7 @@ class Tasks(db.Model):
             return self.author.email
         elif ("change" in self.action) and ("password" in self.action):
             return self.user.email
-        elif (self.author and self.project):
+        elif self.author and self.project:
             return self.project.responsible.email
         else:
             return ""
