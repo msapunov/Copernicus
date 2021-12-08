@@ -13,7 +13,7 @@ from base.functions import (
 
 def resources_update(projects, force=False, end=dt.now()):
     """
-    Updates the total consumption of the projects with valid resources.
+    Updates the total consumption for the projects with valid resources.
     Consumption start is time of resource creation if force parameter is True.
     If force is False then start time will be the value of consumption_ts field
     associated with resource. If end date is not provided then current date and
@@ -22,7 +22,7 @@ def resources_update(projects, force=False, end=dt.now()):
     :param force: Boolean. Default False. If True then consumption will be
     recalculated from resource creation date.
     :param end:
-    :return: HTTP 200 OK
+    :return: List. List of updated project objects
     """
     dates = group_for_consumption(projects, recalculate=force)
     for start, value in dates.items():
@@ -56,6 +56,14 @@ def resources_update(projects, force=False, end=dt.now()):
 
 
 def dump_projects_database(extension_type):
+    """
+    Select all available projects in the database excluding the projects
+    without responsible or registration reference and return the data in a
+    file formatted according to extension_type parameter
+    :param extension_type: String. File format to store the data. Could be
+    one of following: csv, ods, xls, xlsx
+    :return: HTTP response
+    """
     if extension_type not in ["csv", "ods", "xls", "xlsx"]:
         raise ValueError("Unsupported format: %s" % extension_type)
     dirty_projects = Project.query.all()
@@ -76,7 +84,7 @@ def dump_projects_database(extension_type):
 def project_types():
     """
     Get distinct values of Project.type
-    :return: list of distinct types
+    :return: List. List of distinct types
     """
     types = []
     for t in db.session.query(Project.type).distinct():
