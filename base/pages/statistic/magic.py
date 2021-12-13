@@ -1,6 +1,6 @@
-from logging import debug, error
+from logging import debug
 import flask_excel as excel
-from datetime import datetime as dt, timezone
+from datetime import datetime as dt
 
 from flask import current_app
 from base import db
