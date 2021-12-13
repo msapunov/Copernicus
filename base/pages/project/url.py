@@ -116,8 +116,8 @@ def web_project_delete_user():
     data = request.get_json()
     if not data:
         raise ValueError("Expecting application/json requests")
-    pid = check_int(data["project"])
-    login = check_str(data["login"].strip().lower())
+    pid = data["project"]
+    login = data["login"].strip().lower()
     project = get_project_record(pid)
     users = list(map(lambda x: x.login, project.users))
     if login not in users:
