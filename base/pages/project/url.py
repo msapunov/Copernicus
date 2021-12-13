@@ -3,8 +3,6 @@ from flask_login import login_required, current_user
 from base.classes import ProjectLog
 from base.database.schema import LogDB, Project
 from base.pages import (
-    check_int,
-    check_str,
     TaskQueue,
     grant_access)
 from base.functions import projects_consumption
