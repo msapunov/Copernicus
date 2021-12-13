@@ -169,19 +169,6 @@ def check_json():
     return data
 
 
-def check_int(raw_int):
-    if not str(raw_int).isdigit():
-        raise ValueError("Number expected: %s" % raw_int)
-    return int(raw_int)
-
-
-def check_str(raw_note):
-    note = str(raw_note).strip()
-    if len(note) < 1:
-        raise ValueError("Non empty string expected: %s" % raw_note)
-    return note
-
-
 class Task:
 
     def __init__(self, tid):
