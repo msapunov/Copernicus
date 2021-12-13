@@ -14,9 +14,6 @@ from struct import unpack
 from os import urandom
 import locale
 
-from flask_login import current_user
-from base.pages import calculate_usage
-from base.database.schema import Project
 from base.pages import ssh_wrapper
 from base.utils import is_text
 
@@ -295,9 +292,10 @@ def project_check_resources(project):
 
 
 def projects_consumption(projects):
-    projects = list(filter(lambda x: project_check_resources(x), projects))
+    #  TODO: use dfferent functions for this
+    all_projects = list(filter(lambda x: project_check_resources(x), projects))
     result = {}
-    for project in projects:
+    for project in all_projects:
         if not project.resources.consumption_ts:
             project.resources.consumption_ts = dt.now(tz=None).replace(
                 hour=0,
@@ -314,82 +312,7 @@ def projects_consumption(projects):
         finish = dt.now().strftime("%Y-%m-%dT%H:%M")
         slurm_raw, cmd = slurm_consumption_raw(name, start, finish)
         slurm.update(slurm_parse_project_conso(slurm_raw))
-    for project in projects:
-        name = project.get_name()
-        if name not in slurm.keys():
-            project.consumed = project.resources.consumption
-        else:
-            conso = slurm[name]["total consumption"]
-            project.consumed = project.resources.consumption + conso
-        cpu = project.resources.cpu
-        project.consumed_use = calculate_usage(project.consumed, cpu)
-    return projects
-
-
-def projects_consumption_new(projects):
-    projects = list(filter(lambda x: project_check_resources(x), projects))
-    result = {}
-    for project in projects:
-        if not project.resources.consumption_ts:
-            start = project.resources.created
-        else:
-            start = project.resources.consumption_ts
-        if start not in result:
-            result[start] = []
-        result[start].append(project.get_name())
-    conso = {}
-    for key, value in result.items():
-        name = ",".join(value)
-        start = key.strftime("%Y-%m-%dT%H:%M")
-        finish = dt.now().strftime("%Y-%m-%dT%H:%M")
-        slurm_raw, cmd = slurm_consumption_raw(name, start, finish)
-        conso.update(slurm_parse_project_conso(slurm_raw))
-    for project in projects:
-        name = project.get_name()
-        if name in conso.keys():
-            new_conso = conso[name]["total consumption"]
-        else:
-            new_conso = 0
-        if project.resources.consumption and new_conso:
-            project.consumed = project.resources.consumption + new_conso
-        else:
-            project.consumed = project.resources.consumption
-        cpu = project.resources.cpu
-        project.consumed_use = calculate_usage(project.consumed, cpu)
-    return projects
-
-
-def project_get_info(every=None, user_is_responsible=None, usage=True):
-    """
-    Function which make a call to remote server and parse returned values as
-    project consumption. The projects can be all projects, projects user is
-    responsible for and projects user are registered in
-    :param every: Boolean. If True returns consumption for all projects in the
-    system
-    :param user_is_responsible: Boolean. If True returns consumption for the
-    projects user is responsible in. False returns consumption for the projects
-    user registered in
-    :param usage: Boolean. If True project consumption will be added to projects
-    objects. If False projects objects will be returned without resource usage
-    information
-    :return: List. Return projects with project consumption
-    """
-    if every:
-        projects = Project.query.all()
-    else:
-        if user_is_responsible:
-            projects = Project.query.filter_by(responsible=current_user).all()
-        else:
-            projects = current_user.project
-    if not projects:
-        if every:
-            raise ValueError("No projects found!")
-        else:
-            raise ValueError("No projects found for user '%s'" %
-                             current_user.full())
-    if not usage:
-        return projects
-    return projects_consumption(projects)
+    return list(map(lambda x: x.with_usage(), all_projects))
 
 
 def slurm_parse_project_conso(slurm_raw_output):
