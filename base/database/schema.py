@@ -3,7 +3,8 @@ from base import db
 from datetime import datetime as dt
 from textwrap import shorten
 from hashlib import md5
-from base.functions import calculate_usage
+from logging import error
+
 
 __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
@@ -134,8 +135,16 @@ class Project(db.Model):
 
     def with_usage(self):
         result = self.to_dict()
-        result["consumed"] = getattr(self, "consumed", 0)
-        result["consumed_use"] = getattr(self, "consumed_use", 0)
+        consumption = self.resources.consumption
+        total = self.resources.cpu
+        try:
+            usage = "{0:.1%}".format(float(consumption) / float(total))
+            use = str(float(usage.replace("%", "")))
+        except TypeError as err:
+            error("Failed to calculate project usage: %s" % err)
+            use = ""
+        result["consumed"] = consumption
+        result["consumed_use"] = use
         return result
 
     def to_dict(self):
