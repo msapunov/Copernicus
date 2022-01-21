@@ -1,6 +1,6 @@
 from datetime import datetime as dt, timezone
 from logging import error, debug, warning
-from pathlib import Path
+from pathlib import Path, PurePath
 
 from flask import current_app, render_template, g
 from flask_login import current_user
