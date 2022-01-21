@@ -277,6 +277,7 @@ def save_report(project):
                   user=current_user,
                   project=project,
                   created=dt.now(timezone.utc))
+    db.session.add(report)
     db.session.commit()
     project.resources.file = report
     db.session.commit()  # Ugly fix preventing circular dependency
