@@ -278,6 +278,8 @@ def save_report(project):
                   project=project,
                   created=dt.now(timezone.utc))
     db.session.commit()
+    project.resources.file = report
+    db.session.commit()  # Ugly fix preventing circular dependency
     debug("Activity report saved to the file %s" % report.path)
     return report
 
