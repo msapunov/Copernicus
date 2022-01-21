@@ -512,7 +512,8 @@ def project_extend(name, form):
 def is_activity_report(rec):
     if (not rec.project.resources) or (not rec.project.resources.file):
         return False
-    path = rec.project.resources.file.path
+    name = PurePath(rec.project.resources.file.path).name
+    debug("Activity file name is: %s" % name)
     if not current_app.config.get("ACTIVITY_UPLOAD", False):
         return True
     url = current_app.config.get("OWN_CLOUD_URL", None)
@@ -528,13 +529,13 @@ def is_activity_report(rec):
     remote_dir = current_app.config.get("ACTIVITY_DIR", "/")
     if remote_dir[-1] is not "/":
         remote_dir += "/"
-    remote = remote_dir + path
+    remote = remote_dir + name
     debug("Checking is file %s exists" % remote)
     try:
         oc.file_info(remote)
     except Exception as e:
         raise ValueError("Failed to find activity report %s on the cloud:"
-                         " %s\nProbably you should re-upload it" % (path, e))
+                         " %s\nProbably you should re-upload it" % (name, e))
     return True
 
 
