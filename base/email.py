@@ -205,6 +205,11 @@ class Mail(Thread):
         return self.pending_log(log)
 
     def pending_approve(self, log):
+        self.populate("REGISTRATION APPROVED")
+        title = log.pending.title
+        meso = log.pending.project_id()
+        full = log.pending.responsible_full_name()
+        self.__populate_values({"%TITLE": title, "%MESO": meso, "%FULL": full})
         return self.pending_log(log)
 
     def pending_reset(self, log):
