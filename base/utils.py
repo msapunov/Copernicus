@@ -7,6 +7,7 @@ from os.path import join as join_dir, exists
 from base64 import b64encode
 from magic import from_file
 import logging as log
+from logging import debug
 
 
 def is_text(name):
@@ -50,9 +51,11 @@ def get_tmpdir(app):
     if is_exists:
         dir_name = is_exists[0]
         log.debug("Found existing directory: %s" % dir_name)
+        debug("Found existing directory: %s" % dir_name)
     else:
         dir_name = mkdtemp(prefix=prefix)
         log.debug("Temporary directory created: %s" % dir_name)
+        debug("Temporary directory created: %s" % dir_name)
     return dir_name
 
 
@@ -82,6 +85,7 @@ def save_file(req, directory, file_name=False):
     if file.filename == '':
         raise ValueError("No selected file")
     log.debug("File name from incoming request: %s" % file.filename)
+    debug("File name from incoming request: %s" % file.filename)
     if not file_name:
         file_name = file.filename
     else:
@@ -90,9 +94,11 @@ def save_file(req, directory, file_name=False):
         elif "." not in file_name and "." in file.filename:
             ext = file.filename.rsplit('.', 1)[1].lower()
             log.debug("Deducted file extensions: %s" % ext)
+            debug("Deducted file extensions: %s" % ext)
             file_name = "%s.%s" % (file_name, ext)
     name = join_dir(directory, file_name)
     log.debug("Saving file from incoming request to: %s" % name)
+    debug("Saving file from incoming request to: %s" % name)
     file.save(name)
     return {"saved_name": file_name, "incoming_name": file.filename}
 
