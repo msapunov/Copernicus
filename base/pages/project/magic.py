@@ -1,6 +1,6 @@
 from datetime import datetime as dt, timezone
 from logging import error, debug, warning
-from pathlib import Path
+from pathlib import Path, PurePath
 
 from flask import current_app, render_template, g
 from flask_login import current_user
@@ -277,7 +277,10 @@ def save_report(project):
                   user=current_user,
                   project=project,
                   created=dt.now(timezone.utc))
+    db.session.add(report)
     db.session.commit()
+    project.resources.file = report
+    db.session.commit()  # Ugly fix preventing circular dependency
     debug("Activity report saved to the file %s" % report.path)
     return report
 
@@ -509,7 +512,8 @@ def project_extend(name, form):
 def is_activity_report(rec):
     if (not rec.project.resources) or (not rec.project.resources.file):
         return False
-    path = rec.project.resources.file.path
+    name = PurePath(rec.project.resources.file.path).name
+    debug("Activity file name is: %s" % name)
     if not current_app.config.get("ACTIVITY_UPLOAD", False):
         return True
     url = current_app.config.get("OWN_CLOUD_URL", None)
@@ -525,13 +529,13 @@ def is_activity_report(rec):
     remote_dir = current_app.config.get("ACTIVITY_DIR", "/")
     if remote_dir[-1] is not "/":
         remote_dir += "/"
-    remote = remote_dir + path
+    remote = remote_dir + name
     debug("Checking is file %s exists" % remote)
     try:
         oc.file_info(remote)
     except Exception as e:
         raise ValueError("Failed to find activity report %s on the cloud:"
-                         " %s\nProbably you should re-upload it" % (path, e))
+                         " %s\nProbably you should re-upload it" % (name, e))
     return True
 
 
