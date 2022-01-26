@@ -212,7 +212,7 @@ class Mail(Thread):
         Message to be sent when software requirements for a new project can
         be satisfied
         :param log: Object. Log event
-        :return: Result of pending_log method
+        :return: Copy of self class
         """
         self.populate("REGISTRATION APPROVED")
         self.destination = log.pending.responsible_email
