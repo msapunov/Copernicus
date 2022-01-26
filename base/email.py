@@ -215,6 +215,7 @@ class Mail(Thread):
         :return: Result of pending_log method
         """
         self.populate("REGISTRATION APPROVED")
+        self.destination = log.pending.responsible_email
         title = log.pending.title
         meso = log.pending.project_id()
         full = log.pending.responsible_full_name()
