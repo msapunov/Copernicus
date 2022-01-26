@@ -45,7 +45,8 @@ class Mail(Thread):
                              % path)
         with open(path, "rb") as fd:
             part = MIMEApplication(fd.read(), Name=str(attach_file.name))
-        part['Content-Disposition'] = 'attachment; filename="%s"' % str(attach_file.name)
+        part['Content-Disposition'] = 'attachment; filename="%s"' % str(
+            attach_file.name)
         self.msg.attach(part)
         debug("File %s attached" % path)
         return self
@@ -147,7 +148,8 @@ class Mail(Thread):
         self.destination = cfg.get("TO", fallback=rec.responsible_email)
         self.cc = cfg.get("CC", fallback=[])
         self.sender = cfg.get("FROM", fallback="")
-        self.title = cfg.get("TITLE", fallback="Visa for: %s" % rec.project_id())
+        self.title = cfg.get("TITLE",
+                             fallback="Visa for: %s" % rec.project_id())
         message = """Dear %s,
         You have to sign the visa in order to have your project activated
         """ % rec.responsible_full_name()
@@ -192,7 +194,8 @@ class Mail(Thread):
     def pending_message(self, msg):
         self.populate("REGISTRATION MESSAGE")
         self.destination = msg["destination"]
-        self.__populate_values({"%TITLE": msg["title"], "%MESSAGE": msg["body"]})
+        self.__populate_values(
+            {"%TITLE": msg["title"], "%MESSAGE": msg["body"]})
         return self.run()
 
     def visa_resent(self, log):
@@ -209,7 +212,8 @@ class Mail(Thread):
         title = log.pending.title
         meso = log.pending.project_id()
         full = log.pending.responsible_full_name()
-        self.__populate_values({"%TITLE": title, "%MESO": meso, "%FULL": full})
+        self.__populate_values({"%TITLE": title, "%MESO": meso, "%FULLNAME":
+            full})
         return self.pending_log(log)
 
     def pending_reset(self, log):
