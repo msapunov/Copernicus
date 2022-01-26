@@ -220,7 +220,7 @@ class Mail(Thread):
         full = log.pending.responsible_full_name()
         self.__populate_values({"%TITLE": title, "%MESO": meso, "%FULLNAME":
             full})
-        return self.pending_log(log)
+        return self
 
     def pending_reset(self, log):
         return self.pending_log(log)
