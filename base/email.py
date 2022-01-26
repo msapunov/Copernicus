@@ -208,6 +208,12 @@ class Mail(Thread):
         return self.pending_log(log)
 
     def pending_approve(self, log):
+        """
+        Message to be sent when software requirements for a new project can
+        be satisfied
+        :param log: Object. Log event
+        :return: Result of pending_log method
+        """
         self.populate("REGISTRATION APPROVED")
         title = log.pending.title
         meso = log.pending.project_id()
