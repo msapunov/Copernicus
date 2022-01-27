@@ -4,6 +4,7 @@ from datetime import datetime as dt
 from textwrap import shorten
 from hashlib import md5
 from logging import error
+from pathlib import Path, PurePath
 
 
 __author__ = "Matvey Sapunov"
