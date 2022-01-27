@@ -319,6 +319,9 @@ class File(db.Model):
     project = db.relationship("Project", back_populates="files")
     user = db.relationship("User", foreign_keys=user_id)
 
+    def name(self):
+        return PurePath(self.path).name
+
 
 class Resources(db.Model):
     __tablename__ = "project_resources"
