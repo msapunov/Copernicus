@@ -146,6 +146,8 @@
         // `d` is the original data object for the row
         var stat = (d.active) ? 'Active' : 'Suspended';
         var resp = (d.responsible) ? d.responsible.fullname + ' &lt;' + d.responsible.email + '&gt;' + ' [' + d.responsible.login + ']' : "-";
+        var lab = (d.responsible) ? d.responsible.lab : "-";
+        var phone = (d.responsible) ? d.responsible.phone : "-";
         var proc = (d.consumed_use > 0) ? d.consumed_use+"%" : "-" ;
         var rid = row.index();
         var btnState = window.stat.btnState(d.id, d.name, d.active, rid);
@@ -162,6 +164,8 @@
                 '<div>Total: ' + d.resources.cpu + '</div>' +
                 '<div>Usage: ' + proc + '</div>' +
                 '<div>Responsible: ' + resp + '</div>' +
+                '<div>Lab: ' + lab + '</div>' +
+                '<div>Phone: ' + phone + '</div>' +
                 '<div>Users: ' + window.stat.users(d.users) + '</div>' +
                 '<div>Genci: ' + d.genci_committee + '</div>' +
                 '<div>Scientific fields: ' + d.scientific_fields + '</div>' +
