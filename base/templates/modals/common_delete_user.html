@@ -1,0 +1,17 @@
+<div class="uk-modal" aria-hidden="true" id="{{rec.id}}_delete">
+    <div class="uk-modal-dialog">
+        <button type="button" class="uk-modal-close uk-close"></button>
+        <div class="uk-modal-header">
+            <h3>Delete user {{rec.login}} in project {{rec.name}}?</h3>
+        </div>
+        <div class="uk-margin uk-modal-content">
+            <div>
+                Delete user {{rec.full}} from the project {{rec.name}}? Are you sure?
+            </div>
+        </div>
+        <div class="uk-modal-footer uk-text-right">
+            <button class="uk-button window_hide" data-modal="{{rec.id}}_delete">Cancel</button>
+            <button class="uk-button uk-button-primary ignore_submit" data-modal="{{rec.id}}_delete" data-url="project/{{rec.name}}/delete/{{rec.login}}">Submit</button>
+        </div>
+    </div>
+</div>
