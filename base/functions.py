@@ -154,7 +154,8 @@ def project_parse_cfg_options(cfg, section):
     :return: Dictionary. Keys are: "duration_text", "duration_dt", "extendable",
             "finish_text", "finish_dt", "cpu", "finish_notice_text", "acl",
             "finish_notice_dt", "transform", "description", "evaluation_text",
-            "evaluation_dt", "evaluation_notice_text", "evaluation_notice_dt"
+            "evaluation_dt", "evaluation_notice_text", "evaluation_notice_dt",
+            "finish_report"
     """
     r = RecurringEvent()
     cpu = cfg.getint(section, "cpu", fallback=None)
@@ -175,6 +176,12 @@ def project_parse_cfg_options(cfg, section):
         end_notice_dt = tmp.replace(tzinfo=timezone.utc)
     else:
         end_notice_dt = None
+    end_report = cfg.get(section, "finish_report", fallback=None)
+    if end_report and end_dt:
+        tmp = RecurringEvent(end_dt).parse(end_report)
+        end_report_dt = tmp.replace(tzinfo=timezone.utc)
+    else:
+        end_report_dt = None
     trans = cfg.get(section, "transform", fallback=None)
     if trans:
         transform = list(map(lambda x: x.strip(), trans.split(",")))
@@ -213,6 +220,7 @@ def project_parse_cfg_options(cfg, section):
             "finish_text": end, "finish_dt": end_dt, "cpu": cpu, "visa": visa,
             "finish_notice_text": end_notice, "extendable": extendable,
             "finish_notice_dt": end_notice_dt,
+            "finish_report_dt": end_report_dt,
             "transform": transform, "description": description,
             "evaluation_text": evaluation, "evaluation_dt": eva_dt,
             "evaluation_notice_text": eva_notice,
