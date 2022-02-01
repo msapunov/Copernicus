@@ -319,6 +319,9 @@
                 data: "active",
                 visible: false
             },{
+                data: "responsible.lab",
+                visible: false
+            },{
                 data: "scientific_fields",
                 visible: false
             }],
