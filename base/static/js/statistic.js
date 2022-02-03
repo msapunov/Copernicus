@@ -101,6 +101,28 @@
             })
         });
     };
+    window.stat.dump = function dump(type, e){
+        if(!type in ["csv", "ods", "xls"]){
+            e.preventDefault();
+            alert("Extension " + type + " is not supported");
+            return;
+        }
+        var data = $("#statistics").DataTable().rows({search:'applied'}).data().toArray();
+        if(data.length < 1){
+            e.preventDefault();
+            alert("No records to save, table is empty!");
+            return;
+        }
+        var pid=[];
+        data.forEach(function(row) {
+            pid.push(row.name);
+        });
+
+        var url = "projects." + type + "?projects=" + pid.join(",");
+        var id = ".dump_" + type;
+        var anchor = $(id);
+        anchor.attr("href", url);
+    };
     window.stat.project_state = function project_state(btn, table){
         if(!$(btn).hasClass("uk-active")){
             return;
