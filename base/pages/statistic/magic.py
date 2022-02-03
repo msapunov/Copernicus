@@ -55,7 +55,7 @@ def resources_update(projects, force=False, end=dt.now()):
     return projects
 
 
-def dump_projects_database(extension_type):
+def dump_projects_database(extension_type, request):
     """
     Select all available projects in the database excluding the projects
     without responsible or registration reference and return the data in a
@@ -66,7 +66,12 @@ def dump_projects_database(extension_type):
     """
     if extension_type not in ["csv", "ods", "xls", "xlsx"]:
         raise ValueError("Unsupported format: %s" % extension_type)
-    dirty_projects = Project.query.all()
+    select = request.args.get("projects", None)
+    if not select:
+        dirty_projects = Project.query.all()
+    else:
+        names = select.split(",")
+        dirty_projects = Project.query.filter(Project.name.in_(names)).all()
     projects = []
     for project in dirty_projects:
         if not project.responsible:
