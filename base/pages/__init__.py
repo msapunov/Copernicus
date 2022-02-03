@@ -35,6 +35,13 @@ def grant_access(*roles):
     return log_required
 
 
+def check_str(raw_note):
+    note = str(raw_note)
+    if (not note) or (len(note) < 1):
+        raise ValueError("Provided string can't be empty")
+    return note
+
+
 def calculate_usage(use, total):
     try:
         use = "{0:.1%}".format(float(use) / float(total))
