@@ -45,7 +45,10 @@ def resources_update(projects, force=False, end=dt.now()):
             if force:
                 project.resources.consumption = consumption
             else:
-                project.resources.consumption += consumption
+                if project.resources.consumption:
+                    project.resources.consumption += consumption
+                else:
+                    project.resources.consumption = consumption
             if name in conso:
                 conso[name]["start time"] = begin
                 conso[name]["end time"] = finish
