@@ -1,4 +1,4 @@
-from flask import render_template, jsonify
+from flask import render_template, jsonify, request
 from flask_login import login_required
 from base.pages import grant_access
 from base.pages.user import bp
@@ -19,21 +19,21 @@ __copyright__ = "Aix Marseille University"
 @login_required
 @grant_access("admin")
 def web_projects_csv():
-    return dump_projects_database("csv")
+    return dump_projects_database("csv", request)
 
 
 @bp.route("/projects.ods", methods=["GET"])
 @login_required
 @grant_access("admin")
 def web_projects_ods():
-    return dump_projects_database("ods")
+    return dump_projects_database("ods", request)
 
 
 @bp.route("/projects.xls", methods=["GET"])
 @login_required
 @grant_access("admin")
 def web_projects_xls():
-    return dump_projects_database("xls")
+    return dump_projects_database("xls", request)
 
 
 @bp.route("/statistic/update/hourly", methods=["POST", "GET"])
