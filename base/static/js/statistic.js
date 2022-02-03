@@ -360,6 +360,9 @@
         $(document).on("click", ".change_responsible_submit", function(){ window.stat.resp_submit(this, table) });
         $(document).on("click", ".project-state", function(){ window.stat.project_state(this, table) });
         $(document).on("click", ".project-type", function(){ window.stat.project_type(this, table) });
+        $(document).on("click", ".dump_csv", function(e){window.stat.dump("csv", e) });
+        $(document).on("click", ".dump_ods", function(e){ window.stat.dump("ods", e) });
+        $(document).on("click", ".dump_xls", function(e){ window.stat.dump("xls", e) });
         $(document).on("click", ".suspend", function(){ window.stat.set_state(false, table, this) });
         $(document).on("click", ".activate", function(){ window.stat.set_state(true, table, this) });
         $(document).on("click", ".change-responsible", function(){ window.stat.change_responsible(this, table) });
