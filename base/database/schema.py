@@ -99,6 +99,10 @@ class Project(db.Model):
     ref_id = db.Column(db.Integer, db.ForeignKey("register.id"))
     ref = db.relationship("Register", foreign_keys=ref_id)
 
+    def __init__(self):
+        self.consumed = None
+        self.consumed_use = None
+
     def __repr__(self):
         return '<Project {}>'.format(self.get_name())
 
@@ -126,6 +130,7 @@ class Project(db.Model):
     def pretty_dict(self):
         rec = self.to_dict()
         rec["approve"] = rec["approve"]["fullname"]
+        rec["lab"] = rec["responsible"]["lab"]
         rec["responsible"] = rec["responsible"]["fullname"]
         rec["resources"] = rec["resources"]["cpu"]
         tmp = []
@@ -135,18 +140,16 @@ class Project(db.Model):
         return rec
 
     def with_usage(self):
-        result = self.to_dict()
-        consumption = self.resources.consumption
+        self.consumed = self.resources.consumption
         total = self.resources.cpu
         try:
-            usage = "{0:.1%}".format(float(consumption) / float(total))
-            use = str(float(usage.replace("%", "")))
+            usage = "{0:.1%}".format(float(self.consumed) / float(total))
+            use = float(usage.replace("%", ""))
         except TypeError as err:
             error("Failed to calculate project usage: %s" % err)
             use = ""
-        result["consumed"] = consumption
-        result["consumed_use"] = use
-        return result
+        self.consumed_use = use
+        return self
 
     def to_dict(self):
         if self.created:
@@ -176,7 +179,7 @@ class Project(db.Model):
             ref = self.ref.id
         else:
             ref = ""
-        return {
+        result = {
             "id": self.id,
             "title": self.title,
             "description": self.description,
@@ -205,6 +208,11 @@ class Project(db.Model):
             "allocation_end": end,
             "ref": ref
         }
+        if hasattr(self, "consumed") and self.consumed is not None:
+            result["consumed"] = self.consumed
+        if hasattr(self, "consumed_use") and self.consumed_use is not None:
+            result["consumed_use"] = self.consumed_use
+        return result
 
 
 class Extend(db.Model):
