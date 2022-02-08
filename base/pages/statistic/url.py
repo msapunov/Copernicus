@@ -78,8 +78,9 @@ def web_admin_project_suspend(pid):
 def web_statistic_list():
     all_projects = Project.query.all()
     projects = resources_update(all_projects)
-    stat = list(map(lambda x: x.with_usage(), projects)) if projects else []
-    return jsonify(data=stat)
+    if not projects:
+        return jsonify(data=[])
+    return jsonify(data=list(map(lambda x: x.with_usage().to_dict(), projects)))
 
 
 @bp.route("/statistic.html", methods=["GET"])
