@@ -181,7 +181,7 @@ def upload_file_cloud(path, remote=None):
 
 def check_responsible(name):
     """
-    Check if current user is responsible of a project given in argument
+    Check if current user is responsible for a project given in argument
     :param name: String. Name of a project
     :return: Object. Object of a project under given project name
     """
