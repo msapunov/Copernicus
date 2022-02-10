@@ -154,10 +154,11 @@ def web_project_reactivate(project_name):
 @grant_access("admin", "responsible")
 def web_project_renew(project_name):
     form = RenewForm()
-    record = project_renew(project_name, form)
-    if not is_activity_report(record):
+    project = check_responsible(project_name)
+    if not is_activity_report(project):
         raise ValueError("Please upload an activity report first!")
-    return jsonify(message=ProjectLog(record.project).renew(record))
+    record = project_renew(project, form)
+    return jsonify(message=ProjectLog(project).renew(record))
 
 
 @bp.route("/project/extend/<string:project_name>", methods=["POST"])
