@@ -71,8 +71,7 @@
             );
         UIkit.modal.confirm(form.prop("outerHTML"), function(){
             var comment = $("textarea[name=note]").val();
-            json_send(window.board.url.activate, {
-                "eid": id,
+            json_send(window.board.url.activate + "/" + id, {
                 "comment": comment
             }).done(function(reply){
                 window.process(reply);
