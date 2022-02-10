@@ -466,17 +466,16 @@ def project_transform(name, form):
     return record
 
 
-def project_renew(name, form, activate=False):
+def project_renew(project, form, activate=False):
     if not form.validate_on_submit():
         raise ValueError(form_error_string(form.errors))
     cpu = form.cpu.data
     note = form.note.data
-    project = check_responsible(name)
     if activate and project.active:
-        raise ValueError("Project %s already active" % name)
+        raise ValueError("Project %s already active" % project.get_name())
     project = is_project_renewable(project)
     if not project.is_renewable and "admin" not in g.permissions:
-        raise ValueError("Project %s is not renewable" % name)
+        raise ValueError("Project %s is not renewable" % project.get_name())
     project = get_project_consumption(project)
     record = Extend(project=project, hours=cpu, reason=note, extend=False,
                     present_use=project.consumed,
