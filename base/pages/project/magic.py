@@ -511,7 +511,13 @@ def project_extend(name, form):
 def is_activity_report(project):
     if (not project.resources) or (not project.resources.file):
         return False
-    name = PurePath(rec.project.resources.file.path).name
+    cfg = project_config()
+    finish_dt = cfg[project.type].get("finish_dt", None)
+    report_dt = cfg[project.type].get("finish_report_dt", None)
+    file_dt = project.resources.file.created.replace(tzinfo=timezone.utc)
+    if (report_dt and finish_dt) and not (report_dt < file_dt < finish_dt):
+        raise ValueError("Please upload the most recent activity report")
+    name = project.resources.file.name()
     debug("Activity file name is: %s" % name)
     if not current_app.config.get("ACTIVITY_UPLOAD", False):
         return True
