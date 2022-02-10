@@ -395,6 +395,10 @@ class Mail(Thread):
         self.__project_init(record, "PROJECT ACTIVATE")
         return self
 
+    def project_activated(self, record):
+        self.__project_init(record, "PROJECT ACTIVATED")
+        return self
+
     def allocation_accepted(self, record, extend_or_renew):
         self.__project_init(record, "ALLOCATION ACCEPTED")
         reason = record.decision if record.decision else None
