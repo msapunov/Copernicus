@@ -508,8 +508,8 @@ def project_extend(name, form):
     return record
 
 
-def is_activity_report(rec):
-    if (not rec.project.resources) or (not rec.project.resources.file):
+def is_activity_report(project):
+    if (not project.resources) or (not project.resources.file):
         return False
     name = PurePath(rec.project.resources.file.path).name
     debug("Activity file name is: %s" % name)
