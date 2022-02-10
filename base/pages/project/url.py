@@ -18,6 +18,7 @@ from base.pages.project.form import (
     activity, ActivityForm,
     get_transformation_options)
 from base.pages.project.magic import (
+    check_responsible,
     sanity_check,
     assign_responsible,
     get_project_by_name,
