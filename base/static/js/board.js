@@ -211,10 +211,9 @@
         });
     };
     window.board.history = function(){
-        var id = $(this).data("pid");
         var name = $(this).data("name");
         var title = "History for project {0}".f(name);
-        var url = window.board.url.history + "/" + id;
+        var url = window.board.url.history + "/" + name;
         json_send(url).done(function(reply){
             if(reply.length > 0){
                 window.render.history(reply, title);
