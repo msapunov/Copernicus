@@ -192,7 +192,7 @@ class Mail(Thread):
         return self
 
     def pending_message(self, msg):
-        self.populate("TECH")
+        self.populate("PENDING MESSAGE")
         self.destination = msg["destination"]
         self.__populate_values(
             {"%TITLE": msg["title"], "%MESSAGE": msg["body"]})
