@@ -214,7 +214,8 @@
         var id = $(this).data("pid");
         var name = $(this).data("name");
         var title = "History for project {0}".f(name);
-        json_send(window.board.url.history, {"project": id}).done(function(reply){
+        var url = window.board.url.history + "/" + id;
+        json_send(url).done(function(reply){
             if(reply.length > 0){
                 window.render.history(reply, title);
             }else{
