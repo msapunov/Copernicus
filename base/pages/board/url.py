@@ -34,6 +34,15 @@ def web_board_history():
     return jsonify(data=result)
 
 
+@bp.route("/board/activate/<int:eid>", methods=["POST"])
+@login_required
+@grant_access("admin")
+def web_board_activate(eid):
+    record = Extensions(eid).activate("Activation accepted")
+    return jsonify(message=ProjectLog(record.project).accept(record),
+                   data={"id": record.id})
+
+
 @bp.route("/board/transform", methods=["POST"])
 @login_required
 @grant_access("admin")
