@@ -159,6 +159,11 @@ class ProjectLog(Log):
         self.log.extension = extension
         return self.commit(Mail().project_activate(extension))
 
+    def activated(self, extension):
+        self.log.event = "Activation has been finished successfully"
+        self.log.extension = extension
+        return self.commit(Mail().project_activated(extension))
+
     def accept(self, extension):
         ext_or_new = "Extension" if extension.extend else "Renewal"
         if not self.project.active:
@@ -384,6 +389,16 @@ class Extensions:
         record.accepted = False
         record.decision = note
         return self._process(record)
+
+    def activate(self, note):
+        self.rec = self.record()
+        if self.rec.processed:
+            raise ValueError("This request has been already processed")
+        self.rec.decision = note
+        if not self.rec.transform:
+            raise ValueError("This request is not transformation one")
+        self.rec.accepted = True
+        return self._process(self.rec)
 
     def transform(self, note):
         self.rec = self.record()
