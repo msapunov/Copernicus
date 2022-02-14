@@ -161,6 +161,8 @@ class ProjectLog(Log):
 
     def accept(self, extension):
         ext_or_new = "Extension" if extension.extend else "Renewal"
+        if not self.project.active:
+            ext_or_new = "Activation"
         self.log.event = "%s request for %s hours is accepted" \
                          % (ext_or_new, extension.hours)
         self.log.extension = extension
