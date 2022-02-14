@@ -144,7 +144,8 @@ def web_project_transform(project_name):
 @grant_access("admin", "responsible")
 def web_project_reactivate(project_name):
     form = ActivateForm()
-    record = project_renew(project_name, form, activate=True)
+    project = check_responsible(project_name)
+    record = project_renew(project, form, activate=True)
     record.activate = True
     return jsonify(message=ProjectLog(record.project).activate(record))
 
