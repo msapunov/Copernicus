@@ -215,8 +215,8 @@
         var title = "History for project {0}".f(name);
         var url = window.board.url.history + "/" + name;
         json_send(url).done(function(reply){
-            if(reply.length > 0){
-                window.render.history(reply, title);
+            if (reply.hasOwnProperty("data") && reply.data.length > 0){
+                window.render.history(reply.data, title);
             }else{
                 UIkit.modal.alert("No history found for project {0}".f(name));
             }
