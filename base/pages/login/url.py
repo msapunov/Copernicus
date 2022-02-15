@@ -43,7 +43,8 @@ def load_user_from_request(urlpath):
         else:
             urlpath = "/%s" % urlpath
         return redirect(urlpath, code=307)
-    return None
+    flash("API key is required")
+    return redirect(url_for("login.login"))
 
 
 @bp.route("/login", methods=["GET", "POST"])
