@@ -369,6 +369,16 @@ def transform_project(ext, date):
     return ProjectLog(ext.project).transformed(ext)
 
 
+def activate_project(eid, ext, date):
+    ext.project.resources.valid = False
+    ext.project.resources = create_resource(ext.project, ext.hours)
+    msg = "Created based on activation request ID %s on %s" % (eid, date)
+    ext.project.resources.comment = msg
+    ext.project.users = [ext.project.responsible]
+    ext.project.active = True
+    return ProjectLog(ext.project).activated(ext)
+
+
 def process_extension(eid):
     ext = Extend.query.filter_by(id=eid).first()
     if not ext:
@@ -383,6 +393,8 @@ def process_extension(eid):
         return renew_project(eid, ext, date)
     if ext.project.type in never_renew:
         return extend_project(eid, ext, date)
+    if ext.activate:
+        return activate_project(eid, ext, date)
     if not ext.extend:
         return renew_project(eid, ext, date)
     return extend_project(eid, ext, date)
