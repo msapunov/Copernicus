@@ -147,7 +147,7 @@ class Project(db.Model):
             use = float(usage.replace("%", ""))
         except TypeError as err:
             error("Failed to calculate project usage: %s" % err)
-            use = ""
+            use = 0
         self.consumed_use = use
         return self
 
