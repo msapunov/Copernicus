@@ -706,7 +706,7 @@ def get_transformation_options(project_type=None):
 
     trans = config[project_type].get("transform", None)
     if not trans:
-        return options
+        return []
 
     options_copy = options.copy()
     for option in options_copy:
