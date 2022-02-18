@@ -18,6 +18,7 @@ from base.pages.project.form import (
     activity, ActivityForm,
     get_transformation_options)
 from base.pages.project.magic import (
+    is_project_transformable,
     check_responsible,
     sanity_check,
     assign_responsible,
@@ -269,6 +270,7 @@ def web_project_index():
         return render_template("project.html", data={})
     list(map(lambda x: clean_activity(x.get_name()), projects))
     get_limbo_users(projects)
+    list(map(lambda x: is_project_transformable(x), projects))
     list(map(lambda x: is_project_extendable(x), projects))
     list(map(lambda x: is_project_renewable(x), projects))
     list(map(lambda x: set_users_len(x), projects))
