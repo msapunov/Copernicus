@@ -706,10 +706,26 @@ def get_transformation_options(project_type=None):
 
     trans = config[project_type].get("transform", None)
     if not trans:
-        return options
+        return []
 
     options_copy = options.copy()
     for option in options_copy:
         if option[0] not in trans:
             options.remove(option)
     return options
+
+
+def is_project_transformable(project):
+    """
+    Check if project type has evaluation_dt or extendable option in config file
+    and set is_extendable property True if one of the options is present or
+    False otherwise.
+    :param project: Object. Project object
+    :return: Object. Project object
+    """
+    trans = get_transformation_options(project.type)
+    if trans:
+        project.is_transformable = True
+    else:
+        project.is_transformable = False
+    return project
