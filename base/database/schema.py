@@ -590,16 +590,16 @@ class Register(db.Model):
 
     def cloud(self):
         return [
-            "id: %s" % self.id,
+            "registration id: %s" % self.id,
             "title: %s" % self.title,
             "type: %s" % self.project_type(),
-            "cloud_image: %s" % self.cloud_image,
-            "responsible_full_name: %s" % self.responsible_full_name(),
+            "cloud image: %s" % self.cloud_image,
+            "responsible full name: %s" % self.responsible_full_name(),
             "users: %s" % self.get_users(),
             "description: %s" % self.description,
             "created: %s" % self.created,
             "status: %s" % self.status,
-            "meso_id: %s" % self.project_id()
+            "mesocentre id: %s" % self.project_id()
         ]
 
     def to_dict(self):
