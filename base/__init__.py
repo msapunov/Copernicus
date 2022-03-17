@@ -9,6 +9,7 @@ from base.pages.user import bp as blueprint_user
 from base.pages.board import bp as blueprint_board
 from base.pages.admin import bp as blueprint_admin
 from base.pages.statistic import bp as blueprint_stat
+from base.pages.sanity import bp as blueprint_stat
 
 from base.database.schema import User, Project
 
