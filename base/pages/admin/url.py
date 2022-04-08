@@ -2,7 +2,6 @@ from flask import g, flash, request, redirect, url_for, render_template, jsonify
 from flask import current_app
 from flask_login import login_required, login_user, current_user
 from base.pages import (
-    ssh_wrapper,
     send_message,
     Task,
     grant_access)
@@ -33,7 +32,7 @@ from base.pages.admin.magic import (
     reg_reject,
     register_message,
     reg_accept)
-from base.functions import slurm_nodes_status, show_configuration
+from base.functions import slurm_nodes_status, show_configuration, ssh_wrapper
 from base.pages.login.form import MessageForm
 from base.pages.admin.form import (
     PendingActionForm,

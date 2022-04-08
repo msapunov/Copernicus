@@ -2,8 +2,7 @@ from hashlib import md5
 from flask import g, render_template, current_app as app
 from flask_login import current_user
 from base import db
-from base.pages import (ssh_wrapper,
-                        send_message,
+from base.pages import (send_message,
                         check_str,
                         Task as TaskOld,
                         TaskQueue)
@@ -17,7 +16,7 @@ from base.classes import UserLog, RequestLog, TmpUser, ProjectLog, Task
 from logging import error, debug
 from operator import attrgetter
 from datetime import datetime as dt
-from base.functions import project_config
+from base.functions import project_config, ssh_wrapper
 
 __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
