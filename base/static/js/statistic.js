@@ -75,6 +75,24 @@
         });
 */
     };
+    window.stat.actualize = function actualize(state, dt, btn){
+        var name = $.trim( $(btn).data("name") );
+        var id = $.trim( $(btn).data("pid") );
+        var rid = $.trim( $(btn).data("row") );
+        var text = "Actualize consumption for project " + name + "? ";
+        var url = window.stat.url.actualize + name;
+        UIkit.modal.confirm(text, function(){
+            json_send(url).done(function(reply){
+                var row = dt.row(rid);
+                row.data(reply.data).draw();
+                row.child.hide();
+                row.child(window.stat.expand(row.data(), row)).show();
+                var tdi = $(row.node()).find("span.btn");
+                tdi.first().removeClass("uk-icon-plus");
+                tdi.first().addClass("uk-icon-minus");
+            })
+        });
+    };
     window.stat.set_state = function set_state(state, dt, btn){
         // activate - true
         // suspend - false
@@ -164,6 +182,15 @@
             ' type="button">Activate project</button>';
         }
     };
+    window.stat.btnConso = function btnConso(pid, name, rid){
+        return '<button class="uk-button actualize uk-width-1-1 uk-margin-small-bottom" data-pid=' +
+            pid +
+            ' data-name=' +
+            name +
+            ' data-row=' +
+            rid +
+            ' type="button">Actualize consumption</button>';
+    };
     window.stat.expand = function format(d, row){
         // `d` is the original data object for the row
         var stat = (d.active) ? 'Active' : 'Suspended';
@@ -173,6 +200,7 @@
         var proc = (d.consumed_use > 0) ? d.consumed_use+"%" : "-" ;
         var rid = row.index();
         var btnState = window.stat.btnState(d.id, d.name, d.active, rid);
+        var btnConso = window.stat.btnConso(d.id, d.name, d.active, rid);
         var btnAddUser = window.stat.btnAddUser(d.id, d.name, rid);
         return '<div class="uk-grid"><div class="uk-width-3-4 uk-panel uk-margin-top uk-margin-bottom" style="padding-left:50px;padding-right:50px;">' +
                 '<div>ID: <b>' + d.id + '</b></div>' +
@@ -195,6 +223,9 @@
             '<div class="uk-width-1-4">' +
                 '<div>' +
                     btnState +
+                '</div>' +
+                '<div>' +
+                    btnConso +
                 '</div>' +
                 /*
                 '<div>' +
