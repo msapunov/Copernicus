@@ -1,3 +1,4 @@
+from paramiko import SSHClient, AutoAddPolicy, AuthenticationException, RSAKey
 from flask import current_app as app, flash, request, render_template
 from datetime import datetime as dt, timezone
 from tempfile import gettempdir, mkdtemp
@@ -14,11 +15,43 @@ from struct import unpack
 from os import urandom
 import locale
 
-from base.pages import ssh_wrapper
 from base.utils import is_text
 
 __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
+
+
+def ssh_wrapper(cmd, host=None):
+    debug("ssh_wrapper(%s)" % cmd)
+    if not host:
+        host = app.config["SSH_SERVER"]
+    login = app.config["SSH_USERNAME"]
+    key_file = app.config["SSH_KEY"]
+    key = RSAKey.from_private_key_file(key_file)
+    timeout = app.config.get("SSH_TIMEOUT", 60)
+
+    debug("Connecting to %s with login %s and key %s" % (host, login, key_file))
+    client = SSHClient()
+    client.set_missing_host_key_policy(AutoAddPolicy())
+    try:
+        client.connect(host, username=login, pkey=key, timeout=timeout)
+    except AuthenticationException:
+        error("Failed to connect to %s under using %s with key '%s'"
+              % (host, login, key_file))
+        client.close()
+        return [], []
+    except Exception as e:
+        error("Failed to establish a connection to %s due following error: %s"
+              % (host, e))
+        client.close()
+        return [], []
+    stdin, stdout, stderr = client.exec_command(cmd)
+    output = stdout.readlines()
+    errors = stderr.readlines()
+    client.close()
+    debug("Out: %s" % output)
+    debug("Err: %s" % errors)
+    return output, errors
 
 
 def show_configuration():
