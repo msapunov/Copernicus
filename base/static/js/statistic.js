@@ -419,6 +419,7 @@
         $(document).on("click", ".dump_xls", function(e){ window.stat.dump("xls", e) });
         $(document).on("click", ".suspend", function(){ window.stat.set_state(false, table, this) });
         $(document).on("click", ".activate", function(){ window.stat.set_state(true, table, this) });
+        $(document).on("click", ".actualize", function(){ window.stat.actualize(true, table, this) });
         $(document).on("click", ".change-responsible", function(){ window.stat.change_responsible(this, table) });
     });
 
