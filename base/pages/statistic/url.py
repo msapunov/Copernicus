@@ -72,6 +72,16 @@ def web_admin_project_suspend(pid):
     return jsonify(data=set_state(pid, False).with_usage())
 
 
+@bp.route("/statistic/consumption/<string:name>", methods=["POST"])
+@login_required
+@grant_access("admin")
+def web_statistic_consumption(name):
+    project = Project.query.filter_by(name=name).first()
+    if not project:
+        raise ValueError("Failed to find a project with name '%s'" % name)
+    return jsonify(data=project.consumption().with_usage().to_dict())
+
+
 @bp.route("/statistic/list", methods=["POST"])
 @login_required
 @grant_access("admin")
