@@ -133,39 +133,6 @@ def send_message(to_who, by_who=None, cc=None, title=None, message=None,
     return "Message was sent to %s successfully" % ", ".join(to_who)
 
 
-def ssh_wrapper(cmd, host=None):
-    debug("ssh_wrapper(%s)" % cmd)
-    if not host:
-        host = current_app.config["SSH_SERVER"]
-    login = current_app.config["SSH_USERNAME"]
-    key_file = current_app.config["SSH_KEY"]
-    key = RSAKey.from_private_key_file(key_file)
-    timeout = current_app.config.get("SSH_TIMEOUT", 60)
-
-    debug("Connecting to %s with login %s and key %s" % (host, login, key_file))
-    client = SSHClient()
-    client.set_missing_host_key_policy(AutoAddPolicy())
-    try:
-        client.connect(host, username=login, pkey=key, timeout=timeout)
-    except AuthenticationException:
-        error("Failed to connect to %s under using %s with key '%s'"
-              % (host, login, key_file))
-        client.close()
-        return [], []
-    except Exception as e:
-        error("Failed to establish a connection to %s due following error: %s"
-              % (host, e))
-        client.close()
-        return [], []
-    stdin, stdout, stderr = client.exec_command(cmd)
-    output = stdout.readlines()
-    errors = stderr.readlines()
-    client.close()
-    debug("Out: %s" % output)
-    debug("Err: %s" % errors)
-    return output, errors
-
-
 def check_json():
     if not request.is_json:
         raise ValueError("Expecting application/json requests")
