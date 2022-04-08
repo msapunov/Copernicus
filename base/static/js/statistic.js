@@ -4,6 +4,7 @@
     window.stat.url = {
         list: "statistic/list",
         user_list: "user/list",
+        actualize: "statistic/consumption/",
         suspend: "statistic/suspend/",
         activate: "statistic/activate/"
     };
