@@ -107,6 +107,21 @@ class Project(db.Model):
     def __repr__(self):
         return '<Project {}>'.format(self.get_name())
 
+    def consumption(self):
+        if not self.name:
+            self.name = self.get_name()
+        start = self.resources.created.strftime("%Y-%m-%dT%H:%M")
+        finish = dt.now().strftime("%Y-%m-%dT%H:%M")
+        slurm_raw, cmd = slurm_consumption_raw(self.name, start, finish)
+        result = slurm_parse_project_conso(slurm_raw)
+        if self.name not in result:
+            self.consumed = 0
+        elif "total consumption" not in result[self.name]:
+            self.consumed = 0
+        else:
+            self.consumed = result[self.name]["total consumption"]
+        return self
+
     def get_responsible(self):
         return self.responsible
 
