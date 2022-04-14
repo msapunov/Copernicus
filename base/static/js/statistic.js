@@ -201,7 +201,7 @@
         var proc = (d.consumed_use > 0) ? d.consumed_use+"%" : "-" ;
         var rid = row.index();
         var btnState = window.stat.btnState(d.id, d.name, d.active, rid);
-        var btnConso = window.stat.btnConso(d.id, d.name, d.active, rid);
+        var btnConso = window.stat.btnConso(d.id, d.name, rid);
         var btnAddUser = window.stat.btnAddUser(d.id, d.name, rid);
         return '<div class="uk-grid"><div class="uk-width-3-4 uk-panel uk-margin-top uk-margin-bottom" style="padding-left:50px;padding-right:50px;">' +
                 '<div>ID: <b>' + d.id + '</b></div>' +
