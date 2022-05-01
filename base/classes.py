@@ -160,25 +160,25 @@ class ProjectLog(Log):
         return self.commit(Mail().project_activate(extension))
 
     def accept(self, extension):
-        ext_or_new = "Extension" if extension.extend else "Renewal"
+        prefix = self._prefix(extension)
         self.log.event = "%s request for %s hours is accepted" \
-                         % (ext_or_new, extension.hours)
+                         % (prefix, extension.hours)
         self.log.extension = extension
-        return self.commit(Mail().allocation_accepted(extension, ext_or_new))
+        return self.commit(Mail().allocation_accepted(extension, prefix))
 
     def ignore(self, extension):
-        new = "Extension" if extension.extend else "Renewal"
+        prefix = self._prefix(extension)
         self.log.event = "%s request for %s hours is ignored" \
-                         % (new, extension.hours)
+                         % (prefix, extension.hours)
         self.log.extension = extension
-        return self.commit(Mail().allocation_ignored(extension, new))
+        return self.commit(Mail().allocation_ignored(extension, prefix))
 
     def reject(self, extension):
-        ext_or_new = "Extension" if extension.extend else "Renewal"
+        prefix = self._prefix(extension)
         self.log.event = "%s request for %s hours is rejected" \
-                         % (ext_or_new, extension.hours)
+                         % (prefix, extension.hours)
         self.log.extension = extension
-        return self.commit(Mail().allocation_rejected(extension, ext_or_new))
+        return self.commit(Mail().allocation_rejected(extension, prefix))
 
     def activity_report(self, file_rec):
         file_name = file_rec.path
