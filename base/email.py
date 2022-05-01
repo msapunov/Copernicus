@@ -45,8 +45,7 @@ class Mail(Thread):
                              % path)
         with open(path, "rb") as fd:
             part = MIMEApplication(fd.read(), Name=str(attach_file.name))
-        part['Content-Disposition'] = 'attachment; filename="%s"' % str(
-            attach_file.name)
+        part['Content-Disposition'] = 'attachment; filename="%s"' % str(attach_file.name)
         self.msg.attach(part)
         debug("File %s attached" % path)
         return self
@@ -140,7 +139,7 @@ class Mail(Thread):
         smtp.quit()
         for header in self.msg.items():
             debug("%s: %s" % (header[0], header[1]))
-        debug("Message sent to %s" % self.msg["To"])
+        debug("Message sent!")
 
     def registration(self, rec):
         self.populate("PROJECT VISA")
@@ -148,8 +147,7 @@ class Mail(Thread):
         self.destination = cfg.get("TO", fallback=rec.responsible_email)
         self.cc = cfg.get("CC", fallback=[])
         self.sender = cfg.get("FROM", fallback="")
-        self.title = cfg.get("TITLE",
-                             fallback="Visa for: %s" % rec.project_id())
+        self.title = cfg.get("TITLE", fallback="Visa for: %s" % rec.project_id())
         message = """Dear %s,
         You have to sign the visa in order to have your project activated
         """ % rec.responsible_full_name()
@@ -191,13 +189,6 @@ class Mail(Thread):
         self.__populate_values({"%COMMENT": message})
         return self
 
-    def pending_message(self, msg):
-        self.populate("PENDING MESSAGE")
-        self.destination = msg["destination"]
-        self.__populate_values(
-            {"%TITLE": msg["title"], "%MESSAGE": msg["body"]})
-        return self.run()
-
     def visa_resent(self, log):
         return self.pending_log(log)
 
@@ -208,19 +199,7 @@ class Mail(Thread):
         return self.pending_log(log)
 
     def pending_approve(self, log):
-        """
-        Message to be sent when software requirements for a new project can
-        be satisfied
-        :param log: Object. Log event
-        :return: Copy of self class
-        """
-        self.populate("REGISTRATION APPROVED")
-        title = log.pending.title
-        meso = log.pending.project_id()
-        full = log.pending.responsible_full_name()
-        self.__populate_values({"%TITLE": title, "%MESO": meso, "%FULLNAME":
-            full})
-        return self
+        return self.pending_log(log)
 
     def pending_reset(self, log):
         return self.pending_log(log)
@@ -276,7 +255,7 @@ class Mail(Thread):
         self.populate("USER NEW")
         self.destination = user.email
         self.__populate_values({"%FULLNAME": user.full(), "%LOGIN": user.login,
-                                "%PASS": user.password})
+                                "%PASS": user.pasword})
         return self
 
     def user_create(self, user, done=False):
@@ -379,29 +358,27 @@ class Mail(Thread):
         return self
 
     def project_expired(self, record):
-        self.__project_init(record, "PROJECT EXPIRED")
-        self.__populate_values({"%TYPE_BEFORE": record.project.type,
-                                "%TYPE_AFTER": record.transform})
         return self
 
     def project_expiring(self, record):
-        self.__project_init(record, "PROJECT EXPIRING")
-        self.__populate_values({"%TYPE_BEFORE": record.project.type,
-                                "%TYPE_AFTER": record.transform})
         return self
 
     def project_activate(self, record):
         self.__project_init(record, "PROJECT ACTIVATE")
         return self
 
-    def project_activated(self, record):
-        self.__project_init(record, "PROJECT ACTIVATED")
-        return self
-
-    def allocation_accepted(self, record, extend_or_renew):
-        self.__project_init(record, "ALLOCATION ACCEPTED")
+    def allocation_accepted(self, record, e_type):
         reason = record.decision if record.decision else None
-        self.__populate_values({"%EXT": extend_or_renew, "%REASON": reason})
+        if e_type == "transformation":
+            self.__project_init(record, "TRANSFORMATION ACCEPTED")
+            self.__populate_values({"%TYPE_BEFORE": record.project.type,
+                                    "%TYPE_AFTER": record.transform,
+                                    "%REASON": reason})
+        elif e_type == "activation":
+            self.__project_init(record, "ACTIVATION ACCEPTED")
+        else:
+            self.__project_init(record, "ALLOCATION ACCEPTED")
+            self.__populate_values({"%EXT": e_type, "%REASON": reason})
         return self
 
     def allocation_ignored(self, record, e_type):

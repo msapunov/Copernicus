@@ -159,33 +159,26 @@ class ProjectLog(Log):
         self.log.extension = extension
         return self.commit(Mail().project_activate(extension))
 
-    def activated(self, extension):
-        self.log.event = "Activation has been finished successfully"
-        self.log.extension = extension
-        return self.commit(Mail().project_activated(extension))
-
     def accept(self, extension):
-        ext_or_new = "Extension" if extension.extend else "Renewal"
-        if not self.project.active:
-            ext_or_new = "Activation"
+        prefix = self._prefix(extension)
         self.log.event = "%s request for %s hours is accepted" \
-                         % (ext_or_new, extension.hours)
+                         % (prefix, extension.hours)
         self.log.extension = extension
-        return self.commit(Mail().allocation_accepted(extension, ext_or_new))
+        return self.commit(Mail().allocation_accepted(extension, prefix))
 
     def ignore(self, extension):
-        new = "Extension" if extension.extend else "Renewal"
+        prefix = self._prefix(extension)
         self.log.event = "%s request for %s hours is ignored" \
-                         % (new, extension.hours)
+                         % (prefix, extension.hours)
         self.log.extension = extension
-        return self.commit(Mail().allocation_ignored(extension, new))
+        return self.commit(Mail().allocation_ignored(extension, prefix))
 
     def reject(self, extension):
-        ext_or_new = "Extension" if extension.extend else "Renewal"
+        prefix = self._prefix(extension)
         self.log.event = "%s request for %s hours is rejected" \
-                         % (ext_or_new, extension.hours)
+                         % (prefix, extension.hours)
         self.log.extension = extension
-        return self.commit(Mail().allocation_rejected(extension, ext_or_new))
+        return self.commit(Mail().allocation_rejected(extension, prefix))
 
     def activity_report(self, file_rec):
         file_name = file_rec.path
@@ -205,6 +198,17 @@ class ProjectLog(Log):
     def event(self, message):
         self.log.event = message.lower()
         return self.commit()
+
+    def _prefix(self, rec):
+        if rec.extend:
+            if rec.transform.strip():
+                return "transformation"
+            else:
+                return "extension"
+        elif rec.activate:
+            return "activation"
+        else:
+            return "renewal"
 
 
 class RequestLog(Log):
@@ -389,16 +393,6 @@ class Extensions:
         record.accepted = False
         record.decision = note
         return self._process(record)
-
-    def activate(self, note):
-        self.rec = self.record()
-        if self.rec.processed:
-            raise ValueError("This request has been already processed")
-        self.rec.decision = note
-        if not self.rec.transform:
-            raise ValueError("This request is not transformation one")
-        self.rec.accepted = True
-        return self._process(self.rec)
 
     def transform(self, note):
         self.rec = self.record()
