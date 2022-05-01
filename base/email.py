@@ -367,10 +367,18 @@ class Mail(Thread):
         self.__project_init(record, "PROJECT ACTIVATE")
         return self
 
-    def allocation_accepted(self, record, extend_or_renew):
-        self.__project_init(record, "ALLOCATION ACCEPTED")
+    def allocation_accepted(self, record, e_type):
         reason = record.decision if record.decision else None
-        self.__populate_values({"%EXT": extend_or_renew, "%REASON": reason})
+        if e_type == "transformation":
+            self.__project_init(record, "TRANSFORMATION ACCEPTED")
+            self.__populate_values({"%TYPE_BEFORE": record.project.type,
+                                    "%TYPE_AFTER": record.transform,
+                                    "%REASON": reason})
+        elif e_type == "activation":
+            self.__project_init(record, "ACTIVATION ACCEPTED")
+        else:
+            self.__project_init(record, "ALLOCATION ACCEPTED")
+            self.__populate_values({"%EXT": e_type, "%REASON": reason})
         return self
 
     def allocation_ignored(self, record, e_type):
