@@ -199,6 +199,17 @@ class ProjectLog(Log):
         self.log.event = message.lower()
         return self.commit()
 
+    def _prefix(self, rec):
+        if rec.extend:
+            if rec.transform.strip():
+                return "transformation"
+            else:
+                return "extension"
+        elif rec.activate:
+            return "activation"
+        else:
+            return "renewal"
+
 
 class RequestLog(Log):
 
