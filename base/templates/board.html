@@ -84,7 +84,7 @@
                             </td>
                             <td class="uk-width-1-10">
                                 {% if record.transform|trim != "" %}
-                                    <span class="uk-icon-plus"></span>
+                                    <span class="uk-icon-plus uk-margin-small-right"></span>{{ record.transform|upper }}
                                 {% endif %}
                             </td>
                             <td class="uk-width-1-10 uk-text-nowrap">{{ record.created }}</td>
