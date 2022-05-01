@@ -38,7 +38,7 @@ def transform():
         record.cpu = cpu
     record.extend = False
     record.transform(note)
-    message = ProjectLog(record.rec.project).transform(record.rec)
+    message = ProjectLog(record.rec.project).accept(record.rec)
     return record.id, message
 
 
