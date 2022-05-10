@@ -262,7 +262,7 @@ class Mail(Thread):
         self.populate("USER NEW")
         self.destination = user.email
         self.__populate_values({"%FULLNAME": user.full(), "%LOGIN": user.login,
-                                "%PASS": user.pasword})
+                                "%PASS": user.password})
         return self
 
     def user_create(self, user, done=False):
