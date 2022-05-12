@@ -85,5 +85,9 @@ def user_edit(login, form):
 
     if not c_dict:
         raise ValueError("No changes in submitted user information found")
-    TaskQueue().user(user).user_update(c_dict)
+    task = TaskQueue().user(user).user_update(c_dict).task
+    if "admin" in current_user.permissions():
+        Task(task).accept()
+        UserLog(current_user).user_update(info=c_dict)
+        return "Task ID %s Has been created" % task.id
     return UserLog(user).user_update(info=c_dict)
