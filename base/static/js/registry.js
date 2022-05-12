@@ -116,6 +116,19 @@
                 visible: false
             }]
         });
+        $('#registry tbody').on('click', 'td.details-control', function () {
+            let tr = $(this).closest('tr');
+            let tdi = tr.find("span.btn");
+            let row = table.row(tr);
+            if (row.child.isShown()) {
+                // This row is already open - close it
+                row.child.hide();
+                window.registry.expand_processing(tr, tdi, true);
+            }else {
+                // Open row in ajax callback in function window.registry.expand
+                window.registry.expand(row.data(), row, tr, tdi);
+            }
+        });
         $("#table_search").on( "keyup", function () {
             table.search( this.value ).draw();
         });
