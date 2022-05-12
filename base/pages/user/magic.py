@@ -3,7 +3,7 @@ from base.utils import form_error_string
 from base.functions import bytes2human, ssh_wrapper
 from base.pages import TaskQueue
 from base.database.schema import User
-from base.classes import UserLog
+from base.classes import UserLog, Task
 
 
 __author__ = "Matvey Sapunov"
