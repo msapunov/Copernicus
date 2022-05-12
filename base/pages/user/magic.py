@@ -3,7 +3,7 @@ from base.utils import form_error_string
 from base.functions import bytes2human, ssh_wrapper
 from base.pages import TaskQueue
 from base.database.schema import User
-from base.classes import UserLog
+from base.classes import UserLog, Task
 
 
 __author__ = "Matvey Sapunov"
@@ -85,5 +85,9 @@ def user_edit(login, form):
 
     if not c_dict:
         raise ValueError("No changes in submitted user information found")
-    TaskQueue().user(user).user_update(c_dict)
+    task = TaskQueue().user(user).user_update(c_dict).task
+    if "admin" in current_user.permissions():
+        Task(task).accept()
+        UserLog(current_user).user_update(info=c_dict)
+        return "Task ID %s Has been created" % task.id
     return UserLog(user).user_update(info=c_dict)

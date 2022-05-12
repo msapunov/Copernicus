@@ -5,6 +5,9 @@
     <script src="{{ url_for('static', filename='js/datatables.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/registry.js') }}"></script>
     <style>
+        .uk-table td, .uk-table th {
+            border-bottom: 0px !important;
+        }
         .ws {
             white-space: normal !important;
         }
@@ -15,12 +18,20 @@
         tr.shown td.details-control {
             text-align:center;
         }
+        .acl_info {
+            background: #f2fae3 !important;
+            color: #659f13;
+        }
+        .tech_info {
+            background: #fff1f0 !important;
+            color: #d85030;
+        }
     </style>
 {% endblock %}
 {% block main %}
 <div class="uk-width-1-1">
     <div class="uk-grid uk-margin-bottom">
-        <div class="uk-width-1-4 uk-form">
+        <div class="uk-width-5-6 uk-form">
             <button class="uk-button user_add" data-modal="add_user">
                 <span class="uk-icon-user-plus"></span>
                 Add user
@@ -40,11 +51,11 @@
             <button class="uk-button acl-type uk-text-bold uk-text-danger" data-type=16 title="Scientific Committee">C</button>
             <button class="uk-button acl-type uk-button-danger" data-type=18 title="Administrators">A</button>
         </div>
-        <div class="uk-width-1-4 uk-form">
+        <div class="uk-width-1-6 uk-form">
             <input type="text" class="uk-width-1-1" id="table_search">
         </div>
     </div>
-    <table id="registry" class="display compact" data-order='[[ 3, "desc" ]]'>
+    <table id="registry" class="stripe compact" data-order='[[ 3, "desc" ]]'>
         <thead>
             <tr>
                 <th></th>
@@ -97,60 +108,3 @@
 </div>
 {% include "modals/registry_add_user.html" %}
 {% endblock %}
-
-<!--
-    <table class="display compact" data-order='[[ 2, "desc" ]]'>
-        <thead>
-            <tr>
-                <th></th>
-                <th>ID</th>
-                <th>Active</th>
-                <th>Person</th>
-                <th>User</th>
-                <th>Responsible</th>
-                <th>Manager</th>
-                <th>Tech</th>
-                <th>Committee</th>
-                <th>Admin</th>
-                <th>Login</th>
-                <th>Name</th>
-                <th>Surname</th>
-                <th>Email</th>
-                <th>Phone</th>
-                <th>Lab</th>
-                <th>Position</th>
-                <th>Comment</th>
-                <th>Created</th>
-                <th>UID</th>
-                <th>Projects</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for user in data %}
-            <tr>
-                <td></td>
-                <td>{{user.id}}</td>
-                <td>{{user.active}}</td>
-                <td>{{user.brief}}</td>
-                <td>{{user.user}}</td>
-                <td>{{user.responsible}}</td>
-                <td>{{user.manager}}</td>
-                <td>{{user.tech}}</td>
-                <td>{{user.committee}}</td>
-                <td>{{user.admin}}</td>
-                <td>{{user.login}}</td>
-                <td>{{user.name}}</td>
-                <td>{{user.surname}}</td>
-                <td>{{user.email}}</td>
-                <td>{{user.phone}}</td>
-                <td>{{user.lab}}</td>
-                <td>{{user.position}}</td>
-                <td>{{user.comment}}</td>
-                <td>{{user.created}}</td>
-                <td>{{user.uid}}</td>
-                <td>{{user.projects}}</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
--->

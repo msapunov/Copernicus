@@ -10,6 +10,7 @@ from base.pages.user.magic import get_user_record, user_by_id
 from base.pages.admin import bp
 from base.pages.admin.magic import (
     render_pending,
+    render_user_edit,
     all_users,
     create_project,
     event_log,
@@ -432,6 +433,13 @@ def web_admin_user_info():
 
         users.append({"username": login, "from": host, "process": cmd})
     return jsonify(data=users)
+
+
+@bp.route("/admin/bits/user_info/<string:login>", methods=["POST"])
+@login_required
+@grant_access("admin", "manager")
+def web_admin_bits_user_info(login):
+    return render_user_edit(get_user_record(login))
 
 
 @bp.route("/admin/bits/pending/<int:rid>", methods=["POST"])
