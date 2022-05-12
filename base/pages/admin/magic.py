@@ -10,6 +10,7 @@ from base.pages.project.magic import get_project_by_name
 from base.pages.admin.form import action_pending, visa_pending, contact_pending
 from base.pages.board.magic import create_resource
 from base.pages.user.magic import user_by_id
+from base.pages.user.form import EditInfo
 from base.database.schema import User, Register, LogDB, Project, Tasks, Register
 from base.email import Mail
 from base.classes import UserLog, RequestLog, TmpUser, ProjectLog, Task
@@ -54,6 +55,13 @@ def unprocessed():
         elif set(acl).intersection(set(g.permissions)):
             approve.append(type)
     return query.filter(Register.type.in_(approve)).all()
+
+
+def render_user_edit(user):
+    edit_form = EditInfo(user)
+    user_edit = render_template("modals/user_edit_info.html", form=edit_form)
+    row = render_template("bits/registry_expand_row.html", user=user.details())
+    return row + user_edit
 
 
 def render_pending(rec):
