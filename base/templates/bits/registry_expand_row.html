@@ -28,15 +28,15 @@
                 </tr>
                 <tr>
                     <td class="uk-width-1-10 uk-text-right">Phone:</td>
-                    <td class="uk-width-9-10 uk-text-left">{{user.phone}}</td>
+                    <td class="uk-width-9-10 uk-text-left">{% if user.phone %}{{user.phone}}{% endif %}</td>
                 </tr>
                 <tr>
                     <td class="uk-width-1-10 uk-text-right">Lab:</td>
-                    <td class="uk-width-9-10 uk-text-left">{{user.lab}}</td>
+                    <td class="uk-width-9-10 uk-text-left">{% if user.lab %}{{user.lab}}{% endif %}</td>
                 </tr>
                 <tr>
                     <td class="uk-width-1-10 uk-text-right">Position:</td>
-                    <td class="uk-width-9-10 uk-text-left">{{user.position}}</td>
+                    <td class="uk-width-9-10 uk-text-left">{% if user.position %}{{user.position}}{% endif %}</td>
                 </tr>
                 <tr>
                     <td class="uk-width-1-10 uk-text-right">Active:</td>
