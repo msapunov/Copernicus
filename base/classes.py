@@ -19,6 +19,7 @@ class Log:
 
     def __init__(self, project=None, register=None, user=None):
         self.log = LogDB(
+            event="",
             author=current_user,
             project=project,
             register=register,
