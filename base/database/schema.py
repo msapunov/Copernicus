@@ -769,6 +769,11 @@ class Tasks(db.Model):
     def __repr__(self):
         return "<Task queue record {}>".format(self.id)
 
+    def waiting(self):
+        return self.query.filter_by(processed=True,
+                                    done=False,
+                                    decision="accept").all()
+
     def brief(self):
         act, entity, login, project, task = self.action.split("|")
         if act in ["create", "add", "assign", "delete", "remove"]:
