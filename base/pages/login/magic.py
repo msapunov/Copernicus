@@ -31,8 +31,8 @@ def ssh_login(login, password):
         except AuthenticationException:
             warning("Wrong password to server %s" % host)
             continue
-        except:
-            error("Exception connecting to %s" % host)
+        except Exception as err:
+            error("Exception connecting to %s: %s" % (host, err))
             continue
         finally:
             client.close()
