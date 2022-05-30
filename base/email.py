@@ -281,6 +281,24 @@ class Mail(Thread):
     def user_created(self, user):
         return self.user_create(user, done=True)
 
+    def user_activate(self, task, done=False):
+        if done:
+            self.populate("USER ACTIVATED")
+        else:
+            self.populate("USER ACTIVATE")
+        self.destination = task.author.email
+        if self.cc:
+            self.cc = task.user.email + "," + self.cc
+        else:
+            self.cc = task.user.email
+        self.__populate_values({"%FULLNAME": task.author.full_name(),
+                                "%ACTIVATE_USER": task.user.full(),
+                                "%NAME": task.project.get_name()})
+        return self
+
+    def user_activated(self, task):
+        return self.user_activate(task, done=True)
+
     def user_assign(self, task, done=False):
         if done:
             self.populate("USER ASSIGNED")
