@@ -111,10 +111,15 @@ def project_attach_user(name, form):
     if user in project.users:
         raise ValueError("User %s has been already attached to project %s"
                          % (user.full(), project.get_name()))
-    task = TaskQueue().project(project).user_assign(user).task
+    if user.active:
+        task = TaskQueue().project(project).user_assign(user).task
+    else:
+        task = TaskQueue().project(project).user_activate(user).task
     if "admin" in current_user.permissions():
         Task(task).accept()
-    return ProjectLog(project).user_assign(task)
+    if user.active:
+        return ProjectLog(project).user_assign(task)
+    return ProjectLog(project).user_activate(task)
 
 
 def project_create_user(name, form):
