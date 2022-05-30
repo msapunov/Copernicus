@@ -15,6 +15,12 @@ __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
 
 
+@bp.route("/user/list/all", methods=["GET"])
+@login_required
+def user_all():
+    return user_list(active=False)
+
+
 @bp.route("/user/list", methods=["GET"])
 @login_required
 def user_list(active=True):
