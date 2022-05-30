@@ -123,7 +123,7 @@ def new_responsible(project, is_admin):
 
 
 class UserForm(FlaskForm):
-    prenom = StringField("Name")  # Can't use "name" cause it cause conflict
+    prenom = StringField("Name")  # Can't use "name" cause it causes conflict
     surname = StringField("Surname")
     email = EmailField("E-mail")
     login = SelectField("Login", choices=[], coerce=int, default=0)
