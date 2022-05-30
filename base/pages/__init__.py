@@ -268,6 +268,16 @@ class TaskQueue:
                                                      description)
         return self._user_action()
 
+    def user_activate(self, user):
+        if not self.project:
+            raise ValueError("Can't activate user for none existent project")
+        login = user.login
+        description = "Activate user %s for project %s" % (login, self.p_name)
+        self.task.action = "activate|user|%s|%s|%s" % (login, self.p_name,
+                                                       description)
+        self.task.user = user
+        return self._user_action()
+
     def user_assign(self, user):
         if not self.project:
             raise ValueError("Can't assign a user to none existent project")
