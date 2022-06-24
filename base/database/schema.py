@@ -89,7 +89,8 @@ class Project(db.Model):
 
     files = db.relationship("File", back_populates="project")
     articles = db.relationship("ArticleDB", back_populates="project")
-    users = db.relationship("User", secondary="user_project")
+    users = db.relationship("User", secondary="user_project",
+                            back_populates="project")
 
     approve_id = db.Column(db.Integer, db.ForeignKey("users.id"))
     approve = db.relationship("User", foreign_keys=approve_id)
@@ -403,7 +404,8 @@ class User(UserMixin, db.Model):
     login = db.Column(db.String(128), unique=True)
     acl_id = db.Column(db.Integer, db.ForeignKey("acl.id"))
     acl = db.relationship("ACLDB", uselist=False, backref="users")
-    project = db.relationship("Project", secondary="user_project")
+    project = db.relationship("Project", secondary="user_project",
+                              back_populates="users")
     active = db.Column(db.Boolean, default=False)
     comment = db.Column(db.Text)
     modified = db.Column(db.DateTime(True))
