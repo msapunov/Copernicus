@@ -8,6 +8,7 @@ from base.pages import (send_message,
                         TaskQueue)
 from base.pages.project.magic import get_project_by_name
 from base.pages.admin.form import action_pending, visa_pending, contact_pending
+from base.pages.admin.form import activate_user
 from base.pages.board.magic import create_resource
 from base.pages.user.magic import user_by_id
 from base.pages.user.form import EditInfo
@@ -57,10 +58,18 @@ def unprocessed():
     return query.filter(Register.type.in_(approve)).all()
 
 
-def render_user_edit(user):
+def render_registry(user):
     edit_form = EditInfo(user)
     user_edit = render_template("modals/user_edit_info.html", form=edit_form)
-    row = render_template("bits/registry_expand_row.html", user=user.details())
+    tasks = Tasks.query.filter_by(user=user).all()
+    details = user.details()
+    if tasks:
+        details["todo"] = list(map(lambda x: x.description(), tasks))
+    row = render_template("bits/registry_expand_row.html", user=details)
+    if not user.active:
+        a_form = activate_user(user)
+        act = render_template("modals/registry_activate_user.html", form=a_form)
+        return row + user_edit + act
     return row + user_edit
 
 
