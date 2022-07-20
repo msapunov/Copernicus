@@ -771,7 +771,8 @@ class Task:
                  "update", "remove" and "change"
         """
         act = self.task.action.split("|")[0]
-        if act not in ["create", "assign", "update", "remove", "change"]:
+        if act not in ["activate", "create", "assign", "update", "remove",
+                       "change"]:
             raise ValueError("The action '%s' is not supported" % act)
         return act
 
