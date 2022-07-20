@@ -865,6 +865,18 @@ class Task:
                                                 user.full_name())
         return UserLog(user).user_updated(self.task)
 
+    def user_activate(self):
+        """
+        Appending task associated user to task associated project and set active
+        property to True
+        :return: String. The log event associated with this action
+        """
+        project = self.task.project
+        user = self.task.user
+        user.active = True
+        project.users.append(user)
+        return ProjectLog(project).user_activated(self.task)
+
     def user_assign(self):
         """
         Appending task associated user to a task associated project
