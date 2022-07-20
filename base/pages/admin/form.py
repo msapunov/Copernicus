@@ -115,3 +115,24 @@ class UserEditForm(FlaskForm):
         super(UserEditForm, self).__init__(*args, **kwargs)
         projects = list_of_projects()
         self.project.choices = [(project, project) for project in projects]
+
+
+def activate_user(user):
+    form = ActivateUserForm()
+    form.login = user.login
+    form.full = user.full_name()
+    form.complete = user.full()
+    form.project = list(map(lambda x: x.get_name(), user.project))
+    form.projects.process_data(form.project)
+    return form
+
+
+class ActivateUserForm(FlaskForm):
+    exception = BooleanField()
+    login = HiddenField()
+    projects = SelectMultipleProjects("Project", choices=[])
+
+    def __init__(self, *args, **kwargs):
+        super(ActivateUserForm, self).__init__(*args, **kwargs)
+        projects = list_of_projects()
+        self.projects.choices = [(project, project) for project in projects]
