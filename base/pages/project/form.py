@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import HiddenField, IntegerField, BooleanField
 from wtforms import TextAreaField, SelectField, StringField
-from wtforms.fields.html5 import EmailField
+from wtforms.fields import EmailField
 from wtforms.validators import DataRequired, NumberRange, ValidationError, Email
 from base.pages.project.magic import (
     get_transformation_options,
