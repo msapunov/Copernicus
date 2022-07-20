@@ -85,7 +85,7 @@
                 <td></td>
                 <td></td>
                 <td>{{user.active}}</td>
-                <td>{{user.login}}</td>
+                <td>{{user.login}}{% if user.todo %} *{% endif %}</td>
                 <td>{{user.name}}</td>
                 <td>{{user.surname}}</td>
                 <td>{{user.email}}</td>
