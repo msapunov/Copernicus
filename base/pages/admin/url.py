@@ -439,7 +439,7 @@ def web_admin_user_info():
 @login_required
 @grant_access("admin", "manager")
 def web_admin_bits_user_info(login):
-    return render_user_edit(get_user_record(login))
+    return render_registry(get_user_record(login))
 
 
 @bp.route("/admin/bits/pending/<int:rid>", methods=["POST"])
