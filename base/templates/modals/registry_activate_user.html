@@ -1,0 +1,46 @@
+<div class="uk-modal fade" tabindex="-1" role="dialog" aria-labelledby="confirm-modal" aria-hidden="true" id="{{form.login}}_activate">
+    <div class="uk-modal-dialog">
+        <button type="button" class="uk-modal-close uk-close"></button>
+        <div class="uk-modal-header">
+            <h3>Activate suspended user {{form.full}}?</h3>
+        </div>
+        <div class="uk-overflow-container">
+            <form action="test" method="post" class="uk-panel uk-form" id="activate_form">
+                {{ form.csrf_token }}
+                <div class="uk-form-row uk-panel">
+                    To activate user {{form.complete}} please set at least one working project.
+                    {% if form.project %}
+                        {% if form.project | length > 1 %}
+                            Original projects: {{form.project | join(", ")}}
+                        {% else %}
+                            Original project is {{form.project | join(", ")}}
+                        {% endif %}
+                    {% else %}
+                        No original projects found
+                    {% endif %}
+                </div>
+                <div class="uk-form-row">
+                    {{form.projects(id=form.login+"_projects", class_="uk-width-1-1 project_select", data_user=form.login)}}
+                </div>
+                <div class="uk-form-row uk-panel">
+                    Selected projects: <span id="{{form.login}}_selected_projects"></span>
+                </div>
+                <div class="uk-form-row uk-alert">
+                    Hold down the Ctrl (PC) or Command (Mac) button to select multiple projects.
+                </div>
+                <div class="uk-form-row uk-alert uk-alert-danger">
+                    {{ form.exception(id=form.login+"_exception_activate", class_="uk-margin-small-right uk-form-danger") }}
+                    <label for="exception_checkbox">
+                        Select this checkbox ONLY if the user should NOT have any project and job submission will be forbidden!
+                    </label>
+                </div>
+            </form>
+        </div>
+        <div class="uk-modal-footer">
+            <div class="uk-text-right">
+                <button class="uk-button window_hide" data-modal="{{form.login}}_activate">Cancel</button>
+                <button class="uk-button uk-button-primary activate_submit" data-modal="{{form.login}}_activate" data-form="activate_form" data-url="admin/user/activate">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
