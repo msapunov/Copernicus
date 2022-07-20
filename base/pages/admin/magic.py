@@ -596,6 +596,8 @@ def process_task(tid):
         task.user_update()
     elif act == "update" and ent == "proj":
         pass
+    elif act == "activate" and ent == "user":
+        task.user_activate()
     elif act == "assign" and ent == "user":
         task.user_assign()
     elif act == "assign" and ent == "resp":
