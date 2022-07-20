@@ -109,8 +109,13 @@ def visa_comment(rec, sent=True):
 
 
 def all_users():
-    # TODO: get a list of pending tasks check for user and update user info accordinly
-    todo = list(map(lambda x: x.user, Tasks().waiting()))
+    """
+    Query all the users, check if there is a task associated with a user and
+    set a todo property to True for such user and then apply info_acl method
+    to all the users in a list.
+    :return: List. List of users info dicts
+    """
+    dirty = list(filter(lambda x: x.user, Tasks().waiting()))
     users = User.query.all()
     for task in dirty:
         idx = users.index(task.user)
