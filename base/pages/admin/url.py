@@ -10,7 +10,7 @@ from base.pages.user.magic import get_user_record, user_by_id
 from base.pages.admin import bp
 from base.pages.admin.magic import (
     render_pending,
-    render_user_edit,
+    render_registry,
     all_users,
     create_project,
     event_log,
@@ -41,6 +41,7 @@ from base.pages.admin.form import (
     AddUserForm,
     UserEditForm,
     RegistrationEditForm,
+    ActivateUserForm,
     NewUserEditForm)
 from base.pages.project.magic import process_extension
 from base.utils import form_error_string
