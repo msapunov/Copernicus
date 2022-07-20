@@ -112,7 +112,10 @@ def all_users():
     # TODO: get a list of pending tasks check for user and update user info accordinly
     todo = list(map(lambda x: x.user, Tasks().waiting()))
     users = User.query.all()
-    dirty = list(filter(lambda x: x in todo, users))
+    for task in dirty:
+        idx = users.index(task.user)
+        if not hasattr(users[idx], "todo"):
+            users[idx].todo = True
     return list(map(lambda x: x.info_acl(), User.query.all()))
 
 
