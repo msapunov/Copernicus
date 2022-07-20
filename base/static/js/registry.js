@@ -62,6 +62,16 @@
             table.columns([6]).visible(true);
         }
     };
+    window.registry.update_projects = function update_projects(select){
+        const login = $.trim( $(select).data("user") );
+        const id = "#" + login + "_selected_projects";
+        const values = $(select).val();
+        var text = "None";
+        if(values.length > 0){
+            text = values.join(", ");
+        }
+        $(id).text(text);
+    };
     $(document).on("ready", function(){
         var table = $("#registry").DataTable({
             dom: "tip",
