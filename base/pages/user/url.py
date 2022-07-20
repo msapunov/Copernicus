@@ -25,7 +25,10 @@ def user_all():
 @login_required
 def user_list(active=True):
     term = request.args.get("term")
-    query = User.query.filter(User.active == active)
+    if active:
+        query = User.query.filter_by(active=active)
+    else:
+        query = User.query
     if term:
         term = "%%%s%%" % term.lower()
         users_obj = query.filter(User.surname.like(term)
