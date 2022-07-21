@@ -1245,6 +1245,7 @@
             "columns": [{
                 data: "node"
             },{
+                className: "dt-body-nowrap",
                 data: "reason"
             },{
                 data: "date",
