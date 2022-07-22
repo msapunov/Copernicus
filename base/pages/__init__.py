@@ -8,6 +8,7 @@ from base import db
 from base.email import Mail
 from base.database.schema import User, Tasks
 from base.utils import normalize_word
+from base.functions import generate_password
 from string import ascii_letters
 
 import smtplib
@@ -271,9 +272,12 @@ class TaskQueue:
     def user_activate(self, user):
         if not self.project:
             raise ValueError("Can't activate user for none existent project")
-        login = user.login
-        description = "Activate user %s for project %s" % (login, self.p_name)
-        self.task.action = "activate|user|%s|%s|%s" % (login, self.p_name,
+        if not hasattr(user, "password"):
+            user.password = generate_password()
+        description = "login: %s and name: %s and surname: %s and email: %s" \
+                      " AND PASSWORD %s" % (user.login, user.name, user.surname,
+                                            user.email, user.password)
+        self.task.action = "activate|user|%s|%s|%s" % (user.login, self.p_name,
                                                        description)
         self.task.user = user
         return self._user_action()
