@@ -256,6 +256,8 @@ class TaskQueue:
     def user_create(self, user):
         if not self.p_name:
             raise ValueError("Can't add a user to none existent project")
+        if not hasattr(user, "password"):
+            user.password = generate_password()
         description = user.ready_task()
         self.task.action = "create|user|%s|%s|%s" % (user.login, self.p_name,
                                                      description)
@@ -264,6 +266,8 @@ class TaskQueue:
     def responsible_create(self, user):
         if not self.p_name:
             raise ValueError("Can't add a user to none existent project")
+        if not hasattr(user, "password"):
+            user.password = generate_password()
         description = user.ready_task()
         self.task.action = "create|resp|%s|%s|%s" % (user.login, self.p_name,
                                                      description)
