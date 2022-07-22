@@ -113,10 +113,11 @@ def calculate_ttl(project):
     return ttl
 
 
-def generate_password(pass_len):
+def generate_password(pass_len=16):
     """
     Create alphanumeric password of given length
-    :param pass_len: Int. Number of symbols password must consist of
+    :param pass_len: Int. Number of symbols password must consist of.
+    Default length is 16 symbols
     :return: String. Password
     """
     symbols = ascii_letters + digits
