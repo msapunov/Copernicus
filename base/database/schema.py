@@ -755,6 +755,7 @@ class Tasks(db.Model):
                                             " 'ignore')"))
     processed = db.Column(db.Boolean)
     done = db.Column(db.Boolean)
+    result = db.Column(db.Text, default=None)
 
     created = db.Column(db.DateTime(True), default=dt.utcnow)
     modified = db.Column(db.DateTime(True))
@@ -840,6 +841,7 @@ class Tasks(db.Model):
             "processed": self.processed,
             "created": self.created.strftime("%Y-%m-%d %X %Z"),
             "status": status,
+            "result": self.result,
             "modified": mod
         }
 
