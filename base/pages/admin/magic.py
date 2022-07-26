@@ -596,7 +596,7 @@ def group_users():
     return result
 
 
-def process_task(tid):
+def process_task(tid, result):
     task = Task(Tasks().query.filter_by(id=tid).first())
     act = task.get_action()
     ent = task.get_entity()
@@ -621,7 +621,7 @@ def process_task(tid):
         task.responsible_assign()
     elif act == "remove" and ent == "user":
         task.user_delete()
-    return task.done()
+    return task.done(result)  # TODO: result of task should be an argument for done methode
 
 
 class TaskManager:

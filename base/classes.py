@@ -721,12 +721,14 @@ class Task:
         """
         return self.task.processed
 
-    def done(self):
+    def done(self, result=None):
         """
         Set field done of the task record to True and commit changes
         :return: Object. Result of self.commit method  - task object
         """
         self.task.done = True
+        if result:
+            self.task.result = result
         return self.commit()
 
     def accept(self):
