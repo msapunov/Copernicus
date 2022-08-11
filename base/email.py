@@ -172,9 +172,11 @@ class Mail(Thread):
 
     def __pending_init(self, record, section_name):
         self.populate(section_name)
-        if not record.responsible_email:
+        if not hasattr(record, "pending"):
+            raise ValueError("Pending object is not attached to log")
+        if not hasattr(record.pending, "responsible_email"):
             raise ValueError("Responsible has no email")
-        self.destination = record.responsible_email
+        self.destination = record.pending.responsible_email
         pid = record.project_id()
         title = record.title
         first = record.responsible_first_name
