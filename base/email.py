@@ -177,10 +177,10 @@ class Mail(Thread):
         if not hasattr(record.pending, "responsible_email"):
             raise ValueError("Responsible has no email")
         self.destination = record.pending.responsible_email
-        pid = record.project_id()
-        title = record.title
-        first = record.responsible_first_name
-        last = record.responsible_last_name
+        pid = record.pending.project_id()
+        title = record.pending.title
+        first = record.pending.responsible_first_name
+        last = record.pending.responsible_last_name
         full = "%s %s" % (first, last)
         self.__populate_values({"%FULLNAME": full, "%MESO": pid,
                                 "%TITLE": title})
