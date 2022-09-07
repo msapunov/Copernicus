@@ -121,7 +121,7 @@
                 <div class="uk-panel uk-margin-top uk-margin-bottom" id="{{project.name}}_project_users">
                 {% for user in project.users|sort(attribute='login')%}
                     <div class="uk-panel" id="{{project.name}}_{{user.login}}">
-                    {% if user.login != project.responsible_login %}
+                    {% if user.login != project.responsible.login %}
                         <button class="uk-button uk-button-mini uk-button-link uk-text-danger remove uk-icon-justify"
                         type="button" data-pid='{{project.id}}'
                         data-name='{{user.full_name()}}' data-login='{{user.login}}'
