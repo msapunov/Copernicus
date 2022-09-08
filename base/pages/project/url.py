@@ -18,6 +18,7 @@ from base.pages.project.form import (
     activity, ActivityForm,
     get_transformation_options)
 from base.pages.project.magic import (
+    conso_by_user,
     is_project_transformable,
     check_responsible,
     sanity_check,
@@ -274,4 +275,5 @@ def web_project_index():
     list(map(lambda x: is_project_extendable(x), projects))
     list(map(lambda x: is_project_renewable(x), projects))
     list(map(lambda x: set_users_len(x), projects))
+    list(map(lambda x: conso_by_user(x), projects))
     return render_template("project.html", data={"projects": projects})
