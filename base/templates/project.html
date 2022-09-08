@@ -135,7 +135,7 @@
                         data-project='{{project.name}}' disabled>
                         </button>
                     {% endif %}
-                        <span class={% if user.active == 'Suspended' %}"uk-margin-small-left uk-text-muted"{% else %}"uk-margin-small-left"{% endif %} title="{{user.login}} &lt;{{user.email}}&gt;">
+                        <span class="{% if user.active == 'Suspended' %}uk-text-muted {% endif %}uk-margin-small-left" title="{{user.login}} &lt;{{user.email}}&gt;">
                         {{user.full_name()}}{% if user.consumption %} : {{user.consumption}} hours {% endif %} {% if user.active == 'Suspended' %}[Inactive]{% endif%}
                         </span>
 
