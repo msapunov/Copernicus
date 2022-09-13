@@ -506,7 +506,7 @@ class TmpUser:
         u_part = "login: %s and name: %s and surname: %s and email: %s" % (
             self.login, self.name, self.surname, self.email)
         if self.password:
-            u_part += " and password %s" % self.password
+            u_part += " and password: %s" % self.password
         a_part = "user: %s, responsible: %s, manager: %s, tech: %s, " \
                  "committee: %s, admin: %s" % (self.is_user,
                                                self.is_responsible,
