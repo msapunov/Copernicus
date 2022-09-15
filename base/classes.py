@@ -474,13 +474,15 @@ class TmpUser:
         user_part, service_part = description.split(" WITH ACL ")
         for i in user_part.split(" and "):
             if "login" in i:
-                self.login = i.replace("login: ", "")
+                self.login = i.replace("login: ", "").strip()
             elif "surname" in i:
-                self.surname = i.replace("surname: ", "")
+                self.surname = i.replace("surname: ", "").strip()
             elif "name" in i:
-                self.name = i.replace("name: ", "")
+                self.name = i.replace("name: ", "").strip()
             elif "email" in i:
-                self.email = i.replace("email: ", "")
+                self.email = i.replace("email: ", "").strip()
+            if "password" in i:
+                self.password = i.replace("password: ", "").strip()
 
         acl_part, active_part = service_part.split(" WITH STATUS ")
         roles = ["user", "responsible", "manager", "tech", "committee", "admin"]
@@ -492,9 +494,6 @@ class TmpUser:
                 tmp = True if condition in acl.strip() else False
                 self.__setattr__("is_%s" % role, tmp)
 
-        if "PASSWORD" in active_part:
-            active_part, password = active_part.split("AND PASSWORD")
-            self.password = password.strip()
         self.active = True if active_part.strip() == "True" else False
         return self
 
