@@ -360,8 +360,8 @@ def remove_activity(name, file_name):
 
 def clean_activity(name):
     debug("Cleaning activity files for project %s" % name)
-    project = check_responsible(name)
-    files = get_activity_files(project.get_name())
+    check_responsible(name)
+    files = get_activity_files(name)
     if len(files) < 1:
         return True
     for x in files:
