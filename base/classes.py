@@ -168,6 +168,11 @@ class ProjectLog(Log):
         self.log.extension = extension
         return self.commit(Mail().project_activate(extension))
 
+    def activated(self, extension):
+        self.log.event = "Activation request has been processed"
+        self.log.extension = extension
+        return self.commit(Mail().project_activated(extension))
+
     def accept(self, extension):
         prefix = self._prefix(extension)
         self.log.event = "%s request for %s hours is accepted" \
