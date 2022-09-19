@@ -149,7 +149,7 @@ class Mail(Thread):
         self.sender = cfg.get("FROM", fallback="")
         self.title = cfg.get("TITLE", fallback="Visa for: %s" % rec.project_id())
         message = """Dear %s,
-        You have to sign the visa in order to have your project activated
+        You have to sign the visa in order to have your project created
         """ % rec.responsible_full_name()
         self.message = cfg.get("MESSAGE", fallback=message)
         self.signature = cfg.get("SIGNATURE", fallback="Truly Yours, Robot")
@@ -392,6 +392,10 @@ class Mail(Thread):
 
     def project_activate(self, record):
         self.__project_init(record, "PROJECT ACTIVATE")
+        return self
+
+    def project_activated(self, record):
+        self.__project_init(record, "PROJECT ACTIVATED")
         return self
 
     def allocation_accepted(self, record, e_type):
