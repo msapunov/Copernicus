@@ -1,6 +1,6 @@
 from flask_login import UserMixin
 from base import db
-from base.functions import slurm_consumption_raw, slurm_parse_project_conso
+from base.functions import slurm_consumption_raw, slurm_parse
 from datetime import datetime as dt
 from textwrap import shorten
 from hashlib import md5
@@ -117,9 +117,9 @@ class Project(db.Model):
         else:
             start = self.resources.created.strftime("%Y-%m-%dT%H:%M")
         slurm_raw, cmd = slurm_consumption_raw(name, start, finish)
-        new = slurm_parse_project_conso(slurm_raw)
+        new = slurm_parse(slurm_raw)
         if self.resources.consumption_raw:
-            old = slurm_parse_project_conso(self.resources.consumption_raw)
+            old = slurm_parse(self.resources.consumption_raw)
         else:
             old = {}
         for i in [new, old]:
