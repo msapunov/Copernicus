@@ -353,7 +353,7 @@ def projects_consumption(projects):
         start = key.strftime("%Y-%m-%dT%H:%M")
         finish = dt.now().strftime("%Y-%m-%dT%H:%M")
         slurm_raw, cmd = slurm_consumption_raw(name, start, finish)
-        slurm.update(slurm_parse_project_conso(slurm_raw))
+        slurm.update(slurm_parse(slurm_raw))
     return list(map(lambda x: x.with_usage(), all_projects))
 
 
