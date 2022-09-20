@@ -131,8 +131,9 @@ class Project(db.Model):
             if not project:
                 continue
             self.consumed += project.get("total consumption", 0)
-            tmp = i.keys()
-            logins = tmp.pop("total consumption")
+            logins = list(i.keys())
+            while "total consumption" in logins:
+                logins.remove("total consumption")
             for login in logins:
                 conso = project.get(login, 0)
                 error(login, conso)
