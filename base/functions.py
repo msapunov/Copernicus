@@ -357,18 +357,20 @@ def projects_consumption(projects):
     return list(map(lambda x: x.with_usage(), all_projects))
 
 
-def slurm_parse_project_conso(slurm_raw_output):
+def slurm_parse(slurm_raw_output):
     """
-    Parsing the output of sreport command looking for account, not user,
-    consumption. Normally it's the line with || in it
+    Parsing the output of sreport command looking for account and users,
+    consumption.
     :param slurm_raw_output: list of lines produced by sreport command
-    :return: dictionary, where project name is the key, consumption is the value
+    :return: dictionary of dictionaries, where project name is the key in first
+    dictionary, consumption is the value
     """
     output = {}
     if not slurm_raw_output:
         return output
     for item in slurm_raw_output:
-        if "||" not in item:  # skip user consumption
+        debug("Parsing line: %s" % item)
+        if "||" not in item:  # user consumption
             items = item.strip().split("|")
         else:
             items = item.strip().split("||")
