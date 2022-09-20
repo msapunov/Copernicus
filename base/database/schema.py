@@ -110,18 +110,34 @@ class Project(db.Model):
         return '<Project {}>'.format(self.get_name())
 
     def consumption(self):
-        if not self.name:
-            self.name = self.get_name()
-        start = self.resources.created.strftime("%Y-%m-%dT%H:%M")
+        name = self.get_name()
         finish = dt.now().strftime("%Y-%m-%dT%H:%M")
-        slurm_raw, cmd = slurm_consumption_raw(self.name, start, finish)
-        result = slurm_parse_project_conso(slurm_raw)
-        if self.name not in result:
-            self.consumed = 0
-        elif "total consumption" not in result[self.name]:
-            self.consumed = 0
+        if self.resources.consumption_ts:
+            start = self.resources.consumption_ts.strftime("%Y-%m-%dT%H:%M")
         else:
-            self.consumed = result[self.name]["total consumption"]
+            start = self.resources.created.strftime("%Y-%m-%dT%H:%M")
+        slurm_raw, cmd = slurm_consumption_raw(name, start, finish)
+        new = slurm_parse_project_conso(slurm_raw)
+        if self.resources.consumption_raw:
+            old = slurm_parse_project_conso(self.resources.consumption_raw)
+        else:
+            old = {}
+        for i in [new, old]:
+            error(i)
+            project = i.get(name, {})
+            if not project:
+                continue
+            self.consumed += project.get("total consumption", 0)
+            tmp = i.keys()
+            logins = tmp.pop("total consumption")
+            for login in logins:
+                conso = project.get(login, 0)
+                error(login, conso)
+                if login not in self.consumed_users:
+                    self.consumed_users[login] = conso
+                else:
+                    self.consumed_users[login] += conso
+                error(login, conso)
         return self
 
     def get_responsible(self):
