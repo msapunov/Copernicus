@@ -8,7 +8,7 @@ from base.database.schema import Project
 from base.functions import (
     group_for_consumption,
     slurm_consumption_raw,
-    slurm_parse_project_conso)
+    slurm_parse)
 
 
 def resources_update(projects, force=False, end=dt.now()):
@@ -33,7 +33,7 @@ def resources_update(projects, force=False, end=dt.now()):
         begin = start.strftime("%Y-%m-%dT%H:%M")
         finish = end.strftime("%Y-%m-%dT%H:%M")
         result, cmd = slurm_consumption_raw(accounts, begin, finish)
-        conso = slurm_parse_project_conso(result)
+        conso = slurm_parse(result)
         names = conso.keys()
         for project in value:
             project.resources.consumption_ts = end
