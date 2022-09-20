@@ -379,7 +379,11 @@ def slurm_parse(slurm_raw_output):
             login = items[1].strip()
         else:
             login = None
-        conso = int(items[-1].strip())
+        try:
+            conso = int(items[-1].strip())
+        except ValueError as err:
+            error("Exception converting '%s' to int: %s" % (items[-1], err))
+            continue
         if name not in output:
             output[name] = {}
         if login:
