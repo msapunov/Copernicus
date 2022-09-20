@@ -119,7 +119,8 @@ class Project(db.Model):
         slurm_raw, cmd = slurm_consumption_raw(name, start, finish)
         new = slurm_parse(slurm_raw)
         if self.resources.consumption_raw:
-            old = slurm_parse(self.resources.consumption_raw)
+            saved = self.resources.consumption_raw.split("\n")
+            old = slurm_parse(saved)
         else:
             old = {}
         for i in [new, old]:
