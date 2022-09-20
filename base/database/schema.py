@@ -135,12 +135,10 @@ class Project(db.Model):
                 logins.remove("total consumption")
             for login in logins:
                 conso = project.get(login, 0)
-                error("%s: %s" % (login, conso))
                 if login not in self.consumed_users:
                     self.consumed_users[login] = conso
                 else:
                     self.consumed_users[login] += conso
-                error(login, conso)
         return self
 
     def get_responsible(self):
