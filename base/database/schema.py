@@ -130,7 +130,7 @@ class Project(db.Model):
             if not project:
                 continue
             self.consumed += project.get("total consumption", 0)
-            logins = list(i.keys())
+            logins = list(project.keys())
             while "total consumption" in logins:
                 logins.remove("total consumption")
             for login in logins:
