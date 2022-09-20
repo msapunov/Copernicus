@@ -126,7 +126,6 @@ class Project(db.Model):
         else:
             old = {}
         for i in [new, old]:
-            error(i)
             project = i.get(name, {})
             if not project:
                 continue
