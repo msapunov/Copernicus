@@ -102,7 +102,7 @@ class Project(db.Model):
     ref = db.relationship("Register", foreign_keys=ref_id)
 
     def __init__(self):
-        self.consumed = None
+        self.consumed = 0
         self.consumed_use = None
         self.consumed_users = {}
 
