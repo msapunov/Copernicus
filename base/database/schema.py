@@ -180,7 +180,7 @@ class Project(db.Model):
         if not hasattr(self, "consumed"):
             self.__init__()
         if self.consumed == 0:
-            self.consumed = self.consumption()
+            self.consumption()
         total = self.resources.cpu
         try:
             usage = "{0:.1%}".format(float(self.consumed) / float(total))
