@@ -110,6 +110,8 @@ class Project(db.Model):
         return '<Project {}>'.format(self.get_name())
 
     def consumption(self):
+        if not hasattr(self, "consumed"):
+            self.__init__()
         name = self.get_name()
         finish = dt.now().strftime("%Y-%m-%dT%H:%M")
         if self.resources.consumption_ts:
@@ -175,7 +177,9 @@ class Project(db.Model):
         return rec
 
     def with_usage(self):
-        if not hasattr(self, "consumed") or self.consumed is None:
+        if not hasattr(self, "consumed"):
+            self.__init__()
+        if self.consumed == 0:
             self.consumed = self.consumption()
         total = self.resources.cpu
         try:
