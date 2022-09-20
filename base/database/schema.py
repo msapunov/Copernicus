@@ -104,6 +104,7 @@ class Project(db.Model):
     def __init__(self):
         self.consumed = None
         self.consumed_use = None
+        self.consumed_users = {}
 
     def __repr__(self):
         return '<Project {}>'.format(self.get_name())
