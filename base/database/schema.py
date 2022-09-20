@@ -175,7 +175,7 @@ class Project(db.Model):
 
     def with_usage(self):
         if not hasattr(self, "consumed") or self.consumed is None:
-            self.consumed = self.resources.consumption
+            self.consumed = self.consumption()
         total = self.resources.cpu
         try:
             usage = "{0:.1%}".format(float(self.consumed) / float(total))
