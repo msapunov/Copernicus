@@ -416,35 +416,6 @@ def slurm_consumption_raw(name, start, finish):
     return data, run
 
 
-def resource_consumption(project, start=None, end=None):
-    """
-    Parse the raw output of scontrol command to get a project's consumption
-    :param project: Object. Instance of a project object
-    :param start: starting date for accounting query
-    :param end: end date for accounting query should be now by default
-    :return: Return project's consumption as integer
-    """
-    name = project.get_name()
-    if not name:
-        error("Project %s has no name!" % project)
-        return 0
-    if not start:
-        start = project.resources.created
-    start = start.strftime("%Y-%m-%d-%H:%M:%S")
-    if not end:
-        end = dt.now()
-    end = end.strftime("%Y-%m-%d-%H:%M:%S")
-    raw, cmd = slurm_consumption_raw(name, start, end)
-    if not raw:
-        debug("Returning 0")
-        return 0
-    result = slurm_parse_project_conso(raw)
-    if name not in result:
-        debug("Failed to find consumption of %s in raw data: %s" % (name, raw))
-        return 0
-    return result[name]["total consumption"]
-
-
 def group_for_consumption(projects, recalculate=False):
     """
     Grouping projects by resource created time
