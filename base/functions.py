@@ -368,7 +368,8 @@ def slurm_parse(slurm_raw_output):
     output = {}
     if not slurm_raw_output:
         return output
-    for item in slurm_raw_output:
+    meaningful = list(filter(lambda x: "|" in x, slurm_raw_output))
+    for item in meaningful:
         debug("Parsing line: %s" % item)
         if "||" not in item:  # user consumption
             items = item.strip().split("|")
