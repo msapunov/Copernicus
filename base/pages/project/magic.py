@@ -23,33 +23,6 @@ __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
 
 
-def conso_by_user(project):
-    """
-    Takes raw consumption associated to a project resource, parse it and append
-    to user information
-    :param project: Object. Instance of project object
-    :return: Object. Instance of project object
-    """
-    if not project.resources:
-        error("No resources associated to project %s found" % project)
-        return project
-    if not project.resources.consumption_raw:
-        error("No consumption_raw in a resource associated to project %s found"
-              % project)
-        return project
-    try:
-        conso_dict = eval(project.resources.consumption_raw)
-    except Exception as err:
-        return project
-    conso_keys = conso_dict.keys()
-    for user in project.users:
-        if user.login not in conso_keys:
-            user.consumption = None
-        else:
-            user.consumption = conso_dict[user.login]
-    return project
-
-
 def suspend_expired_projects(projects):
     """
     Check end of life of resources for all the projects and if the EOL is less
