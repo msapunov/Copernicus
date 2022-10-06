@@ -390,7 +390,6 @@ class Resources(db.Model):
     project = db.Column(db.String)
     treated = db.Column(db.Boolean, default=False)
     consumption_ts = db.Column(db.DateTime(True))
-    consumption = db.Column(db.Integer, db.CheckConstraint("consumption>=0"))
     consumption_raw = db.Column(db.Text)
 
     def to_dict(self):
