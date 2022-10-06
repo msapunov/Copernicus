@@ -410,6 +410,13 @@ class Resources(db.Model):
             "finish": ttl
         }
 
+    def consumption(self):
+        if not self.consumption_pro:
+            self.consumption_pro = self.update()
+        conso = eval(self.consumption_pro)
+        if "total consumption" not in conso:
+            raise ValueError("Wrong format of consumption data")
+        return conso["total consumption"]
 
 class User(UserMixin, db.Model):
     __tablename__ = "users"
