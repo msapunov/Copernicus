@@ -119,6 +119,8 @@
             </div>
             <div class="uk-width-medium-2-5 uk-width-small-1-2 {% if project.active != True %}uk-text-muted{% endif %}">
                 <div class="uk-panel uk-margin-top uk-margin-bottom" id="{{project.name}}_project_users">
+                {% set user_conso = project.consumed_users.keys()|list %}
+                {% set user_real = project.users|map(attribute='login')|list %}
                 {% for user in project.users|sort(attribute='login')%}
                     <div class="uk-panel" id="{{project.name}}_{{user.login}}">
                     {% if user.login != project.responsible.login %}
@@ -136,10 +138,21 @@
                         </button>
                     {% endif %}
                         <span class="{% if user.active == 'Suspended' %}uk-text-muted {% endif %}uk-margin-small-left" title="{{user.login}} &lt;{{user.email}}&gt;">
-                        {{user.full_name()}}{% if user.consumption %} : {{user.consumption}} hours {% endif %} {% if user.active == 'Suspended' %}[Inactive]{% endif%}
+                        {{user.full_name()}}{% if user.login in user_conso  %} : {{project.consumed_users[user.login]}} hours {% endif %} {% if user.active == 'Suspended' %}[Inactive]{% endif%}
                         </span>
-
                     </div>
+                {% endfor %}
+                <div class="uk-hidden">{{ user_real }}</div>
+                {% for login in user_conso %}
+                    {% if login in user_real %}
+                    {% else %}
+                    <div class="uk-panel" id="{{project.name}}_{{login}}">
+                        <button class="uk-button uk-button-mini uk-button-link uk-text-warning uk-icon-justify" type="button" disabled></button>
+                        <span class="uk-text-muted uk-margin-small-left">
+                            {{login}} : {{project.consumed_users[login]}} hours
+                        </span>
+                    </div>
+                    {% endif %}
                 {% endfor %}
                 </div>
             </div>
