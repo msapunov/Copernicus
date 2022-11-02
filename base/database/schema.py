@@ -385,7 +385,7 @@ class Resources(db.Model):
     type = db.Column(db.String(1))
     comment = db.Column(db.Text)
     modified = db.Column(db.DateTime(True))
-    created = db.Column(db.DateTime(True))
+    created = db.Column(db.DateTime(True), default=dt.utcnow)
     ttl = db.Column(db.DateTime(True))
     project = db.Column(db.String)
     treated = db.Column(db.Boolean, default=False)
