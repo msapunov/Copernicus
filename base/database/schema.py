@@ -389,9 +389,10 @@ class Resources(db.Model):
     ttl = db.Column(db.DateTime(True))
     project = db.Column(db.String)
     treated = db.Column(db.Boolean, default=False)
-    consumption_ts = db.Column(db.DateTime(True))
-    consumption_raw = db.Column(db.Text)
-    consumption_pro = db.Column(db.Text)
+    consumption_prefix = db.Column(db.Text)
+    consumption_prefix_date = db.Column(db.DateTime(True))
+    consumption_last = db.Column(db.Text)
+    consumption_last_date = db.Column(db.DateTime(True))
 
     def to_dict(self):
         start = self.created.strftime("%Y-%m-%d %X %Z") if self.created else ""
