@@ -367,9 +367,14 @@ class Resources(db.Model):
     project = db.Column(db.String)
     treated = db.Column(db.Boolean, default=False)
     consumption_prefix = db.Column(db.Text)
-    consumption_prefix_date = db.Column(db.DateTime(True))
-    consumption_last = db.Column(db.Text)
-    consumption_last_date = db.Column(db.DateTime(True))
+
+    def consumption_prefix_update(self):
+        end = self.created + timedelta(days=1)
+        end = end.replace(hour=0, minute=0, second=0, microsecond=0)
+        conso, cmd = consumption(self.project, self.created, end)
+        self.consumption_prefix = str(conso)
+        db.session.commit()
+        return conso
 
     def to_dict(self):
         start = self.created.strftime("%Y-%m-%d %X %Z") if self.created else ""
