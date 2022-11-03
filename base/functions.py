@@ -396,6 +396,53 @@ def slurm_parse(slurm_raw_output):
     return output
 
 
+def consumption(name, start, finish):
+    """
+    Build a remote query to SLURM DB to obtain a project's CPU consumption.
+    :param name: Account name, in out case it's a project's name
+    :param start: starting date for accounting query
+    :param finish: end date for accounting query should be now by default
+    :return: Raw result of sreport command
+    """
+    if isinstance(name, list):
+        name = ",".join(name)
+    if isinstance(start, dt):
+        start = start.strftime("%Y-%m-%dT%H:%M:%S")
+    if isinstance(finish, dt):
+        finish = finish.strftime("%Y-%m-%dT%H:%M:%S")
+    output = {"total consumption": 0, "start date": start, "end date": finish}
+    cmd = ["sreport", "cluster", "AccountUtilizationByUser", "-t", "hours"]
+    cmd += ["-nP", "format=Account,Login,Used", "Accounts=%s" % name]
+    cmd += ["start=%s" % start, "end=%s" % finish]
+    run = " ".join(cmd)
+    data, err = ssh_wrapper(run)
+    if not data:
+        debug("No data received, nothing to return")
+        return output, run
+    debug("Got raw consumption values for project %s: %s" % (name, data))
+    for item in list(filter(lambda x: "|" in x, data)):
+        login = None
+        if "||" not in item:  # user consumption
+            name, login, conso = item.strip().split("|")
+        else:
+            name, conso = item.strip().split("||")
+        name = name.strip()
+        try:
+            conso = int(conso.strip())
+        except ValueError as err:
+            error("Exception converting '%s' to int: %s" % (conso, err))
+            continue
+        if name not in output:
+            output[name] = {}
+        if login:
+            output[name][login] = conso
+        else:
+            output["total consumption"] += conso
+            output[name]["total consumption"] = conso
+    debug("Parsed result: %s" % output)
+    return output, run
+
+
 def slurm_consumption_raw(name, start, finish):
     """
     Build a remote query to SLURM DB to obtain a project's CPU consumption.
