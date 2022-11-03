@@ -164,7 +164,7 @@ class Project(db.Model):
             error("Failed to calculate project usage: %s" % err)
             use = 0
         self.consumed_use = use
-        return self
+        return self.consumed_use
 
     def to_dict(self):
         if self.created:
