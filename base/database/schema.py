@@ -394,12 +394,27 @@ class Resources(db.Model):
         }
 
     def consumption(self):
-        if not self.consumption_pro:
-            self.consumption_pro = self.update()
-        conso = eval(self.consumption_pro)
-        if "total consumption" not in conso:
-            raise ValueError("Wrong format of consumption data")
-        return conso["total consumption"]
+        conso = cache.get("consumption")
+        if conso:
+            return conso
+        if not self.consumption_prefix:
+            prefix = self.consumption_prefix_update()
+        else:
+            prefix = eval(self.consumption_prefix)
+        start = prefix["end date"]
+        end = dt.utcnow() + timedelta(days=1)
+        end = end.replace(hour=0, minute=0, second=0, microsecond=0)
+        conso, cmd = consumption(self.project, start, end)
+        prefix = prefix.get(self.project, {})
+        conso = conso.get(self.project, {})
+        for key, value in prefix.items():
+            if key not in conso:
+                conso[key] = int(value)
+            else:
+                conso[key] = int(value) + int(conso[key])
+        cache.set("consumption", conso, 600)
+        return conso
+
 
 class User(UserMixin, db.Model):
     __tablename__ = "users"
