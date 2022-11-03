@@ -1,7 +1,7 @@
 from flask_login import UserMixin
-from base import db
-from base.functions import slurm_consumption_raw, slurm_parse
-from datetime import datetime as dt
+from base import db, cache
+from base.functions import consumption
+from datetime import datetime as dt, timedelta
 from textwrap import shorten
 from hashlib import md5
 from logging import error
