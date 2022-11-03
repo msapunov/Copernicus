@@ -112,34 +112,11 @@ class Project(db.Model):
     def consumption(self):
         if not hasattr(self, "consumed"):
             self.__init__()
-        name = self.get_name()
-        finish = dt.now().strftime("%Y-%m-%dT%H:%M")
-        if self.resources.consumption_ts:
-            start = self.resources.consumption_ts.strftime("%Y-%m-%dT%H:%M")
-        else:
-            start = self.resources.created.strftime("%Y-%m-%dT%H:%M")
-        slurm_raw, cmd = slurm_consumption_raw(name, start, finish)
-        new = slurm_parse(slurm_raw)
-        if self.resources.consumption_raw:
-            saved = self.resources.consumption_raw.split("\n")
-            old = slurm_parse(saved)
-        else:
-            old = {}
-        for i in [new, old]:
-            project = i.get(name, {})
-            if not project:
-                continue
-            self.consumed += project.get("total consumption", 0)
-            logins = list(project.keys())
-            while "total consumption" in logins:
-                logins.remove("total consumption")
-            for login in logins:
-                conso = project.get(login, 0)
-                if login not in self.consumed_users:
-                    self.consumed_users[login] = conso
-                else:
-                    self.consumed_users[login] += conso
-        return self
+        conso = self.resources.consumption()
+        self.consumed = conso["total consumption"]
+        self.consumed_use = self.with_usage()
+        self.consumed_users = conso
+        return self.consumed
 
     def get_responsible(self):
         return self.responsible
