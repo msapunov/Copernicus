@@ -23,7 +23,7 @@ __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
 
 
-def suspend_expired_projects(projects):
+def suspend_expired_projects(projects, config):
     """
     Check end of life of resources for all the projects and if the EOL is less
     the now() the project's active property set to False, project_suspend action
@@ -33,6 +33,8 @@ def suspend_expired_projects(projects):
     now = dt.now().replace(tzinfo=timezone.utc)
     for rec in projects:
         if not rec.active:
+            continue
+        if not config[rec.type].suspend:
             continue
         finish = rec.resources.ttl
         if now > finish:
@@ -87,7 +89,7 @@ def consumption_check(projects):
 def sanity_check():
     conf = project_config()
     projects = db.session.query(Project).all()
-    suspend_expired_projects(projects)
+    suspend_expired_projects(projects, conf)
     warn_expired_projects(projects, conf)
     suspend_overconsumed_projects(projects)
     warn_overconsumed_projects(projects)
