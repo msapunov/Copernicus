@@ -244,7 +244,7 @@ def project_parse_cfg_options(cfg, section):
     else:
         eva_text_dt = None
     extendable = cfg.get(section, "extendable", fallback=False)
-
+    suspend = cfg.get(section, "suspend", fallback=True)
     visa_names = cfg.get(section, "visa", fallback=None)
     if visa_names:
         visa = list(map(lambda x: x.strip(), visa_names.split(",")))
@@ -253,6 +253,7 @@ def project_parse_cfg_options(cfg, section):
     return {"duration_text": duration, "duration_dt": duration_dt, "acl": acl,
             "finish_text": end, "finish_dt": end_dt, "cpu": cpu, "visa": visa,
             "finish_notice_text": end_notice, "extendable": extendable,
+            "suspend": suspend,
             "finish_notice_dt": end_notice_dt,
             "finish_report_dt": end_report_dt,
             "transform": transform, "description": description,
