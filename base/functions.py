@@ -264,7 +264,7 @@ def project_parse_cfg_options(cfg, section):
 def project_config():
     """
     Parsing file defined in PROJECT_CONFIG option of main application config.
-    Otherwise trying to find project.cfg file
+    Otherwise, trying to find project.cfg file
     :return: Dict. Each project type (i.e. subsection in config file) having
     options returned by project_parse_cfg_options function
     """
