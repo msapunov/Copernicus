@@ -1,0 +1,30 @@
+<div class="uk-modal fade" tabindex="-1" role="dialog" aria-labelledby="confirm-modal" aria-hidden="true" id="{{form.username}}_ssh">
+    <div class="uk-modal-dialog">
+        <button type="button" class="uk-modal-close uk-close"></button>
+        <div class="uk-modal-header">
+            <h3>Upload SSH public key for the account '{{form.username}}'?</h3>
+        </div>
+        <div class="uk-overflow-container">
+            <form action="test" method="post" class="uk-panel uk-form" id="{{form.username}}_ssh_form">
+                {{ form.csrf_token }}
+                <div class="uk-form-row">
+                    <div class="uk-form-controls">
+                        {{ form.key(class_="uk-width-1-1", placeholder="ssh-rsa AAAAB3NzaC1yc2...+6W5hijLDZ4zVw== username@computer") }}
+                    </div>
+                </div>
+                <div class="uk-form-row uk-alert">
+                    <div>
+                        <p>Upload the content of SSH public key. It usually stored in a file like ~/.ssh/id_rsa.pub or ~/.ssh/id_ed25519.pub</p>
+                        <p>In POSIX systems (Linux, MacOS) it's enough to do 'cat ~/.ssh/id_*.pub' and paste output into text area above.</p>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="uk-modal-footer">
+            <div class="uk-text-right">
+                <button class="uk-button window_hide" data-modal="{{form.username}}_ssh">Cancel</button>
+                <button class="uk-button uk-button-primary ssh_submit" data-modal="{{form.username}}_ssh" data-form="{{form.username}}_ssh_form" data-url="user/ssh/{{form.username}}">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
