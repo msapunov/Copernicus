@@ -359,19 +359,8 @@ class Extensions:
 
     def unprocessed(self):
         records = self.queue.filter_by(processed=False).all()
-        projects = list(map(lambda x: x.project, records))
-        consumption = projects_consumption(projects)
         for i in records:
-            project = list(filter(lambda x: i.project.name == x.name, consumption))
-            if len(project) < 1:
-                continue
-            i.project = project[0]
-        #    if len(project) < 1:
-        #        i.consumed = "Undefined"
-        #        i.consumed_use = "Undefined"
-        #    else:
-        #        i.consumed = str(project[0].consumed)
-        #        i.consumed_use = str(project[0].consumed_use) + "%"
+            i.project.with_usage()
         return records
 
     def pending(self):
