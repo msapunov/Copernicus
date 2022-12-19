@@ -297,6 +297,10 @@ class UserLog(Log):
         self.log.event = "Set ACL permissions: %s" % "; ".join(result)
         return self.commit()
 
+    def key_upload(self, key):
+        self.log.event = "Upload SSH key %s" % key
+        return self.commit()
+
     def user_update(self, info):
         changes = []
         for name, value in info.items():

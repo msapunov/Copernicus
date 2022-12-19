@@ -14,8 +14,8 @@
                 </div>
                 <div class="uk-form-row uk-alert">
                     <div>
-                        <p>Upload the content of SSH public key. It usually stored in a file like ~/.ssh/id_rsa.pub or ~/.ssh/id_ed25519.pub</p>
-                        <p>In POSIX systems (Linux, MacOS) it's enough to do 'cat ~/.ssh/id_*.pub' and paste output into text area above.</p>
+                        <p>Upload the content of SSH public key. Public key usually saved in a file like ~/.ssh/id_rsa.pub or ~/.ssh/id_ed25519.pub</p>
+                        <p>In POSIX systems (Linux, MacOS) it's enough to do 'cat ~/.ssh/name_public_key.pub' and paste output into text area above</p>
                     </div>
                 </div>
             </form>
@@ -23,7 +23,7 @@
         <div class="uk-modal-footer">
             <div class="uk-text-right">
                 <button class="uk-button window_hide" data-modal="{{form.username}}_ssh">Cancel</button>
-                <button class="uk-button uk-button-primary ssh_submit" data-modal="{{form.username}}_ssh" data-form="{{form.username}}_ssh_form" data-url="user/ssh/{{form.username}}">Submit</button>
+                <button class="uk-button uk-button-primary ssh_submit" data-modal="{{form.username}}_ssh" data-form="{{form.username}}_ssh_form" data-url="user/upload/ssh">Submit</button>
             </div>
         </div>
     </div>
