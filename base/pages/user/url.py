@@ -63,6 +63,16 @@ def web_modal_edit(login):
     return jsonify(render_template("modals/user_edit_info.html", form=form))
 
 
+@bp.route("/user/upload/ssh", methods=["POST"])
+@login_required
+def web_user_upload_ssh():
+    log.info("Call to process new SSH key")
+    form = KeyForm()
+    if not form.validate_on_submit():
+        raise ValueError(form_error_string(form.errors))
+    return jsonify(message=ssh_key(form))
+
+
 @bp.route("/user/edit/<string:login>", methods=["POST"])
 @login_required
 def web_user_edit(login):
