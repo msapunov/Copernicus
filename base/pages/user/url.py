@@ -45,6 +45,15 @@ def user_list(active=True):
     return jsonify(results=users_list)
 
 
+@bp.route("/user/modal/ssh", methods=["POST"])
+@login_required
+def web_modal_ssh():
+    log.info("Call to render upload ssh key modal")
+    form = KeyForm()
+    form.username = current_user.login
+    return jsonify(render_template("modals/user_load_ssh.html", form=form))
+
+
 @bp.route("/user/modal/edit/<string:login>", methods=["POST"])
 @login_required
 def web_modal_edit(login):
