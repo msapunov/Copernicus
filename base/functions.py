@@ -12,6 +12,7 @@ from pdfkit import from_string
 from pathlib import Path
 from string import ascii_letters, digits
 from struct import unpack
+from subprocess import check_output, STDOUT, CalledProcessError
 from os import urandom
 import locale
 
@@ -19,6 +20,21 @@ from base.utils import is_text
 
 __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
+
+
+def ssh_public(key_file):
+    argz = ["ssh-keygen", "-l", "-f", key_file]
+    cmd = " ".join(argz)
+    debug("Executing command: %s" % cmd)
+    result = False
+    err = False
+    try:
+        result = check_output(argz, stderr=STDOUT, universal_newlines=True)
+    except CalledProcessError as e:
+        err = "Error while executing the command '%s': %s" % (cmd, e.output)
+    except Exception as e:
+        err = "Exception while executing command '%s': %s" % (cmd, e)
+    return result, err
 
 
 def ssh_wrapper(cmd, host=None):
