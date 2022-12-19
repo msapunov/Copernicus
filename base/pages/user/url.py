@@ -50,7 +50,7 @@ def user_list(active=True):
 def web_modal_edit(login):
     log.info("Call to render edit user info modal")
     user = get_user_record(login)
-    form = EditInfo(user)
+    form = edit_info(user)
     return jsonify(render_template("modals/user_edit_info.html", form=form))
 
 
