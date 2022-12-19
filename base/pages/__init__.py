@@ -246,6 +246,12 @@ class TaskQueue:
         self.task.project = project_obj
         return self
 
+    def key_upload(self, key):
+        if not self.u_name:
+            raise ValueError("User is  not set. Can't upload SSH key")
+        self.task.action = "ssh|user|%s||%s" % (self.u_name, key)
+        return self._user_action()
+
     def password_reset(self):
         if not self.u_name:
             raise ValueError("User is  not set. Can't change the password")
