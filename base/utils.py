@@ -4,16 +4,7 @@ from tempfile import gettempdir, mkdtemp
 from os import walk
 from os.path import join as join_dir, exists
 from base64 import b64encode
-from magic import from_file
 from logging import debug
-
-
-def is_text(name):
-    name = str(name)
-    mime = from_file(name, mime=True)
-    if "text/" in mime:
-        return True
-    return False
 
 
 def check_str(raw):
