@@ -11,7 +11,7 @@ from base.pages.admin.form import action_pending, visa_pending, contact_pending
 from base.pages.admin.form import activate_user
 from base.pages.board.magic import create_resource
 from base.pages.user.magic import user_by_id
-from base.pages.user.form import EditInfo
+from base.pages.user.form import edit_info
 from base.database.schema import User, Register, LogDB, Project, Tasks, Register
 from base.email import Mail
 from base.classes import UserLog, RequestLog, TmpUser, ProjectLog, Task
@@ -59,7 +59,7 @@ def unprocessed():
 
 
 def render_registry(user):
-    edit_form = EditInfo(user)
+    edit_form = edit_info(user)
     user_edit = render_template("modals/user_edit_info.html", form=edit_form)
     tasks = Tasks.query.filter_by(user=user).all()
     details = user.details()
