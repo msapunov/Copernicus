@@ -4,9 +4,7 @@ from base import db
 from base.functions import project_config, create_visa
 from base.email import Mail, UserMailingList, ResponsibleMailingList
 from base.database.schema import LogDB, User, ACLDB, Extend, Register
-from base.functions import projects_consumption
-
-from logging import warning, debug
+from logging import debug
 from operator import attrgetter
 from datetime import datetime as dt
 from pathlib import Path
