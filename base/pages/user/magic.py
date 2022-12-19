@@ -12,6 +12,21 @@ __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
 
 
+def ssh_key(form):
+    key = form.key.data
+    fd, key_path = mkstemp(text=True)
+    with open(key_path, "w") as writer:
+        writer.write(key)
+    stdout, stderr = ssh_public(key_path)
+    if path.exists(key_path):
+        remove(key_path)
+    if stderr:
+        raise ValueError("Provided public key failed to pass ssh-keygen check")
+    task = TaskQueue().user(current_user).key_upload(key).task
+    Task(task).accept()
+    return UserLog(current_user).key_upload(key)
+
+
 def user_by_id(uid):
     user = User.query.filter_by(id=uid).first()
     if not user:
