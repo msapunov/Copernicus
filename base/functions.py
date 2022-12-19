@@ -16,7 +16,6 @@ from subprocess import check_output, STDOUT, CalledProcessError
 from os import urandom
 import locale
 
-from base.utils import is_text
 
 __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
@@ -80,7 +79,6 @@ def show_configuration():
     cfg = {}
     path = Path(app.instance_path)
     files = list(filter(lambda x: x.is_file(), path.iterdir()))
-    text_files = list(filter(lambda x: is_text(x), files))
     config = ConfigParser(allow_no_value=True)
     for fichier in text_files:
         nom = str(fichier)
