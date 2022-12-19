@@ -4,6 +4,8 @@ from base.functions import bytes2human, ssh_wrapper, ssh_public
 from base.pages import TaskQueue
 from base.database.schema import User
 from base.classes import UserLog, Task
+from tempfile import mkstemp
+from os import path, remove
 
 
 __author__ = "Matvey Sapunov"
