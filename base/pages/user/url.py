@@ -4,8 +4,9 @@ from base.functions import projects_consumption
 from base.database.schema import User
 from base.pages.user import bp
 from base.pages.user.magic import get_user_record, get_jobs
-from base.pages.user.magic import get_scratch, user_edit
-from base.pages.user.form import EditInfo, InfoForm
+from base.pages.user.magic import get_scratch, user_edit, ssh_key
+from base.pages.user.form import edit_info, InfoForm, KeyForm
+from base.utils import form_error_string
 from datetime import datetime as dt, timezone
 from operator import attrgetter
 import logging as log
