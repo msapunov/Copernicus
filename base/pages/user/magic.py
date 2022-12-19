@@ -1,6 +1,6 @@
 from flask_login import current_user
 from base.utils import form_error_string
-from base.functions import bytes2human, ssh_wrapper
+from base.functions import bytes2human, ssh_wrapper, ssh_public
 from base.pages import TaskQueue
 from base.database.schema import User
 from base.classes import UserLog, Task
