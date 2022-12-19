@@ -418,7 +418,7 @@ def consumption(name, start, finish):
     Build a remote query to SLURM DB to obtain a project's CPU consumption.
     :param name: Account name, in out case it's a project's name
     :param start: starting date for accounting query
-    :param finish: end date for accounting query should be now by default
+    :param finish: end date for accounting query should be today's midnight
     :return: Raw result of sreport command
     """
     if isinstance(name, list):
