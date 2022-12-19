@@ -9,7 +9,11 @@ class InfoForm(FlaskForm):
     email = EmailField("E-mail")
 
 
-def EditInfo(user):
+class KeyForm(FlaskForm):
+    key = StringField("Key")
+
+
+def edit_info(user):
     form = InfoForm()
     form.username = user.login
     form.prenom.data = user.name
