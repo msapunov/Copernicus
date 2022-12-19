@@ -28,11 +28,15 @@
             <meta id="user_login" data-login="{{ data.user.login }}">
             <div class="uk-panel uk-width-1-1 uk-panel-space uk-text-center uk-panel-hover user_info" style="height: 120px;">
                 <p class="uk-h2 uk-text-nowrap">{{data.user.full}} &lt;{{data.user.email}}&gt;</p>
-                <p class="uk-h4 uk-text-nowrap">User ID: {{data.user.uid}}
-                    <button class="uk-panel-badge uk-button uk-button-success uk-button-small edit uk-hidden" data-modal="{{data.user.login}}_edit" disabled>
-                        <span class="uk-icon-edit uk-margin-small-right"></span>Edit
-                    </button>
-                </p>
+                <p class="uk-h4 uk-text-nowrap">User ID: {{data.user.uid}}</p>
+            </div>
+            <div class="uk-panel uk-width-1-1 uk-panel-space uk-text-center">
+                <button class="uk-button uk-button-small edit" data-modal="{{data.user.login}}_edit">
+                    <span class="uk-icon-edit uk-margin-small-right"></span>Edit user info
+                </button>
+                <button class="uk-button uk-button-small ssh" data-modal="{{data.user.login}}_ssh">
+                    <span class="uk-icon-key uk-margin-small-right"></span>Upload SSH key
+                </button>
             </div>
         {% endif %}
         {% if data and data.jobs %}
