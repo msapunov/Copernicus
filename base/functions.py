@@ -80,14 +80,14 @@ def show_configuration():
     path = Path(app.instance_path)
     files = list(filter(lambda x: x.is_file(), path.iterdir()))
     config = ConfigParser(allow_no_value=True)
-    for fichier in text_files:
-        nom = str(fichier)
+    for name in files:
+        nom = str(name)
         try:
             config.read(nom, encoding="utf-8")
         except Exception as err:
             error("%s - not a configuration file: %s" % (nom, err))
-            text_files.remove(fichier)
-    for cfg_file in text_files:
+            files.remove(name)
+    for cfg_file in files:
         name = cfg_file.name
         if "ssh" in name:
             warning("Skipping ssh key: %s" % cfg_file)
