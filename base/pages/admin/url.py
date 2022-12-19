@@ -307,7 +307,7 @@ def admin_registration_visa_received(pid):
 @grant_access("admin", "tech")
 def admin_registration_visa_resend(pid):
     """
-    Sometimes visa should be send once again
+    Sometimes visa should be sent once again
     :param pid: Int. ID of register record
     :return: String. Message to display. Result of admin_registration_visa()
     """
