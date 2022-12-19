@@ -27,7 +27,7 @@ def resources_update(projects, force=False, end=dt.now()):
     dates = group_for_consumption(projects, recalculate=force)
     for start, value in dates.items():
         if start == end:
-            debug("Start date %s and finish %s is same" % (start, end))
+            debug("Start %s and finish %s is same. Skipping" % (start, end))
             continue
         accounts = ",".join(list(map(lambda x: x.get_name(), value)))
         begin = start.strftime("%Y-%m-%dT%H:%M")
