@@ -1,6 +1,5 @@
 from flask import render_template, request, jsonify, flash
 from flask_login import login_required, current_user
-from base.functions import projects_consumption
 from base.database.schema import User
 from base.pages.user import bp
 from base.pages.user.magic import get_user_record, get_jobs
@@ -86,18 +85,21 @@ def web_user_edit(login):
 @bp.route("/user.html", methods=["GET"])
 @login_required
 def user_index():
-    start = dt.now(timezone.utc)
-    for project in current_user.project:
-        if project.resources.created < start:
-            start = project.resources.created
-    begin = start.strftime("%m/%d/%y-%H:%M")
-    finish = dt.now().strftime("%m/%d/%y-%H:%M")
+    if not current_user.project:
+        current_user.project = []
+        flash("No projects found for user '%s'" % current_user.full())
     user = {"full": current_user.full_name(),
             "name": current_user.name,
             "surname": current_user.surname,
             "email": current_user.email,
             "uid": current_user.uid,
             "login": current_user.login}
+    start = dt.now(timezone.utc)
+    for project in current_user.project:
+        if project.resources.created < start:
+            start = project.resources.created
+    begin = start.strftime("%m/%d/%y-%H:%M")
+    finish = dt.now().strftime("%m/%d/%y-%H:%M")
     try:
         jobs = get_jobs(begin, finish)
     except ValueError as err:
@@ -108,13 +110,18 @@ def user_index():
     except ValueError as err:
         scratch = None
         flash(str(err))
-    if current_user.project:
-        projects = projects_consumption(current_user.project)
-    else:
-        projects = None
-        flash("No projects found for user '%s'" % current_user.full())
-
+    for project in current_user.project:
+        try:
+            conso = eval(project.resources.consumption_raw)
+        except:
+            conso = {}
+        if current_user.login not in conso:
+            project.private = 0
+        else:
+            project.private = conso[current_user.login]
+        project.private_use = "{0:.1%}".format(
+            float(project.private) / float(project.resources.cpu))
     return render_template("user.html", data={"user": user,
                                               "jobs": jobs,
                                               "scratch": scratch,
-                                              "projects": projects})
+                                              "projects": current_user.project})
