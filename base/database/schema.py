@@ -104,15 +104,6 @@ class Project(db.Model):
     def __repr__(self):
         return '<Project {}>'.format(self.get_name())
 
-    def consumption(self):
-        if not hasattr(self, "consumed"):
-            self.__init__()
-        conso = self.resources.consumption()
-        self.consumed = conso["total consumption"]
-        self.consumed_use = self.with_usage()
-        self.consumed_users = conso
-        return self.consumed
-
     def get_responsible(self):
         return self.responsible
 
