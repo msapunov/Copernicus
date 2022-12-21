@@ -3,12 +3,12 @@ from flask_login import login_required
 from base.pages import grant_access
 from base.pages.user import bp
 from base.pages.statistic.magic import (
+    consumption_update,
     dump_projects_database,
-    project_types,
-    resources_update)
+    project_types)
 from base.pages.project.magic import set_state
 from base.database.schema import Project
-from datetime import datetime as dt, timezone
+from json import loads, JSONDecodeError
 
 
 __author__ = "Matvey Sapunov"
