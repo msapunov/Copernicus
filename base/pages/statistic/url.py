@@ -1,5 +1,6 @@
 from flask import render_template, jsonify, request, abort
 from flask_login import login_required
+from base.functions import consumption
 from base.pages import grant_access
 from base.pages.user import bp
 from base.pages.statistic.magic import (
@@ -74,7 +75,9 @@ def web_statistic_consumption(name):
     project = Project.query.filter_by(name=name).first()
     if not project:
         raise ValueError("Failed to find a project with name '%s'" % name)
-    return jsonify(data=project.consumption().with_usage().to_dict())
+    out = consumption(name, project.resources.created, project.resources.ttl)
+    consumption_update(out)
+    return jsonify(data=project.to_dict())
 
 
 @bp.route("/statistic/list", methods=["POST"])
