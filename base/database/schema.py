@@ -218,10 +218,6 @@ class Project(db.Model):
             "allocation_end": end,
             "ref": ref
         }
-        if hasattr(self, "consumed") and self.consumed is not None:
-            result["consumed"] = self.consumed
-        if hasattr(self, "consumed_use") and self.consumed_use is not None:
-            result["consumed_use"] = self.consumed_use
         return result
 
 
