@@ -36,26 +36,21 @@ def web_projects_xls():
     return dump_projects_database("xls", request)
 
 
-@bp.route("/statistic/update/hourly", methods=["POST", "GET"])
+@bp.route("/statistic/update", methods=["POST"])
 @login_required
 @grant_access("admin", "tech")
 def web_statistic_update_hourly():
-    end = dt.now().replace(minute=0, second=0, microsecond=0,
-                           tzinfo=timezone.utc)
-    projects = Project.query.filter_by(active=True).all()
-    resources_update(projects, end=end)
-    return "Hourly statistic update", 200
-
-
-@bp.route("/statistic/update/nightly", methods=["POST", "GET"])
-@login_required
-@grant_access("admin", "tech")
-def web_statistic_update_nightly():
-    end = dt.now().replace(hour=0, minute=0, second=0, microsecond=0,
-                           tzinfo=timezone.utc)
-    projects = Project.query.all()
-    resources_update(projects, force=True, end=end)
-    return "Nightly statistic update", 200
+    if request.content_length > 1000000:  # 1000000 - 1 Megabyte
+        return abort(413)
+    raw_data = request.get_data(cache=False, as_text=True)
+    raw_json = raw_data.replace("'", "\"")
+    try:
+        data = loads(raw_json)
+    except JSONDecodeError:
+        "Failed to serialize data to python object: %s" % str(raw_data)
+        return abort(500)
+    consumption_update(data)
+    return "Statistic updated", 200
 
 
 @bp.route("/statistic/activate/<int:pid>", methods=["POST"])
