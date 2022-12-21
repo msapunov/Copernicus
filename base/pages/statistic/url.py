@@ -81,11 +81,7 @@ def web_statistic_consumption(name):
 @login_required
 @grant_access("admin")
 def web_statistic_list():
-    all_projects = Project.query.all()
-    projects = resources_update(all_projects)
-    if not projects:
-        return jsonify(data=[])
-    return jsonify(data=list(map(lambda x: x.with_usage().to_dict(), projects)))
+    return jsonify(data=list(map(lambda x: x.to_dict(), Project.query.all())))
 
 
 @bp.route("/statistic.html", methods=["GET"])
