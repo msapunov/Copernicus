@@ -71,14 +71,15 @@
         {% endif %}
         {% if data and data.projects %}
             {% for project in data.projects|sort(attribute='name') %}
+                {% set use = project.consumed_use() %}
                 {% if project.resources.cpu > 0 %}
-                    {% if project.consumed_use > 100 %}
+                    {% if use > 100 %}
                         {% set color = "#da314b" %}
                         {% set style = "uk-progress-danger" %}
-                    {% elif project.consumed_use > 60 %}
+                    {% elif use > 60 %}
                         {% set color = "#faa732" %}
                         {% set style = "uk-progress-warning" %}
-                    {% elif project.consumed_use < 10 %}
+                    {% elif use < 10 %}
                         {% set color = "#8cc14c" %}
                         {% set style = "uk-progress-success" %}
                     {% else %}
@@ -86,39 +87,31 @@
                         {% set style = "uk-progress-info" %}
                     {% endif %}
                 {% endif %}
-                {% if project.private_use %}
-                    {% set private_percent = "(" + project.private_use|string + "%)" %}
-                {% else %}
-                    {% set private_percent = "" %}
-                {% endif %}
-                {% if project.consumed_use %}
-                    {% set project_percent = "(" + project.consumed_use|string + "%)" %}
-                {% else %}
-                    {% set project_percent = "" %}
-                {% endif %}
             <div class="uk-panel uk-width-1-1 uk-panel-space">
-
                 <h2 class="uk-h2">Project {{project.name}}</h2>
-                <p>Group ID: {{project.gid}}</p>
-
                 <div class="uk-grid">
                     <div class="uk-width-small-1-1 uk-width-medium-1-2">
+                        <p>Group ID: {{project.gid}}</p>
                         <p>Created: {{project.created.strftime("%Y-%m-%d")}}</p>
+                        <p>Start of resources allocation: {{project.resources.created.strftime("%Y-%m-%d")}}</p>
                         <p>End of resources allocation: {{project.resources.ttl.strftime("%Y-%m-%d")}}</p>
+                    </div>
+                    <div class="uk-margin-top uk-width-small-1-1 uk-hidden-medium uk-hidden-large">
+                    </div>
+                    <div class="uk-width-small-1-1 uk-width-medium-1-2">
                         {% if project.resources.cpu == 0 %}
                             <p>No limit for CPU hours</p>
                         {% else %}
                             <p>Assigned resources: {{project.resources.cpu}} CPU hours</p>
                         {% endif %}
-                    </div>
-                    <div class="uk-margin-top uk-width-small-1-1 uk-hidden-medium uk-hidden-large">
-                    </div>
-                    <div class="uk-width-small-1-1 uk-width-medium-1-2">
+                        <!--
                         <div class="uk-progress uk-progress-mini uk-progress-striped {{style}}">
-                            <div class="uk-progress-bar" style="width: {{project.consumed_use}}%;"></div>
+                        -->
+                        <div class="uk-progress uk-progress-striped uk-active {{style}}">
+                            <div class="uk-progress-bar" style="width: {{use}}%;"></div>
                         </div>
-                        <p><span class="uk-icon-star" aria-hidden="true" style="color:{{color}}"></span> Assigned consumption: {{project.consumed}} CPU hours {{project_percent}}</p>
-                        <p><span class="uk-icon-star-o" aria-hidden="true" style="color:{{color}}"></span> Personal consumption: {{project.private}} CPU hours {{private_percent}}</p>
+                        <p>Resources consumption: {{project.resources.consumption}} CPU hours ({{ use|string }}%)</p>
+                        <p>Personal consumption: {{project.private}} CPU hours ({{project.private_use}})</p>
                     </div>
                 </div>
             </div>
