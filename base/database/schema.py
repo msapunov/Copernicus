@@ -137,20 +137,12 @@ class Project(db.Model):
         rec["users"] = tmp
         return rec
 
-    def with_usage(self):
-        if not hasattr(self, "consumed"):
-            self.__init__()
-        if self.consumed == 0:
-            self.consumption()
-        total = self.resources.cpu
-        try:
-            usage = "{0:.1%}".format(float(self.consumed) / float(total))
-            use = float(usage.replace("%", ""))
-        except TypeError as err:
-            error("Failed to calculate project usage: %s" % err)
-            use = 0
-        self.consumed_use = use
-        return self.consumed_use
+    def consumed(self):
+        return self.resources.usage()
+
+    def consumed_use(self):
+        usage = self.resources.usage()  # with percents
+        return float(usage.replace("%", "")) if usage else 0
 
     def to_dict(self):
         if self.created:
