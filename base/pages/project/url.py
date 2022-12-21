@@ -5,7 +5,6 @@ from base.database.schema import LogDB, Project
 from base.pages import (
     TaskQueue,
     grant_access)
-from base.functions import projects_consumption
 from base.pages.project import bp
 from base.pages.user.magic import get_user_record
 from base.pages.project.form import (
@@ -18,11 +17,11 @@ from base.pages.project.form import (
     activity, ActivityForm,
     get_transformation_options)
 from base.pages.project.magic import (
-#    conso_per_user,
     is_project_transformable,
     check_responsible,
     sanity_check,
     assign_responsible,
+    set_consumed_users,
     get_project_by_name,
     is_project_renewable,
     is_project_extendable,
