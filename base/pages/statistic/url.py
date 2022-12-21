@@ -58,14 +58,14 @@ def web_statistic_update_hourly():
 @login_required
 @grant_access("admin")
 def web_admin_project_activate(pid):
-    return jsonify(data=set_state(pid, True).with_usage())
+    return jsonify(data=set_state(pid, True))
 
 
 @bp.route("/statistic/suspend/<int:pid>", methods=["POST"])
 @login_required
 @grant_access("admin")
 def web_admin_project_suspend(pid):
-    return jsonify(data=set_state(pid, False).with_usage())
+    return jsonify(data=set_state(pid, False))
 
 
 @bp.route("/statistic/consumption/<string:name>", methods=["POST"])
