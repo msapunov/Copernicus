@@ -356,10 +356,7 @@ class Extensions:
         return sorted(records, key=attrgetter("created"), reverse=reverse)
 
     def unprocessed(self):
-        records = self.queue.filter_by(processed=False).all()
-        for i in records:
-            i.project.with_usage()
-        return records
+        return self.queue.filter_by(processed=False).all()
 
     def pending(self):
         recs = self.queue.filter_by(processed=True).filter_by(accepted=True) \
