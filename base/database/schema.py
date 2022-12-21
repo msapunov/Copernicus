@@ -172,6 +172,8 @@ class Project(db.Model):
             ref = self.ref.id
         else:
             ref = ""
+        usage = self.resources.usage()  # with percents
+        use = float(usage.replace("%", "")) if usage else 0
         result = {
             "id": self.id,
             "title": self.title,
@@ -199,7 +201,10 @@ class Project(db.Model):
             "resources": self.resources.to_dict(),
             "allocation_start": start,
             "allocation_end": end,
-            "ref": ref
+            "ref": ref,
+            "consumed": self.resources.consumption,
+            "consumed_use": use,
+            "consumed_usage": usage
         }
         return result
 
