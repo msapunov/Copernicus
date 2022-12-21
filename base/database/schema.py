@@ -263,7 +263,7 @@ class Extend(db.Model):
         else:
             conso = ""
         if hasattr(self.project, "consumed_use"):
-            use = self.project.consumed_use
+            use = self.project.consumed_use()
         else:
             use = ""
         return {
