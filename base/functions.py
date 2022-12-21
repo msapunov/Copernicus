@@ -425,7 +425,7 @@ def consumption(name, start, finish):
         start = start.strftime("%Y-%m-%dT%H:%M:%S")
     if isinstance(finish, dt):
         finish = finish.strftime("%Y-%m-%dT%H:%M:%S")
-    output = {"total consumption": 0, "start date": start, "end date": finish}
+    output = {"total consumption": 0, "total updated": finish}
     cmd = ["sreport", "cluster", "AccountUtilizationByUser", "-t", "hours"]
     cmd += ["-nP", "format=Account,Login,Used", "Accounts=%s" % name]
     cmd += ["start=%s" % start, "end=%s" % finish]
@@ -433,7 +433,7 @@ def consumption(name, start, finish):
     data, err = ssh_wrapper(run)
     if not data:
         debug("No data received, nothing to return")
-        return output, run
+        return output
     debug("Got raw consumption values for project %s: %s" % (name, data))
     for item in list(filter(lambda x: "|" in x, data)):
         login = None
@@ -448,14 +448,14 @@ def consumption(name, start, finish):
             error("Exception converting '%s' to int: %s" % (conso, err))
             continue
         if name not in output:
-            output[name] = {}
+            output[name] = {"total updated": finish}
         if login:
             output[name][login] = conso
         else:
             output["total consumption"] += conso
             output[name]["total consumption"] = conso
     debug("Parsed result: %s" % output)
-    return output, run
+    return output
 
 
 def slurm_consumption_raw(name, start, finish):
