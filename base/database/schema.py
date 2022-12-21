@@ -101,11 +101,6 @@ class Project(db.Model):
     ref_id = db.Column(db.Integer, db.ForeignKey("register.id"))
     ref = db.relationship("Register", foreign_keys=ref_id)
 
-    def __init__(self):
-        self.consumed = 0
-        self.consumed_use = None
-        self.consumed_users = {}
-
     def __repr__(self):
         return '<Project {}>'.format(self.get_name())
 
