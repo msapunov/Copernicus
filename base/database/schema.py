@@ -366,27 +366,16 @@ class Resources(db.Model):
             "finish": ttl
         }
 
-    def consumption(self):
-        conso = cache.get("consumption")
-        if conso:
-            return conso
-        if not self.consumption_prefix:
-            prefix = self.consumption_prefix_update()
-        else:
-            prefix = eval(self.consumption_prefix)
-        start = prefix["end date"]
-        end = dt.utcnow() + timedelta(days=1)
-        end = end.replace(hour=0, minute=0, second=0, microsecond=0)
-        conso, cmd = consumption(self.project, start, end)
-        prefix = prefix.get(self.project, {})
-        conso = conso.get(self.project, {})
-        for key, value in prefix.items():
-            if key not in conso:
-                conso[key] = int(value)
-            else:
-                conso[key] = int(value) + int(conso[key])
-        cache.set("consumption", conso, 600)
-        return conso
+    def usage(self):
+        conso = self.consumption
+        total = self.cpu
+        if not conso:
+            return "0%"
+        try:
+            return "{0:.1%}".format(float(conso) / float(total))
+        except TypeError as err:
+            error("Failed to calculate project usage: %s" % err)
+            return "0%"
 
 
 class User(UserMixin, db.Model):
