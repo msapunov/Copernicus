@@ -103,7 +103,7 @@
                         <li>{{user.name[0]|upper}}{{user.name[1:]|lower}} {{user.last[0]|upper}}{{user.last[1:]|lower}} - {{user.mail|lower}}</li>
                     {% endfor %}
                     </ul>
-                    <p>For new user accounts, logins and passwords will be communicated in a separate message.</p>
+                    <p>For new user accounts, connection details will be communicated directly. Only SSH-based connections will be allowed.</p>
                     <p>A project management interface is available at https://mesocentre.univ-amu.fr/copernicus/. It allows in particular to request for addition, attachment or deletion of a user account.</p>
                     <p>As project coordinator, the signing of this document commits you, as well as the other users attached to the project, to respect the Terms of Use of the Mésocentre available at https://mesocentre.univ-amu.fr/en/chart/.</p>
                     <p>Even if you haven't requested it, a user account will be created for you and you will be subscribed to the project managers mailing list {{ data.resp_list }} and to the general mailing list {{ data.user_list }}.</p>
