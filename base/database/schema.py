@@ -765,8 +765,13 @@ class Tasks(db.Model):
 
     def brief(self):
         act, entity, login, project, task = self.action.split("|")
-        if act in ["create", "add", "assign", "delete", "remove"]:
-            act += " a user "
+        if act in ["create", "add", "assign", "delete", "remove", "activate"]:
+            if entity == "user":
+                act += " a user "
+            else:
+                act += " a project "
+        elif act in ["ssh"]:
+            act = "upload SSH key "
         elif act in ["update"]:
             act += " user's info "
         act = act[0].upper() + act[1:].lower()
