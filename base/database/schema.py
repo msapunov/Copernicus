@@ -775,7 +775,7 @@ class Tasks(db.Model):
 
     def description(self):
         act, entity, login, project, task = self.action.split("|")
-        if act in ["create"]:
+        if act in ["create", "activate"]:
             act += " a user with %s for the project %s" % (task, project)
         if act in ["assign", "remove"]:
             return task
