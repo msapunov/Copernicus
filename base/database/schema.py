@@ -781,6 +781,9 @@ class Tasks(db.Model):
             return task
         elif act in ["update"]:
             act += " user info for %s with following data: %s" % (login, task)
+        elif act in ["ssh"]:
+            short = "%s ... %s" % (task[:20], task[-20:])
+            act = "upload SSH public key: %s" % short
         act = act[0].upper() + act[1:]
         return act
 
