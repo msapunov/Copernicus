@@ -258,7 +258,7 @@ class Extend(db.Model):
         mod = self.modified.strftime("%Y-%m-%d %X %Z") if self.modified else ""
         approve = self.approve.full_name() if self.approve else ""
         usage = self.project.resources.usage()  # with percents
-        use = float(usage.replace("%", "")) if usage else 0
+        use = self.project.resources.consumption
         return {
             "id": self.id,
             "extension": self.extend,
@@ -277,8 +277,8 @@ class Extend(db.Model):
             "total": self.present_total,
             "initial_use": self.present_use,
             "initial_usage": self.usage_percent,
-            "present_use": usage,  # Should be inverse with use
-            "present_usage": use,
+            "present_use": use,  # Should be inverse with use
+            "present_usage": usage,
             "name": self.project.get_name(),
             "approve": approve,
             "responsible": self.project.responsible.full_name(),
