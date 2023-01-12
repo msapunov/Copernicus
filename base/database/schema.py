@@ -5,6 +5,7 @@ from textwrap import shorten
 from hashlib import md5
 from logging import error
 from pathlib import PurePath
+from werkzeug.security import generate_password_hash, check_password_hash
 
 
 __author__ = "Matvey Sapunov"
@@ -391,9 +392,16 @@ class User(UserMixin, db.Model):
     modified = db.Column(db.DateTime(True))
     created = db.Column(db.DateTime(True))
     uid = db.Column(db.Integer)
+    hash = db.Column(db.String(128))
 
     def __repr__(self):
         return '<User {}>'.format(self.login)
+
+    def set_password(self, password):
+        self.hash = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.hash, password)
 
     def full(self):
         return "%s <%s> [%s]" % (self.full_name(), self.email, self.login)
