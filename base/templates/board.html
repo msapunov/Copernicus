@@ -66,7 +66,7 @@
                             <td class="uk-width-1-10">{{ record.name }}</td>
                             <td class="uk-width-1-10 uk-text-nowrap">{{ record.responsible }}</td>
                             <td class="uk-width-1-10">{{ record.total }}</td>
-                            <td class="uk-width-1-10 uk-text-nowrap">{{record.present_usage}}% [{{ record.initial_usage }}%]</td>
+                            <td class="uk-width-1-10 uk-text-nowrap">{{record.present_use}} [{{ record.present_usage }}]</td>
                             <td class="uk-width-1-10">
                                 {% if record.extension %}
                                     {{ record.hours }}
@@ -107,7 +107,7 @@
                                         </tr>
                                         <tr class="ext_info">
                                             <td class="uk-width-1-10 uk-text-right uk-text-bold uk-text-nowrap">CPU usage now:</td>
-                                            <td class="uk-width-9-10">{{ record.present_usage }}%</td>
+                                            <td class="uk-width-9-10">{{ record.present_usage }}</td>
                                         </tr>
                                         <tr class="ext_info">
                                             <td class="uk-width-1-10 uk-text-right uk-text-bold uk-text-nowrap">CPU usage on extension time:</td>
