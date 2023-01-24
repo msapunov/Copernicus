@@ -1,7 +1,7 @@
 from flask import render_template, request, redirect, url_for, g, flash, abort
 from flask_login import current_user, login_user, logout_user, login_required
 from base.pages.login.magic import ssh_login
-from base.pages.login.form import LoginForm
+from base.pages.login.form import LoginForm, ResetForm
 from base.pages.login import bp
 from base64 import b64decode
 from base.database.schema import User
