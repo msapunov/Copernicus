@@ -47,6 +47,31 @@ def load_user_from_request(urlpath):
     return redirect(url_for("login.login"))
 
 
+@bp.route("/reset", methods=["GET", "POST"])
+@bp.route("/reset.html", methods=["GET", "POST"])
+@login_required
+def reset():
+    form = ResetForm(request.form)
+    if request.method == "GET":
+        return render_template("reset.html", form=form)
+    form.validate_on_submit()
+    old = form.old.data
+    new = form.new_passw.data
+    conf = form.conf_passw.data
+    if not current_user.check_password(old):
+        flash("Old password is not correct!")
+        return redirect(url_for("login.reset"))
+    if new != conf:
+        flash("New password does not match!")
+        return redirect(url_for("login.reset"))
+    if old == new:
+        flash("New password match with old one!")
+        return redirect(url_for("login.reset"))
+    current_user.set_password(new)
+    flash("You have successfully changed your password!")
+    return redirect(url_for("user.user_index"))
+
+
 @bp.route("/login", methods=["GET", "POST"])
 @bp.route("/login.html", methods=["GET", "POST"])
 def login():
