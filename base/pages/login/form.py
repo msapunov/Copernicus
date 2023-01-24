@@ -9,6 +9,12 @@ class MessageForm(FlaskForm):
         message="Message field is empty")])
 
 
+class ResetForm(FlaskForm):
+    old = PasswordField("OldPassword", validators=[DataRequired()])
+    new_passw = PasswordField("NewPassword", validators=[DataRequired()])
+    conf_passw = PasswordField("ConfirmPassword", validators=[DataRequired()])
+
+
 class LoginForm(FlaskForm):
     login = StringField("Login", validators=[DataRequired()])
     passw = PasswordField("Password", validators=[DataRequired()])
