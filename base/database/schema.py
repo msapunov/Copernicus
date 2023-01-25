@@ -393,6 +393,7 @@ class User(UserMixin, db.Model):
     created = db.Column(db.DateTime(True))
     uid = db.Column(db.Integer)
     hash = db.Column(db.String(128))
+    first_login = db.Column(db.Boolean, default=True)
 
     def __repr__(self):
         return '<User {}>'.format(self.login)
