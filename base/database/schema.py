@@ -401,6 +401,8 @@ class User(UserMixin, db.Model):
 
     def set_password(self, password):
         self.hash = generate_password_hash(password)
+        self.first_login = False
+        return password
 
     def check_password(self, password):
         return check_password_hash(self.hash, password)
