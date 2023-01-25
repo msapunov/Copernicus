@@ -227,6 +227,13 @@ class Mail(Thread):
         self.__project_init(record, "REPORT UPLOADED")
         return self
 
+    def user_password(self, record, passwd):
+        self.populate("PASSWORD RESET")
+        self.destination = record.user.email
+        full = record.user.full_name()
+        self.__populate_values({"%FULLNAME": full, "%PASS": passwd})
+        return self
+
     def user_update(self, record):
         self.populate("USER UPDATE")
         self.destination = record.user.email
