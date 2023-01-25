@@ -1,5 +1,6 @@
 from flask_login import UserMixin
 from base import db
+from base.functions import generate_password
 from datetime import datetime as dt
 from textwrap import shorten
 from hashlib import md5
