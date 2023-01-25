@@ -104,7 +104,7 @@ def web_admin_message_send():
     return jsonify(data=send_message(emails, cc=cc, message=msg, title=title))
 
 
-@bp.route("/admin/user/password/<int:uid>", methods=["POST"])
+@bp.route("/admin/user/reset/password/<int:uid>", methods=["POST"])
 @login_required
 @grant_access("admin")
 def admin_user_password(uid):
