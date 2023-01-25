@@ -175,21 +175,6 @@ def message(to, msg, title=None):
     return send_message(to, by_who, cc, title, msg)
 
 
-def project_type(register):
-    if register.type_a:
-        return "a"
-    elif register.type_b:
-        return "b"
-    elif register.type_c:
-        return "c"
-    elif register.type_h:
-        return "h"
-    elif register.type_p:
-        return "p"
-    else:
-        raise ValueError("Failed to determine project's type")
-
-
 def reg_accept(pid, note):
     rec = get_registration_record(pid)
     #  TEMP code start here
