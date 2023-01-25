@@ -94,6 +94,8 @@ def login():
         return redirect(url_for("login.login"))
     login_user(user, True)
     g.name = username
+    if user.first_login:
+        return redirect(url_for("login.reset"))
     return redirect(url_for("user.user_index"))
 
 
