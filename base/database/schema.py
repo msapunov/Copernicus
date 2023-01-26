@@ -399,6 +399,12 @@ class User(UserMixin, db.Model):
     def __repr__(self):
         return '<User {}>'.format(self.login)
 
+    def reset_password(self):
+        password = generate_password()
+        self.hash = generate_password_hash(password)
+        self.first_login = True
+        return password
+
     def set_password(self, password):
         self.hash = generate_password_hash(password)
         self.first_login = False
