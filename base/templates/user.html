@@ -37,6 +37,9 @@
                 <button class="uk-button uk-button-small ssh" data-modal="{{data.user.login}}_ssh">
                     <span class="uk-icon-key uk-margin-small-right"></span>Upload SSH key
                 </button>
+                <button class="uk-button uk-button-small pass uk-button-danger" data-modal="{{data.user.login}}_pass">
+                    <span class="uk-icon-eraser uk-margin-small-right"></span>Change password
+                </button>
             </div>
         {% endif %}
         {% if data and data.jobs %}
