@@ -1,186 +1,77 @@
 {% extends "base.html" %}
 {% block head %}
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.10.21/b-1.6.2/b-html5-1.6.2/r-2.2.5/datatables.min.css"/>
 
-    <script src="{{ url_for('static', filename='js/moment-with-locales.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/datatables.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/board.js') }}"></script>
-
     <style>
-        .ext_info{
-            background-color: #ddd !important;
+        .ws {
+            white-space: normal !important;
         }
-        .glyphicon-plus {
-            cursor: pointer !important;
+        td.details-control {
+            text-align:center;
+            cursor: pointer;
         }
-        .glyphicon-minus {
-            cursor: pointer !important;
+        tr.shown td.details-control {
+            text-align:center;
         }
     </style>
 {% endblock %}
 {% block main %}
-    {% if error %}
-        <div class="uk-panel uk-width-1-1 uk-panel-space">
-            <h1 class="uk-text-center">{{ error }}</h1>
-            <button class="uk-button global_history uk-align-center">
-                <span class="uk-icon-history uk-margin-small-right"></span>Project requests history
-            </button>
+
+<div class="uk-width-1-1">
+    <div class="uk-grid uk-margin-bottom">
+        <div data-uk-button-radio class="uk-button-group uk-width-1-3">
+            <button class="uk-button uk-active ext-type" data-type="">All</button>
+            <button class="uk-button ext-type" data-type="extension">Extension</button>
+            <button class="uk-button ext-type" data-type="renewal">Renewal</button>
+            <button class="uk-button ext-type" data-type="activate">Activate</button>
+            <button class="uk-button ext-type" data-type="transform">Transform</button>
         </div>
-    {% else %}
-        <div class="uk-panel uk-width-1-1 uk-panel-space treated uk-hidden">
-            <h1 class="uk-text-center">All new project requests are treated!</h1>
-            <button class="uk-button global_history uk-align-center">
-                <span class="uk-icon-history uk-margin-small-right"></span>Project requests history
-            </button>
-        </div>
-        <div class="uk-panel uk-width-1-1 uk-panel-space uk-overflow-container">
-            <div class="container" role="main">
-                {% if data %}
-                <table id="ext_projects_table" class="uk-table uk-table-striped uk-table-condensed">
-                    <thead>
-                        <tr>
-                            <th></th>
-                            <th></th>
-                            <th>Project</th>
-                            <th>Responsible</th>
-                            <th>Present</th>
-                            <th>Use</th>
-                            <th>Extension</th>
-                            <th>Renewal</th>
-                            <th>Activate</th>
-                            <th>Transform</th>
-                            <th>Date</th>
-                        </tr>
-                    </thead>
-                <tbody id="ext_result_records">
-                    {% for record in data|sort(attribute='created', reverse=True) %}
-                        <tr id="{{record.id}}">
-                            <td class="uk-width-1-10">
-                                <button class="uk-button uk-button-mini new_ext" type="button" data-id='{{record.id}}-info'>
-                                    <span class="uk-icon-plus"></span>
-                                </button>
-                            </td>
-                            <td class="uk-width-1-10">
-                                {% if record.exception %}
-                                    <span class="uk-icon-exclamation"></span>
-                                {% endif %}
-                            </td>
-                            <td class="uk-width-1-10">{{ record.name }}</td>
-                            <td class="uk-width-1-10 uk-text-nowrap">{{ record.responsible }}</td>
-                            <td class="uk-width-1-10">{{ record.total }}</td>
-                            <td class="uk-width-1-10 uk-text-nowrap">{{record.present_use}} [{{ record.present_usage }}]</td>
-                            <td class="uk-width-1-10">
-                                {% if record.extension %}
-                                    {{ record.hours }}
-                                {% endif %}
-                            </td>
-                            <td class="uk-width-1-10">
-                                {% if not record.extension %}
-                                    {{ record.hours }}
-                                {% endif %}
-                            </td>
-                            <td class="uk-width-1-10">
-                                {% if record.activate %}
-                                    <span class="uk-icon-plus"></span>
-                                {% endif %}
-                            </td>
-                            <td class="uk-width-1-10">
-                                {% if record.transform|trim != "" %}
-                                    <span class="uk-icon-refresh uk-margin-small-right"></span>{{ record.transform|upper }}
-                                {% endif %}
-                            </td>
-                            <td class="uk-width-1-10 uk-text-nowrap">{{ record.created }}</td>
-                        </tr>
-                        <tr id="{{record.id}}-info" class="ext_info uk-hidden"> <!-- uk-text-center uk-hidden -->
-                            <td colspan="10">
-                                <table id="info_table" class="uk-table">
-                                    <tbody>
-                                        <tr class="ext_info">
-                                            <td class="uk-width-1-10 uk-text-right uk-text-bold uk-text-nowrap">CPU total:</td>
-                                            <td class="uk-width-9-10">{{ record.total }}</td>
-                                        </tr>
-                                        <tr class="ext_info">
-                                            <td class="uk-width-1-10 uk-text-right uk-text-bold uk-text-nowrap">CPU used now:</td>
-                                            <td class="uk-width-9-10">{{ record.present_use }}</td>
-                                        </tr>
-                                        <tr class="ext_info">
-                                            <td class="uk-width-1-10 uk-text-right uk-text-bold uk-text-nowrap">CPU used on extension time:</td>
-                                            <td class="uk-width-9-10">{{ record.initial_use }}</td>
-                                        </tr>
-                                        <tr class="ext_info">
-                                            <td class="uk-width-1-10 uk-text-right uk-text-bold uk-text-nowrap">CPU usage now:</td>
-                                            <td class="uk-width-9-10">{{ record.present_usage }}</td>
-                                        </tr>
-                                        <tr class="ext_info">
-                                            <td class="uk-width-1-10 uk-text-right uk-text-bold uk-text-nowrap">CPU usage on extension time:</td>
-                                            <td class="uk-width-9-10">{{ record.initial_usage }}%</td>
-                                        </tr>
-                                        <tr class="ext_info">
-                                            <td class="uk-width-1-10 uk-text-right uk-text-bold uk-text-nowrap">CPU extension:</td>
-                                            <td class="uk-width-9-10">{{ record.hours }}</td>
-                                        </tr>
-                                        <tr class="ext_info">
-                                            <td class="uk-width-1-10 uk-text-right uk-text-bold uk-text-nowrap">Comments:</td>
-                                            <td class="uk-width-9-10">{{ record.reason }}</td>
-                                        </tr>
-                                        <tr class="ext_info">
-                                            <td class="uk-width-1-10 uk-text-right uk-text-bold uk-text-nowrap">Exceptional extension:</td>
-                                            <td class="uk-width-9-10">{{ record.exception }}</td>
-                                        </tr>
-                                        {% if record.transform|trim %}
-                                            <tr class="ext_info">
-                                                <td class="uk-width-1-10 uk-text-right uk-text-bold uk-text-nowrap">Transform to type:</td>
-                                                <td class="uk-width-9-10">{{ record.transform|upper }}</td>
-                                            </tr>
-                                        {% endif %}
-                                        <tr class="ext_info">
-                                            <td>
-                                                <div class="uk-button-group uk-margin-top">
-                                                    <button class="uk-button history"  data-pid="{{record.project}}" data-name="{{record.name}}">
-                                                        <span class="uk-icon-history uk-margin-small-right"></span>History
-                                                    </button>
-                                                    <button class="uk-button contact" data-login="{{record.responsible_login}}">
-                                                        <span class="uk-icon-commenting uk-margin-small-right"></span>Contact
-                                                    </button>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="uk-button-group uk-float-right uk-margin-top">
-                                                    <button class="uk-button accept" data-id="{{record.id}}" data-pid="{{record.project}}" data-name="{{record.project_name}}" data-act="{{record.activate}}" data-trans="{{record.transform|trim}}" data-cpu="{{record.hours}}"  data-extend="{{record.extension}}">
-                                                        <span class="uk-icon-thumbs-o-up uk-margin-small-right"></span>Accept
-                                                    </button>
-                                                    <button class="uk-button ignore" data-id="{{record.id}}" data-pid="{{record.project}}" data-name="{{record.project_name}}" data-act="{{record.activate}}" data-trans="{{record.transform}}">
-                                                        <span class="uk-icon-thumbs-o-down uk-margin-small-right"></span>Ignore
-                                                    </button>
-                                                    <button class="uk-button uk-button-danger reject" data-id="{{record.id}}" data-pid="{{record.project}}" data-name="{{record.project_name}}" data-act="{{record.activate}}" data-trans="{{record.transform}}">
-                                                        <span class="uk-icon-thumbs-down uk-margin-small-right"></span>Reject
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-                </table>
-                {% endif %}
-            </div>
+        <div data-uk-button-radio class="uk-width-1-3">
             <!--
-            <div class="uk-button-group uk-float-right">
-                {% if data %}
-                    {% set ids=[] %}
-                    {% set names=[] %}
-                    {% for record in data %}
-                        {{ ids.append(record.id | string()) }}
-                        {{ names.append(record.project_name | string()) }}
-                    {% endfor %}
-                    {% set ids=",".join(ids) %}
-                    {% set names=", ".join(names) %}
-                    <button class="uk-button bulk_renew" type="button" data-id='{{ids}}' data-name='{{names}}'><span class="uk-icon-repeat uk-margin-small-right"></span>Bulk renew</button>
-                    <button class="uk-button bulk_extend" type="button" data-id='{{ids}}' data-name='{{names}}'><span class="uk-icon-arrows-h uk-margin-small-right"></span>Bulk extend</button>
-                {% endif %}
+            <div class="uk-button-dropdown" data-uk-dropdown>
+                <button class="uk-button project-dump">Save As</button>
+                <div class="uk-dropdown uk-dropdown-small">
+                    <ul class="uk-nav uk-nav-dropdown">
+                        <li><a class="dump_csv" href="">CSV list (.csv)</a></li>
+                        <li><a class="dump_ods" href="">OpenDocument Spreadsheet (.ods)</a></li>
+                        <li><a class="dump_xls" href="">Microsoft Excel 97-2003 (.xls)</a></li>
+                    </ul>
+                </div>
             </div>
             -->
         </div>
-    {% endif %}
+        <div class="uk-width-1-3 uk-form">
+            <input type="text" class="uk-width-1-1" id="table_search">
+        </div>
+    </div>
+    <table id="board" style="width:100%" class="display nowrap">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Project</th>
+                <th>Responsible</th>
+                <th>Present</th>
+                <th>Use</th>
+                <th>Usage</th>
+                <th>Extension</th>
+                <th>Renewal</th>
+                <th>Activate</th>
+                <th>Transform</th>
+                <th>Date</th>
+                <th>Hours</th>
+            </tr>
+        </thead>
+    </table>
+    <div class="uk-grid uk-margin-bottom">
+        <div class="uk-width-1-2 uk-text-left" id="table_info">
+
+        </div>
+        <div class="uk-width-1-2 uk-text-right" id="table_total">
+
+        </div>
+
+    </div>
+</div>
 {% endblock %}
