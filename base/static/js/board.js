@@ -19,13 +19,13 @@
         var type = $.trim( $(btn).data("type") );
         if (type == "extension"){
             var tt = table.column(6).data();
-            table.column(6).search().draw();
+            table.columns(6).search().draw();
         }else if(type == "renewal"){
             table.columns(7).search(Boolean(), true).draw();
         }else if(type == "activate"){
             table.columns(8).search().draw();
         }else if(type == "transform"){
-            table.columns(9).search("").draw();
+            table.columns(9).search("\\w+", true).draw();
         }else {
             table.columns().search("").draw();
         }
