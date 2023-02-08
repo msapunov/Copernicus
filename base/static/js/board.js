@@ -9,6 +9,7 @@
         activate: "board/activate",
         transform: "board/transform",
         history: "project/history",
+        expand: "board/expand",
         global_history: "board/history"
     };
     window.board.project_type = function project_type(btn, table){
