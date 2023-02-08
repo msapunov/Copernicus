@@ -257,7 +257,7 @@ class Extend(db.Model):
         start = self.created.strftime("%Y-%m-%d %X %Z") if self.created else ""
         mod = self.modified.strftime("%Y-%m-%d %X %Z") if self.modified else ""
         approve = self.approve.full_name() if self.approve else ""
-        usage = self.project.resources.usage()  # with percents
+        usage = self.project.resources.usage().replace("%", "")  # No percents
         use = self.project.resources.consumption
         return {
             "id": self.id,
