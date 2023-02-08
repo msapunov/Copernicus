@@ -240,6 +240,21 @@ class Extend(db.Model):
     def __repr__(self):
         return "<Extension for project {}>".format(self.project.get_name())
 
+    def about(self):
+        result = ""
+        if self.exception:
+            result += "exceptional "
+        if self.transform != " ":
+            result += "transformation"
+        elif self.activate:
+            result += "activation"
+        else:
+            if self.extend:
+                result += "extension"
+            else:
+                result += "renewal"
+        return result
+
     def api(self):
         return {
             "cpu": self.hours,
