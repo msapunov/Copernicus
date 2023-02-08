@@ -191,23 +191,17 @@
                 visible: false
             }]
         });
-
-        $('#statistics tbody').on('click', 'td.details-control', function () {
-            var tr = $(this).closest('tr');
-            var tdi = tr.find("span.btn");
-            var row = table.row(tr);
+        $('#board tbody').on('click', 'td.details-control', function () {
+            let tr = $(this).closest('tr');
+            let tdi = tr.find("span.btn");
+            let row = table.row(tr);
             if (row.child.isShown()) {
                 // This row is already open - close it
                 row.child.hide();
-                tr.removeClass('shown');
-                tdi.first().removeClass('uk-icon-minus');
-                tdi.first().addClass('uk-icon-plus');
+                window.board.expand_processing(tr, tdi, true);
             }else {
-                // Open this row
-                row.child(window.board.expand(row.data(), row)).show();
-                tr.addClass('shown');
-                tdi.first().removeClass('uk-icon-plus');
-                tdi.first().addClass('uk-icon-minus');
+                // Open row in ajax callback in function window.board.expand
+                window.board.expand(row.data(), row, tr, tdi);
             }
         });
 
