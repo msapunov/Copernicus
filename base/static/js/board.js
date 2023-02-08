@@ -147,6 +147,7 @@
                 }
             },{
                 data: "extension",
+                defaultContent: "",
                 render: function ( data, type, row ) {
                     if(data == true){
                         //return row.hours.fn.dataTable.render.number( ',', '')
@@ -155,7 +156,7 @@
                 }
             },{
                 data: null,
-                defaultContent: '',
+                defaultContent: "",
                 render: function ( data, type, row ) {
                     if(row.extension != true){
                         return new Intl.NumberFormat().format(row.hours);
@@ -163,7 +164,7 @@
                 }
             },{
                 data: "activate",
-                defaultContent: '',
+                defaultContent: "",
                 render: function ( data, type, row ) {
                     if(data == true) {
                         return '<span class="btn uk-icon-check"></span>';
@@ -172,7 +173,7 @@
                 width:"15px"
             },{
                 data: "transform",
-                defaultContent: '',
+                defaultContent: "",
                 render: function ( data, type, row ) {
                     if(data != " ") {
                         return '<span class="btn uk-icon-refresh uk-margin-small-right"></span>' + data.toUpperCase();
