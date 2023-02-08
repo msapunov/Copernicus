@@ -15,12 +15,7 @@ __copyright__ = "Aix Marseille University"
 @login_required
 @grant_access("admin")
 def web_board():
-    extensions_list = Extensions().unprocessed()
-    if not extensions_list:
-        err = "No new project related requests found! Nothing to do"
-        return render_template("board.html", error=err)
-    result = list(map(lambda x: x.to_dict(), extensions_list))
-    return render_template("board.html", data=result)
+    return render_template("board.html")
 
 
 @bp.route("/board/history", methods=["POST"])
