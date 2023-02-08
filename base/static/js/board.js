@@ -52,13 +52,36 @@
         var anchor = $(id);
         anchor.attr("href", url);
     };
-    window.board.percentage = function percentage(percent, total) {
-        if( percent == 0 && total == 0){
-            return "0";
-        }
-        return ((percent * 100) / total).toFixed(2);
-    };
 
+    window.board.expand_processing = function(tr, tdi, show){
+        if(show === true){
+            tr.removeClass('shown');
+            tdi.first().removeClass('uk-icon-minus');
+            tdi.first().removeClass('uk-icon-spin');
+            tdi.first().addClass('uk-icon-plus');
+        }else if(show === false){
+            tr.addClass('shown');
+            tdi.first().removeClass('uk-icon-plus');
+            tdi.first().removeClass('uk-icon-spin');
+            tdi.first().addClass('uk-icon-minus');
+        }else if(show === undefined){
+            tdi.first().removeClass('uk-icon-minus');
+            tdi.first().removeClass('uk-icon-plus');
+            tdi.first().addClass('uk-icon-spin');
+        }
+    };
+    window.board.expand = function format(d, row, tr, tdi){
+        // `d` is the original data object for the row
+        let id = d.id;
+        let url = "{0}/{1}".f(window.board.url.expand, id);
+        window.board.expand_processing(tr, tdi);
+        ajax(url).done(function(data){
+            row.child(data).show();
+            window.board.expand_processing(tr, tdi, false);
+        }).fail(function(request){
+            window.board.expand_processing(tr, tdi, true);
+        });
+    };
     $(document).ready(function(){
         var table = $("#board").DataTable({
             ajax: {type: "POST", url: window.board.url.list},
