@@ -11,15 +11,6 @@
         history: "project/history",
         global_history: "board/history"
     };
-    window.board.update = function update(dt, rid, data){
-        var row = dt.row(rid);
-        row.data(data).draw();
-        row.child.hide();
-        row.child(window.board.expand(row.data(), row)).show();
-        var tdi = $(row.node()).find("span.btn");
-        tdi.first().removeClass("uk-icon-plus");
-        tdi.first().addClass("uk-icon-minus");
-    };
     window.board.project_type = function project_type(btn, table){
         if(!$(btn).hasClass("uk-active")){
             return;
@@ -36,32 +27,6 @@
             table.columns(9).search("").draw();
         }else {
             table.columns().search("").draw();
-        }
-    };
-    window.board.resp_submit = function resp_submit(btn, dt){
-        var pid = $(".change-responsible").data("pid");
-        var rid = $(".change-responsible").data("row");
-        var uid = $("#form_responsible").serialize().replace("change_responsible=", "");
-        var url = window.board.url.set_responsible + pid;
-        json_send(url, {"uid": uid}).done(function(reply){
-            if(reply.data){
-                UIkit.notify(reply.data, {timeout: 2000, status:"success"});
-                window.board.update(dt, rid, reply.data);
-            }
-        });
-    };
-    window.board.change_responsible = function change_responsible(btn, dt){
-        var name = $.trim( $(btn).data("name") );
-        var pid = $.trim( $(btn).data("pid") );
-        var rid = $.trim( $(btn).data("row") );
-        var resp = $.trim( $(btn).data("responsible") );
-        $(".change_resp_project_placeholder").text(name);
-        $(".change_resp_current_placeholder").text(resp);
-        var modal = UIkit.modal("#change_responsible");
-        if ( modal.isActive() ) {
-            modal.hide();
-        } else {
-            modal.show();
         }
     };
     window.board.dump = function dump(type, e){
@@ -199,8 +164,7 @@
             },{
                 data: "hours",
                 visible: false
-            }],
-            order: [[10, 'desc']]
+            }]
         });
 
         $('#statistics tbody').on('click', 'td.details-control', function () {
