@@ -92,65 +92,6 @@
         }
         return ((percent * 100) / total).toFixed(2);
     };
-    window.board.expand = function format(d, row){
-        // `d` is the original data object for the row
-        var stat = (d.active) ? 'Active' : 'Suspended';
-        var resp = (d.responsible) ? d.responsible.fullname + ' &lt;' + d.responsible.email + '&gt;' + ' [' + d.responsible.login + ']' : "-";
-        var lab = (d.responsible) ? d.responsible.lab : "-";
-        var phone = (d.responsible) ? d.responsible.phone : "-";
-        var proc = (d.consumed_use > 0) ? d.consumed_use+"%" : "-" ;
-        var rid = row.index();
-        var btnState = window.board.btnState(d.id, d.name, d.active, rid);
-        var btnConso = window.board.btnConso(d.id, d.name, rid);
-        var btnAddUser = window.board.btnAddUser(d.id, d.name, rid);
-        return '<div class="uk-grid"><div class="uk-width-3-4 uk-panel uk-margin-top uk-margin-bottom" style="padding-left:50px;padding-right:50px;">' +
-                '<div>ID: <b>' + d.id + '</b></div>' +
-                '<div>Name: <b>' + d.name + '</b></div>' +
-                '<div>Title: ' + d.title + '</div>' +
-                '<div>Status: <b>' + stat + '</b></div>' +
-                '<div>Created: ' + d.created + '</div>' +
-                '<div>CPU allocation kickoff: ' + d.allocation_start + '</div>' +
-                '<div>CPU allocation deadline: ' + d.allocation_end + '</div>' +
-                '<div>Consumption: ' + d.consumed + '</div>' +
-                '<div>Total: ' + d.resources.cpu + '</div>' +
-                '<div>Usage: ' + proc + '</div>' +
-                '<div>Responsible: ' + resp + '</div>' +
-                '<div>Lab: ' + lab + '</div>' +
-                '<div>Phone: ' + phone + '</div>' +
-                '<div>Users: ' + window.board.users(d.users) + '</div>' +
-                '<div>Genci: ' + d.genci_committee + '</div>' +
-                '<div>Scientific fields: ' + d.scientific_fields + '</div>' +
-            '</div>' +
-            '<div class="uk-width-1-4">' +
-                '<div>' +
-                    btnState +
-                '</div>' +
-                '<div>' +
-                    btnConso +
-                '</div>' +
-                /*
-                '<div>' +
-                    btnAddUser +
-                '</div>' +
-                */
-            '</div>' +
-            '<div class="uk-width-1-1 uk-panel" style="padding-left:50px;padding-right:50px;">' +
-                '<ul class="uk-subnav uk-subnav-pill" data-uk-switcher="{connect:\'#' + d.name + '-additional-info\'}">' +
-                    '<li class="uk-active"><a href="">Description</a></li>' +
-                    '<li><a href="">Methods</a></li>' +
-                    '<li><a href="">Resources</a></li>' +
-                    '<li><a href="">Management</a></li>' +
-                    '<li><a href="">Motivation</a></li>' +
-                '</ul>' +
-                '<ul id="' + d.name + '-additional-info" class="uk-switcher">' +
-                    '<li><article class="ws">' + d.description + '</article></li>' +
-                    '<li><article class="ws">' + d.numerical_methods + '</article></li>' +
-                    '<li><article class="ws">' + d.computing_resources + '</article></li>' +
-                    '<li><article class="ws">' + d.project_management + '</article></li>' +
-                    '<li><article class="ws">' + d.project_motivation + '</article></li>' +
-                '</ul>' +
-            '</div></div>';
-    };
 
     $(document).ready(function(){
         var table = $("#board").DataTable({
@@ -279,11 +220,6 @@
             }
         });
 
-        table.on("user-select", function (e, dt, type, cell, originalEvent) {
-            if ($(cell.node()).hasClass("details-control")) {
-                e.preventDefault();
-            }
-        });
         $("#table_search").on( "keyup", function () {
             table.search( this.value ).draw();
         } );
@@ -292,10 +228,7 @@
         $(document).on("click", ".dump_csv", function(e){window.board.dump("csv", e) });
         $(document).on("click", ".dump_ods", function(e){ window.board.dump("ods", e) });
         $(document).on("click", ".dump_xls", function(e){ window.board.dump("xls", e) });
-        $(document).on("click", ".suspend", function(){ window.board.set_state(false, table, this) });
-        $(document).on("click", ".activate", function(){ window.board.set_state(true, table, this) });
-        $(document).on("click", ".actualize", function(){ window.board.actualize(true, table, this) });
-        $(document).on("click", ".change-responsible", function(){ window.board.change_responsible(this, table) });
+
     });
 
 })(window, document, jQuery);
