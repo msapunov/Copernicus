@@ -75,3 +75,13 @@ def web_board_ignore(eid):
     record = Extensions(eid).ignore()
     return jsonify(message=ProjectLog(record.project).ignore(record),
                    data={"id": record.id})
+
+@bp.route("/board/list", methods=["POST"])
+@login_required
+@grant_access("admin")
+def web_board_list():
+    extensions_list = Extensions().unprocessed()
+    if not extensions_list:
+        err = "No new project related requests found! Nothing to do"
+        return jsonify(message=err)
+    return jsonify(data = list(map(lambda x: x.to_dict(), extensions_list)))
