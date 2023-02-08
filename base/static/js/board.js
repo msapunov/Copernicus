@@ -213,7 +213,13 @@
         $(document).on("click", ".dump_csv", function(e){window.board.dump("csv", e) });
         $(document).on("click", ".dump_ods", function(e){ window.board.dump("ods", e) });
         $(document).on("click", ".dump_xls", function(e){ window.board.dump("xls", e) });
+        $(document).on("click", ".history", trigger_modal);
+        $(document).on("click", ".contact", trigger_modal);
+        $(document).on("click", ".accept", trigger_modal);
+        $(document).on("click", ".ignore", trigger_modal);
+        $(document).on("click", ".reject", trigger_modal);
 
+        $(document).on("click", ".window_hide", trigger_modal);
     });
 
 })(window, document, jQuery);
