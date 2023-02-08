@@ -89,16 +89,23 @@ def login():
     form.validate_on_submit()
     username = form.login.data
     password = form.passw.data
-    if not ssh_login(username, password):
-        flash("Invalid username or password")
-        return redirect(url_for("login.login"))
     user = User.query.filter_by(login=username).first()
     debug(user)
     if not user:
-        flash("Failed to find a user with login '%s'" % username)
+        flash("User '%s' does not exists" % username)
+        return redirect(url_for("login.login"))
+    if user.hash:
+        check = user.check_password(password)
+    else:
+        check = ssh_login(username, password)
+    if not check:
+        flash("Invalid password")
         return redirect(url_for("login.login"))
     login_user(user, True)
     g.name = username
+    if not user.hash and not user.first_login:
+        flash("Think about set new password at %s" % url_for("login.reset",
+                                                             _external=True))
     if user.first_login:
         return redirect(url_for("login.reset"))
     return redirect(url_for("user.user_index"))
