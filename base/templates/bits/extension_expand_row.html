@@ -1,0 +1,49 @@
+<div class="uk-grid">
+    <div class="uk-width-3-4 uk-panel uk-margin-top uk-margin-bottom" style="padding-left:50px;padding-right:50px;">
+        <table id="{{rec.id}}_info_table" class="uk-table uk-table-condensed">
+            <tbody>
+                <tr>
+                    <td class="uk-width-1-10 uk-text-right uk-text-nowrap">CPU total:</td>
+                    <td class="uk-width-9-10 uk-text-left">{{rec.total}}</td>
+                </tr>
+                <tr>
+                    <td class="uk-width-1-10 uk-text-right uk-text-nowrap">CPU used now:</td>
+                    <td class="uk-width-9-10 uk-text-left">{{rec.present_use}}</td>
+                </tr>
+                <tr>
+                    <td class="uk-width-1-10 uk-text-right uk-text-nowrap">CPU used on extension time:</td>
+                    <td class="uk-width-9-10 uk-text-left">{{rec.initial_use}}%</td>
+                </tr>
+                <tr>
+                    <td class="uk-width-1-10 uk-text-right uk-text-nowrap">CPU usage now:</td>
+                    <td class="uk-width-9-10 uk-text-left">{{rec.present_usage}}%</td>
+                </tr>
+                <tr>
+                    <td class="uk-width-1-10 uk-text-right uk-text-nowrap">CPU usage on extension time:</td>
+                    <td class="uk-width-9-10 uk-text-left">{{rec.initial_usage}}</td>
+                </tr>
+                <tr>
+                    <td class="uk-width-1-10 uk-text-right uk-text-nowrap">CPU extension:</td>
+                    <td class="uk-width-9-10 uk-text-left">{{rec.hours}}</td>
+                </tr>
+                <tr>
+                    <td class="uk-width-1-10 uk-text-right uk-text-nowrap">Comment:</td>
+                    <td class="uk-width-9-10 uk-text-left">{{rec.reason}}</td>
+                </tr>
+                <tr>
+                    <td class="uk-width-1-10 uk-text-right uk-text-nowrap">Exceptional extension:</td>
+                    <td class="uk-width-9-10 uk-text-left">{{rec.exception}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="uk-width-1-4 uk-margin-top uk-margin-bottom">
+        <button class="uk-button uk-width-1-1 uk-margin-small-bottom history" data-modal="{{rec.id}}_ignore"><span class="uk-icon-history uk-margin-small-right"></span>History</button>
+        <button class="uk-button uk-width-1-1 uk-margin-small-bottom contact" data-modal="{{rec.id}}_ignore"><span class="uk-icon-commenting uk-margin-small-right"></span>Contact</button>
+
+
+        <button class="uk-button uk-width-1-1 uk-margin-small-bottom accept" data-modal="{{rec.id}}_ignore"><span class="uk-icon-thumbs-o-up uk-margin-small-right"></span>Accept</button>
+        <button class="uk-button uk-width-1-1 uk-margin-small-bottom ignore" data-modal="{{rec.id}}_ignore"><span class="uk-icon-thumbs-o-down uk-margin-small-right"></span>Ignore</button>
+        <button class="uk-button uk-width-1-1 uk-margin-small-bottom reject uk-button-danger" data-modal="{{rec.id}}_reject"><span class="uk-icon-thumbs-down uk-margin-small-right"></span>Reject</button>
+    </div>
+</div>
