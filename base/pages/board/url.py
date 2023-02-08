@@ -86,3 +86,12 @@ def web_board_list():
         err = "No new project related requests found! Nothing to do"
         return jsonify(message=err)
     return jsonify(data=list(map(lambda x: x.to_dict(), extensions_list)))
+
+
+@bp.route("/board/expand/<int:eid>", methods=["POST"])
+@login_required
+@grant_access("admin")
+def web_board_expand(eid):
+    record = Extensions(eid).record()
+    return render_template("bits/extension_expand_row.html",
+                          rec=record.to_dict())
