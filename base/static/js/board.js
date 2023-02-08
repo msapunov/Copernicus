@@ -149,6 +149,7 @@
                 render: $.fn.dataTable.render.number( ',', '')
             },{
                 data: "present_use",
+                defaultContent: 0,
                 render: $.fn.dataTable.render.number( ',', '')
             },{
                 data: "present_usage",
@@ -164,9 +165,10 @@
                     }
                 }
             },{
-                data: "extension",
+                data: null,
+                defaultContent: '',
                 render: function ( data, type, row ) {
-                    if(data != true){
+                    if(row.extension != true){
                         return new Intl.NumberFormat().format(row.hours);
                     }
                 }
