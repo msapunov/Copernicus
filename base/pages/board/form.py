@@ -8,8 +8,8 @@ __copyright__ = "Aix Marseille University"
 
 
 class RejectForm(FlaskForm):
-    note = TextAreaField("Note", validators=[DataRequired(
-        message="Note field is empty")])
+    note = TextAreaField(validators=[DataRequired(
+        message="Please indicate a reason for rejection")])
 
 
 def rejection(project):
