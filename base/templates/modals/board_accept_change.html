@@ -1,0 +1,35 @@
+<div class="uk-modal" aria-hidden="true" id="{{rec.id}}_accept">
+    <div class="uk-modal-dialog">
+        <button type="button" class="uk-modal-close uk-close"></button>
+        <div class="uk-modal-header">
+            <h3>Accept {{ rec.action }} of {{ rec.name }}?</h3>
+        </div>
+        <div class="uk-margin uk-modal-content">
+                <form class="uk-form">
+                    <p>Accept  request for {{ rec.action }} of {{ rec.name }} with additional {{ rec.hours }} CPU hours?</p>
+                    <div class="uk-form-row">
+                        <input class="uk-width-1-1" name="cpu" type="text" value="500000">
+                    </div>
+                    <div class="uk-form-row">
+                        <textarea class="uk-width-1-1" rows="4" name="note">Renewal accepted by CCIAM</textarea>
+                    </div>
+                    <div class="uk-form-row">
+                        <div>
+                            <div class="uk-form-controls uk-form-controls-text">
+                                <input id="new_resource_radio" name="resource" checked="checked" type="radio" class="uk-margin-small-right" value="false">
+                                <label for="new_resource_radio">Start new resource allocation. Total: {{ rec.hours }} hours</label>
+                            </div>
+                            <div class="uk-form-controls uk-form-controls-text">
+                                <input id="ext_resource_radio" name="resource" type="radio" class="uk-margin-small-right" value="true">
+                                <label for="ext_resource_radio">Extend already allocated resource. Total: {{ rec.project.resources.cpu + rec.hours }} hours</label>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+        </div>
+        <div class="uk-modal-footer uk-text-right">
+            <button class="uk-button window_hide" data-modal="{{rec.id}}_accept">Cancel</button>
+            <button class="uk-button uk-button-primary accept_submit" data-modal="{{rec.id}}_accept" data-url="admin/registration/accept/{{rec.id}}">Submit</button>
+        </div>
+    </div>
+</div>
