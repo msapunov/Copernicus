@@ -132,7 +132,7 @@ ajax = function(url, data){
 ajax_send = function(url, data, show_modal){
     UIkit.modal("#ajax_call", {modal: false}).show();
     return $.ajax({
-        data: data,
+        data: data ? data : undefined,
         timeout: 60000,
         type: "POST",
         url: url
