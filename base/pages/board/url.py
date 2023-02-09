@@ -47,15 +47,17 @@ def web_board_transform():
     return jsonify(data={"id": pid}, message=message)
 
 
-@bp.route("/board/accept", methods=["POST"])
+@bp.route("/board/accept/<int:eid>", methods=["POST"])
 @login_required
 @grant_access("admin")
-def web_board_accept():
-    eid, note, cpu, ext = get_arguments()
+def web_board_accept(eid):
+    form = AcceptForm()
+    if not form.validate_on_submit():
+        raise ValueError(form.errors)
     record = Extensions(eid)
-    record.cpu = cpu
-    record.extend = ext
-    record.accept(note)
+    record.cpu = form.cpu.data
+    record.extend = form.extend.data
+    record.accept(form.note.data)
     return jsonify(message=ProjectLog(record.rec.project).accept(record.rec),
                    data={"id": record.id})
 
@@ -64,7 +66,10 @@ def web_board_accept():
 @login_required
 @grant_access("admin")
 def web_board_reject(eid):
-    record = reject_extension(eid)
+    form = RejectForm()
+    if not form.validate_on_submit():
+        raise ValueError(form.errors)
+    record = Extensions(eid).reject(form.note.data)
     return jsonify(message=ProjectLog(record.project).reject(record),
                    data={"id": record.id})
 
@@ -96,11 +101,12 @@ def web_board_expand(eid):
     record = Extensions(eid).record()
     record.action = record.about()
     record.name = record.project.get_name()
+
     accept_form = acceptance(record)
-    accept = render_template("modals/board_accept_change.html", rec = record, form=accept_form)
-    ignore = render_template("modals/board_ignore_change.html", rec = record)
+    accept = render_template("modals/board_accept_change.html", rec=record, form=accept_form)
+    ignore = render_template("modals/board_ignore_change.html", rec=record)
     reject_form = rejection(record)
-    reject = render_template("modals/board_reject_change.html", rec = record, form=reject_form)
+    reject = render_template("modals/board_reject_change.html", rec=record, form=reject_form)
 #    form = contact_pending(rec)
 #    mail = render_template("modals/common_send_message.html", form=form)
     project = record.project
