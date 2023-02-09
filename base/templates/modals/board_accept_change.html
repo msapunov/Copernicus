@@ -5,27 +5,28 @@
             <h3>Accept {{ rec.action }} of {{ rec.name }}?</h3>
         </div>
         <div class="uk-margin uk-modal-content">
-                <form class="uk-form">
-                    <p>Accept  request for {{ rec.action }} of {{ rec.name }} with additional {{ rec.hours }} CPU hours?</p>
-                    <div class="uk-form-row">
-                        <input class="uk-width-1-1" name="cpu" type="text" value="500000">
-                    </div>
-                    <div class="uk-form-row">
-                        <textarea class="uk-width-1-1" rows="4" name="note">Renewal accepted by CCIAM</textarea>
-                    </div>
-                    <div class="uk-form-row">
-                        <div>
-                            <div class="uk-form-controls uk-form-controls-text">
-                                <input id="new_resource_radio" name="resource" checked="checked" type="radio" class="uk-margin-small-right" value="false">
-                                <label for="new_resource_radio">Start new resource allocation. Total: {{ rec.hours }} hours</label>
-                            </div>
-                            <div class="uk-form-controls uk-form-controls-text">
-                                <input id="ext_resource_radio" name="resource" type="radio" class="uk-margin-small-right" value="true">
-                                <label for="ext_resource_radio">Extend already allocated resource. Total: {{ rec.project.resources.cpu + rec.hours }} hours</label>
-                            </div>
+            <form action="board/accept/{{rec.id}}" method="post" class="uk-panel uk-form" id="{{rec.id}}_accept_form">
+                {{ form.csrf_token(id=rec.id|string+"_csrf_renew") }}
+                <p>Accept  request for {{ rec.action }} of {{ rec.name }} with additional {{ rec.hours }} CPU hours?</p>
+                <div class="uk-form-row">
+                    {{ form.cpu(id=rec.name+"_cpu_accept", value=rec.hours, class_="uk-width-1-1") }}
+                </div>
+                <div class="uk-form-row">
+                    {{ form.note(id=rec.name+"_note_accept", class_="uk-width-1-1", rows=4) }}
+                </div>
+                <div class="uk-form-row">
+                    <div>
+                        <div class="uk-form-controls uk-form-controls-text">
+                            <input id="{{ rec.name }}_new_radio" name="extend" {{ form.new_check }} type="radio" class="uk-margin-small-right" value="false">
+                            <label for="{{ rec.name }}_new_radio">Start new resource allocation. Total: {{ rec.hours }} hours</label>
+                        </div>
+                        <div class="uk-form-controls uk-form-controls-text">
+                            <input id="{{ rec.name }}_ext_radio" name="extend" {{ form.ext_check }} type="radio" class="uk-margin-small-right" value="true">
+                            <label for="{{ rec.name }}_ext_radio">Extend already allocated resource. Total: {{ rec.project.resources.cpu + rec.hours }} hours</label>
                         </div>
                     </div>
-                </form>
+                </div>
+            </form>
         </div>
         <div class="uk-modal-footer uk-text-right">
             <button class="uk-button window_hide" data-modal="{{rec.id}}_accept">Cancel</button>
