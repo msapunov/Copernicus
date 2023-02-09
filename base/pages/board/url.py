@@ -3,6 +3,7 @@ from flask_login import login_required
 from base.classes import ProjectLog, Extensions
 from base.pages import grant_access
 from base.pages.board import bp
+from base.pages.board.form import rejection, acceptance
 from base.pages.board.magic import get_arguments, reject_extension, transform
 
 
@@ -93,5 +94,16 @@ def web_board_list():
 @grant_access("admin")
 def web_board_expand(eid):
     record = Extensions(eid).record()
-    return render_template("bits/extension_expand_row.html",
-                          rec=record.to_dict())
+    record.action = record.about()
+    record.name = record.project.get_name()
+    accept_form = acceptance(record)
+    accept = render_template("modals/board_accept_change.html", rec = record, form=accept_form)
+    ignore = render_template("modals/board_ignore_change.html", rec = record)
+    reject_form = rejection(record)
+    reject = render_template("modals/board_reject_change.html", rec = record, form=reject_form)
+#    form = contact_pending(rec)
+#    mail = render_template("modals/common_send_message.html", form=form)
+    project = record.project
+    history = render_template("modals/project_show_history.html", form=project)
+    row = render_template("bits/extension_expand_row.html", rec=record.to_dict())
+    return row + history + accept + ignore + reject
