@@ -5,7 +5,7 @@
       <h3>Reject {{ rec.action }} of {{ rec.name }}?</h3>
     </div>
     <div class="uk-margin uk-modal-content">
-      <form action="board/reject/{{rec.id}}" method="post" class="uk-panel uk-form" id="{{form.id}}_reject_form">
+      <form action="board/reject/{{rec.id}}" method="post" class="uk-panel uk-form" id="{{rec.id}}_reject_form">
         {{ form.csrf_token(id=form.name+"_csrf_renew") }}
         <div class="uk-form-row">
           <div class="uk-form-controls">
