@@ -3,8 +3,8 @@ from flask_login import login_required
 from base.classes import ProjectLog, Extensions
 from base.pages import grant_access
 from base.pages.board import bp
-from base.pages.board.form import rejection, acceptance
-from base.pages.board.magic import get_arguments, reject_extension, transform
+from base.pages.board.form import rejection, acceptance, AcceptForm, RejectForm
+from base.pages.board.magic import get_arguments, transform
 
 
 __author__ = "Matvey Sapunov"
