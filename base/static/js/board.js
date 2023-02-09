@@ -218,6 +218,9 @@
         $(document).on("click", ".accept", trigger_modal);
         $(document).on("click", ".ignore", trigger_modal);
         $(document).on("click", ".reject", trigger_modal);
+        $(document).on("click", ".accept_submit", submit);
+        $(document).on("click", ".ignore_submit", submit);
+        $(document).on("click", ".reject_submit", submit);
 
         $(document).on("click", ".window_hide", trigger_modal);
     });
