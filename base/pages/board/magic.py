@@ -10,15 +10,6 @@ __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
 
 
-def reject_extension(eid):
-    data = check_json()
-    note = check_str(data["comment"])
-    if not note:
-        raise ValueError("Please indicate reason for rejection extension")
-    record = Extensions(eid)
-    return record.reject(note)
-
-
 def create_resource(project, cpu):
     return Resources(
         approve=current_user,
