@@ -16,18 +16,17 @@
         if(!$(btn).hasClass("uk-active")){
             return;
         }
+        table.columns().search("").draw();
         var type = $.trim( $(btn).data("type") );
         if (type == "extension"){
             var tt = table.column(6).data();
-            table.columns(6).search().draw();
+            table.columns(6).search("\\d+", true).draw();
         }else if(type == "renewal"){
-            table.columns(7).search(Boolean(), true).draw();
+            table.columns(7).search("\\d+", true).draw();
         }else if(type == "activate"){
-            table.columns(8).search().draw();
+            table.columns(8).search("\\d+").draw();
         }else if(type == "transform"){
             table.columns(9).search("\\w+", true).draw();
-        }else {
-            table.columns().search("").draw();
         }
     };
     window.board.dump = function dump(type, e){
