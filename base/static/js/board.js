@@ -178,6 +178,13 @@
             },{
                 data: "hours",
                 visible: false
+            },{
+                data: "present_usage",
+                visible: false
+            },{
+                data: "about",
+                visible: false
+
             }]
         });
         $('#board tbody').on('click', 'td.details-control', function () {
