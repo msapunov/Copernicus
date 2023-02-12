@@ -297,7 +297,8 @@ class Extend(db.Model):
             "name": self.project.get_name(),
             "approve": approve,
             "responsible": self.project.responsible.full_name(),
-            "responsible_login": self.project.responsible.login
+            "responsible_login": self.project.responsible.login,
+            "about": self.about()
         }
 
 
