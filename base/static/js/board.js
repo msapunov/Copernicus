@@ -171,6 +171,7 @@
                 width:"15px"
             },{
                 data: "created",
+                defaultContent: "",
                 render: function ( data, type, row ) {
                     var dateSplit = data.split(' ');
                     return type === "display" || type === "filter" ? dateSplit[0] : data;
