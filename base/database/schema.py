@@ -729,7 +729,7 @@ class LogDB(db.Model):
         return {
             "project": self.project.name if self.project else "",
             "item": item,
-            "type": category,
+            "category": category,
             "date": self.created.strftime("%Y-%m-%d %X %Z"),
             "date_full": self.created.strftime("%c"),
             "message": msg
