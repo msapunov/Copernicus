@@ -403,11 +403,13 @@ class User(UserMixin, db.Model):
         password = generate_password()
         self.hash = generate_password_hash(password)
         self.first_login = True
+        db.session.commit()
         return password
 
     def set_password(self, password):
         self.hash = generate_password_hash(password)
         self.first_login = False
+        db.session.commit()
         return password
 
     def check_password(self, password):
