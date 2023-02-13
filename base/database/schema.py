@@ -714,15 +714,20 @@ class LogDB(db.Model):
         msg = "%s by %s" % (event, creator)
         if self.project:
             item = self.project.name
+            category = "project"
         elif self.register:
             item = self.register.project_id()
+            category = "registration"
         elif self.user:
             item = self.user.full_name()
+            category = "user"
         else:
             item = ""
+            category = "unknown"
         return {
             "project": self.project.name if self.project else "",
             "item": item,
+            "type": category,
             "date": self.created.strftime("%Y-%m-%d %X %Z"),
             "date_full": self.created.strftime("%c"),
             "message": msg
