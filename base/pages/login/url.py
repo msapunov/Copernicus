@@ -1,6 +1,6 @@
 from flask import render_template, request, redirect, url_for, g, flash, abort
 from flask_login import current_user, login_user, logout_user, login_required
-from base.pages.login.magic import ssh_login
+from base.pages.login.magic import ssh_login, password_quality
 from base.pages.login.form import LoginForm, ResetForm
 from base.pages.login import bp
 from base64 import b64decode
@@ -67,6 +67,11 @@ def reset():
     if old == new:
         flash("New password match with old one!")
         return redirect(url_for("login.reset"))
+    try:
+        password_quality(new)
+    except ValueError as err:
+        flash(err)
+        return redirect(url_for("login.reset"))
     current_user.set_password(new)
     flash("You have successfully changed your password!")
     return redirect(url_for("user.user_index"))
@@ -87,17 +92,20 @@ def login():
     user = User.query.filter_by(login=username).first()
     debug(user)
     if not user:
-        flash("Invalid user '%s'" % username)
+        flash("User '%s' does not exists" % username)
         return redirect(url_for("login.login"))
     if user.hash:
-        logged = user.check_password(password)
+        check = user.check_password(password)
     else:
-        logged = ssh_login(username, password)
-    if not logged:
+        check = ssh_login(username, password)
+    if not check:
         flash("Invalid password")
         return redirect(url_for("login.login"))
     login_user(user, True)
     g.name = username
+    if not user.hash and not user.first_login:
+        flash("Think about set new password at %s" % url_for("login.reset",
+                                                             _external=True))
     if user.first_login:
         return redirect(url_for("login.reset"))
     return redirect(url_for("user.user_index"))
