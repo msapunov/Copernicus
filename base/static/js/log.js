@@ -13,7 +13,8 @@
             dom: "tip",
             pageLength: 100,
             columns: [{
-                data: "item"
+                data: "item",
+                visible: false
             },{
                 data: "message"
             },{
@@ -25,6 +26,9 @@
                 }
             },{
                 data: "date_full",
+                visible: false
+            },{
+                data: "category",
                 visible: false
             }]
         });
