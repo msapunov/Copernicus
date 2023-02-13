@@ -19,6 +19,17 @@
         let extype = $.trim( $(btn).data("type") );
         table.columns(13).search(extype).draw();
     };
+    window.board.filter_conso = function filter_conso(btn, table) {
+        if (!$(btn).hasClass("uk-active")) {
+            return;
+        }
+        let conso = parseInt( $.trim($(btn).data("conso")) );
+        $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
+            return parseInt(data[12]) >= conso
+        });
+        table.draw();
+        $.fn.dataTable.ext.search.pop();
+    };
     window.board.dump = function dump(type, e){
         if(!type in ["csv", "ods", "xls"]){
             e.preventDefault();
