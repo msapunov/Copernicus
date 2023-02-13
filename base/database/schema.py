@@ -5,6 +5,7 @@ from textwrap import shorten
 from hashlib import md5
 from logging import error
 from pathlib import PurePath
+from re import split as re_split
 
 
 __author__ = "Matvey Sapunov"
@@ -415,9 +416,16 @@ class User(UserMixin, db.Model):
         return "%s <%s> [%s]" % (self.full_name(), self.email, self.login)
 
     def full_name(self):
-        if self.name and self.surname:
-            return "%s %s" % (self.name.capitalize(), self.surname.capitalize())
-        return "%s %s" % (self.name, self.surname)
+        result = []
+        for name in [self.name, self.surname]:
+            if not name:
+                continue
+            name_parts = re_split('[\/.,\'\s-]', name)
+            for part in name_parts:
+                cap = part.capitalize()
+                name = name.replace(part, cap)
+            result.append(name)
+        return " ".join(result)
 
     def permissions(self):
         perm = []
