@@ -710,6 +710,8 @@ class LogDB(db.Model):
 
     def to_web(self):
         event = self.event.capitalize()
+        if "ssh" in event:
+            event = event[:50] + "..." + event[-50:]
         creator = self.author.full_name() if self.author else "Unknown author"
         msg = "%s by %s" % (event, creator)
         if self.project:
