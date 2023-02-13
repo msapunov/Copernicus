@@ -218,6 +218,7 @@
         } );
 
         $(document).on("click", ".ext-type", function(){ window.board.project_type(this, table) });
+        $(document).on("click", ".conso", function(){ window.board.filter_conso(this, table) });
         $(document).on("click", ".dump_csv", function(e){window.board.dump("csv", e) });
         $(document).on("click", ".dump_ods", function(e){ window.board.dump("ods", e) });
         $(document).on("click", ".dump_xls", function(e){ window.board.dump("xls", e) });
