@@ -16,7 +16,15 @@
                 data: "item",
                 visible: false
             },{
-                data: "message"
+                data: "message",
+                render: function ( data, type, row ) {
+                    let cat = row.category;
+                    if(cat=="project" || cat == "registration"){
+                        return "<b>" + row.item + ":</b>&nbsp;" + data;
+                    }else{
+                        return data;
+                    }
+                }
             },{
                 data: "date",
                 render: function ( date, type, row ) {
