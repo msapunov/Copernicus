@@ -103,9 +103,6 @@ def login():
         return redirect(url_for("login.login"))
     login_user(user, True)
     g.name = username
-    if not user.hash and not user.first_login:
-        flash("Think about set new password at %s" % url_for("login.reset",
-                                                             _external=True))
     if user.first_login:
         return redirect(url_for("login.reset"))
     return redirect(url_for("user.user_index"))
