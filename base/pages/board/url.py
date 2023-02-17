@@ -111,5 +111,5 @@ def web_board_expand(eid):
 #    mail = render_template("modals/common_send_message.html", form=form)
     project = record.project
     history = render_template("modals/project_show_history.html", form=project)
-    row = render_template("bits/extension_expand_row.html", rec=record.to_dict())
+    row = render_template("bits/extension_expand_row.html", rec=record.to_dict(), project=record.project)
     return row + history + accept + ignore + reject
