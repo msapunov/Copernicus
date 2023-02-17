@@ -299,6 +299,14 @@ class UserLog(Log):
         self.log.event = "Upload SSH key %s" % key
         return self.commit()
 
+    def password_changed(self, passwd):
+        self.log.event = "Password has been changed"
+        return self.commit()
+
+    def password_reset(self, passwd):
+        self.log.event = "Password has been reset"
+        return self.commit(Mail().user_password(self, passwd))
+
     def user_update(self, info):
         changes = []
         for name, value in info.items():

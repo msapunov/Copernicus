@@ -1,7 +1,7 @@
 from flask import render_template, request, redirect, url_for, g, flash, abort
 from flask_login import current_user, login_user, logout_user, login_required
-from base.pages.login.magic import ssh_login
-from base.pages.login.form import LoginForm
+from base.pages.login.magic import ssh_login, password_quality
+from base.pages.login.form import LoginForm, ResetForm
 from base.pages.login import bp
 from base64 import b64decode
 from base.database.schema import User
@@ -47,6 +47,36 @@ def load_user_from_request(urlpath):
     return redirect(url_for("login.login"))
 
 
+@bp.route("/reset", methods=["GET", "POST"])
+@bp.route("/reset.html", methods=["GET", "POST"])
+@login_required
+def reset():
+    form = ResetForm(request.form)
+    if request.method == "GET":
+        return render_template("reset.html", form=form)
+    form.validate_on_submit()
+    old = form.old.data
+    new = form.new_passw.data
+    conf = form.conf_passw.data
+    if not current_user.check_password(old):
+        flash("Old password is not correct!")
+        return redirect(url_for("login.reset"))
+    if new != conf:
+        flash("New password does not match!")
+        return redirect(url_for("login.reset"))
+    if old == new:
+        flash("New password match with old one!")
+        return redirect(url_for("login.reset"))
+    try:
+        password_quality(new)
+    except ValueError as err:
+        flash(err)
+        return redirect(url_for("login.reset"))
+    current_user.set_password(new)
+    flash("You have successfully changed your password!")
+    return redirect(url_for("user.user_index"))
+
+
 @bp.route("/login", methods=["GET", "POST"])
 @bp.route("/login.html", methods=["GET", "POST"])
 def login():
@@ -59,16 +89,22 @@ def login():
     form.validate_on_submit()
     username = form.login.data
     password = form.passw.data
-    if not ssh_login(username, password):
-        flash("Invalid username or password")
-        return redirect(url_for("login.login"))
     user = User.query.filter_by(login=username).first()
     debug(user)
     if not user:
-        flash("Failed to find a user with login '%s'" % username)
+        flash("User '%s' does not exists" % username)
+        return redirect(url_for("login.login"))
+    if user.hash:
+        check = user.check_password(password)
+    else:
+        check = ssh_login(username, password)
+    if not check:
+        flash("Invalid password")
         return redirect(url_for("login.login"))
     login_user(user, True)
     g.name = username
+    if user.first_login:
+        return redirect(url_for("login.reset"))
     return redirect(url_for("user.user_index"))
 
 

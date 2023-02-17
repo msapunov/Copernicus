@@ -1,10 +1,12 @@
 from flask_login import UserMixin
 from base import db
+from base.functions import generate_password
 from datetime import datetime as dt
 from textwrap import shorten
 from hashlib import md5
 from logging import error
 from pathlib import PurePath
+from werkzeug.security import generate_password_hash, check_password_hash
 from re import split as re_split
 
 
@@ -408,9 +410,27 @@ class User(UserMixin, db.Model):
     modified = db.Column(db.DateTime(True))
     created = db.Column(db.DateTime(True))
     uid = db.Column(db.Integer)
+    hash = db.Column(db.String(128))
+    first_login = db.Column(db.Boolean, default=True)
 
     def __repr__(self):
         return '<User {}>'.format(self.login)
+
+    def reset_password(self):
+        password = generate_password()
+        self.hash = generate_password_hash(password)
+        self.first_login = True
+        db.session.commit()
+        return password
+
+    def set_password(self, password):
+        self.hash = generate_password_hash(password)
+        self.first_login = False
+        db.session.commit()
+        return password
+
+    def check_password(self, password):
+        return check_password_hash(self.hash, password)
 
     def full(self):
         return "%s <%s> [%s]" % (self.full_name(), self.email, self.login)

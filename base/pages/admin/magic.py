@@ -175,21 +175,6 @@ def message(to, msg, title=None):
     return send_message(to, by_who, cc, title, msg)
 
 
-def project_type(register):
-    if register.type_a:
-        return "a"
-    elif register.type_b:
-        return "b"
-    elif register.type_c:
-        return "c"
-    elif register.type_h:
-        return "h"
-    elif register.type_p:
-        return "p"
-    else:
-        raise ValueError("Failed to determine project's type")
-
-
 def reg_accept(pid, note):
     rec = get_registration_record(pid)
     #  TEMP code start here
@@ -564,36 +549,9 @@ def user_delete(uid):
 
 def user_reset_pass(uid):
     user = user_by_id(uid)
-    task = TaskQueue().user(user).password_reset().task
-    Task(task).accept()
-    return "Password reset task has been added to execution queue"
-
-
-def group_users():
-    result = {}
-
-    users_obj = User.query.all()
-    users_obj = sorted(users_obj, key=attrgetter("login"))
-    users = map(lambda x: {"id": x.id, "login": x.login, "name": x.name,
-                           "surname": x.surname, "status": x.active,
-                           "user": x.acl.is_user, "manager": x.acl.is_manager,
-                           "tech": x.acl.is_tech, "admin": x.acl.is_admin,
-                           "responsible": x.acl.is_responsible, "mail": x.email,
-                           "committee": x.acl.is_committee}, users_obj)
-
-    roles = ["user", "manager", "tech", "admin", "committee", "responsible"]
-    for user in list(users):
-        first = user["login"][0]
-        if first not in result:
-            result[first] = []
-        result[first].append(user)
-        for i in roles:
-            if not user[i]:
-                continue
-            if i not in result:
-                result[i] = []
-            result[i].append(user)
-    return result
+    passwd = user.reset_password()
+    UserLog(user).password_reset(passwd)
+    return "Password for user %s has been changed" % user.login
 
 
 def process_task(tid, result):

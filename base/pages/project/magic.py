@@ -58,7 +58,9 @@ def warn_expired_projects(projects, config):
         if not rec.active:
             continue
         finish = rec.resources.ttl
-        warn = config[rec.type].finish_notice_dt
+        warn = config[rec.type].get("finish_notice_dt")
+        if not warn:
+            debug("No warning date has been defined")
         if warn <= now < finish:
             debug("Expiring %s, %s" % (rec.name, finish.isoformat()))
             debug("Checking if warning has been send already")
