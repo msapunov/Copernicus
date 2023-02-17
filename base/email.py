@@ -79,12 +79,12 @@ class Mail(Thread):
         """
         cfg_file = app.config.get("EMAIL_CONFIG", "mail.cfg")
         cfg_path = path_join(app.instance_path, cfg_file)
-        if not exists(cfg_path):
-            warning("E-mail configuration file doesn't exists. Using defaults")
-            return
         self.cfg = ConfigParser(interpolation=ExtendedInterpolation(),
                                 allow_no_value=True)
-        self.cfg.read(cfg_path, encoding="utf-8")
+        if exists(cfg_path):
+            self.cfg.read(cfg_path, encoding="utf-8")
+        else:
+            warning("E-mail configuration file doesn't exists. Using defaults")
         self.server = self.cfg.get("SERVER", "HOST", fallback="localhost")
         self.port = self.cfg.getint("SERVER", "PORT", fallback=25)
         self.use_tls = self.cfg.getboolean("SERVER", "USE_TLS", fallback=False)
