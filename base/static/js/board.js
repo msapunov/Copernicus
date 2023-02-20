@@ -104,6 +104,9 @@
         var table = $("#board").DataTable({
             ajax: {type: "POST", url: window.board.url.list},
             dom: 't',
+            fnCreatedRow: function (row, data, iDisplayIndex) {
+                $(row).attr('id', data.id);
+            },
             footerCallback: function( tfoot, data, start, end, display ) {
                 var api = this.api();
                 var total = api.column( 3, { page: 'current'} ).data().reduce( function ( a, b ) {
