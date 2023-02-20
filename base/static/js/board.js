@@ -33,19 +33,9 @@
     window.board.submit = function (e) {
         let x = submit.call(this);
         x.done(function (reply) {
-            trigger_modal.call(this);
-            setTimeout(function (){
-                let dt = $("table#board").DataTable();
-                let id = reply.data.id;
-                if ($.fn.DataTable.isDataTable(dt)) {
-                    let row = dt.row("#" + id);
-                    if (row.child.isShown()) {
-                        row.child.hide();
-                    }
-                    row.remove().draw();
-                }
-            }, 300);
-
+            UIkit.modal("#ajax_call", {modal: false}).hide();
+            let id = reply.data.id;
+            $("table#board").DataTable().row("#" + id).remove().draw();
         });
     }
     window.board.dump = function dump(type, e){
