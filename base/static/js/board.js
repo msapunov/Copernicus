@@ -30,6 +30,24 @@
         table.draw();
         $.fn.dataTable.ext.search.pop();
     };
+    window.board.submit = function (e) {
+        let x = submit.call(this);
+        x.done(function (reply) {
+            trigger_modal.call(this);
+            setTimeout(function (){
+                let dt = $("table#board").DataTable();
+                let id = reply.data.id;
+                if ($.fn.DataTable.isDataTable(dt)) {
+                    let row = dt.row("#" + id);
+                    if (row.child.isShown()) {
+                        row.child.hide();
+                    }
+                    row.remove().draw();
+                }
+            }, 300);
+
+        });
+    }
     window.board.dump = function dump(type, e){
         if(!type in ["csv", "ods", "xls"]){
             e.preventDefault();
