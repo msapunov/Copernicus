@@ -94,8 +94,10 @@ def login():
         flash("User '%s' does not exists" % username)
         return redirect(url_for("login.login"))
     if user.hash:
+        debug("Using password verification")
         check = user.check_password(password)
     else:
+        debug("Using SSH verification")
         check = ssh_login(username, password)
     if not check:
         flash("Invalid password")
