@@ -58,6 +58,10 @@ def ssh_wrapper(cmd, host=None):
               % (host, login, key_file))
         client.close()
         return [], []
+    except BadHostKeyException:
+        error("Host key given by %s did not match with expected" % host)
+        client.close()
+        return [], []
     except Exception as e:
         error("Failed to establish a connection to %s due following error: %s"
               % (host, e))
