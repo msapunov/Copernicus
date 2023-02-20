@@ -39,6 +39,7 @@ def password_errors(password):
 def ssh_login(login, password):
     auth = False
     login_servers = current_app.config.get("LOGIN_SERVER", None)
+    port = current_app.config.get("SSH_PORT", 22)
     if not login_servers:
         error("Configuration has no LOGIN_SERVER option set")
         return False
@@ -53,7 +54,7 @@ def ssh_login(login, password):
         client = SSHClient()
         try:
             client.set_missing_host_key_policy(AutoAddPolicy())
-            client.connect(host, username=login, password=password,
+            client.connect(host, username=login, password=password, port=port,
                            allow_agent=False, look_for_keys=False)
             if client.get_transport().is_authenticated():
                 auth = True

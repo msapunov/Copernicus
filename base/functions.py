@@ -1,4 +1,5 @@
 from paramiko import SSHClient, AutoAddPolicy, AuthenticationException, RSAKey
+from paramiko import BadHostKeyException
 from flask import current_app as app, flash, request, render_template
 from datetime import datetime as dt, timezone
 from tempfile import gettempdir, mkdtemp
@@ -44,15 +45,20 @@ def ssh_wrapper(cmd, host=None):
     key_file = app.config["SSH_KEY"]
     key = RSAKey.from_private_key_file(key_file)
     timeout = app.config.get("SSH_TIMEOUT", 60)
-
-    debug("Connecting to %s with login %s and key %s" % (host, login, key_file))
+    port = app.config.get("SSH_PORT", 22)
+    debug("Connecting to %s:%s with username %s and key %s" %
+          (host, port, login, key_file))
     client = SSHClient()
     client.set_missing_host_key_policy(AutoAddPolicy())
     try:
-        client.connect(host, username=login, pkey=key, timeout=timeout)
+        client.connect(host, username=login, pkey=key, timeout=timeout,
+                       port=port)
     except AuthenticationException:
-        error("Failed to connect to %s under using %s with key '%s'"
-              % (host, login, key_file))
+        error("Failed to connect to %s" % host)
+        client.close()
+        return [], []
+    except BadHostKeyException:
+        error("Host key given by %s did not match with expected" % host)
         client.close()
         return [], []
     except Exception as e:
