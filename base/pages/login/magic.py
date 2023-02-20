@@ -8,7 +8,7 @@ __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
 
 
-def password_quality(password):
+def password_errors(password):
     """
     Solution based on
     https://stackoverflow.com/questions/16709638/checking-the-strength-of-a-password-how-to-check-conditions#32542964
@@ -22,18 +22,18 @@ def password_quality(password):
         1 lowercase letter or more
     """
     if len(password) < 8:
-        raise ValueError("Password must be 8 or more characters!")
+        return "Password must be 8 or more characters!"
     if len(password) > 128:
-        raise ValueError("Password must be less then 128 characters!")
+        return "Password must be less then 128 characters!"
     if not search(r"\d", password):
-        raise ValueError("Password must contain at least one digit!")
+        return "Password must contain at least one digit!"
     if not search(r"[A-Z]", password):
-        raise ValueError("Password must contain at least 1 uppercase letter!")
+        return "Password must contain at least 1 uppercase letter!"
     if not search(r"[a-z]", password):
-        raise ValueError("Password must contain at least 1 lowercase letter!")
+        return "Password must contain at least 1 lowercase letter!"
     if not search(r"\W", password):
-        raise ValueError("Password must contain at least 1 special character!")
-    return True
+        return "Password must contain at least 1 special character!"
+    return None
 
 
 def ssh_login(login, password):
