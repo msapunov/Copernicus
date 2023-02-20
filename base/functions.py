@@ -45,12 +45,14 @@ def ssh_wrapper(cmd, host=None):
     key_file = app.config["SSH_KEY"]
     key = RSAKey.from_private_key_file(key_file)
     timeout = app.config.get("SSH_TIMEOUT", 60)
-
-    debug("Connecting to %s with login %s and key %s" % (host, login, key_file))
+    port = app.config.get("SSH_PORT", 22)
+    debug("Connecting to %s:%s with username %s and key %s" %
+          (host, port, login, key_file))
     client = SSHClient()
     client.set_missing_host_key_policy(AutoAddPolicy())
     try:
-        client.connect(host, username=login, pkey=key, timeout=timeout)
+        client.connect(host, username=login, pkey=key, timeout=timeout,
+                       port=port)
     except AuthenticationException:
         error("Failed to connect to %s under using %s with key '%s'"
               % (host, login, key_file))
