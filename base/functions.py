@@ -54,8 +54,7 @@ def ssh_wrapper(cmd, host=None):
         client.connect(host, username=login, pkey=key, timeout=timeout,
                        port=port)
     except AuthenticationException:
-        error("Failed to connect to %s under using %s with key '%s'"
-              % (host, login, key_file))
+        error("Failed to connect to %s" % host)
         client.close()
         return [], []
     except BadHostKeyException:
