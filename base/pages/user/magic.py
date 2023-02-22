@@ -49,8 +49,10 @@ def get_scratch():
     if not result:
         raise ValueError("No scratch space info found")
 
-    info = result[1]
-    name, uid, used, total, files, hard = info.split(",")
+    info = list(filter(lambda x: current_user.login in x, result))
+    if not info:
+        raise ValueError("Error parsing scratch space info")
+    name, uid, used, total, files, hard = info[0].split(",")
     usage = "{0:.1%}".format(float(used) / float(total))
     free = float(total) - float(used)
     return {"usage": usage, "total": total, "used": used, "free": free,
