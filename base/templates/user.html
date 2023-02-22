@@ -42,6 +42,23 @@
                 </button>
             </div>
         {% endif %}
+        <div class="uk-panel uk-panel-box uk-width-1-1">
+            <div class="uk-panel-badge uk-badge uk-badge-success">
+                Important!
+            </div>
+            <h3 class="uk-panel-title">Connection information</h3>
+            <p>
+                The login server will only accept SSH connections on port 8822 instead of default port (22).
+            </p>
+            <p>
+                To connect to the server please use the following command: <code class="uk-alert-success">ssh -p 8822 {{data.user.login}}@login.mesocentre.univ-amu.fr</code><br>
+                Note that the '-p' option is used to specify the port number.
+            </p>
+            <p>
+                If you prefer to use a graphical SSH client, you will need to configure it to use port 8822 instead of default port.
+                Please refer to the documentation for your SSH client for instructions on how to do this.
+            </p>
+        </div>
         {% if data and data.jobs %}
             <div class="uk-panel uk-width-1-1 uk-overflow-container uk-panel-space">
                 <table class="uk-table uk-table-hover uk-table-striped uk-table-condensed">
