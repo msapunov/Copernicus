@@ -8,7 +8,7 @@ from base.database.schema import User
 from base.extensions import login_manager
 
 
-from logging import warning, debug
+from logging import error, debug
 
 
 __author__ = "Matvey Sapunov"
@@ -34,9 +34,16 @@ def load_user_from_request(urlpath):
         except TypeError:
             pass
         username, password = api_key.decode(encoding="UTF-8").split(":")
-        if not ssh_login(username, password):
+        if len(username) > 128:
+            error("Username is longer then 128 letters")
+            return abort(401)
+        if not username.isalpha():
+            error("Username '%s' consists not only from letters" % username)
             return abort(401)
         user = User.query.filter_by(login=username).first()
+        debug("API user found %s" % user.login)
+        if not user.check_password(password):
+            return abort(401)
         login_user(user, True)
         if ("SCRIPT_NAME" in request.environ) and request.environ["SCRIPT_NAME"]:
             urlpath = "%s/%s" % (request.environ["SCRIPT_NAME"], urlpath)
@@ -88,6 +95,12 @@ def login():
     form.validate_on_submit()
     username = form.login.data
     password = form.passw.data
+    if len(username) > 128:
+        flash("Username not correct")
+        return redirect(url_for("login.login"))
+    if not username.isalpha():
+        flash("Username is not real")
+        return redirect(url_for("login.login"))
     user = User.query.filter_by(login=username).first()
     debug(user)
     if not user:
