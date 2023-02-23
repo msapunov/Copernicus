@@ -6,6 +6,7 @@ from base.database.schema import User
 from base.classes import UserLog, Task
 from tempfile import mkstemp
 from os import path, remove
+from logging import debug, error
 
 
 __author__ = "Matvey Sapunov"
@@ -21,7 +22,10 @@ def ssh_key(form):
     if path.exists(key_path):
         remove(key_path)
     if stderr:
+        error("Provided key: '%s'" % key)
+        error(stderr)
         raise ValueError("Provided public key failed to pass ssh-keygen check")
+    debug(stdout)
     task = TaskQueue().user(current_user).key_upload(key).task
     Task(task).accept()
     return UserLog(current_user).key_upload(key)
