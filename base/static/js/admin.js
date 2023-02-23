@@ -58,7 +58,7 @@
     window.sub = function (e){
         var x = submit.call(this);
         x.done(function(reply){
-            trigger_modal.call(this);
+            UIkit.modal("#ajax_call", {modal: false}).hide();
             let div = $("table#pending_projects");
             if ( $.fn.DataTable.isDataTable( div )){
                 pending_child = $(div).DataTable().rows($('.shown'));
@@ -1113,6 +1113,9 @@
         let pending_table = $("#pending_projects").DataTable({
             "ajax": {"type": "POST", "url": window.admin.url.pending},
             dom: 'tiB',
+            fnCreatedRow: function (row, data, iDisplayIndex) {
+                $(row).attr('id', data.id);
+            },
             buttons: {
                 className: 'copyButton',
                 buttons: [ 'refresh' ]
