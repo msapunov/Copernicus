@@ -329,12 +329,16 @@ def slurm_nodes_status():
             error("Wrong format: %s" % line)
             continue
         reason = info[0].strip()
-        date = dt.strptime(info[1].strip(), "%Y-%m-%dT%H:%M:%S")
+        try:
+            date = dt.strptime(info[1].strip(), "%Y-%m-%dT%H:%M:%S")
+        except ValueError as err:
+            error("Error parsing date '%s': %s" % (info[1].strip(), err))
+            date = None
         node = info[2].strip()
         stat = info[3].strip()
         result.append({
-            "date": date.strftime("%Y-%m-%d %X %Z"),
-            "date_full": date.strftime("%c"),
+            "date": date.strftime("%Y-%m-%d %X %Z") if date else "Unknown",
+            "date_full": date.strftime("%c") if date else "Unknown",
             "reason": reason,
             "status": stat,
             "node": node})
