@@ -579,6 +579,8 @@ def process_task(tid, result):
         task.responsible_assign()
     elif act == "remove" and ent == "user":
         task.user_delete()
+    elif act == "ssh" and ent == "user":
+        task.user_publickey()
     return task.done(result)  # TODO: result of task should be an argument for done methode
 
 
