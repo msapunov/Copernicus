@@ -50,6 +50,7 @@ def web_modal_ssh():
     log.info("Call to render upload ssh key modal")
     form = KeyForm()
     form.username = current_user.login
+    form.email = current_user.email
     return jsonify(render_template("modals/user_load_ssh.html", form=form))
 
 
