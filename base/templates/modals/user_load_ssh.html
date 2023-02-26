@@ -12,6 +12,13 @@
                         {{ form.key(class_="uk-width-1-1", placeholder="ssh-rsa AAAAB3NzaC1yc2...+6W5hijLDZ4zVw== username@computer") }}
                     </div>
                 </div>
+                <div class="uk-form-row uk-alert uk-alert-danger">
+                    <div>
+                        <p>Please note that uploading your public key is not an instant process!</p>
+                        <p>Once we have installed your key on the login server, a confirmation email will be sent to {{ form.email }} to let you know that the process is complete</p>
+                        <p>Thank you for your patience!</p>
+                    </div>
+                </div>
                 <div class="uk-form-row uk-alert">
                     <div>
                         <p>Upload the content of SSH public key. Public key usually saved in a file like ~/.ssh/id_rsa.pub or ~/.ssh/id_ed25519.pub</p>
