@@ -123,6 +123,10 @@ class Mail(Thread):
             if self.signature:
                 self.message = self.message + self.signature
             self.msg.attach(MIMEText(self.message))
+        debug("Value of self.sending switch: %s" % self.sending)
+        if not self.sending:
+            debug("No e-mail has been sent")
+            return None
         if self.use_ssl:
             smtp = smtplib.SMTP_SSL(self.server, self.port)
         else:
@@ -130,11 +134,9 @@ class Mail(Thread):
         if self.use_tls:
             smtp.starttls()
         if self.username and self.password:
+            debug("Login to SMTP server")
             smtp.login(self.username, self.password)
-        debug("Value of self.sending switch: %s" % self.sending)
-        if self.sending:
-            debug("Submitting mail to SMTP server")
-            smtp.send_message(self.msg)
+        smtp.send_message(self.msg)
         debug("Quit SMTP server")
         smtp.quit()
         for header in self.msg.items():
