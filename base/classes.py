@@ -299,6 +299,10 @@ class UserLog(Log):
         self.log.event = "Upload SSH key %s" % key
         return self.commit()
 
+    def key_uploaded(self, key):
+        self.log.event = "Uploaded SSH key %s" % key
+        return self.commit(Mail().user_publickey(self, key))
+
     def password_changed(self, passwd):
         self.log.event = "Password has been changed"
         return self.commit()
