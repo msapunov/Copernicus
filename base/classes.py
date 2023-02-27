@@ -928,3 +928,12 @@ class Task:
             old_responsible.acl.is_responsible = False
             ResponsibleMailingList.unsubscribe(old_responsible.email)
         return ProjectLog(project).responsible_assigned(self.task)
+
+    def user_publickey(self):
+        """
+        Send message after public key has been uploaded on the server
+        Return: Object. Mail object
+        """
+        user = self.task.user
+        key = self.get_description()
+        return UserLog(user).key_uploaded(key)
