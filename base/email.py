@@ -236,6 +236,14 @@ class Mail(Thread):
         self.__populate_values({"%FULLNAME": full, "%PASS": passwd})
         return self
 
+    def user_publickey(self, record, key):
+        self.populate("PUBLIC KEY")
+        self.destination = record.user.email
+        full = record.user.full_name()
+        key = key[:62] + "..." + key[-62:]
+        self.__populate_values({"%FULLNAME": full, "%KEY": key})
+        return self
+
     def user_update(self, record):
         self.populate("USER UPDATE")
         self.destination = record.user.email
