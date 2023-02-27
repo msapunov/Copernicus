@@ -28,7 +28,8 @@ def ssh_key(form):
     debug(stdout)
     task = TaskQueue().user(current_user).key_upload(key).task
     Task(task).accept()
-    return UserLog(current_user).key_upload(key)
+    UserLog(current_user).key_upload(key)
+    return "You will be notified when your public key is installed"
 
 
 def user_by_id(uid):
