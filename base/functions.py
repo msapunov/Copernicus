@@ -301,7 +301,7 @@ def project_config():
     for project in projects:
         name = project.lower()
         result[name] = project_parse_cfg_options(cfg, project)
-    debug("Project configuration: %s" % result)
+    #debug("Project configuration: %s" % result)
     return result
 
 
