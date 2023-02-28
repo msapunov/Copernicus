@@ -19,3 +19,15 @@ def edit_info(user):
     form.surname.data = user.surname
     form.email.data = user.email
     return form
+
+
+class PassForm(FlaskForm):
+    password = StringField("Password")
+
+
+def set_password(user):
+    form = PassForm()
+    form.id = user.id
+    form.login = user.login
+    form.fullname = user.full_name()
+    return form
