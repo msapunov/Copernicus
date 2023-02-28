@@ -303,7 +303,7 @@ class UserLog(Log):
         self.log.event = "Uploaded SSH key %s" % key
         return self.commit(Mail().user_publickey(self, key))
 
-    def password_changed(self, passwd):
+    def password_changed(self):
         self.log.event = "Password has been changed"
         return self.commit()
 
