@@ -549,6 +549,16 @@ def user_delete(uid):
     return "User %s has been removed from the database" % login
 
 
+def user_set_pass(uid):
+    form = PassForm()
+    if not form.validate_on_submit():
+        raise ValueError(form.errors)
+    user = user_by_id(uid)
+    user.set_password(form.password.data)
+    UserLog(user).password_changed()
+    return "Password for user %s has been set successfully" % user.login
+
+
 def user_reset_pass(uid):
     user = user_by_id(uid)
     passwd = user.reset_password()
