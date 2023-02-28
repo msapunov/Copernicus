@@ -59,18 +59,18 @@ def unprocessed():
 
 
 def render_registry(user):
-    edit_form = edit_info(user)
-    user_edit = render_template("modals/user_edit_info.html", form=edit_form)
     tasks = Tasks.query.filter_by(user=user).all()
     details = user.details()
     if tasks:
         details["todo"] = list(map(lambda x: x.description(), tasks))
     row = render_template("bits/registry_expand_row.html", user=details)
+    edit_form = edit_info(user)
+    row += render_template("modals/user_edit_info.html", form=edit_form)
     if not user.active:
         a_form = activate_user(user)
         act = render_template("modals/registry_activate_user.html", form=a_form)
-        return row + user_edit + act
-    return row + user_edit
+        return row + act
+    return row
 
 
 def render_pending(rec):
