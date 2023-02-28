@@ -1145,7 +1145,7 @@
                     } else if( "H" == data ){
                         return '<span class="uk-text-bold uk-text-warning">H</span>'
                     }else{
-                        return '<span>{{record.type}}</span>'
+                        return '<span>'+data+'</span>'
                     }
                 },
                 width:"20px"
