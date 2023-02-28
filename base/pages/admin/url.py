@@ -22,6 +22,7 @@ from base.pages.admin.magic import (
     unprocessed,
     user_info_update,
     user_create_by_admin,
+    user_set_pass,
     user_reset_pass,
     user_delete,
     registration_user_del,
