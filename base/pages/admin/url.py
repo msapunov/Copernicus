@@ -114,7 +114,7 @@ def admin_user_set_password(uid):
 @bp.route("/admin/user/reset/password/<int:uid>", methods=["POST"])
 @login_required
 @grant_access("admin")
-def admin_user_password(uid):
+def admin_user_reset_password(uid):
     return jsonify(message=user_reset_pass(uid))
 
 
