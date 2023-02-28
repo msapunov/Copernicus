@@ -66,6 +66,8 @@ def render_registry(user):
     row = render_template("bits/registry_expand_row.html", user=details)
     edit_form = edit_info(user)
     row += render_template("modals/user_edit_info.html", form=edit_form)
+    set_form = set_password(user)
+    row += render_template("modals/registry_set_password.html", form=set_form)
     if not user.active:
         a_form = activate_user(user)
         act = render_template("modals/registry_activate_user.html", form=a_form)
