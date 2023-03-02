@@ -95,6 +95,9 @@ def login():
     form.validate_on_submit()
     username = form.login.data
     password = form.passw.data
+    if not username or not password:
+        flash("Username and password are required!")
+        return redirect(url_for("login.login"))
     if len(username) > 128:
         flash("Username not correct")
         return redirect(url_for("login.login"))
