@@ -401,7 +401,15 @@ class Mail(Thread):
                                 "%TYPE_AFTER": record.transform})
         return self
 
-    def project_expired(self, record):
+    def project_expired(self, user, project):
+        self.populate("PROJECT EXPIRED")
+        self.destination = user.email
+        name = project.get_name()
+        full = project.responsible.full_name()
+        if not project.resources or not project.resources.ttl:
+            raise ValueError("Project %s has no resources attached" % name)
+        end = str(project.resources.ttl.isoformat())
+        self.__populate_values({"%FULLNAME": full, "%NAME": name, "%END": end})
         return self
 
     def project_expiring(self, record):
