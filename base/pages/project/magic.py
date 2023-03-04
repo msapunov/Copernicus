@@ -31,17 +31,21 @@ def suspend_expired_projects(projects, config):
     :return: Nothing
     """
     now = dt.now().replace(tzinfo=timezone.utc)
-    for rec in projects:
-        if not rec.active:
+    for project in projects:
+        if not project.active:
             continue
-        if not config[rec.type].suspend:
+        ptype = project.type
+        if ptype in config and config[ptype].get("suspend", False):
+            project.active = False
+            debug("%s: suspended due to configuration setting" % project.name)
+            ProjectLog(project).expired()
             continue
-        finish = rec.resources.ttl
+        finish = project.resources.ttl
         if now > finish:
-            rec.active = False
-            debug("%s: suspended. Resource expired %s" %
-                  (rec.name, finish.isoformat()))
-            ProjectLog(rec).expired()
+            project.active = False
+            debug("%s: suspended due to resource expiration %s" %
+                  (project.name, finish.isoformat()))
+            ProjectLog(project).expired()
     db.session.commit()
     return
 
@@ -54,17 +58,21 @@ def warn_expired_projects(projects, config):
     :return: Nothing
     """
     now = dt.now().replace(tzinfo=timezone.utc)
-    for rec in projects:
-        if not rec.active:
+    for project in projects:
+        if not project.active:
             continue
-        finish = rec.resources.ttl
-        warn = config[rec.type].get("finish_notice_dt")
+        finish = project.resources.ttl
+        ptype = project.type
+        if ptype not in config:
+            continue
+        warn = config[ptype].get("finish_notice_dt", "")
         if not warn:
-            debug("No warning date has been defined")
+            debug("No warning date has been defined, skipping notification")
+            continue
         if warn <= now < finish:
-            debug("Expiring %s, %s" % (rec.name, finish.isoformat()))
+            debug("Expiring %s, %s" % (project.name, finish.isoformat()))
             debug("Checking if warning has been send already")
-            log = ProjectLog(rec)
+            log = ProjectLog(project)
             logs = log.after(warn).list()
             debug("List of log events found: %s" % logs)
             was_sent = list(filter(lambda x: "Expiring" in x.event, logs))
