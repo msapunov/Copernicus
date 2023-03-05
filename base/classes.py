@@ -438,7 +438,7 @@ class Extensions:
         return self._process(self.rec)
 
 
-class TmpUser:
+class TmpUser(User):
     """
     Class representing a user which has to be added to the system and doesn't
     exists yet
@@ -460,9 +460,6 @@ class TmpUser:
         self.is_committee = False
         self.is_admin = False
         self.password = None
-
-    def full(self):
-        return "%s %s" % (self.name, self.surname)
 
     def from_task(self, task):
         """
