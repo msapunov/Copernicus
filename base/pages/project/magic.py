@@ -149,7 +149,6 @@ def project_create_user(name, form):
                          % email)
     user = TmpUser()
     user.login = generate_login(prenom, surname)
-    user.password = generate_password(16)
     user.name = prenom
     user.surname = surname
     user.email = email
