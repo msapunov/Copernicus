@@ -259,13 +259,7 @@ class TaskQueue:
             raise ValueError("Same previous task found ID: %s" % double.id)
         return self._user_action()
 
-    def password_reset(self):
-        if not self.u_name:
-            raise ValueError("User is  not set. Can't change the password")
-        self.task.action = "change|user|%s||password" % self.u_name
-        return self._user_action()
-
-    def user_create(self, user):
+    def user_create(self, user): #!!!
         if not self.p_name:
             raise ValueError("Can't add a user to none existent project")
         if not hasattr(user, "password"):
