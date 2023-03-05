@@ -681,9 +681,10 @@ def is_project_renewable(project):
     :return: Object. Project object
     """
     cfg = project_config()
-    finish = cfg[project.type].get("finish_dt", None)
+    ptype = project.type
+    finish = cfg[ptype].get("finish_dt", None) if ptype in cfg else None
+    pre_end = cfg[ptype].get("finish_notice_dt", None) if ptype in cfg else None
     resource_end = project.resources.ttl
-    pre_end = cfg[project.type].get("finish_notice_dt", None)
     debug("For %s; finish: %s; resource_end: %s, pre_end: %s"
           % (project.get_name(), finish, resource_end, pre_end))
     if finish and (resource_end > finish):
