@@ -401,9 +401,11 @@ class Mail(Thread):
                                 "%TYPE_AFTER": record.transform})
         return self
 
-    def project_expired(self, user, project):
+    def project_expired(self, project):
         self.populate("PROJECT EXPIRED")
-        self.destination = user.email
+        self.destination = project.responsible.email
+        emails = list(map(lambda x: x.email, project.users))
+        self.cc = emails + [self.cc]
         name = project.get_name()
         full = project.responsible.full_name()
         if not project.resources or not project.resources.ttl:
