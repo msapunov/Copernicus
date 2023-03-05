@@ -140,7 +140,7 @@ def generate_password(pass_len=16):
     Default length is 16 symbols
     :return: String. Password
     """
-    symbols = ascii_letters + digits
+    symbols = ascii_letters + digits + "!@#$%^&*"
     password = []
     for x in unpack('%dB' % (pass_len,), urandom(pass_len)):
         idx = round(x * len(symbols) / 256) - 1
