@@ -441,7 +441,7 @@ class Extensions:
 class TmpUser(User):
     """
     Class representing a user which has to be added to the system and doesn't
-    exists yet
+    exist yet
     """
 
     def __init__(self):
