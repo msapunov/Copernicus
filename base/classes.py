@@ -838,10 +838,14 @@ class Task:
                     acl=acl,
                     project=[project],
                     created=dt.now())
+        tmp_user.password = user.reset_password()
         db.session.add(acl)
         db.session.add(user)
         project.users.append(user)
-        Mail().user_new(tmp_user)
+        Mail().user_new(tmp_user)  # Send
+        UserMailingList().subscribe(user.email, user.full_name())
+        if user.acl.is_responsible:
+            ResponsibleMailingList.subscribe(user.email, user.full_name())
         return ProjectLog(project).user_created(self.task)
 
     def user_update(self):
