@@ -661,8 +661,9 @@ def is_project_extendable(project):
     :return: Object. Project object
     """
     cfg = project_config()
-    eva = cfg[project.type].get("evaluation_dt", None)
-    ext = cfg[project.type].get("extendable", False)
+    ptype = project.type
+    eva = cfg[ptype].get("evaluation_dt", None) if ptype in cfg else None
+    ext = cfg[ptype].get("extendable", False) if ptype in cfg else None
     if eva or ext:
         project.is_extendable = True
     else:
