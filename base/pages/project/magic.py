@@ -9,10 +9,7 @@ from pdfkit import from_string
 
 from base import db
 from base.classes import TmpUser, ProjectLog, Task
-from base.functions import (project_config,
-                            generate_password,
-                            ssh_wrapper,
-                            calculate_ttl)
+from base.functions import project_config, ssh_wrapper, calculate_ttl
 from base.database.schema import Extend, File, Project, Tasks, User
 from base.pages import calculate_usage, generate_login, TaskQueue
 from base.pages.user.magic import user_by_id
