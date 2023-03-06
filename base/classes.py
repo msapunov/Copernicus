@@ -842,7 +842,7 @@ class Task:
         db.session.add(acl)
         db.session.add(user)
         project.users.append(user)
-        Mail().user_new(tmp_user)  # Send
+        Mail().user_new(tmp_user).start()
         UserMailingList().subscribe(user.email, user.full_name())
         if user.acl.is_responsible:
             ResponsibleMailingList.subscribe(user.email, user.full_name())
