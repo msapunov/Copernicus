@@ -481,6 +481,14 @@ class Sympa(Mail):
         self.list = self.cfg.get("LIST", list_name)
         self.destination = self.cfg.get("LIST", "SYMPA")
 
+    def add(self, email, name=None):
+        self.sender = self.cfg.get("LIST", "ADMIN")
+        if name:
+            self.title = "ADD %s %s" % (self.list, name)
+        else:
+            self.title = "ADD %s" % self.list
+        return self.start()
+
     def subscribe(self, email, name=None):
         self.sender = email
         if name:
