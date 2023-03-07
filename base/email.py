@@ -483,6 +483,8 @@ class Sympa(Mail):
 
     def add(self, email, name=None):
         self.sender = self.cfg.get("LIST", "ADMIN")
+        if not self.sender:
+            raise ValueError("Admin email is absent can't add to the list")
         if name:
             self.title = "ADD %s %s" % (self.list, name)
         else:
