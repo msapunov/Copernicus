@@ -263,8 +263,8 @@ def project_parse_cfg_options(cfg, section):
         eva_text_dt = list(map(lambda x: x.replace(tzinfo=timezone.utc), tmp))
     else:
         eva_text_dt = None
-    extendable = cfg.get(section, "extendable", fallback=False)
-    suspend = cfg.get(section, "suspend", fallback=True)
+    extendable = cfg.getboolean(section, "extendable", fallback=False)
+    suspend = cfg.getboolean(section, "suspend", fallback=True)
     visa_names = cfg.get(section, "visa", fallback=None)
     if visa_names:
         visa = list(map(lambda x: x.strip(), visa_names.split(",")))
