@@ -172,7 +172,6 @@
                         {% if project.is_extendable %}
                             <button class="uk-button uk-width-1-1 uk-margin-small-bottom uk-button-primary extend" data-modal="{{project.name}}_extend" disabled>Extend&nbsp;CPU&nbsp;allocation</button>
                         {% endif %}
-                        <button class="uk-button uk-width-1-1 uk-margin-small-bottom uk-button-primary activity" data-modal="{{project.name}}_activity" disabled>Activity report</button>
                         <button class="uk-button uk-width-1-1 uk-margin-small-bottom attach" data-modal="{{project.name}}_attach" disabled>Add user</button>
                         {% if project.users_length > 1 %}
                             <button class="uk-button uk-width-1-1 uk-margin-small-bottom delete" data-modal="{{project.name}}_delete" disabled>Delete user</button>
@@ -180,6 +179,7 @@
                     {% else %}
                         <button class="uk-button uk-width-1-1 uk-margin-small-bottom activate" data-modal='{{project.name}}_activate' disabled>Activate project</button>
                     {% endif %}
+                    <button class="uk-button uk-width-1-1 uk-margin-small-bottom uk-button-primary activity" data-modal="{{project.name}}_activity" disabled>Activity report</button>
                     <button class="uk-button uk-width-1-1 uk-margin-small-bottom history" data-modal="{{project.name}}_history" disabled>History</button>
                 </div>
             </div>
