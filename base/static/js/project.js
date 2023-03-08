@@ -294,6 +294,7 @@
         $.each(inactive, function(key, value){
             if(value != ""){
                 modal("{0}/{1}".f(window.proj.url.modal_activate, value), "activate");
+                modal("{0}/{1}".f(window.proj.url.modal_activity, value), "activity");
                 modal("{0}/{1}".f(window.proj.url.modal_history, value), "history");
             }
         });
