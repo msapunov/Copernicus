@@ -177,6 +177,8 @@ def create_visa(record):
     """
     config = project_config()
     project_type = record.type.lower()
+    if not project_type in config:
+        raise ValueError("Project type '%s' not in config" % project_type)
     end = config[project_type].get("finish_dt", None)
     duration = config[project_type].get("duration_dt", None)
     if end and duration:
