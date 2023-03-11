@@ -486,9 +486,9 @@ class Sympa(Mail):
         if not self.sender:
             raise ValueError("Admin email is absent can't add to the list")
         if name:
-            self.title = "ADD %s %s" % (self.list, name)
+            self.title = "ADD %s %s %s" % (self.list, email, name)
         else:
-            self.title = "ADD %s" % self.list
+            self.title = "ADD %s %s" % (self.list, email)
         return self.start()
 
     def subscribe(self, email, name=None):

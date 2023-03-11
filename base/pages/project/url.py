@@ -146,7 +146,7 @@ def web_project_transform(project_name):
 def web_project_reactivate(project_name):
     form = ActivateForm()
     project = check_responsible(project_name)
-    record = project_renew(project, form, activate=True)
+    record = project_renew(project, form, active=True)
     record.activate = True
     return jsonify(message=ProjectLog(record.project).activate(record))
 
