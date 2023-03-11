@@ -815,6 +815,39 @@ class Task:
         db.session.commit()
         return self.task
 
+    def user_new(self):
+        """
+        Re-create TmpUser object user out of task description, create DB entry
+        for User record and ACL record and append ne user to project associated
+        with the task.
+        :return: String. The log event associated with this action
+        """
+        project = self.task.project
+        tmp_user = TmpUser().from_task(self)
+        acl = ACLDB(is_user=tmp_user.is_user,
+                    is_responsible=tmp_user.is_responsible,
+                    is_tech=tmp_user.is_tech,
+                    is_manager=tmp_user.is_manager,
+                    is_committee=tmp_user.is_committee,
+                    is_admin=tmp_user.is_admin)
+        user = User(login=tmp_user.login,
+                    name=tmp_user.name,
+                    surname=tmp_user.surname,
+                    email=tmp_user.email,
+                    active=tmp_user.active,
+                    acl=acl,
+                    project=[project],
+                    created=dt.now())
+        tmp_user.password = user.reset_password()
+        db.session.add(acl)
+        db.session.add(user)
+        project.users.append(user)
+        Mail().user_new(tmp_user).start()
+        UserMailingList().add(user.email, user.full_name())
+        if user.acl.is_responsible:
+            ResponsibleMailingList.add(user.email, user.full_name())
+        return ProjectLog(project).user_new(self.task)
+
     def user_create(self):
         """
         Re-create TmpUser object user out of task description, create DB entry
