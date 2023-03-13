@@ -69,11 +69,10 @@ class ProjectLog(Log):
             self.send = False
         return self
 
-    def created(self, date):
-        self.log.event = "Project created"
-        if date:
-            self.log.created = date
-        return self.commit()
+    def created(self):
+        rid = self.project.ref.project_id()
+        self.log.event = "Project created out of request %s" % rid
+        return self.commit(Mail().project_new(self.project))
 
     def user(self, user):
         self.log.user = user
