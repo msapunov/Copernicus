@@ -578,9 +578,7 @@ def process_task(tid, result):
     elif act == "create" and ent == "resp":
         task.user_create()
     elif act == "create" and ent == "proj":
-        #  After project creation, automatically create a task to create
-        #  a responsible and users
-        pass
+        task.project_create()
     elif act == "update" and ent == "user":
         task.user_update()
     elif act == "update" and ent == "proj":
