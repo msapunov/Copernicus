@@ -343,6 +343,13 @@ class Mail(Thread):
     def user_assigned(self, task):
         return self.user_assign(task, done=True)
 
+    def user_attached(self, task):
+        self.populate("USER ATTACHED")
+        self.destination = task.user.email
+        self.__populate_values({"%FULLNAME": task.user.full_name(),
+                                "%NAME": task.project.get_name()})
+        return self
+
     def user_delete(self, task, done=False):
         if done:
             self.populate("USER DELETED")
