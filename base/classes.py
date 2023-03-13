@@ -950,7 +950,7 @@ class Task:
             user.acl.is_responsible = True
         old_responsible = project.responsible
         project.responsible = user
-        ResponsibleMailingList.subscribe(user.email, user.full_name())
+        ResponsibleMailingList().subscribe(user.email, user.full_name())
         resp = list(map(lambda x: x.get_responsible(), old_responsible.project))
         if not resp:
             old_responsible.acl.is_responsible = False
