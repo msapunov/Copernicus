@@ -88,6 +88,10 @@ class ProjectLog(Log):
                          % task.user.full()
         return self.user(task.user).commit(Mail().responsible_assigned(task))
 
+    def responsible_attached(self, task):
+        self.log.event = "Attached responsible %s" % task.user.full()
+        return self.user(task.user).commit(Mail().responsible_attached(task))
+
     def user_new(self, task):
         user = task.user
         self.log.event = "User %s has been created" % user.full()
