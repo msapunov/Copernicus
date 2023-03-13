@@ -836,6 +836,8 @@ class Task:
         Execute user_new method but send warning to project's responsible.
         :return: String. The log event associated with this action
         """
+        if not self.task.author_id:
+            return self.user_new()
         project = self.task.project
         tmp_user = TmpUser().from_task(self)
         acl = ACLDB(is_user=tmp_user.is_user,
