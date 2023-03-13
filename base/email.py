@@ -277,6 +277,13 @@ class Mail(Thread):
                                 "%NAME": name})
         return self
 
+    def responsible_attached(self, task):
+        self.populate("RESPONSIBLE ATTACHED")
+        self.destination = task.user.email
+        self.__populate_values({"%FULLNAME": task.user.full_name(),
+                                "%NAME": task.project.get_name()})
+        return self
+
     def user_new(self, user):
         self.populate("USER NEW")
         self.destination = user.email
