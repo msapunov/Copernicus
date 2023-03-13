@@ -833,9 +833,7 @@ class Task:
 
     def user_create(self):
         """
-        Re-create TmpUser object user out of task description, create DB entry
-        for User record and ACL record and append ne user to project associated
-        with the task.
+        Execute user_new method but send warning to project's responsible.
         :return: String. The log event associated with this action
         """
         project = self.task.project
