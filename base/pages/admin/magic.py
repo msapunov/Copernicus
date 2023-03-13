@@ -568,6 +568,8 @@ def user_reset_pass(uid):
 
 def process_task(tid, result):
     task = Task(Tasks().query.filter_by(id=tid).first())
+    if task.task.done:
+        raise ValueError("Task %s has been processed already" % task.id)
     act = task.get_action()
     ent = task.get_entity()
 
