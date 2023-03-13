@@ -125,6 +125,10 @@ class ProjectLog(Log):
         self.log.event = "User %s has been assigned" % task.user.full()
         return self.user(task.user).commit(Mail().user_assigned(task))
 
+    def user_attached(self, task):
+        self.log.event = "User %s has been assigned" % task.user.full()
+        return self.user(task.user).commit(Mail().user_attached(task))
+
     def user_delete(self, task):
         self.log.event = "Made a request to delete user %s" % task.user.full()
         return self.user(task.user).commit(Mail().user_delete(task))
