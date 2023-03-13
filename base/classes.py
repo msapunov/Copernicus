@@ -955,3 +955,12 @@ class Task:
         user = self.task.user
         key = self.get_description()
         return UserLog(user).key_uploaded(key)
+
+    def project_create(self):
+        """
+        Send message after public key has been uploaded on the server
+        Return: Object. Mail object
+        """
+        project = self.task.project
+        project.active = True
+        return ProjectLog(project).created()
