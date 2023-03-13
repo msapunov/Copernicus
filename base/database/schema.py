@@ -820,7 +820,10 @@ class Tasks(db.Model):
         elif act in ["update"]:
             act += " user's info "
         act = act[0].upper() + act[1:].lower()
-        act += "by %s" % self.author.full_name()
+        if self.author:
+            act += "by %s" % self.author.full_name()
+        else:
+            act += "by Automatic Service"
         return act
 
     def description(self):
