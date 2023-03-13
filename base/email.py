@@ -373,6 +373,20 @@ class Mail(Thread):
                 setattr(self, attr, val)
         return self
 
+    def project_new(self, project):
+        self.populate("PROJECT NEW")
+        self.destination = project.responsible.email
+        emails = list(map(lambda x: x.email, project.users))
+        self.cc = emails + [self.cc]
+        name = project.get_name()
+        full = project.responsible.full_name()
+        title = project.title
+        cpu = str(project.resources.cpu)
+        logins = ", ".join(list(map(lambda x: x.login, project.users)))
+        self.__populate_values({"%FULLNAME": full, "%NAME": name, "%CPU": cpu,
+                                "%TITLE": title, "%LOGIN": logins})
+        return self
+
     def project_renew(self, record):
         self.__project_init(record, "PROJECT RENEW")
         return self
