@@ -954,7 +954,9 @@ class Task:
         resp = list(map(lambda x: x.get_responsible(), old_responsible.project))
         if not resp:
             old_responsible.acl.is_responsible = False
-            ResponsibleMailingList.unsubscribe(old_responsible.email)
+            ResponsibleMailingList().unsubscribe(old_responsible.email)
+        if not self.task.author_id:
+            return ProjectLog(project).responsible_attached(self.task)
         return ProjectLog(project).responsible_assigned(self.task)
 
     def user_publickey(self):
