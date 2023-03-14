@@ -862,10 +862,10 @@ class Task:
                     acl=acl,
                     project=[project],
                     created=dt.now())
-        tmp_user.password = user.reset_password()
         db.session.add(acl)
         db.session.add(user)
         project.users.append(user)
+        user.passwd = user.reset_password()
         Mail().user_new(user).start()
         UserMailingList().add(user.email, user.full_name())
         if user.acl.is_responsible:
