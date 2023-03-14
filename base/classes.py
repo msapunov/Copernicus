@@ -866,7 +866,7 @@ class Task:
         db.session.add(acl)
         db.session.add(user)
         project.users.append(user)
-        Mail().user_new(tmp_user).start()
+        Mail().user_new(user).start()
         UserMailingList().add(user.email, user.full_name())
         if user.acl.is_responsible:
             ResponsibleMailingList.add(user.email, user.full_name())
