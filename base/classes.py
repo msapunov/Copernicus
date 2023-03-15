@@ -837,6 +837,9 @@ class Task:
         project = self.task.project
         self.task.user.passwd = self.task.user.reset_password()
         self.task.user.active = True
+        UserMailingList().add(self.task.user.email, self.task.user.full_name())
+        if self.task.user.acl.is_responsible:
+            ResponsibleMailingList.add(self.task.user.email, self.task.user.full_name())
         return ProjectLog(project).user_new(self.task)
 
     def user_create(self):
