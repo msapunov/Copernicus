@@ -908,6 +908,8 @@ class Task:
         """
         project = self.task.project
         user = self.task.user
+        if user.active:
+            raise ValueError("User %s is already active!")
         user.active = True
         project.users.append(user)
         return ProjectLog(project).user_activated(self.task)
