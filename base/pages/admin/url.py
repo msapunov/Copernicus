@@ -111,6 +111,7 @@ def web_admin_message_send():
 def admin_user_set_password(uid):
     return jsonify(message=user_set_pass(uid))
 
+
 @bp.route("/admin/user/reset/password/<int:uid>", methods=["POST"])
 @login_required
 @grant_access("admin")
