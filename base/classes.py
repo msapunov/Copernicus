@@ -979,7 +979,7 @@ class Task:
 
     def project_create(self):
         """
-        Send message after public key has been uploaded on the server
+        Send message when project has been created on the server
         Return: Object. Mail object
         """
         project = self.task.project
