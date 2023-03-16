@@ -942,6 +942,9 @@ class Task:
         project.users.remove(user)
         if not user.project:
             user.active = False
+            UserMailingList().unsubscribe(user.email)
+            if user.acl.is_responsible:
+                ResponsibleMailingList.unsubscribe(user.email)
         return ProjectLog(project).user_deleted(self.task)
 
     def responsible_assign(self):
