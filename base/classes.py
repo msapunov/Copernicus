@@ -912,6 +912,10 @@ class Task:
             raise ValueError("User %s is already active!")
         user.active = True
         project.users.append(user)
+        Mail().user_new(user).start()
+        UserMailingList().add(user.email, user.full_name())
+        if user.acl.is_responsible:
+            ResponsibleMailingList.add(user.email, user.full_name())
         return ProjectLog(project).user_activated(self.task)
 
     def user_assign(self):
