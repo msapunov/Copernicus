@@ -10,6 +10,10 @@ __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
 
 
+def create_pending(register):
+    return
+
+
 def contact_pending(register):
     form = MessageForm()
     form.id = register.id
