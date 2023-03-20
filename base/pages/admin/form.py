@@ -50,7 +50,7 @@ def action_pending(register):
     return form
 
 
-class CreateProjectForm(FlaskForm):
+class EditProjectForm(FlaskForm):
     title = StringField("Title", validators=[DataRequired()])
     cpu = IntegerField("CPU", validators=[DataRequired()])
     type = StringField("Type", validators=[DataRequired()])
