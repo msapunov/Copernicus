@@ -7,7 +7,10 @@ from base.pages import (send_message,
                         Task as TaskOld,
                         TaskQueue)
 from base.pages.project.magic import get_project_by_name
-from base.pages.admin.form import action_pending, visa_pending, contact_pending
+from base.pages.admin.form import (action_pending,
+                                   visa_pending,
+                                   create_pending,
+                                   contact_pending)
 from base.pages.admin.form import activate_user
 from base.pages.board.magic import create_resource
 from base.pages.user.magic import user_by_id

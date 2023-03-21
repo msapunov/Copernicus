@@ -10,6 +10,10 @@ __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
 
 
+def create_pending(register):
+    return
+
+
 def contact_pending(register):
     form = MessageForm()
     form.id = register.id
@@ -46,7 +50,7 @@ def action_pending(register):
     return form
 
 
-class CreateProjectForm(FlaskForm):
+class EditProjectForm(FlaskForm):
     title = StringField("Title", validators=[DataRequired()])
     cpu = IntegerField("CPU", validators=[DataRequired()])
     type = StringField("Type", validators=[DataRequired()])

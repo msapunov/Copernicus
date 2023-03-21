@@ -528,8 +528,10 @@ class Sympa(Mail):
         return self.start()
 
     def unsubscribe(self, email):
-        self.sender = email
-        self.title = "UNSUBSCRIBE %s" % self.list
+        self.sender = self.cfg.get("LIST", "ADMIN")
+        if not self.sender:
+            raise ValueError("Admin email is absent can't unsubscribe from the list")
+        self.title = "QUIET DELETE %s %s" % (self.list, email)
         return self.start()
 
     def change(self, old_mail, new_mail, name=None):

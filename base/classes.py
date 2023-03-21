@@ -939,7 +939,8 @@ class Task:
         """
         project = self.task.project
         user = self.task.user
-        project.users.remove(user)
+        if user in project.users:
+            project.users.remove(user)
         if not user.project:
             user.active = False
             UserMailingList().unsubscribe(user.email)
