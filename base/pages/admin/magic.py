@@ -552,6 +552,13 @@ def user_delete(uid):
     return "User %s has been removed from the database" % login
 
 
+def user_send_welcome(uid):
+    user = user_by_id(uid)
+    user.passwd = user.reset_password()
+    Mail().user_new(user).start()
+    return "Welcome message for user %s has been sent" % user.login
+
+
 def user_set_pass(uid):
     form = PassForm()
     if not form.validate_on_submit():
