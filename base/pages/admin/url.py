@@ -23,6 +23,7 @@ from base.pages.admin.magic import (
     user_info_update,
     user_create_by_admin,
     user_set_pass,
+    user_send_welcome,
     user_reset_pass,
     user_delete,
     registration_user_del,
@@ -103,6 +104,13 @@ def web_admin_message_send():
         emails.append(user.email)
     cc = current_user.email
     return jsonify(data=send_message(emails, cc=cc, message=msg, title=title))
+
+
+@bp.route("/admin/user/<int:uid>/welcome", methods=["POST"])
+@login_required
+@grant_access("admin")
+def admin_user_password_welcome(uid):
+    return jsonify(message=user_send_welcome(uid))
 
 
 @bp.route("/admin/user/<int:uid>/password/set", methods=["POST"])
