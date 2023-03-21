@@ -180,8 +180,10 @@
         $(document).on("click", ".user_add", trigger_modal);
         $(document).on("click", ".set", trigger_modal);
         $(document).on("click", ".reset", trigger_modal);
+        $(document).on("click", ".welcome", trigger_modal);
         $(document).on("click", ".set_submit", submit);
         $(document).on("click", ".reset_submit", submit);
+        $(document).on("click", ".welcome_submit", submit);
         $(document).on("change", ".project_select", function(){ window.registry.update_projects(this) });
         $(document).on("click", ".user-status", function(){ window.registry.user_status(this, table) });
         $(document).on("click", ".acl-type", function(){ window.registry.acl_type(this, table) });
