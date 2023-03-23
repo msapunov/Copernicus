@@ -13,6 +13,17 @@ __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
 
 
+def sanitize_key(key):
+    try:
+        parts = key.split(" ")
+    except:
+        return key
+    algo = parts[0]
+    host = parts[-1]
+    key = "".join(parts[1:-1]).replace(" ", "")
+    return "%s %s %s" % (algo, key, host)
+
+
 def ssh_key(form):
     key = form.key.data
     fd, key_path = mkstemp(text=True)
@@ -22,7 +33,6 @@ def ssh_key(form):
     if path.exists(key_path):
         remove(key_path)
     if stderr:
-        error("Provided key: '%s'" % key)
         error(stderr)
         raise ValueError("Provided public key failed to pass ssh-keygen check")
     debug(stdout)
