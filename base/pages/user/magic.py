@@ -26,6 +26,8 @@ def sanitize_key(key):
 
 def ssh_key(form):
     key = form.key.data
+    debug("Provided key: '%s'" % key)
+    key = sanitize_key(key)
     fd, key_path = mkstemp(text=True)
     with open(key_path, "w") as writer:
         writer.write(key)
