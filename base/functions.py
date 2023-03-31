@@ -77,7 +77,7 @@ def ssh_wrapper(cmd, host=None):
 
 def show_configuration():
     """
-    This function get tje instance path associated with the current app and
+    This function get the instance path associated with the current app and
     creates a dictionary where each cfg file is a key, And the value is the
     content of that cfg file
     :return: Dictionary. Content of cfg file(s)
