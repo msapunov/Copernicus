@@ -535,8 +535,8 @@ class Sympa(Mail):
         return self.start()
 
     def change(self, old_mail, new_mail, name=None):
-        if self.unsubscribe(old_mail):
-            return self.subscribe(new_mail, name=name)
+        self.unsubscribe(old_mail)
+        return self.add(new_mail, name=name)
 
 
 class UserMailingList(Sympa):
