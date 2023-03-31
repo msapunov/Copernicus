@@ -95,6 +95,7 @@ def show_configuration():
             files.remove(name)
     for cfg_file in files:
         name = cfg_file.name
+        warning("Reading configuration file: %s" % name)
         if "ssh" in name:
             warning("Skipping ssh key: %s" % cfg_file)
             continue
