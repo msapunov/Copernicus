@@ -86,22 +86,21 @@ def show_configuration():
     path = Path(app.instance_path)
     files = list(filter(lambda x: x.is_file(), path.iterdir()))
     config = ConfigParser(allow_no_value=True)
-    for name in files:
-        nom = str(name)
+    for file in files:
+        nom = str(file)
+        print("File name: %s" % nom)
         try:
-            config.read(nom, encoding="utf-8")
+            with open(nom) as fd:
+                text = fd.read()
+        except UnicodeDecodeError as err:
+            error("%s - not a text file: %s" % (nom, err))
+            continue
+        try:
+            config.read_string(text, source=nom)
         except Exception as err:
             error("%s - not a configuration file: %s" % (nom, err))
-            files.remove(name)
-    for cfg_file in files:
-        name = cfg_file.name
-        warning("Reading configuration file: %s" % name)
-        if "ssh" in name:
-            warning("Skipping ssh key: %s" % cfg_file)
             continue
-        if name not in cfg:
-            with open(str(cfg_file)) as fd:
-                cfg[name] = fd.read()
+        cfg[file.name] = text
     return cfg
 
 
