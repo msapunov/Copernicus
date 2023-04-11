@@ -246,6 +246,21 @@ class Mail(Thread):
         self.__populate_values({"%FULLNAME": full, "%KEY": key})
         return self
 
+    def user_goodbye(self, user):
+        self.populate("USER GOODBYE")
+        self.destination = user.email
+        full = user.full_name()
+        dead = app.config.get("USER_DELETE_AFTER", False)
+        if dead:
+            cal = Calendar()
+            dead, result = cal.parseDT(dead)
+            if result < 1:
+                dead = False
+        end = dt.now() if not dead else dead
+        self.__populate_values({"%FULLNAME": full, "%LOGIN": user.login,
+                                "%END": str(end.date())})
+        return self
+
     def user_update(self, record):
         self.populate("USER UPDATE")
         self.destination = record.user.email
