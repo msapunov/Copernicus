@@ -301,6 +301,10 @@ class UserLog(Log):
         super().__init__(user=user)
         self.user = user
 
+    def goodbye(self):
+        self.log.event = "Sending goodbye notification"
+        return self.commit(Mail().user_goodbye(self.user))
+
     def acl(self, acl):
         result = []
         for name, value in acl.items():
