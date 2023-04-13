@@ -531,9 +531,9 @@ class Sympa(Mail):
         if not self.sender:
             raise ValueError("Admin email is absent can't add to the list")
         if name:
-            self.title = "ADD %s %s %s" % (self.list, email, name)
+            self.title = "QUIET ADD %s %s %s" % (self.list, email, name)
         else:
-            self.title = "ADD %s %s" % (self.list, email)
+            self.title = "QUIET ADD %s %s" % (self.list, email)
         return self.start()
 
     def subscribe(self, email, name=None):
@@ -550,10 +550,6 @@ class Sympa(Mail):
             raise ValueError("Admin email is absent can't unsubscribe from the list")
         self.title = "QUIET DELETE %s %s" % (self.list, email)
         return self.start()
-
-    def change(self, old_mail, new_mail, name=None):
-        self.unsubscribe(old_mail)
-        return self.add(new_mail, name=name)
 
 
 class UserMailingList(Sympa):
