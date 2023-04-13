@@ -897,11 +897,11 @@ class Task:
                 setattr(user, "email", i.replace("email: ", "").strip())
 
         if old_email:
-            UserMailingList().change(old_email, user.email, user.full_name())
+            UserMailingList().unsubscribe(old_email)
+            UserMailingList().add(user.email, user.full_name())
             if user.acl.is_responsible:
-                ResponsibleMailingList().change(old_email,
-                                                user.email,
-                                                user.full_name())
+                ResponsibleMailingList().unsubscribe(old_email)
+                ResponsibleMailingList().add(user.email, user.full_name())
         return UserLog(user).user_updated(self.task)
 
     def user_activate(self):
