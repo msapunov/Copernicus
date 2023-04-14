@@ -412,6 +412,7 @@ class User(UserMixin, db.Model):
     uid = db.Column(db.Integer)
     hash = db.Column(db.String(128))
     first_login = db.Column(db.Boolean, default=True)
+    seen = db.Column(db.DateTime(True))
 
     def __repr__(self):
         return '<User {}>'.format(self.login)
@@ -494,7 +495,7 @@ class User(UserMixin, db.Model):
             "position": self.position,
             "active": self.active,
             "comment": self.comment,
-            #            "last_seen": self.last_seen.isoformat() + 'Z',
+            "seen": self.seen.strftime("%Y-%m-%d %X %Z") if self.seen else "",
             "modified": self.modified,
             "created": self.created,
             "acl_id": self.acl.id,
@@ -539,7 +540,7 @@ class User(UserMixin, db.Model):
             "position": self.position,
             "active": self.active,
             "comment": self.comment,
-            #            "last_seen": self.last_seen.isoformat() + 'Z',
+            "seen": self.seen.strftime("%Y-%m-%d %X %Z") if self.seen else "",
             "modified": self.modified,
             "uid": self.uid,
             "created": self.created
