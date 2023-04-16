@@ -46,6 +46,21 @@ def register_message(rid, form):
 
 
 def unprocessed():
+    """
+        Retrieves unprocessed Register objects from the database.
+
+        Returns a list of Register objects that have their 'processed' attribute set to False.
+        If the user is an admin (as indicated by 'admin' being present in the 'g.permissions' list),
+        all unprocessed Register objects are returned. Otherwise, only Register objects that have a
+        'type' value that is included in the 'approve' list are returned. The 'approve' list is
+        generated based on the user's login and the ACL (Access Control List) defined in the
+        'project_config()' function.
+
+        Returns:
+            list: A list of Register objects that are unprocessed and approved based on the user's
+            permissions and ACL.
+
+        """
     query = Register.query.filter_by(processed=False)
     if "admin" in g.permissions:
         return query.all()
