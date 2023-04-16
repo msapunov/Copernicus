@@ -6,15 +6,15 @@
         </div>
         <div class="uk-margin uk-modal-content">
             <form action="test" method="post" class="uk-panel uk-form" id="{{form.id}}_message_form">
-                {{ form.csrf_token(id=form.meso+"_csrf_message") }}
+                {{ form.csrf_token(id=form.id|string+"_csrf_message") }}
                 <div class="uk-form-row">
                     <div class="uk-form-controls">
-                        {{ form.title(id=form.meso+"_title", value=form.project_title, class_="uk-width-1-1") }}
+                        {{ form.title(id=form.id|string+"_title", value=form.project_title, class_="uk-width-1-1") }}
                     </div>
                 </div>
                 <div class="uk-form-row">
                     <div class="uk-form-controls">
-                        {{ form.message(id=form.meso+"_body", placeholder="Write message to " + form.responsible + " <" + form.destination + ">, responsible of " + form.meso, class_="uk-width-1-1") }}
+                        {{ form.message(id=form.id|string+"_body", placeholder="Write message to " + form.responsible + " <" + form.destination + ">", class_="uk-width-1-1", rows=4) }}
                     </div>
                 </div>
             </form>
