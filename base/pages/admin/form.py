@@ -1,17 +1,39 @@
+from flask import request
 from flask_wtf import FlaskForm
 from wtforms import StringField, BooleanField, HiddenField, SelectMultipleField
-from wtforms import IntegerField, TextAreaField
+from wtforms import IntegerField, TextAreaField, FieldList
 from wtforms.fields import EmailField
 from wtforms.validators import DataRequired, Email
 from base.pages.project.magic import list_of_projects
 from base.pages.login.form import MessageForm
+from base.pages import process_new_user
 
 __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
 
 
 def create_pending(register):
-    return
+    form = FlaskForm()
+    form.id = register.id
+    form.meso = register.project_id()
+    #form.title = register.title
+    form.title = StringField("Title", validators=[DataRequired()])
+    form.cpu = IntegerField("CPU", validators=[DataRequired()])
+
+    users = register.users.split("\n")
+    if register.responsible_email not in register.users:
+        name = register.responsible_first_name.lower()
+        sname = register.responsible_last_name.lower()
+        email = register.responsible_email
+        users.append("First Name: %s; Last Name: %s; E-mail: %s; Login:" % (
+            name, sname, email))
+    form.users = []
+    for user in users:
+        if not user:
+            continue
+        form.users.append(process_new_user(user))
+    form.process(formdata=request.form)
+    return form
 
 
 def contact_pending(register):
