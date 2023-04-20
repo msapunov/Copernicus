@@ -9,7 +9,7 @@ from pdfkit import from_string
 
 from base import db
 from base.classes import TmpUser, ProjectLog, Task
-from base.functions import project_config, ssh_wrapper, calculate_ttl
+from base.functions import ssh_wrapper, calculate_ttl
 from base.database.schema import Extend, File, Project, Tasks, User
 from base.pages import calculate_usage, generate_login, TaskQueue
 from base.pages.user.magic import user_by_id
@@ -94,10 +94,10 @@ def consumption_check(projects):
 
 
 def sanity_check():
-    conf = project_config()
+    cfg = g.project_config
     projects = db.session.query(Project).all()
-    suspend_expired_projects(projects, conf)
-    warn_expired_projects(projects, conf)
+    suspend_expired_projects(projects, cfg)
+    warn_expired_projects(projects, cfg)
     suspend_overconsumed_projects(projects)
     warn_overconsumed_projects(projects)
     consumption_check(projects)
@@ -536,7 +536,7 @@ def project_extend(name, form):
 def is_activity_report(project):
     if (not project.resources) or (not project.resources.file):
         return False
-    cfg = project_config()
+    cfg = g.project_config
     finish_dt = cfg[project.type].get("finish_dt", None)
     report_dt = cfg[project.type].get("finish_report_dt", None)
     file_dt = project.resources.file.created.replace(tzinfo=timezone.utc)
@@ -660,7 +660,7 @@ def is_project_extendable(project):
     :param project: Object. Project object
     :return: Object. Project object
     """
-    cfg = project_config()
+    cfg = g.project_config
     ptype = project.type
     eva = cfg[ptype].get("evaluation_dt", None) if ptype in cfg else None
     ext = cfg[ptype].get("extendable", False) if ptype in cfg else None
@@ -680,7 +680,7 @@ def is_project_renewable(project):
     :param project: Object. Project object
     :return: Object. Project object
     """
-    cfg = project_config()
+    cfg = g.project_config
     ptype = project.type
     finish = cfg[ptype].get("finish_dt", None) if ptype in cfg else None
     pre_end = cfg[ptype].get("finish_notice_dt", None) if ptype in cfg else None
@@ -712,16 +712,16 @@ def get_transformation_options(project_type=None):
              project type can be transformed, second item is type's
              description
     """
-    config = project_config()
+    cfg = g.project_config
     options = []
-    for name in config.keys():
-        desc = config[name].get("description", None)
+    for name in cfg.keys():
+        desc = cfg[name].get("description", None)
         options.append((name.lower(), desc if desc else name))
 
-    if (not project_type) or (project_type not in config.keys()):
+    if (not project_type) or (project_type not in cfg.keys()):
         return options
 
-    trans = config[project_type].get("transform", None)
+    trans = cfg[project_type].get("transform", None)
     if not trans:
         return []
 
