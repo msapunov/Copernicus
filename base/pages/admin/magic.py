@@ -21,7 +21,7 @@ from base.classes import UserLog, RequestLog, TmpUser, ProjectLog, Task
 from logging import error, debug
 from operator import attrgetter
 from datetime import datetime as dt
-from base.functions import project_config, ssh_wrapper
+from base.functions import ssh_wrapper
 
 __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
