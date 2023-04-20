@@ -66,13 +66,14 @@ def unprocessed():
         return query.all()
 
     approve = []
-    config = project_config()
-    for type in config.keys():
-        acl = config[type].get("acl", [])
+    for project_type in g.project_config.keys():
+        if project_type not in g.project_config:
+            continue
+        acl = g.project_config[project_type].get("acl", [])
         if current_user.login in acl:
-            approve.append(type)
+            approve.append(project_type)
         elif set(acl).intersection(set(g.permissions)):
-            approve.append(type)
+            approve.append(project_type)
     return query.filter(Register.type.in_(approve)).all()
 
 
