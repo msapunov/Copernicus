@@ -13,6 +13,7 @@ from base.pages.statistic import bp as blueprint_stat
 from base.database.schema import User, Project
 
 from base.utils import get_tmpdir_prefix
+from base.functions import project_config
 
 from datetime import datetime as dt
 from werkzeug.exceptions import HTTPException
@@ -93,6 +94,12 @@ def register_decor(app):
             user_list = sorted(list(users))
             cache.set("user_list", user_list, 600)
         g.user_list = user_list
+
+        config = cache.get("project_config")
+        if not config:
+            config = project_config()
+            cache.set("project_config", config, 600)
+        g.project_config = config
 
         if current_user.is_authenticated:
             g.permissions = current_user.permissions()

@@ -1,3 +1,4 @@
+from flask import g
 from flask_wtf import FlaskForm
 from wtforms import HiddenField, IntegerField, BooleanField
 from wtforms import TextAreaField, SelectField, StringField
@@ -6,7 +7,6 @@ from wtforms.validators import DataRequired, NumberRange, ValidationError, Email
 from base.pages.project.magic import (
     get_transformation_options,
     get_users)
-from base.functions import project_config
 from logging import error
 
 __author__ = "Matvey Sapunov"
@@ -50,7 +50,7 @@ class RenewForm(FlaskForm):
 
 
 def renew(project):
-    config = project_config()
+    config = g.project_config
     project_type = project.type.lower()
     if project_type not in config.keys():
         error("Type %s is not found in config" % project_type)
@@ -77,7 +77,7 @@ class ExtendForm(FlaskForm):
 
 
 def extend(project):
-    config = project_config()
+    config = g.project_config
     project_type = project.type.lower()
     if project_type not in config.keys():
         return  # TODO: Check what to return in this case

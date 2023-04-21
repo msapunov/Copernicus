@@ -1,7 +1,7 @@
 from flask import g
 from flask_login import current_user
 from base import db
-from base.functions import project_config, create_visa
+from base.functions import create_visa
 from base.email import Mail, UserMailingList, ResponsibleMailingList
 from base.database.schema import LogDB, User, ACLDB, Extend, Register
 from logging import debug
@@ -562,8 +562,11 @@ class Pending:
             raise ValueError("Register project record is not set!")
         if "admin" in g.permissions:
             return self.pending
-        config = project_config()
-        acl = config[self.pending.type].get("acl", [])
+        if self.pending.type not in g.project_config:
+            debug("Type %s absent in project configuration" % self.pending.type)
+            acl = []
+        else:
+            acl = g.project_config[self.pending.type].get("acl", [])
         user_allowed = current_user.login in acl
         role_allowed = set(acl).intersection(set(g.permissions))
         if (not user_allowed) and (not role_allowed):

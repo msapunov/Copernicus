@@ -21,7 +21,7 @@ from base.classes import UserLog, RequestLog, TmpUser, ProjectLog, Task
 from logging import error, debug
 from operator import attrgetter
 from datetime import datetime as dt
-from base.functions import project_config, ssh_wrapper
+from base.functions import ssh_wrapper
 
 __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
@@ -49,30 +49,29 @@ def unprocessed():
     """
         Retrieves unprocessed Register objects from the database.
 
-        Returns a list of Register objects that have their 'processed' attribute set to False.
-        If the user is an admin (as indicated by 'admin' being present in the 'g.permissions' list),
-        all unprocessed Register objects are returned. Otherwise, only Register objects that have a
-        'type' value that is included in the 'approve' list are returned. The 'approve' list is
-        generated based on the user's login and the ACL (Access Control List) defined in the
-        'project_config()' function.
+        Returns a list of Register objects that have their 'processed' attribute
+        set to False. If the user is an admin (as indicated by 'admin' being
+        present in the 'g.permissions' list), all unprocessed Register objects
+        are returned. Otherwise, only Register objects that have a 'type' value
+        that is included in the 'approve' list are returned. The 'approve' list
+        is generated based on the user's login and the ACL (Access Control List)
+        defined in the project configuration.
 
         Returns:
-            list: A list of Register objects that are unprocessed and approved based on the user's
-            permissions and ACL.
-
-        """
+            list: A list of Register objects that are unprocessed and approved
+            based on the user's permissions and ACL.
+    """
     query = Register.query.filter_by(processed=False)
     if "admin" in g.permissions:
         return query.all()
 
     approve = []
-    config = project_config()
-    for type in config.keys():
-        acl = config[type].get("acl", [])
+    for project_type in g.project_config.keys():
+        acl = g.project_config[project_type].get("acl", [])
         if current_user.login in acl:
-            approve.append(type)
+            approve.append(project_type)
         elif set(acl).intersection(set(g.permissions)):
-            approve.append(type)
+            approve.append(project_type)
     return query.filter(Register.type.in_(approve)).all()
 
 
