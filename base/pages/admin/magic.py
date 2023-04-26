@@ -174,18 +174,6 @@ def accept_message(register, msg):
     return message(to, msg, title)
 
 
-def reject_message(register, msg):
-    to = register.responsible_email
-    name = register.responsible_first_name
-    surname = register.responsible_last_name
-    mid = register.project_id()
-    title = "Your project request '%s' has been rejected" % mid
-    prefix = "Dear %s %s,\nYour project request '%s' has been rejected with" \
-             " following comment:\n\n" % (name, surname, mid)
-    msg = prefix + msg
-    return message(to, msg, title)
-
-
 def message(to, msg, title=None):
     by_who = app.config["EMAIL_PROJECT"]
     cc = app.config["EMAIL_PROJECT"]
@@ -211,18 +199,6 @@ def reg_accept(pid, note):
     db.session.commit()
     RequestLog(rec).accept()
     return accept_message(rec, note)
-
-
-def reg_reject(pid, note):
-    rec = get_registration_record(pid)
-    rec.processed = True
-    rec.accepted = False
-    rec.comment = reg_message(rec.comment, "reject") + note
-    rec.accepted_ts = dt.now()
-    rec.processed_ts = dt.now()
-    db.session.commit()
-    RequestLog(rec).reject()
-    return reject_message(rec, note)
 
 
 def reg_message(txt, selector):
