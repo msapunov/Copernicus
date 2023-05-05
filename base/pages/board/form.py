@@ -29,7 +29,6 @@ class AcceptForm(FlaskForm):
 
 def acceptance(record):
     form = AcceptForm(active=True)
-    form.note.data = "Renewal accepted by CCIAM"
     if record.transform != " ":
         form.ext_check = "checked = checked"
     elif record.activate:
