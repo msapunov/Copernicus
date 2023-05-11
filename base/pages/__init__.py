@@ -87,6 +87,39 @@ def generate_login(name, surname):
                      " registered in our database" % guess)
 
 
+def process_new_user(rec):
+    class Tmp:
+        pass
+    user = Tmp()
+    parts = rec.split(";")
+    if not parts or len(parts) < 3:
+        return user
+    for i in parts:
+        if "First Name:" in i:
+            user.name = i.replace("First Name:", "").strip()
+        elif "Last Name:" in i:
+            user.surname = i.replace("Last Name:", "").strip()
+        elif "E-mail:" in i:
+            user.email = i.replace("E-mail:", "").strip()
+        elif "Login:" in i:
+            user.login = i.replace("Login:", "").strip()
+        else:
+            continue
+    user.uid = "".join(filter(lambda x: x in ascii_letters, user.email)).lower()
+    user.full = full_name(user.name, user.surname)
+    user.direct= generate_login(user.name, user.surname)
+    user.inverse = generate_login(user.surname, user.name)
+    if not user.login:
+        is_user = user_by_details(user.name, user.surname, user.email)
+        if is_user:
+            user.login = is_user[0].login
+    if not user.login:
+        user.direct_check = "checked"
+    else:
+        user.select_check = "checked"
+    return user
+
+
 def send_message(to_who, by_who=None, cc=None, title=None, message=None,
                  attach=None):  # TODO: replace by mail class
     if isinstance(to_who, str):
