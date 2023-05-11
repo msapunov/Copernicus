@@ -12,7 +12,8 @@
                     {{ form.cpu(id=rec.name+"_cpu_accept", value=rec.hours, class_="uk-width-1-1") }}
                 </div>
                 <div class="uk-form-row">
-                    {{ form.note(id=rec.name+"_note_accept", class_="uk-width-1-1", rows=4) }}
+                    <!-- Workaround of WTForm incapability of setting dynamic value in constructor -->
+                    <textarea class="uk-width-1-1" id={{ rec.name+"_note_accept" }} name="note" required="" rows="4">{{ rec.action|capitalize + " accepted by CCIAM" }}</textarea>
                 </div>
                 <div class="uk-form-row">
                     <div>

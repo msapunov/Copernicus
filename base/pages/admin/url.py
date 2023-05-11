@@ -32,7 +32,6 @@ from base.pages.admin.magic import (
     registration_info_update,
     get_registration_record,
     space_info,
-    reg_reject,
     register_message,
     reg_accept)
 from base.functions import slurm_nodes_status, show_configuration, ssh_wrapper

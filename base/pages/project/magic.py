@@ -31,19 +31,19 @@ def suspend_expired_projects(projects, config):
     for project in projects:
         if not project.active:
             continue
-        ptype = project.type
-        if ptype in config and config[ptype].get("suspend", False):
-            project.active = False
-            debug("%s: suspended due to configuration setting" % project.name)
-            ProjectLog(project).expired()
-            continue
+#        ptype = project.type
+#        if ptype in config and config[ptype].get("suspend", False):
+#            project.active = False
+#            debug("%s: suspended due to configuration setting" % project.name)
+#            ProjectLog(project).expired()
+#            continue
         finish = project.resources.ttl
         if now > finish:
-            project.active = False
+#            project.active = False
             debug("%s: suspended due to resource expiration %s" %
                   (project.name, finish.isoformat()))
-            ProjectLog(project).expired()
-    db.session.commit()
+#            ProjectLog(project).expired()
+#    db.session.commit()
     return
 
 

@@ -378,6 +378,12 @@
             },{
                 data: "scientific_fields",
                 visible: false
+            },{
+                data: "description",
+                visible: false
+            },{
+                data: "numerical_methods",
+                visible: false
             }],
             order: [[1, 'asc']]
         });
