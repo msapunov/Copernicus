@@ -133,7 +133,7 @@ def send_message(to_who, by_who=None, cc=None, title=None, message=None,
     return "Message was sent to %s successfully" % ", ".join(to_who)
 
 
-def check_json():
+def check_json():  # TODO: remove - replace
     if not request.is_json:
         raise ValueError("Expecting application/json requests")
     data = request.get_json()
