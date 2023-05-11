@@ -1,4 +1,4 @@
-from flask import request
+from flask import request, g
 from flask_wtf import FlaskForm
 from wtforms import StringField, BooleanField, HiddenField, SelectMultipleField
 from wtforms import IntegerField, TextAreaField, FieldList, DateField, RadioField, SelectField
