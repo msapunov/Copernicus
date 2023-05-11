@@ -649,7 +649,7 @@ def set_state(pid, state):
         ValueError("Argument state is not boolean: %s" % state)
     project.active = state
     db.session.commit()
-    return project
+    return project.to_dict()
 
 
 def is_project_extendable(project):
