@@ -374,30 +374,6 @@ def project_check_resources(project):
     return True
 
 
-def projects_consumption(projects):
-    #  TODO: use dfferent functions for this
-    all_projects = list(filter(lambda x: project_check_resources(x), projects))
-    result = {}
-    for project in all_projects:
-        if not project.resources.consumption_ts:
-            project.resources.consumption_ts = dt.now(tz=None).replace(
-                hour=0,
-                minute=0,
-                second=0,
-                microsecond=0)
-        if project.resources.consumption_ts not in result:
-            result[project.resources.consumption_ts] = []
-        result[project.resources.consumption_ts].append(project.get_name())
-    slurm = {}
-    for key, value in result.items():
-        name = ",".join(value)
-        start = key.strftime("%Y-%m-%dT%H:%M")
-        finish = dt.now().strftime("%Y-%m-%dT%H:%M")
-        slurm_raw, cmd = slurm_consumption_raw(name, start, finish)
-        slurm.update(slurm_parse(slurm_raw))
-    return list(map(lambda x: x.with_usage(), all_projects))
-
-
 def slurm_parse(slurm_raw_output):
     """
     Parsing the output of sreport command looking for account and users,
