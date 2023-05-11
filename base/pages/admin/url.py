@@ -37,6 +37,7 @@ from base.pages.admin.magic import (
 from base.functions import slurm_nodes_status, show_configuration, ssh_wrapper
 from base.pages.login.form import MessageForm
 from base.pages.admin.form import (
+    RegForm,
     PendingActionForm,
     VisaPendingForm,
     AddUserForm,
@@ -290,6 +291,9 @@ def admin_registration_ignore(pid):
 @login_required
 @grant_access("admin", "manager")
 def admin_registration_create(pid):
+    form = RegForm()
+    if not form.validate_on_submit():
+        raise ValueError(form_error_string(form.errors))
     return jsonify(data=Pending(pid).create().result)
 
 
