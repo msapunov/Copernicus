@@ -1,7 +1,9 @@
 from flask import request
 from flask_wtf import FlaskForm
 from wtforms import StringField, BooleanField, HiddenField, SelectMultipleField
-from wtforms import IntegerField, TextAreaField, FieldList
+from wtforms import IntegerField, TextAreaField, FieldList, DateField, RadioField, SelectField
+from wtforms.widgets import TextInput
+from wtforms.validators import DataRequired, NumberRange, ValidationError, Email, InputRequired
 from wtforms.fields import EmailField
 from wtforms.validators import DataRequired, Email
 from base.pages.project.magic import list_of_projects
