@@ -72,7 +72,7 @@ def generate_login(name, surname):
 
 
 def send_message(to_who, by_who=None, cc=None, title=None, message=None,
-                 attach=None):
+                 attach=None):  # TODO: replace by mail class
     if isinstance(to_who, str):
         to_who = to_who.split(";")
     if not by_who:
