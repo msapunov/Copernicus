@@ -1,20 +1,81 @@
-<div class="uk-modal" aria-hidden="true" id="{{rec.id}}_create">
-  <div class="uk-modal-dialog">
-    <button type="button" class="uk-modal-close uk-close"></button>
-    <div class="uk-modal-header">
-      <h3>Create project out of request {{rec.meso}}?</h3>
+<div class="uk-modal" aria-hidden="true" id="{{form.id}}_create">
+    <div class="uk-modal-dialog">
+        <button type="button" class="uk-modal-close uk-close"></button>
+        <div class="uk-modal-header">
+            <h3>Create project out of request {{form.meso}}?</h3>
+        </div>
+        <div class="uk-margin uk-modal-content">
+        <form action="xxx/create/{{form.id}}" method="post" class="uk-form" id="{{form.meso}}_create_form">
+            {{ form.csrf_token(id=form.meso+"_csrf_extend") }}
+            <div class="uk-form-row">
+                {{ form.title(id=form.meso+"_title", value=form.title_value, class_="uk-width-1-1") }}
+            </div>
+            <ul class="uk-form-row uk-grid uk-grid-width-1-2 uk-grid-small">
+                <li><div>{{ form.cpu(id=form.meso+"_cpu", value=form.cpu_value, class_="uk-width-1-1") }}</div></li>
+                <li><div>{{ form.ttl(id=form.meso+"_ttl", value="01/03/2024", class_="uk-width-1-1") }}</div></li>
+            </ul>
+            <ul class="uk-form-row uk-grid uk-grid-width-1-{{ form.types.uk_length }} uk-grid-small">
+                {% for option in form.types %}
+                    <li><div>
+                        <input {%if form.type_value==option.data%}checked="checked"{%endif%} type="radio" id="{{ option.id }}" name="{{ option.name }}" value="{{ option.data }}">
+                        <label for="{{ option.id }}">{{ option.label }}</label>
+                    </div></li>
+                {% endfor %}
+            </ul>
+
+
+            {% for i in form.users | sort(attribute='admin', reverse=True) %}
+                <div class="uk-form-row uk-panel uk-panel-box{% if i.admin==True %} uk-panel-box-primary{% endif %}">
+                    <ul class="uk-form-row uk-grid uk-grid-width-1-2 uk-grid-small">
+                        <li><div>
+                            <input class="uk-width-1-1" id="{{ i.uid }}_full" required="" type="text" value="{{ i.full }}">
+                        </div></li>
+                        <li><div>
+                            <input class="uk-width-1-1" id="{{ i.uid }}_email" required="" type="text" value="{{ i.email }}">
+                        </div></li>
+                    </ul>
+
+                    <div class="uk-form-controls-text uk-margin-small-top">
+                        <input id="{{ i.uid }}_direct" name="{{ i.uid }}" {{ i.direct_check }} type="radio" class="uk-margin-small-right">
+                        <label for="{{ i.uid }}_direct">Create a new user: <strong>{{ i.direct }}</strong></label>
+                    </div>
+                    <div class="uk-form-controls-text uk-margin-small-top">
+                        <input id="{{ i.uid }}_inverse" name="{{ i.uid }}" type="radio" class="uk-margin-small-right">
+                        <label for="{{ i.uid }}_inverse">Create a new user: <strong>{{ i.inverse }}</strong></label>
+                    </div>
+
+                    <div class="uk-form-controls-text uk-margin-small-top">
+                        <input id="{{ i.uid }}_select" name="{{ i.uid }}" {{ i.select_check }} type="radio" class="uk-margin-small-right">
+                        <select class="{{ i.uid }}">
+                            <option></option>
+                            {% for user in g.user_list %}
+                                <option value="{{user}}" {%if user==i.login%}selected{%endif%}>{{user}}</option>
+                            {% endfor %}
+                        </select>
+                        <script>
+                            setTimeout(function() {
+                                $(".{{ i.uid }}").select2({
+                                    placeholder: 'Select already registered user',
+                                    width: '50%'
+                                });
+                            }, 10);
+                        </script>
+                    </div>
+
+                    {% if not i.admin %}
+                    <div class=" uk-form-controls-text uk-margin-small-top">
+                        <input id="{{ i.login }}_skip" name="{{ i.uid }}" type="radio" class="uk-margin-small-right">
+                        <label for="{{ i.login }}_skip">Skip user creation</label>
+                    </div>
+                    {% endif %}
+
+                </div>
+            {% endfor %}
+        </form>
+        </div>
+        <div class="uk-modal-footer uk-text-right">
+            <button class="uk-button window_hide" data-modal="{{form.id}}_create">Cancel</button>
+            <button class="uk-button uk-button-primary create_submit" data-modal="{{form.id}}_create" data-url="admin/registration/create/{{form.id}}">Submit</button>
+        </div>
     </div>
-    <div class="uk-margin uk-modal-content">
-      <div>
-        Project: {{rec.name}}
-      </div>
-      <div>
-        This is a placeholder for any project except Cloud. Don't forget to create project by hands
-      </div>
-    </div>
-    <div class="uk-modal-footer uk-text-right">
-      <button class="uk-button window_hide" data-modal="{{rec.id}}_create">Cancel</button>
-      <button class="uk-button uk-button-primary create_submit" data-modal="{{rec.id}}_create" data-url="admin/registration/create/{{rec.id}}">Submit</button>
-    </div>
-  </div>
 </div>
