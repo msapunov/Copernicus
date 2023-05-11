@@ -50,7 +50,14 @@ def create_pending(register):
     for user in users:
         if not user:
             continue
-        form.users.append(process_new_user(user))
+        new_user = process_new_user(user)
+        if not new_user:
+            continue
+        if register.responsible_email in new_user.email:
+            new_user.admin = True
+        else:
+            new_user.admin = False
+        form.users.append(new_user)
     form.process(formdata=request.form)
     return form
 
