@@ -12,6 +12,26 @@ __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
 
 
+class RegForm(FlaskForm):
+    cpu = IntegerField("CPU", validators=[NumberRange(
+        min=0, message="CPU value must be 0 or any other positive number")])
+#    ttl = DateField("Valid", format='%d/%m/%y',
+#                    render_kw={"data-uk-datepicker": "{format:'DD/MM/YYYY'}"})
+    ttl = StringField(render_kw={"data-uk-datepicker": "{format:'DD/MM/YYYY'}"})
+    title = StringField("Title", validators=[DataRequired(
+        message="Project title is empty")])
+    types = RadioField(choices=[], validators=[DataRequired(
+        message="Project type is empty")])
+    users = RadioField(choices=[('select', 'Select'), ('skip', 'Skip user creation')])
+    exists = SelectField(choices=[], validators=[InputRequired()])
+
+    def __init__(self, *args, **kwargs):
+        super(RegForm, self).__init__(*args, **kwargs)
+        types = g.project_config.keys()
+        self.types.choices = [(project, project.upper()) for project in types]
+        self.types.uk_length = len(self.types.choices)
+
+
 def create_pending(register):
     form = FlaskForm()
     form.id = register.id
