@@ -15,6 +15,7 @@ from string import ascii_letters, digits
 from struct import unpack
 from subprocess import check_output, STDOUT, CalledProcessError
 from os import urandom
+from re import split as re_split
 import locale
 
 
@@ -131,6 +132,19 @@ def calculate_ttl(project):
         raise ValueError("Calculated time is in the past")
     debug("Calculated time value for %s: %s" % (project, ttl))
     return ttl
+
+
+def full_name(name, surname):
+    result = []
+    for name in [name, surname]:
+        if not name:
+            continue
+        name_parts = re_split('[\/.,\'\s-]', name)
+        for part in name_parts:
+            cap = part.capitalize()
+            name = name.replace(part, cap)
+        result.append(name)
+    return " ".join(result)
 
 
 def generate_password(pass_len=16):
