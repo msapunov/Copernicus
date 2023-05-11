@@ -56,9 +56,9 @@ def generate_login(name, surname):
     logins = list(map(lambda x: x.login, users))
 
     name = normalize_word(name)
-    name = "".join(filter(lambda x: x in ascii_letters, name))
+    name = "".join(filter(lambda x: x in ascii_letters, name)).lower()
     surname = normalize_word(surname)
-    surname = "".join(filter(lambda x: x in ascii_letters, surname))
+    surname = "".join(filter(lambda x: x in ascii_letters, surname)).lower()
 
     i = 1
     guess = None
