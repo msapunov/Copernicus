@@ -33,13 +33,12 @@ class RegForm(FlaskForm):
 
 
 def create_pending(register):
-    form = FlaskForm()
+    form = RegForm()
     form.id = register.id
     form.meso = register.project_id()
-    #form.title = register.title
-    form.title = StringField("Title", validators=[DataRequired()])
-    form.cpu = IntegerField("CPU", validators=[DataRequired()])
-
+    form.title_value = register.title
+    form.cpu_value = register.cpu
+    form.type_value = register.type
     users = register.users.split("\n")
     if register.responsible_email not in register.users:
         name = register.responsible_first_name.lower()
