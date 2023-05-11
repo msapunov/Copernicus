@@ -7,7 +7,7 @@ from base import db
 from base.email import Mail
 from base.database.schema import User, Tasks
 from base.utils import normalize_word
-from base.functions import generate_password
+from base.functions import generate_password, full_name
 from string import ascii_letters
 
 import smtplib
