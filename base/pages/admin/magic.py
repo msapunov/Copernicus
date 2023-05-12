@@ -444,7 +444,7 @@ def registration_info_update(form):
         new = item.data
         if isinstance(new, str):
             new = new.strip()
-            if name is not "title":
+            if name != "title":
                 new = new.lower()
         if old != new:
             setattr(rec, name, new)
