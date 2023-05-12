@@ -1,4 +1,5 @@
 from flask import g, flash, request, redirect, url_for, render_template, jsonify
+from flask import abort
 from flask import current_app
 from flask_login import login_required, login_user, current_user
 from base.pages import (
@@ -9,6 +10,7 @@ from base.classes import Pending, Extensions
 from base.pages.user.magic import get_user_record, user_by_id
 from base.pages.admin import bp
 from base.pages.admin.magic import (
+    last_user,
     render_pending,
     render_registry,
     all_users,
@@ -215,6 +217,17 @@ def admin_user_create():
 def admin_user_details(uid):
     user = user_by_id(uid)
     return jsonify(data=user.details())
+
+
+@bp.route("/admin/user/lastlog", methods=["POST"])
+@login_required
+@grant_access("admin", "tech")
+def admin_user_lastlog():
+    if request.content_length > 1000000:  # 1000000 - 1 Megabyte
+        return abort(413)
+    data = request.get_data(cache=False, as_text=True)
+    last_user(data)
+    return "Lastlog user info is updated", 200
 
 
 @bp.route("/admin/registration/details/get/<int:rid>", methods=["POST"])
