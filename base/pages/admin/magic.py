@@ -27,6 +27,30 @@ __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
 
 
+def last_user(data):
+    """
+    Process data returned by last command and updates seen field in User record
+    :param data: String. Output of last command in linux
+    :return: None
+    """
+    lines = data.split("\n")
+    for line in lines:
+        items = line.split()
+        if len(items) < 5:
+            continue
+        login = items[0]
+        try:
+            date = dt.strptime(" ".join(items[3:]), "%a %b %d %H:%M:%S %z %Y")
+        except Exception as err:
+            error("Failed to convert to datetime: %s" % err)
+            continue
+        user = User.query.filter_by(login=login).first()
+        if not user:
+            continue
+        user.seen = date
+    db.session.commit()
+
+
 def register_message(rid, form):
     """
     Send message to new registered project responsible. Takes request record ID
