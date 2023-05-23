@@ -41,7 +41,7 @@ pyocclient==0.6
 python-dateutil==2.8.2
 python-magic==0.4.27
 recurrent==0.4.1
-requests==2.28.1
+requests==2.31.0
 six==1.16.0
 SQLAlchemy==1.4.23
 texttable==1.6.7
