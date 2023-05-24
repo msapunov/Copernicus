@@ -39,11 +39,13 @@ def last_user(data):
         if len(items) < 5:
             continue
         login = items[0]
-        try:
-            date = dt.strptime(" ".join(items[3:]), "%a %b %d %H:%M:%S %z %Y")
-        except Exception as err:
-            error("Failed to convert to datetime: %s" % err)
-            continue
+        formats = ['%b %d %H:%M:%S %z %Y', '%a %b %d %H:%M:%S %z %Y']
+        for form in formats:
+            try:
+                date = dt.strptime(" ".join(items[3:]), form)
+            except Exception as err:
+                error("Failed to convert to datetime: %s" % err)
+                continue
         user = User.query.filter_by(login=login).first()
         if not user:
             continue
