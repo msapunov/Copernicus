@@ -27,7 +27,7 @@
             let url = "{0}/{1}".f(window.registry.url.expand_user, id);
             window.registry.expand_processing(tr, tdi);
             ajax(url).done(function(data){
-                row.child(data).show();
+                row.child("<div class='uk-grid'>" + data + "</div>").show();
                 window.registry.expand_processing(tr, tdi, false);
             }).fail(function(request){
                 window.registry.expand_processing(tr, tdi, true);
