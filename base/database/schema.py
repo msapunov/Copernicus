@@ -618,8 +618,10 @@ class Register(db.Model):
         last = self.responsible_last_name
         if first and last:
             return "%s %s" % (first.capitalize(), last.capitalize())
-        if first: return first.capitalize()
-        if last: return last.capitalize()
+        if first:
+            return first.capitalize()
+        if last:
+            return last.capitalize()
 
     def get_users(self):
         users = self.users.split("\n")
