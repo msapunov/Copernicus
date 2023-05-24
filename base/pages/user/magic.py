@@ -54,6 +54,12 @@ def user_by_id(uid):
 def get_user_record(login=None):
     if not login:
         login = current_user.login
+    if len(login) < 1:
+        raise ValueError("Username '%s' is too short!" % login)
+    if len(login) > 128:
+        raise ValueError("Username '%s' is too long!" % login)
+    if not login.isalpha():
+        raise ValueError("Username '%s' consists not only from letters" % login)
     user = User.query.filter_by(login=login).first()
     if not user:
         raise ValueError("Failed to find user with login '%s'" % login)
