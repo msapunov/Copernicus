@@ -526,6 +526,14 @@ def web_admin_space_info():
     return jsonify(data=space_info())
 
 
+@bp.route("/users/<login>", methods=["GET", "POST"])
+@login_required
+@grant_access("admin")
+def web_login_registry(login):
+    info = render_registry(get_user_record(login))
+    return render_template("test.html", data=info)
+
+
 @bp.route("/registry", methods=["GET", "POST"])
 @bp.route("/registry.html", methods=["GET", "POST"])
 @login_required
