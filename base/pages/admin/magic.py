@@ -35,17 +35,18 @@ def last_user(data):
     """
     lines = data.split("\n")
     for line in lines:
+        if "Never" in line:
+            continue
         items = line.split()
-        if len(items) < 5:
+        if len(items) < 6:
             continue
         login = items[0]
-        formats = ['%b %d %H:%M:%S %z %Y', '%a %b %d %H:%M:%S %z %Y']
-        for form in formats:
-            try:
-                date = dt.strptime(" ".join(items[3:]), form)
-            except Exception as err:
-                error("Failed to convert to datetime: %s" % err)
-                continue
+        raw = " ".join(items[-6:])
+        try:
+            date = dt.strptime(raw, "%a %b %d %H:%M:%S %z %Y")
+        except Exception as err:
+            error("Failed to convert to datetime: %s" % err)
+            continue
         user = User.query.filter_by(login=login).first()
         if not user:
             continue
