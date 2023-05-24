@@ -108,6 +108,8 @@ def render_registry(user):
     if tasks:
         details["todo"] = list(map(lambda x: x.description(), tasks))
     row = render_template("bits/registry_expand_row.html", user=details)
+    row += render_template("modals/registry_reset_password.html", user=details)
+    row += render_template("modals/registry_send_welcome.html", user=details)
     edit_form = edit_info(user)
     row += render_template("modals/user_edit_info.html", form=edit_form)
     set_form = set_password(user)
