@@ -109,6 +109,9 @@
                 data: "email",
                 visible: false
             },{
+                data: "seen",
+                visible: true
+            },{
                 data: "user",
                 render: function ( date, type, row ) {
                     return row.user == "True" ? '<span class="btn uk-icon-check"></span>' : '';

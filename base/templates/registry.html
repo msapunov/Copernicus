@@ -29,6 +29,12 @@
     </style>
 {% endblock %}
 {% block main %}
+
+{% if login %}
+    {{ login|safe }}
+{% endif %}
+
+{% if data %}
 <div class="uk-width-1-1">
     <div class="uk-grid uk-margin-bottom">
         <div class=" uk-form uk-width-1-4">
@@ -65,6 +71,7 @@
                 <th>Name</th>
                 <th>Surname</th>
                 <th>Email</th>
+                <th>Last</th>
                 <th>User</th>
                 <th></th>
                 <th>Responsible</th>
@@ -89,6 +96,7 @@
                 <td>{{user.name}}</td>
                 <td>{{user.surname}}</td>
                 <td>{{user.email}}</td>
+                <td>{{user.seen}}</td>
                 <td></td>
                 <td>{{user.user}}</td>
                 <td></td>
@@ -107,4 +115,6 @@
     </table>
 </div>
 {% include "modals/registry_add_user.html" %}
+{% endif %}
+
 {% endblock %}

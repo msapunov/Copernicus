@@ -531,7 +531,7 @@ def web_admin_space_info():
 @grant_access("admin")
 def web_login_registry(login):
     info = render_registry(get_user_record(login))
-    return render_template("test.html", data=info)
+    return render_template("registry.html", login=info)
 
 
 @bp.route("/registry", methods=["GET", "POST"])
