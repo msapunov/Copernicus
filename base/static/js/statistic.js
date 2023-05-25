@@ -6,7 +6,8 @@
         user_list: "user/list",
         actualize: "statistic/consumption/",
         suspend: "statistic/suspend/",
-        activate: "statistic/activate/"
+        activate: "statistic/activate/",
+        login: "users/"
     };
     window.stat.update = function update(dt, rid, data){
         var row = dt.row(rid);
@@ -25,7 +26,12 @@
         $.each(users, function(idx, v){
             var li = $("<li/>");
             var user = v.fullname + " <" + v.email + "> [" + v.login +"] ";
-            li.text(user);
+            var link = $("<a>");
+            link.attr("href", window.stat.url.login + v.login);
+            link.attr("title", user);
+            link.text(user);
+            link.addClass("link");
+            li.append(link);
             ul.append(li);
         });
         return ul.prop("outerHTML")
