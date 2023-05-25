@@ -524,6 +524,7 @@ class User(UserMixin, db.Model):
             "login": self.login,
             "name": self.name,
             "surname": self.surname,
+            "seen": self.seen.strftime("%Y-%m-%d %X %Z") if self.seen else "",
             "email": self.email
         }
 
