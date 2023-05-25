@@ -133,9 +133,10 @@ def render_pending(rec):
         top = render_template("modals/admin_visa_received.html", rec=rec)
         top += render_template("modals/admin_visa_pending.html", rec=visa)
     elif "VISA RECEIVED" in status:
-        top = render_template("modals/admin_create_project.html", rec=rec)
+        create = create_pending(rec)
+        top = render_template("modals/admin_create_project.html", form=create)
     elif "VISA SKIPPED" in status:
-        top = render_template("modals/admin_create_project.html", rec=rec)
+        top = render_template("modals/admin_create_project.html", form=rec)
     else:
         top = render_template("modals/admin_approve_pending.html", rec=rec)
     reset = render_template("modals/admin_reset_pending.html", rec=rec)
