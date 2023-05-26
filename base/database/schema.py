@@ -649,6 +649,12 @@ class Register(db.Model):
             "mesocentre id: %s" % self.project_id()
         ]
 
+    def logs(self, obj=False):
+        logs = LogDB.query.filter_by(register=self).all()
+        if obj:
+            return logs
+        return list(map(lambda x: x.to_dict(), logs))
+
     def to_dict(self):
         return {
             "id": self.id,
