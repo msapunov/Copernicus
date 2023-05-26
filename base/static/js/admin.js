@@ -1176,7 +1176,11 @@
                     if ( "APPROVED" == status ) {
                         return '<span class="uk-icon-wrench uk-text-danger"></span>';
                     }else if ( "VISA SENT" == status ) {
-                        return '<span class="uk-icon-edit uk-text-warning"></span>';
+                        if ( data.visa_expired == true){
+                            return '<span class="uk-icon-exclamation-circle uk-text-danger"></span>';
+                        }else {
+                            return '<span class="uk-icon-edit uk-text-warning"></span>';
+                        }
                     }else if ( "VISA RECEIVED" == status ) {
                         return '<span class="uk-icon-check uk-text-success"></span>';
                     }else{
