@@ -20,7 +20,7 @@ from base.email import Mail
 from base.classes import UserLog, RequestLog, TmpUser, ProjectLog, Task
 from logging import error, debug
 from operator import attrgetter
-from datetime import datetime as dt
+from datetime import timedelta, datetime as dt
 from base.functions import ssh_wrapper
 
 __author__ = "Matvey Sapunov"
@@ -70,6 +70,21 @@ def register_message(rid, form):
              "body": form.message.data,
              "destination": record.responsible_email}
     return Mail().pending_message(email)
+
+
+def unprocessed_dict():
+    result = []
+    for p in unprocessed():
+        sent = list(filter(lambda x: "Visa sent" in x.event, p.logs(True)))
+        got = list(filter(lambda x: "Visa received" in x.event, p.logs(True)))
+        res = p.to_dict()
+        if sent and not got:
+            created = sent[0].created.replace(tzinfo=None)
+            three = dt.now() - timedelta(days=3*30)
+            if created < three:
+                res["visa_expired"] = True
+        result.append(res)
+    return result
 
 
 def unprocessed():
