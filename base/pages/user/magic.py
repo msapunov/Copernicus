@@ -39,7 +39,7 @@ def ssh_key(form):
         err = "Provided public key failed to pass ssh-keygen check. " \
               "Please make sure that you've inserted the content of the " \
               "public key file which should looks like this key for example: " \
-              "521 SHA256:dm7lPKaRcwGfaq6v6ZFQ3LSD70BSPOyX1UWZk ky_name (ECDSA)"
+              "521 SHA256:dm7lPKaRcwGfaq6v6ZFQ3LSD70BSPOyX1UWZk key_name (ECDSA)"
         raise ValueError(err)
     debug(stdout)
     task = TaskQueue().user(current_user).key_upload(key).task
