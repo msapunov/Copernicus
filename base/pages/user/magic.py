@@ -62,7 +62,7 @@ def get_user_record(login=None):
         raise ValueError("Username '%s' is too short!" % login)
     if len(login) > 128:
         raise ValueError("Username '%s' is too long!" % login)
-    if not login.isalpha():
+    if not login.isalnum():
         raise ValueError("Username '%s' consists not only from letters" % login)
     user = User.query.filter_by(login=login).first()
     if not user:
