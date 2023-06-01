@@ -173,6 +173,7 @@ class UserEditForm(FlaskForm):
 
 def activate_user(user):
     form = ActivateUserForm()
+    form.id = user.id
     form.login = user.login
     form.full = user.full_name()
     form.complete = user.full()
