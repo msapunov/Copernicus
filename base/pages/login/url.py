@@ -37,7 +37,7 @@ def load_user_from_request(urlpath):
         if len(username) > 128:
             error("Username is longer then 128 letters")
             return abort(401)
-        if not username.isalpha():
+        if not username.isalnum():
             error("Username '%s' consists not only from letters" % username)
             return abort(401)
         user = User.query.filter_by(login=username).first()
@@ -101,7 +101,7 @@ def login():
     if len(username) > 128:
         flash("Username not correct")
         return redirect(url_for("login.login"))
-    if not username.isalpha():
+    if not username.isalnum():
         flash("Username is not real")
         return redirect(url_for("login.login"))
     user = User.query.filter_by(login=username).first()
