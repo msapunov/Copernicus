@@ -22,17 +22,17 @@
                         {{ form.email(placeholder="john.smith@univ-amu.fr", class_="uk-width-1-1 uk-form-large") }}
                     </div>
                 </div>
+                <div class="uk-form-row">
+                    <div class="uk-form-controls">
+                        {{ form.login(placeholder="jsmith", class_="uk-width-1-1 uk-form-large") }}
+                    </div>
+                </div>
                 <div class="uk-form-row uk-alert">
                     <div>
                         Please, double check if provided data is correct
                     </div>
                     <div>
                         All provided data will be stored in lower case with special symbols striped out
-                    </div>
-                </div>
-                <div class="uk-form-row">
-                    <div class="uk-form-controls">
-                        {{ form.login(class_="uk-width-1-1 uk-form-large") }}
                     </div>
                 </div>
             </form>
