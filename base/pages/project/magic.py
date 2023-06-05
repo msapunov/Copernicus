@@ -15,6 +15,7 @@ from base.pages import calculate_usage, generate_login, TaskQueue
 from base.pages.user.magic import user_by_id
 from base.pages.board.magic import create_resource
 from base.utils import save_file, get_tmpdir, form_error_string
+from base.email import Mail
 
 __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
