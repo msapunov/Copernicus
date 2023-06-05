@@ -105,6 +105,34 @@ def sanity_check():
     return "Sanity check done"
 
 
+def active_check():
+    result = []
+    projects = db.session.query(Project).all()
+    raw_data = request.get_data()
+    if not raw_data:
+        return "No data received"
+    cook_data = raw_data.decode('utf-8', errors='replace').split("\n")
+    data = dict(map(lambda x: x.split("|"), cook_data))
+    for project in projects:
+        name = project.name
+        if name not in data:
+            if project.active:
+                result.append("Project %s have no QOS but it's active" % name)
+            continue
+        if data[name] == 0 and project.active:
+            result.append("Project %s banned in SLURM but active in DB" % name)
+            continue
+        if not data[name] and not project.active:
+            result.append("Project %s active in SLURM but banned in DB" % name)
+            continue
+    if result:
+        msg = {"destination": "matvey.sapunov@univ-amu.fr",
+               "title": "Project status check", "body": "\n".join(result)
+               }
+        Mail().simple_message(msg)
+    return "Project status check done"
+
+
 def project_attach_user(name, form):
     """
     Function which attach an existing user to a given project
