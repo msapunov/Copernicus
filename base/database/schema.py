@@ -509,7 +509,9 @@ class User(UserMixin, db.Model):
             "acl_modified": mod,
             "uid": self.uid,
             "brief": self.full(),
-            "projects": self.project_names()
+            "projects": self.project_names(),
+            "password": True if self.hash else False,
+            "first": self.first_login
         }
 
     def info_acl(self):
