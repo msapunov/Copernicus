@@ -21,6 +21,8 @@
                     let cat = row.category;
                     if(cat=="project" || cat == "registration"){
                         return "<b>" + row.item + ":</b>&nbsp;" + data;
+                    }else if (cat=="user" && data.includes("Password has been reset")){
+                        return data + " for " + row.item;
                     }else{
                         return data;
                     }
