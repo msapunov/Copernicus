@@ -46,6 +46,13 @@ __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
 
 
+@bp.route("/project/check/active", methods=["POST"])
+@login_required
+@grant_access("admin", "tech")
+def project_check_active():
+    return jsonify(data=active_check())
+
+
 @bp.route("/project/sanity", methods=["POST"])
 @login_required
 @grant_access("admin", "tech")
