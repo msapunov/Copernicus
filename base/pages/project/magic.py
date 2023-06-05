@@ -2,7 +2,7 @@ from datetime import datetime as dt, timezone
 from logging import error, debug, warning
 from pathlib import Path, PurePath
 
-from flask import current_app, render_template, g
+from flask import current_app, render_template, g, request
 from flask_login import current_user
 from owncloud import Client as OwnClient
 from pdfkit import from_string
