@@ -126,7 +126,7 @@ def active_check():
             result.append("Project %s active in SLURM but banned in DB" % name)
             continue
     if result:
-        msg = {"destination": "matvey.sapunov@univ-amu.fr",
+        msg = {"destination": current_app.config["EMAIL_TECH"],
                "title": "Project status check", "body": "\n".join(result)
                }
         Mail().simple_message(msg)

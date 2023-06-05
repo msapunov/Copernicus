@@ -19,6 +19,7 @@ from base.pages.project.form import (
 from base.pages.project.magic import (
     is_project_transformable,
     check_responsible,
+    active_check,
     sanity_check,
     assign_responsible,
     set_consumed_users,
