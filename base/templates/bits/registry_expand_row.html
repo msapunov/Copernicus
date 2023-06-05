@@ -2,32 +2,32 @@
         <table id="{{user.id}}_info_table" class="uk-table uk-table-condensed">
             <tbody>
                 <tr>
-                    <td class="uk-width-1-10 uk-text-right">Name:</td>
-                    <td class="uk-width-9-10 uk-text-left">{{user.fullname}}</td>
+                    <td class="uk-width-1-5 uk-text-right">Name:</td>
+                    <td class="uk-width-4-5 uk-text-left">{{user.fullname}}</td>
                 </tr>
                 <tr>
-                    <td class="uk-width-1-10 uk-text-right">Email:</td>
-                    <td class="uk-width-9-10 uk-text-left">{{user.email}}</td>
+                    <td class="uk-width-1-5 uk-text-right">Email:</td>
+                    <td class="uk-width-4-5 uk-text-left">{{user.email}}</td>
                 </tr>
                 <tr>
-                    <td class="uk-width-1-10 uk-text-right">Login:</td>
-                    <td class="uk-width-9-10 uk-text-left">{{user.login}}</td>
+                    <td class="uk-width-1-5 uk-text-right">Login:</td>
+                    <td class="uk-width-4-5 uk-text-left">{{user.login}}</td>
                 </tr>
                 <tr>
-                    <td class="uk-width-1-10 uk-text-right uk-text-nowrap">UID:</td>
-                    <td class="uk-width-9-10 uk-text-left">{{user.uid}}</td>
+                    <td class="uk-width-1-5 uk-text-right uk-text-nowrap">UID:</td>
+                    <td class="uk-width-4-5 uk-text-left">{{user.uid}}</td>
                 </tr>
                 <tr>
-                    <td class="uk-width-1-10 uk-text-right">Projects:</td>
-                    <td class="uk-width-9-10 uk-text-left">
+                    <td class="uk-width-1-5 uk-text-right">Projects:</td>
+                    <td class="uk-width-4-5 uk-text-left">
                         {% if user.projects %}
                             {{user.projects | join(", ")}}
                         {% endif %}
                     </td>
                 </tr>
                 <tr>
-                    <td class="uk-width-1-10 uk-text-right">Tasks:</td>
-                    <td class="uk-width-9-10 uk-text-left">
+                    <td class="uk-width-1-5 uk-text-right">Tasks:</td>
+                    <td class="uk-width-4-5 uk-text-left">
                         {% if user.todo %}
                             <ul>
                                 {% for task in user.todo %}
@@ -38,72 +38,72 @@
                     </td>
                 </tr>
                 <tr>
-                    <td class="uk-width-1-10 uk-text-right">Phone:</td>
-                    <td class="uk-width-9-10 uk-text-left">{% if user.phone %}{{user.phone}}{% endif %}</td>
+                    <td class="uk-width-1-5 uk-text-right">Phone:</td>
+                    <td class="uk-width-4-5 uk-text-left">{% if user.phone %}{{user.phone}}{% endif %}</td>
                 </tr>
                 <tr>
-                    <td class="uk-width-1-10 uk-text-right">Lab:</td>
-                    <td class="uk-width-9-10 uk-text-left">{% if user.lab %}{{user.lab}}{% endif %}</td>
+                    <td class="uk-width-1-5 uk-text-right">Lab:</td>
+                    <td class="uk-width-4-5 uk-text-left">{% if user.lab %}{{user.lab}}{% endif %}</td>
                 </tr>
                 <tr>
-                    <td class="uk-width-1-10 uk-text-right">Position:</td>
-                    <td class="uk-width-9-10 uk-text-left">{% if user.position %}{{user.position}}{% endif %}</td>
+                    <td class="uk-width-1-5 uk-text-right">Position:</td>
+                    <td class="uk-width-4-5 uk-text-left">{% if user.position %}{{user.position}}{% endif %}</td>
                 </tr>
                 <tr>
-                    <td class="uk-width-1-10 uk-text-right">Active:</td>
-                    <td class="uk-width-9-10 uk-text-left">{{user.active}}</td>
+                    <td class="uk-width-1-5 uk-text-right">Active:</td>
+                    <td class="uk-width-4-5 uk-text-left">{{user.active}}</td>
                 </tr>
                 <tr class="acl_info uk-hidden">
-                    <td class="uk-width-1-10 uk-text-right">User:</td>
-                    <td class="uk-width-9-10 uk-text-left">{{user.user}}</td>
+                    <td class="uk-width-1-5 uk-text-right">User:</td>
+                    <td class="uk-width-4-5 uk-text-left">{{user.user}}</td>
                 </tr>
                 <tr class="acl_info uk-hidden">
-                    <td class="uk-width-1-10 uk-text-right">Responsible:</td>
-                    <td class="uk-width-9-10 uk-text-left">{{user.responsible}}</td>
+                    <td class="uk-width-1-5 uk-text-right">Responsible:</td>
+                    <td class="uk-width-4-5 uk-text-left">{{user.responsible}}</td>
                 </tr>
                 <tr class="acl_info uk-hidden">
-                    <td class="uk-width-1-10 uk-text-right">Manager:</td>
-                    <td class="uk-width-9-10 uk-text-left">{{user.manager}}</td>
+                    <td class="uk-width-1-5 uk-text-right">Manager:</td>
+                    <td class="uk-width-4-5 uk-text-left">{{user.manager}}</td>
                 </tr>
                 <tr class="acl_info uk-hidden">
-                    <td class="uk-width-1-10 uk-text-right">Tech:</td>
-                    <td class="uk-width-9-10 uk-text-left">{{user.tech}}</td>
+                    <td class="uk-width-1-5 uk-text-right">Tech:</td>
+                    <td class="uk-width-4-5 uk-text-left">{{user.tech}}</td>
                 </tr>
                 <tr class="acl_info uk-hidden">
-                    <td class="uk-width-1-10 uk-text-right">Committee:</td>
-                    <td class="uk-width-9-10 uk-text-left">{{user.committee}}</td>
+                    <td class="uk-width-1-5 uk-text-right">Committee:</td>
+                    <td class="uk-width-4-5 uk-text-left">{{user.committee}}</td>
                 </tr>
                 <tr class="acl_info uk-hidden">
-                    <td class="uk-width-1-10 uk-text-right">Admin:</td>
-                    <td class="uk-width-9-10 uk-text-left">{{user.admin}}</td>
+                    <td class="uk-width-1-5 uk-text-right">Admin:</td>
+                    <td class="uk-width-4-5 uk-text-left">{{user.admin}}</td>
                 </tr>
                 <tr class="tech_info uk-hidden">
-                    <td class="uk-width-1-10 uk-text-right">Comment:</td>
-                    <td class="uk-width-9-10 uk-text-left">{{user.comment}}</td>
+                    <td class="uk-width-1-5 uk-text-right">Comment:</td>
+                    <td class="uk-width-4-5 uk-text-left">{{user.comment}}</td>
                 </tr>
                 <tr class="tech_info uk-hidden">
-                    <td class="uk-width-1-10 uk-text-right uk-text-nowrap">Database ID:</td>
-                    <td class="uk-width-9-10 uk-text-left">{{user.id}}</td>
+                    <td class="uk-width-1-5 uk-text-right uk-text-nowrap">Database ID:</td>
+                    <td class="uk-width-4-5 uk-text-left">{{user.id}}</td>
                 </tr>
                 <tr class="tech_info uk-hidden">
-                    <td class="uk-width-1-10 uk-text-right">Created:</td>
-                    <td class="uk-width-9-10 uk-text-left">{{user.created}}</td>
+                    <td class="uk-width-1-5 uk-text-right">Created:</td>
+                    <td class="uk-width-4-5 uk-text-left">{{user.created}}</td>
                 </tr>
                 <tr class="tech_info uk-hidden">
-                    <td class="uk-width-1-10 uk-text-right">Modified:</td>
-                    <td class="uk-width-9-10 uk-text-left">{{user.modified}}</td>
+                    <td class="uk-width-1-5 uk-text-right">Modified:</td>
+                    <td class="uk-width-4-5 uk-text-left">{{user.modified}}</td>
                 </tr>
                 <tr class="tech_info uk-hidden">
-                    <td class="uk-width-1-10 uk-text-right uk-text-nowrap">ACL ID:</td>
-                    <td class="uk-width-9-10 uk-text-left">{{user.acl_id}}</td>
+                    <td class="uk-width-1-5 uk-text-right uk-text-nowrap">ACL ID:</td>
+                    <td class="uk-width-4-5 uk-text-left">{{user.acl_id}}</td>
                 </tr>
                 <tr class="tech_info uk-hidden">
-                    <td class="uk-width-1-10 uk-text-right uk-text-nowrap">ACL created:</td>
-                    <td class="uk-width-9-10 uk-text-left">{{user.acl_created}}</td>
+                    <td class="uk-width-1-5 uk-text-right uk-text-nowrap">ACL created:</td>
+                    <td class="uk-width-4-5 uk-text-left">{{user.acl_created}}</td>
                 </tr>
                 <tr class="tech_info uk-hidden">
-                    <td class="uk-width-1-10 uk-text-right uk-text-nowrap">ACL modified:</td>
-                    <td class="uk-width-9-10 uk-text-left">{{user.acl_modified}}</td>
+                    <td class="uk-width-1-5 uk-text-right uk-text-nowrap">ACL modified:</td>
+                    <td class="uk-width-4-5 uk-text-left">{{user.acl_modified}}</td>
                 </tr>
             </tbody>
         </table>
