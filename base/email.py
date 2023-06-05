@@ -145,6 +145,13 @@ class Mail(Thread):
             debug("%s: %s" % (header[0], header[1]))
         debug("Message sent!")
 
+    def simple_message(self, msg):
+        self.populate("SIMPLE MESSAGE")
+        self.destination = msg["destination"]
+        self.__populate_values(
+            {"%TITLE": msg["title"], "%MESSAGE": msg["body"]})
+        return self.run()
+
     def registration(self, rec):
         self.populate("PROJECT VISA")
         cfg = self.cfg["PROJECT VISA"]
