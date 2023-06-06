@@ -264,7 +264,6 @@ def assign_responsible(name, form):
 
 
 def get_activity_files(name):
-    check_responsible(name)
     temp_dir = get_tmpdir(current_app)
     debug("Using temporary directory to store files: %s" % temp_dir)
     pattern = "*%s*" % name
