@@ -274,6 +274,13 @@ def get_activity_files(name):
 
 
 def save_activity(req):
+    """
+    Save incoming files on the server to use them later in activity report pdf.
+    Check how many files has been already uploaded and refuse to save more if a
+    limit has been reached.
+    :param req: incoming HTTP request
+    :return: String. Name of saved file
+    """
     limit = current_app.config.get("ACTIVITY_REPORT_LIMIT", 3)
     project = req.form.get("project", None)
     if not project:
