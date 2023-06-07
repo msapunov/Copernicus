@@ -1,9 +1,10 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, TextAreaField
+from wtforms import StringField, PasswordField, TextAreaField, HiddenField
 from wtforms.validators import DataRequired
 
 
 class MessageForm(FlaskForm):
+    destination = HiddenField(validators=[DataRequired()])
     title = StringField("Title", validators=[DataRequired()])
     message = TextAreaField("Message", validators=[DataRequired(
         message="Message field is empty")])
