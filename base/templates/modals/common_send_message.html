@@ -2,7 +2,7 @@
     <div class="uk-modal-dialog">
         <button type="button" class="uk-modal-close uk-close"></button>
         <div class="uk-modal-header">
-            <h3>Send message to {{form.destination}}?</h3>
+            <h3>Send message to {{form.destination.value}}?</h3>
         </div>
         <div class="uk-margin uk-modal-content">
             <form action="test" method="post" class="uk-panel uk-form" id="{{form.id}}_message_form">
@@ -15,7 +15,7 @@
                 </div>
                 <div class="uk-form-row">
                     <div class="uk-form-controls">
-                        {{ form.message(id=form.id|string+"_body", placeholder="Write message to " + form.responsible + " <" + form.destination + ">", class_="uk-width-1-1", rows=4) }}
+                        {{ form.message(id=form.id|string+"_body", placeholder="Write message to " + form.responsible + " <" + form.destination.value + ">", class_="uk-width-1-1", rows=4) }}
                     </div>
                 </div>
             </form>
