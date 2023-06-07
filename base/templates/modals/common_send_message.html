@@ -7,6 +7,7 @@
         <div class="uk-margin uk-modal-content">
             <form action="test" method="post" class="uk-panel uk-form" id="{{form.id}}_message_form">
                 {{ form.csrf_token(id=form.id|string+"_csrf_message") }}
+                {{ form.destination(value=form.destination.value) }}
                 <div class="uk-form-row">
                     <div class="uk-form-controls">
                         {{ form.title(id=form.id|string+"_title", value=form.project_title, class_="uk-width-1-1") }}
