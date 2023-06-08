@@ -47,5 +47,5 @@ def contact(ext):
     form.project_title = "%s %s request created %s" % (
         ext.project.get_name(), ext.about(), ext.created.strftime("%Y-%m-%d %X"))
     form.responsible = ext.project.responsible.full_name()
-    form.destination = ext.project.responsible.email
+    form.destination.value = ext.project.responsible.email
     return form

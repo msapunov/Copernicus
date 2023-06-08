@@ -70,7 +70,7 @@ def contact_pending(register):
     form.meso = register.project_id()
     form.project_title = "[%s] %s" % (form.meso, register.title)
     form.responsible = register.responsible_full_name()
-    form.destination = register.responsible_email
+    form.destination.value = register.responsible_email
     return form
 
 
