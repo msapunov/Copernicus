@@ -74,6 +74,14 @@ def contact_pending(register):
     return form
 
 
+def contact_user(user):
+    form = MessageForm()
+    form.id = user.id
+    form.message_holder = "Write message to " + user.full()
+    form.destination.value = user.email
+    return form
+
+
 class VisaPendingForm(FlaskForm):
     exception = BooleanField()
 
