@@ -8,14 +8,34 @@
             <form action="test" method="post" class="uk-panel uk-form" id="{{form.id}}_message_form">
                 {{ form.csrf_token(id=form.id|string+"_csrf_message") }}
                 {{ form.destination(value=form.destination.value) }}
+                {% if not form.title_value %}
+                    {% set title_value = "" %}
+                {% else %}
+                    {% set title_value = form.title_value %}
+                {% endif %}
+                {% if not form.title_holder %}
+                    {% set title_holder = "Message title" %}
+                {% else %}
+                    {% set title_holder = form.title_holder %}
+                {% endif %}
+                {% if not form.message_value %}
+                    {% set message_value = "" %}
+                {% else %}
+                    {% set message_value = form.message_value %}
+                {% endif %}
+                {% if not form.message_holder %}
+                    {% set message_holder = "Write message here" %}
+                {% else %}
+                    {% set message_holder = form.message_holder %}
+                {% endif %}
                 <div class="uk-form-row">
                     <div class="uk-form-controls">
-                        {{ form.title(id=form.id|string+"_title", value=form.project_title, class_="uk-width-1-1") }}
+                        {{ form.title(id=form.id|string+"_title", placeholder=title_holder, value=title_value, class_="uk-width-1-1") }}
                     </div>
                 </div>
                 <div class="uk-form-row">
                     <div class="uk-form-controls">
-                        {{ form.message(id=form.id|string+"_body", placeholder="Write message to " + form.responsible + " <" + form.destination.value + ">", class_="uk-width-1-1", rows=4) }}
+                        {{ form.message(id=form.id|string+"_body", placeholder=message_holder, value=message_value, class_="uk-width-1-1", rows=4) }}
                     </div>
                 </div>
             </form>
