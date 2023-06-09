@@ -44,8 +44,8 @@ def acceptance(record):
 def contact(ext):
     form = MessageForm()
     form.id = ext.id
-    form.project_title = "%s %s request created %s" % (
+    form.title_value = "%s %s request created %s" % (
         ext.project.get_name(), ext.about(), ext.created.strftime("%Y-%m-%d %X"))
-    form.responsible = ext.project.responsible.full_name()
+    form.message_holder = "Write message to " + ext.project.responsible.full()
     form.destination.value = ext.project.responsible.email
     return form
