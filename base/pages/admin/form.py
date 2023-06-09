@@ -76,7 +76,7 @@ def contact_pending(register):
 
 def contact_user(user):
     form = MessageForm()
-    form.id = user.id
+    form.id = user.login
     form.message_holder = "Write message to " + user.full()
     form.destination.value = user.email
     return form
