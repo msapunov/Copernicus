@@ -130,6 +130,8 @@ def render_registry(user):
     row += render_template("modals/user_edit_info.html", form=edit_form)
     set_form = set_password(user)
     row += render_template("modals/registry_set_password.html", form=set_form)
+    msg = contact_user(user)
+    row += render_template("modals/common_send_message.html", form=msg)
     if not user.active:
         a_form = activate_user(user)
         act = render_template("modals/registry_activate_user.html", form=a_form)
