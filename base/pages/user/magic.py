@@ -24,6 +24,19 @@ def sanitize_key(key):
     return "%s %s %s" % (algo, key, host)
 
 
+def ssh_check(key_text):
+    fd, key_path = mkstemp(text=True)
+    with open(key_path, "w") as writer:
+        writer.write(key_text)
+    stdout, stderr = ssh_public(key_path)
+    if path.exists(key_path):
+        remove(key_path)
+    debug(stdout)
+    if stderr:
+        return False
+    return True
+
+
 def ssh_key(form):
     key = form.key.data
     debug("Provided key: '%s'" % key)
