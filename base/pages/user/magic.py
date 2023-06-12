@@ -40,25 +40,19 @@ def ssh_check(key_text):
 def ssh_key(form):
     key = form.key.data
     debug("Provided key: '%s'" % key)
-    key = sanitize_key(key)
-    fd, key_path = mkstemp(text=True)
-    with open(key_path, "w") as writer:
-        writer.write(key)
-    stdout, stderr = ssh_public(key_path)
-    if path.exists(key_path):
-        remove(key_path)
-    if stderr:
-        error(stderr)
-        err = "Provided public key failed to pass ssh-keygen check. " \
-              "Please make sure that you've inserted the content of the " \
-              "public key file which should looks like this key for example: " \
-              "521 SHA256:dm7lPKaRcwGfaq6v6ZFQ3LSD70BSPOyX1UWZk key_name (ECDSA)"
-        raise ValueError(err)
-    debug(stdout)
-    task = TaskQueue().user(current_user).key_upload(key).task
-    Task(task).accept()
-    UserLog(current_user).key_upload(key)
-    return "You will be notified when your public key is installed"
+    new = sanitize_key(key)
+    for k in [key, new]:
+        if not ssh_check(k):
+            continue
+        task = TaskQueue().user(current_user).key_upload(k).task
+        Task(task).accept()
+        UserLog(current_user).key_upload(k)
+        return "You will be notified when your public key is installed"
+    raise ValueError("Provided public key failed to pass ssh-keygen check. " 
+                     "Please make sure that you've inserted the content of "
+                     "the public key file which should looks like this key "
+                     "for example: "
+                     "521 SHA256:dm7lPKaRcwGfa66ZFQ3LSD70BSPOyX1UWZk key_name (ECDSA)")
 
 
 def user_by_id(uid):
