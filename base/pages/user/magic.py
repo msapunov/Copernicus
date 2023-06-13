@@ -40,8 +40,9 @@ def ssh_check(key_text):
 def ssh_key(form):
     key = form.key.data
     debug("Provided key: '%s'" % key)
-    new = sanitize_key(key)
-    for k in [key, new]:
+    clean = key.strip()
+    sane = sanitize_key(key)
+    for k in [key, sane, clean]:
         if not ssh_check(k):
             continue
         task = TaskQueue().user(current_user).key_upload(k).task
