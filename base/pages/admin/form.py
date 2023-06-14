@@ -138,15 +138,53 @@ class SelectMultipleProjects(SelectMultipleField):
 
 class RegistrationEditForm(FlaskForm):
     rid = HiddenField()
-    title = StringField("Title", validators=[DataRequired()])
-    cpu = IntegerField("CPU", validators=[DataRequired()])
-    type = StringField("Type", validators=[DataRequired()])
+    cpu = IntegerField("CPU", validators=[NumberRange(
+        min=0, message="CPU value must be 0 or any other positive number")])
+    ttl = StringField(render_kw={"data-uk-datepicker": "{format:'DD/MM/YYYY'}"})
+    title = StringField("Title", validators=[DataRequired(
+        message="Project title is empty")])
+    types = RadioField(choices=[], validators=[DataRequired(
+        message="Project type is empty")])
     responsible_first_name = StringField("Responsible name", validators=[DataRequired()])
     responsible_last_name = StringField("Responsible surname", validators=[DataRequired()])
     responsible_email = EmailField("Responsible e-mail", validators=[DataRequired(), Email()])
     responsible_position = StringField("Responsible position", validators=[DataRequired()])
     responsible_lab = StringField("Responsible lab", validators=[DataRequired()])
     responsible_phone = StringField("Responsible phone", validators=[DataRequired()])
+
+    def __init__(self, *args, **kwargs):
+        super(RegistrationEditForm, self).__init__(*args, **kwargs)
+        types = g.project_config.keys()
+        self.types.choices = [(project, project.upper()) for project in types]
+        self.types.uk_length = len(self.types.choices)
+
+
+def edit_pending(register):
+    form = RegistrationEditForm()
+    form.id = register.id
+    form.meso = register.project_id()
+    form.title_value = register.title
+    form.cpu_value = register.cpu
+    form.type_value = register.type
+    form.resp_first_value = register.responsible_first_name
+    form.resp_last_value = register.responsible_last_name
+    form.resp_mail_value = register.responsible_email
+    form.resp_pos_value = register.responsible_position
+    form.resp_lab_value = register.responsible_lab
+    form.resp_phone_value = register.responsible_phone
+    users = register.users.split("\n")
+    form.users = []
+    for user in users:
+        if not user:
+            continue
+        new_user = process_new_user(user)
+        if not new_user:
+            continue
+        if register.responsible_email in new_user.email:
+            continue
+        form.users.append(new_user)
+    form.process(formdata=request.form)
+    return form
 
 
 class NewUserEditForm(FlaskForm):
