@@ -166,7 +166,9 @@
         VISA SENT: visa received, visa re-send
         VISA RECEIVED: project create
         -->
-
+        {% if status != "VISA SENT" and status != "VISA RECEIVED" %}
+            <button class="uk-button uk-width-1-1 uk-margin-top edit_pending uk-button-primary" data-modal="{{pending.id}}_edit_pending"><span class="uk-icon-edit uk-margin-small-right"></span>Edit</button>
+        {% endif %}
         {% if "admin" in g.permissions %}
             <button class="uk-button uk-width-1-1 uk-margin-top contact uk-button-primary" data-modal="{{pending.id}}_message"><span class="uk-icon-commenting uk-margin-small-right"></span>Contact</button>
         <!--
