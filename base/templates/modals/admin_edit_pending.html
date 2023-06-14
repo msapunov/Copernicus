@@ -1,0 +1,59 @@
+<div class="uk-modal" aria-hidden="true" id="{{form.id}}_edit_pending">
+    <div class="uk-modal-dialog">
+        <button type="button" class="uk-modal-close uk-close"></button>
+        <div class="uk-modal-header">
+            <h3>Edit new project request {{form.meso}}?</h3>
+        </div>
+        <div class="uk-margin uk-modal-content">
+        <form action="xxx/create/{{form.id}}" method="post" class="uk-form" id="{{form.meso}}_edit_pending_form">
+            {{ form.csrf_token(id=form.meso+"_csrf_edit") }}
+            <div class="uk-form-row">
+                {{ form.title(id=form.meso+"_title", value=form.title_value, class_="uk-width-1-1") }}
+            </div>
+            <ul class="uk-form-row uk-grid uk-grid-width-1-2 uk-grid-small">
+                <li><div>{{ form.cpu(id=form.meso+"_cpu", value=form.cpu_value, class_="uk-width-1-1") }}</div></li>
+                <li><div>{{ form.ttl(id=form.meso+"_ttl", value="01/03/2024", class_="uk-width-1-1") }}</div></li>
+            </ul>
+            <ul class="uk-form-row uk-grid uk-grid-width-1-{{ form.types.uk_length }} uk-grid-small">
+                {% for option in form.types %}
+                    <li><div>
+                        <input {%if form.type_value==option.data%}checked="checked"{%endif%} type="radio" id="{{ option.id }}" name="{{ option.name }}" value="{{ option.data }}">
+                        <label for="{{ option.id }}">{{ option.label }}</label>
+                    </div></li>
+                {% endfor %}
+            </ul>
+            <div class="uk-form-row uk-panel uk-panel-box uk-panel-box-primary">
+                <div class="uk-panel-badge uk-badge uk-badge-danger">
+                    Admin
+                </div>
+                {{ form.responsible_first_name(id=form.meso+"_title", value=form.resp_first_value, class_="uk-width-1-1") }}
+                {{ form.responsible_last_name(id=form.meso+"_title", value=form.resp_last_value, class_="uk-width-1-1") }}
+                {{ form.responsible_email(id=form.meso+"_title", value=form.resp_mail_value, class_="uk-width-1-1") }}
+                {{ form.responsible_position(id=form.meso+"_title", value=form.resp_pos_value, class_="uk-width-1-1") }}
+                {{ form.responsible_lab(id=form.meso+"_title", value=form.resp_lab_value, class_="uk-width-1-1") }}
+                {{ form.responsible_phone(id=form.meso+"_title", value=form.resp_phone_value, class_="uk-width-1-1") }}
+            </div>
+
+            {% for i in form.users | sort(attribute='full', reverse=True) %}
+                <div class="uk-form-row uk-panel uk-panel-box">
+                    <ul class="uk-form-row uk-grid uk-grid-width-1-3 uk-grid-small">
+                        <li><div>
+                            <input class="uk-width-1-1" id="{{ i.uid }}_name" required="" type="text" value="{{ i.name }}">
+                        </div></li>
+                        <li><div>
+                            <input class="uk-width-1-1" id="{{ i.uid }}_surname" required="" type="text" value="{{ i.surname }}">
+                        </div></li>
+                        <li><div>
+                            <input class="uk-width-1-1" id="{{ i.uid }}_email" required="" type="text" value="{{ i.email }}">
+                        </div></li>
+                    </ul>
+                </div>
+            {% endfor %}
+        </form>
+        </div>
+        <div class="uk-modal-footer uk-text-right">
+            <button class="uk-button window_hide" data-modal="{{form.id}}_edit_pending">Cancel</button>
+            <button class="uk-button uk-button-primary edit_pending_submit" data-modal="{{form.id}}_edit_pending" data-form="{{form.meso}}_edit_pending_form" data-url="admin/registration/edit/{{form.id}}">Submit</button>
+        </div>
+    </div>
+</div>
