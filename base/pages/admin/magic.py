@@ -8,6 +8,7 @@ from base.pages import (send_message,
                         TaskQueue)
 from base.pages.project.magic import get_project_by_name
 from base.pages.admin.form import (action_pending,
+                                   edit_pending,
                                    visa_pending,
                                    create_pending,
                                    contact_pending,
