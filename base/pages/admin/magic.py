@@ -158,8 +158,9 @@ def render_pending(rec):
         top = render_template("modals/admin_create_project.html", form=rec)
     else:
         top = render_template("modals/admin_approve_pending.html", rec=rec)
-    if status not in ["VISA SENT", "VISA RECEIVED", "VISA SKIPPED"]:
-        edit = edit_info(rec)
+    if status not in ["VISA SENT", "VISA RECEIVED"]:
+        edit = edit_pending(rec)
+        top += render_template("modals/admin_edit_pending.html", form=edit)
     reset = render_template("modals/admin_reset_pending.html", rec=rec)
     action = action_pending(rec)
     reject = render_template("modals/admin_reject_pending.html", form=action)
