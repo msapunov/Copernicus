@@ -698,10 +698,10 @@ class Pending:
         record.accepted = False
         record.author = current_user.full_name()
         debug("Action performed on project creation request: %s" % self.action)
-        if self.action is "ignore":
+        if self.action == "ignore":
             record.status = "ignore"
             self.result = RequestLog(record).ignore()
-        elif self.action is "reject":
+        elif self.action == "reject":
             record.status = "reject"
             self.result = RequestLog(record).reject(message)
         else:
