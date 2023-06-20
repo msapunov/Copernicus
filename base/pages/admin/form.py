@@ -152,6 +152,19 @@ class RegistrationEditForm(FlaskForm):
     responsible_position = StringField("Responsible position", validators=[DataRequired()])
     responsible_lab = StringField("Responsible lab", validators=[DataRequired()])
     responsible_phone = StringField("Responsible phone", validators=[DataRequired()])
+    description = TextAreaField()
+    scientific = TextAreaField("Scientific fields")
+    genci = TextAreaField("Genci")
+    methods = TextAreaField()
+    resources = TextAreaField()
+    management = TextAreaField()
+    motivation = TextAreaField()
+    article_1 = StringField()
+    article_2 = StringField()
+    article_3 = StringField()
+    article_4 = StringField()
+    article_5 = StringField()
+
 
     def __init__(self, *args, **kwargs):
         super(RegistrationEditForm, self).__init__(*args, **kwargs)
