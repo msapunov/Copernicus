@@ -186,6 +186,16 @@ def edit_pending(register):
     form.resp_pos_value = register.responsible_position
     form.resp_lab_value = register.responsible_lab
     form.resp_phone_value = register.responsible_phone
+    form.description.default = register.description
+    form.resources.default = register.computing_resources
+    form.management.default = register.project_management
+    form.motivation.default = register.project_motivation
+    form.methods.default = register.numerical_methods
+    form.article_1.default = register.article_1
+    form.article_2.default = register.article_2
+    form.article_3.default = register.article_3
+    form.article_4.default = register.article_4
+    form.article_5.default = register.article_5
     users = register.users.split("\n")
     form.users = []
     for user in users:
