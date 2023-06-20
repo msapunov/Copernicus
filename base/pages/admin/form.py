@@ -68,9 +68,10 @@ def contact_pending(register):
     form = MessageForm()
     form.id = register.id
     form.meso = register.project_id()
-    form.project_title = "[%s] %s" % (form.meso, register.title)
+    form.title_value = "[%s] %s" % (form.meso, register.title)
     form.responsible = register.responsible_full_name()
     form.destination.value = register.responsible_email
+    form.message_holder = "Write a message to %s" % form.responsible
     return form
 
 
