@@ -204,8 +204,6 @@ def edit_pending(register):
         new_user = process_new_user(user)
         if not new_user:
             continue
-        if register.responsible_email in new_user.email:
-            continue
         form.users.append(new_user)
     form.process(formdata=request.form)
     return form
