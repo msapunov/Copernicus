@@ -1279,9 +1279,9 @@
     $(document).on("click", ".new_accept", window.render.new_accept);
     $(document).on("click", ".resp_name_swap", window.render.responsible_swap);
 
-    $(document).on("click", ".edit_pending_submit", trigger_modal);
     $(document).on("click", ".edit_pending", trigger_modal);
 
+    $(document).on("click", ".submit", window.sub);
     $(document).on("click", ".message_submit", window.sub);
     $(document).on("click", ".create_submit", window.sub);
     $(document).on("click", ".approve_submit", window.sub);
