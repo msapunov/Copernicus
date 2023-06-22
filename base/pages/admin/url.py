@@ -81,16 +81,6 @@ def web_switch_user():
     return redirect(url_for("user.user_index"))
 
 
-@bp.route("/admin/message/register/<int:rid>", methods=["POST"])
-@login_required
-@grant_access("admin")
-def web_admin_message_register(rid):
-    form = MessageForm()
-    if not form.validate_on_submit():
-        raise ValueError(form.errors)
-    return jsonify(data=register_message(rid, form))
-
-
 @bp.route("/admin/message/send", methods=["POST"])
 @login_required
 @grant_access("admin")

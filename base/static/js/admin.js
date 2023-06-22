@@ -428,34 +428,6 @@
         $(this).closest("tr").eq(0).toggleClass("ext_info");
         $(this).find("span").eq(0).toggleClass("uk-icon-plus uk-icon-minus");
     };
-    window.render.message=function(){
-        var id = $(this).data("id");
-        var mail = $(this).data("addr");
-        var title = "Send message to {0}?".f(mail);
-        var placeholder = "Type your message";
-        var motiv = $("<textarea/>").addClass("uk-width-1-1").attr({
-            "rows": "4",
-            "name": "note",
-            "placeholder": placeholder
-        });
-        var form = $("<form/>").addClass("uk-form").append(
-            $("<legend/>").text(title)
-        ).append(
-            $("<div/>").addClass("uk-form-row").append(motiv)
-        );
-        var popup = dialog(form.prop("outerHTML"), function(){
-            var data = {
-                "note": $("textarea[name=note]").val(),
-                "project": id
-            };
-            json_send(window.admin.url.message, data).done(function(reply){
-                if(reply.data){
-                    UIkit.notify(reply.data, {timeout: 2000, status:"success"});
-                }
-                popup.hide();
-            });
-        });
-    };
 
     window.render.nu_add_submit_or_cancel=function(btn){
         if($(this).hasClass("add_new_user_submit")){

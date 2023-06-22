@@ -56,24 +56,6 @@ def last_user(data):
     db.session.commit()
 
 
-def register_message(rid, form):
-    """
-    Send message to new registered project responsible. Takes request record ID
-    and wtforms object as argument extract data from it and construct dict with
-    keys "title", "body" and "destination". Finally in calls pending_message
-    method of Mail object with email dict as an argument for this method.
-    :param rid: Int. ID of new project request record
-    :param form: Object. Copy of WTForms form object
-    :return:
-    """
-    record = get_registration_record(rid)
-    pid = record.project_id()
-    email = {"title": "[%s] %s" % (pid, form.title.data),
-             "body": form.message.data,
-             "destination": record.responsible_email}
-    return Mail().pending_message(email)
-
-
 def unprocessed_dict():
     result = []
     for p in unprocessed():
