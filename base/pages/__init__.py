@@ -382,6 +382,14 @@ class TaskQueue:
         self.task.user = user
         return self._user_action()
 
+    def project_suspend(self):
+        if not self.p_name:
+            raise ValueError("Can't suspend undefined project")
+        description = "Suspending project %s" % self.p_name
+        self.task.action = "suspend|proj||%s|%s" % (self.p_name, description)
+        self.task.processed = True
+        return self._commit()
+
     def _user_action(self):
         self.processed = True
         self._commit()
