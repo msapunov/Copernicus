@@ -212,6 +212,7 @@
         return '<div class="uk-grid"><div class="uk-width-3-4 uk-panel uk-margin-top uk-margin-bottom" style="padding-left:50px;padding-right:50px;">' +
                 '<div>ID: <b>' + d.id + '</b></div>' +
                 '<div>Name: <b>' + d.name + '</b></div>' +
+                '<div>Reference: <b>' + d.ref + '</b></div>' +
                 '<div>Title: ' + d.title + '</div>' +
                 '<div>Status: <b>' + stat + '</b></div>' +
                 '<div>Created: ' + d.created + '</div>' +
@@ -386,6 +387,9 @@
                 visible: false
             },{
                 data: "description",
+                visible: false
+            },{
+                data: "ref",
                 visible: false
             },{
                 data: "numerical_methods",
