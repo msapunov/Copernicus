@@ -272,7 +272,7 @@ class Mail(Thread):
     def user_updated(self, record):
         pass
 
-    def responsible_assign(self, task):
+    def responsible_assign(self, task, path=None):
         self.populate("RESPONSIBLE ASSIGN")
         self.destination = task.project.responsible.email
         name = task.project.get_name()
@@ -281,6 +281,8 @@ class Mail(Thread):
         self.cc = task.user.email + "," + self.cc
         self.__populate_values({"%FULLNAME": full, "%NEW_FULLNAME": new_full,
                                 "%NAME": name})
+        if path:
+            self.attach(path)
         return self
 
     def responsible_assigned(self, task):
