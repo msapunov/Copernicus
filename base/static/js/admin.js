@@ -863,6 +863,7 @@
         $("#ua_current").text("None");
         $("#ua_project").val('').trigger('chosen');
     };
+    /*
     window.render.user_add=function() {
         window.render.form_reset_user();
         if ($(this).hasClass("user_edit")) {
@@ -874,6 +875,24 @@
         } else {
             modal.show();
         }
+    };
+    */
+    window.render.user_add=function() {
+        const id = $.trim( $(this).data("project") );
+        var data = {};
+        let ids = ["#add_name","#add_surname","#add_email"];
+        $.each(ids, function(idx, name) {
+            const tmp = name.replace("#add_", "");
+            const tmp_val = $(name).val();
+            if (tmp_val) {
+                data[tmp] = tmp_val;
+            }
+        });
+        const url = window.admin.url.new_user_add + "/" + id;
+        json_send(url, data, false).done(function(reply){
+            // !!! TODO: Edit this function in order to update the list of users
+            //window.render.update_new_user(id, reply);
+        })
     };
     window.render.user_edit=function(btn){
         var id = $.trim( $(btn).data("id") );
@@ -1257,7 +1276,8 @@
     $(document).on("click", ".system_reload", window.admin.sys);
     $(document).on("click", ".slurm_reload", window.render.partition);
 
-
+    $(document).on("click", ".add_user", window.render.user_add);
+    //
     $(document).on("click", ".add_new_user_submit", window.render.nu_add_submit_or_cancel);
     $(document).on("click", ".new_user_add", window.render.nu_add);
     $(document).on("click", ".nu_edit", window.render.nu_edit);
