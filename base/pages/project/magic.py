@@ -227,12 +227,17 @@ def assign_responsible(name, form):
     if user == project.responsible:
         raise ValueError("User %s is already responsible for the project %s" %
                          (user.full_name(), project.get_name()))
-    if user not in project.users:
-        raise ValueError("New responsible has to be one of the project users")
-    pid = project.ref
-    Pending(pid).visa_create(True).result
+#    if user not in project.users:
+#        raise ValueError("New responsible has to be one of the project users")
+    ref_visa = project.ref
+    ref_visa.ttl = project.resources.ttl
+    path = create_visa(ref_visa)
+    if not path:
+        raise ValueError("Failed to generate visa document")
     task = TaskQueue().project(project).responsible_assign(user).task
-    return ProjectLog(project).responsible_assign(task)
+    project_log = ProjectLog(project).responsible_assign(task, path)
+    map(lambda x: Path(x).unlink(), path)
+    return project_log
 
 
 def get_activity_files(name):
