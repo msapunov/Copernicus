@@ -187,6 +187,7 @@ def create_visa(record, signature="signature.png"):
     Generates html using as templates values from configuration file and
     provided record and then convert it to pdf files
     :param record: Object. Instance of project register class
+    :param signature: String. Name of a graphical file with a signature
     :return: List. List of resulting files
     """
     config = project_config()
