@@ -209,7 +209,10 @@ def create_visa(record, signature="signature.png"):
     record.signature = file_as_string(signature)
     record.base_url = request.url_root
     loc = app.config.get("LOCALE", "C.UTF-8")
-    locale.setlocale(locale.LC_ALL, loc)
+    try:
+        locale.setlocale(locale.LC_ALL, loc)
+    except locale.Error:
+        locale.setlocale(locale.LC_ALL, 'C')
     path = []
     for i in config[project_type].get("visa", []):
         html = render_template("%s" % i, data=record)
