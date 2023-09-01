@@ -214,6 +214,12 @@ def edit_pending(register):
     return form
 
 
+class UserForm(FlaskForm):
+    name = StringField("Name", validators=[DataRequired()])
+    surname = StringField("Surname", validators=[DataRequired()])
+    email = EmailField("E-mail", validators=[DataRequired(), Email()])
+
+
 class NewUserEditForm(FlaskForm):
     pid = HiddenField()
     uid = HiddenField()
