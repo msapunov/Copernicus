@@ -43,6 +43,7 @@ from base.pages.admin.form import (
     VisaPendingForm,
     AddUserForm,
     UserEditForm,
+    UserForm,
     RegistrationEditForm,
     ActivateUserForm,
     NewUserEditForm)
@@ -143,13 +144,13 @@ def admin_user_activate(uid):
     return jsonify(data=result, message=msg)
 
 
-@bp.route("/admin/user/new/add", methods=["POST"])
+@bp.route("/admin/user/new/add/<int:pid>", methods=["POST"])
 @login_required
 @grant_access("admin")
-def admin_user_new_add():
-    form = NewUserEditForm()
+def admin_user_new_add(pid):
+    form = UserForm()
     if not form.validate_on_submit():
-        raise ValueError(form.errors)
+       raise ValueError(form.errors)
     return jsonify(data=registration_user_new(form))
 
 
