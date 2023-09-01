@@ -165,6 +165,11 @@ class RegistrationEditForm(FlaskForm):
     article_4 = StringField()
     article_5 = StringField()
 
+    def pre_validate(self, form):
+        users = []
+        for i in form.project.data:
+            if i not in projects:
+                raise ValueError("Project %s doesn't register in the DB" % i)
 
     def __init__(self, *args, **kwargs):
         super(RegistrationEditForm, self).__init__(*args, **kwargs)
