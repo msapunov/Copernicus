@@ -230,7 +230,7 @@ def write_pdf(html, name):
     return path
 
 
-def create_visa(record):
+def create_visa(record, signature="signature.png"):
     """
     Generates html using as templates values from configuration file and
     provided record and then convert it to pdf files
