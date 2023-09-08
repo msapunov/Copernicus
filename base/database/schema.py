@@ -817,6 +817,8 @@ class Tasks(db.Model):
         if act in ["create", "add", "assign", "delete", "remove", "activate"]:
             if entity == "user":
                 act += " a user "
+            elif entity == "resp":
+                act += " a responsible "
             else:
                 act += " a project "
         elif act in ["ssh"]:
