@@ -9,7 +9,7 @@ from pdfkit import from_string
 
 from base import db
 from base.classes import TmpUser, ProjectLog, Task
-from base.functions import ssh_wrapper, calculate_ttl, create_visa
+from base.functions import ssh_wrapper, calculate_ttl, create_visa, create_document
 from base.database.schema import Extend, File, Project, Tasks, User
 from base.pages import calculate_usage, generate_login, TaskQueue
 from base.pages.user.magic import user_by_id
@@ -231,7 +231,11 @@ def assign_responsible(name, form):
 #        raise ValueError("New responsible has to be one of the project users")
     ref_visa = project.ref
     ref_visa.ttl = project.resources.ttl
-    path = create_visa(ref_visa)
+    ref_visa.responsible_first_name = user.name
+    ref_visa.responsible_last_name = user.surname
+    ref_visa.responsible_email = user.email
+    ref_visa.name = project.get_name()
+    path = create_document(ref_visa, "responsible_new")
     if not path:
         raise ValueError("Failed to generate visa document")
     task = TaskQueue().project(project).responsible_assign(user).task
