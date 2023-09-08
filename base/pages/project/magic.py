@@ -229,6 +229,9 @@ def assign_responsible(name, form):
                          (user.full_name(), project.get_name()))
 #    if user not in project.users:
 #        raise ValueError("New responsible has to be one of the project users")
+    task = TaskQueue().project(project).responsible_assign(user).task
+    if not send:
+        return ProjectLog(project).responsible_assign(task)
     ref_visa = project.ref
     ref_visa.ttl = project.resources.ttl
     ref_visa.responsible_first_name = user.name
@@ -237,11 +240,8 @@ def assign_responsible(name, form):
     ref_visa.name = project.get_name()
     path = create_document(ref_visa, "responsible_new")
     if not path:
-        raise ValueError("Failed to generate visa document")
-    task = TaskQueue().project(project).responsible_assign(user).task
-    project_log = ProjectLog(project).responsible_assign(task, path)
-    map(lambda x: Path(x).unlink(), path)
-    return project_log
+        raise ValueError("Failed to generate document")
+    return ProjectLog(project).responsible_assign(task, path)
 
 
 def get_activity_files(name):
