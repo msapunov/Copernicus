@@ -182,6 +182,31 @@ def generate_pdf(html, base):
     return path
 
 
+def create_document(record, directory=""):
+    """
+    Generates html using as templates values from configuration file and
+    provided record and then convert it to pdf files
+    :param record: Object. Instance of project register class
+    :param directory: String. Name of a directory which contains document files
+    :return: List. List of resulting files
+    """
+    record.base_url = request.url_root
+    loc = app.config.get("LOCALE", "C.UTF-8")
+    try:
+        locale.setlocale(locale.LC_ALL, loc)
+    except locale.Error:
+        locale.setlocale(locale.LC_ALL, 'C')
+    path = []
+    temp = join_dir(app.template_folder, directory)
+    full = join_dir(app.root_path, temp)
+    files = [file.name for file in Path(full).iterdir() if file.is_file()]
+    for f_name in files:
+        i = join_dir(directory, f_name)
+        html = render_template("%s" % i, data=record)
+        path.append(generate_pdf(html, "%s_%s" % (record.project_id(), i)))
+    return path
+
+
 def create_visa(record, signature="signature.png"):
     """
     Generates html using as templates values from configuration file and
