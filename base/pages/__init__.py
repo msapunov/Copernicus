@@ -146,19 +146,6 @@ def send_message(to_who, by_who=None, cc=None, title=None, message=None,
     if message:
         msg.attach(MIMEText(message))
 
-    for path in attach or []:
-        attach_file = Path(path)
-        if not attach_file.exists():
-            raise ValueError("Failed to attach %s to the mail. "
-                             "File doesn't exists" % path)
-        if not attach_file.is_file():
-            raise ValueError("Failed to attach %s to the mail. It's not a file"
-                             % path)
-        with open(path, "rb") as fd:
-            part = MIMEApplication(fd.read(), Name=str(attach_file.name))
-        part['Content-Disposition'] = 'attachment; filename="%s"' % str(attach_file.name)
-        msg.attach(part)
-
     server = current_app.config.get("MAIL_SERVER", "localhost")
     port = current_app.config.get("MAIL_PORT", 25)
     use_tls = current_app.config.get("MAIL_USE_TLS", False)
