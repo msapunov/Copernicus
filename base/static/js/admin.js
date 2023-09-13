@@ -55,9 +55,9 @@
         });
     };
     window.render = {};
-    window.sub = function (e){
+    window.sub = function (){
         var x = submit.call(this);
-        x.done(function(reply){
+        x.done(function(){
             UIkit.modal("#ajax_call", {modal: false}).hide();
             let div = $("table#pending_projects");
             if ( $.fn.DataTable.isDataTable( div )){
@@ -367,7 +367,6 @@
         var div = $("<div/>");
         $("<h3/>").append(data.server).appendTo(div);
         var ul = $("<ul/>").appendTo(div);
-        var user = $("<span/>").attr({"class": "user_show"}).append(data.uptime.users);
         $("<li/>").append("Users: ").append($("<a/>").attr({"class": "user_show"}).text(data.uptime.users).data("data", data.server)).appendTo(ul);
 
         var load_1 = data.uptime.load_1;
@@ -429,9 +428,8 @@
         $(this).find("span").eq(0).toggleClass("uk-icon-plus uk-icon-minus");
     };
 
-    window.render.nu_add_submit_or_cancel=function(btn){
+    window.render.nu_add_submit_or_cancel=function(){
         if($(this).hasClass("add_new_user_submit")){
-            var data = {};
             var data = $("form#add_new_user_form").serializeArray().map(function(x){this[x.name] = x.value; return this;}.bind({}))[0];
             var id = data.pid;
             var url = window.admin.url.new_user_add;
@@ -524,40 +522,6 @@
             ul.append(li);
         });
     };
-
-    window.render.nu_submit_or_cancel=function(btn){
-        if($(this).hasClass("new_user_submit")){
-            var data = {};
-            var data = $("form#new_user_form").serializeArray().map(function(x){this[x.name] = x.value; return this;}.bind({}))[0];
-            var id = data.pid;
-            var url = window.admin.url.new_user_edit;
-            json_send(url, data, false).done(function(reply){
-                window.render.update_new_user(id, reply);
-            })
-        }
-        UIkit.modal("#new_user_edit").hide();
-    }
-
-    window.render.new_user_swap=function(btn){
-        window.render.swap("#new_user_name", "#new_user_surname");
-    };
-
-    window.render.new_user_edit=function(btn){
-        var id = $.trim( $(btn).data("pid") );
-        var uid = $.trim( $(btn).data("uid") );
-        var name = $.trim( $(btn).data("name") );
-        var surname = $.trim( $(btn).data("surname") );
-        var email = $.trim( $(btn).data("email") );
-        var login = $.trim( $(btn).data("login") );
-
-        $("#new_user_id").val(id);
-        $("#new_user_uid").val(uid);
-        $("#new_user_name").val(name);
-        $("#new_user_surname").val(surname);
-        $("#new_user_email").val(email);
-        $("#new_user_login").val(login ? login : '');
-    };
-
     window.render.new_edit=function(){
         window.render.reg_edit(this);
         var modal = UIkit.modal("#register_edit");
@@ -621,65 +585,6 @@
                     UIkit.notify(reply.data.join("\n"), {timeout: 2000, status:"success"});
                 }
 
-            });
-        });
-    };
-    window.render.new_create=function(){
-        var id = $.trim( $(this).data("id") );
-        var mid = $.trim( $(this).data("meso") );
-        var project_title = $.trim( $(this).data("title") );
-        var title = "Project: {0}".f(project_title);
-        var name = "Registration ID: {0}".f(mid);
-        var text = "Create project record and correspondent task in the task queue?";
-        var checkbox = $("<input>").attr({
-            "id": "safety_checkbox",
-            "name": "safety",
-            "type": "checkbox"
-        }).addClass("uk-margin-small-right uk-form-danger");
-        var label = $("<label/>").attr('for', "safety_checkbox");
-        label.text("I do confirm that all bureaucratic procedures are finished");
-        var express = $("<div/>").addClass(
-            "uk-form-row uk-alert uk-alert-danger"
-        );
-        express.append(checkbox).append(label);
-
-        var conf = [title, name, text, express.prop("outerHTML")].join("<br>");
-        var url = window.admin.url.create + "/" + id;
-        UIkit.modal.confirm(conf, function(){
-            var safety = $("input[name=safety]").is(':checked') ? true : false;
-            json_send(url, {"safety": safety}).done(function(reply){
-                if(reply.data){
-                    UIkit.notify(reply.data, {timeout: 2000, status:"success"});
-                }
-                $("#"+id).remove();
-                $("#"+id+"-info").remove();
-            });
-        });
-    };
-    window.render.new_reject=function(){
-        var id = $.trim( $(this).data("id") );
-        var mid = $.trim( $(this).data("meso") );
-        var project_title = $.trim( $(this).data("title") );
-        var title = "Reject project {0}?".f(mid);
-        var text = "Enter a reason for rejecting project '{0}' ({1})".f(project_title, mid);
-        var motiv = $("<textarea/>").html(text).addClass("uk-width-1-1").attr({
-            "rows": "4",
-            "name": "note"
-        });
-        var form = $("<form/>").addClass("uk-form").append(
-            $("<legend/>").text(title)
-        ).append(
-            $("<div/>").addClass("uk-form-row").append(motiv)
-        );
-        UIkit.modal.confirm(form.prop("outerHTML"), function(){
-            var comment = $("textarea[name=note]").val();
-            var url = window.admin.url.reject + "/" + id;
-            json_send(url, {"note": comment}).done(function(reply){
-                if(reply.data){
-                    UIkit.notify(reply.data, {timeout: 2000, status:"success"});
-                }
-                $("#"+id).remove();
-                $("#"+id+"-info").remove();
             });
         });
     };
@@ -863,20 +768,6 @@
         $("#ua_current").text("None");
         $("#ua_project").val('').trigger('chosen');
     };
-    /*
-    window.render.user_add=function() {
-        window.render.form_reset_user();
-        if ($(this).hasClass("user_edit")) {
-            window.render.user_edit(this);
-        }
-        var modal = UIkit.modal("#user_change");
-        if ( modal.isActive() ) {
-            modal.hide();
-        } else {
-            modal.show();
-        }
-    };
-    */
     window.render.user_add=function() {
         const id = $.trim( $(this).data("project") );
         var data = {};
@@ -918,9 +809,7 @@
         });
     };
     window.render.ue_buttons=function(id, login){
-        var s_reset = $("<span/>").addClass("uk-icon-eraser");
-        var btn_reset = $("<button/>").attr({"data-id": id, "type": "button"}).append(s_reset);
-        btn_reset.addClass("uk-button uk-button-mini user_password_reset");
+
 
         var s_edit = $("<span/>").addClass("uk-icon-cogs");
         var btn_edit = $("<button/>").attr({"data-id": id, "type": "button"}).append(s_edit);
@@ -955,10 +844,9 @@
             status.append( $("<span/>").addClass("uk-icon-check") )
         }
 
-        var buttons = window.render.ue_buttons(id, data.login);
 
         var tr = $("<tr/>").attr({"id": "ue_rec_"+id}).append(login).append(name);
-        tr.append(surname).append(status).append(buttons);
+        tr.append(surname).append(status);
         $("tr#ue_rec_"+id).replaceWith(tr);
     };
     window.render.tasks_accept=function(){
@@ -1012,17 +900,6 @@
         }
         UIkit.modal("#user_change").hide();
     };
-    window.render.user_password_reset=function(msg, url){
-        UIkit.modal.confirm(msg, function(){
-            json_send(url,false).done(function(reply){
-                if(reply.data && reply.data === ""){
-                    if(reply.message){
-                        UIkit.notify(reply.message, {timeout: 2000, status:"success"});
-                    }
-                }
-            });
-        });
-    };
     window.render.destroy=function(url, id){
         var url = url + "/" + id;
         json_send(url,false).done(function(reply){
@@ -1072,7 +949,6 @@
         var mail = $.trim( $(this).data("mail") );
         var msg = "<p>Reset the login password for {0}?<p>An e-mail with the new password will be sent to {1}<p>Are you sure?".f(login, mail);
         var url = window.admin.url.user_p_reset + "/" + id;
-        window.render.user_password_reset(msg, url);
     };
 
     window.render.expand = function format(d, row, tr, tdi){
@@ -1329,8 +1205,6 @@
     $(document).on("click", ".user_purge", window.render.user_purge);
     $(document).on("click", ".user_password_reset", window.render.pass_reset);
     $(document).on("click", ".name_swap", window.render.name_swap);
-    $(document).on("click", ".ue_submit", window.render.ue_submit_or_cancel);
-    $(document).on("click", ".ue_cancel", window.render.ue_submit_or_cancel);
 
     $(document).on("change", "#ua_project", window.render.update_project_list);
     $(document).on("change", ".task_sel_info", window.render.tasks_btn_toggle);
