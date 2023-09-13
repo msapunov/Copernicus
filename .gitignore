@@ -20,7 +20,8 @@ __pycache__/
 /base/static/img
 
 # documents related
-/base/templates/responsible_new/
+/base/templates/responsible_new
+/base/templates/docs
 
 # Venv folder
 /venv
