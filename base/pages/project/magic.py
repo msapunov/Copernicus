@@ -231,7 +231,7 @@ def assign_responsible(name, form):
 #        raise ValueError("New responsible has to be one of the project users")
     task = TaskQueue().project(project).responsible_assign(user).task
     if not send:
-        return ProjectLog(project).responsible_assign(task)
+        return ProjectLog(project).send_message(False).responsible_assign(task)
     ref_visa = project.ref
     ref_visa.ttl = project.resources.ttl
     ref_visa.responsible_first_name = user.name
