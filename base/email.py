@@ -35,7 +35,7 @@ class Mail(Thread):
         self.configure()
         Thread.__init__(self)
 
-    def attach_file(self, path=None):
+    def attach_file(self, path=None, delete=True):
         if not path:
             raise ValueError("Please, indicate a name of a file to attach")
         attach_file = Path(path)
@@ -50,6 +50,8 @@ class Mail(Thread):
         part['Content-Disposition'] = 'attachment; filename="%s"' % str(attach_file.name)
         self.msg.attach(part)
         debug("File %s attached" % path)
+        if delete:
+            Path(path).unlink()
         return self
 
     def attach(self, name=None):
