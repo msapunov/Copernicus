@@ -101,7 +101,7 @@ class ResponsibleForm(FlaskForm):
     login = SelectField("Login", choices=[("", "---")], default=0)
     send = BooleanField(default="checked")
 
-    def validate(self):
+    def validate(self, extra_validators=None):
         if self.login.data:
             self.login.validate(self, [DataRequired()])
             return True
@@ -129,7 +129,7 @@ class UserForm(FlaskForm):
     login = SelectField("Login", choices=[], coerce=int, default=0)
     create_user = False
 
-    def validate(self):
+    def validate(self, extra_validators=None):
         """
         Method which replaces standard validate method because of usage custom
         select2 field
