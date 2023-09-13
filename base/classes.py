@@ -950,7 +950,7 @@ class Task:
             project.users.remove(user)
         if not user.project:
             user.active = False
-            UserLog(user).goodbye()
+            # UserLog(user).goodbye()
         return ProjectLog(project).user_deleted(self.task)
 
     def responsible_assign(self):
