@@ -600,9 +600,9 @@ SYMBOLS = {
 }
 
 
-def bytes2human(n, format='%(value).1f %(symbol)s', symbols='customary'):
+def bytes2human(n, layout='%(value).1f %(symbol)s', symbols='customary'):
     """
-    Convert n bytes into a human readable string based on format.
+    Convert n bytes into a human-readable string based on format.
     symbols can be either "customary", "customary_ext", "iec" or "iec_ext",
     see: https://goo.gl/kTQMs
 
@@ -647,5 +647,5 @@ def bytes2human(n, format='%(value).1f %(symbol)s', symbols='customary'):
     for symbol in reversed(symbols[1:]):
         if n >= prefix[symbol]:
             value = float(n) / prefix[symbol]
-            return format % locals()
-    return format % dict(symbol=symbols[0], value=n)
+            return layout % locals()
+    return layout % dict(symbol=symbols[0], value=n)
