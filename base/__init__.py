@@ -142,3 +142,5 @@ def configure_logger(app):
         logging.config.fileConfig(cfg_path)
     else:
         print("No config found! Using default logger")
+        #app_logger = logging.getLogger("copernicus")
+        #app_logger.propagate = False
