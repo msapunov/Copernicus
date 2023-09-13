@@ -129,10 +129,13 @@ class Project(db.Model):
 
     def pretty_dict(self):
         rec = self.to_dict()
-        rec["approve"] = rec["approve"]["fullname"]
-        rec["lab"] = rec["responsible"]["lab"]
-        rec["responsible"] = rec["responsible"]["fullname"]
-        rec["resources"] = rec["resources"]["cpu"]
+        a_user = rec["approve"]
+        r_user = rec["responsible"]
+        res = rec["resources"]
+        rec["approve"] = a_user["fullname"]
+        rec["lab"] = r_user["lab"]
+        rec["responsible"] = r_user["fullname"]
+        rec["resources"] = res["cpu"]
         tmp = []
         for user in rec["users"]:
             tmp.append("%s <%s>" % (user["fullname"], user["email"]))
