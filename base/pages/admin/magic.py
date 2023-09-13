@@ -223,7 +223,7 @@ def reg_accept(pid, note):
     if not p:
         raise ValueError("Project with title %s not in ProjectDB!" % rec.title)
     created = p.resources.created
-    ProjectLog(p).created(created)
+    ProjectLog(p).created()
     #  TEMP code ends here
     rec.accepted = True
     rec.accepted_ts = created
@@ -827,7 +827,6 @@ def create_project(rid):
         active=False,
         comment="Initial commit",
         ref=record,
-        privileged=False,
         type=record.type,
         created=dt.now()
     )
