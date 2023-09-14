@@ -215,10 +215,17 @@ def edit_pending(register):
     return form
 
 
-class UserForm(FlaskForm):
-    name = StringField("Name", validators=[DataRequired()])
-    surname = StringField("Surname", validators=[DataRequired()])
-    email = EmailField("E-mail", validators=[DataRequired(), Email()])
+class NewUserForm(UserForm):
+    login = StringField("Login")
+
+    def validate(self):
+        super().validate()
+
+
+def new_user(name):
+    form = NewUserForm()
+    form.name = name
+    return form
 
 
 class NewUserEditForm(FlaskForm):
