@@ -42,7 +42,6 @@ from base.pages.admin.form import (
     VisaPendingForm,
     AddUserForm,
     UserEditForm,
-    UserForm,
     RegistrationEditForm,
     ActivateUserForm,
     NewUserEditForm)
