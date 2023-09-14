@@ -149,9 +149,9 @@ class UserForm(FlaskForm):
         return ValidationError("Assign an existing user or add a new one")
 
 
-def new_user(project):
+def new_user(name):
     form = UserForm()
-    form.name = project.name
+    form.name = name
     return form
 
 
