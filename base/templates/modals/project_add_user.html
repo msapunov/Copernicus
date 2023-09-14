@@ -23,12 +23,18 @@
           </div>
         </div>
         <div class="uk-form-row uk-alert">
-          <div>
-            If user has (or has had) an account in Mesocentre, please select this user using dropdown select list below:
-            <div class="uk-form-controls select2_hack">
-              {{ form.login(id=form.name+"_login_attach", placeholder="Login", class_="uk-width-1-1 select2_users") }}
-            </div>
-          </div>
+            {% if project_page|default(True) %}
+                <div>
+                    If user has (or has had) an account in Mesocentre, please select this user using dropdown select list below:
+                    <div class="uk-form-controls select2_hack">
+                        {{ form.login(id=form.name+"_login_attach", placeholder="Login", class_="uk-width-1-1 select2_users") }}
+                    </div>
+                </div>
+            {% else %}
+                <div class="uk-form-controls">
+                    {{ form.email(id=form.name+"_login_attach", placeholder="Login", class_="uk-width-1-1 user_login") }}
+                </div>
+            {% endif %}
         </div>
       </form>
     </div>
