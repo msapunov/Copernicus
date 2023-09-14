@@ -29,7 +29,7 @@ from base.pages.admin.magic import (
     user_reset_pass,
     user_delete,
     registration_user_del,
-    registration_user_new,
+    registration_create_user,
     registration_user_update,
     registration_info_update,
     get_registration_record,
