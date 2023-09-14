@@ -39,6 +39,7 @@ from base.pages.project.magic import (
     project_extend,
     project_renew,
     get_limbo_users)
+from base.pages.admin.magic import registration_create_user
 from logging import debug
 
 
@@ -105,6 +106,8 @@ def web_project_add_user(project_name):
     form = UserForm()
     if not form.validate_on_submit():
         raise ValueError(form.errors)
+    if form.pending:
+        return jsonify(message=registration_create_user(project_name, form))
     if form.create_user:
         return jsonify(message=project_create_user(project_name, form))
     else:
