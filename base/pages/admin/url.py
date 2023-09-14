@@ -143,16 +143,6 @@ def admin_user_activate(uid):
     return jsonify(data=result, message=msg)
 
 
-@bp.route("/admin/user/new/add/<int:pid>", methods=["POST"])
-@login_required
-@grant_access("admin")
-def admin_user_new_add(pid):
-    form = UserForm()
-    if not form.validate_on_submit():
-       raise ValueError(form.errors)
-    return jsonify(data=registration_user_new(form))
-
-
 @bp.route("/admin/user/new/del/<int:pid>", methods=["POST"])
 @login_required
 @grant_access("admin")
