@@ -8,6 +8,7 @@ from wtforms.fields import EmailField
 from wtforms.validators import DataRequired, Email
 from base.pages.project.magic import list_of_projects
 from base.pages.login.form import MessageForm
+from base.pages.project.form import UserForm
 from base.pages import process_new_user
 
 __author__ = "Matvey Sapunov"
