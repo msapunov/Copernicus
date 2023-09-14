@@ -39,7 +39,6 @@ from base.pages.project.magic import (
     project_extend,
     project_renew,
     get_limbo_users)
-from base.pages.admin.magic import registration_create_user
 from logging import debug
 
 
