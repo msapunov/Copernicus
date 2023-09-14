@@ -17,6 +17,7 @@ from base.pages.admin.form import activate_user
 from base.pages.board.magic import create_resource
 from base.pages.user.magic import user_by_id
 from base.pages.user.form import edit_info, set_password, PassForm
+from base.pages.project.form import new_pending_user
 from base.database.schema import User, Register, LogDB, Project, Tasks, Register
 from base.email import Mail
 from base.classes import UserLog, RequestLog, TmpUser, ProjectLog, Task
