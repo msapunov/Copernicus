@@ -258,8 +258,7 @@ def reg_message(txt, selector):
 def get_registration_record(pid):
     register = Register.query.filter_by(id=pid).first()
     if not register:
-        raise ValueError("Project registration request with id %s not found"
-                         % pid)
+        raise ValueError("Project registration request id %s not found" % pid)
     return register
 
 
