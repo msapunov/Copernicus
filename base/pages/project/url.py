@@ -208,7 +208,7 @@ def web_modal_responsible(pid):
 @grant_access("admin", "responsible")
 def web_modal_user(pid):
     project = get_project_record(pid)
-    form = new_user(project.name)
+    form = new_user(project)
     return jsonify(render_template("modals/project_add_user.html", form=form))
 
 
