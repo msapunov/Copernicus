@@ -6,7 +6,7 @@
         new_user_add: "admin/user/new/add",
         new_user_del: "admin/user/new/del",
         new_user_edit: "admin/user/new/update",
-        reg_details: "admin/registration/details/get",
+
         reg_edit: "admin/registration/details/set",
         accept: "admin/registration/accept",  // Temporary handler to be removed
         approve: "admin/registration/approve",
@@ -520,38 +520,6 @@
         $.each(users, function(id, user){
             var li = window.render.create_new_user_tr(pid, user);
             ul.append(li);
-        });
-    };
-    window.render.new_edit=function(){
-        window.render.reg_edit(this);
-        var modal = UIkit.modal("#register_edit");
-        if ( modal.isActive() ) {
-            modal.hide();
-        } else {
-            modal.show();
-        }
-    };
-    window.render.reg_edit=function(btn){
-        var id = $.trim( $(btn).data("id") );
-        var url = window.admin.url.reg_details + "/" + id;
-        json_send(url, false, false).done(function(reply) {
-            if(! reply.data){
-                UIkit.notify("No data returned by service", {timeout: 2000, status:"danger"});
-                return
-            }
-            var data = reply.data;
-            $("#re_id").val(data.id ? data.id : '');
-            $("#re_title").val(data.title ? data.title : '');
-            $("#re_cpu").val(data.cpu ? data.cpu : '');
-            $("#re_type").val(data.type ? data.type : '');
-            $("#re_resp_name").val(data.responsible_first_name ? data.responsible_first_name : '');
-            $("#re_resp_surname").val(data.responsible_last_name ? data.responsible_last_name : '');
-            $("#re_resp_email").val(data.responsible_email ? data.responsible_email : '');
-            $("#re_resp_position").val(data.responsible_position ? data.responsible_position : '');
-            $("#re_resp_lab").val(data.responsible_lab ? data.responsible_lab : '');
-            $("#re_resp_phone").val(data.responsible_phone ? data.responsible_phone : '');
-//            $("#re_current").text(data.projects.join(", "));
-//            $("#re_project").val(data.projects).multiselect("refresh");
         });
     };
     window.render.update_re=function(reply){
@@ -1162,7 +1130,7 @@
     $(document).on("click", ".new_user_cancel", window.render.nu_submit_or_cancel);
     $(document).on("click", ".new_user_swap", window.render.new_user_swap);
     $(document).on("click", ".new_project", window.render.new_project);
-    $(document).on("click", ".new_edit", window.render.new_edit);
+
     $(document).on("click", ".re_create", trigger_modal);
     $(document).on("click", ".re_received", trigger_modal);
     $(document).on("click", ".re_visa", trigger_modal);
