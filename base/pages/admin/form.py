@@ -219,7 +219,15 @@ class NewUserForm(UserForm):
     login = StringField("Login")
 
     def validate(self):
-        super().validate()
+        if not self.csrf_token.validate(self):
+            return False
+        if not self.prenom.validate(self, [DataRequired()]):
+            return False
+        if not self.surname.validate(self, [DataRequired()]):
+            return False
+        if not self.email.validate(self, [DataRequired(), Email()]):
+            return False
+        return True
 
 
 def new_user(name):
