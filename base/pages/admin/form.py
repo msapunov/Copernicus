@@ -230,9 +230,10 @@ class NewUserForm(UserForm):
         return True
 
 
-def new_user(name):
+def new_user(register):
     form = NewUserForm()
-    form.name = name
+    form.name = register.project_id()
+    form.pending_id = register.id
     return form
 
 
