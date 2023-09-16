@@ -29,7 +29,7 @@ from base.pages.admin.magic import (
     user_reset_pass,
     user_delete,
     registration_user_del,
-    registration_user_new,
+    registration_user_add,
     registration_user_update,
     registration_info_update,
     get_registration_record,
@@ -44,7 +44,7 @@ from base.pages.admin.form import (
     UserEditForm,
     RegistrationEditForm,
     ActivateUserForm,
-    new_user,
+    NewUserForm,
     NewUserEditForm)
 from base.pages.project.magic import process_extension
 from base.utils import form_error_string
