@@ -1,0 +1,49 @@
+<div class="uk-modal fade" tabindex="-1" role="dialog" aria-labelledby="confirm-modal" aria-hidden="true" id="{{form.name}}_edit_responsible">
+  <div class="uk-modal-dialog">
+    <button type="button" class="uk-modal-close uk-close"></button>
+    <div class="uk-modal-header">
+      <h3>Edit responsible for the project {{form.name}}?</h3>
+    </div>
+    <div class="uk-overflow-container">
+      <form method="post" class="uk-panel uk-form edit_responsible_form" id="{{form.name}}_edit_responsible_form">
+        {{ form.csrf_token(id=form.name+"_csrf_edit_responsible") }}
+        <div class="uk-form-row">
+          <div class="uk-form-controls">
+            {{ form.prenom(id=form.name+"_name", placeholder="Name (Prenom)", class_="uk-width-1-1 resp_name") }}
+          </div>
+        </div>
+        <div class="uk-form-row">
+          <div class="uk-form-controls">
+            {{ form.surname(id=form.name+"_surname", placeholder="Family name (Nom de famille)", class_="uk-width-1-1 resp_surname") }}
+          </div>
+        </div>
+        <div class="uk-form-row">
+          <div class="uk-form-controls">
+            {{ form.email(id=form.name+"_email", placeholder="E-mail", class_="uk-width-1-1 resp_email") }}
+          </div>
+        </div>
+        <div class="uk-form-row">
+          <div class="uk-form-controls">
+            {{ form.position(id=form.name+"_position", placeholder="Position", class_="uk-width-1-1 resp_position") }}
+          </div>
+        </div>
+        <div class="uk-form-row">
+          <div class="uk-form-controls">
+            {{ form.lab(id=form.name+"_lab", placeholder="Laboratory", class_="uk-width-1-1 resp_lab") }}
+          </div>
+        </div>
+        <div class="uk-form-row">
+          <div class="uk-form-controls">
+            {{ form.phone(id=form.name+"_phone", placeholder="Phone", class_="uk-width-1-1 resp_phone") }}
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="uk-modal-footer">
+      <div class="uk-text-right">
+        <button class="uk-button window_hide" data-modal="{{form.name}}_edit_responsible">Cancel</button>
+        <button class="uk-button uk-button-primary edit_responsible_submit" data-modal="{{form.name}}_edit_responsible" data-form="{{form.name}}_edit_responsible_form" data-url="admin/registration/edit/responsible/{{form.pending_id}}">Submit</button>
+      </div>
+    </div>
+  </div>
+</div>
