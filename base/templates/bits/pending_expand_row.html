@@ -168,10 +168,10 @@
         -->
         {% if status != "VISA SENT" and status != "VISA RECEIVED" %}
         <div class="uk-width-1-1 uk-panel uk-panel-box uk-margin-top">
-            <button class="uk-button uk-width-1-1 uk-margin-small-bottom edit_info" data-modal="{{pending.id}}_edit"><span class="uk-icon-info-circle uk-margin-small-right"></span>Edit information</button>
-            <button class="uk-button uk-width-1-1 uk-margin-small-bottom edit_responsible" data-modal="{{pending.id}}_attach"><span class="uk-icon-user uk-margin-small-right"></span>Edit responsible</button>
-            <button class="uk-button uk-width-1-1 uk-margin-small-bottom edit_users" data-modal="{{pending.id}}_attach"><span class="uk-icon-users uk-margin-small-right"></span>Edit users</button>
-            <button class="uk-button uk-width-1-1 uk-margin-small-bottom edit_new" data-modal="{{pending.id}}_attach"><span class="uk-icon-user-plus uk-margin-small-right"></span>Add user</button>
+            <button class="uk-button uk-width-1-1 uk-margin-small-bottom edit_info" data-modal="{{pending.meso_id}}_edit"><span class="uk-icon-info-circle uk-margin-small-right"></span>Edit information</button>
+            <button class="uk-button uk-width-1-1 uk-margin-small-bottom edit_responsible" data-modal="{{pending.meso_id}}_edit_responsible"><span class="uk-icon-user uk-margin-small-right"></span>Edit responsible</button>
+            <button class="uk-button uk-width-1-1 uk-margin-small-bottom edit_users" data-modal="{{pending.meso_id}}_attach"><span class="uk-icon-users uk-margin-small-right"></span>Edit users</button>
+            <button class="uk-button uk-width-1-1 uk-margin-small-bottom edit_new" data-modal="{{pending.meso_id}}_attach"><span class="uk-icon-user-plus uk-margin-small-right"></span>Add user</button>
         </div>
         {% endif %}
         {% if "admin" in g.permissions %}
