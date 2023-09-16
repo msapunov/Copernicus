@@ -212,9 +212,11 @@ def admin_user_lastlog():
 @bp.route("/admin/registration/add/user/<int:rid>", methods=["POST"])
 @login_required
 @grant_access("admin")
-def admin_registration_details_get(rid):
-    registration = get_registration_record(rid)
-    return jsonify(data=registration.to_dict())
+def admin_registration_add_user(rid):
+    form = NewUserForm()
+    if not form.validate_on_submit():
+        raise ValueError(form.errors)
+    return registration_user_add(rid, form)
 
 
 @bp.route("/admin/registration/details/set/<int:rid>", methods=["POST"])
