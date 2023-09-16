@@ -144,6 +144,8 @@ def render_pending(rec):
     if status not in ["VISA SENT", "VISA RECEIVED"]:
         edit = edit_pending(rec)
         top += render_template("modals/admin_edit_pending.html", form=edit)
+        resp = edit_responsible(rec)
+        top += render_template("modals/admin_edit_responsible.html", form=resp)
         nu = new_user(rec)
         top += render_template("modals/admin_add_user.html", form=nu)
     reset = render_template("modals/admin_reset_pending.html", rec=rec)
