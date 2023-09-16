@@ -209,7 +209,7 @@ def admin_user_lastlog():
     return "Lastlog user info is updated", 200
 
 
-@bp.route("/admin/registration/details/get/<int:rid>", methods=["POST"])
+@bp.route("/admin/registration/add/user/<int:rid>", methods=["POST"])
 @login_required
 @grant_access("admin")
 def admin_registration_details_get(rid):
