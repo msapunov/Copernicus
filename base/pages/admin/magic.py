@@ -400,24 +400,23 @@ def registration_user_del(pid, uid):
     return rec.to_dict()
 
 
-def registration_user_new(form):
-    pid = form.pid.data
-    rec = get_registration_record(pid)
-    name = form.user_first_name.data.strip()
-    surname = form.user_last_name.data.strip()
-    email = form.user_email.data.strip()
-    if getattr(form, "user_login", None):
-        login = form.user_login.data.strip()
+def registration_user_add(rid, form):
+    rec = get_registration_record(rid)
+    name = form.prenom.data.strip()
+    surname = form.surname.data.strip()
+    email = form.email.data.strip()
+    if getattr(form, "login", None):
+        login = form.login.data.strip()
     else:
         login = ""
-    new_user = "First Name: %s; Last Name: %s; E-mail: %s; Login: %s" % \
-               (name, surname, email, login)
+    user = "First Name: %s; Last Name: %s; E-mail: %s; Login: %s" % \
+           (name, surname, email, login)
     users = rec.users.split("\n")
-    users.append(new_user)
+    users.append(user)
     rec.users = "\n".join(users)
     db.session.commit()
-    RequestLog(rec).user_add(new_user)
-    return rec.to_dict()
+    RequestLog(rec).user_add(user)
+    return render_pending(rec)
 
 
 def registration_user_update(form):
