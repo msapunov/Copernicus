@@ -219,7 +219,17 @@ def admin_registration_add_user(rid):
     return registration_user_add(rid, form)
 
 
-@bp.route("/admin/registration/details/set/<int:rid>", methods=["POST"])
+@bp.route("/admin/registration/edit/responsible/<int:rid>", methods=["POST"])
+@login_required
+@grant_access("admin")
+def admin_registration_edit_responsible(rid):
+    form = EditResponsibleForm()
+    if not form.validate_on_submit():
+        raise ValueError(form.errors)
+    return registration_responsible_edit(rid, form)
+
+
+@bp.route("/admin/registration/edit/record/<int:rid>", methods=["POST"])
 @login_required
 @grant_access("admin")
 def admin_registration_details_set(rid):
