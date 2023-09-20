@@ -14,7 +14,7 @@ __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
 
 
-class Accounting(Base):
+class Accounting(db.Model):
   __tablename__ = "accounting"
   id = db.Column(db.Integer, primary_key=True)
   resources_id = db.Column(db.Integer, db.ForeignKey("project_resources.id"))
