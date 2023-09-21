@@ -153,7 +153,7 @@
             return;
         }
         var state = $.trim( $(btn).data("state") );
-        table.columns(11).search(state).draw();
+        table.columns(12).search(state).draw();
     };
     window.stat.percentage = function percentage(percent, total) {
         if( percent == 0 && total == 0){
@@ -348,6 +348,15 @@
                     }
                 }
             },{
+                data: "accounted",
+                render: function ( data, type, row ) {
+                    if(! data){
+                        return "-";
+                    }else{
+                        return new Intl.NumberFormat().format(data);
+                    }
+                }
+            },{
                 data: "resources.cpu",
                 render: $.fn.dataTable.render.number( '.', '')
             },{
@@ -394,15 +403,6 @@
             },{
                 data: "numerical_methods",
                 visible: false
-            },{
-                data: "accounted",
-                render: function ( data, type, row ) {
-                    if(! data){
-                        return "-";
-                    }else{
-                        return new Intl.NumberFormat().format(data);
-                    }
-                }
             }],
             order: [[1, 'asc']]
         });
