@@ -124,10 +124,9 @@ class Project(db.Model):
         return '<Project {}>'.format(self.get_name())
 
     def account(self):
-        query = Accounting.query.filter_by(resources=self.resources)
-        query += query.filter_by(user=None)
-        query += query.with_entities(func.sum(Accounting.cpu))
-        return query.scalar()
+        return Accounting.query.filter_by(
+            resources=self.resources, user=None
+        ).with_entities(func.sum(Accounting.cpu)).scalar()
 
     def get_responsible(self):
         return self.responsible
