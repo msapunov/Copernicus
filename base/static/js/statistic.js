@@ -348,6 +348,15 @@
                     }
                 }
             },{
+                data: "accounted",
+                render: function ( data, type, row ) {
+                    if(! data){
+                        return "-";
+                    }else{
+                        return new Intl.NumberFormat().format(data);
+                    }
+                }
+            },{
                 data: "resources.cpu",
                 render: $.fn.dataTable.render.number( '.', '')
             },{
