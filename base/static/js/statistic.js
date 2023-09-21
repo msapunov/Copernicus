@@ -276,7 +276,7 @@
                 var conso = api.column( 5, { page: 'current'} ).data().reduce( function ( a, b ) {
                     return a + b;
                 }, 0 )
-                var total = api.column( 6, { page: 'current'} ).data().reduce( function ( a, b ) {
+                var total = api.column( 7, { page: 'current'} ).data().reduce( function ( a, b ) {
                     return a + b;
                 }, 0 )
                 var dp = window.stat.percentage(conso, total) + "%";
