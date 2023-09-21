@@ -7,6 +7,7 @@ from hashlib import md5
 from logging import error
 from pathlib import PurePath
 from werkzeug.security import generate_password_hash, check_password_hash
+from sqlalchemy import func
 from re import split as re_split
 
 
@@ -15,18 +16,18 @@ __copyright__ = "Aix Marseille University"
 
 
 class Accounting(db.Model):
-  __tablename__ = "accounting"
-  id = db.Column(db.Integer, primary_key=True)
-  resources_id = db.Column(db.Integer, db.ForeignKey("project_resources.id"))
-  resources = db.relationship("ProjectResources", foreign_keys=resources_id)
-  project_id = db.Column(db.Integer, db.ForeignKey("projects.id"))
-  project = db.relationship("Project", foreign_keys=project_id)
-  user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
-  user = db.relationship("User", foreign_keys=user_id)
-  date = db.Column(db.DateTime(True))
-  cpu = db.Column(db.Integer, db.CheckConstraint("cpu>=0"))
-  def __repr__(self):
-    return '<Account ID {}>'.format(self.id)
+    __tablename__ = "accounting"
+    id = db.Column(db.Integer, primary_key=True)
+    resources_id = db.Column(db.Integer, db.ForeignKey("project_resources.id"))
+    resources = db.relationship("ProjectResources", foreign_keys=resources_id)
+    project_id = db.Column(db.Integer, db.ForeignKey("projects.id"))
+    project = db.relationship("Project", foreign_keys=project_id)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+    user = db.relationship("User", foreign_keys=user_id)
+    date = db.Column(db.DateTime(True))
+    cpu = db.Column(db.Integer, db.CheckConstraint("cpu>=0"))
+    def __repr__(self):
+        return '<Account ID {}>'.format(self.id)
 
 
 class ACLDB(db.Model):
@@ -120,6 +121,12 @@ class Project(db.Model):
 
     def __repr__(self):
         return '<Project {}>'.format(self.get_name())
+
+    def account(self):
+        query = Accounting.query.filter_by(resources=self.resources)
+        query += query.filter_by(users=None)
+        query += query.with_entities(func.sum(Accounting.cpu))
+        return query.scalar()
 
     def get_responsible(self):
         return self.responsible
@@ -222,6 +229,7 @@ class Project(db.Model):
             "allocation_start": start,
             "allocation_end": end,
             "ref": ref,
+            "accounted": self.account(),
             "consumed": self.resources.consumption,
             "consumed_use": use,
             "consumed_usage": usage
