@@ -19,13 +19,14 @@ class Accounting(db.Model):
     __tablename__ = "accounting"
     id = db.Column(db.Integer, primary_key=True)
     resources_id = db.Column(db.Integer, db.ForeignKey("project_resources.id"))
-    resources = db.relationship("ProjectResources", foreign_keys=resources_id)
+    resources = db.relationship("Resources", foreign_keys=resources_id)
     project_id = db.Column(db.Integer, db.ForeignKey("projects.id"))
     project = db.relationship("Project", foreign_keys=project_id)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
     user = db.relationship("User", foreign_keys=user_id)
     date = db.Column(db.DateTime(True))
     cpu = db.Column(db.Integer, db.CheckConstraint("cpu>=0"))
+
     def __repr__(self):
         return '<Account ID {}>'.format(self.id)
 
