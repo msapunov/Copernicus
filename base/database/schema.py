@@ -125,7 +125,7 @@ class Project(db.Model):
 
     def account(self):
         query = Accounting.query.filter_by(resources=self.resources)
-        query += query.filter_by(users=None)
+        query += query.filter_by(user=None)
         query += query.with_entities(func.sum(Accounting.cpu))
         return query.scalar()
 
