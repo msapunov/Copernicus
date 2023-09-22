@@ -21,8 +21,8 @@
                         <li><div>{{ form.cpu(id=form.meso+"_cpu", placeholder="CPU hours", value=form.cpu_value, class_="uk-width-1-1") }}</div></li>
                         <li><div>{{ form.ttl(id=form.meso+"_ttl", placeholder="Date", value="01/03/2024", class_="uk-width-1-1") }}</div></li>
                     </ul>
-                    <ul class="uk-form-row uk-grid uk-grid-width-1-{{ form.types.uk_length }} uk-grid-small">
-                        {% for option in form.types %}
+                    <ul class="uk-form-row uk-grid uk-grid-width-1-{{ form.type.uk_length }} uk-grid-small">
+                        {% for option in form.type %}
                             <li><div>
                                 <input {%if form.type_value==option.data%}checked="checked"{%endif%} type="radio" id="{{ option.id }}" name="{{ option.name }}" value="{{ option.data }}">
                                 <label for="{{ option.id }}">{{ option.label }}</label>
