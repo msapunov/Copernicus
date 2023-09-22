@@ -23,6 +23,23 @@ __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
 
 
+def process_register_user(user_as_string):
+    name, surname, email, login = None, None, None, None
+    parts = user_as_string.split(";")
+    for i in parts:
+        if "First Name:" in i:
+            name = i.replace("First Name:", "").strip()
+        elif "Last Name:" in i:
+            surname = i.replace("Last Name:", "").strip()
+        elif "E-mail:" in i:
+            email = i.replace("E-mail:", "").strip()
+        elif "Login:" in i:
+            login = i.replace("Login:", "").strip()
+        else:
+            continue
+    return name, surname, email, login
+
+
 def ssh_public(key_file):
     argz = ["ssh-keygen", "-l", "-f", key_file]
     cmd = " ".join(argz)
