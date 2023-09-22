@@ -248,12 +248,11 @@ def admin_registration_edit_user(rid):
 @bp.route("/admin/registration/edit/record/<int:rid>", methods=["POST"])
 @login_required
 @grant_access("admin")
-def admin_registration_details_set(rid):
+def admin_registration_edit_record(rid):
     form = RegistrationEditForm()
     if not form.validate_on_submit():
         raise ValueError(form.errors)
-    result, msg = registration_info_update(form)
-    return jsonify(data=result, message=msg)
+    return registration_record_edit(rid, form)
 
 
 @bp.route("/admin/registration/approve/<int:pid>", methods=["POST"])
