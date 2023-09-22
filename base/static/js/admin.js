@@ -547,9 +547,10 @@
                 className: 'copyButton',
                 buttons: [ 'refresh' ]
             },
-            "paging": false,
-            "searching": false,
-            "columns": [{
+            rowId: 'id',
+            paging: false,
+            searching: false,
+            columns: [{
                 className: 'details-control',
                 orderable: false,
                 data: null,
