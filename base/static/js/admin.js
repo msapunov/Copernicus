@@ -523,35 +523,6 @@
         let tableHeight = windowHeight - headerHeight - footerHeight - 20; // Adjust the value as needed
         return tableHeight + 'px';
     };
-    window.render.expand_processing = function(tr, tdi, show){
-        if(show === true){
-            tr.removeClass('shown');
-            tdi.first().removeClass('uk-icon-minus');
-            tdi.first().removeClass('uk-icon-spin');
-            tdi.first().addClass('uk-icon-plus');
-        }else if(show === false){
-            tr.addClass('shown');
-            tdi.first().removeClass('uk-icon-plus');
-            tdi.first().removeClass('uk-icon-spin');
-            tdi.first().addClass('uk-icon-minus');
-        }else if(show === undefined){
-            tdi.first().removeClass('uk-icon-minus');
-            tdi.first().removeClass('uk-icon-plus');
-            tdi.first().addClass('uk-icon-spin');
-        }
-    };
-    window.render.expand = function format(d, row, tr, tdi){
-            // `d` is the original data object for the row
-            let id = d.id;
-            let url = "{0}/{1}".f(window.admin.url.expand_pending, id);
-            window.render.expand_processing(tr, tdi);
-            ajax(url).done(function(data){
-                row.child(data).show();
-                window.render.expand_processing(tr, tdi, false);
-            }).fail(function(request){
-                window.render.expand_processing(tr, tdi, true);
-            });
-    };
 
     $(document).on("ready", function(){
         $.fn.dataTable.ext.buttons.refresh = {
