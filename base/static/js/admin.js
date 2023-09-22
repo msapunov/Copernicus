@@ -767,3 +767,6 @@
 
     $(document).on("click", ".window_hide", trigger_modal);
 })(window, document, jQuery);
+$(window).resize(function () {
+    $("table#pending_projects").DataTable().show();
+});
