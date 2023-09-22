@@ -111,18 +111,6 @@ def action_pending(register):
     return form
 
 
-class EditProjectForm(FlaskForm):
-    title = StringField("Title", validators=[DataRequired()])
-    cpu = IntegerField("CPU", validators=[DataRequired()])
-    type = StringField("Type", validators=[DataRequired()])
-    responsible_first_name = StringField("Responsible name", validators=[DataRequired()])
-    responsible_last_name = StringField("Responsible surname", validators=[DataRequired()])
-    responsible_email = EmailField("Responsible e-mail", validators=[DataRequired(), Email()])
-    responsible_position = StringField("Responsible position", validators=[DataRequired()])
-    responsible_lab = StringField("Responsible lab", validators=[DataRequired()])
-    responsible_phone = StringField("Responsible phone", validators=[DataRequired()])
-
-
 class AddUserForm(FlaskForm):
     prenom = StringField("Name", validators=[DataRequired()])
     surname = StringField("Surname", validators=[DataRequired()])
