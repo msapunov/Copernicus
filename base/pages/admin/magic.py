@@ -464,32 +464,28 @@ def registration_user_update(rid, forms):
     return render_pending(rec)
 
 
-def registration_info_update(form):
-    props = ["title", "cpu", "type", "responsible_first_name",
-             "responsible_last_name", "responsible_email",
-             "responsible_position", "responsible_lab", "responsible_phone"]
-    rid = form.rid.data
+def registration_responsible_edit(rid, form):
     rec = get_registration_record(rid)
+    props = {"responsible_first_name": "prenom",
+             "responsible_last_name": "surname",
+             "responsible_email": "email",
+             "responsible_position": "position",
+             "responsible_lab": "lab",
+             "responsible_phone": "phone"}
     msg = ["Updated"]
-    for name in props:
-        if name not in form:
-            continue
-        old = getattr(rec, name)
-        item = getattr(form, name)
-        new = item.data
-        if isinstance(new, str):
-            new = new.strip()
-            if name != "title":
-                new = new.lower()
+    for key, value in props.items():
+        old = getattr(rec, key)
+        field = getattr(form, value)
+        new = field.data.strip()
         if old != new:
-            setattr(rec, name, new)
-            msg.append("%s: %s -> %s" % (item.label.text, old, new))
+            setattr(rec, key, new)
+            msg.append("%s: %s -> %s" % (field.label.text, old, new))
     if db.session.dirty:
         db.session.commit()
         msg = "\n".join(msg)
         RequestLog(rec).request_change(msg)
-        return rec.to_dict(), msg
-    return rec.to_dict(), "No modifications has been detected"
+        return render_pending(rec)
+    raise  ValueError("No modifications has been detected!")
 
 
 def user_info_update_new(form):
