@@ -742,8 +742,14 @@
     $(document).on("click", ".history_info", window.render.new_project);
     $(document).on("click", ".history_info", window.render.tasks_sel_update);
 
+    $(document).on("click", ".edit_info", trigger_modal);
+    $(document).on("click", ".edit_info_submit", window.render.submit);
+    $(document).on("click", ".edit_responsible", trigger_modal);
+    $(document).on("click", ".edit_responsible_submit", window.render.submit);
+    $(document).on("click", ".edit_users", trigger_modal);
+    $(document).on("click", ".edit_users_submit", window.render.submit);
     $(document).on("click", ".edit_new", trigger_modal);
-    $(document).on("click", ".attach_submit", submit);
+    $(document).on("click", ".attach_submit", window.render.submit);
 
     $(document).on("click", ".name_swap", window.render.name_swap);
 
