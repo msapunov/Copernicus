@@ -12,6 +12,8 @@ from base.pages.admin.form import (action_pending,
                                    visa_pending,
                                    create_pending,
                                    contact_pending,
+                                   edit_responsible,
+                                   edit_user,
                                    new_user,
                                    contact_user)
 from base.pages.admin.form import activate_user
