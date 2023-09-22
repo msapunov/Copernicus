@@ -39,53 +39,6 @@
                         {{ form.responsible_phone(id=form.meso+"_title", value=form.resp_phone_value, class_="uk-width-1-1") }}
                     </div>
                 </li>
-                <li class="uk-form-row uk-panel">
-                    <div class="uk-form-row uk-panel uk-panel-box uk-form-horizontal" data-uk-alert>
-                        <div class="uk-form-row">
-                            <label class="uk-form-label" for="add_name">Name:</label>
-                            <div class="uk-form-controls">
-                                <input class="uk-width-1-1" id="add_name" required="" type="text" value="">
-                            </div>
-                        </div>
-                        <div class="uk-form-row">
-                            <label class="uk-form-label" for="add_surname">Surname:</label>
-                            <div class="uk-form-controls">
-                                <input class="uk-width-1-1" id="add_surname" required="" type="text" value="">
-                            </div>
-                        </div>
-                        <div class="uk-form-row">
-                            <label class="uk-form-label" for="add_email">Email:</label>
-                            <div class="uk-form-controls">
-                                <input class="uk-width-1-1" id="add_email" required="" type="text" value="">
-                            </div>
-                        </div>
-                        <button class="uk-button uk-button-success uk-float-right uk-margin-top add_user" type="button" data-project="{{form.id}}"><span class="uk-icon-user-plus uk-margin-small-right"></span>Add user</button>
-                    </div>
-                    {% for i in form.users | sort(attribute='full', reverse=True) %}
-                        <div class="uk-form-row uk-panel uk-panel-box uk-form-horizontal" data-uk-alert>
-                            <a href="" class="uk-panel-badge uk-alert-close uk-close"></a>
-                            <div class="uk-margin-top"></div>
-                            <div class="uk-form-row">
-                                <label class="uk-form-label" for="{{ i.uid }}_name">Name:</label>
-                                <div class="uk-form-controls">
-                                    <input class="uk-width-1-1" id="{{ i.uid }}_name" name="{{ i.uid }}_name" required="" type="text" value="{{ i.name }}">
-                                </div>
-                            </div>
-                            <div class="uk-form-row">
-                                <label class="uk-form-label" for="{{ i.uid }}_surname">Surname:</label>
-                                <div class="uk-form-controls">
-                                    <input class="uk-width-1-1" id="{{ i.uid }}_surname" name="{{ i.uid }}_surname" required="" type="text" value="{{ i.surname }}">
-                                </div>
-                            </div>
-                            <div class="uk-form-row">
-                                <label class="uk-form-label" for="{{ i.uid }}_email">Email:</label>
-                                <div class="uk-form-controls">
-                                    <input class="uk-width-1-1" id="{{ i.uid }}_email" name="{{ i.uid }}_email" required="" type="text" value="{{ i.email }}">
-                                </div>
-                            </div>
-                        </div>
-                    {% endfor %}
-                </li>
                 <li class="uk-panel">
                     <div class="uk-form-row">
                     <div class="uk-form-controls">
