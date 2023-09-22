@@ -151,8 +151,8 @@ class RegistrationEditForm(FlaskForm):
     def __init__(self, *args, **kwargs):
         super(RegistrationEditForm, self).__init__(*args, **kwargs)
         types = g.project_config.keys()
-        self.types.choices = [(project, project.upper()) for project in types]
-        self.types.uk_length = len(self.types.choices)
+        self.type.choices = [(project, project.upper()) for project in types]
+        self.type.uk_length = len(self.type.choices)
 
 
 def edit_pending(register):
