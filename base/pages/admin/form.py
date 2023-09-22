@@ -128,7 +128,6 @@ class SelectMultipleProjects(SelectMultipleField):
 
 
 class RegistrationEditForm(FlaskForm):
-    rid = HiddenField()
     cpu = IntegerField("CPU", validators=[NumberRange(
         min=0, message="CPU value must be 0 or any other positive number")])
     ttl = StringField(render_kw={"data-uk-datepicker": "{format:'DD/MM/YYYY'}"})
@@ -175,12 +174,6 @@ def edit_pending(register):
     form.title_value = register.title
     form.cpu_value = register.cpu
     form.type_value = register.type
-    form.resp_first_value = register.responsible_first_name
-    form.resp_last_value = register.responsible_last_name
-    form.resp_mail_value = register.responsible_email
-    form.resp_pos_value = register.responsible_position
-    form.resp_lab_value = register.responsible_lab
-    form.resp_phone_value = register.responsible_phone
     form.description.default = register.description
     form.resources.default = register.computing_resources
     form.management.default = register.project_management
@@ -191,15 +184,6 @@ def edit_pending(register):
     form.article_3.default = register.article_3
     form.article_4.default = register.article_4
     form.article_5.default = register.article_5
-    users = register.users.split("\n")
-    form.users = []
-    for user in users:
-        if not user:
-            continue
-        new_user = process_new_user(user)
-        if not new_user:
-            continue
-        form.users.append(new_user)
     form.process(formdata=request.form)
     return form
 
