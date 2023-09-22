@@ -445,27 +445,23 @@ def registration_user_add(rid, form):
     return render_pending(rec)
 
 
-def registration_user_update(form):
-    pid = form.pid.data
-    uid = form.uid.data
-    rec = get_registration_record(pid)
-    name = form.user_first_name.data
-    surname = form.user_last_name.data
-    email = form.user_email.data
-    login = form.user_login.data if getattr(form, "user_login", None) else ""
-    users = rec.users.split("\n")
-    for user in users:
-        tmp = md5(user.encode()).hexdigest()
-        if tmp != uid:
-            continue
-        users.remove(user)
-        new_user = 'First Name: %s; Last Name: %s; E-mail: %s; Login: %s' % \
-                   (name, surname, email, login)
-        users.append(new_user)
-        RequestLog(rec).user_change(new_user)
-    rec.users = "\n".join(users)
-    db.session.commit()
-    return rec.to_dict()
+def registration_user_update(rid, forms):
+    rec = get_registration_record(rid)
+    users = []
+    for form in forms:
+        name = form.prenom.data
+        surname = form.surname.data
+        email = form.email.data
+        login = form.login.data if getattr(form, "login", None) else ""
+        user = "First Name: %s; Last Name: %s; E-mail: %s; Login: %s" % \
+               (name, surname, email, login)
+        users.append(user)
+    new = "\n".join(users)
+    if rec.users != new:
+        RequestLog(rec).user_change(new)  # TODO nicer messages with changes
+        rec.users = new
+        db.session.commit()
+    return render_pending(rec)
 
 
 def registration_info_update(form):
