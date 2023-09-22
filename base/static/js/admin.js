@@ -639,22 +639,6 @@
                 });
             }
         });
-        /*
-        pending_table.on("draw", function(){
-            if (pending_child) {
-                pending_child.every(function ( rowIdx, tableLoop, rowLoop ) {
-                    let data = this.data()
-                    if(data === undefined){
-                        return;
-                    }
-                    var tr = $(this.node());
-                    let tdi = tr.find("span.btn");
-                    window.render.expand(data, this, tr, tdi);
-                });
-                // Reset childRows so loop is not executed each draw
-                pending_child = null;
-            }
-        });
         $("#overview").DataTable({
             "ajax": {"type": "POST", "url": window.admin.url.partition},
             dom: 'tiB',
