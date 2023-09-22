@@ -133,32 +133,20 @@ class RegistrationEditForm(FlaskForm):
     ttl = StringField(render_kw={"data-uk-datepicker": "{format:'DD/MM/YYYY'}"})
     title = StringField("Title", validators=[DataRequired(
         message="Project title is empty")])
-    types = RadioField(choices=[], validators=[DataRequired(
+    type = RadioField(choices=[], validators=[DataRequired(
         message="Project type is empty")])
-    responsible_first_name = StringField("Responsible name", validators=[DataRequired()])
-    responsible_last_name = StringField("Responsible surname", validators=[DataRequired()])
-    responsible_email = EmailField("Responsible e-mail", validators=[DataRequired(), Email()])
-    responsible_position = StringField("Responsible position", validators=[DataRequired()])
-    responsible_lab = StringField("Responsible lab", validators=[DataRequired()])
-    responsible_phone = StringField("Responsible phone", validators=[DataRequired()])
-    description = TextAreaField()
-    scientific = TextAreaField("Scientific fields")
-    genci = TextAreaField("Genci")
-    methods = TextAreaField()
-    resources = TextAreaField()
-    management = TextAreaField()
-    motivation = TextAreaField()
-    article_1 = StringField()
-    article_2 = StringField()
-    article_3 = StringField()
-    article_4 = StringField()
-    article_5 = StringField()
-
-    def pre_validate(self, form):
-        users = []
-        for i in form.project.data:
-            if i not in projects:
-                raise ValueError("Project %s doesn't register in the DB" % i)
+    description = TextAreaField("Description")
+    scientific_fields = StringField("Scientific fields")
+    genci_committee = SelectField("Genci", validators=[])
+    numerical_methods = TextAreaField("Methods")
+    computing_resources = TextAreaField("Resources")
+    project_management = TextAreaField("Management")
+    project_motivation = TextAreaField("Motivation")
+    article_1 = StringField("Article 1")
+    article_2 = StringField("Article 2")
+    article_3 = StringField("Article 3")
+    article_4 = StringField("Article 4")
+    article_5 = StringField("Article 5")
 
     def __init__(self, *args, **kwargs):
         super(RegistrationEditForm, self).__init__(*args, **kwargs)
