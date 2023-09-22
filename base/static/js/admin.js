@@ -25,12 +25,6 @@
         tasks_update: "admin/tasks/update",
         expand_pending: "admin/bits/pending",
         user: "admin/user/info",
-        user_details: "admin/user/details/get",
-        user_create: "admin/user/create",
-        user_edit: "admin/user/details/set",
-        user_delete: "admin/user/delete",
-        user_purge: "admin/user/purge",
-        user_p_reset: "admin/user/password",
         visa: "admin/registration/visa",
         visa_resend: "admin/registration/visa/resend"
     };
