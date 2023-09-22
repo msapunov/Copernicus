@@ -178,6 +178,28 @@ def edit_pending(register):
     return form
 
 
+class EditResponsibleForm(UserForm):
+    position = StringField("Position", validators=[DataRequired(
+        message="Login field is empty")])
+    lab = StringField("Lab", validators=[DataRequired(
+        message="Login field is empty")])
+    phone = StringField("Phone", validators=[DataRequired(
+        message="Login field is empty")])
+
+
+def edit_responsible(register):
+    form = EditResponsibleForm()
+    form.prenom.data = register.responsible_first_name
+    form.surname.data = register.responsible_last_name
+    form.email.data = register.responsible_email
+    form.position.data = register.responsible_position
+    form.lab.data = register.responsible_lab
+    form.phone.data = register.responsible_phone
+    form.name = register.project_id()
+    form.pending_id = register.id
+    return form
+
+
 class NewUserForm(UserForm):
     login = StringField("Login")
 
