@@ -31,8 +31,8 @@ from base.pages.admin.magic import (
     registration_user_del,
     registration_user_add,
     registration_user_update,
-    registration_info_update,
-    get_registration_record,
+    registration_responsible_edit,
+    registration_record_edit,
     space_info,
     reg_accept)
 from base.functions import slurm_nodes_status, show_configuration, ssh_wrapper
@@ -44,6 +44,7 @@ from base.pages.admin.form import (
     UserEditForm,
     RegistrationEditForm,
     ActivateUserForm,
+    EditResponsibleForm,
     NewUserForm,
     NewUserEditForm)
 from base.pages.project.magic import process_extension
