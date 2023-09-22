@@ -15,11 +15,11 @@
             <ul class="uk-switcher" id="{{form.meso}}-pending-info">
                 <li>
                     <div class="uk-form-row">
-                        {{ form.title(id=form.meso+"_title", value=form.title_value, class_="uk-width-1-1") }}
+                        {{ form.title(id=form.meso+"_title", placeholder="Title", value=form.title_value, class_="uk-width-1-1") }}
                     </div>
                     <ul class="uk-form-row uk-grid uk-grid-width-1-2 uk-grid-small">
-                        <li><div>{{ form.cpu(id=form.meso+"_cpu", value=form.cpu_value, class_="uk-width-1-1") }}</div></li>
-                        <li><div>{{ form.ttl(id=form.meso+"_ttl", value="01/03/2024", class_="uk-width-1-1") }}</div></li>
+                        <li><div>{{ form.cpu(id=form.meso+"_cpu", placeholder="CPU hours", value=form.cpu_value, class_="uk-width-1-1") }}</div></li>
+                        <li><div>{{ form.ttl(id=form.meso+"_ttl", placeholder="Date", value="01/03/2024", class_="uk-width-1-1") }}</div></li>
                     </ul>
                     <ul class="uk-form-row uk-grid uk-grid-width-1-{{ form.types.uk_length }} uk-grid-small">
                         {% for option in form.types %}
