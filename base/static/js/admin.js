@@ -618,6 +618,28 @@
                 width:"20px"
             }]
         });
+        pending_table.on('click', 'td.details-control', function () {
+            let tr = $(this).closest('tr');
+            let tdi = tr.find("span.btn");
+            let row = pending_table.row(tr);
+            let id = row.id();
+            if (row.child.isShown()) {
+                $('div.slider', row.child()).slideUp(function () {
+                    row.child.hide();
+                    tdi.removeClass('uk-icon-minus');
+                    tdi.addClass('uk-icon-plus');
+                });
+            } else {
+                let url = "{0}/{1}".f(window.admin.url.expand_pending, id);
+                ajax(url).done(function (data) {
+                    row.child(data, 'no-padding').show();
+                    tdi.addClass('uk-icon-minus');
+                    tdi.removeClass('uk-icon-plus');
+                    $('div.slider', row.child()).slideDown();
+                });
+            }
+        });
+        /*
         pending_table.on("draw", function(){
             if (pending_child) {
                 pending_child.every(function ( rowIdx, tableLoop, rowLoop ) {
