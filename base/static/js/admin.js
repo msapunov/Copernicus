@@ -516,20 +516,12 @@
             }
         });
     };
-    window.render.user_purge=function(){
-        var id = $.trim( $(this).data("id") );
-        var login = $.trim( $(this).data("login") );
-        var msg1 = "<p>Delete user {0} from the data base? Are you sure?".f(login);
-        var msg2 = "<p><input type='checkbox' id='purge_chk'> Delete user account and user files too?";
-        var msg = msg1 + msg2;
-        UIkit.modal.confirm(msg, function(){
-            if($("#purge_chk").prop("checked") === true){
-                var url = window.admin.url.user_purge;
-            }else{
-                var url = window.admin.url.user_delete;
-            }
-            window.render.destroy(url, id);
-        });
+    window.render.recalculate=function() {
+        let windowHeight = $(window).height();
+        let headerHeight = $('header').outerHeight(); // Adjust as needed
+        let footerHeight = $('footer').outerHeight(); // Adjust as needed
+        let tableHeight = windowHeight - headerHeight - footerHeight - 20; // Adjust the value as needed
+        return tableHeight + 'px';
     };
     window.render.expand_processing = function(tr, tdi, show){
         if(show === true){
