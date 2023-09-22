@@ -163,10 +163,12 @@ def edit_pending(register):
     form.cpu_value = register.cpu
     form.type_value = register.type
     form.description.default = register.description
-    form.resources.default = register.computing_resources
-    form.management.default = register.project_management
-    form.motivation.default = register.project_motivation
-    form.methods.default = register.numerical_methods
+    form.computing_resources.default = register.computing_resources
+    form.project_management.default = register.project_management
+    form.project_motivation.default = register.project_motivation
+    form.numerical_methods.default = register.numerical_methods
+    form.scientific_fields.default = register.scientific_fields
+    form.genci_committee.default = register.genci_committee.lower()
     form.article_1.default = register.article_1
     form.article_2.default = register.article_2
     form.article_3.default = register.article_3
