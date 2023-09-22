@@ -55,6 +55,20 @@
             }
         });
     };
+    window.render.submit = function (){
+        let id = $.trim( $(this).data("row") );
+        let x = submit.call(this);
+        x.done(function(data){
+            let table = $("table#pending_projects").DataTable();
+            let row = $("table#pending_projects").DataTable().row("#" + id);
+            row.child().hide();
+            row.child(data, 'no-padding').show();
+            $('div.slider', row.child(data)).slideDown();
+            //let old = table.row("#" + id).child().height();
+            //table.row("#" + id).child(data).height(old).show();
+
+        });
+    }
     window.sort_by = function(field, reverse, primer){
         var key = primer ?
         function(x) {return primer(x[field])} :
