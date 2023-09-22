@@ -230,6 +230,21 @@ def admin_registration_edit_responsible(rid):
     return registration_responsible_edit(rid, form)
 
 
+@bp.route("/admin/registration/edit/user/<int:rid>", methods=["POST"])
+@login_required
+@grant_access("admin")
+def admin_registration_edit_user(rid):
+    data = request.form.to_dict()
+    indexes = list(set([int(key.split("-")[0]) for key in data.keys()]))
+    forms = []
+    for i in indexes:
+        form = NewUserForm(prefix=str(i))
+        if not form.validate_on_submit():
+            raise ValueError(form.errors)
+        forms.append(form)
+    return registration_user_update(rid, forms)
+
+
 @bp.route("/admin/registration/edit/record/<int:rid>", methods=["POST"])
 @login_required
 @grant_access("admin")
