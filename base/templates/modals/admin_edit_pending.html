@@ -29,14 +29,10 @@
                             </div></li>
                         {% endfor %}
                     </ul>
-                    <div class="uk-form-row uk-panel uk-panel-box uk-panel-box-primary">
-                        <div class="uk-panel-badge uk-badge uk-badge-danger">Admin</div>
-                        {{ form.responsible_first_name(id=form.meso+"_title", value=form.resp_first_value, class_="uk-width-1-1") }}
-                        {{ form.responsible_last_name(id=form.meso+"_title", value=form.resp_last_value, class_="uk-width-1-1") }}
-                        {{ form.responsible_email(id=form.meso+"_title", value=form.resp_mail_value, class_="uk-width-1-1") }}
-                        {{ form.responsible_position(id=form.meso+"_title", value=form.resp_pos_value, class_="uk-width-1-1") }}
-                        {{ form.responsible_lab(id=form.meso+"_title", value=form.resp_lab_value, class_="uk-width-1-1") }}
-                        {{ form.responsible_phone(id=form.meso+"_title", value=form.resp_phone_value, class_="uk-width-1-1") }}
+                    <div class="uk-form-row">
+                        <div class="uk-form-controls">
+                            {{ form.description(id=form.meso+"_description", class_="uk-width-1-1", rows=8) }}
+                        </div>
                     </div>
                 </li>
                 <li class="uk-panel">
