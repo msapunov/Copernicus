@@ -21,8 +21,17 @@
         .uk-table td, .uk-table th {
             border-bottom: 0px !important;
         }
+        td.details-control {
+            cursor: pointer;
+        }
+        div.slider {
+            display: none;
+        }
         .ext_info{
           background-color: #ddd !important;
+        }
+        table.dataTable tbody td.no-padding {
+            padding: 0;
         }
         table.dataTable thead th {
             border-bottom: 0 !important;
@@ -30,6 +39,13 @@
         table.dataTable tfoot th {
             border-top: 0 !important;
         }
+        table.dataTable.no-footer {
+            border-bottom: 0;
+        }
+        div.dt-buttons {
+            float: right;
+        }
+        /*
         button.dt-button {
             margin-right: 0;
             margin-top: 5px;
@@ -38,19 +54,7 @@
             padding-top: 0.2em;
             padding-bottom: 0.2em;
         }
-        table.dataTable.no-footer {
-            border-bottom: 0;
-        }
-        div.dt-buttons {
-            float: right;
-        }
-        td.details-control {
-            text-align:center;
-            cursor: pointer;
-        }
-        tr.shown td.details-control {
-            text-align:center;
-        }
+         */
     </style>
 
 {% endblock %}
