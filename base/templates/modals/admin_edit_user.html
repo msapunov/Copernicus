@@ -1,0 +1,42 @@
+<div class="uk-modal fade" tabindex="-1" role="dialog" aria-labelledby="confirm-modal" aria-hidden="true" id="{{project_id}}_edit_users">
+    <div class="uk-modal-dialog">
+        <button type="button" class="uk-modal-close uk-close"></button>
+        <div class="uk-modal-header">
+            <h3>Edit user of the project {{project_id}}?</h3>
+        </div>
+        <div class="uk-overflow-container">
+            <form action="test" method="post" class="uk-panel uk-form edit_users_form" id="{{name}}_edit_users_form">
+            {% for form in forms | sort(attribute='full') %}
+                <div class="uk-form-row uk-panel uk-panel-box" data-uk-alert>
+                    <ul class="uk-form-row uk-grid uk-grid-width-1-2 uk-grid-small">
+                        <li><div>
+                            {{ form.csrf_token() }}
+                            {{ form.prenom(id=form.full+"_name_edit", placeholder="Name (Prenom)", class_="uk-width-1-1 user_name") }}
+                        </div></li>
+                        <li><div>
+                            {{ form.surname(id=form.full+"_surname_edit", placeholder="Family name (Nom de famille)", class_="uk-width-1-1 user_surname") }}
+                        </div></li>
+                    </ul>
+                    <ul class="uk-form-row uk-grid uk-grid-width-1-2 uk-grid-small">
+                        <li><div>
+                            {{ form.email(id=form.full+"_email_edit", placeholder="E-mail", class_="uk-width-1-1 user_email") }}
+                        </div></li>
+                        <li><div>
+                            {{ form.login(id=form.full+"_login_edit", placeholder="Login", class_="uk-width-1-1 user_login") }}
+                        </div></li>
+                    </ul>
+                    <div class="uk-form-row uk-text-right">
+                        <button class="uk-button uk-button-danger delete_users uk-alert-close">Delete user</button>
+                    </div>
+                </div>
+            {% endfor %}
+            </form>
+        </div>
+        <div class="uk-modal-footer">
+            <div class="uk-text-right">
+                <button class="uk-button window_hide" data-modal="{{project_id}}_edit_users">Cancel</button>
+                <button class="uk-button uk-button-primary edit_users_submit" data-row="{{project_id}}" data-modal="{{project_id}}_edit_users" data-form="{{name}}_edit_users_form" data-url="/admin/registration/edit/user/{{name}}">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
