@@ -4,6 +4,7 @@ from base.functions import consumption
 from base.pages import grant_access
 from base.pages.user import bp
 from base.pages.statistic.magic import (
+    accounting_run,
     consumption_update,
     dump_projects_database,
     project_types)
@@ -40,17 +41,8 @@ def web_projects_xls():
 @bp.route("/statistic/update", methods=["POST"])
 @login_required
 @grant_access("admin", "tech")
-def web_statistic_update_hourly():
-    if request.content_length > 1000000:  # 1000000 - 1 Megabyte
-        return abort(413)
-    raw_data = request.get_data(cache=False, as_text=True)
-    raw_json = raw_data.replace("'", "\"")
-    try:
-        data = loads(raw_json)
-    except JSONDecodeError:
-        "Failed to serialize data to python object: %s" % str(raw_data)
-        return abort(500)
-    consumption_update(data)
+def web_statistic_update():
+    accounting_run()
     return "Statistic updated", 200
 
 
