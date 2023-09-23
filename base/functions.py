@@ -444,37 +444,14 @@ def consumption(name, start, finish):
         start = start.strftime("%Y-%m-%dT%H:%M:%S")
     if isinstance(finish, dt):
         finish = finish.strftime("%Y-%m-%dT%H:%M:%S")
-    output = {"total consumption": 0, "total updated": finish}
     cmd = ["sreport", "cluster", "AccountUtilizationByUser", "-t", "hours"]
     cmd += ["-nP", "format=Account,Login,Used", "Accounts=%s" % name]
     cmd += ["start=%s" % start, "end=%s" % finish]
-    run = " ".join(cmd)
-    data, err = ssh_wrapper(run)
-    if not data:
-        debug("No data received, nothing to return")
-        return output
-    debug("Got raw consumption values for project %s: %s" % (name, data))
-    for item in list(filter(lambda x: "|" in x, data)):
-        login = None
-        if "||" not in item:  # user consumption
-            name, login, conso = item.strip().split("|")
-        else:
-            name, conso = item.strip().split("||")
-        name = name.strip()
-        try:
-            conso = int(conso.strip())
-        except ValueError as err:
-            error("Exception converting '%s' to int: %s" % (conso, err))
-            continue
-        if name not in output:
-            output[name] = {"total updated": finish}
-        if login:
-            output[name][login] = conso
-        else:
-            output["total consumption"] += conso
-            output[name]["total consumption"] = conso
-    debug("Parsed result: %s" % output)
-    return output
+    result, err = ssh_wrapper(" ".join(cmd))
+    if not result:
+        debug("Error getting information from the remote server: %s" % err)
+        return None
+    return slurm_parse(result)
 
 
 def slurm_consumption_raw(name, start, finish):
