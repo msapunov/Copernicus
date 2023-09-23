@@ -58,6 +58,39 @@ def resources_update(projects, force=False, end=dt.now()):
     return projects
 
 
+def process_accounting_data(date, result):
+    """
+    Function which parse incoming dict created after SLURM sreport and create
+    Accounting record for accounting table
+    @param date: DateTime. Argument for Accounting record
+    @param result: Dictionary. Result of sreport parsing
+    @return: DateTime. First argument for function call for further processing
+    """
+    for name, value in result.items():
+        if name == "root":
+            db.session.add(Accounting(date=date,
+                                      cpu=value["total consumption"]))
+            continue
+        project = Project.query.filter_by(name=name).first()
+        if not project or not project.active:
+            continue
+        if date.replace(tzinfo=timezone.utc) < project.resources.created:
+            continue
+        for login, cpu in value.items():
+            if login == "total consumption":
+                db.session.add(Accounting(resources=project.resources,
+                                          project=project, date=date, cpu=cpu))
+            else:
+                user = User.query.filter_by(login=login).first()
+                if user:
+                    db.session.add(Accounting(resources=project.resources,
+                                              project=project, user=user,
+                                              date=date, cpu=cpu))
+    db.session.commit()
+    debug("Finish processing for date: %s" % date)
+    return date
+
+
 def consumption_query(begin=timedelta(days=1), finish=dt.now()):
     """
     Construct sreport command to get consumption on a given interval of time.
