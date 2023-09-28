@@ -80,8 +80,8 @@ def web_statistic_consumption(name):
 def web_statistic_all():
     data = list(map(lambda x: {x.name: x.account()}, Project.query.all()))
     last = (Accounting.query.distinct(Accounting.date)
-            .order_by(Accounting.date.desc()).first()).date.strftime("%Y-%m-%d")
-    return jsonify(data=data, finish=last)
+            .order_by(Accounting.date.desc()).first()).date
+    return jsonify(data=data, finish=last.strftime("%Y-%m-%dT%H:%M"))
 
 
 @bp.route("/statistic/list", methods=["POST"])
