@@ -9,7 +9,7 @@ from base.pages.statistic.magic import (
     dump_projects_database,
     project_types)
 from base.pages.project.magic import set_state
-from base.database.schema import Project
+from base.database.schema import Project, Accounting
 from json import loads, JSONDecodeError
 
 
@@ -77,7 +77,10 @@ def web_statistic_consumption(name):
 @login_required
 @grant_access("admin", "tech")
 def web_statistic_all():
-    return jsonify(data=list(map(lambda x: {x.name: x.account()}, Project.query.all())))
+    data = list(map(lambda x: {x.name: x.account()}, Project.query.all()))
+    last = (Accounting.query.distinct(Accounting.date)
+            .order_by(Accounting.date.desc()).first())
+    return jsonify(data=data, finish=last)
 
 
 @bp.route("/statistic/list", methods=["POST"])
