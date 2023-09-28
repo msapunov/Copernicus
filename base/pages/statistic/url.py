@@ -78,7 +78,7 @@ def web_statistic_consumption(name):
 @login_required
 @grant_access("admin", "tech")
 def web_statistic_all():
-    data = list(map(lambda x: {x.name: x.account()}, Project.query.all()))
+    data = {i.name: i.account() for i in Project.query.all()}
     last = (Accounting.query.distinct(Accounting.date)
             .order_by(Accounting.date.desc()).first()).date
     return jsonify(data=data, finish=last.strftime("%Y-%m-%dT%H:%M"))
