@@ -73,6 +73,13 @@ def web_statistic_consumption(name):
     return jsonify(data=project.to_dict())
 
 
+@bp.route("/statistic/all", methods=["POST"])
+@login_required
+@grant_access("admin", "tech")
+def web_statistic_all():
+    return jsonify(data=list(map(lambda x: {x.name: x.account()}, Project.query.all())))
+
+
 @bp.route("/statistic/list", methods=["POST"])
 @login_required
 @grant_access("admin")
