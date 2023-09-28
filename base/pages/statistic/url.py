@@ -10,6 +10,7 @@ from base.pages.statistic.magic import (
     project_types)
 from base.pages.project.magic import set_state
 from base.database.schema import Project, Accounting
+from datetime import datetime as dt
 from json import loads, JSONDecodeError
 
 
@@ -79,7 +80,7 @@ def web_statistic_consumption(name):
 def web_statistic_all():
     data = list(map(lambda x: {x.name: x.account()}, Project.query.all()))
     last = (Accounting.query.distinct(Accounting.date)
-            .order_by(Accounting.date.desc()).first())
+            .order_by(Accounting.date.desc()).first()).date.strftime("%Y-%m-%d")
     return jsonify(data=data, finish=last)
 
 
