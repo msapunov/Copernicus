@@ -139,26 +139,26 @@
         {% endif %}
 
         {% if status == "NONE" %}
-            <button class="uk-button uk-width-1-1 uk-margin-small-bottom re_approve" data-modal="{{pending.id}}_approve"><span class="uk-icon-wrench uk-margin-small-right"></span>Approve</button>
+            <button class="uk-button uk-width-1-1 uk-margin-small-bottom pending_approve" data-modal="{{pending.id}}_approve"><span class="uk-icon-wrench uk-margin-small-right"></span>Approve</button>
             {% if "admin" not in g.permissions %}
-                <button class="uk-button uk-width-1-1 uk-margin-small-bottom re_ignore uk-margin-top" data-modal="{{pending.id}}_ignore"><span class="uk-icon-thumbs-o-down uk-margin-small-right"></span>Ignore</button>
-                <button class="uk-button uk-width-1-1 uk-margin-small-bottom re_reject uk-button-danger" data-modal="{{pending.id}}_reject"><span class="uk-icon-thumbs-down uk-margin-small-right"></span>Reject</button>
+                <button class="uk-button uk-width-1-1 uk-margin-small-bottom pending_ignore uk-margin-top" data-modal="{{pending.id}}_ignore"><span class="uk-icon-thumbs-o-down uk-margin-small-right"></span>Ignore</button>
+                <button class="uk-button uk-width-1-1 uk-margin-small-bottom pending_reject uk-button-danger" data-modal="{{pending.id}}_reject"><span class="uk-icon-thumbs-down uk-margin-small-right"></span>Reject</button>
             {% endif %}
         {% elif status == "APPROVED" %}
             {% if "admin" in g.permissions %}
-                <button class="uk-button uk-width-1-1 uk-margin-small-bottom re_visa" data-modal="{{pending.id}}_visa"><span class="uk-icon-edit uk-margin-small-right"></span>Send Visa</button>
+                <button class="uk-button uk-width-1-1 uk-margin-small-bottom pending_visa" data-modal="{{pending.id}}_visa"><span class="uk-icon-edit uk-margin-small-right"></span>Send Visa</button>
             {% else %}
                 <div class="uk-form-row uk-alert uk-text-center">
                     <p>Please, wait for arrival of a signed visa!</p>
                 </div>
             {% endif %}
         {% elif status == "VISA SENT" %}
-            <button class="uk-button uk-width-1-1 uk-margin-small-bottom re_received uk-button-primary" data-modal="{{pending.id}}_received"><span class="uk-icon-check uk-margin-small-right"></span>Visa received</button>
-            <button class="uk-button uk-width-1-1 uk-margin-small-bottom re_visa" data-modal="{{pending.id}}_visa"><span class="uk-icon-edit uk-margin-small-right"></span>Re-send Visa</button>
+            <button class="uk-button uk-width-1-1 uk-margin-small-bottom pending_received uk-button-primary" data-modal="{{pending.id}}_received"><span class="uk-icon-check uk-margin-small-right"></span>Visa received</button>
+            <button class="uk-button uk-width-1-1 uk-margin-small-bottom pending_visa" data-modal="{{pending.id}}_visa"><span class="uk-icon-edit uk-margin-small-right"></span>Re-send Visa</button>
         {% elif status == "VISA RECEIVED" or status == "VISA SKIPPED" %}
-            <button class="uk-button uk-width-1-1 uk-margin-small-bottom re_create uk-button-primary" data-modal="{{pending.id}}_create"><span class="uk-icon-cogs uk-margin-small-right"></span>Create Project!</button>
+            <button class="uk-button uk-width-1-1 uk-margin-small-bottom pending_create uk-button-primary" data-modal="{{pending.id}}_create"><span class="uk-icon-cogs uk-margin-small-right"></span>Create Project!</button>
         {% else %}
-            <button class="uk-button uk-width-1-1 uk-margin-small-bottom re_create uk-button-primary" data-modal="{{pending.id}}_create"><span class="uk-icon-cogs uk-margin-small-right"></span>Create Project!</button>
+            <button class="uk-button uk-width-1-1 uk-margin-small-bottom pending_create uk-button-primary" data-modal="{{pending.id}}_create"><span class="uk-icon-cogs uk-margin-small-right"></span>Create Project!</button>
         {% endif %}
         <!--
         Empty: approve button
