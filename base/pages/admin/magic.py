@@ -406,7 +406,8 @@ def registration_user_del(pid, uid):
 
 def registration_record_edit(rid, form):
     rec = get_registration_record(rid)
-    props = ["title", "type", "description", "scientific_fields",
+    not_str = ["cpu"]
+    props = ["title", "type", "description", "scientific_fields", "cpu",
              "genci_committee", "numerical_methods", "computing_resources",
              "project_management", "project_motivation", "article_1",
              "article_2", "article_3", "article_4", "article_5"]
@@ -414,7 +415,10 @@ def registration_record_edit(rid, form):
     for prop in props:
         old = getattr(rec, prop)
         field = getattr(form, prop)
-        new = field.data.strip()
+        if prop not in not_str:
+            new = field.data.strip()
+        else:
+            new = field.data
         if old != new:
             setattr(rec, prop, new)
             msg.append("%s: %s -> %s" % (field.label.text, old, new))
