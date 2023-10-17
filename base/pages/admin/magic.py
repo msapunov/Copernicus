@@ -148,7 +148,7 @@ def render_pending(rec):
         top += render_template("modals/admin_edit_pending.html", form=edit)
         resp = edit_responsible(rec)
         top += render_template("modals/admin_edit_responsible.html", form=resp)
-        user_forms = [edit_user(user, i) for i, user in enumerate(rec.users.split("\n"))]
+        user_forms = edit_user(rec.users)
         top += render_template("modals/admin_edit_user.html", forms=user_forms, project_id=rec.project_id(), name = rec.id)
         nu = new_user(rec)
         top += render_template("modals/admin_add_user.html", form=nu)
