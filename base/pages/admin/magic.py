@@ -452,14 +452,15 @@ def registration_user_add(rid, form):
 def registration_user_update(rid, forms):
     rec = get_registration_record(rid)
     users = []
-    for form in forms:
-        name = form.prenom.data
-        surname = form.surname.data
-        email = form.email.data
-        login = form.login.data if getattr(form, "login", None) else ""
-        user = "First Name: %s; Last Name: %s; E-mail: %s; Login: %s" % \
-               (name, surname, email, login)
-        users.append(user)
+    if len(forms) > 0:
+        for form in forms:
+            name = form.prenom.data
+            surname = form.surname.data
+            email = form.email.data
+            login = form.login.data if getattr(form, "login", None) else ""
+            user = "First Name: %s; Last Name: %s; E-mail: %s; Login: %s" % \
+                   (name, surname, email, login)
+            users.append(user)
     new = "\n".join(users)
     if rec.users != new:
         RequestLog(rec).user_change(new)  # TODO nicer messages with changes
