@@ -137,7 +137,8 @@ class RegistrationEditForm(FlaskForm):
         message="Project type is empty")])
     description = TextAreaField("Description")
     scientific_fields = StringField("Scientific fields")
-    genci_committee = SelectField("Genci", validators=[])
+    genci_committee = Field("Genci", validators=[DataRequired(
+        message="Genci field is empty")])
     numerical_methods = TextAreaField("Methods")
     computing_resources = TextAreaField("Resources")
     project_management = TextAreaField("Management")
