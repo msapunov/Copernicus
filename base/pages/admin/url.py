@@ -310,10 +310,15 @@ def admin_registration_ignore(pid):
 @login_required
 @grant_access("admin", "manager")
 def admin_registration_create(pid):
-    form = RegForm()
-    if not form.validate_on_submit():
-        raise ValueError(form_error_string(form.errors))
-    return jsonify(data=Pending(pid).create().result)
+    data = request.form.to_dict()
+    indexes = list(set([int(key.split("-")[0]) for key in data.keys()]))
+    forms = []
+    for i in indexes:
+        form = CreateForm(prefix=str(i))
+        if not form.validate_on_submit():
+            raise ValueError(form.errors)
+        forms.append(form)
+    return jsonify(data=Pending(pid).create(forms).result)
 
 
 @bp.route("/admin/registration/accept/<int:pid>", methods=["POST"])
