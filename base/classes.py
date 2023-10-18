@@ -573,14 +573,13 @@ class Pending:
             raise ValueError("Processing of new project record is not allowed")
         return self.pending
 
-    def create(self):
+    def create(self, forms):
         """
         Check if all requirements are satisfied and creates a project in the DB
         and corresponding task for remote execution.
         :return: Object. Pending object
         """
         record = self.verify()
-        name = record.project_id()
         status = record.status.upper()
         if "VISA RECEIVED" not in status and "VISA SKIPPED" not in status:
             raise ValueError("Visa for '%s' haven't been received yet!" % name)
