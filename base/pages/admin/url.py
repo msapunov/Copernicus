@@ -37,7 +37,7 @@ from base.pages.admin.magic import (
     reg_accept)
 from base.functions import slurm_nodes_status, show_configuration, ssh_wrapper
 from base.pages.admin.form import (
-    RegForm,
+    CreateForm,
     PendingActionForm,
     VisaPendingForm,
     AddUserForm,
