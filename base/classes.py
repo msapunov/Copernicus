@@ -583,6 +583,7 @@ class Pending:
         status = record.status.upper()
         if "VISA RECEIVED" not in status and "VISA SKIPPED" not in status:
             raise ValueError("Visa for '%s' haven't been received yet!" % name)
+        #TODO: call function project_create
         record.status = "project created"
         self.result = RequestLog(record).create()
         record.processed = True
