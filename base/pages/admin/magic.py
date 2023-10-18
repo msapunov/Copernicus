@@ -831,6 +831,16 @@ def slurm_partition_info():
     return partition
 
 
+def get_articles(record, user):
+    articles = []
+    for i in range(1,6):
+        a_title = getattr(record, "article_%s" % i, False)
+        if not a_title:
+            continue
+        articles.append(ArticleDB(info = a_title, user = user))
+    return articles
+
+
 def create_project(rid):
     record = get_registration_record(rid)
     reg_name = record.project_id()
