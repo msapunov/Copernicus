@@ -32,12 +32,7 @@ class CreateForm(FlaskForm):
 
 
 def create_pending(register):
-    form = RegForm()
-    form.id = register.id
-    form.meso = register.project_id()
-    form.title_value = register.title
-    form.cpu_value = register.cpu
-    form.type_value = register.type
+    result = []
     users = register.users.split("\n")
     if register.responsible_email not in register.users:
         name = register.responsible_first_name.lower()
@@ -45,20 +40,30 @@ def create_pending(register):
         email = register.responsible_email
         users.append("First Name: %s; Last Name: %s; E-mail: %s; Login:" % (
             name, sname, email))
-    form.users = []
-    for user in users:
-        if not user:
-            continue
-        new_user = process_new_user(user)
-        if not new_user:
-            continue
-        if register.responsible_email in new_user.email:
-            new_user.admin = True
+    for num, user in enumerate(users):
+        form = CreateForm(prefix=str(num))
+        name, surname, email, login = process_register_user(user)
+        form.uid = "".join(filter(lambda x: x in ascii, email)).lower()
+        form.user.data = "%s <%s>" % (full_name(name, surname), email)
+        direct = generate_login(name, surname)
+        invert = generate_login(surname, name)
+        form.login.choices = [(direct, "Create a new user: %s" % direct),
+                              (invert, "Create a new user: %s" % invert),
+                              ("select", "")]
+        already = user_by_details(name, surname, email, login)
+        if already:
+            form.old = already[0].login
+            form.login.data = "select"
         else:
-            new_user.admin = False
-        form.users.append(new_user)
-    form.process(formdata=request.form)
-    return form
+            form.old = ""
+            form.login.data = direct
+        if email in register.responsible_email:
+            form.admin = True
+        else:
+            form.admin = False
+            form.login.choices.append(("none", "Skip user creation"))
+        result.append(form)
+    return result
 
 
 def contact_pending(register):
