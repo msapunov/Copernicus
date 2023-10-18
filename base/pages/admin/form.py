@@ -1,16 +1,18 @@
 from flask import request, g
 from flask_wtf import FlaskForm
+from string import ascii_letters as ascii
 from wtforms import StringField, BooleanField, HiddenField, SelectMultipleField
-from wtforms import IntegerField, TextAreaField, FieldList, DateField, RadioField, SelectField
+from wtforms import IntegerField, TextAreaField, FieldList, DateField, RadioField, SelectField, Field
 from wtforms.widgets import TextInput
 from wtforms.validators import DataRequired, NumberRange, ValidationError, Email, InputRequired
 from wtforms.fields import EmailField
 from wtforms.validators import DataRequired, Email
-from base.pages.project.magic import list_of_projects
+from base.pages.project.magic import list_of_projects, get_users
 from base.pages.login.form import MessageForm
 from base.pages.project.form import UserForm
-from base.functions import process_register_user
-from base.pages import process_new_user
+from base.functions import process_register_user, full_name
+from base.pages import process_new_user, generate_login, user_by_details
+
 
 __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
