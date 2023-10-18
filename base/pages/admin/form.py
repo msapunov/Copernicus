@@ -223,15 +223,20 @@ def new_user(register):
     return form
 
 
-def edit_user(user_as_string, num=None):
-    form = NewUserForm(prefix=str(num))
-    name, surname, email, login = process_register_user(user_as_string)
-    form.prenom.data = name
-    form.surname.data = surname
-    form.email.data = email
-    form.login.data = login
-    form.full = name+surname
-    return form
+def edit_user(users):
+    result = []
+    if not users:
+        return result
+    for num, user in enumerate(users.strip().split("\n")):
+        form = NewUserForm(prefix=str(num))
+        name, surname, email, login = process_register_user(user)
+        form.prenom.data = name
+        form.surname.data = surname
+        form.email.data = email
+        form.login.data = login
+        form.full = name+surname
+        result.append(form)
+    return result
 
 
 class NewUserEditForm(FlaskForm):
