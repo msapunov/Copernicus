@@ -51,7 +51,7 @@ def calculate_usage(use, total):
         return ""
 
 
-def user_by_details(name, surname, email):
+def user_by_details(name, surname, email, login=None):
     name = normalize_word(name)
     name = "".join(filter(lambda x: x in ascii_letters, name)).lower()
     surname = normalize_word(surname)
@@ -59,12 +59,16 @@ def user_by_details(name, surname, email):
     email = email.lower()
     login1 = name[0] + surname
     login2 = surname[0] + name
-    result = [User.query.filter_by(login=login1).first(),
-              User.query.filter_by(login=login2).first(),
-              User.query.filter_by(email=email).first(),
-              User.query.filter_by(name=name, surname=surname).first(),
-              User.query.filter_by(name=surname, surname=name).first()]
-    return list(filter(lambda x: x, result))
+    result = [User.query.filter_by(login=login1).all(),
+              User.query.filter_by(login=login2).all(),
+              User.query.filter_by(email=email).all(),
+              User.query.filter_by(name=name, surname=surname).all(),
+              User.query.filter_by(name=surname, surname=name).all()]
+    if login:
+        result.append(User.query.filter_by(login=login1).all())
+    not_empty = list(filter(lambda x: x != [], result))
+    every = [item for sublist in not_empty for item in sublist]
+    return list(set(every))
 
 
 def generate_login(name, surname):
