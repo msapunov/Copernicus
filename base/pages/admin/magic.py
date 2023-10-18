@@ -848,24 +848,35 @@ def create_project(rid):
         raise ValueError("Project %s has to be approved first!" % reg_name)
     if not record.accepted:
         raise ValueError("Project %s has to be accepted first!" % reg_name)
-    record.processed = True
-    db.session.commit()
-    raise ValueError("Registration record marked as processed. Don't forget to create project!")
+    total = Project.query.count()
+    name = "%s%s" % (record.type, total + 1)
     project = Project(
-        title=record.title,
-        description=record.description,
-        scientific_fields=record.scientific_fields,
-        genci_committee=record.genci_committee,
-        numerical_methods=record.numerical_methods,
-        computing_resources=record.computing_resources,
-        project_management=record.project_management,
-        project_motivation=record.project_motivation,
-        active=False,
-        comment="Initial commit",
-        ref=record,
-        type=record.type,
-        created=dt.now()
+        title = record.title,
+        description = record.description,
+        scientific_fields = record.scientific_fields,
+        genci_committee = record.genci_committee,
+        numerical_methods = record.numerical_methods,
+        computing_resources = record.computing_resources,
+        project_management  = record.project_management,
+        project_motivation = record.project_motivation,
+        active = False,
+        comment = "Project created by Copernicus",
+        ref = record,
+        privileged = False,
+        type = record.type,
+        created = dt.now(),
+        approve=current_user,
+        name = name
     )
-    db.session.commit()
-    name = project.get_name()
+    project.responsible = responsible
+    project.articles = get_articles(record, responsible)
+    project.users = users
     project.resources = create_resource(project, record.cpu)
+
+    record.processed = True
+    record.processed_ts = dt.now()
+    db.session.add(project)
+    for user in project.users:
+        db.session.add(user)
+    db.session.commit()
+
