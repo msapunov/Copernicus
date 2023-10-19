@@ -842,7 +842,7 @@ def get_articles(record, user):
         a_title = getattr(record, "article_%s" % i, False)
         if not a_title:
             continue
-        articles.append(ArticleDB(info = a_title, user = user))
+        articles.append(ArticleDB(info=a_title, user=user))
     return articles
 
 
