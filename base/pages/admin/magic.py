@@ -873,11 +873,6 @@ def parse_pending_users(forms):
 
 def create_project(rid, forms):
     record = get_registration_record(rid)
-    reg_name = record.project_id()
-    if not record.approve:
-        raise ValueError("Project %s has to be approved first!" % reg_name)
-    if not record.accepted:
-        raise ValueError("Project %s has to be accepted first!" % reg_name)
     total = Project.query.count()
     name = "%s%s" % (record.type, total + 1)
     project = Project(
