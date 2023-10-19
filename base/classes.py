@@ -554,7 +554,7 @@ class Pending:
 
     def verify(self):
         """
-        Verify if record is exists and user or user's role has proper access
+        Verify if record exists and user or user's role has proper access
         rights.
         :return: Object. Register record
         """
