@@ -875,6 +875,7 @@ def create_project(rid, forms):
     record = get_registration_record(rid)
     total = Project.query.count()
     name = "%s%s" % (record.type, total + 1)
+    responsible, users = parse_pending_users(forms)
     project = Project(
         title = record.title,
         description = record.description,
