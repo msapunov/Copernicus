@@ -236,11 +236,11 @@
         $(document).on("click", ".pending_create", trigger_modal);
         $(document).on("click", ".pending_create_submit", window.admin.submit);
         $(document).on("click", ".pending_received", trigger_modal);
-        $(document).on("click", ".pending_received_submit", window.sub);
+        $(document).on("click", ".pending_received_submit", window.admin.submit);
         $(document).on("click", ".pending_visa", trigger_modal);
-        $(document).on("click", ".pending_visa_submit", window.sub);
+        $(document).on("click", ".pending_visa_submit", window.admin.submit);
         $(document).on("click", ".pending_approve", trigger_modal);
-        $(document).on("click", ".pending_approve_submit", window.sub);
+        $(document).on("click", ".pending_approve_submit", window.admin.submit);
 
         $(document).on("click", ".edit_info", trigger_modal);
         $(document).on("click", ".edit_info_submit", window.admin.submit);
@@ -252,13 +252,13 @@
         $(document).on("click", ".edit_new_submit", window.admin.submit);
 
         $(document).on("click", ".pending_message", trigger_modal);
-        $(document).on("click", ".pending_message_submit", window.sub);
+        $(document).on("click", ".pending_message_submit", window.admin.submit);
 
         $(document).on("click", ".pending_reset", trigger_modal);
-        $(document).on("click", ".pending_reset_submit", window.sub);
+        $(document).on("click", ".pending_reset_submit", window.admin.submit);
         $(document).on("click", ".pending_ignore", trigger_modal);
-        $(document).on("click", ".pending_ignore_submit", window.sub);
+        $(document).on("click", ".pending_ignore_submit", window.admin.submit);
         $(document).on("click", ".pending_reject", trigger_modal);
-        $(document).on("click", ".pending_reject_submit", window.sub);
+        $(document).on("click", ".pending_reject_submit", window.admin.submit);
     });
 })(window, document, jQuery);
