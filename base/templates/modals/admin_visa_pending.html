@@ -27,8 +27,8 @@
           {% endif %}
         </div>
         <div class="uk-form-row uk-alert uk-alert-danger">
-          {{ rec.exception(id=rec.name+"_exception_extend", class_="uk-margin-small-right uk-form-danger") }}
-          <label for="exception_checkbox">
+          {{ rec.exception(id=rec.meso+"_exception_checkbox", class_="uk-margin-small-right uk-form-danger") }}
+          <label for="{{ rec.meso }}_exception_checkbox">
             Select checkbox if project does not require a signed visa
           </label>
         </div>
