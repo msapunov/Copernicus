@@ -847,6 +847,30 @@ def get_articles(record, user):
     return articles
 
 
+def parse_pending_users(forms):
+    users = []
+    responsible = None
+    for form in forms:
+        admin = form.admin.data
+        login = form.login.data
+        if login == "none":
+            continue
+        elif login == "select":
+            username = form.old.data
+            if username not in g.user_list:
+                raise ValueError("Failed to find %s among registered users"
+                                 % username)
+            user = User.query.filter_by(login=username).one()
+            if admin:
+                responsible = user
+            else:
+                users.append(user)
+        else:
+            pass
+    return responsible, users
+
+
+
 def create_project(rid, forms):
     record = get_registration_record(rid)
     reg_name = record.project_id()
