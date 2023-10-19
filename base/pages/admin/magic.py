@@ -846,7 +846,7 @@ def get_articles(record, user):
     return articles
 
 
-def create_project(rid):
+def create_project(rid, forms):
     record = get_registration_record(rid)
     reg_name = record.project_id()
     if not record.approve:
