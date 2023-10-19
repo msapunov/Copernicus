@@ -899,8 +899,6 @@ def create_project(rid, forms):
     project.users = users
     project.resources = create_resource(project, record.cpu)
 
-    record.processed = True
-    record.processed_ts = dt.now()
     db.session.add(project)
     for user in project.users:
         db.session.add(user)
