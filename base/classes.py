@@ -573,7 +573,7 @@ class Pending:
             raise ValueError("Processing of new project record is not allowed")
         return self.pending
 
-    def create(self, forms):
+    def create(self, users):
         """
         Check if all requirements are satisfied and creates a project in the DB
         and corresponding task for remote execution.
