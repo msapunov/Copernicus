@@ -596,6 +596,23 @@ class Pending:
         record.processed_ts = dt.now()
         return self.commit()
 
+
+    def create_check(self):
+        """
+        Check if all requirements are satisfied.
+        :return: Object. Pending object
+        """
+        record = self.verify()
+        status = record.status.upper()
+        name = record.project_id()
+        if "VISA RECEIVED" not in status and "VISA SKIPPED" not in status:
+            raise ValueError("Visa for '%s' haven't been received yet!" % name)
+        if not record.approve:
+            raise ValueError("Project %s has to be approved first!" % name)
+        if not record.accepted:
+            raise ValueError("Project %s has to be accepted first!" % name)
+        return record
+
     def visa_skip(self):
         """
         Set correct value to status field in case if visa is not required.
