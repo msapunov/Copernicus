@@ -317,7 +317,7 @@ def admin_registration_create(pid):
         if not form.validate_on_submit():
             raise ValueError(form.errors)
         forms.append(form)
-    return jsonify(data=Pending(pid).create(forms).result)
+    return jsonify(message=Pending(pid).create(forms).result)
 
 
 @bp.route("/admin/registration/accept/<int:pid>", methods=["POST"])
