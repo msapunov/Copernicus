@@ -48,6 +48,9 @@ def create_pending(register):
         name, surname, email, login = process_register_user(user)
         form.uid = "".join(filter(lambda x: x in ascii, email)).lower()
         form.user.data = "%s <%s>" % (full_name(name, surname), email)
+        form.prenom.data = name
+        form.surname.data = surname
+        form.email.data = email
         direct = generate_login(name, surname)
         invert = generate_login(surname, name)
         form.login.choices = [(direct, "Create a new user: %s" % direct),
@@ -55,10 +58,10 @@ def create_pending(register):
                               ("select", "")]
         already = user_by_details(name, surname, email, login)
         if already:
-            form.old = already[0].login
+            form.exist = already[0].login
             form.login.data = "select"
         else:
-            form.old = ""
+            form.exist = ""
             form.login.data = direct
         if email in register.responsible_email:
             form.admin = True
