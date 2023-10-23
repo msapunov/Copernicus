@@ -552,6 +552,8 @@ class Pending:
         self.pending = query.filter_by(id=rid).first()
         self.action = None
         self.result = None
+        self.project = None
+        self.tasks = []
 
     def verify(self):
         """
