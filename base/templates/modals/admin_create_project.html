@@ -24,10 +24,10 @@
                             <li><div class="uk-form-controls-text uk-margin-small-top uk-form-row">
                                 {{ subfield }}
                                 {% if subfield.data == 'select' %}
-                                    <select name="{{ form._prefix }}old" class="{{ form.uid }}">
+                                    <select name="{{ form._prefix }}exist" class="{{ form.uid }}">
                                         <option></option>
                                         {% for user in g.user_list %}
-                                            <option value="{{user}}" {%if user==form.old%}selected{%endif%}>{{user}}</option>
+                                            <option value="{{user}}" {%if user==form.exist%}selected{%endif%}>{{user}}</option>
                                         {% endfor %}
                                     </select>
                                     <script>
