@@ -263,7 +263,7 @@ def admin_registration_approve(pid):
     :param pid: Int. ID of register record
     :return: String. Message to display
     """
-    return jsonify(data=Pending(pid).approve().result)
+    return jsonify(message=Pending(pid).approve().result)
 
 
 @bp.route("/admin/registration/reset/<int:pid>", methods=["POST"])
