@@ -20,8 +20,11 @@ __copyright__ = "Aix Marseille University"
 
 class CreateForm(FlaskForm):
     user = HiddenField()
-    old = StringField()
+    prenom = HiddenField()
+    surname = HiddenField()
+    email = HiddenField()
     login = RadioField('Login', choices=[])
+    exist = StringField()
 
     def validate(self):
         if not self.csrf_token.validate(self):
