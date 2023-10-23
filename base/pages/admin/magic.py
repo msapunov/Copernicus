@@ -20,7 +20,8 @@ from base.pages.admin.form import activate_user
 from base.pages.board.magic import create_resource
 from base.pages.user.magic import user_by_id
 from base.pages.user.form import edit_info, set_password, PassForm
-from base.database.schema import User, ArticleDB, LogDB, Project, Tasks, Register
+from base.database.schema import (User, ArticleDB, LogDB, Project, Tasks,
+                                  Register)
 from base.email import Mail
 from base.classes import UserLog, RequestLog, TmpUser, ProjectLog, Task
 from logging import error, debug
@@ -845,62 +846,3 @@ def get_articles(record, user):
             continue
         articles.append(ArticleDB(info=a_title, user=user))
     return articles
-
-
-def parse_pending_users(forms):
-    users = []
-    responsible = None
-    for form in forms:
-        admin = form.admin.data
-        login = form.login.data
-        if login == "none":
-            continue
-        elif login == "select":
-            username = form.old.data
-            if username not in g.user_list:
-                raise ValueError("Failed to find %s among registered users"
-                                 % username)
-            user = User.query.filter_by(login=username).one()
-            if admin:
-                responsible = user
-            else:
-                users.append(user)
-        else:
-            pass
-    return responsible, users
-
-
-
-def create_project(rid, forms):
-    record = get_registration_record(rid)
-    total = Project.query.count()
-    name = "%s%s" % (record.type, total + 1)
-    responsible, users = parse_pending_users(forms)
-    project = Project(
-        title=record.title,
-        description=record.description,
-        scientific_fields=record.scientific_fields,
-        genci_committee=record.genci_committee,
-        numerical_methods=record.numerical_methods,
-        computing_resources=record.computing_resources,
-        project_management=record.project_management,
-        project_motivation=record.project_motivation,
-        active=False,
-        comment="Project created by Copernicus",
-        ref=record,
-        privileged=False,
-        type=record.type,
-        created=dt.now(),
-        approve=current_user,
-        name=name
-    )
-    project.responsible = responsible
-    project.articles = get_articles(record, responsible)
-    project.users = users
-    project.resources = create_resource(project, record.cpu)
-
-    db.session.add(project)
-    for user in project.users:
-        db.session.add(user)
-    db.session.commit()
-
