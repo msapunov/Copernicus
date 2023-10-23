@@ -15,6 +15,9 @@
                     </div>
                     {% endif %}
                     {{ form.csrf_token() }}
+                    {{ form.prenom() }}
+                    {{ form.surname() }}
+                    {{ form.email() }}
                     {{ form.user() }}
                     <ul class="uk-form-row uk-grid uk-grid-width-1-1 uk-grid-small">
                         {% for subfield in form.login %}
