@@ -576,6 +576,34 @@ class Pending:
             raise ValueError("Processing of new project record is not allowed")
         return self.pending
 
+    def create_task(self):
+        if not self.project:
+            raise ValueError("Can create task to existing project only!")
+        act = ("create|proj||" + self.project.name + "|Create new project " +
+               self.project.name + " based on request " +
+               self.pending.project_id() + " with CPU " +
+               str(self.project.resources.cpu))
+        db.session.add(Tasks(
+            action=act,
+            approve=current_user,
+            processed=True,
+            decision="accept",
+            done=False,
+            pid=self.project.id,
+            project=self.project
+        ))
+        for user in self.project.users:
+            db.session.add(Tasks(
+                action=user.task.replace("%s", self.project.name),
+                approve=current_user,
+                processed=True,
+                decision="accept",
+                done=False,
+                uid=user.id,
+                project=self.project
+            ))
+        return self
+
     def create(self, users):
         """
         Check if all requirements are satisfied and creates a project in the DB
