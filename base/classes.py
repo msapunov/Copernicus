@@ -1,9 +1,10 @@
 from flask import g
 from flask_login import current_user
 from base import db
-from base.functions import create_visa
+from base.functions import create_visa, calculate_ttl
 from base.email import Mail, UserMailingList, ResponsibleMailingList
-from base.database.schema import LogDB, User, ACLDB, Extend, Register
+from base.database.schema import (LogDB, User, ACLDB, Extend, Register, Project,
+                                  Resources, ArticleDB, Tasks)
 from logging import debug
 from operator import attrgetter
 from datetime import datetime as dt
