@@ -14,7 +14,6 @@ from base.pages.admin.magic import (
     render_pending,
     render_registry,
     all_users,
-    create_project,
     event_log,
     get_server_info,
     get_ltm,
