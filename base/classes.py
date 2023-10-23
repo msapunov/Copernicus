@@ -727,7 +727,7 @@ class Pending:
             raise ValueError("Project %s has to be approved first!" % name)
         if not record.accepted:
             raise ValueError("Project %s has to be accepted first!" % name)
-        return record
+        return self
 
     def visa_skip(self):
         """
