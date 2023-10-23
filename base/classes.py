@@ -627,6 +627,58 @@ class Pending:
         record.processed_ts = dt.now()
         return self.commit()
 
+    def attach_users(self, forms):
+        if not self.project:
+            raise ValueError("Can attach to existing project only!")
+        for form in forms:
+            prenom = form.prenom.data
+            surname = form.surname.data
+            email = form.email.data
+            login = form.login.data
+            if login == "none":
+                continue
+            elif login == "select":
+                username = form.exist.data
+                if username not in g.user_list:
+                    raise ValueError("Failed to find %s among registered users"
+                                     % username)
+                user = User.query.filter_by(login=username).one()
+                task = "assign|%s|" + user.login
+            else:
+                user = User(
+                    name=prenom.lower(),
+                    surname=surname.lower(),
+                    email=email.lower(),
+                    phone=None,
+                    lab=None,
+                    position=None,
+                    login=login,
+                    active=False,
+                    comment="Initial commit",
+                    created=dt.now(),
+                    acl=ACLDB()
+                )
+                task = "create|%s|" + login
+            desc = ("login: %s and name: %s and surname: %s and email: %s" %
+                    (user.login, user.name, user.surname, user.email))
+            desc += " WITH ACL "
+            if email == self.pending.responsible_email:
+                user.acl.is_responsible = True
+                user.position = self.pending.responsible_position
+                user.lab = self.pending.responsible_lab
+                user.phone = self.pending.responsible_phone
+                desc += ("user: True, responsible: True, manager: False, "
+                         "tech: False, committee: False, admin: False")
+                self.project.responsible = user
+                task = task % "resp"
+            else:
+                desc += ("user: True, responsible: False, manager: False, "
+                         "tech: False, committee: False, admin: False")
+                task = task % "user"
+            desc += " WITH STATUS True"
+            user.task = task + "|%s|" + desc
+            self.project.users.append(user)
+        return self
 
     def create_check(self):
         """
