@@ -610,17 +610,50 @@ class Pending:
         and corresponding task for remote execution.
         :return: Object. Pending object
         """
-        record = self.verify()
-        status = record.status.upper()
-        name = record.project_id()
-        if "VISA RECEIVED" not in status and "VISA SKIPPED" not in status:
-            raise ValueError("Visa for '%s' haven't been received yet!" % name)
-        if not record.approve:
-            raise ValueError("Project %s has to be approved first!" % name)
-        if not record.accepted:
-            raise ValueError("Project %s has to be accepted first!" % name)
-        create_project(record, forms)
-        #TODO: call function project_create
+        record = self.create_check().pending
+        total = Project.query.count()
+        name = "%s%s" % (record.type, total + 1)
+        self.project = Project(
+            title=record.title,
+            description=record.description,
+            scientific_fields=record.scientific_fields,
+            genci_committee=record.genci_committee,
+            numerical_methods=record.numerical_methods,
+            computing_resources=record.computing_resources,
+            project_management=record.project_management,
+            project_motivation=record.project_motivation,
+            active=False,
+            comment="Project created by Copernicus",
+            ref=record,
+            privileged=False,
+            type=record.type,
+            created=dt.now(),
+            approve=current_user,
+            name=name,
+            responsible=None,
+            users=[]
+        )
+        self.attach_users(users)
+        if not self.project.responsible:
+            raise ValueError("Failed to find responsible among provided users")
+        for i in range(1, 6):
+            a_title = getattr(record, f"article_{i}", False)
+            if a_title:
+                self.project.articles.append(
+                    ArticleDB(info=a_title, user=self.project.responsible))
+        self.project.resources = Resources(
+            approve=current_user,
+            valid=True,
+            cpu=record.cpu,
+            type=record.type,
+            project=name,
+            ttl=calculate_ttl(record),
+            treated=False
+        )
+        self.create_task()
+        db.session.add(self.project)
+        for item in self.project.users:
+            db.session.add(item)
         record.status = "project created"
         self.result = RequestLog(record).create()
         record.processed = True
