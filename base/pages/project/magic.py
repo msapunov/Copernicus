@@ -460,25 +460,21 @@ def get_users(project=None):
         return User.query.all()
 
 
-def get_limbo_users(projects):
+def get_future_users(projects):
     for project in projects:
-        pid = project.id
-        tasks = Tasks.query.filter(
-            Tasks.processed == False, Tasks.pid == pid, Tasks.limbo_uid > 0
-        ).all()
-        if not tasks:
+        recs = Tasks.query.filter_by(processed = False, project = project).all()
+        if not recs:
             continue
-        limbos = list(map(lambda x: x.limbo_user.login, tasks))
-
+        tasks = list(filter(lambda x: "create|user" in x.action, recs))
+        f_users = [TmpUser().from_task(Task(task)).login for task in tasks]
+        f_login = list(map(lambda x: x.login, f_users))
         for user in project.users:
-            login = user.login
-            if login in limbos:
+            if user.login in f_login:
                 user.active = "Suspended"
-                limbos = [x for x in limbos if x != login]
+                f_login = [x for x in f_login if x != user.login]
 
-        if len(limbos) > 0:
-            add = list(filter(lambda x: x.limbo_user.login in limbos, tasks))
-            new_users = list(map(lambda x: x.limbo_user.to_dict(), add))
+        if f_login:
+            new_users = list(filter(lambda x: x.login in f_login, f_users))
             for user in new_users:
                 user.active = "Suspended"
             project.users.extend(new_users)
