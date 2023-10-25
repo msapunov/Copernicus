@@ -993,24 +993,25 @@ class Task:
             return self.user_new()
         project = self.task.project
         tmp_user = TmpUser().from_task(self)
-        acl = ACLDB(is_user=tmp_user.is_user,
-                    is_responsible=tmp_user.is_responsible,
-                    is_tech=tmp_user.is_tech,
-                    is_manager=tmp_user.is_manager,
-                    is_committee=tmp_user.is_committee,
-                    is_admin=tmp_user.is_admin)
-        user = User(login=tmp_user.login,
-                    name=tmp_user.name,
-                    surname=tmp_user.surname,
-                    email=tmp_user.email,
-                    active=tmp_user.active,
-                    acl=acl,
-                    project=[project],
-                    created=dt.now())
-        db.session.add(acl)
-        db.session.add(user)
-        project.users.append(user)
-        user.passwd = user.reset_password()
+        user = User.query.filter_by(login=tmp_user.login).one()
+        if not user:
+            user = User(login=tmp_user.login,
+                        name=tmp_user.name,
+                        surname=tmp_user.surname,
+                        email=tmp_user.email,
+                        active=tmp_user.active,
+                        project=[project],
+                        created=dt.now(),
+                        acl=ACLDB(is_user=tmp_user.is_user,
+                                  is_responsible=tmp_user.is_responsible,
+                                  is_tech=tmp_user.is_tech,
+                                  is_manager=tmp_user.is_manager,
+                                  is_committee=tmp_user.is_committee,
+                                  is_admin=tmp_user.is_admin))
+            db.session.add(user)
+            user.passwd = user.reset_password()
+        if user not in project.users:
+            project.users.append(user)
         Mail().user_new(user).start()
         UserMailingList().add(user.email, user.full_name())
         if user.acl.is_responsible:
