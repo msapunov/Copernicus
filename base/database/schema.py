@@ -877,6 +877,8 @@ class Tasks(db.Model):
             short = "%s ... %s" % (task[:20], task[-20:])
             act = "upload SSH public key: %s" % short
         act = act[0].upper() + act[1:]
+        if self.comment:
+            act = act + " " + self.comment
         return act
 
     def notify(self):
@@ -923,5 +925,6 @@ class Tasks(db.Model):
             "created": self.created.strftime("%Y-%m-%d %X %Z"),
             "status": status,
             "result": self.result,
+            "comment": self.comment,
             "modified": mod
         }
