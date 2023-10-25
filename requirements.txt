@@ -47,6 +47,6 @@ SQLAlchemy==1.4.23
 texttable==1.6.7
 typing_extensions==4.4.0
 urllib3==1.26.13
-Werkzeug==2.2.3
+Werkzeug==3.0.1
 WTForms==3.0.1
 zipp==3.11.0
