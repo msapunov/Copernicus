@@ -691,14 +691,14 @@ class Pending:
                     name=prenom.lower(),
                     surname=surname.lower(),
                     email=email.lower(),
-                    phone=None,
-                    lab=None,
-                    position=None,
+                    phone=ref.responsible_phone if resp else None,
+                    lab=ref.responsible_lab if resp else None,
+                    position=ref.responsible_position if resp else None,
                     login=login,
                     active=False,
                     comment="Initial commit",
                     created=dt.now(),
-                    acl=ACLDB()
+                    acl=ACLDB(is_responsible=True) if resp else ACLDB()
                 )
                 task = "create|%s|" + login
             desc = ("login: %s and name: %s and surname: %s and email: %s" %
