@@ -835,9 +835,6 @@ class Tasks(db.Model):
     uid = db.Column(db.Integer, db.ForeignKey("users.id"))
     user = db.relationship("User", foreign_keys=uid)
 
-    limbo_uid = db.Column(db.Integer, db.ForeignKey("limbo_users.id"))
-    limbo_user = db.relationship("LimboUser", foreign_keys=limbo_uid)
-
     pid = db.Column(db.Integer, db.ForeignKey("projects.id"))
     project = db.relationship("Project", foreign_keys=pid)
 
