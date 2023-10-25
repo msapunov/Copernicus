@@ -652,16 +652,6 @@ class Pending:
             if a_title:
                 self.project.articles.append(
                     ArticleDB(info=a_title, user=self.project.responsible))
-        self.project.resources = Resources(
-            approve=current_user,
-            valid=True,
-            cpu=record.cpu,
-            type=record.type,
-            project=name,
-            ttl=calculate_ttl(record),
-            treated=False
-        )
-        self.create_task()
         db.session.add(self.project)
         for item in self.project.users:
             db.session.add(item)
