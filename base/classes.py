@@ -633,7 +633,16 @@ class Pending:
             approve=current_user,
             name=name,
             responsible=None,
-            users=[]
+            users=[],
+            resources=Resources(
+                approve=current_user,
+                valid=True,
+                cpu=record.cpu,
+                type=record.type,
+                project=name,
+                ttl=calculate_ttl(record),
+                treated=False
+            )
         )
         self.attach_users(users)
         if not self.project.responsible:
