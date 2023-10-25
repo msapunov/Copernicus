@@ -673,6 +673,10 @@ class Pending:
             prenom = form.prenom.data
             surname = form.surname.data
             email = form.email.data
+            if email == ref.responsible_email:
+                resp = True
+            else:
+                resp = False
             login = form.login.data
             if login == "none":
                 continue
