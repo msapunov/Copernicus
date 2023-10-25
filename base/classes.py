@@ -680,7 +680,7 @@ class Pending:
             login = form.login.data
             if login == "none":
                 continue
-            elif login == "select":
+            if login == "select":
                 username = form.exist.data
                 if username not in g.user_list:
                     raise ValueError("Failed to find %s among registered users"
