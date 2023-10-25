@@ -700,17 +700,8 @@ class Pending:
                     created=dt.now(),
                     acl=ACLDB(is_responsible=True) if resp else ACLDB()
                 )
-                task = "create|%s|" + login
-            desc = ("login: %s and name: %s and surname: %s and email: %s" %
-                    (user.login, user.name, user.surname, user.email))
-            desc += " WITH ACL "
-            if email == self.pending.responsible_email:
-                user.acl.is_responsible = True
-                user.position = self.pending.responsible_position
-                user.lab = self.pending.responsible_lab
-                user.phone = self.pending.responsible_phone
-                desc += ("user: True, responsible: True, manager: False, "
-                         "tech: False, committee: False, admin: False")
+            self.project.users.append(user)
+            if resp:
                 self.project.responsible = user
                 TaskQueue().project(self.project).responsible_assign(user)
             else:
