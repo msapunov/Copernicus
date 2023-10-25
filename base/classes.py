@@ -644,6 +644,7 @@ class Pending:
                 treated=False
             )
         )
+        TaskQueue().project(self.project).project_create()
         self.attach_users(users)
         if not self.project.responsible:
             raise ValueError("Failed to find responsible among provided users")
