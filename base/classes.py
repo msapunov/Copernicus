@@ -668,6 +668,7 @@ class Pending:
     def attach_users(self, forms):
         if not self.project:
             raise ValueError("Can attach to existing project only!")
+        ref = self.pending
         for form in forms:
             prenom = form.prenom.data
             surname = form.surname.data
