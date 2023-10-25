@@ -828,6 +828,7 @@ class Tasks(db.Model):
     processed = db.Column(db.Boolean)
     done = db.Column(db.Boolean)
     result = db.Column(db.Text, default=None)
+    comment = db.Column(db.String, default=None)
 
     created = db.Column(db.DateTime(True), default=dt.utcnow())
     modified = db.Column(db.DateTime(True))
