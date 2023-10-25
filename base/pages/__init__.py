@@ -386,6 +386,17 @@ class TaskQueue:
         self.task.user = user
         return self._user_action()
 
+    def project_create(self):
+        if not self.p_name:
+            raise ValueError("Can't create undefined project")
+        ref = self.task.project.ref
+        description = ("Create new project " + self.p_name +
+                       " based on request " + ref.project_id() +
+                       " with CPU " + str(self.task.project.resources.cpu))
+        self.task.action = "create|proj||%s|%s" % (self.p_name, description)
+        self.task.processed = True
+        return self._commit()
+
     def project_suspend(self):
         if not self.p_name:
             raise ValueError("Can't suspend undefined project")
