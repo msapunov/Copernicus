@@ -260,8 +260,9 @@ class RequestLog(Log):
         self.log.event = "Visa sending step has been skipped"
         return self.commit(Mail().visa_skip(self))
 
-    def create(self):
-        self.log.event = "Project created out of this request"
+    def create(self, name):
+        meso = self.pending.project_id()
+        self.log.event = "Project %s created out of request %s" % (name, meso)
         return self.commit()
 
     def user_del(self, user):
