@@ -657,7 +657,7 @@ class Pending:
         for item in self.project.users:
             db.session.add(item)
         record.status = "project created"
-        self.result = RequestLog(record).create()
+        self.result = RequestLog(record).create(name)
         record.processed = True
         record.processed_ts = dt.now()
         return self.commit()
