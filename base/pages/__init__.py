@@ -205,24 +205,6 @@ class Task:
         self.task = task
         self.id = task.id
 
-    def _update_user(self):
-        limbo = self.task.limbo_user
-        user = User().query.filter_by(id=limbo.ref_id).one()
-
-        for key in db.inspect(User).columns.keys():
-            if key in ["id", "login"]:
-                continue
-            if hasattr(limbo, key):
-                val = getattr(limbo, key)
-                setattr(user, key, val)
-        db.session.delete(limbo)
-        db.session.commit()
-        return user
-
-    def _execute(self):
-        if "update" in self.task.action and self.task.limbo_user:
-            return self._update_user()
-
     def is_processed(self):
         return self.task.processed
 
@@ -234,7 +216,6 @@ class Task:
     def done(self):
         self.task.done = True
         self._commit()
-        self._execute()
         return True
 
     def description(self):
