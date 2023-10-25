@@ -454,7 +454,7 @@ def get_users(project=None):
     :return: List.
     """
     if project:
-        get_limbo_users([project])
+        get_future_users([project])
         return project.users
     else:
         return User.query.all()
