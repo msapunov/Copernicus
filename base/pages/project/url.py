@@ -38,7 +38,7 @@ from base.pages.project.magic import (
     get_project_record,
     project_extend,
     project_renew,
-    get_limbo_users)
+    get_future_users)
 from logging import debug
 
 
@@ -279,7 +279,7 @@ def web_project_index():
         flash("No projects associated with %s found" % current_user.full_name())
         return render_template("project.html", data={})
     list(map(lambda x: clean_activity(x.get_name()), projects))
-    get_limbo_users(projects)
+    get_future_users(projects)
     list(map(lambda x: is_project_transformable(x), projects))
     list(map(lambda x: is_project_extendable(x), projects))
     list(map(lambda x: is_project_renewable(x), projects))
