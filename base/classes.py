@@ -1074,7 +1074,8 @@ class Task:
         """
         project = self.task.project
         user = self.task.user
-        project.users.append(user)
+        if user not in project:
+            project.users.append(user)
         if not self.task.author_id:
             return ProjectLog(project).user_attached(self.task)
         return ProjectLog(project).user_assigned(self.task)
