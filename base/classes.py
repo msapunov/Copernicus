@@ -711,9 +711,6 @@ class Pending:
             self.project.users.append(user)
             if resp:
                 self.project.responsible = user
-                TaskQueue().project(self.project).responsible_assign(user)
-            else:
-                TaskQueue().project(self.project).user_assign(user)
         return self
 
     def create_check(self):
