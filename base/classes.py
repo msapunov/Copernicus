@@ -665,6 +665,8 @@ class Pending:
     def attach_users(self, forms):
         if not self.project:
             raise ValueError("Can attach to existing project only!")
+        p_log = ProjectLog(self.project)
+        p_log.send = False
         ref = self.pending
         for form in forms:
             prenom = form.prenom.data
@@ -686,8 +688,10 @@ class Pending:
                 user = User.query.filter_by(login=username).one()
                 if resp:
                     task = tq.responsible_assign(user).task
+                    p_log.responsible_assign(task)
                 else:
                     task = tq.user_assign(user).task
+                    p_log.user_assign(task)
             else:
                 user = TmpUser(
                     name=prenom.lower(),
@@ -698,8 +702,10 @@ class Pending:
                 )
                 if resp:
                     task = tq.responsible_create(user).task
+                    p_log.user_create(task)
                 else:
                     task = tq.user_create(user).task
+                    p_log.user_create(task)
             Task(task).accept()
         return self
 
