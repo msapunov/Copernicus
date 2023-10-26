@@ -686,6 +686,10 @@ class Pending:
                     raise ValueError("Failed to find %s among registered users"
                                      % username)
                 user = User.query.filter_by(login=username).one()
+                if resp:
+                    TaskQueue().project(self.project).responsible_assign(user)
+                else:
+                    TaskQueue().project(self.project).user_assign(user)
             else:
                 user = User(
                     name=prenom.lower(),
@@ -700,6 +704,10 @@ class Pending:
                     created=dt.now(),
                     acl=ACLDB(is_responsible=True) if resp else ACLDB()
                 )
+                if resp:
+                    TaskQueue().project(self.project).responsible_create(user)
+                else:
+                    TaskQueue().project(self.project).user_create(user)
             self.project.users.append(user)
             if resp:
                 self.project.responsible = user
