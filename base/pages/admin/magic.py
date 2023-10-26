@@ -434,7 +434,7 @@ def registration_record_edit(rid, form):
         msg = "\n".join(msg)
         RequestLog(rec).request_change(msg)
         return render_pending(rec)
-    raise  ValueError("No modifications has been detected!")
+    raise ValueError("No modifications has been detected!")
 
 
 def registration_user_add(rid, form):
