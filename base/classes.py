@@ -680,6 +680,7 @@ class Pending:
             login = form.login.data
             if login == "none":
                 continue
+            tq = TaskQueue().project(self.project)
             if login == "select":
                 username = form.exist.data
                 if username not in g.user_list:
@@ -687,9 +688,9 @@ class Pending:
                                      % username)
                 user = User.query.filter_by(login=username).one()
                 if resp:
-                    TaskQueue().project(self.project).responsible_assign(user)
+                    task = tq.responsible_assign(user).task
                 else:
-                    TaskQueue().project(self.project).user_assign(user)
+                    task = tq.user_assign(user).task
             else:
                 user = User(
                     name=prenom.lower(),
@@ -705,12 +706,10 @@ class Pending:
                     acl=ACLDB(is_responsible=True) if resp else ACLDB()
                 )
                 if resp:
-                    TaskQueue().project(self.project).responsible_create(user)
+                    task = tq.responsible_create(user).task
                 else:
-                    TaskQueue().project(self.project).user_create(user)
-            self.project.users.append(user)
-            if resp:
-                self.project.responsible = user
+                    task = tq.user_create(user).task
+            Task(task).accept()
         return self
 
     def create_check(self):
