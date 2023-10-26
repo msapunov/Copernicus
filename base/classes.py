@@ -692,18 +692,12 @@ class Pending:
                 else:
                     task = tq.user_assign(user).task
             else:
-                user = User(
+                user = TmpUser(
                     name=prenom.lower(),
                     surname=surname.lower(),
                     email=email.lower(),
-                    phone=ref.responsible_phone if resp else None,
-                    lab=ref.responsible_lab if resp else None,
-                    position=ref.responsible_position if resp else None,
                     login=login,
-                    active=False,
-                    comment="Initial commit",
-                    created=dt.now(),
-                    acl=ACLDB(is_responsible=True) if resp else ACLDB()
+                    is_responsible=True if resp else False
                 )
                 if resp:
                     task = tq.responsible_create(user).task
