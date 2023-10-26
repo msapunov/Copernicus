@@ -792,6 +792,8 @@ class Pending:
         """
         record = self.verify()
         record.status = "approved"
+        record.approve = True
+        record.approve_ts = dt.now()
         self.result = RequestLog(record).approve()
         return self.commit()
 
