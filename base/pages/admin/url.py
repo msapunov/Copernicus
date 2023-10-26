@@ -515,8 +515,10 @@ def web_admin_pending_list():
 @login_required
 @grant_access("admin", "manager")
 def web_admin_accounting(last):
-    every = Accounting.query.order_by(Accounting.date.desc()).last(last).all()
-    return jsonify(data=list(map(lambda x: (x.date, x.cpu), every)))
+    every = Accounting.query.filter_by(
+        project=None, user=None
+    ).order_by(Accounting.date.desc()).limit(last).all()
+    return jsonify(data=[{x.date.strftime("%x"): x.cpu} for x in every])
 
 
 @bp.route("/admin/slurm/nodes/list", methods=["POST"])
