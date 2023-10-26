@@ -1,6 +1,6 @@
 from flask_login import UserMixin
 from base import db
-from base.functions import generate_password
+from base.functions import generate_password, process_register_user
 from datetime import datetime as dt
 from textwrap import shorten
 from hashlib import md5
@@ -618,21 +618,6 @@ class Register(db.Model):
     def __repr__(self):
         return "<Registration request {}>".format(self.id)
 
-    def _parse_user_rec(self, record):
-        tmp = {"uid": md5(record.encode()).hexdigest()}
-        info = record.split(";")
-        for i in info:
-            j = i.split(":")
-            if "First Name" in j[0]:
-                tmp["name"] = j[1].strip()
-            elif "Last Name" in j[0]:
-                tmp["last"] = j[1].strip()
-            elif "E-mail" in j[0]:
-                tmp["mail"] = j[1].strip()
-            else:
-                tmp["login"] = j[1].strip()
-        return tmp
-
     def project_type(self):
         return self.type.upper()
 
@@ -652,14 +637,12 @@ class Register(db.Model):
 
     def get_users(self):
         users = self.users.split("\n")
-        result = []
-        for user in users:
-            try:
-                tmp = self._parse_user_rec(user)
-            except:
-                continue
-            result.append(tmp)
-        return result
+        return [{"name": name if name else "",
+                 "last": surname if surname else "",
+                 "mail": email if email else "",
+                 "login": login if login else ""}
+                for x in users
+                for name, surname, email, login in [process_register_user(x)]]
 
     def cloud(self):
         return [
