@@ -647,20 +647,17 @@ class Pending:
                 treated=False
             )
         )
-        TaskQueue().project(self.project).project_create()
+        task = TaskQueue().project(self.project).project_create().task
+        Task(task).accept()
+        self.result = RequestLog(record).create(name)
+        db.session.add(self.project)
         self.attach_users(users)
-        if not self.project.responsible:
-            raise ValueError("Failed to find responsible among provided users")
         for i in range(1, 6):
             a_title = getattr(record, f"article_{i}", False)
             if a_title:
                 self.project.articles.append(
                     ArticleDB(info=a_title, user=self.project.responsible))
-        db.session.add(self.project)
-        for item in self.project.users:
-            db.session.add(item)
         record.status = "project created"
-        self.result = RequestLog(record).create(name)
         record.processed = True
         record.processed_ts = dt.now()
         return self.commit()
