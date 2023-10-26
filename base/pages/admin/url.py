@@ -48,7 +48,7 @@ from base.pages.admin.form import (
     NewUserEditForm)
 from base.pages.project.magic import process_extension
 from base.utils import form_error_string
-from base.database.schema import Project
+from base.database.schema import Project, Accounting
 
 
 __author__ = "Matvey Sapunov"
@@ -509,6 +509,14 @@ def web_admin_bits_pending(rid):
 @grant_access("admin", "manager")
 def web_admin_pending_list():
     return jsonify(data=unprocessed_dict())
+
+
+@bp.route("/admin/accounting/<int:last>", methods=["POST", "GET"])
+@login_required
+@grant_access("admin", "manager")
+def web_admin_accounting(last):
+    every = Accounting.query.order_by(Accounting.date.desc()).last(last).all()
+    return jsonify(data=list(map(lambda x: (x.date, x.cpu), every)))
 
 
 @bp.route("/admin/slurm/nodes/list", methods=["POST"])
