@@ -65,7 +65,7 @@ def user_by_details(name, surname, email, login=None):
               User.query.filter_by(name=name, surname=surname).all(),
               User.query.filter_by(name=surname, surname=name).all()]
     if login:
-        result.append(User.query.filter_by(login=login1).all())
+        result.append(User.query.filter_by(login=login).all())
     not_empty = list(filter(lambda x: x != [], result))
     every = [item for sublist in not_empty for item in sublist]
     return list(set(every))
