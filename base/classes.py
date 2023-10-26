@@ -29,11 +29,11 @@ class Log:
         self.send = True
 
     def before(self, date):
-        self.query = self.query.filter_by(created < date)
+        self.query = self.query.filter_by(LogDB.created < date)
         return self.list()
 
     def after(self, date):
-        self.query = self.query.filter_by(created >= date)
+        self.query = self.query.filter_by(LogDB.created >= date)
         return self.list()
 
     def list(self):
