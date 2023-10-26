@@ -648,7 +648,7 @@ class Pending:
             )
         )
         task = TaskQueue().project(self.project).project_create().task
-        Task(task).accept()
+        #Task(task).accept()
         self.result = RequestLog(record).create(name)
         db.session.add(self.project)
         self.attach_users(users)
@@ -706,7 +706,7 @@ class Pending:
                 else:
                     task = tq.user_create(user).task
                     p_log.user_create(task)
-            Task(task).accept()
+ #           Task(task).accept()
         return self
 
     def create_check(self):
