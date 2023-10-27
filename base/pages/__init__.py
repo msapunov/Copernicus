@@ -291,7 +291,7 @@ class TaskQueue:
         ).first()
         if double:
             raise ValueError("Same previous task found ID: %s" % double.id)
-        return self._user_action()
+        return self.commit()
 
     def user_create(self, user): #!!!
         if not self.p_name:
@@ -299,7 +299,7 @@ class TaskQueue:
         description = user.ready_task()
         self.task.action = "create|user|%s|%s|%s" % (user.login, self.p_name,
                                                      description)
-        return self._user_action()
+        return self.commit()
 
     def responsible_create(self, user):
         if not self.p_name:
@@ -307,7 +307,7 @@ class TaskQueue:
         description = user.ready_task()
         self.task.action = "create|resp|%s|%s|%s" % (user.login, self.p_name,
                                                      description)
-        return self._user_action()
+        return self.commit()
 
     def user_activate(self, user):
         if not self.project:
@@ -320,7 +320,7 @@ class TaskQueue:
         self.task.action = "activate|user|%s|%s|%s" % (user.login, self.p_name,
                                                        description)
         self.task.user = user
-        return self._user_action()
+        return self.commit()
 
     def user_assign(self, user):
         if not self.project:
@@ -330,7 +330,7 @@ class TaskQueue:
         self.task.action = "assign|user|%s|%s|%s" % (login, self.p_name,
                                                      description)
         self.task.user = user
-        return self._user_action()
+        return self.commit()
 
     def responsible_assign(self, user):
         if not self.project:
@@ -342,7 +342,7 @@ class TaskQueue:
         self.task.action = "assign|resp|%s|%s|%s" % (login, self.p_name,
                                                      description)
         self.task.user = user
-        return self._user_action()
+        return self.commit()
 
     def user_update(self, data):
         if not self.task.user:
@@ -355,7 +355,7 @@ class TaskQueue:
                 act.append("%s: %s" % (key, value))
         act = " and ".join(act)
         self.task.action = "update|user|%s|%s|%s" % (login, "", act)
-        return self._user_action()
+        return self.commit()
 
     def user_remove(self, user):
         if not self.project:
@@ -376,7 +376,7 @@ class TaskQueue:
                        " with CPU " + str(self.task.project.resources.cpu))
         self.task.action = "create|proj||%s|%s" % (self.p_name, description)
         self.task.processed = True
-        return self._commit()
+        return self.commit()
 
     def project_suspend(self):
         if not self.p_name:
@@ -384,20 +384,15 @@ class TaskQueue:
         description = "Suspending project %s" % self.p_name
         self.task.action = "suspend|proj||%s|%s" % (self.p_name, description)
         self.task.processed = True
-        return self._commit()
+        return self.commit()
 
-    def _user_action(self):
-        self.processed = True
-        self._commit()
-        return self
-
-    def _commit(self):
+    def commit(self):
         double = Tasks().query.filter_by(
-            action=self.task.action
-        ).filter_by(
-            processed=False
+            action=self.task.action, processed=False
         ).first()
         if double:
             raise ValueError("Same previous task found ID: %s" % double.id)
+        self.task.processed = True
         db.session.add(self.task)
         db.session.commit()
+        return self
