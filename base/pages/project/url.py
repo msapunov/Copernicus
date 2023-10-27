@@ -105,8 +105,6 @@ def web_project_add_user(project_name):
     form = UserForm()
     if not form.validate_on_submit():
         raise ValueError(form.errors)
-    if form.pending:
-        return jsonify(message=registration_create_user(project_name, form))
     if form.create_user:
         return jsonify(message=project_create_user(project_name, form))
     else:
