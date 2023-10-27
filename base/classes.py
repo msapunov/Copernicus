@@ -693,13 +693,12 @@ class Pending:
                     task = tq.user_assign(user).task
                     p_log.user_assign(task)
             else:
-                user = TmpUser(
-                    name=prenom.lower(),
-                    surname=surname.lower(),
-                    email=email.lower(),
-                    login=login,
-                    is_responsible=True if resp else False
-                )
+                user = TmpUser()
+                user.name=prenom.lower()
+                user.surname=surname.lower()
+                user.email=email.lower()
+                user.login=login
+                user.is_responsible=True if resp else False
                 if resp:
                     task = tq.responsible_create(user).task
                     p_log.user_create(task)
