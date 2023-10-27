@@ -865,7 +865,10 @@ class Tasks(db.Model):
         elif ("change" in self.action) and ("password" in self.action):
             return self.user.email
         elif self.author and self.project:
-            return self.project.responsible.email
+            if self.project.responsible and self.project.responsible.email:
+                return self.project.responsible.email
+            else:
+                return ""
         else:
             return ""
 
