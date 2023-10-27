@@ -1020,6 +1020,7 @@ class Task:
         Mail().user_new(user).start()
         UserMailingList().add(user.email, user.full_name())
         if user.acl.is_responsible:
+            project.responsible = user
             ResponsibleMailingList().add(user.email, user.full_name())
         return ProjectLog(project).user_created(self.task)
 
