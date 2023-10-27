@@ -722,6 +722,9 @@ class Pending:
             raise ValueError("Project %s has to be approved first!" % name)
         if not record.accepted:
             raise ValueError("Project %s has to be accepted first!" % name)
+        ex = Project.query.filter(Project.title.ilike(record.title)).first()
+        if ex:
+            raise ValueError("Project '%s' already exist" % record.title)
         return self
 
     def visa_skip(self):
