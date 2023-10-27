@@ -998,7 +998,7 @@ class Task:
             return self.user_new()
         project = self.task.project
         tmp_user = TmpUser().from_task(self)
-        user = User.query.filter_by(login=tmp_user.login).one()
+        user = User.query.filter_by(login=tmp_user.login).first()
         if not user:
             user = User(login=tmp_user.login,
                         name=tmp_user.name,
