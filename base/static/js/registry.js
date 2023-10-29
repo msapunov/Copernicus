@@ -110,7 +110,11 @@
                 visible: false
             },{
                 data: "seen",
-                visible: true
+                render: function ( date, type, row ) {
+                    let dateSplit = date.split(' ');
+                    let full = row.seen;
+                    return type === "display" || type === "filter" ? '<div title="' + full + '">' + dateSplit[0] : date;
+                }
             },{
                 data: "user",
                 render: function ( date, type, row ) {
