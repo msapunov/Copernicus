@@ -365,7 +365,7 @@ class TaskQueue:
         self.task.action = "remove|user|%s|%s|%s" % (login, self.p_name,
                                                      description)
         self.task.user = user
-        return self._user_action()
+        return self.commit()
 
     def project_create(self):
         if not self.p_name:
