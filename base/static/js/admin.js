@@ -16,6 +16,7 @@
         space: "admin/space/info",
         system: "admin/sys/info",
         pending: "admin/pending/list",
+        accounting: "admin/accounting",
         tasks: "admin/tasks/list",
         tasks_accept: "admin/tasks/accept",
         tasks_history: "admin/tasks/history",
