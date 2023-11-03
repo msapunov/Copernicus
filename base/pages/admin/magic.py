@@ -21,7 +21,7 @@ from base.pages.board.magic import create_resource
 from base.pages.user.magic import user_by_id
 from base.pages.user.form import edit_info, set_password, PassForm
 from base.database.schema import (User, ArticleDB, LogDB, Project, Tasks,
-                                  Register)
+                                  Accounting, Register)
 from base.email import Mail
 from base.classes import UserLog, RequestLog, TmpUser, ProjectLog, Task
 from logging import error, debug
@@ -31,6 +31,24 @@ from base.functions import ssh_wrapper
 
 __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
+
+
+def account_days(days=30, project=None, user=None):
+    today = dt.today().replace(hour=0, minute=0, second=0, microsecond=0)
+    dates = [today - timedelta(days=i) for i in range(days)]
+    every = Accounting.query.filter(
+        Accounting.project == project,
+        Accounting.user == user,
+        Accounting.date >= dates[-1]
+    ).order_by(Accounting.date.desc()).limit(days).all()
+    every_data = list(map(lambda x: {x.date.strftime("%Y-%m-%d 00:00"): x.cpu}, every))
+    every_keys = list(map(lambda x: x.date.strftime("%Y-%m-%d 00:00"), every))
+
+    for date in dates:
+        date = date.strftime("%Y-%m-%d 00:00")
+        if date not in every_keys:
+            every_data.append({date: 0})
+    return every_data
 
 
 def last_user(data):
