@@ -119,6 +119,12 @@
             });
     };
     $(document).on("ready", function(){
+        $.ajax({
+            type: "POST",
+            url: window.admin.url.accounting + "/" + "365"
+        }).done(function(reply){
+            window.admin.draw_accounting(reply);
+        });
         $.fn.dataTable.ext.buttons.refresh = {
             text: "<span class='uk-icon-refresh uk-margin-small-right'></span>&nbsp;Reload",
             className: "uk-button uk-button-small uk-margin-small-top",
