@@ -144,6 +144,7 @@
         });
         $("#pending_projects").DataTable({
             ajax: {"type": "POST", "url": window.admin.url.pending},
+            dom: 'tiB',
             buttons: {
                 className: 'copyButton',
                 buttons: [ 'refresh' ]
