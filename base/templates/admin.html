@@ -5,6 +5,9 @@
 
 <script type="text/javascript" src="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.10.21/b-1.6.2/b-html5-1.6.2/r-2.2.5/datatables.min.js"></script>
 <script type="text/javascript" src="https://getuikit.com/v2/src/js/components/datepicker.js"></script>
+<script src="
+https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js
+"></script>
 
 
     <script src="{{ url_for('static', filename='js/moment-with-locales.min.js') }}"></script>
@@ -71,6 +74,10 @@
                         <button class="uk-button task_reload uk-button-small"><span class="uk-icon-refresh uk-margin-small-right"></span>Reload</button>
                         <button class="uk-button task_manage uk-button-small uk-button-danger"><span class="uk-icon-edit uk-margin-small-right"></span>Edit</button>
                 </div>
+            </div>
+
+            <div class="uk-width-1-1 uk-text-center uk-padding-remove uk-margin-bottom" style="border: 1px solid #ddd;">
+                <canvas id="accounting"></canvas>
             </div>
 
             <div class="uk-width-small-1-1 uk-width-medium-1-2 uk-margin-top uk-padding-remove">
