@@ -18,6 +18,23 @@ __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
 
 
+@bp.route("/statistic/accounting/<string:name>", methods=["POST"])
+@bp.route("/statistic/accounting", methods=["POST"])
+@login_required
+@grant_access("admin", "responsible", "tech")
+def project_info(name=None):
+    projects = Project.query.all()
+    if name:
+        projects = [project for project in projects if project.name == name]
+    data = {
+        i.name: {
+            "consumption": i.account(),
+            "total": i.resources.cpu if i.resources else 0
+        } for i in projects
+    }
+    return jsonify(data=data)
+
+
 @bp.route("/projects.csv", methods=["GET"])
 @login_required
 @grant_access("admin")
