@@ -91,11 +91,15 @@ def project_activity(project_name):
     return jsonify(message=ProjectLog(report.project).activity_report(report))
 
 
-@bp.route("/project/info/<string:project_name>", methods=["POST"])
+@bp.route("/project/info/<string:name>", methods=["POST"])
+@bp.route("/project/info", methods=["POST"])
 @login_required
-@grant_access("admin", "responsible")
-def project_info(project_name):
-    return jsonify(data=project_info_by_name(project_name))
+@grant_access("admin", "responsible", "tech")
+def project_info(name=None):
+    projects = Project.query.all()
+    if name:
+        projects = [project for project in projects if project.name == name]
+    return jsonify(data=list(map(lambda x: x.to_dict(), projects)))
 
 
 @bp.route("/project/<string:project_name>/add/user", methods=["POST"])
