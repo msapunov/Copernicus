@@ -59,53 +59,6 @@
             tdi.first().addClass('uk-icon-spin');
         }
     };
-    window.admin.draw_accounting = function (data){
-        const sortedData = data.data.map(item => {
-            const dateStr = Object.keys(item)[0];
-            const date = moment(dateStr, 'YYYY-MM-DD HH:mm').toDate();
-            const value = Object.values(item)[0];
-            return { date, value };
-        }).sort((a, b) => a.date - b.date);
-        const dates = sortedData.map(item => moment(item.date).format('YYYY-MM-DD HH:mm'));
-        const values = sortedData.map(item => item.value);
-        const canvas = document.getElementById('accounting');
-        canvas.style.width = '100%';
-        canvas.style.height = '240px';
-        const ctx = canvas.getContext('2d');
-        new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: dates,
-                datasets: [{
-                    label: "",
-                    data: values,
-                    barPercentage: 1.0,
-                    categoryPercentage: 1.0,
-                    backgroundColor: '#00aff2',
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    title: {
-                        display: false
-                    },
-                    legend: {
-                        display: false
-                    }
-                },
-                scales: {
-                    x: {
-                        display: false
-                    },
-                    y: {
-                        min: 0,
-                        display: false
-                    }
-                }
-            }
-        });
-    };
     window.admin.expand = function format(d, row, tr, tdi){
             // `d` is the original data object for the row
             let id = row.id();
@@ -123,7 +76,7 @@
             type: "POST",
             url: window.admin.url.accounting + "/" + "365"
         }).done(function(reply){
-            window.admin.draw_accounting(reply);
+            accounting("accounting", reply);
         });
         $.fn.dataTable.ext.buttons.refresh = {
             text: "<span class='uk-icon-refresh uk-margin-small-right'></span>&nbsp;Reload",
