@@ -721,6 +721,10 @@ def get_server_info(server):
             memory_data = i
         elif "Swap" in i:
             swap_data = i
+        elif "cores" in i:
+            cores = i.strip().replace("cores:", "")
+        else:
+            users.append(i.strip())
 
     uptime = parse_uptime(uptime_data)
     swap = parse_swap(swap_data)
