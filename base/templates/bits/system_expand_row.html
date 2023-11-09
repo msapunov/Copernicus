@@ -1,25 +1,45 @@
 <div class="uk-grid">
     <div class="uk-width-medium-1-2">
-        <div class="uk-panel">
-            <div class="uk-panel">
-                <h3>Load</h3>
-                <p>Load 1min: {{ load.load_1 }}</p>
-                <p>Load 1min: {{ load.load_5 }}</p>
-                <p>Load 1min: {{ load.load_15 }}</p>
-            </div>
-            <div class="uk-panel">
-                <h3>Memory</h3>
-                <p>Total: {{ mem["total"] }}</p>
-                <p>Available: {{ mem["available"] }}</p>
-                <p>Used: {{ mem["used"] }}</p>
-            <div class="uk-panel">
-            </div>
-                <h3>Swap</h3>
-                <p>Total: {{ swap["total"] }}</p>
-                <p>Available: {{ swap["available"] }}</p>
-                <p>Used: {{ swap["used"] }}</p>
-            </div>
-        </div>
+        <table class="uk-table uk-width-medium-1-2">
+            <tbody>
+                <tr>
+                    <td class="uk-text-right uk-text-nowrap"><span class="uk-text-bold">Load</span> last minute:</td>
+                    <td>{{ load.load_1 }}</td>
+                </tr>
+                <tr>
+                    <td class="uk-text-right uk-text-nowrap">last 5 minutes:</td>
+                    <td>{{ load.load_5 }}</td>
+                </tr>
+                <tr>
+                    <td class="uk-text-right uk-text-nowrap">last 15 minutes:</td>
+                    <td>{{ load.load_15 }}</td>
+                </tr>
+                <tr>
+                    <td class="uk-text-right uk-text-nowrap"><span class="uk-text-bold">Memory</span> total:</td>
+                    <td>{{ mem["total"] }}</td>
+                </tr>
+                <tr>
+                    <td class="uk-text-right uk-text-nowrap">available:</td>
+                    <td>{{ mem["available"] }}</td>
+                </tr>
+                <tr>
+                    <td class="uk-text-right uk-text-nowrap">used:</td>
+                    <td>{{ mem["used"] }}</td>
+                </tr>
+                <tr>
+                    <td class="uk-text-right uk-text-nowrap"><span class="uk-text-bold">Swap</span> total:</td>
+                    <td>{{ swap["total"] }}</td>
+                </tr>
+                <tr>
+                    <td class="uk-text-right uk-text-nowrap">available:</td>
+                    <td>{{ swap["available"] }}</td>
+                </tr>
+                <tr>
+                    <td class="uk-text-right uk-text-nowrap">used:</td>
+                    <td>{{ swap["used"] }}</td>
+                </tr>
+            </tbody>
+        </table>
     </div>
     <div class="uk-width-medium-1-2">
         <ol>
