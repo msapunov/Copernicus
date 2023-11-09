@@ -123,6 +123,12 @@ class Project(db.Model):
     def __repr__(self):
         return '<Project {}>'.format(self.get_name())
 
+    def accounting(self):
+        result = Accounting.query.filter_by(
+            resources=self.resources, project=self, user=None
+        ).all()
+        return result
+
     def account(self):
         result = Accounting.query.filter_by(
             resources=self.resources, user=None
