@@ -712,6 +712,8 @@ def get_server_info(server):
         return {}
 
     uptime_data = memory_data = swap_data = ""
+    cores = 1
+    users = []
     for i in result:
         if "load average" in i:
             uptime_data = i
