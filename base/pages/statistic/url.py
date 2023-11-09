@@ -18,6 +18,16 @@ __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
 
 
+@bp.route("/statistic/accounting/<string:name>", methods=["POST", "GET"])
+@login_required
+@grant_access("admin", "manager", "responsible")
+def web_admin_accounting(name):
+    project = Project.query.filter_by(name=name).first()
+    result = project.accounting()
+    result = list(map(lambda x: {x.date.strftime("%Y-%m-%d"): x.cpu}, result))
+    return jsonify(data=result)
+
+
 @bp.route("/projects.csv", methods=["GET"])
 @login_required
 @grant_access("admin")
