@@ -408,6 +408,31 @@
                 dt.ajax.reload();
             }
         };
+        $("#system").DataTable({
+            ajax: {type: "POST", url: window.admin.url.system},
+            dom: 'tiB',
+            buttons: {
+                className: 'copyButton',
+                buttons: [ 'refresh' ]
+            },
+            paging: false,
+            searching: false,
+            columns: [{
+                data: "server"
+            },{
+                data: "memory",
+            },{
+                data: "swap",
+            },{
+                data: "load"
+            },{
+                data: "uptime"
+            }],
+            rowCallback: function(row_html, data) {
+                let row = $("#system").DataTable().row(row_html);
+                row.child(data.html).show();
+            }
+        });
         $("#disk_space").DataTable({
             ajax: {type: "POST", url: window.admin.url.space},
             dom: 'tiB',
