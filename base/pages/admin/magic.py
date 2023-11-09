@@ -737,28 +737,10 @@ def get_server_info(server):
 
 
 def parse_uptime(result):
-    tmp = {}
-    output = result.split(",")
-    for i in output:
-        if "users" in i:
-            users = i.replace("users", "")
-            users = users.strip()
-            try:
-                users = int(users)
-            except Exception as err:
-                error("Failed to convert to int: %s" % err)
-                continue
-            tmp["users"] = users
-        if "load average" in i:
-            idx = output.index(i)
-            i = "|".join(output[idx:])
-            load = i.replace("load average: ", "")
-            load = load.strip()
-            loads = load.split("|")
-            tmp["load_1"] = loads[0]
-            tmp["load_5"] = loads[1]
-            tmp["load_15"] = loads[2]
-    return tmp
+    up, hours, users, load_1, load_5, load_15 = result.strip().split(",")
+    up = up.split(" up ")[1] + hours
+    load_1 = load_1.replace("load average: ", "")
+    return {"up": up, "load_1": load_1, "load_5": load_5, "load_15": load_15}
 
 
 def parse_swap(result):
