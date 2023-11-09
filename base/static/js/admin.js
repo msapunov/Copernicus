@@ -429,8 +429,10 @@
                 data: "uptime"
             }],
             rowCallback: function(row_html, data) {
-                let row = $("#system").DataTable().row(row_html);
-                row.child(data.html).show();
+                if("html" in data){
+                    let row = $("#system").DataTable().row(row_html);
+                    row.child(data.html).show();
+                }
             }
         });
         $("#disk_space").DataTable({
