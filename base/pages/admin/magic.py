@@ -705,11 +705,12 @@ class TaskManager:
 
 
 def get_server_info(server):
+    out = {"server": server, "uptime": "", "memory": "", "load": "", "swap": ""}
     cmd = "echo cores:`nproc` && uptime  && free -b | grep -v total && who | cut -d' ' -f1 | sort -u"
     result, err = ssh_wrapper(cmd, host=server)
     if not result:
         error("Error getting information from the remote server: %s" % err)
-        return {}
+        return out
 
     uptime_data = memory_data = swap_data = ""
     cores = 1
@@ -727,13 +728,15 @@ def get_server_info(server):
             users.append(i.strip())
 
     uptime = parse_uptime(uptime_data)
-    load = "{0:.1%}".format(float(uptime["load_1"]) / float(cores))
     swap = parse_swap(swap_data)
     memory = parse_memory(memory_data)
-    html = render_template("bits/system_expand_row.html",
-                           users=users, mem=memory, swap=swap, load=uptime)
-    return {"server": server, "uptime": uptime["up"], "memory": memory["usage"],
-            "load": load, "swap": swap["usage"], "html": html}
+    out["load"] = "{0:.1%}".format(float(uptime["load_1"]) / float(cores))
+    out["uptime"] = uptime["up"]
+    out["memory"] = memory["usage"]
+    out["swap"] = swap["usage"]
+    out["html"] = render_template("bits/system_expand_row.html", users=users,
+                                  mem=memory, swap=swap, load=uptime)
+    return out
 
 
 def parse_uptime(result):
