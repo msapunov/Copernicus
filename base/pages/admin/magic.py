@@ -730,8 +730,10 @@ def get_server_info(server):
     load = "{0:.1%}".format(float(uptime["load_1"]) / float(cores))
     swap = parse_swap(swap_data)
     memory = parse_memory(memory_data)
-    total = dict(list(memory.items()) + list(swap.items()))
-    return {"server": server, "uptime": uptime, "mem": total}
+    html = render_template("bits/system_expand_row.html",
+                           users=users, mem=memory, swap=swap, load=uptime)
+    return {"server": server, "uptime": uptime["up"], "memory": memory["usage"],
+            "load": load, "swap": swap["usage"], "html": html}
 
 
 def parse_uptime(result):
