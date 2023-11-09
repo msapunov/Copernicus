@@ -184,7 +184,7 @@ trigger_modal = function(e){
     }
 };
 
-accounting = function (canvas_id, data){
+accounting = function (canvas_id, data, vert){
     const sortedData = data.data.map(item => {
         const dateStr = Object.keys(item)[0];
         const date = moment(dateStr, 'YYYY-MM-DD HH:mm').toDate();
@@ -195,7 +195,11 @@ accounting = function (canvas_id, data){
     const values = sortedData.map(item => item.value);
     const canvas = document.getElementById(canvas_id);
     canvas.style.width = '100%';
-    canvas.style.height = '240px';
+    if(typeof vert === 'undefined'){
+        canvas.style.height = '240px';
+    }else{
+        canvas.style.height = vert+'px';
+    }
     const ctx = canvas.getContext('2d');
     new Chart(ctx, {
         type: 'bar',
