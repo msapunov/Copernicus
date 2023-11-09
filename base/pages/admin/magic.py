@@ -727,6 +727,7 @@ def get_server_info(server):
             users.append(i.strip())
 
     uptime = parse_uptime(uptime_data)
+    load = "{0:.1%}".format(float(uptime["load_1"]) / float(cores))
     swap = parse_swap(swap_data)
     memory = parse_memory(memory_data)
     total = dict(list(memory.items()) + list(swap.items()))
