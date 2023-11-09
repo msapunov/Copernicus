@@ -626,6 +626,7 @@
     $(document).on("click", ".task_ignore", window.admin.tasks_ignore);
     $(document).on("click", ".task_reject", window.admin.tasks_reject);
     $(document).on("click", ".task_edit", window.admin.tasks_edit);
+    $(document).on("click", ".history_info", window.admin.new_project);
         $(document).on({
             mouseenter: function () {
                 $("#task_btn_group").toggleClass("uk-hidden");
