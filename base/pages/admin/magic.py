@@ -24,6 +24,7 @@ from base.database.schema import (User, ArticleDB, LogDB, Project, Tasks,
                                   Register)
 from base.email import Mail
 from base.classes import UserLog, RequestLog, TmpUser, ProjectLog, Task
+from base.functions import bytes2human
 from logging import error, debug
 from operator import attrgetter
 from datetime import timedelta, datetime as dt
@@ -762,10 +763,10 @@ def parse_swap(result):
             swap_used = swap_total - swap_available
             swap_usage = "{0:.1%}".format(float(swap_used) /
                                           float(swap_total))
-            tmp["swap_total"] = swap_total
-            tmp["swap_avail"] = swap_available
-            tmp["swap_used"] = swap_used
-            tmp["swap_usage"] = swap_usage
+            tmp["total"] = bytes2human(swap_total)
+            tmp["available"] = bytes2human(swap_available)
+            tmp["used"] = bytes2human(swap_used)
+            tmp["usage"] = swap_usage
     return tmp
 
 
@@ -779,10 +780,10 @@ def parse_memory(result):
             mem_available = int(memory[6].strip())
             mem_used = mem_total - mem_available
             mem_usage = "{0:.1%}".format(float(mem_used) / float(mem_total))
-            tmp["mem_total"] = mem_total
-            tmp["mem_avail"] = mem_available
-            tmp["mem_used"] = mem_used
-            tmp["mem_usage"] = mem_usage
+            tmp["total"] = bytes2human(mem_total)
+            tmp["available"] = bytes2human(mem_available)
+            tmp["used"] = bytes2human(mem_used)
+            tmp["usage"] = mem_usage
     return tmp
 
 
