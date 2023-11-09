@@ -709,7 +709,7 @@ def get_server_info(server):
     result, err = ssh_wrapper(cmd, host=server)
     if not result:
         error("Error getting information from the remote server: %s" % err)
-        return tmp
+        return {}
 
     uptime_data = memory_data = swap_data = ""
     for i in result:
