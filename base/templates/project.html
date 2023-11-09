@@ -119,6 +119,17 @@
                             <span class="uk-icon-exclamation-circle uk-margin-small-right uk-text-danger"></span>Suspended project
                         {% endif %}
                     </div>
+                    <div class="uk-panel uk-width-medium-1-1 uk-width-small-1-1 {% if project.active != True %}uk-text-muted{% endif %}">
+                        <canvas id="{{ project.name }}_accounting"></canvas>
+                        <script>
+                        $.ajax({
+                            type: "POST",
+                            url: "statistic/accounting/{{ project.name }}"
+                        }).done(function(reply){
+                            accounting("{{ project.name }}_accounting", reply, 60);
+                        });
+                        </script>
+                    </div>
                 </div>
             </div>
             <div class="uk-width-medium-2-5 uk-width-small-1-2 {% if project.active != True %}uk-text-muted{% endif %}">
