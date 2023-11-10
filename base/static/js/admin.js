@@ -76,7 +76,7 @@
             type: "POST",
             url: window.admin.url.accounting + "/" + "365"
         }).done(function(reply){
-            accounting("accounting", reply);
+            accounting("accounting", reply, 100);
         });
         $.fn.dataTable.ext.buttons.refresh = {
             text: "<span class='uk-icon-refresh uk-margin-small-right'></span>&nbsp;Reload",
