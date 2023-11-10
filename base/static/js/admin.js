@@ -2,6 +2,16 @@
     "use strict";
     window.admin = {};
 
+    window.admin.tasks_sel_update = function(){
+        var data = $(this).data("id");
+        var selectors = $("#"+data).find("select");
+        $.each(selectors, function(idx, el){
+            var val = $(el).attr("data-val");
+            if(val != "") {
+                $(el).val(val);
+            }
+        });
+    };
     window.admin.tasks_act=function(action, btn){
         var id = $(btn).data("id");
         var url = window.admin.url.tasks_ignore;
@@ -627,6 +637,7 @@
     $(document).on("click", ".task_reject", window.admin.tasks_reject);
     $(document).on("click", ".task_edit", window.admin.tasks_edit);
     $(document).on("click", ".history_info", window.admin.new_project);
+    $(document).on("click", ".history_info", window.admin.tasks_sel_update);
         $(document).on({
             mouseenter: function () {
                 $("#task_btn_group").toggleClass("uk-hidden");
