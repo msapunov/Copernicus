@@ -1,15 +1,4 @@
 <div class="uk-grid">
-    <div class="uk-width-1-1 uk-panel uk-margin-bottom">
-        <canvas id="{{rec.id}}_accounting"></canvas>
-        <script>
-            $.ajax({
-                type: "POST",
-                url: "statistic/accounting/{{rec.name}}"
-            }).done(function(reply){
-                accounting("{{rec.id}}_accounting", reply);
-            });
-        </script>
-    </div>
     <div class="uk-width-3-4 uk-panel uk-margin-top uk-margin-bottom" style="padding-left:50px;padding-right:50px;">
         <table id="{{rec.id}}_info_table" class="uk-table uk-table-condensed">
             <tbody>
@@ -48,6 +37,22 @@
                 <tr>
                     <td class="uk-width-1-10 uk-text-right uk-text-nowrap">Description:</td>
                     <td class="uk-width-9-10 uk-text-left">{{project.description}}</td>
+                </tr>
+                <tr>
+                    <td class="uk-width-1-10 uk-text-right uk-text-nowrap">Accounting:</td>
+                    <td class="uk-width-9-10 uk-text-left">
+                        <div class="uk-width-1-1 uk-panel uk-margin-bottom">
+                            <canvas id="{{rec.id}}_accounting"></canvas>
+                            <script>
+                                $.ajax({
+                                    type: "POST",
+                                    url: "statistic/accounting/{{rec.name}}"
+                                }).done(function(reply){
+                                    accounting("{{rec.id}}_accounting", reply, 50);
+                                });
+                            </script>
+                        </div>
+                    </td>
                 </tr>
             </tbody>
         </table>
