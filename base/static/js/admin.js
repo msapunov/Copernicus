@@ -643,6 +643,7 @@
     $(document).on("click", ".task_edit", window.admin.tasks_edit);
     $(document).on("click", ".history_info", window.admin.new_project);
     $(document).on("click", ".history_info", window.admin.tasks_sel_update);
+    $(document).on("change", ".task_sel_info", window.admin.tasks_btn_toggle);
         $(document).on({
             mouseenter: function () {
                 $("#task_btn_group").toggleClass("uk-hidden");
