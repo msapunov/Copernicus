@@ -119,14 +119,14 @@
                             <span class="uk-icon-exclamation-circle uk-margin-small-right uk-text-danger"></span>Suspended project
                         {% endif %}
                     </div>
-                    <div class="uk-panel uk-width-medium-1-1 uk-width-small-1-1 {% if project.active != True %}uk-text-muted{% endif %}">
+                    <div class="uk-panel uk-width-medium-1-1 uk-width-small-1-1" style="border: 1px solid #ddd;">
                         <canvas id="{{ project.name }}_accounting"></canvas>
                         <script>
                         $.ajax({
                             type: "POST",
                             url: "statistic/accounting/{{ project.name }}"
                         }).done(function(reply){
-                            accounting("{{ project.name }}_accounting", reply, 60);
+                            accounting("{{ project.name }}_accounting", reply, 50);
                         });
                         </script>
                     </div>
