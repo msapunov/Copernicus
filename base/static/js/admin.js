@@ -2,6 +2,11 @@
     "use strict";
     window.admin = {};
 
+
+    window.admin.tasks_btn_toggle = function(){
+        var tid = $(this).data("tid");
+        $(".task_btn_" + tid).prop("disabled", false);
+    };
     window.admin.tasks_sel_update = function(){
         var data = $(this).data("id");
         var selectors = $("#"+data).find("select");
