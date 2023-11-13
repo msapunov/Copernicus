@@ -334,7 +334,7 @@ def user_create_by_admin(form):
     for name in names:
         project = get_project_by_name(name)
         tid = TaskQueue().project(project).user_create(user).task.id
-        TaskOld(tid).accept()
+        Task(tid).accept()  # TODO: Do some tests!
         msg = "Add a new user: %s '%s %s <%s>'" % (
             user.login, user.name, user.surname, user.email)
         ProjectLog(project).event(msg)
