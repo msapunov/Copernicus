@@ -533,7 +533,7 @@ def web_slurm_node_list():
 @grant_access("admin")
 def web_admin_sys_info():
     servers = current_app.config["ADMIN_SERVER"]
-    if type(list()) != servers:
+    if not isinstance(servers, list):
         servers = servers.split(",")
     uptime = []
     for server in servers:
