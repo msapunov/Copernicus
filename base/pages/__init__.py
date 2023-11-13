@@ -356,7 +356,6 @@ class TaskQueue:
                        " based on request " + ref.project_id() +
                        " with CPU " + str(self.task.project.resources.cpu))
         self.task.action = "create|proj||%s|%s" % (self.p_name, description)
-        self.task.processed = True
         return self.commit()
 
     def project_suspend(self):
@@ -364,7 +363,6 @@ class TaskQueue:
             raise ValueError("Can't suspend undefined project")
         description = "Suspending project %s" % self.p_name
         self.task.action = "suspend|proj||%s|%s" % (self.p_name, description)
-        self.task.processed = True
         return self.commit()
 
     def commit(self):
@@ -373,7 +371,8 @@ class TaskQueue:
         ).first()
         if double:
             raise ValueError("Same previous task found ID: %s" % double.id)
-        self.task.processed = True
+        if "admin" in current_user.permissions():
+            self.task.processed = True
         db.session.add(self.task)
         db.session.commit()
         return self
