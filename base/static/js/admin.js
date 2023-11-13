@@ -433,11 +433,14 @@
             paging: false,
             searching: false,
             columns: [{
-                data: "server"
+                data: "server",
+                render: function(data, type, row) {
+                    return '<div title="' + data + '" style="white-space: nowrap;">' + data + '</div>';
+                }
             },{
-                data: "memory",
+                data: "memory"
             },{
-                data: "swap",
+                data: "swap"
             },{
                 data: "load"
             },{
