@@ -205,19 +205,6 @@ class Task:
         self.task = task
         self.id = task.id
 
-    def is_processed(self):
-        return self.task.processed
-
-    def process(self):
-        self.task.processed = True
-        self._commit()
-        return True
-
-    def done(self):
-        self.task.done = True
-        self._commit()
-        return True
-
     def description(self):
         return self.task.description()
 
