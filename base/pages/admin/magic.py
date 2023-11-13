@@ -698,7 +698,8 @@ class TaskManager:
 
 def get_server_info(server):
     out = {"server": server, "uptime": "", "memory": "", "load": "", "swap": ""}
-    cmd = "echo cores:`nproc` && uptime  && free -b | grep -v total && who | cut -d' ' -f1 | sort -u"
+    cmd = "echo cores:`nproc` && uptime  && free -b | grep -v total"
+    cmd += "&& who | cut -d' ' -f1 | sort -u"
     result, err = ssh_wrapper(cmd, host=server)
     if not result:
         error("Error getting information from the remote server: %s" % err)
