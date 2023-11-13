@@ -664,8 +664,6 @@ def process_task(tid, result):
 class TaskManager:
 
     def __init__(self):
-        from base.database.schema import Tasks
-
         self.query = Tasks().query
         self.tasks = Tasks
 
