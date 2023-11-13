@@ -271,13 +271,7 @@ class TaskQueue:
         if not self.u_name:
             raise ValueError("User is  not set. Can't upload SSH key")
         self.task.action = "ssh|user|%s||%s" % (self.u_name, key)
-        double = Tasks().query.filter_by(
-            action=self.task.action
-        ).filter_by(
-            done=False, decision="accept"
-        ).first()
-        if double:
-            raise ValueError("Same previous task found ID: %s" % double.id)
+        self.task.processed = True
         return self.commit()
 
     def user_create(self, user): #!!!
