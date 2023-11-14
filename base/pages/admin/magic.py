@@ -170,20 +170,6 @@ def render_pending(rec):
     return row + top + reset + reject + ignore + mail
 
 
-def visa_comment(rec, sent=True):
-    visa_ts = rec.accepted_ts.replace(
-        microsecond=0
-    ).isoformat("_").replace(":", "-")
-    if sent:
-        msg = "%s: Visa sent to %s" % (visa_ts, rec.responsible_email)
-    else:
-        msg = "%s: Visa step has been skipped" % visa_ts
-    comments = rec.comment.split("\n")
-    comment_list = list(map(lambda x: x.strip(), comments))
-    comment_list.append(msg)
-    return "\n".join(comment_list)
-
-
 def all_users():
     """
     Query all the users, check if there is a task associated with a user and
@@ -279,32 +265,6 @@ def get_ltm(data):
     title = check_str(data["title"])
     msg = check_str(data["message"])
     return users, title, msg
-
-
-def is_user_exists(record):
-    from base.database.schema import User
-
-    name = record["name"] if "name" in record else False
-    surname = record["surname"] if "surname" in record else False
-    email = record["email"] if "email" in record else False
-    login = record["login"] if "login" in record else False
-
-    if login:
-        result = User.query.filter_by(login=login).first()
-    elif email:
-        result = User.query.filter_by(email=email).first()
-    elif name and surname:
-        result = User.query.filter_by(name=name, surname=surname).first()
-    else:
-        result = User.query.filter_by(login=login, email=email, name=name,
-                                      surname=surname).first()
-
-    if result:
-        print(result.id)
-        record["exists"] = True
-    else:
-        record["exists"] = False
-    return record
 
 
 def user_create_by_admin(form):
@@ -824,13 +784,3 @@ def slurm_partition_info():
         partition.append({"name": name, "allocated": allocated, "idle": idle,
                           "other": other, "total": int(total)})
     return partition
-
-
-def get_articles(record, user):
-    articles = []
-    for i in range(1,6):
-        a_title = getattr(record, "article_%s" % i, False)
-        if not a_title:
-            continue
-        articles.append(ArticleDB(info=a_title, user=user))
-    return articles
