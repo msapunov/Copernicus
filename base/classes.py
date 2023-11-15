@@ -574,7 +574,11 @@ class Pending:
         record = self.create_check().pending
         total = Project.query.count()
         name = "%s%s" % (record.type, total + 1)
-        self.project = Project(
+        responsible = list(filter(lambda x: x.resp, users))[0]
+        titles = [getattr(record, f"article_{i}") for i in range(1, 6) if
+                  getattr(record, f"article_{i}", "") is not ""]
+        articles = map(lambda x: ArticleDB(info=x, user=responsible), titles)
+        proj = Project(
             title=record.title,
             description=record.description,
             scientific_fields=record.scientific_fields,
@@ -584,15 +588,16 @@ class Pending:
             project_management=record.project_management,
             project_motivation=record.project_motivation,
             active=False,
-            comment="Project created by Copernicus",
+            comment="Project created using Copernicus",
             ref=record,
             privileged=False,
             type=record.type,
             created=dt.now(),
             approve=current_user,
             name=name,
-            responsible=None,
-            users=[],
+            responsible=responsible,
+            users=users,
+            articles=list(articles),
             resources=Resources(
                 approve=current_user,
                 valid=True,
@@ -603,16 +608,18 @@ class Pending:
                 treated=False
             )
         )
-        task = TaskQueue().project(self.project).project_create().task
-        Task(task).accept()
-        self.result = RequestLog(record).create(name)
-        db.session.add(self.project)
-        self.attach_users(users)
-        for i in range(1, 6):
-            a_title = getattr(record, f"article_{i}", False)
-            if a_title:
-                self.project.articles.append(
-                    ArticleDB(info=a_title, user=self.project.responsible))
+        TaskQueue().project(proj).project_create().task.accept()
+        for user in users:
+            if user.action == "assign" and user.resp:
+                TaskQueue().project(proj).responsible_assign(user).task.accept()
+            elif user.action == "assign" and not user.resp:
+                TaskQueue().project(proj).user_assign(user).task.accept()
+            elif user.action == "create" and user.resp:
+                TaskQueue().project(proj).responsible_create(user).task.accept()
+            elif user.action == "create" and not user.resp:
+                TaskQueue().project(proj).user_create(user).task.accept()
+        db.session.add(proj)
+        self.result = RequestLog(record).create(proj)
         record.status = "project created"
         record.processed = True
         record.processed_ts = dt.now()
