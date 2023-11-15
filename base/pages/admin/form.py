@@ -23,6 +23,7 @@ class CreateForm(FlaskForm):
     prenom = HiddenField()
     surname = HiddenField()
     email = HiddenField()
+    responsible = HiddenField()
     login = RadioField('Login', choices=[])
     exist = StringField()
 
