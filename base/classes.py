@@ -543,8 +543,6 @@ class Pending:
         self.pending = query.filter_by(id=rid).first()
         self.action = None
         self.result = None
-        self.project = None
-        self.tasks = []
 
     def verify(self):
         """
@@ -566,34 +564,6 @@ class Pending:
         if (not user_allowed) and (not role_allowed):
             raise ValueError("Processing of new project record is not allowed")
         return self.pending
-
-    def create_task(self):
-        if not self.project:
-            raise ValueError("Can create task to existing project only!")
-        act = ("create|proj||" + self.project.name + "|Create new project " +
-               self.project.name + " based on request " +
-               self.pending.project_id() + " with CPU " +
-               str(self.project.resources.cpu))
-        db.session.add(Tasks(
-            action=act,
-            approve=current_user,
-            processed=True,
-            decision="accept",
-            done=False,
-            pid=self.project.id,
-            project=self.project
-        ))
-        for user in self.project.users:
-            db.session.add(Tasks(
-                action=user.task.replace("%s", self.project.name),
-                approve=current_user,
-                processed=True,
-                decision="accept",
-                done=False,
-                uid=user.id,
-                project=self.project
-            ))
-        return self
 
     def create(self, users):
         """
@@ -647,52 +617,6 @@ class Pending:
         record.processed = True
         record.processed_ts = dt.now()
         return self.commit()
-
-    def attach_users(self, forms):
-        if not self.project:
-            raise ValueError("Can attach to existing project only!")
-        p_log = ProjectLog(self.project)
-        p_log.send = False
-        ref = self.pending
-        for form in forms:
-            prenom = form.prenom.data
-            surname = form.surname.data
-            email = form.email.data
-            if email == ref.responsible_email:
-                resp = True
-            else:
-                resp = False
-            login = form.login.data
-            if login == "none":
-                continue
-            tq = TaskQueue().project(self.project)
-            if login == "select":
-                username = form.exist.data
-                if username not in g.user_list:
-                    raise ValueError("Failed to find %s among registered users"
-                                     % username)
-                user = User.query.filter_by(login=username).one()
-                if resp:
-                    task = tq.responsible_assign(user).task
-                    p_log.responsible_assign(task)
-                else:
-                    task = tq.user_assign(user).task
-                    p_log.user_assign(task)
-            else:
-                user = TmpUser()
-                user.name=prenom.lower()
-                user.surname=surname.lower()
-                user.email=email.lower()
-                user.login=login
-                user.is_responsible=True if resp else False
-                if resp:
-                    task = tq.responsible_create(user).task
-                    p_log.user_create(task)
-                else:
-                    task = tq.user_create(user).task
-                    p_log.user_create(task)
-            Task(task).accept()
-        return self
 
     def create_check(self):
         """
