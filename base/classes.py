@@ -931,9 +931,10 @@ class Task:
                                   is_committee=tmp_user.is_committee,
                                   is_admin=tmp_user.is_admin))
             db.session.add(user)
-            user.passwd = user.reset_password()
         if user not in project.users:
             project.users.append(user)
+        if not user.passwd:
+            user.passwd = user.reset_password()
         Mail().user_new(user).start()
         UserMailingList().add(user.email, user.full_name())
         if user.acl.is_responsible:
