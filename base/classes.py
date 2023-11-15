@@ -933,7 +933,7 @@ class Task:
             db.session.add(user)
         if user not in project.users:
             project.users.append(user)
-        if not user.passwd:
+        if not getattr(user, "passwd", None):
             user.passwd = user.reset_password()
         Mail().user_new(user).start()
         UserMailingList().add(user.email, user.full_name())
