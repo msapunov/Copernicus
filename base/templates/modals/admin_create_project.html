@@ -10,9 +10,12 @@
                 <div class="uk-form-row uk-panel uk-panel-box{% if form.admin==True %} uk-panel-box-primary{% endif %}">
                     <h3>{{ form.user.data }}</h3>
                     {% if form.admin==True %}
-                    <div class="uk-panel-badge uk-badge uk-badge-danger">
-                        Admin
-                    </div>
+                        <div class="uk-panel-badge uk-badge uk-badge-danger">
+                            Admin
+                        </div>
+                        {{ form.responsible(value='True') }}
+                    {% else %}
+                        {{ form.responsible(value='False') }}
                     {% endif %}
                     {{ form.csrf_token() }}
                     {{ form.prenom() }}
