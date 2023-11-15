@@ -192,13 +192,7 @@
     };
     window.admin.tasks_reload=function(){
         json_send(window.admin.url.tasks).done(function(data){
-            var tasks = 0;
-            if(data.data.length < 1){
-                UIkit.notify("No pending tasks found!", {timeout: 2000, status:"primary"});
-            }else{
-                tasks = data.data.length;
-            }
-            $("#taks_queue_length").text(tasks);
+            $("#taks_queue_length").text(data.data.length);
         });
     };
     window.admin.new_project=function(){
