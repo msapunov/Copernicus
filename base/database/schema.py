@@ -1,4 +1,4 @@
-from flask_login import UserMixin
+from flask_login import UserMixin, current_user
 from base import db
 from base.functions import generate_password, process_register_user
 from datetime import datetime as dt
@@ -825,6 +825,13 @@ class Tasks(db.Model):
         return self.query.filter_by(processed=True,
                                     done=False,
                                     decision="accept").all()
+
+    def accept(self):
+        self.decision = "accept"
+        self.processed = True
+        self.approve = current_user
+        db.session.commit()
+        return self
 
     def brief(self):
         act, entity, login, project, task = self.action.split("|")
