@@ -649,5 +649,15 @@
                 $("#task_btn_group").toggleClass("uk-hidden");
             }
         }, "#tasks_info");
+
+        setInterval(function(){
+            $.ajax({
+                timeout: 60000,
+                type: "POST",
+                url: window.admin.url.tasks
+            }).done(function(data){
+                $("#taks_queue_length").text(data.data.length);
+            });
+        }, 60000);
     });
 })(window, document, jQuery);
