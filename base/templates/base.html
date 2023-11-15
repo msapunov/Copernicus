@@ -29,53 +29,8 @@
             }
         </style>
         <script>
-            var message_window = function(users){
-                var plural = users.length > 1 ? "s" : "";
-                var win_title = "Send a message to the user{0} {1}?".f(plural, users.join(", "));
-                var title = $("<input/>").addClass("uk-width-1-1").attr({
-                    "name": "global_title",
-                    "type": "text",
-                    "placeholder": "Default title"
-                });
-                var message_body = $("<textarea/>").addClass("uk-width-1-1").attr({
-                    "rows": "4",
-                    "name": "global_message",
-                    "placeholder": "Message body can't be empty!"
-                  })
-                var form = $("<form/>").addClass("uk-form").append(
-                        $("<legend/>").text(win_title)
-                    ).append(
-                        $("<div/>").addClass("uk-form-row").append(title)
-                    ).append(
-                        $("<div/>").addClass("uk-form-row").append(message_body)
-                    );
-                var popup = dialog(form.prop("outerHTML"), function(){
-                    var data = {
-                        "title": $("input[name=global_title]").val(),
-                        "message": $("textarea[name=global_message]").val(),
-                        "user": users
-                    };
-                    json_send("admin/message/send", data).done(function(reply){
-                        if(reply.data){
-                            UIkit.notify(reply.data, {timeout: 2000, status:"success"});
-                        }
-                        popup.hide();
-                    });
-                });
-            }
-            var message_popup = function(){
-                var users = $(".main_user_selector").select2("data");
-                if(users.length < 1){
-                    alert("Please, select a user to send him a message!");
-                    return false;
-                }
-                var login = [];
-                $.each(users, function(idx, value){ login.push(value.text) });
-                message_window(login);
-            }
             $(document).ready(function() {
                 $('.switch_user_selector').select2();
-                $(document).on("click", ".message_in_a_bottle", message_popup);
             });
         </script>
         {% endif %}
