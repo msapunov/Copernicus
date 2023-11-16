@@ -195,10 +195,12 @@ accounting = function (canvas_id, data, vert) {
     const values = sortedData.map(item => item.value);
     const canvas = document.getElementById(canvas_id);
     canvas.style.width = '100%';
-    if(typeof vert === 'undefined'){
-        canvas.style.height = '240px';
-    }else{
-        canvas.style.height = vert+'px';
+    const parentWidth = canvas.parentElement.clientWidth;
+    canvas.width = parentWidth;
+    if (typeof vert === 'undefined') {
+        canvas.height = 240;
+    } else {
+        canvas.height = vert;
     }
     const ctx = canvas.getContext('2d');
     new Chart(ctx, {
