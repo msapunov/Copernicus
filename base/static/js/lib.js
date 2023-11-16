@@ -184,12 +184,12 @@ trigger_modal = function(e){
     }
 };
 
-accounting = function (canvas_id, data, vert){
+accounting = function (canvas_id, data, vert) {
     const sortedData = data.data.map(item => {
         const dateStr = Object.keys(item)[0];
         const date = moment(dateStr, 'YYYY-MM-DD HH:mm').toDate();
         const value = Object.values(item)[0];
-        return { date, value };
+        return {date, value};
     }).sort((a, b) => a.date - b.date);
     const dates = sortedData.map(item => moment(item.date).format('YYYY-MM-DD HH:mm'));
     const values = sortedData.map(item => item.value);
