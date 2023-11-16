@@ -203,37 +203,46 @@ accounting = function (canvas_id, data, vert) {
         canvas.height = vert;
     }
     const ctx = canvas.getContext('2d');
-    new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: dates,
-            datasets: [{
-                label: "",
-                data: values,
-                barPercentage: 1.0,
-                categoryPercentage: 1.0,
-                backgroundColor: '#00aff2',
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                title: {
-                    display: false
-                },
-                legend: {
-                    display: false
-                }
+    if (dates.length === 0) {
+        ctx.font = '12px Arial bold';
+        ctx.fillStyle = 'black';
+        ctx.textAlign = 'left';
+        ctx.textBaseline = 'top'; //'middle';
+        ctx.fillText('No data available', 5, 5);
+
+    } else {
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: dates,
+                datasets: [{
+                    label: "",
+                    data: values,
+                    barPercentage: 1.0,
+                    categoryPercentage: 1.0,
+                    backgroundColor: '#00aff2',
+                }]
             },
-            scales: {
-                x: {
-                    display: false
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: false
+                    },
+                    legend: {
+                        display: false
+                    }
                 },
-                y: {
-                    min: 0,
-                    display: false
+                scales: {
+                    x: {
+                        display: false
+                    },
+                    y: {
+                        min: 0,
+                        display: false
+                    }
                 }
             }
-        }
-    });
+        });
+    }
 };
