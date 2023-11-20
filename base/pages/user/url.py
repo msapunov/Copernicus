@@ -89,12 +89,6 @@ def user_index():
     if not current_user.project:
         current_user.project = []
         flash("No projects found for user '%s'" % current_user.full())
-    user = {"full": current_user.full_name(),
-            "name": current_user.name,
-            "surname": current_user.surname,
-            "email": current_user.email,
-            "uid": current_user.uid,
-            "login": current_user.login}
     start = dt.now(timezone.utc)
     for project in current_user.project:
         if project.resources.created < start:
@@ -122,7 +116,8 @@ def user_index():
             project.private = conso[current_user.login]
         project.private_use = "{0:.1%}".format(
             float(project.private) / float(project.resources.cpu))
-    return render_template("user.html", data={"user": user,
+
+    return render_template("user.html", data={"user": current_user.to_dict(),
                                               "jobs": jobs,
                                               "scratch": scratch,
                                               "projects": current_user.project})
