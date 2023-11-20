@@ -89,7 +89,7 @@
                     <div class="uk-margin-top">
                         {% if project.active and project.resources and project.resources.cpu %}
                             {% set conso_use = project.consumed_use() %}
-                            {% if project.resources.consumption and conso_use %}
+                            {% if project.resources.consumption() and conso_use %}
                                 CPU consumed: {{project.resources.consumption}} out of {{project.resources.cpu}} ({{conso_use}}%)
                                     {% if project.resources.cpu > 0 %}
                                         {% if conso_use > 100 %}
