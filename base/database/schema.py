@@ -401,8 +401,13 @@ class Resources(db.Model):
             "finish": ttl
         }
 
+    def consumption(self):
+        return Accounting.query.filter_by(
+            resources=self, user=None
+        ).with_entities(func.sum(Accounting.cpu)).scalar()
+
     def usage(self):
-        conso = self.consumption
+        conso = self.consumption()
         total = self.cpu
         if not conso:
             return "0%"
