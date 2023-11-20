@@ -130,7 +130,7 @@
                         <div class="uk-progress uk-progress-striped uk-active {{style}}">
                             <div class="uk-progress-bar" style="width: {{use}}%;"></div>
                         </div>
-                        <p>Resources consumption: {{project.resources.consumption}} CPU hours ({{ use|string }}%)</p>
+                        <p>Resources consumption: {{project.resources.consumption()}} CPU hours ({{ use|string }}%)</p>
                         <p>Personal consumption: {{project.private}} CPU hours ({{project.private_use}})</p>
                     </div>
                 </div>
