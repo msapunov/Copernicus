@@ -16,6 +16,8 @@
         if(!$(btn).hasClass("uk-active")){
             return;
         }
+        $(".conso").removeClass("uk-active");
+        $(".conso_all").addClass("uk-active");
         let extype = $.trim( $(btn).data("type") );
         table.columns(13).search(extype).draw();
     };
@@ -23,6 +25,8 @@
         if (!$(btn).hasClass("uk-active")) {
             return;
         }
+        $(".ext-type").removeClass("uk-active");
+        $(".type_all").addClass("uk-active");
         let conso = parseInt( $.trim($(btn).data("conso")) );
         $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
             return parseInt(data[12]) >= conso
