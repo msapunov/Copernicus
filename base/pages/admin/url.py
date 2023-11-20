@@ -34,7 +34,8 @@ from base.pages.admin.magic import (
     registration_responsible_edit,
     registration_record_edit,
     space_info,
-    reg_accept)
+    reg_accept,
+    task_history)
 from base.functions import slurm_nodes_status, show_configuration, ssh_wrapper
 from base.pages.admin.form import (
     CreateForm,
@@ -425,7 +426,7 @@ def web_admin_tasks_accept(tid):
 @login_required
 @grant_access("admin")
 def web_admin_tasks_history():
-    return jsonify(data=TaskManager().history())
+    return jsonify(data=task_history())
 
 
 @bp.route("/admin/tasks/todo", methods=["POST"])

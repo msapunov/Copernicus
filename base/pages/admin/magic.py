@@ -652,18 +652,19 @@ def process_task(tid, result):
     return task.done(result)  # TODO: result of task should be an argument for done methode
 
 
+def task_history(reverse=True):
+    # Returns a list of all tasks registered in the system. by default
+    # the records are sorted by date in descending order
+    tasks = sorted(Tasks.query.all(), key=attrgetter("created"),
+                   reverse=reverse)
+    return list(map(lambda x: x.to_dict(), tasks)) if tasks else []
+
+
 class TaskManager:
 
     def __init__(self):
         self.query = Tasks().query
         self.tasks = Tasks
-
-    def history(self, reverse=True):
-        # Returns a list of all tasks registered in the system. by default
-        # the records are sorted by date in descending order
-        tasks = sorted(self.query.all(), key=attrgetter("created"),
-                       reverse=reverse)
-        return list(map(lambda x: x.to_dict(), tasks)) if tasks else []
 
     def todo(self):
         # Returns a list of tasks which has been processed by admins but haven't
