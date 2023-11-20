@@ -585,6 +585,14 @@ def web_cfg():
     return render_template("config.html", data=show_configuration())
 
 
+@bp.route("/tasks", methods=["GET", "POST"])
+@bp.route("/tasks.html", methods=["GET", "POST"])
+@login_required
+@grant_access("admin", "manager")
+def web_task():
+    return render_template("task.html", data=task_history())
+
+
 @bp.route("/admin", methods=["GET", "POST"])
 @bp.route("/admin.html", methods=["GET", "POST"])
 @login_required
