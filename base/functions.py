@@ -477,32 +477,6 @@ def slurm_consumption_raw(name, start, finish):
     return data, run
 
 
-def group_for_consumption(projects, recalculate=False):
-    """
-    Grouping projects by resource created time
-    :param projects: List or String. List of projects is str converts to list
-    :param recalculate: Boolean. Default False. If True take resource creation
-    date as start date for sreport command
-    :return: Dict where keys are created time and value is the list of
-    project records
-    """
-    if not isinstance(projects, list):
-        projects = [projects]
-    dates = {}
-    for project in projects:
-        if not project.resources:
-            error("No resources attached to project", project)
-            continue
-        if project.resources.consumption_ts and not recalculate:
-            start = project.resources.consumption_ts
-        else:
-            start = project.resources.created
-        if start not in dates:
-            dates[start] = []
-        dates[start].append(project)
-    return dates
-
-
 def file_as_string(name):
     """
     Encoding a file to Base64 format

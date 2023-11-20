@@ -7,7 +7,6 @@ from base import db
 from base.database.schema import Project, Accounting, User
 from base.functions import (
     ssh_wrapper,
-    group_for_consumption,
     slurm_consumption_raw,
     slurm_parse)
 
@@ -36,52 +35,6 @@ def accounting_run():
         process_accounting_data(end, result)
     consumption_update()
     return "Statistic updated", 200
-
-
-def resources_update(projects, force=False, end=dt.now()):
-    """
-    Updates the total consumption for the projects with valid resources.
-    Consumption start is time of resource creation if force parameter is True.
-    If force is False then start time will be the value of consumption_ts field
-    associated with resource. If end date is not provided then current date and
-    time will be used.
-    :param projects: Object or List of Objects. Copy of Project object(s)
-    :param force: Boolean. Default False. If True then consumption will be
-    recalculated from resource creation date.
-    :param end:
-    :return: List. List of updated project objects
-    """
-    dates = group_for_consumption(projects, recalculate=force)
-    for start, value in dates.items():
-        if start == end:
-            debug("Start %s and finish %s is same. Skipping" % (start, end))
-            continue
-        accounts = ",".join(list(map(lambda x: x.get_name(), value)))
-        begin = start.strftime("%Y-%m-%dT%H:%M")
-        finish = end.strftime("%Y-%m-%dT%H:%M")
-        result, cmd = slurm_consumption_raw(accounts, begin, finish)
-        conso = slurm_parse(result)
-        names = conso.keys()
-        for project in value:
-            name = project.get_name()
-            if name not in names:
-                consumption = 0
-            else:
-                consumption = int(conso[name]["total consumption"])
-            if force:
-                project.resources.consumption = consumption
-            else:
-                if project.resources.consumption:
-                    project.resources.consumption += consumption
-                else:
-                    project.resources.consumption = consumption
-            if name in conso:
-                conso[name]["start time"] = begin
-                conso[name]["end time"] = finish
-                project.resources.consumption_raw = str(conso[name])
-            debug("Updated resource with ID: %s" % project.resources.id)
-    db.session.commit()
-    return projects
 
 
 def process_accounting_data(date, result):
