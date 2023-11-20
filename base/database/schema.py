@@ -229,7 +229,7 @@ class Project(db.Model):
             "ref": ref,
             "accounted": self.account(),
             "total": self.resources.cpu if self.resources else 0,
-            "consumed": self.resources.consumption,
+            "consumed": self.resources.consumption(),
             "consumed_use": use,
             "consumed_usage": usage
         }
@@ -301,7 +301,7 @@ class Extend(db.Model):
         mod = self.modified.strftime("%Y-%m-%d %X %Z") if self.modified else ""
         approve = self.approve.full_name() if self.approve else ""
         usage = self.project.resources.usage().replace("%", "")  # No percents
-        use = self.project.resources.consumption
+        use = self.project.resources.consumption()
         return {
             "id": self.id,
             "extension": self.extend,
