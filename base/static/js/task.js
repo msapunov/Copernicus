@@ -24,8 +24,18 @@
             return;
         }
         const state = $.trim( $(btn).data("status") );
-        if( state === "waiting"){
+        if( state === "waiting") {
             table.column(4).search('^$', true, false).draw();
+        } else if( state === "processed"){
+            table.column(4).search("processed").draw();
+            $.fn.dataTable.ext.search.push(
+                function(settings, data, dataIndex) {
+                    let originalData = table.cell(dataIndex, 5).data();
+                    return originalData === "accept";
+                }
+            );
+            table.draw();
+            $.fn.dataTable.ext.search.pop();
         }else{
             table.column(4).search(state).draw();
         }
