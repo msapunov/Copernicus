@@ -17,7 +17,7 @@ from base.pages.admin.form import activate_user
 from base.pages.board.magic import create_resource
 from base.pages.user.magic import user_by_id
 from base.pages.user.form import edit_info, set_password, PassForm
-from base.database.schema import (User, ArticleDB, LogDB, Project, Tasks,
+from base.database.schema import (User, ArticleDB, LogDB, Project, Tasks, ACLDB,
                                   Register)
 from base.email import Mail
 from base.classes import UserLog, RequestLog, TmpUser, ProjectLog, Task
@@ -29,6 +29,37 @@ from base.functions import ssh_wrapper
 
 __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
+
+
+def process_user_form(form):
+    prenom = form.prenom.data
+    surname = form.surname.data
+    email = form.email.data
+    login = form.login.data
+    if login == "none":
+        pass
+    if login == "select":
+        username = form.exist.data
+        if username not in g.user_list:
+            raise ValueError("Failed to find '%s' among registered users"
+                             % username)
+        user = User.query.filter_by(login=username).one()
+        user.action = "assign"
+    else:
+        user = User(login=login,
+                    name=prenom.lower(),
+                    surname=surname.lower(),
+                    email=email.lower(),
+                    created=dt.now(),
+                    acl=ACLDB())
+        db.session.add(user)
+        user.action = "create"
+    if "True" == form.responsible.data:
+        user.acl.is_responsible = True
+        user.resp = True
+    else:
+        user.resp = False
+    return user
 
 
 def last_user(data):

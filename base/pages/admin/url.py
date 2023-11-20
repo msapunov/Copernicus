@@ -10,6 +10,7 @@ from base.classes import Pending, Extensions
 from base.pages.user.magic import get_user_record, user_by_id
 from base.pages.admin import bp
 from base.pages.admin.magic import (
+    process_user_form,
     last_user,
     render_pending,
     render_registry,
@@ -311,13 +312,13 @@ def admin_registration_ignore(pid):
 def admin_registration_create(pid):
     data = request.form.to_dict()
     indexes = list(set([int(key.split("-")[0]) for key in data.keys()]))
-    forms = []
+    users = []
     for i in indexes:
         form = CreateForm(prefix=str(i))
         if not form.validate_on_submit():
             raise ValueError(form.errors)
-        forms.append(form)
-    return jsonify(message=Pending(pid).create(forms).result)
+        users.append(process_user_form(form))
+    return jsonify(message=Pending(pid).create(users).result)
 
 
 @bp.route("/admin/registration/accept/<int:pid>", methods=["POST"])

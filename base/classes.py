@@ -260,12 +260,14 @@ class RequestLog(Log):
         self.log.event = "Visa sending step has been skipped"
         return self.commit(Mail().visa_skip(self))
 
-    def create(self, name=None):
+    def create(self, project=None):
         meso = self.pending.project_id()
-        if name:
-            self.log.event = "Project %s created of request %s" % (name, meso)
+        if project:
+            name = project.get_name()
+            self.log.project = project
+            self.log.event = "Create project %s from request %s" % (name, meso)
         else:
-            self.log.event = "Project created of request %s" % meso
+            self.log.event = "Create project from request %s" % meso
         return self.commit()
 
     def user_del(self, user):
@@ -522,22 +524,6 @@ class TmpUser(User):
         self.active = True if active_part.strip() == "True" else False
         return self
 
-    def ready_task(self):
-        """
-        Creates task's description out of instance of TmpUser
-        :return: String. Task's description
-        """
-        u_part = "login: %s and name: %s and surname: %s and email: %s" % (
-            self.login, self.name, self.surname, self.email)
-        if self.password:
-            u_part += " and password: %s" % self.password
-        a_part = "user: %s, responsible: %s, manager: %s, tech: %s, " \
-                 "committee: %s, admin: %s" % (self.is_user,
-                                               self.is_responsible,
-                                               self.is_manager, self.is_tech,
-                                               self.is_committee, self.is_admin)
-        return "%s WITH ACL %s WITH STATUS %s" % (u_part, a_part, self.active)
-
 
 class Pending:
     """
@@ -557,8 +543,6 @@ class Pending:
         self.pending = query.filter_by(id=rid).first()
         self.action = None
         self.result = None
-        self.project = None
-        self.tasks = []
 
     def verify(self):
         """
@@ -581,34 +565,6 @@ class Pending:
             raise ValueError("Processing of new project record is not allowed")
         return self.pending
 
-    def create_task(self):
-        if not self.project:
-            raise ValueError("Can create task to existing project only!")
-        act = ("create|proj||" + self.project.name + "|Create new project " +
-               self.project.name + " based on request " +
-               self.pending.project_id() + " with CPU " +
-               str(self.project.resources.cpu))
-        db.session.add(Tasks(
-            action=act,
-            approve=current_user,
-            processed=True,
-            decision="accept",
-            done=False,
-            pid=self.project.id,
-            project=self.project
-        ))
-        for user in self.project.users:
-            db.session.add(Tasks(
-                action=user.task.replace("%s", self.project.name),
-                approve=current_user,
-                processed=True,
-                decision="accept",
-                done=False,
-                uid=user.id,
-                project=self.project
-            ))
-        return self
-
     def create(self, users):
         """
         Check if all requirements are satisfied and creates a project in the DB
@@ -618,7 +574,11 @@ class Pending:
         record = self.create_check().pending
         total = Project.query.count()
         name = "%s%s" % (record.type, total + 1)
-        self.project = Project(
+        responsible = list(filter(lambda x: x.resp, users))[0]
+        titles = [getattr(record, f"article_{i}") for i in range(1, 6) if
+                  getattr(record, f"article_{i}", "") is not ""]
+        articles = map(lambda x: ArticleDB(info=x, user=responsible), titles)
+        proj = Project(
             title=record.title,
             description=record.description,
             scientific_fields=record.scientific_fields,
@@ -628,15 +588,16 @@ class Pending:
             project_management=record.project_management,
             project_motivation=record.project_motivation,
             active=False,
-            comment="Project created by Copernicus",
+            comment="Project created using Copernicus",
             ref=record,
             privileged=False,
             type=record.type,
             created=dt.now(),
             approve=current_user,
             name=name,
-            responsible=None,
-            users=[],
+            responsible=responsible,
+            users=users,
+            articles=list(articles),
             resources=Resources(
                 approve=current_user,
                 valid=True,
@@ -647,66 +608,22 @@ class Pending:
                 treated=False
             )
         )
-        task = TaskQueue().project(self.project).project_create().task
-        Task(task).accept()
-        self.result = RequestLog(record).create(name)
-        db.session.add(self.project)
-        self.attach_users(users)
-        for i in range(1, 6):
-            a_title = getattr(record, f"article_{i}", False)
-            if a_title:
-                self.project.articles.append(
-                    ArticleDB(info=a_title, user=self.project.responsible))
+        TaskQueue().project(proj).project_create().task.accept()
+        for user in users:
+            if user.action == "assign" and user.resp:
+                TaskQueue().project(proj).responsible_assign(user).task.accept()
+            elif user.action == "assign" and not user.resp:
+                TaskQueue().project(proj).user_assign(user).task.accept()
+            elif user.action == "create" and user.resp:
+                TaskQueue().project(proj).responsible_create(user).task.accept()
+            elif user.action == "create" and not user.resp:
+                TaskQueue().project(proj).user_create(user).task.accept()
+        db.session.add(proj)
+        self.result = RequestLog(record).create(proj)
         record.status = "project created"
         record.processed = True
         record.processed_ts = dt.now()
         return self.commit()
-
-    def attach_users(self, forms):
-        if not self.project:
-            raise ValueError("Can attach to existing project only!")
-        p_log = ProjectLog(self.project)
-        p_log.send = False
-        ref = self.pending
-        for form in forms:
-            prenom = form.prenom.data
-            surname = form.surname.data
-            email = form.email.data
-            if email == ref.responsible_email:
-                resp = True
-            else:
-                resp = False
-            login = form.login.data
-            if login == "none":
-                continue
-            tq = TaskQueue().project(self.project)
-            if login == "select":
-                username = form.exist.data
-                if username not in g.user_list:
-                    raise ValueError("Failed to find %s among registered users"
-                                     % username)
-                user = User.query.filter_by(login=username).one()
-                if resp:
-                    task = tq.responsible_assign(user).task
-                    p_log.responsible_assign(task)
-                else:
-                    task = tq.user_assign(user).task
-                    p_log.user_assign(task)
-            else:
-                user = TmpUser()
-                user.name=prenom.lower()
-                user.surname=surname.lower()
-                user.email=email.lower()
-                user.login=login
-                user.is_responsible=True if resp else False
-                if resp:
-                    task = tq.responsible_create(user).task
-                    p_log.user_create(task)
-                else:
-                    task = tq.user_create(user).task
-                    p_log.user_create(task)
-            Task(task).accept()
-        return self
 
     def create_check(self):
         """
@@ -1014,9 +931,10 @@ class Task:
                                   is_committee=tmp_user.is_committee,
                                   is_admin=tmp_user.is_admin))
             db.session.add(user)
-            user.passwd = user.reset_password()
         if user not in project.users:
             project.users.append(user)
+        if not getattr(user, "passwd", None):
+            user.passwd = user.reset_password()
         Mail().user_new(user).start()
         UserMailingList().add(user.email, user.full_name())
         if user.acl.is_responsible:
