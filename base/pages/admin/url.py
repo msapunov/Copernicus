@@ -422,6 +422,13 @@ def web_admin_tasks_accept(tid):
     return jsonify(data=TaskManager().list())
 
 
+@bp.route("/admin/tasks/info/<int:tid>", methods=["POST"])
+@login_required
+@grant_access("admin")
+def web_admin_tasks_info(tid):
+    return render_template("bits/task_expand_row.html", task=Task(tid).task)
+
+
 @bp.route("/admin/tasks/history", methods=["POST"])
 @login_required
 @grant_access("admin")
