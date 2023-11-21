@@ -56,14 +56,11 @@
             columns.push(idx);
         });
         if(column_n == ""){
-            table.columns([8,10,12,14,16,18]).search("").draw();
-            table.columns([7,9,11,13,15,17]).visible(true);
+            table.columns(columns).search("").draw();
         }else{
             column_n = (column_n/1);
-            table.columns([8,10,12,14,16,18]).search("");
+            table.columns(columns).search("");
             table.columns(column_n).search("True").draw();
-            table.columns([7,9,11,13,15,17]).visible(false);
-            table.columns([6]).visible(true);
         }
     };
     window.registry.update_projects = function update_projects(select){
