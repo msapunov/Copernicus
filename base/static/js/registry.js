@@ -49,8 +49,12 @@
         if(!$(btn).hasClass("uk-active")){
             return;
         }
-        var column_n = $.trim( $(btn).data("type") );
-
+        let columns = [];
+        let column_n = $.trim( $(btn).data("type") );
+        $(".acl-type").each(function() {
+            let idx = $(this).data("type");
+            columns.push(idx);
+        });
         if(column_n == ""){
             table.columns([8,10,12,14,16,18]).search("").draw();
             table.columns([7,9,11,13,15,17]).visible(true);
