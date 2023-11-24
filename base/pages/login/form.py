@@ -3,11 +3,8 @@ from wtforms import StringField, PasswordField, TextAreaField, HiddenField
 from wtforms.validators import DataRequired
 
 
-class MessageForm(FlaskForm):
-    destination = HiddenField(validators=[DataRequired()])
-    title = StringField("Title", validators=[DataRequired()])
-    message = TextAreaField("Message", validators=[DataRequired(
-        message="Message field is empty")])
+__author__ = "Matvey Sapunov"
+__copyright__ = "Aix Marseille University"
 
 
 class ResetForm(FlaskForm):
