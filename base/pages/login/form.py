@@ -7,6 +7,13 @@ __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
 
 
+class MessageForm(FlaskForm):
+    destination = HiddenField(validators=[DataRequired()])
+    title = StringField("Title", validators=[DataRequired()])
+    message = TextAreaField("Message", validators=[DataRequired(
+        message="Message field is empty")])
+
+
 class ResetForm(FlaskForm):
     old = PasswordField("OldPassword", validators=[DataRequired()])
     new_passw = PasswordField("NewPassword", validators=[DataRequired()])
