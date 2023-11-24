@@ -21,8 +21,8 @@ login_manager.session_protection = "strong"
 
 
 @login_manager.user_loader
-def load_user(userid):
-    return User.query.filter(User.id == userid).first()
+def load_user(uid):
+    return User.query.filter_by(id=uid).first()
 
 
 @bp.route("/api/<path:urlpath>", methods=["POST"])
