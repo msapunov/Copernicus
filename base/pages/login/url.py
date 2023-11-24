@@ -131,17 +131,3 @@ def login():
 def logout():
     logout_user()
     return redirect(url_for("login.login"))
-
-
-@bp.route("/message", methods=["POST"])
-@login_required
-def message():
-    form = MessageForm()
-    if not form.validate_on_submit():
-        raise ValueError(form.errors)
-    msg = {"destination": form.destination.data,
-           "title": form.title.data,
-           "body": form.message.data
-           }
-    Mail().simple_message(msg)
-    return jsonify(data="Message sent")
