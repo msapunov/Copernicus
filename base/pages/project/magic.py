@@ -468,9 +468,7 @@ def get_future_users(projects):
         tasks = list(filter(lambda x: "create|user" in x.action, recs))
         f_users = [TmpUser().from_task(Task(task)) for task in tasks]
         for user in project.users:
-            if user.login in f_login:
-                user.active = "Suspended"
-                f_login = [x for x in f_login if x != user.login]
+            f_users = [x for x in f_users if x.login != user.login]
 
         if f_login:
             new_users = list(filter(lambda x: x.login in f_login, f_users))
