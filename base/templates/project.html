@@ -143,6 +143,14 @@
                         </span>
                     </div>
                 {% endfor %}
+                {% for user in project.trans_users|sort(attribute='login')%}
+                    <div class="uk-panel" id="{{project.name}}_{{user.login}}">
+                        <button class="uk-button uk-button-mini uk-button-link uk-text-warning uk-icon-justify" type="button" disabled></button>
+                        <span class="uk-text-muted uk-margin-small-left" title="{{user.login}} &lt;{{user.email}}&gt;">
+                        {{user.full_name()}} [Reviewing]
+                        </span>
+                    </div>
+                {% endfor %}
                 <div class="uk-hidden">{{ user_real }}</div>
                 {% for login in user_conso %}
                     {% if login in user_real %}
