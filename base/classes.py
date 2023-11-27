@@ -511,8 +511,6 @@ class TmpUser(User):
                 self.name = i.replace("name: ", "").strip()
             elif "email" in i:
                 self.email = i.replace("email: ", "").strip()
-            if "password" in i:
-                self.password = i.replace("password: ", "").strip()
 
         acl_part, active_part = service_part.split(" WITH STATUS ")
         roles = ["user", "responsible", "manager", "tech", "committee", "admin"]
