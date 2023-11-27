@@ -485,6 +485,9 @@ class TmpUser(User):
         self.is_admin = False
         self.password = None
 
+    def __repr__(self):
+        return '<TmpUser {}>'.format(self.login)
+
     def from_task(self, task):
         """
         Takes a task's action string and fill up the properties of TmpUser
