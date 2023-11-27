@@ -466,8 +466,7 @@ def get_future_users(projects):
         if not recs:
             continue
         tasks = list(filter(lambda x: "create|user" in x.action, recs))
-        f_users = [TmpUser().from_task(Task(task)).login for task in tasks]
-        f_login = list(map(lambda x: x.login, f_users))
+        f_users = [TmpUser().from_task(Task(task)) for task in tasks]
         for user in project.users:
             if user.login in f_login:
                 user.active = "Suspended"
