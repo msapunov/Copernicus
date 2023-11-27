@@ -304,6 +304,12 @@ def user_create_by_admin(form):
         raise ValueError("User with e-mail %s has been registered already"
                          % email)
 
+    real = filter(lambda x: True if x != "None" else False, form.project.data)
+    names = list(real)
+    if not names:
+        raise ValueError("Can't create a user in not existing project: %s" %
+                         ", ".join(form.project.data))
+
     user = TmpUser()
     user.name = form.name.data.strip().lower()
     user.surname = form.surname.data.strip().lower()
@@ -317,11 +323,6 @@ def user_create_by_admin(form):
     user.is_admin = True if form.is_admin.data else False
     user.is_committee = True if form.is_committee.data else False
 
-    real = filter(lambda x: True if x != "None" else False, form.project.data)
-    names = list(real)
-    if not names:
-        raise ValueError("Can't create a user in not existing project: %s" %
-                         ", ".join(form.project.data))
     for name in names:
         project = get_project_by_name(name)
         tid = TaskQueue().project(project).user_create(user).task.id
