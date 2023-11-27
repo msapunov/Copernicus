@@ -57,8 +57,8 @@
     <div class="uk-width-1-4 uk-margin-top uk-margin-bottom">
         <button disabled class="uk-button uk-width-1-1 uk-margin-small-bottom edit" data-modal="{{ task.id }}_edit"><span class="uk-icon-edit uk-margin-small-right"></span>Edit</button>
         {% if task.decision == None %}
-            <button disabled class="uk-button uk-width-1-1 uk-margin-small-bottom accept" data-modal="{{ task.id }}_accept"><span class="uk-icon-thumbs-o-up uk-margin-small-right"></span>Accept</button>
-            <button disabled class="uk-button uk-width-1-1 uk-margin-small-bottom ignore" data-modal="{{ task.id }}_ignore"><span class="uk-icon-thumbs-o-down uk-margin-small-right"></span>Ignore</button>
-            <button disabled class="uk-button uk-button-danger uk-width-1-1 uk-margin-small-bottom reject" data-modal="{{ task.id }}_reject"><span class="uk-icon-thumbs-down uk-margin-small-right"></span>Reject</button>
+            <button class="uk-button uk-width-1-1 uk-margin-small-bottom accept" data-modal="{{ task.id }}_accept"><span class="uk-icon-thumbs-o-up uk-margin-small-right"></span>Accept</button>
+            <button class="uk-button uk-width-1-1 uk-margin-small-bottom ignore" data-modal="{{ task.id }}_ignore"><span class="uk-icon-thumbs-o-down uk-margin-small-right"></span>Ignore</button>
+            <button class="uk-button uk-button-danger uk-width-1-1 uk-margin-small-bottom reject" data-modal="{{ task.id }}_reject"><span class="uk-icon-thumbs-down uk-margin-small-right"></span>Reject</button>
         {% endif %}
     </div>
