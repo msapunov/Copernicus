@@ -975,15 +975,13 @@ class Task:
         """
         project = self.task.project
         user = self.task.user
-        if user.active:
-            raise ValueError("User %s is already active!" % user.login)
-        user.active = True
-        project.users.append(user)
-        user.passwd = user.reset_password()
-        Mail().user_new(user).start()
-        UserMailingList().add(user.email, user.full_name())
-        if user.acl.is_responsible:
-            ResponsibleMailingList.add(user.email, user.full_name())
+        if user not in project.users:
+            project.users.append(user)
+        if not user.active:
+            user.active = True
+            UserMailingList().add(user.email, user.full_name())
+            if user.acl.is_responsible:
+                ResponsibleMailingList.add(user.email, user.full_name())
         return ProjectLog(project).user_activated(self.task)
 
     def user_assign(self):
