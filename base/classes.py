@@ -976,7 +976,7 @@ class Task:
         project = self.task.project
         user = self.task.user
         if user.active:
-            raise ValueError("User %s is already active!")
+            raise ValueError("User %s is already active!" % user.login)
         user.active = True
         project.users.append(user)
         user.passwd = user.reset_password()
