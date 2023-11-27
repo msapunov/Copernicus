@@ -470,11 +470,8 @@ def get_future_users(projects):
         for user in project.users:
             f_users = [x for x in f_users if x.login != user.login]
 
-        if f_login:
-            new_users = list(filter(lambda x: x.login in f_login, f_users))
-            for user in new_users:
-                user.active = "Suspended"
-            project.users.extend(new_users)
+        if f_users:
+            project.trans_users = f_users
     return projects
 
 
