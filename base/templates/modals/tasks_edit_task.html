@@ -1,0 +1,30 @@
+<div class="uk-modal fade" tabindex="-1" role="dialog" aria-labelledby="confirm-modal" aria-hidden="true" id="{{task.id}}_edit">
+    <div class="uk-modal-dialog">
+        <button type="button" class="uk-modal-close uk-close"></button>
+        <div class="uk-modal-header">
+            <h3>Edit task id: {{task.id}}?</h3>
+        </div>
+        <div class="uk-overflow-container">
+            <form class="uk-panel uk-form edit_form" id="{{task.id}}_edit_form">
+                {{ form.csrf_token() }}
+                <ul class="uk-form-row uk-grid uk-grid-width-1-3 uk-grid-small">
+                        <li><div>{{ form.processed(class_="uk-width-1-1") }}</div></li>
+                        <li><div>{{ form.decision(class_="uk-width-1-1") }}</div></li>
+                        <li><div>{{ form.done(class_="uk-width-1-1") }}</div></li>
+                </ul>
+                <div class="uk-form-row uk-alert">
+                    <p>To schedule a task for execution on a remote server, edit the task by setting the 'Processed' field to True, the 'Decision' field to 'Accept', and the 'Done' field to False.</p>
+                </div>
+                <div class="uk-form-row uk-alert">
+                    <p>To mark a task as completed, simply set the value of the 'Done' field to True</p>
+                </div>
+            </form>
+        </div>
+        <div class="uk-modal-footer">
+            <div class="uk-text-right">
+                <button class="uk-button window_hide" data-modal="{{task.id}}_edit">Cancel</button>
+                <button class="uk-button uk-button-primary edit_submit" data-row="{{project_id}}" data-modal="{{task.id}}_edit" data-form="{{task.id}}_edit_form" data-url="/admin/task/edit/{{task.id}}">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
