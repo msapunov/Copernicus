@@ -3,7 +3,7 @@
     window.task = {};
     window.task.url = {
         details: "admin/tasks/info",
-        list: "/admin/tasks/history"
+        list: "admin/tasks/history"
     };
     window.task.submit = function (){
         let table = $('table#tasks').DataTable();
