@@ -296,3 +296,13 @@ class ActivateUserForm(FlaskForm):
         super(ActivateUserForm, self).__init__(*args, **kwargs)
         projects = list_of_projects()
         self.projects.choices = [(project, project) for project in projects]
+
+
+class TaskEditForm(FlaskForm):
+    processed = SelectField("Processed", choices=[
+        ("true", "Processed: True"), ("false", "Processed: False")])
+    done = SelectField("Done", choices=[("true", "Done: True"),
+                                        ("false", "Done: False")])
+    decision = SelectField("Decision", choices=[
+        ("none", "Decision: None"), ("accept", "Decision: Accept"),
+        ("ignore", "Decision: Ignore"), ("reject", "Decision: Reject")])
