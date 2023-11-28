@@ -306,3 +306,11 @@ class TaskEditForm(FlaskForm):
     decision = SelectField("Decision", choices=[
         ("none", "Decision: None"), ("accept", "Decision: Accept"),
         ("ignore", "Decision: Ignore"), ("reject", "Decision: Reject")])
+
+
+def edit_task(task):
+    processed = str(task.processed).lower()
+    done = str(task.done).lower()
+    decision = "none" if not task.decision else str(task.decision).lower()
+    form = TaskEditForm(processed=processed, done=done, decision=decision)
+    return form
