@@ -12,6 +12,7 @@ from base.pages.admin.form import (action_pending,
                                    edit_responsible,
                                    edit_user,
                                    new_user,
+                                   edit_task,
                                    contact_user)
 from base.pages.admin.form import activate_user
 from base.pages.board.magic import create_resource
