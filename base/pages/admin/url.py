@@ -12,6 +12,7 @@ from base.pages.admin import bp
 from base.pages.admin.magic import (
     process_user_form,
     last_user,
+    render_task,
     render_pending,
     render_registry,
     all_users,
@@ -426,7 +427,7 @@ def web_admin_tasks_accept(tid):
 @login_required
 @grant_access("admin")
 def web_admin_tasks_info(tid):
-    return render_template("bits/task_expand_row.html", task=Task(tid).task)
+    return render_task(Task(tid).task)
 
 
 @bp.route("/admin/tasks/history", methods=["POST"])
