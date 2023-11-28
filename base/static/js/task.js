@@ -137,14 +137,20 @@
         $("#table_search").on( "keyup", function () {
             table.search( this.value ).draw();
         });
+        $(document).on("click", ".window_hide", trigger_modal);
+
         $(document).on("click", ".items", function(){ window.task.items(this, table) });
         $(document).on("click", ".task-status", function(){ window.task.status(this, table) });
+
         $(document).on("click", ".accept", trigger_modal);
         $(document).on("click", ".accept_submit", window.task.submit);
+
         $(document).on("click", ".ignore", trigger_modal);
         $(document).on("click", ".ignore_submit", window.task.submit);
+
         $(document).on("click", ".reject", trigger_modal);
         $(document).on("click", ".reject_submit", window.task.submit);
+
         $(document).on("click", ".edit", trigger_modal);
         $(document).on("click", ".edit_submit", window.task.submit);
     });
