@@ -48,6 +48,7 @@ from base.pages.admin.form import (
     ActivateUserForm,
     EditResponsibleForm,
     NewUserForm,
+    TaskEditForm,
     NewUserEditForm)
 from base.pages.project.magic import process_extension
 from base.utils import form_error_string
