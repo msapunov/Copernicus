@@ -239,7 +239,7 @@ class Task:
         db.session.commit()
         return self.task
 
-    def _action(self):
+    def process(self):
         self.task.processed = True
         self.task.approve = current_user
         db.session.commit()
