@@ -225,16 +225,15 @@ class Task:
     def action(self):
         return self.task.action
 
-    def update(self, data):
-        for prop in ["pending", "processed", "done", "decision"]:
-            value = str(data[prop])
-            if value not in ["accept", "ignore", "reject", "true", "false"]:
+    def update(self, form):
+        for prop in ["processed", "done", "decision"]:
+            value = getattr(form, prop).data
+            if value == "true":
+                value = True
+            elif value == "false":
+                value = False
+            elif value == "none":
                 value = None
-            else:
-                if value == "true":
-                    value = True
-                elif value == "false":
-                    value = False
             setattr(self.task, prop, value)
         db.session.commit()
         return self.task
