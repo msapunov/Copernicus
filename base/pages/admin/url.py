@@ -392,7 +392,7 @@ def admin_extension_todo():
     return jsonify(data=Extensions().pending())
 
 
-@bp.route("/admin/tasks/update/<int:tid>", methods=["POST"])
+@bp.route("/admin/tasks/edit/<int:tid>", methods=["POST"])
 @login_required
 @grant_access("admin")
 def web_admin_tasks_update(tid):
