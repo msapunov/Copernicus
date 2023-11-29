@@ -236,18 +236,14 @@ class Task:
                 elif value == "false":
                     value = False
             setattr(self.task, prop, value)
-        self._commit()
+        db.session.commit()
         return self.task
 
     def _action(self):
         self.task.processed = True
         self.task.approve = current_user
-        self._commit()
-        return self.task
-
-    @staticmethod
-    def _commit():
         db.session.commit()
+        return self.task
 
 
 class TaskQueue:
