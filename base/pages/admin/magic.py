@@ -738,7 +738,7 @@ def get_server_info(server):
 
 def parse_uptime(result):
     info = result.split(",")
-    if len(info) != 5 or len(info) != 6:
+    if 6 < len(info) < 4:
         error("Strange format for uptime: %s" % result)
         return {"up": "", "load_1": 0, "load_5": 0, "load_15": 0}
     load_1 = info[-3].replace("load average: ", "").strip()
