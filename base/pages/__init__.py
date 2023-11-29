@@ -211,16 +211,16 @@ class Task:
     def accept(self):
         self.task.decision = "accept"
         Mail().task_accepted(self.task).send()
-        return self._action()
+        return self.process()
 
     def ignore(self):
         self.task.decision = "ignore"
-        return self._action()
+        return self.process()
 
     def reject(self):
         self.task.decision = "reject"
         Mail().task_rejected(self.task).send()
-        return self._action()
+        return self.process()
 
     def action(self):
         return self.task.action
