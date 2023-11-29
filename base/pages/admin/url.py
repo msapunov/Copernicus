@@ -395,9 +395,11 @@ def admin_extension_todo():
 @bp.route("/admin/tasks/edit/<int:tid>", methods=["POST"])
 @login_required
 @grant_access("admin")
-def web_admin_tasks_update(tid):
-    data = request.get_json()
-    return jsonify(data=Task(tid).update(data).to_dict())
+def web_admin_tasks_edit(tid):
+    form = TaskEditForm()
+    if not form.validate_on_submit():
+        raise ValueError(form_error_string(form.errors))
+    return jsonify(data=Task(tid).update(form).to_dict())
 
 
 @bp.route("/admin/tasks/ignore/<int:tid>", methods=["POST"])
