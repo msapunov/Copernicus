@@ -741,7 +741,7 @@ def parse_uptime(result):
         up, hours, users, load_1, load_5, load_15 = result.strip().split(",")
     except ValueError as e:
         error("Error while splitting uptime: %s" % result)
-        return {"up": "", "load_1": "", "load_5": "", "load_15": ""}
+        return {"up": "", "load_1": 0, "load_5": 0, "load_15": 0}
     up = up.split(" up ")[1] + hours
     load_1 = load_1.replace("load average: ", "")
     return {"up": up, "load_1": load_1, "load_5": load_5, "load_15": load_15}
