@@ -55,7 +55,7 @@
         </table>
     </div>
     <div class="uk-width-1-4 uk-margin-top uk-margin-bottom">
-        <button disabled class="uk-button uk-width-1-1 uk-margin-small-bottom edit" data-modal="{{ task.id }}_edit"><span class="uk-icon-edit uk-margin-small-right"></span>Edit</button>
+        <button class="uk-button uk-width-1-1 uk-margin-small-bottom edit" data-modal="{{ task.id }}_edit"><span class="uk-icon-edit uk-margin-small-right"></span>Edit</button>
         {% if task.decision == None %}
             <button class="uk-button uk-width-1-1 uk-margin-small-bottom accept" data-modal="{{ task.id }}_accept"><span class="uk-icon-thumbs-o-up uk-margin-small-right"></span>Accept</button>
             <button class="uk-button uk-width-1-1 uk-margin-small-bottom ignore" data-modal="{{ task.id }}_ignore"><span class="uk-icon-thumbs-o-down uk-margin-small-right"></span>Ignore</button>
