@@ -737,13 +737,17 @@ def get_server_info(server):
 
 
 def parse_uptime(result):
-    try:
-        up, hours, users, load_1, load_5, load_15 = result.strip().split(",")
-    except ValueError as e:
-        error("Error while splitting uptime: %s" % result)
+    info = result.split(",")
+    if len(info) != 5 or len(info) != 6:
+        error("Strange format for uptime: %s" % result)
         return {"up": "", "load_1": 0, "load_5": 0, "load_15": 0}
-    up = up.split(" up ")[1] + hours
-    load_1 = load_1.replace("load average: ", "")
+    load_1 = info[-3].replace("load average: ", "").strip()
+    load_5 = info[-2].strip()
+    load_15 = info[-1].strip()
+    if len(info) == 5:
+        up = info[0].split(" up ")[1]
+    else:
+        up = info[0].split(" up ")[1] + info[1]
     return {"up": up, "load_1": load_1, "load_5": load_5, "load_15": load_15}
 
 
