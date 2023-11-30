@@ -702,7 +702,8 @@ class TaskManager:
 
 def get_server_info(server):
     out = {"server": server, "uptime": "", "memory": "", "load": "", "swap": ""}
-    cmd = "echo cores:`nproc` && uptime  && free -b | grep -v total"
+    cmd = "echo cores:`nproc` && uptime -p && free -b | grep -v total && uptime"
+    cmd += "| awk '/average/ {OFS=\":\"; print \"Load\",$(NF-2),$(NF-1),$NF}'"
     cmd += "&& who | cut -d' ' -f1 | sort -u"
     result, err = ssh_wrapper(cmd, host=server)
     if not result:
