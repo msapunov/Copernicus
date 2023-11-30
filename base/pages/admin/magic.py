@@ -716,6 +716,8 @@ def get_server_info(server):
     for i in result:
         if "load average" in i:
             uptime_data = i
+        if "Load" in i:
+            load_data = i.replace("Load:", "").strip()
         elif "Mem" in i:
             memory_data = i
         elif "Swap" in i:
