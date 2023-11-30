@@ -734,7 +734,7 @@ def get_server_info(server):
     out["memory"] = memory["usage"]
     out["swap"] = swap["usage"]
     out["html"] = render_template("bits/system_expand_row.html", users=users,
-                                  mem=memory, swap=swap, load=uptime)
+                                  mem=memory, swap=swap, load=uptime, up=up)
     return out
 
 
