@@ -739,18 +739,14 @@ def get_server_info(server):
 
 
 def parse_uptime(result):
-    info = result.split(",")
-    if 6 < len(info) < 4:
-        error("Strange format for uptime: %s" % result)
-        return {"up": "", "load_1": 0, "load_5": 0, "load_15": 0}
-    load_1 = info[-3].replace("load average: ", "").strip()
-    load_5 = info[-2].strip()
-    load_15 = info[-1].strip()
-    if len(info) == 5:
-        up = info[0].split(" up ")[1]
-    else:
-        up = info[0].split(" up ")[1] + info[1]
-    return {"up": up, "load_1": load_1, "load_5": load_5, "load_15": load_15}
+    try:
+        load_1, load_5, load_15 = result.split(":")
+    except ValueError as e:
+        return {"load_1": 0, "load_5": 0, "load_15": 0}
+    load_1 = load_1.strip(",")
+    load_5 = load_5.strip(",")
+    load_15 = load_15.strip(",")
+    return {"load_1": load_1, "load_5": load_5, "load_15": load_15}
 
 
 def parse_swap(result):
