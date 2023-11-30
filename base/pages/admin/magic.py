@@ -723,7 +723,7 @@ def get_server_info(server):
         elif "Swap" in i:
             swap_data = i
         elif "cores" in i:
-            cores = i.strip().replace("cores:", "")
+            cores = i.replace("cores:", "").strip()
         else:
             users.append(i.strip())
 
