@@ -731,7 +731,6 @@ def get_server_info(server):
     swap = parse_swap(swap_data)
     memory = parse_memory(memory_data)
     out["load"] = "{0:.1%}".format(float(uptime["load_1"]) / float(cores))
-    out["uptime"] = uptime["up"]
     out["memory"] = memory["usage"]
     out["swap"] = swap["usage"]
     out["html"] = render_template("bits/system_expand_row.html", users=users,
