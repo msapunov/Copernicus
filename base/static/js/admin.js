@@ -437,8 +437,6 @@
                 data: "swap"
             },{
                 data: "load"
-            },{
-                data: "uptime"
             }],
             rowCallback: function(row_html, data) {
                 if("html" in data){
