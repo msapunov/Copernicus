@@ -72,14 +72,17 @@ dialog=function(content, onconfirm, oncancel){
 };
 
 show_error = function(req){
-    var text = $.trim(req.responseText);
-    var status = $.trim(req.status);
-    var statText = $.trim(req.statusText);
-    var msg;
+    let text = $.trim(req.responseText);
+    let status = $.trim(req.status);
+    let statText = $.trim(req.statusText);
+    let type = req.getResponseHeader('Content-Type');
+    var msg = "Status code: {0}\nSatus text: {1}\n".f(status, statText);
     if((text) && (text.length > 0)){
-        msg = "Status code: {0}\nMessage: {1}\n".f(status, text);
-    }else{
-        msg = "Server return {0}: {1}\n".f(status, statText);
+        if(type && type.indexOf('text/html') !== -1){
+            msg += "Response is an HTML webpage\n".f(status);
+        }else {
+            msg += "Message: {1}\n".f(text);
+        }
     }
     msg += "Please contact technical team: {0}".f(contact);
     alert(msg);
