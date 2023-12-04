@@ -458,7 +458,9 @@ def web_admin_tasks_list():
 @login_required
 @grant_access("admin", "tech")
 def admin_tasks_done(tid):
-    result = request.args.get("result", None)
+    result = request.get_json(silent=True)
+    if result:
+        result = result.get("result", None)
     return jsonify(data=process_task(tid, result).brief())
 
 
