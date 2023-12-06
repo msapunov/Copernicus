@@ -123,6 +123,10 @@ class Project(db.Model):
     def __repr__(self):
         return '<Project {}>'.format(self.get_name())
 
+    def user_account(self, user=current_user):
+        result = self.resources.user_consumption(user)
+        return result if result else 0
+
     def account(self):
         result = self.resources.consumption()
         return result if result else 0
