@@ -105,19 +105,13 @@ def user_index():
     except ValueError as err:
         scratch = None
         flash(str(err))
+
     for project in current_user.project:
-        try:
-            conso = eval(project.resources.consumption_raw)
-        except:
-            conso = {}
-        if current_user.login not in conso:
-            project.private = 0
-        else:
-            project.private = conso[current_user.login]
+        project.private = project.user_account()
         project.private_use = "{0:.1%}".format(
             float(project.private) / float(project.resources.cpu))
 
-    return render_template("user.html", data={"user": current_user.to_dict(),
+    return render_template("user.html", data={"user": current_user,
                                               "jobs": jobs,
                                               "scratch": scratch,
                                               "projects": current_user.project})
