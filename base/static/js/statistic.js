@@ -68,19 +68,6 @@
         } else {
             modal.show();
         }
-/*
-        UIkit.modal.confirm(text, function(){
-            json_send(url).done(function(reply){
-                var row = dt.row(rid);
-                row.data(reply.data).draw();
-                row.child.hide();
-                row.child(window.stat.expand(row.data(), row)).show();
-                var tdi = $(row.node()).find("span.btn");
-                tdi.first().removeClass("uk-icon-plus");
-                tdi.first().addClass("uk-icon-minus");
-            })
-        });
-*/
     };
     window.stat.actualize = function actualize(state, dt, btn){
         var name = $.trim( $(btn).data("name") );
@@ -153,7 +140,7 @@
             return;
         }
         var state = $.trim( $(btn).data("state") );
-        table.columns(12).search(state).draw();
+        table.columns(11).search(state).draw();
     };
     window.stat.percentage = function percentage(percent, total) {
         if( percent == 0 && total == 0){
@@ -276,7 +263,7 @@
                 var conso = api.column( 5, { page: 'current'} ).data().reduce( function ( a, b ) {
                     return a + b;
                 }, 0 )
-                var total = api.column( 7, { page: 'current'} ).data().reduce( function ( a, b ) {
+                var total = api.column( 6, { page: 'current'} ).data().reduce( function ( a, b ) {
                     return a + b;
                 }, 0 )
                 var dp = window.stat.percentage(conso, total) + "%";
