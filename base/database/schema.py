@@ -223,9 +223,8 @@ class Project(db.Model):
             "allocation_start": start,
             "allocation_end": end,
             "ref": ref,
-            "accounted": self.account(),
             "total": self.resources.cpu if self.resources else 0,
-            "consumed": self.resources.consumption(),
+            "consumed": self.account(),
             "consumed_use": use,
             "consumed_usage": usage
         }
