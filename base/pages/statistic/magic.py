@@ -14,7 +14,7 @@ def accounting_run():
     dates = []
     today = dt.today().replace(tzinfo=timezone.utc)
     rec = (Accounting.query.distinct(Accounting.date)
-             .order_by(Accounting.date.desc()).first())
+           .order_by(Accounting.date.desc()).first())
     if rec:
         begin = rec.date
     else:
