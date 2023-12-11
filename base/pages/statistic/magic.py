@@ -7,7 +7,6 @@ from base import db
 from base.database.schema import Project, Accounting, User
 from base.functions import (
     ssh_wrapper,
-    slurm_consumption_raw,
     slurm_parse)
 
 
