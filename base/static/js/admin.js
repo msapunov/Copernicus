@@ -569,7 +569,7 @@
                     if ( "APPROVED" === status ) {
                         return '<span class="uk-icon-wrench uk-text-danger" title="Request status: '+status+'"></span>';
                     }else if ( "VISA SENT" === status ) {
-                        if ( data.visa_expired == true){
+                        if ( data.visa_expired === true){
                             return '<span class="uk-icon-exclamation-circle uk-text-danger" title="Request status: '+status+'"></span>';
                         }else {
                             return '<span class="uk-icon-edit uk-text-warning" title="Request status: '+status+'"></span>';
