@@ -433,30 +433,6 @@ def slurm_parse(slurm_raw_output):
     return output
 
 
-def consumption(name, start, finish):
-    """
-    Build a remote query to SLURM DB to obtain a project's CPU consumption.
-    :param name: Account name, in out case it's a project's name
-    :param start: starting date for accounting query
-    :param finish: end date for accounting query should be today's midnight
-    :return: Raw result of sreport command
-    """
-    if isinstance(name, list):
-        name = ",".join(name)
-    if isinstance(start, dt):
-        start = start.strftime("%Y-%m-%dT%H:%M:%S")
-    if isinstance(finish, dt):
-        finish = finish.strftime("%Y-%m-%dT%H:%M:%S")
-    cmd = ["sreport", "cluster", "AccountUtilizationByUser", "-t", "hours"]
-    cmd += ["-nP", "format=Account,Login,Used", "Accounts=%s" % name]
-    cmd += ["start=%s" % start, "end=%s" % finish]
-    result, err = ssh_wrapper(" ".join(cmd))
-    if not result:
-        debug("Error getting information from the remote server: %s" % err)
-        return None
-    return slurm_parse(result)
-
-
 def slurm_consumption_raw(name, start, finish):
     """
     Build a remote query to SLURM DB to obtain a project's CPU consumption.

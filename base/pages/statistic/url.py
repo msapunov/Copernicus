@@ -1,6 +1,5 @@
 from flask import render_template, jsonify, request, abort
 from flask_login import login_required
-from base.functions import consumption
 from base.pages import grant_access
 from base.pages.user import bp
 from base.pages.statistic.magic import (
@@ -74,19 +73,6 @@ def web_admin_project_activate(pid):
 @grant_access("admin")
 def web_admin_project_suspend(pid):
     return jsonify(data=set_state(pid, False))
-
-
-@bp.route("/statistic/consumption/<string:name>", methods=["POST"])
-@login_required
-@grant_access("admin")
-def web_statistic_consumption(name):
-    project = Project.query.filter_by(name=name).first()
-    if not project:
-        raise ValueError("Failed to find a project with name '%s'" % name)
-    result = consumption(name, project.resources.created, project.resources.ttl)
-    if result:
-        project.resources.consumption = result[name]["total consumption"]
-    return jsonify(data=project.to_dict())
 
 
 @bp.route("/statistic/all", methods=["POST"])
