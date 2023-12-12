@@ -498,8 +498,8 @@ def project_transform(name, form):
     if new not in possible_types and "admin" not in g.permissions:
         raise ValueError("Configuration forbids transformation to %s" % new)
     record = Extend(project=project, hours=cpu, reason=note, extend=True,
-                    present_use=project.consumed, transform=new,
-                    usage_percent=project.consumed_use,
+                    present_use=project.account(), transform=new,
+                    usage_percent=project.consumed_use(),
                     present_total=project.resources.cpu,
                     exception=False)
     db.session.add(record)
@@ -518,8 +518,8 @@ def project_renew(project, form, active=False):
     if not active and not project.is_renewable and "admin" not in g.permissions:
         raise ValueError("Project %s is not renewable" % project.get_name())
     record = Extend(project=project, hours=cpu, reason=note, extend=False,
-                    present_use=project.consumed,
-                    usage_percent=project.consumed_use,
+                    present_use=project.account(),
+                    usage_percent=project.consumed_use(),
                     present_total=project.resources.cpu,
                     exception=False)
     db.session.add(record)
@@ -538,8 +538,8 @@ def project_extend(name, form):
     if not project.is_extendable and "admin" not in g.permissions:
         raise ValueError("Project %s is not extendable" % name)
     record = Extend(project=project, hours=cpu, reason=note, extend=True,
-                    present_use=project.consumed,
-                    usage_percent=project.consumed_use,
+                    present_use=project.account(),
+                    usage_percent=project.consumed_use(),
                     present_total=project.resources.cpu,
                     exception=exception)
     db.session.add(record)
