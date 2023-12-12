@@ -15,14 +15,15 @@ __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
 
 
-@bp.route("/statistic/accounting/<string:name>", methods=["POST"])
 @bp.route("/statistic/accounting", methods=["POST"])
+@bp.route("/statistic/accounting/<string:name>", methods=["POST"])
 @login_required
 @grant_access("admin", "responsible", "tech")
 def project_info(name=None):
-    projects = Project.query.all()
     if name:
-        projects = [project for project in projects if project.name == name]
+        projects = Project.query.filter_by(name=name).all()
+    else:
+        projects = Project.query.filter_by(active=True).all()
     data = {
         i.name: {
             "consumption": i.account(),
