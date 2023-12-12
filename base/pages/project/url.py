@@ -29,7 +29,6 @@ from base.pages.project.magic import (
     project_create_user,
     project_attach_user,
     project_transform,
-    project_info_by_name,
     is_activity_report,
     report_activity,
     remove_activity,
