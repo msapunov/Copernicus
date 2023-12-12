@@ -5,13 +5,10 @@ from base.pages import grant_access
 from base.pages.user import bp
 from base.pages.statistic.magic import (
     accounting_run,
-    consumption_update,
     dump_projects_database,
     project_types)
 from base.pages.project.magic import set_state
 from base.database.schema import Project, Accounting
-from datetime import datetime as dt
-from json import loads, JSONDecodeError
 
 
 __author__ = "Matvey Sapunov"
