@@ -334,25 +334,20 @@ def report_activity(name, form):
     if not form.validate_on_submit():
         raise ValueError(form_error_string(form.errors))
     project = check_responsible(name)
-    result = get_project_consumption(project)
-    if not result:
-        raise ValueError("No information found for project '%s' Failure during "
-                         "report generation" % name)
-
-    result.report = form.report.data
-    result.doi = form.doi.data
-    result.training = form.training.data
-    result.hiring = form.hiring.data
-    result.generated = dt.strftime(dt.now(timezone.utc), "%c")
+    project.report = form.report.data
+    project.doi = form.doi.data
+    project.training = form.training.data
+    project.hiring = form.hiring.data
+    project.generated = dt.strftime(dt.now(timezone.utc), "%c")
     tmp = get_tmpdir(current_app)
     for i in ["image_1", "image_2", "image_3"]:
         path = Path(tmp, form[i].data)
         if path.exists() and path.is_file():
-            setattr(result, i, str(path.resolve()))
+            setattr(project, i, str(path.resolve()))
         else:
             error("Path for image doesn't exists: %s" % path.resolve())
-    debug(result)
-    return save_report(result)
+    debug(project)
+    return save_report(project)
 
 
 def remove_activity(name, file_name):
