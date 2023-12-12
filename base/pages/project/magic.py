@@ -588,69 +588,6 @@ def list_of_projects():
     return sorted(list(projects))
 
 
-def project_info_by_name(name):
-    project = get_project_by_name(name)
-    return project.to_dict()
-
-
-def get_project_consumption(project, start=None, end=None):
-    project.private_use = 0
-    project.private = 0
-    project.consumed_use = 0
-    project.consumed = 0
-    name = project.get_name()
-    if not project.resources:
-        error("No resources attached to project %s" % name)
-        return project
-    if not start:
-        start = project.resources.created
-    start = start.strftime("%m/%d/%y-%H:%M")
-    if not end:
-        end = dt.now(timezone.utc)
-    finish = end.strftime("%m/%d/%y-%H:%M")
-    conso = get_project_conso(name, start, finish)
-    if not conso:
-        error("Failed to get consumption for project %s" % name)
-        return project
-    login = current_user.login
-    if not project.resources.cpu:
-        error("No CPU set in project resources for %s" % name)
-        return project
-    cpu = project.resources.cpu
-    if login in conso.keys():
-        project.private_use = calculate_usage(conso[login], cpu)
-        project.private = conso[login]
-    if name in conso.keys():
-        project.consumed_use = calculate_usage(conso[name], cpu)
-        project.consumed = conso[name]
-    return project
-
-
-def get_project_conso(name, start, finish):
-    cmd = ["sreport", "cluster", "AccountUtilizationByUser", "-t", "hours"]
-    cmd += ["-nP", "format=Account,Login,Used", "Accounts=%s" % name]
-    cmd += ["start=%s" % start, "end=%s" % finish]
-    run = " ".join(cmd)
-    data, err = ssh_wrapper(run)
-    if not data:
-        debug("No data received, nothing to return")
-        return None
-    result = {}
-    for item in data:
-        item = item.strip()
-        items = item.split("|")
-        if len(items) != 3:
-            continue
-        login = items[1]
-        conso = items[2]
-        if not login:
-            result[name] = int(conso)
-        else:
-            result[login] = int(conso)
-    debug("Project '%s' consumption: %s" % (name, result))
-    return result
-
-
 def set_state(pid, state):
     """
     Set active state for a project
