@@ -126,7 +126,7 @@ def active_check():
             result.append("Project %s active in SLURM but banned in DB" % name)
             continue
     if result:
-        warning("\n".join(result))
+        return "\n".join(result)
     return "Project status check done"
 
 
