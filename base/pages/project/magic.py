@@ -697,12 +697,3 @@ def is_project_transformable(project):
     else:
         project.is_transformable = False
     return project
-
-
-def set_consumed_users(project):
-    try:
-        conso_users = eval(project.resources.consumption_raw)
-    except:
-        conso_users = {}
-    project.consumed_users = conso_users
-    return project

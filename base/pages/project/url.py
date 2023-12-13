@@ -22,7 +22,6 @@ from base.pages.project.magic import (
     active_check,
     sanity_check,
     assign_responsible,
-    set_consumed_users,
     get_project_by_name,
     is_project_renewable,
     is_project_extendable,
@@ -284,6 +283,5 @@ def web_project_index():
     list(map(lambda x: is_project_extendable(x), projects))
     list(map(lambda x: is_project_renewable(x), projects))
     list(map(lambda x: set_users_len(x), projects))
-    list(map(lambda x: set_consumed_users(x), projects))
     get_future_users(projects)
     return render_template("project.html", data={"projects": projects})
