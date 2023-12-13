@@ -3,7 +3,6 @@ from base import db
 from base.functions import generate_password, process_register_user
 from datetime import datetime as dt
 from textwrap import shorten
-from hashlib import md5
 from logging import error
 from pathlib import PurePath
 from werkzeug.security import generate_password_hash, check_password_hash
