@@ -122,6 +122,12 @@ class Project(db.Model):
     def __repr__(self):
         return '<Project {}>'.format(self.get_name())
 
+    def account_by_user(self, user=None):
+        result = self.resources.group_by_user()
+        if not result:
+            return {}
+        return {key: value for key, value in result}
+
     def user_account(self, user=current_user):
         result = self.resources.user_consumption(user)
         return result if result else 0
