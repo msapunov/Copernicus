@@ -132,6 +132,24 @@ class Project(db.Model):
         result = self.resources.user_consumption(user)
         return result if result else 0
 
+    def account_group(self, daily=None):
+        query = (Accounting.query.join(User, Accounting.user_id == User.id)
+                 .filter(Accounting.resources_id == self.resources_id))
+        if daily:
+            result = query.group_by(
+                User.login, Accounting.date
+            ).with_entities(
+                User.login, Accounting.date, func.sum(Accounting.cpu)
+            ).all()
+            return {i[1].strftime("%Y-%m-%d"): {i[0]: i[2]} for i in result}
+        else:
+            result = query.group_by(
+                User.login
+            ).with_entities(
+                User.login, func.sum(Accounting.cpu)
+            ).all()
+            return {i[0]: i[1] for i in result }
+
     def account(self):
         result = self.resources.consumption()
         return result if result else 0
