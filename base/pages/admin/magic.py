@@ -158,9 +158,9 @@ def render_registry(user):
 
 def render_task(task):
     row = render_template("bits/task_expand_row.html", task=task)
-    row += render_template("modals/tasks_accept_task.html", task=task)
-    row += render_template("modals/tasks_ignore_task.html", task=task)
-    row += render_template("modals/tasks_reject_task.html", task=task)
+    row += render_template("modals/tasks_accept_task.html", task=task.to_dict())
+    row += render_template("modals/tasks_ignore_task.html", task=task.to_dict())
+    row += render_template("modals/tasks_reject_task.html", task=task.to_dict())
     form = edit_task(task)
     row += render_template("modals/tasks_edit_task.html", task=task, form=form)
     return row
