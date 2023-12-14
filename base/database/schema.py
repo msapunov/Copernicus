@@ -945,6 +945,11 @@ class Tasks(db.Model):
         else:
             status = ""
         mod = self.modified.strftime("%Y-%m-%d %X %Z") if self.modified else ""
+        if self.result:
+            result = self.result.strip().strip("{\"").strip("\"}").strip()
+            result = result.replace("\n", "<br>")
+        else:
+            result = None
         return {
             "id": self.id,
             "description": self.description(),
@@ -956,7 +961,7 @@ class Tasks(db.Model):
             "processed": self.processed,
             "created": self.created.strftime("%Y-%m-%d %X %Z"),
             "status": status,
-            "result": self.result,
+            "result": result,
             "comment": self.comment,
             "modified": mod
         }
