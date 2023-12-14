@@ -107,7 +107,11 @@ def user_index():
         flash(str(err))
 
     for project in current_user.project:
-        project.private = project.user_account()
+        every = project.account_by_user()
+        if current_user.login in every:
+            project.private = every[current_user.login]
+        else:
+            project.private = 0
         project.private_use = "{0:.1%}".format(
             float(project.private) / float(project.resources.cpu))
 
