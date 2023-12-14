@@ -48,7 +48,8 @@
                 {% if task.result %}
                     <tr>
                         <td class="uk-width-1-10 uk-text-right">Result:</td>
-                        <td class="uk-width-9-10 uk-text-left"><pre class="uk-text-truncate">{{task.result}}</pre></td>
+                        <!--<td class="uk-width-9-10 uk-text-left"><pre class="uk-width-1-1">{{task.result}}</pre></td>-->
+                        <td class="uk-width-9-10 uk-text-left"><div class="uk-block">{{task.result|safe}}</div></td>
                     </tr>
                 {% endif %}
             </tbody>
