@@ -3,7 +3,6 @@ from flask_login import login_required
 from base.pages import grant_access
 from base.pages.user import bp
 from base.pages.statistic.magic import (
-    accounting_run,
     dump_projects_database,
     project_types)
 from base.pages.project.magic import set_state
@@ -51,14 +50,6 @@ def web_projects_ods():
 @grant_access("admin")
 def web_projects_xls():
     return dump_projects_database("xls", request)
-
-
-@bp.route("/statistic/update", methods=["POST"])
-@login_required
-@grant_access("admin", "tech")
-def web_statistic_update():
-    accounting_run()
-    return "Statistic updated", 200
 
 
 @bp.route("/statistic/activate/<int:pid>", methods=["POST"])

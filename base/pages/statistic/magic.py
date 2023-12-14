@@ -10,32 +10,6 @@ from base.functions import (
     slurm_parse)
 
 
-def accounting_run():
-    dates = []
-    today = dt.today().replace(tzinfo=timezone.utc)
-    rec = (Accounting.query.distinct(Accounting.date)
-           .order_by(Accounting.date.desc()).first())
-    if rec:
-        begin = rec.date
-    else:
-        begin = today - timedelta(days=365)  # For last year
-    while begin <= today:
-        dates.append(begin)
-        begin += timedelta(days=1)
-    while len(dates) > 0:
-        try:
-            end = dates[1]
-        except:
-            break
-        start = dates.pop(0)
-        result = consumption_query(start, end)
-        if not result:
-            continue
-        process_accounting_data(end, result)
-    consumption_update()
-    return "Statistic updated", 200
-
-
 def process_accounting_data(date, result):
     """
     Function which parse incoming dict created after SLURM sreport and create
