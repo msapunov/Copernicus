@@ -65,23 +65,6 @@ def consumption_query(begin=timedelta(days=1), finish=dt.now()):
     return slurm_parse(result)
 
 
-def consumption_update():
-    """
-    Updates the total consumption for the projects with valid resources.
-    Consumption start is time of resource creation if force parameter is True.
-    If force is False then start time will be the value of consumption_ts field
-    associated with resource. If end date is not provided then current date and
-    time will be used.
-    :return: List. List of updated resources objects
-    """
-    projects = Project.query.filter_by(active=True).all()
-    for project in projects:
-        project.resources.consumption = project.account()
-    if db.session.dirty:
-        db.session.commit()
-    return projects
-
-
 def dump_projects_database(extension_type, request):
     """
     Select all available projects in the database excluding the projects
