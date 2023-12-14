@@ -422,10 +422,21 @@ class Resources(db.Model):
             "finish": ttl
         }
 
-    def user_consumption(self, user=current_user):
-        return Accounting.query.filter_by(
-            resources=self, user=user
-        ).with_entities(func.sum(Accounting.cpu)).scalar()
+    def consumption_by_user(self, daily=None):
+        query = (Accounting.query.join(User, Accounting.user_id == User.id)
+                 .filter(Accounting.resources_id == self.id))
+        if daily:
+            return query.group_by(
+                User.login, Accounting.date
+            ).with_entities(
+                User.login, Accounting.date, func.sum(Accounting.cpu)
+            ).all()
+        else:
+            return query.group_by(
+                User.login
+            ).with_entities(
+                User.login, func.sum(Accounting.cpu)
+            ).all()
 
     def consumption(self):
         return Accounting.query.filter_by(
