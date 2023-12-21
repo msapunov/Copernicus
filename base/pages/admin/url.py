@@ -36,7 +36,6 @@ from base.pages.admin.magic import (
     registration_responsible_edit,
     registration_record_edit,
     space_info,
-    reg_accept,
     task_history)
 from base.functions import slurm_nodes_status, show_configuration, ssh_wrapper
 from base.pages.admin.form import (
