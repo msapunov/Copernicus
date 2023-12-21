@@ -19,7 +19,7 @@ from base.pages.board.magic import create_resource
 from base.pages.user.magic import user_by_id
 from base.pages.user.form import edit_info, set_password, PassForm
 from base.database.schema import (User, ArticleDB, LogDB, Project, Tasks, ACLDB,
-                                  Register)
+                                  Accounting, Register)
 from base.email import Mail
 from base.classes import UserLog, RequestLog, TmpUser, ProjectLog, Task
 from base.functions import bytes2human
