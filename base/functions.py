@@ -433,26 +433,6 @@ def slurm_parse(slurm_raw_output):
     return output
 
 
-def slurm_consumption_raw(name, start, finish):
-    """
-    Build a remote query to SLURM DB to obtain a project's CPU consumption.
-    :param name: Account name, in out case it's a project's name
-    :param start: starting date for accounting query
-    :param finish: end date for accounting query should be now by default
-    :return: Raw result of sreport command
-    """
-    cmd = ["sreport", "cluster", "AccountUtilizationByUser", "-t", "hours"]
-    cmd += ["-nP", "format=Account,Login,Used", "Accounts=%s" % name]
-    cmd += ["start=%s" % start, "end=%s" % finish]
-    run = " ".join(cmd)
-    data, err = ssh_wrapper(run)
-    if not data:
-        debug("No data received, nothing to return")
-        return None, run
-    debug("Got raw consumption values for project %s: %s" % (name, data))
-    return data, run
-
-
 def file_as_string(name):
     """
     Encoding a file to Base64 format
