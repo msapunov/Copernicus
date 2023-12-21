@@ -325,18 +325,6 @@ def admin_registration_create(pid):
     return jsonify(message=Pending(pid).create(users).result)
 
 
-@bp.route("/admin/registration/accept/<int:pid>", methods=["POST"])
-@login_required
-@grant_access("admin")
-def admin_registration_accept(pid):
-    data = request.get_json()
-    if not data:
-        raise ValueError("Expecting application/json requests")
-    if "note" not in data:
-        raise ValueError("Parameter 'note' was not found in the client request")
-    return jsonify(data=reg_accept(pid, data["note"]))
-
-
 @bp.route("/admin/registration/visa/received/<int:pid>", methods=["POST", "GET"])
 @login_required
 @grant_access("admin", "tech")
