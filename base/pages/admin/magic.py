@@ -275,25 +275,6 @@ def message(to, msg, title=None):
     return send_message(to, by_who, cc, title, msg)
 
 
-def reg_accept(pid, note):
-    rec = get_registration_record(pid)
-    #  TEMP code start here
-    p = db.session.query(Project).filter(Project.title.ilike(rec.title)).first()
-    if not p:
-        raise ValueError("Project with title %s not in ProjectDB!" % rec.title)
-    created = p.resources.created
-    ProjectLog(p).created()
-    #  TEMP code ends here
-    rec.accepted = True
-    rec.accepted_ts = created
-    rec.comment = reg_message(rec.comment, "accept") + note
-    rec.processed = True
-    rec.accepted_ts = created
-    db.session.commit()
-    RequestLog(rec).accept()
-    return accept_message(rec, note)
-
-
 def reg_message(txt, selector):
     full_name = current_user.full_name()
     if selector == "accept":
