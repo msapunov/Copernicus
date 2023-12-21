@@ -1,8 +1,8 @@
 from hashlib import md5
-from flask import g, render_template, current_app as app
+from flask import g, render_template
 from flask_login import current_user
 from base import db
-from base.pages import send_message, check_str, TaskQueue
+from base.pages import check_str, TaskQueue
 from base.pages.project.magic import get_project_by_name
 from base.pages.admin.form import (action_pending,
                                    edit_pending,
