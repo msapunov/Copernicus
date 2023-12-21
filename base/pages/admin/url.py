@@ -1,11 +1,8 @@
 from flask import g, flash, request, redirect, url_for, render_template, jsonify
 from flask import abort
 from flask import current_app
-from flask_login import login_required, login_user, current_user
-from base.pages import (
-    send_message,
-    Task,
-    grant_access)
+from flask_login import login_required, login_user
+from base.pages import Task, grant_access
 from base.classes import Pending, Extensions
 from base.pages.user.magic import get_user_record, user_by_id
 from base.pages.admin import bp
