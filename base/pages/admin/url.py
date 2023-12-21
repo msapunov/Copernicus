@@ -82,23 +82,6 @@ def web_switch_user():
     return redirect(url_for("user.user_index"))
 
 
-@bp.route("/admin/message/send", methods=["POST"])
-@login_required
-@grant_access("admin")
-def web_admin_message_send():
-    data = request.get_json()
-    if not data:
-        raise ValueError("Expecting application/json requests")
-    logins, title, msg = get_ltm(data)
-
-    emails = []
-    for login in logins:
-        user = get_user_record(login)
-        emails.append(user.email)
-    cc = current_user.email
-    return jsonify(data=send_message(emails, cc=cc, message=msg, title=title))
-
-
 @bp.route("/admin/user/<int:uid>/welcome", methods=["POST"])
 @login_required
 @grant_access("admin")
