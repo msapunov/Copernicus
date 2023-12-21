@@ -53,8 +53,8 @@ from base.pages.admin.form import (
     NewUserEditForm)
 from base.pages.project.magic import process_extension
 from base.utils import form_error_string
-from base.database.schema import Project, Accounting
 from base.database.schema import Project
+from datetime import datetime as dt, timezone as tz
 
 
 __author__ = "Matvey Sapunov"
