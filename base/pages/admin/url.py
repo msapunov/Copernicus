@@ -54,6 +54,7 @@ from base.pages.admin.form import (
 from base.pages.project.magic import process_extension
 from base.utils import form_error_string
 from base.database.schema import Project, Accounting
+from base.database.schema import Project
 
 
 __author__ = "Matvey Sapunov"
