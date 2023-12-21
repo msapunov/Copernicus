@@ -892,6 +892,23 @@ class Tasks(db.Model):
             act += "by Automatic Service"
         return act
 
+    def short(self):
+        act, entity, login, project, task = self.action.split("|")
+        if entity == "project":
+            return self.brief()
+        if act in ["create", "activate"]:
+            task = task.split(" WITH ")[0]
+            task = task.split(" AND PASSWORD")[0]
+            act += " a user with %s" % task
+            act = act[0].upper() + act[1:].lower()
+            if project:
+                act += " for the project %s" % project
+        elif act in ["add", "assign", "delete", "remove"]:
+            user = User.query.filter_by(login=login).first()
+            if user:
+                act = task.replace(login, user.full())
+        return act
+
     def description(self):
         act, entity, login, project, task = self.action.split("|")
         if act in ["create", "activate"]:
@@ -963,5 +980,6 @@ class Tasks(db.Model):
             "status": status,
             "result": result,
             "comment": self.comment,
+            "short": self.short(),
             "modified": mod
         }
