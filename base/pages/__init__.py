@@ -42,15 +42,6 @@ def check_str(raw_note):
     return note
 
 
-def calculate_usage(use, total):
-    try:
-        use = "{0:.1%}".format(float(use) / float(total))
-        return float(use.replace("%", ""))
-    except TypeError as err:
-        error("Failed to calculate project usage: %s" % err)
-        return ""
-
-
 def user_by_details(name, surname, email, login=None):
     name = normalize_word(name)
     name = "".join(filter(lambda x: x in ascii_letters, name)).lower()
