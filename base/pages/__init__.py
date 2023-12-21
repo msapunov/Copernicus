@@ -115,68 +115,6 @@ def process_new_user(rec):
     return user
 
 
-def send_message(to_who, by_who=None, cc=None, title=None, message=None,
-                 attach=None):  # TODO: replace by mail class
-    if isinstance(to_who, str):
-        to_who = to_who.split(";")
-    if not by_who:
-        by_who = current_app.config["EMAIL_TECH"]
-    if not title:
-        title = "Mesocentre reporting"
-    if not cc:
-        cc = [current_app.config["EMAIL_TECH"]]
-    if isinstance(cc, str):
-        cc = cc.split(";")
-    if not message:
-        debug("Message body is empty")
-    if isinstance(attach, str):
-        attach = attach.split(";")
-
-    msg = MIMEMultipart()
-    msg["Subject"] = title
-    msg["From"] = by_who
-    msg["To"] = ", ".join(to_who)
-    msg["Date"] = formatdate(localtime=True)
-    msg["Cc"] = ", ".join(cc)
-    if message:
-        msg.attach(MIMEText(message))
-
-    for path in attach or []:
-        attach_file = Path(path)
-        if not attach_file.exists():
-            raise ValueError("Failed to attach %s to the mail. "
-                             "File doesn't exists" % path)
-        if not attach_file.is_file():
-            raise ValueError("Failed to attach %s to the mail. It's not a file"
-                             % path)
-        with open(path, "rb") as fd:
-            part = MIMEApplication(fd.read(), Name=str(attach_file.name))
-        part['Content-Disposition'] = 'attachment; filename="%s"' % str(attach_file.name)
-        msg.attach(part)
-
-    server = current_app.config.get("MAIL_SERVER", "localhost")
-    port = current_app.config.get("MAIL_PORT", 25)
-    use_tls = current_app.config.get("MAIL_USE_TLS", False)
-    use_ssl = current_app.config.get("MAIL_USE_SSL", False)
-    username = current_app.config.get("MAIL_USERNAME", None)
-    password = current_app.config.get("MAIL_PASSWORD", None)
-
-    if use_ssl:
-        smtp = smtplib.SMTP_SSL(server, port)
-    else:
-        smtp = smtplib.SMTP(server, port)
-    if use_tls:
-        smtp.starttls()
-    if username and password:
-        smtp.login(username, password)
-
-    to = ", ".join(to_who) + ", ".join(cc)
-    if current_app.config.get("MAIL_SEND", False):
-        smtp.send_message(msg)
-    smtp.quit()
-    return "Message was sent to %s successfully" % ", ".join(to_who)
-
-
 def check_json():  # TODO: remove - replace
     if not request.is_json:
         raise ValueError("Expecting application/json requests")
