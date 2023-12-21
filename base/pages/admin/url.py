@@ -406,24 +406,39 @@ def web_admin_tasks_edit(tid):
 @login_required
 @grant_access("admin")
 def web_admin_tasks_ignore(tid):
-    Task(tid).ignore()
-    return jsonify(data=TaskManager().list())
+    task = Task(tid).ignore()
+    tasks = TaskManager().list()
+    if "admin.html" in request.referrer:
+        return jsonify(data=tasks, info="Task '%s' is ignored" % task.short(),
+                       html=render_template(
+            "modals/admin_show_task.html", data={"tasks": tasks}))
+    return jsonify(data=tasks)
 
 
 @bp.route("/admin/tasks/reject/<int:tid>", methods=["POST"])
 @login_required
 @grant_access("admin")
 def web_admin_tasks_reject(tid):
-    Task(tid).reject()
-    return jsonify(data=TaskManager().list())
+    task = Task(tid).reject()
+    tasks = TaskManager().list()
+    if "admin.html" in request.referrer:
+        return jsonify(data=tasks, info="Task '%s' is rejected" % task.short(),
+                       html=render_template(
+            "modals/admin_show_task.html", data={"tasks": tasks}))
+    return jsonify(data=tasks)
 
 
 @bp.route("/admin/tasks/accept/<int:tid>", methods=["POST"])
 @login_required
 @grant_access("admin")
 def web_admin_tasks_accept(tid):
-    Task(tid).accept()
-    return jsonify(data=TaskManager().list())
+    task = Task(tid).accept()
+    tasks = TaskManager().list()
+    if "admin.html" in request.referrer:
+        return jsonify(data=tasks, info="Task '%s' is accepted" % task.short(),
+                       html=render_template(
+            "modals/admin_show_task.html", data={"tasks": tasks}))
+    return jsonify(data=tasks)
 
 
 @bp.route("/admin/tasks/info/<int:tid>", methods=["POST"])
