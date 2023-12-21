@@ -11,6 +11,7 @@ from base.pages.user.magic import get_user_record, user_by_id
 from base.pages.admin import bp
 from base.pages.admin.magic import (
     process_user_form,
+    account_days,
     last_user,
     render_task,
     render_pending,
@@ -545,10 +546,7 @@ def web_admin_pending_list():
 @login_required
 @grant_access("admin", "manager")
 def web_admin_accounting(last):
-    every = Accounting.query.filter_by(
-        project=None, user=None
-    ).order_by(Accounting.date.desc()).limit(last).all()
-    return jsonify(data=[{x.date.strftime("%x"): x.cpu} for x in every])
+    return jsonify(data=account_days(last))
 
 
 @bp.route("/admin/slurm/nodes/list", methods=["POST"])
