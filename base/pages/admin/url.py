@@ -555,7 +555,7 @@ def web_admin_accounting_project(name):
 @bp.route("/admin/accounting/<int:last>", methods=["POST", "GET"])
 @login_required
 @grant_access("admin", "manager")
-def web_admin_accounting(last):
+def web_admin_accounting_days(last):
     return jsonify(data=account_days(last))
 
 
