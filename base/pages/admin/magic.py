@@ -63,6 +63,24 @@ def process_user_form(form):
     return user
 
 
+def account_days(days=30, project=None, user=None):
+    today = dt.today().replace(hour=0, minute=0, second=0, microsecond=0)
+    dates = [today - timedelta(days=i) for i in range(days)]
+    every = Accounting.query.filter(
+        Accounting.project == project,
+        Accounting.user == user,
+        Accounting.date >= dates[-1]
+    ).order_by(Accounting.date.desc()).limit(days).all()
+    every_data = list(map(lambda x: {x.date.strftime("%Y-%m-%d 00:00"): x.cpu}, every))
+    every_keys = list(map(lambda x: x.date.strftime("%Y-%m-%d 00:00"), every))
+
+    for date in dates:
+        date = date.strftime("%Y-%m-%d 00:00")
+        if date not in every_keys:
+            every_data.append({date: 0})
+    return every_data
+
+
 def last_user(data):
     """
     Process data returned by last command and updates seen field in User record
