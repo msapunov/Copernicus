@@ -42,6 +42,16 @@
             });
         });
     };
+    window.admin.task_submit = function (){
+        submit.call(this).done(function(data){
+            if(data.html){
+                $('#tasks_to_process').replaceWith(data.html);
+            }
+            if(data.info){
+                UIkit.notify(data.info, {status:'success'});
+            }
+        });
+    };
     window.admin.expand_processing = function(tr, tdi, show){
         if(show === true){
             tr.removeClass('shown');
