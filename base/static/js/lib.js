@@ -186,3 +186,66 @@ trigger_modal = function(e){
         modal.show();
     }
 };
+
+accounting = function (canvas_id, data, vert) {
+    const sortedData = data.data.map(item => {
+        const dateStr = Object.keys(item)[0];
+        const date = moment(dateStr, 'YYYY-MM-DD HH:mm').toDate();
+        const value = Object.values(item)[0];
+        return {date, value};
+    }).sort((a, b) => a.date - b.date);
+    const dates = sortedData.map(item => moment(item.date).format('YYYY-MM-DD HH:mm'));
+    const values = sortedData.map(item => item.value);
+    const canvas = document.getElementById(canvas_id);
+    canvas.style.width = '100%';
+    const parentWidth = canvas.parentElement.clientWidth;
+    canvas.width = parentWidth;
+    if (typeof vert === 'undefined') {
+        canvas.height = 240;
+    } else {
+        canvas.height = vert;
+    }
+    const ctx = canvas.getContext('2d');
+    if (dates.length === 0) {
+        ctx.font = '12px Arial bold';
+        ctx.fillStyle = 'black';
+        ctx.textAlign = 'left';
+        ctx.textBaseline = 'top'; //'middle';
+        ctx.fillText('No data available', 5, 5);
+
+    } else {
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: dates,
+                datasets: [{
+                    label: "",
+                    data: values,
+                    barPercentage: 1.0,
+                    categoryPercentage: 1.0,
+                    backgroundColor: '#00aff2',
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: false
+                    },
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    x: {
+                        display: false
+                    },
+                    y: {
+                        min: 0,
+                        display: false
+                    }
+                }
+            }
+        });
+    }
+};
