@@ -543,6 +543,15 @@ def web_admin_pending_list():
     return jsonify(data=unprocessed_dict())
 
 
+@bp.route("/admin/accounting/<string:name>", methods=["POST", "GET"])
+@login_required
+@grant_access("admin", "manager")
+def web_admin_accounting_project(name):
+    project = Project.query.filter_by(name=name).one()
+    days = (dt.now(tz=tz.utc) - project.resources.created).days
+    return jsonify(data=account_days(days, project=project))
+
+
 @bp.route("/admin/accounting/<int:last>", methods=["POST", "GET"])
 @login_required
 @grant_access("admin", "manager")
