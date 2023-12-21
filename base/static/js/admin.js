@@ -17,6 +17,7 @@
         space: "admin/space/info",
         system: "admin/sys/info",
         pending: "admin/pending/list",
+        accounting: "admin/accounting",
         tasks: "admin/tasks/list",
         tasks_accept: "admin/tasks/accept",
         tasks_history: "admin/tasks/history",
@@ -82,6 +83,12 @@
             });
     };
     $(document).on("ready", function(){
+        $.ajax({
+            type: "POST",
+            url: window.admin.url.accounting + "/" + "365"
+        }).done(function(reply){
+            accounting("accounting", reply, 100);
+        });
         $.fn.dataTable.ext.buttons.refresh = {
             text: "<span class='uk-icon-refresh uk-margin-small-right'></span>&nbsp;Reload",
             className: "uk-button uk-button-small uk-margin-small-top",
