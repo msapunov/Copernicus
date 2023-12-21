@@ -124,7 +124,7 @@
                         <script>
                         $.ajax({
                             type: "POST",
-                            url: "statistic/accounting/{{ project.name }}"
+                            url: "admin/accounting/{{ project.name }}"
                         }).done(function(reply){
                             accounting("{{ project.name }}_accounting", reply, 50);
                         });

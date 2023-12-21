@@ -43,28 +43,6 @@ def process_accounting_data(date, result):
     return date
 
 
-def consumption_query(begin=timedelta(days=1), finish=dt.now()):
-    """
-    Construct sreport command to get consumption on a given interval of time.
-    By default, the interval is from yesterday to today, from midnight
-    to midnight.
-    @param begin: DateTime, by default is yesterday
-    @param finish: DateTime, by default is today
-    @return: Result of slurm_parse function which is dictionary of dictionaries,
-     where project name is the key in first dictionary, consumption is the value
-    """
-    start = begin.strftime("%Y-%m-%d")
-    end = finish.strftime("%Y-%m-%d")
-    cmd = ["sreport", "cluster", "AccountUtilizationByUser", "-t", "hours"]
-    cmd += ["-nP", "format=Account,Login,Used", ]
-    cmd += ["start=%sT00:00:00" % start, "end=%sT00:00:00" % end]
-    result, err = ssh_wrapper(" ".join(cmd))
-    if not result:
-        debug("Error getting information from the remote server: %s" % err)
-        return None
-    return slurm_parse(result)
-
-
 def dump_projects_database(extension_type, request):
     """
     Select all available projects in the database excluding the projects

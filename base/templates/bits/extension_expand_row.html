@@ -29,15 +29,15 @@
                 <tr>
                     <td class="uk-width-1-10 uk-text-right uk-text-nowrap">Consumption dynamics:</td>
                     <td class="uk-width-9-10 uk-text-left">
-                        <div class="uk-width-1-1 uk-panel uk-margin-bottom">
+                        <div class="uk-panel uk-width-medium-1-1 uk-width-small-1-1" style="border: 1px solid #ddd;">
                             <canvas id="{{rec.id}}_accounting"></canvas>
                             <script>
-                                $.ajax({
-                                    type: "POST",
-                                    url: "statistic/accounting/{{rec.name}}"
-                                }).done(function(reply){
-                                    accounting("{{rec.id}}_accounting", reply, 50);
-                                });
+                            $.ajax({
+                                type: "POST",
+                                url: "admin/accounting/{{ project.name }}"
+                            }).done(function(reply){
+                                accounting("{{rec.id}}_accounting", reply, 50);
+                            });
                             </script>
                         </div>
                     </td>

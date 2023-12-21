@@ -7,13 +7,6 @@ from base64 import b64encode
 from logging import debug
 
 
-def check_str(raw):
-    note = str(raw).strip()
-    if len(note) < 1:
-        raise ValueError("Non empty string expected: %s" % raw)
-    return note
-
-
 def form_error_string(err_dict):
     result = []
     for key, value in err_dict.items():

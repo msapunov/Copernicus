@@ -3,15 +3,9 @@
     window.admin = {};
 
     window.admin.url = {
-        accept: "admin/registration/accept",  // Temporary handler to be removed
-        approve: "admin/registration/approve",
-        create: "admin/registration/create",
-        reject: "admin/registration/reject",
-        ignore: "admin/registration/ignore",
         info: "admin/partition/info",
         history: "admin/history",
         message: "admin/message/register",
-        new_users: "admin/registration/users",
         sinfo: "admin/slurm/nodes/list",
         partition: "admin/partition/info",
         space: "admin/space/info",
@@ -25,9 +19,7 @@
         tasks_reject: "admin/tasks/reject",
         tasks_update: "admin/tasks/update",
         expand_pending: "admin/bits/pending",
-        user: "admin/user/info",
-        visa: "admin/registration/visa",
-        visa_resend: "admin/registration/visa/resend"
+        user: "admin/user/info"
     };
     window.admin.submit = function (){
         let table = $('table#pending_projects').DataTable();

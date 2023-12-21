@@ -1,8 +1,8 @@
 from hashlib import md5
-from flask import g, render_template, current_app as app
+from flask import g, render_template
 from flask_login import current_user
 from base import db
-from base.pages import send_message, check_str, TaskQueue
+from base.pages import check_str, TaskQueue
 from base.pages.project.magic import get_project_by_name
 from base.pages.admin.form import (action_pending,
                                    edit_pending,
@@ -15,11 +15,10 @@ from base.pages.admin.form import (action_pending,
                                    edit_task,
                                    contact_user)
 from base.pages.admin.form import activate_user
-from base.pages.board.magic import create_resource
 from base.pages.user.magic import user_by_id
 from base.pages.user.form import edit_info, set_password, PassForm
-from base.database.schema import (User, ArticleDB, LogDB, Project, Tasks, ACLDB,
-                                  Accounting, Register)
+from base.database.schema import (User, LogDB, Project, Tasks, ACLDB, Register,
+                                  Accounting)
 from base.email import Mail
 from base.classes import UserLog, RequestLog, TmpUser, ProjectLog, Task
 from base.functions import bytes2human
@@ -248,68 +247,6 @@ def all_users():
 
 def event_log():
     return list(map(lambda x: x.to_web(), LogDB.query.all()))
-
-
-#  Project registration logic below
-
-
-def accept_message(register, msg):
-    to = register.responsible_email
-    name = register.responsible_first_name
-    surname = register.responsible_last_name
-    mid = register.project_id()
-    title = "Your project request '%s' has been accepted" % mid
-    prefix = "Dear %s %s,\nYour project request '%s' has been accepted by" \
-             " scientific committee" % (name, surname, mid)
-    if msg:
-        msg = prefix + " with following comment:\n" + msg
-    else:
-        msg = prefix
-    return message(to, msg, title)
-
-
-def message(to, msg, title=None):
-    by_who = app.config["EMAIL_PROJECT"]
-    cc = app.config["EMAIL_PROJECT"]
-    if not title:
-        title = "Concerning your project"
-    return send_message(to, by_who, cc, title, msg)
-
-
-def reg_accept(pid, note):
-    rec = get_registration_record(pid)
-    #  TEMP code start here
-    p = db.session.query(Project).filter(Project.title.ilike(rec.title)).first()
-    if not p:
-        raise ValueError("Project with title %s not in ProjectDB!" % rec.title)
-    created = p.resources.created
-    ProjectLog(p).created()
-    #  TEMP code ends here
-    rec.accepted = True
-    rec.accepted_ts = created
-    rec.comment = reg_message(rec.comment, "accept") + note
-    rec.processed = True
-    rec.accepted_ts = created
-    db.session.commit()
-    RequestLog(rec).accept()
-    return accept_message(rec, note)
-
-
-def reg_message(txt, selector):
-    full_name = current_user.full_name()
-    if selector == "accept":
-        msg = "Project creation request accepted by %s" % full_name
-    elif selector == "approve":
-        msg = "Project software requirements approved by %s" % full_name
-    elif selector == "reject":
-        msg = "Project creation request rejected by %s\nReason:\n" % full_name
-    elif selector == "ignore":
-        msg = "Project creation request ignored by %s" % full_name
-    else:
-        raise ValueError("Selector %s does not supported" % selector)
-    if txt:
-        return "%s\n%s" % (txt, msg)
-    return msg
 
 
 def get_registration_record(pid):

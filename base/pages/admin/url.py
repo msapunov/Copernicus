@@ -1,11 +1,8 @@
 from flask import g, flash, request, redirect, url_for, render_template, jsonify
 from flask import abort
 from flask import current_app
-from flask_login import login_required, login_user, current_user
-from base.pages import (
-    send_message,
-    Task,
-    grant_access)
+from flask_login import login_required, login_user
+from base.pages import Task, grant_access
 from base.classes import Pending, Extensions
 from base.pages.user.magic import get_user_record, user_by_id
 from base.pages.admin import bp
@@ -36,7 +33,6 @@ from base.pages.admin.magic import (
     registration_responsible_edit,
     registration_record_edit,
     space_info,
-    reg_accept,
     task_history)
 from base.functions import slurm_nodes_status, show_configuration, ssh_wrapper
 from base.pages.admin.form import (
@@ -53,7 +49,8 @@ from base.pages.admin.form import (
     NewUserEditForm)
 from base.pages.project.magic import process_extension
 from base.utils import form_error_string
-from base.database.schema import Project, Accounting
+from base.database.schema import Project
+from datetime import datetime as dt, timezone as tz
 
 
 __author__ = "Matvey Sapunov"
@@ -83,23 +80,6 @@ def web_switch_user():
     user = get_user_record(username)
     login_user(user, True)
     return redirect(url_for("user.user_index"))
-
-
-@bp.route("/admin/message/send", methods=["POST"])
-@login_required
-@grant_access("admin")
-def web_admin_message_send():
-    data = request.get_json()
-    if not data:
-        raise ValueError("Expecting application/json requests")
-    logins, title, msg = get_ltm(data)
-
-    emails = []
-    for login in logins:
-        user = get_user_record(login)
-        emails.append(user.email)
-    cc = current_user.email
-    return jsonify(data=send_message(emails, cc=cc, message=msg, title=title))
 
 
 @bp.route("/admin/user/<int:uid>/welcome", methods=["POST"])
@@ -325,18 +305,6 @@ def admin_registration_create(pid):
     return jsonify(message=Pending(pid).create(users).result)
 
 
-@bp.route("/admin/registration/accept/<int:pid>", methods=["POST"])
-@login_required
-@grant_access("admin")
-def admin_registration_accept(pid):
-    data = request.get_json()
-    if not data:
-        raise ValueError("Expecting application/json requests")
-    if "note" not in data:
-        raise ValueError("Parameter 'note' was not found in the client request")
-    return jsonify(data=reg_accept(pid, data["note"]))
-
-
 @bp.route("/admin/registration/visa/received/<int:pid>", methods=["POST", "GET"])
 @login_required
 @grant_access("admin", "tech")
@@ -542,10 +510,19 @@ def web_admin_pending_list():
     return jsonify(data=unprocessed_dict())
 
 
+@bp.route("/admin/accounting/<string:name>", methods=["POST", "GET"])
+@login_required
+@grant_access("admin", "manager")
+def web_admin_accounting_project(name):
+    project = Project.query.filter_by(name=name).one()
+    days = (dt.now(tz=tz.utc) - project.resources.created).days
+    return jsonify(data=account_days(days, project=project))
+
+
 @bp.route("/admin/accounting/<int:last>", methods=["POST", "GET"])
 @login_required
 @grant_access("admin", "manager")
-def web_admin_accounting(last):
+def web_admin_accounting_days(last):
     return jsonify(data=account_days(last))
 
 

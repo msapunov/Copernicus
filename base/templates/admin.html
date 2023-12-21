@@ -53,8 +53,8 @@ https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js
 {% block main %}
 
 {% if "admin" in g.permissions %}
-            <div class="uk-panel uk-width-1-1 uk-panel-space uk-margin-bottom" id="tasks_info">
-                <p class="uk-h2 uk-text-nowrap uk-text-center">Pending tasks:
+            <div class="uk-panel uk-grid-width-small-1-1 uk-width-medium-1-3 uk-panel-space uk-margin-bottom" id="tasks_info">
+                <p class="uk-h2 uk-text-nowrap">Pending tasks:
                 {% if data.tasks and data.tasks|length > 0 %}
                     <a class="task_show" id="task_queue_length" data-modal="tasks_to_process">{{data.tasks|length}}</a></p>
                     {% include 'modals/admin_show_task.html' %}
@@ -63,7 +63,7 @@ https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js
                 {% endif %}
             </div>
 
-            <div class="uk-width-1-1 uk-text-center uk-padding-remove uk-margin-bottom" style="border: 1px solid #ddd;">
+            <div class="uk-grid-width-small-1-1 uk-width-medium-2-3 uk-text-center uk-padding-remove uk-margin-bottom" style="border: 1px solid #ddd;">
                 <canvas id="accounting"></canvas>
             </div>
 
@@ -120,7 +120,7 @@ https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js
             </div>
 {% endif %}
             <div class="uk-width-1-1 uk-padding-remove uk-margin-large">
-                <table id="pending_projects" class="display compact" data-order='[[ 5, "desc" ]]'>
+                <table id="pending_projects" class="stripe compact" data-order='[[ 5, "desc" ]]'>
                     <thead>
                         <tr>
                             <th></th>
