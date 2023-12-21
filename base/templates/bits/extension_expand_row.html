@@ -27,6 +27,22 @@
                     <td class="uk-width-9-10 uk-text-left">{{rec.hours}}</td>
                 </tr>
                 <tr>
+                    <td class="uk-width-1-10 uk-text-right uk-text-nowrap">Consumption dynamics:</td>
+                    <td class="uk-width-9-10 uk-text-left">
+                        <div class="uk-width-1-1 uk-panel uk-margin-bottom">
+                            <canvas id="{{rec.id}}_accounting"></canvas>
+                            <script>
+                                $.ajax({
+                                    type: "POST",
+                                    url: "statistic/accounting/{{rec.name}}"
+                                }).done(function(reply){
+                                    accounting("{{rec.id}}_accounting", reply, 50);
+                                });
+                            </script>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
                     <td class="uk-width-1-10 uk-text-right uk-text-nowrap">Comment:</td>
                     <td class="uk-width-9-10 uk-text-left">{{rec.reason}}</td>
                 </tr>
