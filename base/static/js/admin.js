@@ -293,18 +293,10 @@
         $(document).on("click", ".pending_reject", trigger_modal);
         $(document).on("click", ".pending_reject_submit", window.admin.submit);
 
-    $(document).on("click", ".task_show", window.admin.tasks);
-    $(document).on("click", ".task_info", window.admin.new_project);
-    $(document).on("click", ".task_history", window.admin.tasks_history);
-    $(document).on("click", ".task_manage", window.admin.tasks_manage);
-    $(document).on("click", ".task_reload", window.admin.tasks_reload);
-    $(document).on("click", ".task_accept", window.admin.tasks_accept);
-    $(document).on("click", ".task_ignore", window.admin.tasks_ignore);
-    $(document).on("click", ".task_reject", window.admin.tasks_reject);
-    $(document).on("click", ".task_edit", window.admin.tasks_edit);
-    $(document).on("click", ".history_info", window.admin.new_project);
-    $(document).on("click", ".history_info", window.admin.tasks_sel_update);
-    $(document).on("change", ".task_sel_info", window.admin.tasks_btn_toggle);
+        $(document).on("click", ".task_show", trigger_modal);
+        $(document).on("click", ".task_accept_submit", window.admin.task_submit);
+        $(document).on("click", ".task_ignore_submit", window.admin.task_submit);
+        $(document).on("click", ".task_reject_submit", window.admin.task_submit);
         $(document).on({
             mouseenter: function () {
                 $("#task_btn_group").toggleClass("uk-hidden");
