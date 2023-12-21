@@ -1,0 +1,40 @@
+<div class="uk-modal fade" tabindex="-1" role="dialog" aria-labelledby="confirm-modal" aria-hidden="true" id="tasks_to_process">
+    <div class="uk-modal-dialog">
+        <button type="button" class="uk-modal-close uk-close"></button>
+        <div class="uk-overflow-container">
+            <table class="uk-table uk-table-hover uk-table-striped uk-table-condensed uk-text-left">
+                <tbody>
+                    {% for task in data.tasks %}
+                    <tr id="task-{{ task.id }}" {% if loop.index % 2 == 0 %}class="ext_info"{% endif %}>
+                        <td>
+                            <div>
+                                {{ task.short }}
+                            </div>
+                            <div>
+                                Author: {{ task.author }}
+                            </div>
+                            <div>
+                                Created: {{ task.created }}
+                            </div>
+                            <div class="uk-button-group uk-float-right uk-margin-top">
+                                <button class="uk-button" data-modal="{{ task.id }}_accept" data-uk-modal="{target:'#{{ task.id }}_accept',modal:false}">
+                                    <span class="uk-icon-thumbs-o-up uk-margin-small-right"></span>Accept
+                                </button>
+                                <button class="uk-button" data-modal="{{ task.id }}_ignore" data-uk-modal="{target:'#{{ task.id }}_ignore',modal:false}">
+                                    <span class="uk-icon-thumbs-o-down uk-margin-small-right"></span>Ignore
+                                </button>
+                                    <button class="uk-button uk-button-danger" data-uk-modal="{target:'#{{ task.id }}_reject',modal:false}">
+                                    <span class="uk-icon-thumbs-down uk-margin-small-right"></span>Reject
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                        {% include "modals/tasks_accept_task.html" %}
+                        {% include "modals/tasks_reject_task.html" %}
+                        {% include "modals/tasks_ignore_task.html" %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
