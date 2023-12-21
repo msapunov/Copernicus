@@ -249,49 +249,6 @@ def event_log():
     return list(map(lambda x: x.to_web(), LogDB.query.all()))
 
 
-#  Project registration logic below
-
-
-def accept_message(register, msg):
-    to = register.responsible_email
-    name = register.responsible_first_name
-    surname = register.responsible_last_name
-    mid = register.project_id()
-    title = "Your project request '%s' has been accepted" % mid
-    prefix = "Dear %s %s,\nYour project request '%s' has been accepted by" \
-             " scientific committee" % (name, surname, mid)
-    if msg:
-        msg = prefix + " with following comment:\n" + msg
-    else:
-        msg = prefix
-    return message(to, msg, title)
-
-
-def message(to, msg, title=None):
-    by_who = app.config["EMAIL_PROJECT"]
-    cc = app.config["EMAIL_PROJECT"]
-    if not title:
-        title = "Concerning your project"
-    return send_message(to, by_who, cc, title, msg)
-
-
-def reg_message(txt, selector):
-    full_name = current_user.full_name()
-    if selector == "accept":
-        msg = "Project creation request accepted by %s" % full_name
-    elif selector == "approve":
-        msg = "Project software requirements approved by %s" % full_name
-    elif selector == "reject":
-        msg = "Project creation request rejected by %s\nReason:\n" % full_name
-    elif selector == "ignore":
-        msg = "Project creation request ignored by %s" % full_name
-    else:
-        raise ValueError("Selector %s does not supported" % selector)
-    if txt:
-        return "%s\n%s" % (txt, msg)
-    return msg
-
-
 def get_registration_record(pid):
     register = Register.query.filter_by(id=pid).first()
     if not register:
