@@ -89,7 +89,8 @@ def web_statistic_list():
 @grant_access("admin")
 def web_name_statistic(name):
     info = render_project(name)
-    return render_template("statistic.html", project=info)
+    url = request.url_root
+    return render_template("statistic.html", project=info, url=url)
 
 
 @bp.route("/statistic.html", methods=["GET"])
