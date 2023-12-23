@@ -5,6 +5,9 @@
     <script src="{{ url_for('static', filename='js/datatables.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/statistic.js') }}"></script>
     <style>
+        .uk-table td, .uk-table th {
+            border-bottom: 0px !important;
+        }
         .ws {
             white-space: normal !important;
         }
@@ -14,6 +17,10 @@
         }
         tr.shown td.details-control {
             text-align:center;
+        }
+        .tech_info {
+            background: #fff1f0 !important;
+            color: #d85030;
         }
     </style>
 {% endblock %}
