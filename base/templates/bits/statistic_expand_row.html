@@ -1,0 +1,161 @@
+    <div class="uk-width-3-4 uk-panel uk-margin-top uk-margin-bottom" style="padding-left:50px;padding-right:50px;">
+        <table id="{{project.name}}_info_table" class="uk-table uk-table-condensed">
+            <tbody>
+                <tr>
+                    <td class="uk-width-1-5 uk-text-right">Name:</td>
+                    <td class="uk-width-4-5 uk-text-left">{{project.name}}</td>
+                </tr>
+                <tr>
+                    <td class="uk-width-1-5 uk-text-right">Reference:</td>
+                    <td class="uk-width-4-5 uk-text-left">{% if project.ref %}{{project.ref.project_id()}}{% endif %}</td>
+                </tr>
+                <tr>
+                    <td class="uk-width-1-5 uk-text-right uk-text-nowrap">Title:</td>
+                    <td class="uk-width-4-5 uk-text-left">{{project.title}}</td>
+                </tr>
+                <tr>
+                    <td class="uk-width-1-5 uk-text-right">Active:</td>
+                    <td class="uk-width-4-5 uk-text-left">{{project.active}}</td>
+                </tr>
+                <tr>
+                    <td class="uk-width-1-5 uk-text-right uk-text-nowrap">CPU allocation kickoff:</td>
+                    <td class="uk-width-4-5 uk-text-left">{% if project.resources %}{{project.resources.created.strftime('%Y-%m-%d %H:%M')}}{% else %}{% endif %}</td>
+                </tr>
+                <tr>
+                    <td class="uk-width-1-5 uk-text-right uk-text-nowrap">CPU allocation deadline:</td>
+                    <td class="uk-width-4-5 uk-text-left">{% if project.resources %}{{project.resources.ttl.strftime('%Y-%m-%d %H:%M')}}{% else %}{% endif %}</td>
+                </tr>
+                <tr>
+                    <td class="uk-width-1-5 uk-text-right">Consumption:</td>
+                    <td class="uk-width-4-5 uk-text-left">{{project.account()}}</td>
+                </tr>
+                <tr>
+                    <td class="uk-width-1-5 uk-text-right">Total:</td>
+                    <td class="uk-width-4-5 uk-text-left">{% if project.resources %}{{project.resources.cpu}}{% else %}0{% endif %}</td>
+                </tr>
+                <tr>
+                    <td class="uk-width-1-5 uk-text-right">Usage:</td>
+                    <td class="uk-width-4-5 uk-text-left">{% if project.resources %}{{project.resources.usage()}}{% else %}0%{% endif %}</td>
+                </tr>
+                <tr>
+                    <td class="uk-width-1-5 uk-text-right uk-text-nowrap">Consumption dynamics:</td>
+                    <td class="uk-width-4-5 uk-text-left">
+                        <div class="uk-panel uk-width-medium-1-1 uk-width-small-1-1" style="border: 1px solid #ddd;">
+                            <canvas id="{{project.id}}_accounting"></canvas>
+                            <script>
+                            $.ajax({
+                                type: "POST",
+                                url: "admin/accounting/{{ project.name }}"
+                            }).done(function(reply){
+                                accounting("{{project.id}}_accounting", reply, 50);
+                            });
+                            </script>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="uk-width-1-5 uk-text-right">Responsible:</td>
+                    <td class="uk-width-4-5 uk-text-left">
+                        {% if project.responsible %}
+                            {{ project.responsible.full_name() }} &lt;{{ project.responsible.email }}&gt; [<a href="/users/{{ project.responsible.login }}">{{ project.responsible.login }}</a>]
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td class="uk-width-1-5 uk-text-right">Phone:</td>
+                    <td class="uk-width-4-5 uk-text-left">{% if project.responsible.phone %}{{project.responsible.phone}}{% endif %}</td>
+                </tr>
+                <tr>
+                    <td class="uk-width-1-5 uk-text-right">Lab:</td>
+                    <td class="uk-width-4-5 uk-text-left">{% if project.responsible.lab %}{{project.responsible.lab}}{% endif %}</td>
+                </tr>
+                <tr>
+                    <td class="uk-width-1-5 uk-text-right">Users:</td>
+                    <td class="uk-width-4-5 uk-text-left">
+                        {% if project.users %}
+                            <ol>
+                            {% for user in project.users %}
+                                <li>
+                                {{ user.full_name() }} &lt;{{ user.email }}&gt; [<a href="/users/{{ user.login }}">{{ user.login }}</a>]
+                                </li>
+                            {% endfor %}
+                            </ol>
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td class="uk-width-1-5 uk-text-right">Genci:</td>
+                    <td class="uk-width-4-5 uk-text-left">{{project.genci_committee}}</td>
+                </tr>
+                <tr>
+                    <td class="uk-width-1-5 uk-text-right">Scientific fields:</td>
+                    <td class="uk-width-4-5 uk-text-left">{{project.responsible.scientific_fields}}</td>
+                </tr>
+                <tr class="tech_info uk-hidden">
+                    <td class="uk-width-1-5 uk-text-right uk-text-nowrap">Database ID:</td>
+                    <td class="uk-width-4-5 uk-text-left">{{project.id}}</td>
+                </tr>
+                <tr class="tech_info uk-hidden">
+                    <td class="uk-width-1-5 uk-text-right uk-text-nowrap">Linux GID:</td>
+                    <td class="uk-width-4-5 uk-text-left">{{project.gid}}</td>
+                </tr>
+                <tr class="tech_info uk-hidden">
+                    <td class="uk-width-1-5 uk-text-right">Reference ID:</td>
+                    <td class="uk-width-4-5 uk-text-left">{{project.ref_id}}</td>
+                </tr>
+                <tr class="tech_info uk-hidden">
+                    <td class="uk-width-1-5 uk-text-right">Resource ID:</td>
+                    <td class="uk-width-4-5 uk-text-left">{{project.resources_id}}</td>
+                </tr>
+                <tr class="tech_info uk-hidden">
+                    <td class="uk-width-1-5 uk-text-right">Approve ID:</td>
+                    <td class="uk-width-4-5 uk-text-left">{{project.approve_id}}</td>
+                </tr>
+                <tr class="tech_info uk-hidden">
+                    <td class="uk-width-1-5 uk-text-right">Responsible ID:</td>
+                    <td class="uk-width-4-5 uk-text-left">{{project.responsible_id}}</td>
+                </tr>
+                <tr class="tech_info uk-hidden">
+                    <td class="uk-width-1-5 uk-text-right">Created:</td>
+                    <td class="uk-width-4-5 uk-text-left">{{project.created}}</td>
+                </tr>
+                <tr class="tech_info uk-hidden">
+                    <td class="uk-width-1-5 uk-text-right">Modified:</td>
+                    <td class="uk-width-4-5 uk-text-left">{{project.modified}}</td>
+                </tr>
+                <tr class="tech_info uk-hidden">
+                    <td class="uk-width-1-5 uk-text-right">Comment:</td>
+                    <td class="uk-width-4-5 uk-text-left">{{project.comment}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="uk-width-1-4 uk-margin-top uk-margin-bottom">
+        <button class="uk-button uk-width-1-1 uk-margin-small-bottom" data-uk-toggle="{target:'.tech_info'}">Toggle technical details</button>
+    </div>
+<div class="uk-width-1-1 uk-margin-bottom" style="padding-left:50px;padding-right:50px;">
+    <ul class="uk-subnav uk-subnav-pill" data-uk-switcher="{connect:'#{{ project.id }}-additional-info'}">
+        <li class="uk-active" aria-expanded="true"><a href="">Description</a></li>
+        <li aria-expanded="false"><a href="">Methods</a></li>
+        <li aria-expanded="false"><a href="">Resources</a></li>
+        <li aria-expanded="false"><a href="">Management</a></li>
+        <li aria-expanded="false"><a href="">Motivation</a></li>
+    </ul>
+    <ul id="{{ project.id }}-additional-info" class="uk-switcher">
+        <li aria-hidden="false" class="uk-active">
+            <article class="ws">{{ project.description }}</article>
+        </li>
+        <li aria-hidden="true">
+            <article class="ws">{{ project.numerical_methods }}</article>
+        </li>
+        <li aria-hidden="true">
+            <article class="ws">{{ project.computing_resources }}</article>
+        </li>
+        <li aria-hidden="true">
+            <article class="ws">{{ project.project_management }}</article>
+        </li>
+        <li aria-hidden="true">
+            <article class="ws">{{ project.project_motivation }}</article>
+        </li>
+    </ul>
+</div>
