@@ -3,6 +3,7 @@ from flask_login import login_required
 from base.pages import grant_access
 from base.pages.user import bp
 from base.pages.statistic.magic import (
+    render_project,
     dump_projects_database,
     project_types)
 from base.pages.project.magic import set_state
