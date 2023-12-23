@@ -26,65 +26,66 @@
 {% endblock %}
 {% block main %}
 
-<div class="uk-width-1-1">
-    <div class="uk-grid uk-margin-bottom">
-        <div data-uk-button-radio class="uk-button-group uk-width-1-4">
-            <button class="uk-button uk-active project-type" data-type="">All</button>
-            {% for type in project_types|sort %}
-                <button class="uk-button project-type" data-type="{{type}}">{{type.capitalize()}}</button>
-            {% endfor %}
-        </div>
-        <div data-uk-button-radio class="uk-button-group uk-width-1-4">
-            <button class="uk-button uk-active project-state" data-state="">All</button>
-            <button class="uk-button project-state" data-state="true">Active</button>
-            <button class="uk-button project-state" data-state="false">Suspended</button>
-        </div>
-        <div data-uk-button-radio class="uk-width-1-4">
-            <div class="uk-button-dropdown" data-uk-dropdown>
-                <button class="uk-button project-dump">Save As</button>
-                <!-- This is the dropdown -->
-                <div class="uk-dropdown uk-dropdown-small">
-                    <ul class="uk-nav uk-nav-dropdown">
-                        <li><a class="dump_csv" href="">CSV list (.csv)</a></li>
-                        <li><a class="dump_ods" href="">OpenDocument Spreadsheet (.ods)</a></li>
-                        <li><a class="dump_xls" href="">Microsoft Excel 97-2003 (.xls)</a></li>
-                    </ul>
+{% if project %}
+    {{ project|safe }}
+{% else %}
+    <di class="uk-width-1-1">
+        <div class="uk-grid uk-margin-bottom">
+            <div data-uk-button-radio class="uk-button-group uk-width-1-4">
+                <button class="uk-button uk-active project-type" data-type="">All</button>
+                {% for type in project_types|sort %}
+                    <button class="uk-button project-type" data-type="{{type}}">{{type.capitalize()}}</button>
+                {% endfor %}
+            </div>
+            <div data-uk-button-radio class="uk-button-group uk-width-1-4">
+                <button class="uk-button uk-active project-state" data-state="">All</button>
+                <button class="uk-button project-state" data-state="true">Active</button>
+                <button class="uk-button project-state" data-state="false">Suspended</button>
+            </div>
+            <div data-uk-button-radio class="uk-width-1-4">
+                <div class="uk-button-dropdown" data-uk-dropdown>
+                    <button class="uk-button project-dump">Save As</button>
+                    <!-- This is the dropdown -->
+                    <div class="uk-dropdown uk-dropdown-small">
+                        <ul class="uk-nav uk-nav-dropdown">
+                            <li><a class="dump_csv" href="">CSV list (.csv)</a></li>
+                            <li><a class="dump_ods" href="">OpenDocument Spreadsheet (.ods)</a></li>
+                            <li><a class="dump_xls" href="">Microsoft Excel 97-2003 (.xls)</a></li>
+                        </ul>
+                    </div>
                 </div>
             </div>
+            <div class="uk-width-1-4 uk-form">
+                <input type="text" class="uk-width-1-1" id="table_search">
+            </div>
         </div>
-        <div class="uk-width-1-4 uk-form">
-            <input type="text" class="uk-width-1-1" id="table_search">
+        <table id="statistics" style="width:100%" class="display nowrap">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Name</th>
+                    <th>Start</th>
+                    <th>End</th>
+                    <th>Responsible</th>
+                    <th>Consumption</th>
+                    <th>Total</th>
+                    <th>Usage</th>
+                    <th>Genci</th>
+                    <th>Users</th>
+                    <th>Title</th>
+                    <th>Status</th>
+                    <th>Scientific fields</th>
+                </tr>
+            </thead>
+        </table>
+        <div class="uk-grid uk-margin-bottom">
+            <div class="uk-width-1-2 uk-text-left" id="table_info">
+            </div>
+            <div class="uk-width-1-2 uk-text-right" id="table_total">
+            </div>
         </div>
-    </div>
-    <table id="statistics" style="width:100%" class="display nowrap">
-        <thead>
-            <tr>
-                <th></th>
-                <th>Name</th>
-                <th>Start</th>
-                <th>End</th>
-                <th>Responsible</th>
-                <th>Consumption</th>
-                <th>Total</th>
-                <th>Usage</th>
-                <th>Genci</th>
-                <th>Users</th>
-                <th>Title</th>
-                <th>Status</th>
-                <th>Scientific fields</th>
-            </tr>
-        </thead>
-    </table>
-    <div class="uk-grid uk-margin-bottom">
-        <div class="uk-width-1-2 uk-text-left" id="table_info">
-
-        </div>
-        <div class="uk-width-1-2 uk-text-right" id="table_total">
-
-        </div>
-
-    </div>
-</div>
+    </di>
+{% endif %}
 {% endblock %}
 
 {% block last %}
