@@ -10,37 +10,10 @@ from base.functions import (
     slurm_parse)
 
 
-def process_accounting_data(date, result):
-    """
-    Function which parse incoming dict created after SLURM sreport and create
-    Accounting record for accounting table
-    @param date: DateTime. Argument for Accounting record
-    @param result: Dictionary. Result of sreport parsing
-    @return: DateTime. First argument for function call for further processing
-    """
-    for name, value in result.items():
-        if name == "root":
-            db.session.add(Accounting(date=date,
-                                      cpu=value["total consumption"]))
-            continue
-        project = Project.query.filter_by(name=name).first()
-        if not project or not project.active:
-            continue
-        if date.replace(tzinfo=timezone.utc) < project.resources.created:
-            continue
-        for login, cpu in value.items():
-            if login == "total consumption":
-                db.session.add(Accounting(resources=project.resources,
-                                          project=project, date=date, cpu=cpu))
-            else:
-                user = User.query.filter_by(login=login).first()
-                if user:
-                    db.session.add(Accounting(resources=project.resources,
-                                              project=project, user=user,
-                                              date=date, cpu=cpu))
-    db.session.commit()
-    debug("Finish processing for date: %s" % date)
-    return date
+def render_project(name):
+    project = Project.query.filter_by(name=name).first()
+    row = render_template("bits/statistic_expand_row.html", project=project)
+    return row
 
 
 def dump_projects_database(extension_type, request):
