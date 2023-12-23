@@ -57,7 +57,7 @@
                     <td class="uk-width-1-5 uk-text-right">Responsible:</td>
                     <td class="uk-width-4-5 uk-text-left">
                         {% if project.responsible %}
-                            {{ project.responsible.full_name() }} &lt;{{ project.responsible.email }}&gt; [<a href="/users/{{ project.responsible.login }}">{{ project.responsible.login }}</a>]
+                            {{ project.responsible.full_name() }} &lt;{{ project.responsible.email }}&gt; [<a href="users/{{ project.responsible.login }}">{{ project.responsible.login }}</a>]
                         {% endif %}
                     </td>
                 </tr>
@@ -76,7 +76,7 @@
                             <ol>
                             {% for user in project.users %}
                                 <li>
-                                {{ user.full_name() }} &lt;{{ user.email }}&gt; [<a href="/users/{{ user.login }}">{{ user.login }}</a>]
+                                {{ user.full_name() }} &lt;{{ user.email }}&gt; [<a href="users/{{ user.login }}">{{ user.login }}</a>]
                                 </li>
                             {% endfor %}
                             </ol>
