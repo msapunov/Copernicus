@@ -12,7 +12,10 @@ from base.functions import (
 
 def render_project(name):
     project = Project.query.filter_by(name=name).first()
-    row = render_template("bits/statistic_expand_row.html", project=project)
+    acc_url = url_for("admin.web_admin_accounting_project", name=name)
+    user_url = url_for("admin.web_login_registry", login="")
+    row = render_template("bits/statistic_expand_row.html", project=project,
+                          accounting_url=acc_url, user_url=user_url)
     return row
 
 
