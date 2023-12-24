@@ -87,7 +87,7 @@ def web_statistic_list():
 @bp.route("/statistic/<string:name>", methods=["GET", "POST"])
 @login_required
 @grant_access("admin")
-def web_name_statistic(name):
+def web_statistic_name(name):
     info = render_project(name)
     return render_template("statistic.html", project=info)
 
