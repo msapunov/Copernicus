@@ -21,7 +21,9 @@
                     <td class="uk-width-1-5 uk-text-right">Projects:</td>
                     <td class="uk-width-4-5 uk-text-left">
                         {% if user.projects %}
-                            {{user.projects | join(", ")}}
+                            {% for project in user.projects %}
+                                <a href="{{ project_url }}{{ project }}">{{ project }}</a>{% if not loop.last %},{% endif %}
+                            {% endfor %}
                         {% endif %}
                     </td>
                 </tr>
