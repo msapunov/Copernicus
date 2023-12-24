@@ -1,5 +1,5 @@
 from hashlib import md5
-from flask import g, render_template
+from flask import g, render_template, url_for
 from flask_login import current_user
 from base import db
 from base.pages import check_str, TaskQueue
