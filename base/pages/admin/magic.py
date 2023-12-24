@@ -157,7 +157,9 @@ def render_registry(user):
     details = user.details()
     if tasks:
         details["todo"] = list(map(lambda x: x.description(), tasks))
-    row = render_template("bits/registry_expand_row.html", user=details)
+    project_url = url_for("user.web_statistic_name", name="")
+    row = render_template("bits/registry_expand_row.html", user=details,
+                          project_url=project_url)
     row += render_template("modals/registry_reset_password.html", form=details)
     row += render_template("modals/registry_send_welcome.html", form=details)
     edit_form = edit_info(user)
