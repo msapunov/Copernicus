@@ -306,14 +306,6 @@
         $(document).on("click", ".task_accept_submit", window.admin.task_submit);
         $(document).on("click", ".task_ignore_submit", window.admin.task_submit);
         $(document).on("click", ".task_reject_submit", window.admin.task_submit);
-        $(document).on({
-            mouseenter: function () {
-                $("#task_btn_group").toggleClass("uk-hidden");
-            },
-            mouseleave: function () {
-                $("#task_btn_group").toggleClass("uk-hidden");
-            }
-        }, "#tasks_info");
         setInterval(function(){
             $.ajax({
                 timeout: 60000,
