@@ -314,7 +314,15 @@
                 $("#task_btn_group").toggleClass("uk-hidden");
             }
         }, "#tasks_info");
-
+        setInterval(function(){
+            $.ajax({
+                timeout: 60000,
+                type: "POST",
+                url: window.admin.url.accounting
+            }).done(function(data){
+                accounting("accounting", data, 100);
+            });
+        }, 86400000);
         setInterval(function(){
             $.ajax({
                 timeout: 60000,
