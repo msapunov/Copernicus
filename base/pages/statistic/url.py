@@ -92,7 +92,6 @@ def web_statistic_name(name):
     return render_template("statistic.html", project=info)
 
 
-@bp.route("/statistic.html", methods=["GET"])
 @bp.route("/statistic", methods=["GET", "POST"])
 @bp.route("/statistic.html", methods=["GET", "POST"])
 @login_required
