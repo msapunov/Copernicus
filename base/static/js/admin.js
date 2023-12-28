@@ -77,7 +77,7 @@
     $(document).on("ready", function(){
         $.ajax({
             type: "POST",
-            url: window.admin.url.accounting + "/" + "365"
+            url: window.admin.url.accounting
         }).done(function(reply){
             accounting("accounting", reply, 100);
         });
