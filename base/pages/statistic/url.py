@@ -93,6 +93,7 @@ def web_statistic_name(name):
 
 
 @bp.route("/statistic.html", methods=["GET"])
+@bp.route("/statistic", methods=["GET", "POST"])
 @login_required
 @grant_access("admin")
 def web_statistic_index():
