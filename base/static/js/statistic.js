@@ -3,97 +3,32 @@
     window.stat = {};
     window.stat.url = {
         list: "statistic/list",
-        user_list: "user/list",
-        suspend: "statistic/suspend/",
-        activate: "statistic/activate/",
-        login: "users/"
+        history: "project/history",
+        expand: "statistic/expand"
     };
-    window.stat.update = function update(dt, rid, data){
-        var row = dt.row(rid);
-        row.data(data).draw();
-        row.child.hide();
-        row.child(window.stat.expand(row.data(), row)).show();
-        var tdi = $(row.node()).find("span.btn");
-        tdi.first().removeClass("uk-icon-plus");
-        tdi.first().addClass("uk-icon-minus");
-    };
-    window.stat.users = function users(users){
-        if(users.length < 1){
-            return "-";
+    window.stat.percentage = function percentage(percent, total) {
+        if( percent == 0 && total == 0){
+            return "0";
         }
-        var ul = $("<ul/>").attr({"style":"list-style: none;"});
-        $.each(users, function(idx, v){
-            var li = $("<li/>");
-            var user = v.fullname + " <" + v.email + "> [" + v.login +"] ";
-            var link = $("<a>");
-            link.attr("href", window.stat.url.login + v.login);
-            link.attr("title", user);
-            link.text(user);
-            link.addClass("link");
-            li.append(link);
-            ul.append(li);
-        });
-        return ul.prop("outerHTML")
+        return ((percent * 100) / total).toFixed(2);
     };
     window.stat.project_type = function project_type(btn, table){
         if(!$(btn).hasClass("uk-active")){
             return;
         }
-        var type = $.trim( $(btn).data("type") );
-        table.columns(1).search(type).draw();
+        $(".conso").removeClass("uk-active");
+        $(".conso_all").addClass("uk-active");
+        let extype = $.trim( $(btn).data("type") );
+        table.columns(13).search(extype).draw();
     };
-    window.stat.resp_submit = function resp_submit(btn, dt){
-        var pid = $(".change-responsible").data("pid");
-        var rid = $(".change-responsible").data("row");
-        var uid = $("#form_responsible").serialize().replace("change_responsible=", "");
-        var url = window.stat.url.set_responsible + pid;
-        json_send(url, {"uid": uid}).done(function(reply){
-            if(reply.data){
-                UIkit.notify(reply.data, {timeout: 2000, status:"success"});
-                window.stat.update(dt, rid, reply.data);
-            }
+    window.stat.submit = function (e) {
+        let x = submit.call(this);
+        x.done(function (reply) {
+            UIkit.modal("#ajax_call", {modal: false}).hide();
+            let id = reply.data.id;
+            $("table#board").DataTable().row("#" + id).remove().draw();
         });
-    };
-    window.stat.change_responsible = function change_responsible(btn, dt){
-        var name = $.trim( $(btn).data("name") );
-        var pid = $.trim( $(btn).data("pid") );
-        var rid = $.trim( $(btn).data("row") );
-        var resp = $.trim( $(btn).data("responsible") );
-        $(".change_resp_project_placeholder").text(name);
-        $(".change_resp_current_placeholder").text(resp);
-        var modal = UIkit.modal("#change_responsible");
-        if ( modal.isActive() ) {
-            modal.hide();
-        } else {
-            modal.show();
-        }
-    };
-    window.stat.set_state = function set_state(state, dt, btn){
-        // activate - true
-        // suspend - false
-        var name = $.trim( $(btn).data("name") );
-        var id = $.trim( $(btn).data("pid") );
-        var rid = $.trim( $(btn).data("row") );
-        if(state){
-            var text = "Activate project " + name + "? ";
-            var url = window.stat.url.activate + id;
-        }else{
-            var text = "Suspend project " + name + "? ";
-            var url = window.stat.url.suspend + id;
-        }
-        text = text + "That change affects database only.";
-        UIkit.modal.confirm(text, function(){
-            json_send(url).done(function(reply){
-                var row = dt.row(rid);
-                row.data(reply.data).draw();
-                row.child.hide();
-                row.child(window.stat.expand(row.data(), row)).show();
-                var tdi = $(row.node()).find("span.btn");
-                tdi.first().removeClass("uk-icon-plus");
-                tdi.first().addClass("uk-icon-minus");
-            })
-        });
-    };
+    }
     window.stat.dump = function dump(type, e){
         if(!type in ["csv", "ods", "xls"]){
             e.preventDefault();
@@ -116,113 +51,37 @@
         var anchor = $(id);
         anchor.attr("href", url);
     };
-    window.stat.project_state = function project_state(btn, table){
-        if(!$(btn).hasClass("uk-active")){
-            return;
-        }
-        var state = $.trim( $(btn).data("state") );
-        table.columns(11).search(state).draw();
-    };
-    window.stat.percentage = function percentage(percent, total) {
-        if( percent == 0 && total == 0){
-            return "0";
-        }
-        return ((percent * 100) / total).toFixed(2);
-    };
-    window.stat.btnAddUser = function btnAddUser(pid, name, rid){
-        return '<button class="uk-button add-user uk-width-1-1 uk-margin-small-bottom" data-pid=' +
-            pid +
-            ' data-name=' +
-            name +
-            ' data-row=' +
-            rid +
-            ' type="button">Add user</button>';
-    };
-    window.stat.btnState = function btnState(pid, name, state, rid){
-        if(state){
-            return '<button class="uk-button suspend uk-width-1-1 uk-margin-small-bottom" data-pid=' +
-            pid +
-            ' data-name=' +
-            name +
-            ' data-row=' +
-            rid +
-            ' type="button">Suspend project</button>';
-        }else{
-            return '<button class="uk-button activate uk-width-1-1 uk-margin-small-bottom" data-pid=' +
-            pid +
-            ' data-name=' +
-            name +
-            ' data-row=' +
-            rid +
-            ' type="button">Activate project</button>';
-        }
-    };
-    window.stat.expand = function format(d, row){
-        // `d` is the original data object for the row
-        var stat = (d.active) ? 'Active' : 'Suspended';
-        var resp = (d.responsible) ? d.responsible.fullname + ' &lt;' + d.responsible.email + '&gt;' + ' [' + d.responsible.login + ']' : "-";
-        var lab = (d.responsible) ? d.responsible.lab : "-";
-        var phone = (d.responsible) ? d.responsible.phone : "-";
-        var proc = (d.consumed_use > 0) ? d.consumed_use+"%" : "-" ;
-        var rid = row.index();
-        var btnState = window.stat.btnState(d.id, d.name, d.active, rid);
-        var btnAddUser = window.stat.btnAddUser(d.id, d.name, rid);
-        return '<div class="uk-grid"><div class="uk-width-3-4 uk-panel uk-margin-top uk-margin-bottom" style="padding-left:50px;padding-right:50px;">' +
-                '<div>ID: <b>' + d.id + '</b></div>' +
-                '<div>Name: <b>' + d.name + '</b></div>' +
-                '<div>Reference: <b>' + d.ref + '</b></div>' +
-                '<div>Title: ' + d.title + '</div>' +
-                '<div>Status: <b>' + stat + '</b></div>' +
-                '<div>Created: ' + d.created + '</div>' +
-                '<div>CPU allocation kickoff: ' + d.allocation_start + '</div>' +
-                '<div>CPU allocation deadline: ' + d.allocation_end + '</div>' +
-                '<div>Consumption: ' + d.consumed + '</div>' +
-                '<div>Total: ' + d.resources.cpu + '</div>' +
-                '<div>Usage: ' + proc + '</div>' +
-                '<div>Responsible: ' + resp + '</div>' +
-                '<div>Lab: ' + lab + '</div>' +
-                '<div>Phone: ' + phone + '</div>' +
-                '<div>Users: ' + window.stat.users(d.users) + '</div>' +
-                '<div>Genci: ' + d.genci_committee + '</div>' +
-                '<div>Scientific fields: ' + d.scientific_fields + '</div>' +
-            '</div>' +
-            '<div class="uk-width-1-4">' +
-                '<div>' +
-                    btnState +
-                '</div>' +
-                /*
-                '<div>' +
-                    btnAddUser +
-                '</div>' +
-                */
-            '</div>' +
-            '<div class="uk-width-1-1 uk-panel" style="padding-left:50px;padding-right:50px;">' +
-                '<ul class="uk-subnav uk-subnav-pill" data-uk-switcher="{connect:\'#' + d.name + '-additional-info\'}">' +
-                    '<li class="uk-active"><a href="">Description</a></li>' +
-                    '<li><a href="">Methods</a></li>' +
-                    '<li><a href="">Resources</a></li>' +
-                    '<li><a href="">Management</a></li>' +
-                    '<li><a href="">Motivation</a></li>' +
-                '</ul>' +
-                '<ul id="' + d.name + '-additional-info" class="uk-switcher">' +
-                    '<li><article class="ws">' + d.description + '</article></li>' +
-                    '<li><article class="ws">' + d.numerical_methods + '</article></li>' +
-                    '<li><article class="ws">' + d.computing_resources + '</article></li>' +
-                    '<li><article class="ws">' + d.project_management + '</article></li>' +
-                    '<li><article class="ws">' + d.project_motivation + '</article></li>' +
-                '</ul>' +
-            '</div></div>';
-    };
 
-    $(document).ready(function(){
-        $(".change_responsible_selector").select2({
-            ajax: {
-                delay: 250,
-                url: window.stat.url.user_list,
-                dataType: "json"
-            }
+    window.stat.expand_processing = function(tr, tdi, show){
+        if(show === true){
+            tr.removeClass('shown');
+            tdi.first().removeClass('uk-icon-minus');
+            tdi.first().removeClass('uk-icon-spin');
+            tdi.first().addClass('uk-icon-plus');
+        }else if(show === false){
+            tr.addClass('shown');
+            tdi.first().removeClass('uk-icon-plus');
+            tdi.first().removeClass('uk-icon-spin');
+            tdi.first().addClass('uk-icon-minus');
+        }else if(show === undefined){
+            tdi.first().removeClass('uk-icon-minus');
+            tdi.first().removeClass('uk-icon-plus');
+            tdi.first().addClass('uk-icon-spin');
+        }
+    };
+    window.stat.expand = function format(d, row, tr, tdi){
+        // `d` is the original data object for the row
+        let id = d.name;
+        let url = "{0}/{1}".f(window.stat.url.expand, id);
+        window.stat.expand_processing(tr, tdi);
+        ajax(url).done(function(data){
+            row.child("<div class='uk-grid'>" + data + "</div>").show();
+            window.stat.expand_processing(tr, tdi, false);
+        }).fail(function(request){
+            window.stat.expand_processing(tr, tdi, true);
         });
-        $('.add_user').select2();
+    };
+    $(document).ready(function(){
         var table = $("#statistics").DataTable({
             ajax: {type: "POST", url: window.stat.url.list},
             dom: 't',
@@ -351,37 +210,24 @@
                 visible: false
             }]
         });
-
         $('#statistics tbody').on('click', 'td.details-control', function () {
-            var tr = $(this).closest('tr');
-            var tdi = tr.find("span.btn");
-            var row = table.row(tr);
+            let tr = $(this).closest('tr');
+            let tdi = tr.find("span.btn");
+            let row = table.row(tr);
             if (row.child.isShown()) {
                 // This row is already open - close it
                 row.child.hide();
-                tr.removeClass('shown');
-                tdi.first().removeClass('uk-icon-minus');
-                tdi.first().addClass('uk-icon-plus');
+                window.stat.expand_processing(tr, tdi, true);
             }else {
-                // Open this row
-                row.child(window.stat.expand(row.data(), row)).show();
-                tr.addClass('shown');
-                tdi.first().removeClass('uk-icon-plus');
-                tdi.first().addClass('uk-icon-minus');
+                // Open row in ajax callback in function window.board.expand
+                window.stat.expand(row.data(), row, tr, tdi);
             }
         });
 
-        table.on("user-select", function (e, dt, type, cell, originalEvent) {
-            if ($(cell.node()).hasClass("details-control")) {
-                e.preventDefault();
-            }
-        });
         $("#table_search").on( "keyup", function () {
             table.search( this.value ).draw();
         } );
 
-        $(document).on("click", ".change_responsible_cancel", window.stat.cancel);
-        $(document).on("click", ".change_responsible_submit", function(){ window.stat.resp_submit(this, table) });
         $(document).on("click", ".project-state", function(){ window.stat.project_state(this, table) });
         $(document).on("click", ".project-type", function(){ window.stat.project_type(this, table) });
         $(document).on("click", ".dump_csv", function(e){window.stat.dump("csv", e) });
@@ -389,7 +235,11 @@
         $(document).on("click", ".dump_xls", function(e){ window.stat.dump("xls", e) });
         $(document).on("click", ".suspend", function(){ window.stat.set_state(false, table, this) });
         $(document).on("click", ".activate", function(){ window.stat.set_state(true, table, this) });
-        $(document).on("click", ".change-responsible", function(){ window.stat.change_responsible(this, table) });
+        $(document).on("click", ".history", trigger_modal);
+        $(document).on("click", ".contact", trigger_modal);
+        $(document).on("click", ".message_submit", submit);
+
+        $(document).on("click", ".window_hide", trigger_modal);
     });
 
 })(window, document, jQuery);
