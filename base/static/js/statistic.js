@@ -349,8 +349,7 @@
             },{
                 data: "numerical_methods",
                 visible: false
-            }],
-            order: [[1, 'asc']]
+            }]
         });
 
         $('#statistics tbody').on('click', 'td.details-control', function () {
