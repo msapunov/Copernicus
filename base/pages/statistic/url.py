@@ -84,6 +84,13 @@ def web_statistic_list():
     return jsonify(data=list(map(lambda x: x.to_dict(), Project.query.all())))
 
 
+@bp.route("/statistic/expand/<string:name>", methods=["POST"])
+@login_required
+@grant_access("admin", "manager")
+def web_admin_bits_user_info(name):
+    return render_project(name)
+
+
 @bp.route("/statistic/<string:name>", methods=["GET", "POST"])
 @login_required
 @grant_access("admin")
