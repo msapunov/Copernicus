@@ -9,9 +9,12 @@ def render_project(name):
     project = Project.query.filter_by(name=name).first()
     acc_url = url_for("admin.web_admin_accounting_project", name=name)
     user_url = url_for("admin.web_login_registry", login="")
+    history_url = url_for("project.web_project_history", project_name=project.name)
+    history = render_template("modals/common_show_history.html", rec=project,
+                              url=history_url)
     row = render_template("bits/statistic_expand_row.html", project=project,
                           accounting_url=acc_url, user_url=user_url)
-    return row
+    return row + history
 
 
 def dump_projects_database(extension_type, request):
