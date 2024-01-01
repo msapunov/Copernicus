@@ -111,8 +111,8 @@
                 }, 0 )
                 var dc = new Intl.NumberFormat().format(total);
                 var dt = new Intl.NumberFormat().format(req);
-                var all = "Present CPU: " + dc + "  Requested CPU: " + dt ;
-                $("#table_total").text(all);
+                $("#table_present").text("Present CPU: " + dc);
+                $("#table_requested").text("Requested CPU: " + dt);
             },
             drawCallback: function( settings ) {
                 var api = this.api();
