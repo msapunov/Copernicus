@@ -307,14 +307,18 @@
         $(document).on("click", ".task_ignore_submit", window.admin.task_submit);
         $(document).on("click", ".task_reject_submit", window.admin.task_submit);
         setInterval(function(){
-            $.ajax({
-                timeout: 60000,
-                type: "POST",
-                url: window.admin.url.accounting
-            }).done(function(data){
-                accounting("accounting", data, 100);
-            });
-        }, 86400000);
+            //  Check any minute is there is 4 AM and redraw accounting plot
+            let date = new Date();
+            if(date.getHours() === 4 && date.getMinutes() === 0){
+                $.ajax({
+                    timeout: 60000,
+                    type: "POST",
+                    url: window.admin.url.accounting
+                }).done(function(data){
+                    accounting("accounting", data, 100);
+                });
+            }
+        }, 60000);
         setInterval(function(){
             $.ajax({
                 timeout: 60000,
