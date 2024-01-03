@@ -1,4 +1,4 @@
-from flask import render_template, jsonify
+from flask import render_template, jsonify, url_for
 from flask_login import login_required
 from base.classes import ProjectLog, Extensions
 from base.pages import grant_access
@@ -114,6 +114,8 @@ def web_board_expand(eid):
     form = contact(record)
     mail = render_template("modals/common_send_message.html", form=form)
     project = record.project
-    history = render_template("modals/project_show_history.html", form=project)
+    history_url = url_for("project.web_project_history", project_name=project.name)
+    history = render_template("modals/common_show_history.html", rec=project,
+                              url=history_url)
     row = render_template("bits/extension_expand_row.html", rec=record.to_dict(), project=record.project)
     return row + history + accept + ignore + reject + mail
