@@ -1,4 +1,4 @@
-from flask import render_template, request, jsonify, flash
+from flask import render_template, request, jsonify, flash, url_for
 from flask_login import login_required, current_user
 from base.classes import ProjectLog
 from base.database.schema import LogDB, Project
@@ -255,7 +255,9 @@ def web_modal_activate(pid):
 @grant_access("admin", "responsible")
 def web_modal_history(pid):
     project = get_project_record(pid)
-    return jsonify(render_template("modals/project_show_history.html", form=project))
+    history_url = url_for("project.web_project_history", project_name=project.name)
+    return jsonify(render_template("modals/common_show_history.html",
+                                   rec=project, url=history_url))
 
 
 @bp.route("/project/modal/activity/<int:pid>", methods=["GET", "POST"])
