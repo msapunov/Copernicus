@@ -183,6 +183,7 @@
             table.search( this.value ).draw();
         });
         $(document).on("click", ".contact", trigger_modal);
+        $(document).on("click", ".message_submit", submit);
         $(document).on("click", ".edit_submit", submit);
         $(document).on("click", ".ed_mail", trigger_modal);
         $(document).on("click", ".user_activate", trigger_modal);
