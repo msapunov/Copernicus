@@ -896,17 +896,25 @@ class Tasks(db.Model):
         act, entity, login, project, task = self.action.split("|")
         if entity == "project":
             return self.brief()
+        if login:
+            user = User.query.filter_by(login=login).first()
         if act in ["create", "activate"]:
             task = task.split(" WITH ")[0]
             task = task.split(" AND PASSWORD")[0]
             act += " a user with %s" % task
-            act = act[0].upper() + act[1:].lower()
             if project:
                 act += " for the project %s" % project
         elif act in ["add", "assign", "delete", "remove"]:
-            user = User.query.filter_by(login=login).first()
             if user:
                 act = task.replace(login, user.full())
+        elif act == "update":
+            if user and "email" in task:
+                task = task.replace("email:", "%s ->" % user.email)
+            if user and "name" in task:
+                task = task.replace("name:", "%s ->" % user.name)
+            if user and "surname" in task:
+                task = task.replace("surname:", "%s ->" % user.surname)
+            act = "Updating: %s" % task
         return act
 
     def description(self):
