@@ -563,6 +563,9 @@ class Pending:
         role_allowed = set(acl).intersection(set(g.permissions))
         if (not user_allowed) and (not role_allowed):
             raise ValueError("Processing of new project record is not allowed")
+        if self.pending.status in ["created", "ignored", "rejected"]:
+            raise ValueError("Request %s is in final state: %s" %
+                             (self.pending.project_id(), self.pending.status))
         return self.pending
 
     def create(self, users):
