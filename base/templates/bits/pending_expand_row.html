@@ -162,7 +162,7 @@
         {% elif status == "RECEIVED" or status == "SKIPPED" %}
             <button class="uk-button uk-width-1-1 uk-margin-small-bottom pending_create uk-button-primary" data-modal="{{pending.id}}_create"><span class="uk-icon-cogs uk-margin-small-right"></span>Create Project!</button>
         {% else %}
-            <button class="uk-button uk-width-1-1 uk-margin-small-bottom pending_create uk-button-primary" data-modal="{{pending.id}}_create"><span class="uk-icon-cogs uk-margin-small-right"></span>Create Project!</button>
+            <button class="uk-button uk-width-1-1 uk-margin-small-bottom uk-button-link" disabled>Unknown status {{ status }}</button>
         {% endif %}
         <!--
         Empty: approve button
