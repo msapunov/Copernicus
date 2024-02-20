@@ -191,23 +191,23 @@ def render_pending(rec):
     if "APPROVED" in status:
         visa = visa_pending(rec)
         top = render_template("modals/admin_visa_pending.html", rec=visa)
-    elif "VISA SENT" in status:
+    elif "SENT" in status:
         visa = visa_pending(rec)
         top = render_template("modals/admin_visa_received.html", rec=rec)
         top += render_template("modals/admin_visa_pending.html", rec=visa)
-    elif "VISA RECEIVED" in status:
+    elif "RECEIVED" in status:
         create = create_pending(rec)
         top = render_template("modals/admin_create_project.html",
                               forms=create, project_id=rec.project_id(),
                               name=rec.id)
-    elif "VISA SKIPPED" in status:
+    elif "SKIPPED" in status:
         create = create_pending(rec)
         top = render_template("modals/admin_create_project.html",
                               forms=create, project_id=rec.project_id(),
                               name=rec.id)
     else:
         top = render_template("modals/admin_approve_pending.html", rec=rec)
-    if status not in ["VISA SENT", "VISA RECEIVED"]:
+    if status not in ["SENT", "RECEIVED"]:
         edit = edit_pending(rec)
         top += render_template("modals/admin_edit_pending.html", form=edit)
         resp = edit_responsible(rec)
