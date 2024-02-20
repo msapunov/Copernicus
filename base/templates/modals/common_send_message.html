@@ -42,7 +42,7 @@
         </div>
         <div class="uk-modal-footer uk-text-right">
             <button class="uk-button window_hide" data-modal="{{form.id}}_message">Cancel</button>
-            <button class="uk-button uk-button-primary message_submit" data-modal="{{form.id}}_message" data-form="{{form.id}}_message_form" data-url="{{ url_for('login.message', _external=True) }}">Submit</button>
+            <button class="uk-button uk-button-primary {% if form.css_class %}{{ form.css_class }}{% else %}message_submit{% endif %}" data-modal="{{form.id}}_message" data-form="{{form.id}}_message_form" data-url="{{ url_for('login.message', _external=True) }}">Submit</button>
         </div>
     </div>
 </div>
