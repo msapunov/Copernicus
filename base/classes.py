@@ -632,39 +632,6 @@ class Pending:
         record.processed_ts = dt.now()
         return self.commit()
 
-    def create_check(self):
-        """
-        Check if all requirements are satisfied.
-        :return: Object. Pending object
-        """
-        record = self.verify()
-        status = record.status.upper()
-        name = record.project_id()
-        if "VISA RECEIVED" not in status and "VISA SKIPPED" not in status:
-            raise ValueError("Visa for '%s' haven't been received yet!" % name)
-        if not record.approve:
-            raise ValueError("Project %s has to be approved first!" % name)
-        if not record.accepted:
-            raise ValueError("Project %s has to be accepted first!" % name)
-        ex = Project.query.filter(Project.title.ilike(record.title)).first()
-        if ex:
-            raise ValueError("Project '%s' already exist" % record.title)
-        return self
-
-    def visa_skip(self):
-        """
-        Set correct value to status field in case if visa is not required.
-        :return: Object. Pending object
-        """
-        record = self.verify()
-        name = record.project_id()
-        status = record.status.upper()
-        if ("APPROVED" not in status) and ("VISA SENT" not in status):
-            raise ValueError("Project %s has to be approved first!" % name)
-        record.status = "visa skipped"
-        self.result = RequestLog(record).visa_skip()
-        return self.commit()
-
     def visa_create(self, resend=False):
         """
         Creates visa files and attaches them to a mail for responsible person.
