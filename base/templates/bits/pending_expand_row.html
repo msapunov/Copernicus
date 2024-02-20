@@ -156,10 +156,10 @@
                     <p>Please, wait for arrival of a signed visa!</p>
                 </div>
             {% endif %}
-        {% elif status == "VISA SENT" %}
+        {% elif status == "SENT" %}
             <button class="uk-button uk-width-1-1 uk-margin-small-bottom pending_received uk-button-primary" data-modal="{{pending.id}}_received"><span class="uk-icon-check uk-margin-small-right"></span>Visa received</button>
             <button class="uk-button uk-width-1-1 uk-margin-small-bottom pending_visa" data-modal="{{pending.id}}_visa"><span class="uk-icon-edit uk-margin-small-right"></span>Re-send Visa</button>
-        {% elif status == "VISA RECEIVED" or status == "VISA SKIPPED" %}
+        {% elif status == "RECEIVED" or status == "SKIPPED" %}
             <button class="uk-button uk-width-1-1 uk-margin-small-bottom pending_create uk-button-primary" data-modal="{{pending.id}}_create"><span class="uk-icon-cogs uk-margin-small-right"></span>Create Project!</button>
         {% else %}
             <button class="uk-button uk-width-1-1 uk-margin-small-bottom pending_create uk-button-primary" data-modal="{{pending.id}}_create"><span class="uk-icon-cogs uk-margin-small-right"></span>Create Project!</button>
@@ -167,10 +167,10 @@
         <!--
         Empty: approve button
         APPROVED: visa send button
-        VISA SENT: visa received, visa re-send
-        VISA RECEIVED: project create
+        SENT: visa received, visa re-send
+        RECEIVED: project create
         -->
-        {% if status != "VISA SENT" and status != "VISA RECEIVED" %}
+        {% if status != "SENT" and status != "RECEIVED" %}
         <div class="uk-width-1-1 uk-panel uk-panel-box uk-margin-top">
             <button class="uk-button uk-width-1-1 uk-margin-small-bottom edit_info" data-modal="{{pending.meso_id}}_edit_pending"><span class="uk-icon-info-circle uk-margin-small-right"></span>Edit information</button>
             <button class="uk-button uk-width-1-1 uk-margin-small-bottom edit_responsible" data-modal="{{pending.meso_id}}_edit_responsible"><span class="uk-icon-user uk-margin-small-right"></span>Edit responsible</button>
