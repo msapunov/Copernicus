@@ -726,10 +726,10 @@ class Pending:
         Set self.action to reject and process the records
         :return: Result of self.process_records() method
         """
-        self.action = "reject"
-        return self.process_record(message)
-
         record = self.verify()
+        record.status = "rejected"
+        record.comment = message
+        self.result = RequestLog(record).reject(message)
         return self.commit()
 
     def commit(self):
