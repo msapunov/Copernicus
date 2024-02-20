@@ -110,11 +110,9 @@ def last_user(data):
 def unprocessed_dict():
     result = []
     for p in unprocessed():
-        sent = list(filter(lambda x: "Visa sent" in x.event, p.logs(True)))
-        got = list(filter(lambda x: "Visa received" in x.event, p.logs(True)))
         res = p.to_dict()
-        if sent and not got:
-            created = sent[0].created.replace(tzinfo=None)
+        if p.status == "sent" or p.status == "resent":
+            created = p.created.replace(tzinfo=None)
             three = dt.now() - timedelta(days=3*30)
             if created < three:
                 res["visa_expired"] = True
