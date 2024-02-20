@@ -118,7 +118,11 @@
                                 SKIPPED
                             {% elif "reset" in event %}
                                 RESET
-                            {% elif "project created" in event %}
+                            {% elif "rejected" in event %}
+                                REJECTED
+                            {% elif "ignored" in event %}
+                                IGNORED
+                            {% elif "created" in event %}
                                 CREATED!
                             {% else %}
                                 {{log.event}}
