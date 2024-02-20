@@ -574,7 +574,11 @@ class Pending:
         and corresponding task for remote execution.
         :return: Object. Pending object
         """
-        record = self.create_check().pending
+        record = self.verify()
+        if record.status not in ["received", "skipped"]:
+            raise ValueError("Visa haven't been received yet!")
+        if Project.query.filter(Project.title.ilike(record.title)).first():
+            raise ValueError("Project '%s' already exist" % record.title)
         total = Project.query.count()
         name = "%s%s" % (record.type, total + 1)
         responsible = list(filter(lambda x: x.resp, users))[0]
