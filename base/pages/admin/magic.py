@@ -138,7 +138,8 @@ def unprocessed():
             list: A list of Register objects that are unprocessed and approved
             based on the user's permissions and ACL.
     """
-    query = Register.query.filter_by(processed=False)
+    status = ["created", "ignored", "rejected"]
+    query = Register.query.filter(~Register.status.in_(status))
     if "admin" in g.permissions:
         return query.all()
 
