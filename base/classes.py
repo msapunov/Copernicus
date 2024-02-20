@@ -707,7 +707,6 @@ class Pending:
         :return: Object. Pending object
         """
         record = self.verify()
-        record.processed = False
         record.status = ""
         self.result = RequestLog(record).reset()
         return self.commit()
