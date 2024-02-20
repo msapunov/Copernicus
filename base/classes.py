@@ -656,10 +656,11 @@ class Pending:
         mail.registration(record).visa_attach(path).start()
         map(lambda x: Path(x).unlink(), path)
         debug("Temporary file(s) %s was deleted" % ",".join(path))
-        record.status = "visa sent"
         if resend:
+            record.status = "resent"
             self.result = RequestLog(record).visa_resent()
         else:
+            record.status = "sent"
             self.result = RequestLog(record).visa_sent()
         return self.commit()
 
