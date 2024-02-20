@@ -627,7 +627,7 @@ class Pending:
                 TaskQueue().project(proj).user_create(user).task.accept()
         db.session.add(proj)
         self.result = RequestLog(record).create(proj)
-        record.status = "project created"
+        record.status = "created"
         record.processed = True
         record.processed_ts = dt.now()
         return self.commit()
