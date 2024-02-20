@@ -716,8 +716,10 @@ class Pending:
         Set self.action to ignore and process the records
         :return: Result of self.process_records() method
         """
-        self.action = "ignore"
-        return self.process_record()
+        record = self.verify()
+        record.status = "ignored"
+        self.result = RequestLog(record).ignore()
+        return self.commit()
 
     def reject(self, message):
         """
