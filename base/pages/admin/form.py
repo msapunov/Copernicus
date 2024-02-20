@@ -81,6 +81,7 @@ def contact_pending(register):
     form.responsible = register.responsible_full_name()
     form.destination.value = register.responsible_email
     form.message_holder = "Write a message to %s" % form.responsible
+    form.css_class = "pending_message_submit"
     return form
 
 
