@@ -682,7 +682,9 @@ class Pending:
         :return: Object. Pending object
         """
         record = self.verify()
-        record.status = "visa received"
+        if record.status not in ["sent", "resent"]:
+            raise ValueError("Record status is not 'sent': %s" % record.status)
+        record.status = "received"
         self.result = RequestLog(record).visa_received()
         return self.commit()
 
@@ -692,9 +694,9 @@ class Pending:
         :return: Object. Pending object
         """
         record = self.verify()
+        if record.status != "":
+            raise ValueError("Record status is not empty: %s" % record.status)
         record.status = "approved"
-        record.approve = True
-        record.approve_ts = dt.now()
         self.result = RequestLog(record).approve()
         return self.commit()
 
