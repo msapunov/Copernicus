@@ -243,15 +243,15 @@
                     let status = (row.status) ? row.status.toUpperCase() : "NONE";
                     if ( "APPROVED" === status ) {
                         return '<span class="uk-icon-wrench uk-text-danger" title="Request status: '+status+'"></span>';
-                    }else if ( "VISA SENT" === status ) {
+                    }else if ( "SENT" === status ) {
                         if ( data.visa_expired === true){
                             return '<span class="uk-icon-exclamation-circle uk-text-danger" title="Request status: '+status+'"></span>';
                         }else {
                             return '<span class="uk-icon-edit uk-text-warning" title="Request status: '+status+'"></span>';
                         }
-                    }else if ( "VISA RECEIVED" === status ) {
+                    }else if ( "RECEIVED" === status ) {
                         return '<span class="uk-icon-check uk-text-success" title="Request status: '+status+'"></span>';
-                    }else if ( "VISA SKIPPED" === status ) {
+                    }else if ( "SKIPPED" === status ) {
                         return '<span class="uk-icon-check uk-text-success" title="Request status: '+status+'"></span>';
                     }else{
                         return '<span class="uk-icon-question uk-text-primary" title="Request status: '+status+'"></span>';
