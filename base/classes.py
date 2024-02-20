@@ -540,8 +540,7 @@ class Pending:
         provided id. Otherwise it returns all unprocessed records.
         :param rid: String. ID of registration record. Optional
         """
-        query = Register.query.filter_by(processed=False)
-        self.pending = query.filter_by(id=rid).first()
+        self.pending = Register.query.filter_by(id=rid).first()
         self.action = None
         self.result = None
 
