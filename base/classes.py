@@ -727,31 +727,7 @@ class Pending:
         self.action = "reject"
         return self.process_record(message)
 
-    def process_record(self, message=None):
-        """
-        Set processed field of the task record to True, so the task will be
-        moved to the task ready to be executed. Based on action property set
-        the accepted property and comment value and execute correspondent
-        RequestLog method. Commit changes via self.commit()
-        :return: Object. Pending object
-        """
         record = self.verify()
-        record.processed = True
-        record.processed_ts = dt.now()
-        record.accepted_ts = dt.now()
-        record.accepted = False
-        record.author = current_user.full_name()
-        debug("Action performed on project creation request: %s" % self.action)
-        if self.action is "ignore":
-            record.status = "ignore"
-            self.result = RequestLog(record).ignore()
-        elif self.action is "reject":
-            record.status = "reject"
-            self.result = RequestLog(record).reject(message)
-        else:
-            raise ValueError("Action %s is not supported" % self.action)
-        if message:
-            self.pending.comment = message
         return self.commit()
 
     def commit(self):
