@@ -664,6 +664,18 @@ class Pending:
             self.result = RequestLog(record).visa_sent()
         return self.commit()
 
+    def visa_skip(self):
+        """
+        Set correct value to status field in case if visa is not required.
+        :return: Object. Pending object
+        """
+        record = self.verify()
+        if record.status != "approved":
+            raise ValueError("Cant skip not approved record: %s" % record.status)
+        record.status = "skipped"
+        self.result = RequestLog(record).visa_skip()
+        return self.commit()
+
     def visa_received(self):
         """
         Set correct value to status field if visa has been received.
