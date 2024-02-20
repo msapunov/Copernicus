@@ -112,7 +112,7 @@ def unprocessed_dict():
     for p in unprocessed():
         res = p.to_dict()
         if p.status == "sent" or p.status == "resent":
-            created = p.created.replace(tzinfo=None)
+            created = p.ts.replace(tzinfo=None)
             three = dt.now() - timedelta(days=3*30)
             if created < three:
                 res["visa_expired"] = True
