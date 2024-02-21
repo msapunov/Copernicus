@@ -242,7 +242,7 @@
                 render: function ( data, type, row ) {
                     let status = (row.status) ? row.status.toUpperCase() : "NONE";
                     if ( "APPROVED" === status ) {
-                        return '<span class="uk-icon-wrench uk-text-primary" title="Request status: '+status+'"></span>';
+                        return '<span class="uk-icon-wrench uk-text-muted" title="Request status: '+status+'"></span>';
                     }else if ( "SENT" === status ) {
                         if ( data.visa_expired === true){
                             return '<span class="uk-icon-exclamation-circle uk-text-danger" title="Request status: '+status+'"></span>';
@@ -254,7 +254,7 @@
                     }else if ( "SKIPPED" === status ) {
                         return '<span class="uk-icon-check uk-text-success" title="Request status: '+status+'"></span>';
                     }else{
-                        return '<span class="uk-icon-question uk-text-muted" title="Request status: '+status+'"></span>';
+                        return '<span class="uk-icon-question uk-text-primary" title="Request status: '+status+'"></span>';
                     }
                 },
                 width:"20px"
