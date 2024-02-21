@@ -694,8 +694,9 @@ class Pending:
         :return: Object. Pending object
         """
         record = self.verify()
-        if record.status != "":
-            raise ValueError("Record status is not empty: %s" % record.status)
+        if len(record.status) > 0:
+            raise ValueError("Record status is not empty: %s\n"
+                             "Probably you should reset it" % record.status)
         record.status = "approved"
         self.result = RequestLog(record).approve()
         return self.commit()
