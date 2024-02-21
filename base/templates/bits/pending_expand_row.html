@@ -187,7 +187,7 @@
             {% if status != "NONE" %}
                 <button class="uk-button uk-width-1-1 uk-margin-small-bottom pending_reset uk-margin-top uk-margin-bottom" data-modal="{{pending.id}}_reset"><span class="uk-icon-fast-backward uk-margin-small-right"></span>Reset</button>
             {% endif %}
-            {% if status != "RECEIVED" or status != "SENT" or status != "RESENT"%}
+            {% if status != "RECEIVED" and status != "SENT" and status != "RESENT"%}
                 <button class="uk-button uk-width-1-1 uk-margin-small-bottom pending_ignore uk-margin-top" data-modal="{{pending.id}}_ignore"><span class="uk-icon-thumbs-o-down uk-margin-small-right"></span>Ignore</button>
             {% endif %}
             <button class="uk-button uk-width-1-1 uk-margin-small-bottom pending_reject uk-button-danger" data-modal="{{pending.id}}_reject"><span class="uk-icon-thumbs-down uk-margin-small-right"></span>Reject</button>
