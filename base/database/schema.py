@@ -687,13 +687,19 @@ class Register(db.Model):
                 for name, surname, email, login in [process_register_user(x)]]
 
     def cloud(self):
+        users = []
+        for u in self.get_users():
+            pair_strings = []
+            for key, value in u.items():
+                pair_strings.append(f"{key}: {value}")
+            users.append(', '.join(pair_strings))
         return [
             "registration id: %s" % self.id,
             "title: %s" % self.title,
             "type: %s" % self.project_type(),
             "cloud image: %s" % self.cloud_image,
             "responsible full name: %s" % self.responsible_full_name(),
-            "users: %s" % self.get_users(),
+            "users: %s" % ', '.join(users),
             "description: %s" % self.description,
             "created: %s" % self.created,
             "status: %s" % self.status,
