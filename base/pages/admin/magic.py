@@ -137,7 +137,8 @@ def unprocessed():
             based on the user's permissions and ACL.
     """
     status = ["created", "ignored", "rejected"]
-    query = Register.query.filter(~Register.status.in_(status))
+    query = Register.query.filter(Register.status.is_(None)
+                                  | ~Register.status.in_(status))
     if "admin" in g.permissions:
         return query.all()
 
