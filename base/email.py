@@ -65,12 +65,12 @@ class Mail(Thread):
         :param name: String. Name of a section
         :return: Object. Instance of Mail object
         """
-        self.destination = self.cfg.get(name, "TO", fallback=None)
-        self.cc = self.cfg.get(name, "CC", fallback=None)
-        self.sender = self.cfg.get(name, "FROM", fallback=None)
-        self.title = self.cfg.get(name, "TITLE", fallback=None)
-        self.message = self.cfg.get(name, "MESSAGE", fallback=None)
-        self.signature = self.cfg.get(name, "SIGNATURE", fallback=None)
+        self.destination = self.cfg.get(name, "TO", fallback="")
+        self.cc = self.cfg.get(name, "CC", fallback="")
+        self.sender = self.cfg.get(name, "FROM", fallback="")
+        self.title = self.cfg.get(name, "TITLE", fallback="")
+        self.message = self.cfg.get(name, "MESSAGE", fallback="")
+        self.signature = self.cfg.get(name, "SIGNATURE", fallback="")
         return self
 
     def configure(self):
