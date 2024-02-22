@@ -129,6 +129,7 @@ class Mail(Thread):
         if not self.sending:
             debug("No e-mail has been sent")
             return None
+        debug("Complete message: %s" % self.msg)
         if self.use_ssl:
             smtp = smtplib.SMTP_SSL(self.server, self.port)
         else:
