@@ -655,6 +655,8 @@ class Register(db.Model):
     approve_ts = db.Column(db.DateTime(True))
     approve_skip = db.Column(db.Boolean)
     cloud_image = db.Column(db.String)
+    cloud_number = db.Column(db.String)
+    cloud_duration = db.Column(db.String)
     status = db.Column(db.String)
 
     def __repr__(self):
