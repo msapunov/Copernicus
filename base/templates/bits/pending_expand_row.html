@@ -22,6 +22,18 @@
                         <td class="uk-width-9-10 uk-text-left">{{pending.cloud_image}}</td>
                     </tr>
                 {% endif %}
+                {% if "cloud_number" in pending %}
+                    <tr>
+                        <td class="uk-width-1-10 uk-text-right">Number of instances:</td>
+                        <td class="uk-width-9-10 uk-text-left">{{pending.cloud_number}}</td>
+                    </tr>
+                {% endif %}
+                {% if "cloud_duration" in pending %}
+                    <tr>
+                        <td class="uk-width-1-10 uk-text-right">Cloud duration:</td>
+                        <td class="uk-width-9-10 uk-text-left">{{pending.cloud_duration}}</td>
+                    </tr>
+                {% endif %}
                 <tr>
                     <td class="uk-width-1-10 uk-text-right">Responsible:</td>
                     <td class="uk-width-9-10 uk-text-left">
