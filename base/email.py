@@ -149,8 +149,8 @@ class Mail(Thread):
     def simple_message(self, msg):
         self.populate("SIMPLE MESSAGE")
         self.destination = msg["destination"]
-        self.__populate_values(
-            {"%TITLE": msg["title"], "%MESSAGE": msg["body"]})
+        self.title = msg["title"]
+        self.message = msg["body"]
         return self.run()
 
     def registration(self, rec):
