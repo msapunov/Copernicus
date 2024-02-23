@@ -695,7 +695,7 @@ class Register(db.Model):
             for key, value in u.items():
                 pair_strings.append(f"{key}: {value}")
             users.append(', '.join(pair_strings))
-        return [
+        return ["",
             "registration id: %s" % self.id,
             "title: %s" % self.title,
             "type: %s" % self.project_type(),
@@ -705,8 +705,7 @@ class Register(db.Model):
             "responsible full name: %s" % self.responsible_full_name(),
             "users: %s" % ', '.join(users),
             "description: %s" % self.description,
-            "created: %s" % self.created,
-            "status: %s" % self.status,
+            "request created: %s" % self.ts,
             "mesocentre id: %s" % self.project_id()
         ]
 
