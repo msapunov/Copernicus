@@ -700,6 +700,8 @@ class Register(db.Model):
             "title: %s" % self.title,
             "type: %s" % self.project_type(),
             "cloud image: %s" % self.cloud_image,
+            "cloud instance number: %s" % self.cloud_number,
+            "cloud project duration: %s" % self.cloud_duration,
             "responsible full name: %s" % self.responsible_full_name(),
             "users: %s" % ', '.join(users),
             "description: %s" % self.description,
