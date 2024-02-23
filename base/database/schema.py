@@ -1,6 +1,8 @@
 from flask_login import UserMixin, current_user
 from base import db
-from base.functions import generate_password, process_register_user
+from base.functions import (generate_password,
+                            process_register_user,
+                            full_name as fn)
 from datetime import datetime as dt
 from textwrap import shorten
 from logging import error
@@ -503,16 +505,7 @@ class User(UserMixin, db.Model):
         return "%s <%s> [%s]" % (self.full_name(), self.email, self.login)
 
     def full_name(self):
-        result = []
-        for name in [self.name, self.surname]:
-            if not name:
-                continue
-            name_parts = re_split('[\/.,\'\s-]', name)
-            for part in name_parts:
-                cap = part.capitalize()
-                name = name.replace(part, cap)
-            result.append(name)
-        return " ".join(result)
+        return fn(self.name, self.surname)
 
     def permissions(self):
         perm = []
