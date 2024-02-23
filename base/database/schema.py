@@ -690,6 +690,7 @@ class Register(db.Model):
             "cloud project duration: %s" % self.cloud_duration,
             "responsible full name: %s" % self.responsible_full_name(),
             "users: %s" % ', '.join(users),
+            "responsible name: %s" % self.responsible_full_name(),
             "description: %s" % self.description,
             "request created: %s" % self.ts,
             "mesocentre id: %s" % self.project_id()
