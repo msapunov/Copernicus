@@ -663,14 +663,7 @@ class Register(db.Model):
         return "meso-%s-%s-%s" % (year, self.id, self.project_type())
 
     def responsible_full_name(self):
-        first = self.responsible_first_name
-        last = self.responsible_last_name
-        if first and last:
-            return "%s %s" % (first.capitalize(), last.capitalize())
-        if first:
-            return first.capitalize()
-        if last:
-            return last.capitalize()
+        return fn(self.responsible_first_name, self.responsible_last_name)
 
     def get_users(self):
         users = self.users.split("\n")
