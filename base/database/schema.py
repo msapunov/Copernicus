@@ -677,10 +677,10 @@ class Register(db.Model):
     def cloud(self):
         users = []
         for u in self.get_users():
-            pair_strings = []
-            for key, value in u.items():
-                pair_strings.append(f"{key}: {value}")
-            users.append(', '.join(pair_strings))
+            user = fn(u["name"], u["last"])
+            user += " <%s>" % u["mail"] if u["mail"] else ""
+            user += " [%s]" % u["login"] if u["login"] else ""
+            users.append(user)
         return ["",
             "registration id: %s" % self.id,
             "title: %s" % self.title,
