@@ -172,7 +172,7 @@ class Mail(Thread):
         self.populate("VISA RECEIVED")
         details = "\n".join(pending.cloud())
         name = pending.project_id()
-        self.__populate_values({"%NAME": name, "DETAILS": details})
+        self.__populate_values({"%NAME": name, "%DETAILS": details})
         return self
 
     def visa_attach(self, visa):
