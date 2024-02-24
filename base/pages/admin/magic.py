@@ -67,9 +67,13 @@ def account_days(days=30, project=None, user=None):
     dates = [today - timedelta(days=i) for i in range(days)]
     every = Accounting.query.filter(
         Accounting.project == project,
-        Accounting.user == user,
-        Accounting.date >= dates[-1]
-    ).order_by(Accounting.date.desc()).limit(days).all()
+        Accounting.user == user
+    )
+    if len(dates) > 0:
+        every = every.filter(Accounting.date >= dates[-1])
+    else:
+        every = every.filter(Accounting.date == today)
+    every = every.order_by(Accounting.date.desc()).limit(days).all()
     every_data = list(map(lambda x: {x.date.strftime("%Y-%m-%d 00:00"): x.cpu}, every))
     every_keys = list(map(lambda x: x.date.strftime("%Y-%m-%d 00:00"), every))
 
