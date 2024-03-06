@@ -168,7 +168,7 @@
                     <p>Please, wait for arrival of a signed visa!</p>
                 </div>
             {% endif %}
-        {% elif status == "SENT" %}
+        {% elif status == "SENT" or status == "RESENT" %}
             <button class="uk-button uk-width-1-1 uk-margin-small-bottom pending_received uk-button-primary" data-modal="{{pending.id}}_received"><span class="uk-icon-check uk-margin-small-right"></span>Visa received</button>
             <button class="uk-button uk-width-1-1 uk-margin-small-bottom pending_visa" data-modal="{{pending.id}}_visa"><span class="uk-icon-edit uk-margin-small-right"></span>Re-send Visa</button>
         {% elif status == "RECEIVED" or status == "SKIPPED" %}
