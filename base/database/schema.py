@@ -99,7 +99,7 @@ class Project(db.Model):
     created = db.Column(db.DateTime(True))
     comment = db.Column(db.Text)
     gid = db.Column(db.Integer)
-    privileged = db.Column(db.Boolean, default=False)
+    priority = db.Column(db.Integer, default=False)
     name = db.Column(db.String(128))
     type = db.Column(db.String(1))
 
@@ -220,7 +220,7 @@ class Project(db.Model):
             "created": created,
             "comment": self.comment,
             "gid": self.gid,
-            "privileged": self.privileged,
+            "priority": self.priority,
             "name": self.get_name(),
             "type": self.type,
             "responsible": responsible,

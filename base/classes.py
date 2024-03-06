@@ -595,7 +595,7 @@ class Pending:
             active=False,
             comment="Project created using Copernicus",
             ref=record,
-            privileged=False,
+            priority=0,
             type=record.type,
             created=dt.now(),
             approve=current_user,
