@@ -13,12 +13,14 @@ __pycache__/
 # Tests folder
 /code/tests
 
+# Venv folder
+/venv
+/unused.txt
+
 # web related stuff
 /base/static/lib
 /base/static/fonts
 /base/static/css
 /base/static/img
-
-# Venv folder
-/venv
-/unused.txt
+/base/static/uikit/
+/base/static/jquery.js
