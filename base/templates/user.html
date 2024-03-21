@@ -114,21 +114,15 @@
         {% endif %}
         {% if data and data.scratch %}
             <div class="uk-panel uk-width-1-1 uk-panel-space">
-                <div id="canvas_for_scratch">
-                <script type="text/javascript">
-                    var data = [{
-                        y: {{data.scratch.used}},
-                        indexLabel: "Used",
-                        legendText: "Used {{data.scratch.used_label}}"
-                    },{
-                        y: {{data.scratch.free}},
-                        indexLabel: "Free",
-                        legendText: "Available {{data.scratch.free_label}}"
-                    }];
-                    var id = "canvas_for_scratch";
-                    var title = "Scratch usage: {{data.scratch.usage}}";
-                    plotChart(id, title, data);
-                </script>
+                <h2 class="uk-h2">Scratch</h2>
+                <div class="uk-grid">
+                    <p class="uk-width-1-3">Used: {{data.scratch.used_label}}</p>
+                    <p class="uk-width-1-3">Free: {{data.scratch.free_label}}</p>
+                    <div class=" uk-width-1-3">
+                        <div class="uk-progress uk-progress-striped uk-active {{style}}">
+                            <div class="uk-progress-bar" style="width: {{data.scratch.usage}};"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
         {% endif %}
