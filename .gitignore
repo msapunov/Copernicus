@@ -18,9 +18,6 @@ __pycache__/
 /unused.txt
 
 # web related stuff
-/base/static/lib
-/base/static/fonts
 /base/static/css
 /base/static/img
-/base/static/uikit/
-/base/static/jquery.js
+/base/static/assets/
