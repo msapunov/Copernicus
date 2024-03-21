@@ -48,7 +48,7 @@
                 <p class="uk-h2 uk-text-nowrap">Pending tasks:
                 {% if data.tasks and data.tasks|length > 0 %}
                     <a class="task_show" id="task_queue_length" data-modal="tasks_to_process">{{data.tasks|length}}</a></p>
-                    {% include 'modals/admin_show_task.html' %}
+                    {% include "modals/admin_show_task.html" %}
                 {% else %}
                     <a class="task_show" id="taks_queue_length">0</a></p>
                 {% endif %}
@@ -59,7 +59,7 @@
             </div>
 
             <div class="uk-width-small-1-1 uk-width-medium-1-2 uk-margin-top uk-padding-remove">
-                <table id="overview" class="display compact nowrap" data-order='[[ 4, "desc" ]]'>
+                <table id="overview" class="display compact nowrap" data-order="[[ 4, 'desc' ]]">
                     <thead>
                     <tr>
                         <th>Partition</th>
@@ -72,7 +72,7 @@
                 </table>
             </div>
             <div class="uk-width-small-1-1 uk-width-medium-1-2 uk-margin-large-top">
-                <table id="disk_space" class="display compact nowrap" data-order='[[ 0, "asc" ]]'>
+                <table id="disk_space" class="display compact nowrap" data-order="[[ 0, 'asc' ]]">
                     <thead>
                         <tr>
                             <th>Mount</th>
@@ -86,7 +86,7 @@
                 </table>
             </div>
             <div class="uk-width-small-1-1 uk-width-medium-1-2 uk-margin-large-top uk-padding-remove">
-                <table id="sinfo" class="display compact" data-order='[[ 2, "desc" ]]'>
+                <table id="sinfo" class="display compact" data-order="[[ 2, 'desc' ]]">
                     <thead>
                         <tr>
                             <th>Node</th>
@@ -98,7 +98,7 @@
                 </table>
             </div>
             <div class="uk-width-small-1-1 uk-width-medium-1-2 uk-margin-top">
-                <table id="system" class="compact" data-order='[[ 0, "asc" ]]'>
+                <table id="system" class="compact" data-order="[[ 0, 'asc' ]]">
                     <thead>
                     <tr>
                         <th>Server</th>
@@ -111,7 +111,7 @@
             </div>
 {% endif %}
             <div class="uk-width-1-1 uk-padding-remove uk-margin-large">
-                <table id="pending_projects" class="stripe compact" data-order='[[ 5, "desc" ]]'>
+                <table id="pending_projects" class="stripe compact" data-order="[[ 5, 'desc' ]]">
                     <thead>
                         <tr>
                             <th></th>
