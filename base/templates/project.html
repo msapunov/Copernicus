@@ -179,7 +179,9 @@
                         {% endif %}
                         <button class="uk-button uk-width-1-1 uk-margin-small-bottom attach" data-modal="{{project.name}}_attach" disabled>Add user</button>
                         {% if project.users_length > 1 %}
+                            <!--
                             <button class="uk-button uk-width-1-1 uk-margin-small-bottom delete" data-modal="{{project.name}}_delete" disabled>Delete user</button>
+                            -->
                         {% endif %}
                     {% else %}
                         <button class="uk-button uk-width-1-1 uk-margin-small-bottom activate" data-modal='{{project.name}}_activate' disabled>Activate project</button>
