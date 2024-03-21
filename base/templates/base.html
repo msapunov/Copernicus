@@ -10,28 +10,27 @@
 
         <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
 
-        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='uikit/css/uikit.gradient.min.css') }}" />
-        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='uikit/css/components/notify.gradient.min.css') }}" />
-        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='uikit/css/components/progress.gradient.min.css') }}" />
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='assets/uikit/css/uikit.gradient.min.css') }}" />
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='assets/uikit/css/components/notify.gradient.min.css') }}" />
 
-        <script type="text/javascript" src="https://code.jquery.com/jquery-2.2.4.js"></script>
-        <script src="{{ url_for('static', filename='uikit/js/uikit.js') }}"></script>
-        <script src="{{ url_for('static', filename='js/notify.js') }}"></script>
+        <script src="{{ url_for('static', filename='assets/jquery.js') }}"></script>
+        <script src="{{ url_for('static', filename='assets/uikit/js/uikit.js') }}"></script>
+        <script src="{{ url_for('static', filename='assets/uikit/js/components/notify.js') }}"></script>
         <script src="{{ url_for('static', filename='js/lib.js') }}"></script>
 
         {% if current_user.login and "admin" in current_user.permissions() %}
-        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/select2.min.css') }}" />
-        <script src="{{ url_for('static', filename='js/select2.min.js') }}"></script>
-        <style>
-            #ajax_call {
-                z-index: 10000000;
-            }
-        </style>
-        <script>
-            $(document).ready(function() {
-                $('.switch_user_selector').select2();
-            });
-        </script>
+            <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='assets/select2.min.css') }}" />
+            <script src="{{ url_for('static', filename='assets/select2.min.js') }}"></script>
+            <style>
+                #ajax_call {
+                    z-index: 10000000;
+                }
+            </style>
+            <script>
+                $(document).ready(function() {
+                    $('.switch_user_selector').select2();
+                });
+            </script>
         {% endif %}
 
 

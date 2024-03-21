@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 {% block head %}
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.10.21/b-1.6.2/b-html5-1.6.2/r-2.2.5/datatables.min.css"/>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='assets/datatables.min.css') }}" />
 
-    <script src="{{ url_for('static', filename='js/datatables.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='assets/datatables.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/registry.js') }}"></script>
     <style>
         .uk-table td, .uk-table th {
