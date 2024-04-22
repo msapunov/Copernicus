@@ -2,6 +2,10 @@
     {% block html %}
         <html class="uk-height-1-1" lang="en">
     {% endblock %}
+    {% block head %}
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='assets/uikit/css/components/form-password.gradient.min.css') }}" />
+        <script src="{{ url_for('static', filename='assets/uikit/js/components/form-password.js') }}"></script>
+    {% endblock %}
     {% block body_replace %}
         <body class="uk-height-1-1">
     {% endblock %}
@@ -18,14 +22,17 @@
 
                 <form action="{{ url_for('login.reset') }}" method="post" class="uk-panel uk-panel-box uk-form">
                     {{ form.csrf_token }}
-                    <div class="uk-form-row">
+                    <div class="uk-form-row uk-form-password">
                         {{ form.old(placeholder="current password", class_="uk-width-1-1 uk-form-large") }}
+                        <a href="" class="uk-form-password-toggle" data-uk-form-password>Show</a>
                     </div>
-                    <div class="uk-form-row">
+                    <div class="uk-form-row uk-form-password">
                         {{ form.new_passw(placeholder="new password", class_="uk-width-1-1 uk-form-large") }}
+                        <a href="" class="uk-form-password-toggle" data-uk-form-password>Show</a>
                     </div>
-                    <div class="uk-form-row">
+                    <div class="uk-form-row uk-form-password">
                         {{ form.conf_passw(placeholder="confirm new password", class_="uk-width-1-1 uk-form-large") }}
+                        <a href="" class="uk-form-password-toggle" data-uk-form-password>Show</a>
                     </div>
                     <div class="uk-form-row">
                         <button class="uk-width-1-1 uk-button uk-button-primary uk-button-large" type="submit">Submit</button>
