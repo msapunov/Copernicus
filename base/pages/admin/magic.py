@@ -32,12 +32,12 @@ __copyright__ = "Aix Marseille University"
 
 
 def process_user_form(form):
-    prenom = form.prenom.data
-    surname = form.surname.data
-    email = form.email.data
-    login = form.login.data
+    prenom = form.prenom.data.lower()
+    surname = form.surname.data.lower()
+    email = form.email.data.lower()
+    login = form.login.data.lower()
     if login == "none":
-        pass
+        return None
     if login == "select":
         username = form.exist.data
         if username not in g.user_list:
@@ -47,9 +47,9 @@ def process_user_form(form):
         user.action = "assign"
     else:
         user = User(login=login,
-                    name=prenom.lower(),
-                    surname=surname.lower(),
-                    email=email.lower(),
+                    name=prenom,
+                    surname=surname,
+                    email=email,
                     created=dt.now(),
                     acl=ACLDB())
         db.session.add(user)
