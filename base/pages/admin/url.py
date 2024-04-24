@@ -296,12 +296,13 @@ def admin_registration_ignore(pid):
 def admin_registration_create(pid):
     data = request.form.to_dict()
     indexes = list(set([int(key.split("-")[0]) for key in data.keys()]))
-    users = []
+    tmp = []
     for i in indexes:
         form = CreateForm(prefix=str(i))
         if not form.validate_on_submit():
             raise ValueError(form.errors)
-        users.append(process_user_form(form))
+        tmp.append(process_user_form(form))
+    users = list(filter(lambda x: x, tmp))
     return jsonify(message=Pending(pid).create(users).result)
 
 
