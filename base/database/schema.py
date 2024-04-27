@@ -29,7 +29,7 @@ class Accounting(db.Model):
     cpu = db.Column(db.Integer, db.CheckConstraint("cpu>=0"))
 
     def __repr__(self):
-        return '<Account ID {}>'.format(self.id)
+        return "<Account ID {}>".format(self.id)
 
 
 class ACLDB(db.Model):
@@ -122,7 +122,7 @@ class Project(db.Model):
     ref = db.relationship("Register", foreign_keys=ref_id)
 
     def __repr__(self):
-        return '<Project {}>'.format(self.get_name())
+        return "<Project {}>".format(self.get_name())
 
     def account_by_user(self, daily=None):
         result = self.resources.consumption_by_user(daily)
