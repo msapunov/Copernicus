@@ -571,7 +571,7 @@ def is_activity_report(project):
     except Exception as err:
         raise ValueError("Failed to connect to the cloud: %s" % err)
     remote_dir = current_app.config.get("ACTIVITY_DIR", "/")
-    if remote_dir[-1] is not "/":
+    if remote_dir[-1] != "/":
         remote_dir += "/"
     remote = remote_dir + name
     debug("Checking is file %s exists" % remote)
