@@ -111,7 +111,7 @@ def active_check():
     raw_data = request.get_data()
     if not raw_data:
         return "No data received"
-    cook_data = raw_data.decode('utf-8', errors='replace').split("\n")
+    cook_data = raw_data.decode("utf-8", errors="replace").split("\n")
     data = dict(map(lambda x: x.split("|"), cook_data))
     for project in projects:
         name = project.name
