@@ -27,9 +27,9 @@ def load_user(uid):
 
 @bp.route("/api/<path:urlpath>", methods=["POST"])
 def load_user_from_request(urlpath):
-    api_key = request.headers.get('Authorization')
+    api_key = request.headers.get("Authorization")
     if api_key:
-        api_key = api_key.replace('Basic ', '', 1)
+        api_key = api_key.replace("Basic ", "", 1)
         try:
             api_key = b64decode(api_key)
         except TypeError:
