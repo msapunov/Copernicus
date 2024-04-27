@@ -211,7 +211,7 @@ def upload_file_cloud(path, remote=None):
         return False
     if not remote:
         remote_dir = current_app.config.get("ACTIVITY_DIR", "/")
-        if remote_dir[-1] is not "/":
+        if remote_dir[-1] != "/":
             remote_dir += "/"
         remote = remote_dir + po.name
     debug("Uploading file %s to %s" % (path, remote))
