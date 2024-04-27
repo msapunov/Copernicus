@@ -84,7 +84,7 @@ show_error = function(req){
             msg += "Message: {1}\n".f(text);
         }
     }
-    msg += "Please contact technical team: {0}".f(contact);
+    msg += "\n\nIn case of persisting errors, please contact our technical team: {0}".f(contact);
     alert(msg);
 };
 
