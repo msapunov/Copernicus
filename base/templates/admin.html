@@ -1,13 +1,12 @@
 {% extends "base.html" %}
 {% block head %}
-    <link rel="stylesheet" type="text/css" href="{{ url_for("static", filename="assets/datatables.min.css") }}"/>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='assets/datatables.min.css') }}"/>
 
-    <script src="{{ url_for("static", filename="assets/uikit/js/components/datepicker.js") }}"></script>
-    <script src="{{ url_for("static", filename="assets/datatables.min.js") }}"></script>
-    <script src="{{ url_for("static", filename="assets/chart.umd.js") }}"></script>
+    <script src="{{ url_for('static', filename='assets/datatables.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='assets/uikit/js/components/datepicker.js') }}"></script>
+    <script src="{{ url_for('static', filename='assets/chart.js') }}"></script>
     <script src="{{ url_for('static', filename='assets/moment-with-locales.min.js') }}"></script>
-    <script src="{{ url_for("static", filename="js/lib.js") }}"></script>
-    <script src="{{ url_for("static", filename="js/admin.js") }}"></script>
+    <script src="{{ url_for('static', filename='js/admin.js') }}"></script>
 
     <style>
         .uk-table td, .uk-table th {
