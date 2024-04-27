@@ -5,7 +5,7 @@
     let pass = "reset.html"
 
     $(document).on("ready", function(){
-        var login = $.trim( $("#user_login").data("login") );
+        let login = $.trim( $("#user_login").data("login") );
         modal("{0}/{1}".f(url, login), "edit");
         modal(ssh, "ssh");
     });
