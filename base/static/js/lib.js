@@ -137,6 +137,12 @@ ajax_send = function(url, data, show_modal){
         type: "POST",
         url: url
     }).done(function(reply){
+        if(reply.includes('<!DOCTYPE html>')){
+            show_error({
+                responseText:'It seems that your session has expired, please reload the webpage.',
+                status: 500
+            })
+        }
         if (reply.message) {
             UIkit.notify(reply.message, {
                 timeout: 3000,
