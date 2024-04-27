@@ -69,7 +69,7 @@ def save_file(req, directory, file_name=False):
     if "file" not in req.files:
         raise ValueError("File expected!")
     file = req.files["file"]
-    if file.filename == '':
+    if file.filename == "":
         raise ValueError("No selected file")
     debug("File name from incoming request: %s" % file.filename)
     if not file_name:
@@ -78,7 +78,7 @@ def save_file(req, directory, file_name=False):
         if "." not in file_name and "." not in file.filename:
             file_name = "%s.unknown" % file_name
         elif "." not in file_name and "." in file.filename:
-            ext = file.filename.rsplit('.', 1)[1].lower()
+            ext = file.filename.rsplit(".", 1)[1].lower()
             debug("Deducted file extensions: %s" % ext)
             file_name = "%s.%s" % (file_name, ext)
     name = join_dir(directory, file_name)
