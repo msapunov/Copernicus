@@ -899,6 +899,8 @@ class Tasks(db.Model):
             return self.brief()
         if login:
             user = User.query.filter_by(login=login).first()
+        else:
+            user = None
         if act in ["create", "activate"]:
             task = task.split(" WITH ")[0]
             task = task.split(" AND PASSWORD")[0]
