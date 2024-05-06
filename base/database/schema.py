@@ -9,7 +9,6 @@ from logging import error
 from pathlib import PurePath
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy import func
-from re import split as re_split
 
 
 __author__ = "Matvey Sapunov"
