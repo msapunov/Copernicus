@@ -137,9 +137,6 @@ class Project(db.Model):
         result = self.resources.consumption()
         return result if result else 0
 
-    def get_responsible(self):
-        return self.responsible
-
     def get_name(self):
         if self.name:
             return self.name
