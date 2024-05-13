@@ -169,8 +169,6 @@ class Project(db.Model):
         return self.resources.usage()
 
     def consumed_use(self):
-        usage = self.resources.usage()  # with percents
-        return float(usage.replace("%", "")) if usage else 0
         # with percents
         return float(self.resources.usage().replace("%", ""))
 
