@@ -381,6 +381,18 @@ class Resources(db.Model):
     project = db.Column(db.String)
     treated = db.Column(db.Boolean, default=False)
 
+    def web(self):
+        form = "%Y-%m-%d %X %Z"
+        return {
+            "id": self.id,
+            "approve": self.approve.to_dict(),
+            "valid": self.valid,
+            "cpu": self.cpu,
+            "created": self.created.strftime(form) if self.created else "",
+            "modified": self.modified.strftime(form) if self.modified else "",
+            "finish": self.ttl.strftime(form) if self.ttl else ""
+        }
+
     def to_dict(self):
         start = self.created.strftime("%Y-%m-%d %X %Z") if self.created else ""
         mod = self.modified.strftime("%Y-%m-%d %X %Z") if self.modified else ""
