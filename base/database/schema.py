@@ -171,6 +171,8 @@ class Project(db.Model):
     def consumed_use(self):
         usage = self.resources.usage()  # with percents
         return float(usage.replace("%", "")) if usage else 0
+        # with percents
+        return float(self.resources.usage().replace("%", ""))
 
     def to_dict(self):
         if self.created:
