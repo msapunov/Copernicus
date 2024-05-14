@@ -4,7 +4,6 @@ from logging import warning, debug
 from configparser import ConfigParser, ExtendedInterpolation
 from os.path import join as path_join, exists
 from datetime import datetime as dt
-from parsedatetime import Calendar
 from threading import Thread
 from email.mime.application import MIMEApplication
 from email.mime.multipart import MIMEMultipart
@@ -245,21 +244,6 @@ class Mail(Thread):
         full = record.user.full_name()
         key = key[:62] + "..." + key[-62:]
         self.__populate_values({"%FULLNAME": full, "%KEY": key})
-        return self
-
-    def user_goodbye(self, user):
-        self.populate("USER GOODBYE")
-        self.destination = user.email
-        full = user.full_name()
-        dead = app.config.get("USER_DELETE_AFTER", False)
-        if dead:
-            cal = Calendar()
-            dead, result = cal.parseDT(dead)
-            if result < 1:
-                dead = False
-        end = dt.now() if not dead else dead
-        self.__populate_values({"%FULLNAME": full, "%LOGIN": user.login,
-                                "%END": str(end.date())})
         return self
 
     def user_update(self, record):
