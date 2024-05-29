@@ -156,7 +156,7 @@ def full_name(name, surname):
     for name in [name, surname]:
         if not name:
             continue
-        name_parts = re_split('[\/.,\'\s-]', name)
+        name_parts = re_split("[\/.,\'\s-]", name)
         for part in name_parts:
             cap = part.capitalize()
             name = name.replace(part, cap)
