@@ -203,7 +203,11 @@
             ]
         });
         $("#pending_projects").DataTable({
-            ajax: {"type": "POST", "url": window.admin.url.pending},
+            ajax: {
+                type: "POST",
+                error: function(request){show_error(request)},
+                url: window.admin.url.pending
+            },
             dom: 'tiB',
             buttons: {
                 className: 'copyButton',
