@@ -355,8 +355,8 @@
         $(document).on("click", ".pending_reject", trigger_modal);
         $(document).on("click", ".pending_reject_submit", window.admin.submit);
 
-        $(document).on("click", ".task_show", trigger_modal);
         $(document).on("click", ".task_list", trigger_modal);
+        $(document).on("click", ".task_show", window.admin.task_show);
         $(document).on("click", ".task_accept_submit", window.admin.task_submit);
         $(document).on("click", ".task_ignore_submit", window.admin.task_submit);
         $(document).on("click", ".task_reject_submit", window.admin.task_submit);
