@@ -36,6 +36,38 @@
             });
         });
     };
+    window.admin.task_show = function () {
+        let act = $.trim( $(this).data("act") );
+        if(act != 'accept' && act != 'reject' && act != 'ignore'){
+            return show_error({'status': 505,
+                'responseText': 'Attention! Action "' + act + '" is unknown'});
+        }
+        let id = $.trim( $(this).closest('div').data('id') );
+        if(id == ''){
+            return show_error({'status': 505, 'responseText': 'Failed to find ID for this record'});
+        }
+        let task = $.trim( $(this).closest('div').data('task') );
+        if(task == ''){
+            return show_error({'status': 505, 'responseText': 'Failed to find task description for this record'});
+        }
+        let url = "{0}/{1}/{2}".f(window.admin.url.task, act, id);
+        let message = "{0} task ID {1}?<br>{2}".f(act.capitalize(), id, task);
+        if(act == 'reject'){
+            return UIkit.modal.prompt(message, "Task '{0}' is rejected".f(task), function(reply_text){
+                ajax(url, reply_text, this);
+            });
+        }
+        return UIkit.modal.confirm(message, function(){
+            json_send(url).done(function(reply){
+                let uid = "{0}_{1}".f(name, login);
+                let btn = $("#"+uid).find("button").css("visibility", "hidden");
+                $("#"+uid).find(".uk-margin-small-left").addClass("uk-text-muted");
+            });
+        });
+    };
+    window.admin.task_submit = function (text) {
+
+    };
     window.admin.task_submit = function (){
         submit.call(this).done(function(data){
             if(data.html){
