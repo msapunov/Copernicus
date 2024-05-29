@@ -181,8 +181,8 @@ json_send = function(url, data, show_modal){
 };
 
 trigger_modal = function(e){
-    var name = $.trim( $(this).data("modal") );
-    var modal = UIkit.modal("#" + name);
+    const name = "#" + $.trim( $(this).data("modal") );
+    const modal = UIkit.modal(name);
     if ( modal.isActive() ) {
         modal.hide();
     } else {
