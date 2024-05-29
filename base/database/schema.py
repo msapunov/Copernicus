@@ -921,7 +921,11 @@ class Tasks(db.Model):
         return act
 
     def description(self):
-        act, entity, login, project, task = self.action.split("|")
+        try:
+            act, entity, login, project, task = self.action.split("|")
+        except ValueError:
+            error("Task incompressible %s: %s" % (self.id, self.action))
+            pass
         if act in ["create", "activate"]:
             if "new project" in task:
                 return task
