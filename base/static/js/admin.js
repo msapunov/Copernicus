@@ -12,6 +12,7 @@
         system: "admin/sys/info",
         pending: "admin/pending/list",
         accounting: "admin/accounting/365",
+        task: "admin/tasks",
         tasks: "admin/tasks/list",
         tasks_accept: "admin/tasks/accept",
         tasks_history: "admin/tasks/history",
