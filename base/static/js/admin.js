@@ -99,7 +99,7 @@
             // `d` is the original data object for the row
             let id = row.id();
             let url = "{0}/{1}".f(window.admin.url.expand_pending, id);
-            window.admin.expand_processing(tr, tdi);
+            window.admin.expand_processing(tr, tdi, false);
             ajax(url).done(function(data){
                 row.child(data).show();
                 window.admin.expand_processing(tr, tdi, false);
