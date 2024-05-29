@@ -137,7 +137,7 @@ ajax_send = function(url, data, show_modal){
         type: "POST",
         url: url
     }).done(function(reply){
-        if(reply.includes('<!DOCTYPE html>')){
+        if(typeof reply === 'string' && reply.includes('<!DOCTYPE html>')){
             show_error({
                 responseText:'It seems that your session has expired, please reload the webpage.',
                 status: 500
