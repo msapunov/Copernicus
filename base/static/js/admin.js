@@ -97,6 +97,7 @@
     };
     window.admin.expand = function format(d, row, tr, tdi){
             // `d` is the original data object for the row
+            //let screen = $("div").
             let id = row.id();
             let url = "{0}/{1}".f(window.admin.url.expand_pending, id);
             window.admin.expand_processing(tr, tdi, false);
