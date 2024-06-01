@@ -369,7 +369,7 @@ def web_admin_tasks_edit(tid):
     form = TaskEditForm()
     if not form.validate_on_submit():
         raise ValueError(form_error_string(form.errors))
-    return jsonify(data=Task(tid).update(form).to_dict())
+    return jsonify(data=Task(tid).update(form).to_dict(), task=True)
 
 
 @bp.route("/admin/tasks/ignore/<int:tid>", methods=["POST"])
@@ -380,9 +380,9 @@ def web_admin_tasks_ignore(tid):
     tasks = TaskManager().list()
     if "admin.html" in request.referrer:
         return jsonify(data=tasks, info="Task '%s' is ignored" % task.short(),
-                       html=render_template(
+                       task=True, html=render_template(
             "modals/admin_show_task.html", data={"tasks": tasks}))
-    return jsonify(data=tasks)
+    return jsonify(data=tasks, task=True)
 
 
 @bp.route("/admin/tasks/reject/<int:tid>", methods=["POST"])
@@ -393,9 +393,9 @@ def web_admin_tasks_reject(tid):
     tasks = TaskManager().list()
     if "admin.html" in request.referrer:
         return jsonify(data=tasks, info="Task '%s' is rejected" % task.short(),
-                       html=render_template(
+                       task=True, html=render_template(
             "modals/admin_show_task.html", data={"tasks": tasks}))
-    return jsonify(data=tasks)
+    return jsonify(data=tasks, task=True)
 
 
 @bp.route("/admin/tasks/accept/<int:tid>", methods=["POST"])
@@ -406,9 +406,9 @@ def web_admin_tasks_accept(tid):
     tasks = TaskManager().list()
     if "admin.html" in request.referrer:
         return jsonify(data=tasks, info="Task '%s' is accepted" % task.short(),
-                       html=render_template(
+                       task=True, html=render_template(
             "modals/admin_show_task.html", data={"tasks": tasks}))
-    return jsonify(data=tasks)
+    return jsonify(data=tasks, task=True)
 
 
 @bp.route("/admin/tasks/info/<int:tid>", methods=["POST"])
@@ -422,21 +422,21 @@ def web_admin_tasks_info(tid):
 @login_required
 @grant_access("admin")
 def web_admin_tasks_history():
-    return jsonify(data=task_history())
+    return jsonify(data=task_history(), task=True)
 
 
 @bp.route("/admin/tasks/todo", methods=["POST"])
 @login_required
 @grant_access("admin", "tech")
 def web_admin_tasks_todo():
-    return jsonify(data=TaskManager().todo())
+    return jsonify(data=TaskManager().todo(), task=True)
 
 
 @bp.route("/admin/tasks/list", methods=["POST"])
 @login_required
 @grant_access("admin")
 def web_admin_tasks_list():
-    return jsonify(data=TaskManager().list())
+    return jsonify(data=TaskManager().list(), task=True)
 
 
 @bp.route("/admin/tasks/done/<int:tid>", methods=["POST"])
@@ -446,7 +446,7 @@ def admin_tasks_done(tid):
     result = request.get_json(silent=True)
     if result:
         result = result.get("result", None)
-    return jsonify(data=process_task(tid, result).brief())
+    return jsonify(data=process_task(tid, result).brief(), task=True)
 
 
 @bp.route("/admin/partition/info", methods=["POST"])
