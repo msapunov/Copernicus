@@ -141,15 +141,17 @@ class Task:
         self.task.decision = "accept"
         Mail().task_accepted(self.task).send()
         return self.process()
+        return self.process(comment)
 
     def ignore(self, comment=None):
         self.task.decision = "ignore"
-        return self.process()
+        return self.process(comment)
 
     def reject(self, comment=None):
         self.task.decision = "reject"
         Mail().task_rejected(self.task).send()
         return self.process()
+        return self.process(comment)
 
     def action(self):
         return self.task.action
