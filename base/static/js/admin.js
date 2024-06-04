@@ -55,6 +55,7 @@
         if(act == 'reject'){
             return UIkit.modal.prompt(message, "Task '{0}' is rejected".f(task), function(reply_text){
                 ajax(url, reply_text, this);
+        let url = '{0}/{1}/{2}'.f(window.admin.url.task, act, id);
             });
         }
         return UIkit.modal.confirm(message, function(){
