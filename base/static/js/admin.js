@@ -38,16 +38,16 @@
     };
     window.admin.task_show = function () {
         let act = $.trim( $(this).data("act") );
-        if(act != 'accept' && act != 'reject' && act != 'ignore'){
+        if(act !== 'accept' && act !== 'reject' && act !== 'ignore'){
             return show_error({'status': 505,
                 'responseText': 'Attention! Action "' + act + '" is unknown'});
         }
         let id = $.trim( $(this).closest('div').data('id') );
-        if(id == ''){
+        if(id === ''){
             return show_error({'status': 505, 'responseText': 'Failed to find ID for this record'});
         }
         let task = $.trim( $(this).closest('div').data('task') );
-        if(task == ''){
+        if(task === ''){
             return show_error({'status': 505, 'responseText': 'Failed to find task description for this record'});
         }
         let url = "{0}/{1}/{2}".f(window.admin.url.task, act, id);
