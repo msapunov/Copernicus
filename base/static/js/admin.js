@@ -58,11 +58,7 @@
             });
         }
         return UIkit.modal.confirm(message, function(){
-            json_send(url).done(function(reply){
-                let uid = "{0}_{1}".f(name, login);
-                let btn = $("#"+uid).find("button").css("visibility", "hidden");
-                $("#"+uid).find(".uk-margin-small-left").addClass("uk-text-muted");
-            });
+            ajax(url, '', this);
         });
     };
     window.admin.task_submit = function (text) {
