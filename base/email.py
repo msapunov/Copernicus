@@ -482,14 +482,14 @@ class Mail(Thread):
         self.__populate_values({"%EXT": extend_or_renew, "%REASON": reason})
         return self
 
-    def task_accepted(self, task):
+    def task_accepted(self, task, comment=None):
         self.populate("TECH")
         title = "Task id '%s' has been accepted" % task.id
         message = "Task '%s' has been accepted" % task.description()
         self.__populate_values({"%TITLE": title, "%MESSAGE": message})
         return self
 
-    def task_rejected(self, task):
+    def task_rejected(self, task, comment=None):
         self.populate("TECH")
         title = "Task id '%s' has been rejected" % task.id
         message = "Task '%s' has been rejected" % task.description()
