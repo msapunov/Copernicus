@@ -137,16 +137,16 @@ class Task:
     def description(self):
         return self.task.description()
 
-    def accept(self):
+    def accept(self, comment=None):
         self.task.decision = "accept"
         Mail().task_accepted(self.task).send()
         return self.process()
 
-    def ignore(self):
+    def ignore(self, comment=None):
         self.task.decision = "ignore"
         return self.process()
 
-    def reject(self):
+    def reject(self, comment=None):
         self.task.decision = "reject"
         Mail().task_rejected(self.task).send()
         return self.process()
@@ -167,7 +167,7 @@ class Task:
         db.session.commit()
         return self.task
 
-    def process(self):
+    def process(self, comment=None):
         self.task.processed = True
         self.task.approve = current_user
         db.session.commit()
