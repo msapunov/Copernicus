@@ -225,7 +225,7 @@ def check_responsible(name):
     :return: Object. Object of a project under given project name
     """
     project = get_project_by_name(name)
-    if current_user != project.get_responsible():
+    if current_user != project.responsible:
         raise ValueError("User %s is not register as the responsible person "
                          "for the project %s" % (current_user.login, name))
     return project

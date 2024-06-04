@@ -56,6 +56,12 @@
             return UIkit.modal.prompt(message, "Task '{0}' is rejected".f(task), function(reply_text){
                 ajax(url, reply_text, this);
         let url = '{0}/{1}/{2}'.f(window.admin.url.task, act, id);
+//        let message = "{0} task: {1}?<br>{2}".f(act.capitalize(), id, task);
+        let message = '{0} {1} ?'.f(act.capitalize(), task);
+        if(act === 'reject'){
+            message += '<br>You might want to provide a reason for your decision:';
+            return UIkit.modal.prompt(message, '', function(reply_text){
+                ajax(url, {reason: reply_text}, this);
             });
         }
         return UIkit.modal.confirm(message, function(){
