@@ -502,6 +502,8 @@ class Mail(Thread):
         self.populate("TECH")
         title = "Task id '%s' has been accepted" % task.id
         message = "Task '%s' has been accepted" % task.description()
+        if comment is not None:
+            message += "\nWith following comment: %s" % comment
         self.__populate_values({"%TITLE": title, "%MESSAGE": message})
         return self
 
@@ -509,6 +511,8 @@ class Mail(Thread):
         self.populate("TECH")
         title = "Task id '%s' has been rejected" % task.id
         message = "Task '%s' has been rejected" % task.description()
+        if comment is not None:
+            message += "\nWith following comment: %s" % comment
         self.__populate_values({"%TITLE": title, "%MESSAGE": message})
         return self
 
