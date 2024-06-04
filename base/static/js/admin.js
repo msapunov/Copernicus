@@ -304,6 +304,9 @@
             dom: 't',
             paging: false,
             searching: false,
+            language: {
+                emptyTable: 'All tasks have been treated. No pending tasks found.'
+            },
             columns: [{
                 data: "short",
                 render: function ( data, type, row ) {
