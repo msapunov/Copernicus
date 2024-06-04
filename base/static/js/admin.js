@@ -309,7 +309,8 @@
                 data: "short",
                 render: function ( data, type, row ) {
                     // Renders a row per record with buttons and task description
-                    return '<div>' + row.short + '</div>' +
+                    return '<div>Task ID: ' + row.id + '</div>' +
+                        '<div>' + row.short + '</div>' +
                         '<div>Author: ' + row.author + '</div>' +
                         '<div>Created: ' + row.created + '</div>' +
                         '<template data-id="' + row.id + '" data-task="' + row.short + '"></template>' +
