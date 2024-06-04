@@ -51,7 +51,7 @@
             return show_error({'status': 505, 'responseText': 'Failed to find task description for this record'});
         }
         let url = "{0}/{1}/{2}".f(window.admin.url.task, act, id);
-        let message = "{0} task ID {1}?<br>{2}".f(act.capitalize(), id, task);
+        let message = "{0} task: {1}?<br>Task:<br>{2}".f(act.capitalize(), id, task);
         if(act == 'reject'){
             return UIkit.modal.prompt(message, "Task '{0}' is rejected".f(task), function(reply_text){
                 ajax(url, reply_text, this);
