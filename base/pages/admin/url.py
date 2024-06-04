@@ -389,7 +389,8 @@ def web_admin_tasks_ignore(tid):
 @login_required
 @grant_access("admin")
 def web_admin_tasks_reject(tid):
-    task = Task(tid).reject()
+    data = request.form.to_dict()
+    task = Task(tid).reject(data.get("reason", None))
     tasks = TaskManager().list()
     if "admin.html" in request.referrer:
         return jsonify(data=tasks, info="Task '%s' is rejected" % task.short(),
