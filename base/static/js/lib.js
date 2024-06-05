@@ -86,7 +86,7 @@ show_error = function(req){
             msg += "An unknown error occurred";
         }
     }
-    msg += "\n\nIn case of persisting errors, please contact our technical team: {0}".f(contact);
+    msg += "\n\nFor further assistance, contact us at: {0}".f(contact);
     alert(msg);
 };
 
