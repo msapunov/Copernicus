@@ -72,14 +72,19 @@ dialog=function(content, onconfirm, oncancel){
 };
 
 show_error = function(req){
-    let text = $.trim(req.responseText);
-    let status = $.trim(req.status);
-    let statText = $.trim(req.statusText);
-    let msg = "Status code: {0}\nSatus text: {1}\n".f(status, statText);
-    if(req.status !== 200){
-        msg = text || statText || "An unknown error occurred.";
-    } else {
-        msg += "An unknown error occurred.";
+    let msg;
+    if (typeof req === 'string') {
+        msg = req;
+    }else{
+        let text = $.trim(req.responseText);
+        let status = $.trim(req.status);
+        let statText = $.trim(req.statusText);
+        msg = "Status code: {0}\nSatus text: {1}\n".f(status, statText);
+        if(req.status !== 200){
+            msg = text || statText || "An unknown error occurred";
+        } else {
+            msg += "An unknown error occurred";
+        }
     }
     msg += "\n\nIn case of persisting errors, please contact our technical team: {0}".f(contact);
     alert(msg);
