@@ -190,6 +190,37 @@ trigger_modal = function(e){
     }
 };
 
+modal_table = function(config) {
+    const modal_id = 'modal_' + Math.floor(Math.random() * 100000);
+    const table_id = 'table_' + Math.floor(Math.random() * 100000);
+    const html = `
+        <div id="${modal_id}" class="uk-modal fade">
+            <div class="uk-modal-dialog uk-modal-body">
+                <div class="uk-overflow-container">
+                    <table id="${table_id}" style="width:100%" class="display compact"></table>
+                </div>
+                <div class="uk-modal-footer">
+                    <div class="uk-text-right">
+                        <button class="uk-button uk-modal-close" >Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    document.body.insertAdjacentHTML('beforeend', html);
+    const table = $(table_id.idfy()).DataTable(config);
+    UIkit.modal(modal_id.idfy()).show();
+    $(modal_id.idfy()).on({
+        'hide.uk.modal': function(){
+            table.destroy();
+            $(modal_id.idfy()).off('hide.uk.modal');
+            document.getElementById(modal_id).remove();
+        }
+    });
+    return {table: table_id, modal: modal_id};
+}
+
+
 accounting = function (canvas_id, data, vert) {
     const sortedData = data.data.map(item => {
         const dateStr = Object.keys(item)[0];
