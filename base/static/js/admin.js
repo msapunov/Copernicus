@@ -392,6 +392,7 @@
                 $("#task_queue_length").text(reply.data.length);
                 if($.fn.DataTable.isDataTable('#tasks_table')){
                     $('#tasks_table').DataTable().clear().rows.add(reply.data).draw();
+                $('#task_queue_length').text(reply.data.length);
                 }
             }
         });
