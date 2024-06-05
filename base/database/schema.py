@@ -136,9 +136,6 @@ class Project(db.Model):
         result = self.resources.consumption()
         return result if result else 0
 
-    def get_responsible(self):
-        return self.responsible
-
     def get_name(self):
         if self.name:
             return self.name
@@ -171,8 +168,8 @@ class Project(db.Model):
         return self.resources.usage()
 
     def consumed_use(self):
-        usage = self.resources.usage()  # with percents
-        return float(usage.replace("%", "")) if usage else 0
+        # with percents
+        return float(self.resources.usage().replace("%", ""))
 
     def to_dict(self):
         if self.created:
@@ -198,10 +195,6 @@ class Project(db.Model):
         else:
             responsible = ""
             responsible_login = ""
-        if self.ref:
-            ref = self.ref.project_id()
-        else:
-            ref = ""
         usage = self.resources.usage()  # with percents
         use = float(usage.replace("%", "")) if usage else 0
         result = {
@@ -231,7 +224,7 @@ class Project(db.Model):
             "resources": self.resources.to_dict(),
             "allocation_start": start,
             "allocation_end": end,
-            "ref": ref,
+            "ref": self.ref.project_id() if self.ref else "",
             "total": self.resources.cpu if self.resources else 0,
             "consumed": self.account(),
             "consumed_use": use,
@@ -386,6 +379,18 @@ class Resources(db.Model):
     ttl = db.Column(db.DateTime(True))
     project = db.Column(db.String)
     treated = db.Column(db.Boolean, default=False)
+
+    def web(self):
+        form = "%Y-%m-%d %X %Z"
+        return {
+            "id": self.id,
+            "approve": self.approve.to_dict(),
+            "valid": self.valid,
+            "cpu": self.cpu,
+            "created": self.created.strftime(form) if self.created else "",
+            "modified": self.modified.strftime(form) if self.modified else "",
+            "finish": self.ttl.strftime(form) if self.ttl else ""
+        }
 
     def to_dict(self):
         start = self.created.strftime("%Y-%m-%d %X %Z") if self.created else ""

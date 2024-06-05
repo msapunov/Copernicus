@@ -987,16 +987,19 @@ class Task:
         :return: String. The log event associated with this action
         """
         project = self.task.project
+        old = project.responsible
         user = self.task.user
+        if old == user:
+            raise ValueError("User %s already assigned as %s responsible" %
+                             (user.full(), project.get_name()))
         if not user.acl.is_responsible:
             user.acl.is_responsible = True
-        old_responsible = project.responsible
         project.responsible = user
         ResponsibleMailingList().subscribe(user.email, user.full_name())
-        resp = list(map(lambda x: x.get_responsible(), old_responsible.project))
-        if not resp:
-            old_responsible.acl.is_responsible = False
-            ResponsibleMailingList().unsubscribe(old_responsible.email)
+        other = filter(lambda x: x.responsible == old, Project.query.all())
+        if len(list(other)) < 1:
+            old.acl.is_responsible = False
+            ResponsibleMailingList().unsubscribe(old.email)
         if not self.task.author_id:
             return ProjectLog(project).responsible_attached(self.task)
         return ProjectLog(project).responsible_assigned(self.task)
