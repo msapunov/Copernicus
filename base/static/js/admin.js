@@ -313,7 +313,7 @@
                     let status = (row.status) ? row.status.toUpperCase() : "NONE";
                     if ( "APPROVED" === status ) {
                         return '<span class="uk-icon-wrench uk-text-muted" title="Request status: '+status+'"></span>';
-                    }else if ( "SENT" === status ) {
+                    }else if ( "SENT" === status || "RESENT" === status) {
                         if ( data.visa_expired === true){
                             return '<span class="uk-icon-exclamation-circle uk-text-danger" title="Request status: '+status+'"></span>';
                         }else {
