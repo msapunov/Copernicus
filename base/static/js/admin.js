@@ -88,7 +88,7 @@
         let url = '{0}/{1}/{2}'.f(window.admin.url.task, act, id);
         let message = '{0} {1} ?'.f(act.capitalize(), task);
         if(act === 'reject'){
-            message += '<br>You might want to provide a reason for your decision:';
+            message += '<br>You might want to provide a reason for rejection:';
             return UIkit.modal.prompt(message, '', function(reply_text){
                 ajax(url, {reason: reply_text}, this);
             });
