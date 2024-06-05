@@ -38,6 +38,40 @@
             });
         });
     };
+    window.admin.task_list = function (){
+        const result = modal_table({
+            ajax: {type: "POST", url: window.admin.url.tasks},
+            dom: 't',
+            paging: false,
+            searching: false,
+            language: {
+                emptyTable: 'All tasks have been treated. No pending tasks found.'
+            },
+            columns: [{
+                data: "short",
+                render: function ( data, type, row ) {
+                    // Renders a row per record with buttons and task description
+                    return '<div>Task ID: ' + row.id + '</div>' +
+                        '<div>' + row.short + '</div>' +
+                        '<div>Author: ' + row.author + '</div>' +
+                        '<div>Created: ' + row.created + '</div>' +
+                        '<template data-id="' + row.id + '" data-task="' + row.short + '"></template>' +
+                        '<div class="uk-button-group uk-float-right uk-margin-top uk-margin-small-right" data-id="' + row.id + '" data-task="' + row.short + '">' +
+                        '<button class="uk-button task_show" data-act="accept">' +
+                        '<span class="uk-icon-thumbs-o-up uk-margin-small-right"></span>Accept</button>' +
+                        '<button class="uk-button task_show" data-act="ignore">' +
+                        '<span class="uk-icon-thumbs-o-down uk-margin-small-right"></span>Ignore</button>' +
+                        '<button class="uk-button task_show uk-button-danger" data-act="reject">' +
+                        '<span class="uk-icon-thumbs-down uk-margin-small-right"></span>Reject</button>' +
+                        '</div>';
+                },
+            }, {
+                data: "created", visible: false
+            }]
+        });
+        window.admin.task_table_id = result.table.idfy();
+        window.admin.task_modal_id = result.modal.idfy();
+    };
     window.admin.task_show = function () {
         let act = $.trim( $(this).data("act") );
         if(act !== 'accept' && act !== 'reject' && act !== 'ignore'){
