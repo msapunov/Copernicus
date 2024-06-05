@@ -81,17 +81,6 @@
         }).done(function(reply){
             accounting("accounting", reply, 100);
         });
-        $.fn.dataTable.ext.buttons.refresh = {
-            text: "<span class='uk-icon-refresh uk-margin-small-right'></span>&nbsp;Reload",
-            className: "uk-button uk-button-small uk-margin-small-top",
-            init: function(api, node, config) {
-                $(node).removeClass("dt-button")
-            },
-            action: function( e, dt, node, config ){
-                dt.clear().draw();
-                dt.ajax.reload();
-            }
-        };
         $("#system").DataTable({
             ajax: {type: "POST", url: window.admin.url.system},
             dom: 'tiB',
