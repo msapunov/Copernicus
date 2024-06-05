@@ -389,9 +389,6 @@
         }, 60000);
         $(document).ajaxSuccess(function(event, xhr, settings, reply) {
             if('task' in reply && reply.task === true ){
-                $("#task_queue_length").text(reply.data.length);
-                if($.fn.DataTable.isDataTable('#tasks_table')){
-                    $('#tasks_table').DataTable().clear().rows.add(reply.data).draw();
                 $('#task_queue_length').text(reply.data.length);
                 if('data' in reply){
                     $(window.admin.task_table_id).DataTable().clear().rows.add(reply.data).draw();
