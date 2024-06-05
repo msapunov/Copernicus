@@ -393,6 +393,13 @@
                 if($.fn.DataTable.isDataTable('#tasks_table')){
                     $('#tasks_table').DataTable().clear().rows.add(reply.data).draw();
                 $('#task_queue_length').text(reply.data.length);
+                if('data' in reply){
+                    $(window.admin.task_table_id).DataTable().clear().rows.add(reply.data).draw();
+                    if(reply.data.length < 1) {
+                        setTimeout(function() {
+                            UIkit.modal(window.admin.task_modal_id).hide();
+                        }, 5000);
+                    }
                 }
             }
         });
