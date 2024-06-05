@@ -385,7 +385,7 @@
                 type: "POST",
                 url: window.admin.url.tasks
             });
-        }, 60000);
+        }, 8000);
         $(document).ajaxSuccess(function(event, xhr, settings, reply) {
             if('task' in reply && reply.task === true ){
                 $('#task_queue_length').text(reply.data.length);
