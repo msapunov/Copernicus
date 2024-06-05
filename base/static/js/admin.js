@@ -22,6 +22,8 @@
         expand_pending: "admin/bits/pending",
         user: "admin/user/info"
     };
+    window.admin.task_table_id = '';
+    window.admin.task_modal_id = '';
     window.admin.submit = function (){
         let table = $('table#pending_projects').DataTable();
         let rows = table.rows('.shown').ids();
