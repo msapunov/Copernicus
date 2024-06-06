@@ -1,4 +1,5 @@
 from hashlib import md5
+from collections import Counter
 from flask import g, render_template, url_for
 from flask_login import current_user
 from base import db
