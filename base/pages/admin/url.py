@@ -535,6 +535,13 @@ def web_slurm_node_list():
     return jsonify(data=slurm_nodes_status())
 
 
+@bp.route("/admin/slurm/jobs/states", methods=["POST"])
+@login_required
+@grant_access("admin")
+def web_slurm_job_state():
+    return jsonify(data=slurm_state_info())
+
+
 @bp.route("/admin/sys/info", methods=["POST"])
 @login_required
 @grant_access("admin")
