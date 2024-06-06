@@ -425,6 +425,15 @@
                 url: window.admin.url.tasks
             });
         }, 8000);
+        setInterval(function(){
+            $.ajax({
+                timeout: 60000,
+                type: "POST",
+                url: window.admin.url.states
+            }).done(function(data){
+                window.admin.states_plot("jobs_state", data, 100);
+            });
+        }, 60000);
         $(document).ajaxSuccess(function(event, xhr, settings, reply) {
             if('task' in reply && reply.task === true ){
                 $('#task_queue_length').text(reply.data.length);
