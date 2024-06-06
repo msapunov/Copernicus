@@ -39,6 +39,44 @@
             });
         });
     };
+    window.admin.states_info = Array();
+    window.admin.states_plot = function (canvas_id, data, vert) {
+        window.admin.states_info.push(data.data);
+        if(window.admin.states_info.length > 100) {
+            window.admin.states_info.shift();
+        }
+        const canvas = document.getElementById(canvas_id);
+        canvas.style.width = '100%';
+        const parentWidth = canvas.parentElement.clientWidth;
+        canvas.width = parentWidth;
+        if (typeof vert === 'undefined') {
+            canvas.height = 240;
+        } else {
+            canvas.height = vert;
+        }
+        const ctx = canvas.getContext('2d');
+        const exist = Chart.getChart(ctx);
+        if (exist) {
+            exist.destroy(); // Destroy existing chart
+        }
+        if (window.admin.states_info.length === 0) {
+            ctx.font = '12px Arial bold';
+            ctx.fillStyle = 'black';
+            ctx.textAlign = 'left';
+            ctx.textBaseline = 'top'; //'middle';
+            ctx.fillText('No data available', 5, 5);
+        } else {
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    datasets: window.admin.states_info
+                },
+                options: {
+                    responsive: true,
+                }
+            });
+        }
+    };
     window.admin.task_list = function (){
         const result = modal_table({
             ajax: {type: "POST", url: window.admin.url.tasks},
