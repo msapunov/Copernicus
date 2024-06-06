@@ -796,3 +796,10 @@ def slurm_partition_info():
         partition.append({"name": name, "allocated": allocated, "idle": idle,
                           "other": other, "total": int(total)})
     return partition
+
+
+def slurm_state_info():
+    result, err = ssh_wrapper("squeue -h -o '%T'")
+    if not result:
+        raise ValueError("Error getting job status information: %s" % err)
+    return Counter(result)
