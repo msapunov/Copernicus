@@ -698,7 +698,11 @@ def get_server_info(server):
     out["swap"] = swap["usage"]
     out["html"] = render_template("bits/system_expand_row.html", users=users,
                                   mem=memory, swap=swap, load=uptime, up=up)
-    return out
+    if now:
+        now = dt.strptime(now, "%Y-%m-%d %H:%M:%S")
+    else:
+        now = dt.now()
+    return {"date": now, "data": out}
 
 
 def parse_uptime(result):
