@@ -683,6 +683,8 @@ def get_server_info(server):
             memory_data = i
         elif "Swap" in i:
             swap_data = i
+        elif "Time" in i:
+            now = i.replace("Time:", "").strip()
         elif "cores" in i:
             cores = i.replace("cores:", "").strip()
         else:
