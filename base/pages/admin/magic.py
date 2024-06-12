@@ -671,7 +671,7 @@ def get_server_info(server):
         error("Error getting information from the remote server: %s" % err)
         return out
 
-    up = memory_data = swap_data = load_data = ""
+    up = memory_data = swap_data = load_data = now = ""
     cores = 1
     users = []
     for i in result:
