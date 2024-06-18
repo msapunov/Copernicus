@@ -442,6 +442,23 @@
             $.ajax({
                 timeout: 60000,
                 type: "POST",
+                url: window.admin.url.load
+            }).done(function(raw_data){
+                const data = raw_data.data[0];
+                window.admin.cpu.data.labels.push(data.time);
+                window.admin.cpu.data.datasets[0].data.push(data.user);
+                window.admin.cpu.data.datasets[1].data.push(data.idle);
+                window.admin.cpu.data.datasets[2].data.push(data.io);
+                window.admin.cpu.data.datasets[3].data.push(data.system);
+                window.admin.cpu.data.datasets[4].data.push(data.virt);
+                window.admin.cpu.update();
+
+            });
+        }, 12000);
+        setInterval(function(){
+            $.ajax({
+                timeout: 60000,
+                type: "POST",
                 url: window.admin.url.tasks
             });
         }, 8000);
