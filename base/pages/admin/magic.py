@@ -27,6 +27,11 @@ from operator import attrgetter
 from datetime import timedelta, datetime as dt
 from base.functions import ssh_wrapper
 
+####
+from subprocess import Popen, PIPE, check_output
+from os import environ
+####
+
 __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
 
