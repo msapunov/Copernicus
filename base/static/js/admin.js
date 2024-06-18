@@ -423,6 +423,8 @@
         $(document).on("click", ".task_accept_submit", window.admin.task_submit);
         $(document).on("click", ".task_ignore_submit", window.admin.task_submit);
         $(document).on("click", ".task_reject_submit", window.admin.task_submit);
+
+        window.admin.cpu = window.admin.plot_cpu();
         setInterval(function(){
             //  Check any minute is there is 4 AM and redraw accounting plot
             let date = new Date();
