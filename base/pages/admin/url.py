@@ -548,6 +548,19 @@ def web_admin_sys_info():
     return jsonify(data=uptime)
 
 
+@bp.route("/admin/sys/info/load", methods=["POST"])
+@login_required
+@grant_access("admin")
+def web_admin_sys_info_load():
+    servers = current_app.config["ADMIN_SERVER"]
+    if not isinstance(servers, list):
+        servers = servers.split(",")
+    uptime = []
+    for server in servers:
+        uptime.append(get_server_load(server.strip()))
+    return jsonify(data=uptime)
+
+
 @bp.route("/admin/space/info", methods=["POST"])
 @login_required
 @grant_access("admin")
