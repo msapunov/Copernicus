@@ -111,6 +111,62 @@
             }
         });
     };
+    window.admin.plot_cpu = function (){
+        const ctx = document.getElementById('cpu_load').getContext('2d');
+        return new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: [], // Time labels
+                datasets: [{
+                    label: 'Load',
+                    data: [], // CPU load data
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    fill: true,
+                    tension: 0.1
+                },{
+                    label: 'Idle',
+                    data: [], // CPU load data
+                    borderColor: 'rgb(232,56,139)',
+                    backgroundColor: 'rgba(124,6,16,0.2)',
+                    fill: true,
+                    tension: 0.1
+                },{
+                    label: 'I/O',
+                    data: [], // CPU load data
+                    borderColor: 'rgb(255,255,0)',
+                    backgroundColor: 'rgba(255,255,127,0.5)',
+                    fill: true,
+                    tension: 0.1
+                },{
+                    label: 'User',
+                    data: [], // CPU load data
+                    borderColor: 'rgb(255,127,255)',
+                    backgroundColor: 'rgba(255,127,255,0.5)',
+                    fill: true,
+                    tension: 0.1
+                },{
+                    label: 'Virt',
+                    data: [], // CPU load data
+                    borderColor: 'rgb(127,255,255)',
+                    backgroundColor: 'rgba(127,255,255,0.5)',
+                    fill: true,
+                    tension: 0.1
+                }]
+            },
+            options: {
+                scales: {
+                    x: {
+                        beginAtZero: true
+                    },
+                    y: {
+                        beginAtZero: true,
+                        stacked: true
+                    }
+                }
+            }
+        });
+    };
     window.admin.expand_processing = function(tr, tdi, show){
         if(show === true){
             tr.removeClass('shown');
