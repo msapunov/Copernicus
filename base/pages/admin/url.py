@@ -16,7 +16,7 @@ from base.pages.admin.magic import (
     all_users,
     event_log,
     get_server_info,
-    get_ltm,
+    get_server_load,
     TaskManager,
     slurm_partition_info,
     process_task,
