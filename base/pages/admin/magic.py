@@ -666,6 +666,55 @@ class TaskManager:
         return list(map(lambda x: x.to_dict(), tasks)) if tasks else []
 
 
+def get_server_load(server):
+    cmd = "mpstat | grep all"
+#    result, err = ssh_wrapper(cmd, host=server)
+    my_env = {"S_COLORS": "never"}
+    env = environ.copy()
+    env.update(my_env)
+
+    out = check_output(["mpstat"], shell=True, env=env)
+    result = out.decode('utf-8')
+
+#    if not result:
+#        raise ValueError("Error getting information from the remote server: %s"
+#                         % err)
+
+    lines = result.split("\n")
+    for line in lines:
+        if "all" in line:
+            result = line
+    info = str(result).split()
+    if len(info) > 12:
+        raise ValueError("Wrong format of mpstat command")
+
+    time = info[0].strip()
+    user = float(info[2].strip().replace(",", "."))
+    nice = float(info[3].strip().replace(",", "."))
+    sys = float(info[4].strip().replace(",", "."))
+    io = float(info[5].strip().replace(",", "."))
+    irq = float(info[6].strip().replace(",", "."))
+    soft = float(info[7].strip().replace(",", "."))
+    steal = float(info[8].strip().replace(",", "."))
+    guest = float(info[9].strip().replace(",", "."))
+    gnice = float(info[10].strip().replace(",", "."))
+    idle = float(info[11].strip().replace(",", "."))
+
+    user += nice
+    virt = steal + guest + gnice
+    system = sys + irq + soft
+
+#    today = dt.strftime(time, "%H:%M:%S")
+#    now = dt.now()
+#    now.replace(hour=today.hour, minute=today.minute,second=today.second,microsecond=0)
+#    if now:
+#        now = dt.strptime(now, "%Y-%m-%d %H:%M:%S")
+#    else:
+#        now = dt.now()
+    return {"time": time, "user": user, "io": io, "system": system,
+            "virt": virt, "idle": idle}
+
+
 def get_server_info(server):
     out = {"server": server, "uptime": "", "memory": "", "load": "", "swap": ""}
     cmd = "echo cores:`nproc` && uptime -p && free -b | grep -v total && uptime"
