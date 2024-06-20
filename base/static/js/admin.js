@@ -449,16 +449,19 @@
                 timeout: 60000,
                 type: "POST",
                 url: window.admin.url.load
-            }).done(function(raw_data){
-                const data = raw_data.data[0];
-                window.admin.cpu.data.labels.push(data.time);
-                window.admin.cpu.data.datasets[0].data.push(data.user);
-                window.admin.cpu.data.datasets[1].data.push(data.idle);
-                window.admin.cpu.data.datasets[2].data.push(data.io);
-                window.admin.cpu.data.datasets[3].data.push(data.system);
-                window.admin.cpu.data.datasets[4].data.push(data.virt);
-                window.admin.cpu.update();
-
+            }).done(function(data){
+                const servers = Object.keys(data);
+                servers.forEach(server => {
+                    const plot = window.admin.cpu[server];
+                    const values = data[server];
+                    plot.data.labels.push(values.time);
+                    plot.data.datasets[0].data.push(values.user);
+                    plot.data.datasets[1].data.push(values.idle);
+                    plot.data.datasets[2].data.push(values.io);
+                    plot.data.datasets[3].data.push(values.system);
+                    plot.data.datasets[4].data.push(values.virt);
+                    plot.update();
+                });
             });
         }, 12000);
         setInterval(function(){
