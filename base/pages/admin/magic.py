@@ -667,24 +667,11 @@ class TaskManager:
 
 
 def get_server_load(server):
-    cmd = "mpstat | grep all"
-#    result, err = ssh_wrapper(cmd, host=server)
-    my_env = {"S_COLORS": "never"}
-    env = environ.copy()
-    env.update(my_env)
-
-    out = check_output(["mpstat"], shell=True, env=env)
-    result = out.decode('utf-8')
-
-#    if not result:
-#        raise ValueError("Error getting information from the remote server: %s"
-#                         % err)
-
-    lines = result.split("\n")
-    for line in lines:
-        if "all" in line:
-            result = line
-    info = str(result).split()
+    cmd = "S_COLORS=never mpstat | grep all"
+    result, err = ssh_wrapper(cmd, host=server)
+    if err:
+        raise ValueError("Error retrieving:" % err)
+    info = str(result[0]).strip("\n").split()
     if len(info) > 12:
         raise ValueError("Wrong format of mpstat command")
 
