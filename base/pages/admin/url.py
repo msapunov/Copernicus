@@ -616,5 +616,6 @@ def web_task():
 @login_required
 @grant_access("admin", "manager")
 def web_admin():
-    result = {"tasks": TaskManager().list()}
+    result = {"tasks": TaskManager().list(),
+              "servers": current_app.config["ADMIN_SERVER"]}
     return render_template("admin.html", data=result)
