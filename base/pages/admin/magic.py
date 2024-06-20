@@ -691,13 +691,6 @@ def get_server_load(server):
     virt = steal + guest + gnice
     system = sys + irq + soft
 
-#    today = dt.strftime(time, "%H:%M:%S")
-#    now = dt.now()
-#    now.replace(hour=today.hour, minute=today.minute,second=today.second,microsecond=0)
-#    if now:
-#        now = dt.strptime(now, "%Y-%m-%d %H:%M:%S")
-#    else:
-#        now = dt.now()
     return {"time": time, "user": user, "io": io, "system": system,
             "virt": virt, "idle": idle}
 
