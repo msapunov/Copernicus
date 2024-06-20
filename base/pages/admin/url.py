@@ -555,10 +555,10 @@ def web_admin_sys_info_load():
     servers = current_app.config["ADMIN_SERVER"]
     if not isinstance(servers, list):
         servers = servers.split(",")
-    uptime = []
+    load = {}
     for server in servers:
-        uptime.append(get_server_load(server.strip()))
-    return jsonify(data=uptime)
+        load[server] = get_server_load(server.strip())
+    return jsonify(load)
 
 
 @bp.route("/admin/space/info", methods=["POST"])
