@@ -130,34 +130,6 @@
                         borderWidth: 1,
                         pointRadius: 1,
                         tension: 0.1
-                    },{
-                        label: 'Idle',
-                        data: [], // CPU load data
-                        borderColor: 'rgb(232,56,139)',
-                        backgroundColor: 'rgba(124,6,16,0.2)',
-                        fill: true,
-                        tension: 0.1
-                    },{
-                        label: 'I/O',
-                        data: [], // CPU load data
-                        borderColor: 'rgb(255,255,0)',
-                        backgroundColor: 'rgba(255,255,127,0.5)',
-                        fill: true,
-                        tension: 0.1
-                    },{
-                        label: 'User',
-                        data: [], // CPU load data
-                        borderColor: 'rgb(255,127,255)',
-                        backgroundColor: 'rgba(255,127,255,0.5)',
-                        fill: true,
-                        tension: 0.1
-                    },{
-                        label: 'Virt',
-                        data: [], // CPU load data
-                        borderColor: 'rgb(127,255,255)',
-                        backgroundColor: 'rgba(127,255,255,0.5)',
-                        fill: true,
-                        tension: 0.1
                     }]
                 },
                 options: {
