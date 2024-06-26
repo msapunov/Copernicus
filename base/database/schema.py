@@ -900,6 +900,8 @@ class Tasks(db.Model):
             act = "upload SSH key "
         elif act in ["update"]:
             act += " user's info "
+        else:
+            return act
         act = act[0].upper() + act[1:].lower()
         if self.author:
             act += "by %s" % self.author.full_name()
@@ -947,6 +949,8 @@ class Tasks(db.Model):
         elif act in ["ssh"]:
             short = "%s ... %s" % (task[:20], task[-20:])
             act = "upload SSH public key: %s" % short
+        else:
+            return act
         act = act[0].upper() + act[1:]
         if self.comment:
             act = act + " " + self.comment
