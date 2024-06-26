@@ -124,8 +124,8 @@
                     datasets: [{
                         label: 'Load',
                         data: [], // CPU load data
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(0, 175, 242, 1)',
+                        backgroundColor: 'rgba(0, 175, 242, 0.2)',
                         fill: true,
                         tension: 0.1
                     },{
