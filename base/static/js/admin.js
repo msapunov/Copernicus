@@ -428,11 +428,8 @@
                     const plot = window.admin.cpu[server];
                     const values = data[server];
                     plot.data.labels.push(values.time);
-                    plot.data.datasets[0].data.push(values.user);
-                    plot.data.datasets[1].data.push(values.idle);
-                    plot.data.datasets[2].data.push(values.io);
-                    plot.data.datasets[3].data.push(values.system);
-                    plot.data.datasets[4].data.push(values.virt);
+                    const load = 100 - values.idle;
+                    plot.data.datasets[0].data.push(load);
                     plot.update();
                 });
             });
