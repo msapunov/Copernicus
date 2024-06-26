@@ -380,8 +380,7 @@ def web_admin_tasks_ignore(tid):
     tasks = TaskManager().list()
     if "admin.html" in request.referrer:
         return jsonify(data=tasks, info="Task '%s' is ignored" % task.short(),
-                       task=True, html=render_template(
-            "modals/admin_show_task.html", data={"tasks": tasks}))
+                       task=True)
     return jsonify(data=tasks, task=True)
 
 
@@ -394,8 +393,7 @@ def web_admin_tasks_reject(tid):
     tasks = TaskManager().list()
     if "admin.html" in request.referrer:
         return jsonify(data=tasks, info="Task '%s' is rejected" % task.short(),
-                       task=True, html=render_template(
-            "modals/admin_show_task.html", data={"tasks": tasks}))
+                       task=True)
     return jsonify(data=tasks, task=True)
 
 
@@ -407,8 +405,7 @@ def web_admin_tasks_accept(tid):
     tasks = TaskManager().list()
     if "admin.html" in request.referrer:
         return jsonify(data=tasks, info="Task '%s' is accepted" % task.short(),
-                       task=True, html=render_template(
-            "modals/admin_show_task.html", data={"tasks": tasks}))
+                       task=True)
     return jsonify(data=tasks, task=True)
 
 
