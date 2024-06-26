@@ -880,6 +880,15 @@ class Tasks(db.Model):
         db.session.commit()
         return self
 
+    def decompose(self):
+        try:
+            act, entity, login, project, task = self.action.split("|")
+        except ValueError:
+            error("Failed process record %s: %s" % (self.id, self.action))
+            act, entity, login, project, task = None
+        return act, entity, login, project, task
+
+
     def brief(self):
         act, entity, login, project, task = self.action.split("|")
         if act in ["create", "add", "assign", "delete", "remove", "activate"]:
