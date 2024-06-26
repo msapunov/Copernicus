@@ -127,6 +127,8 @@
                         borderColor: 'rgba(0, 175, 242, 1)',
                         backgroundColor: 'rgba(0, 175, 242, 0.2)',
                         fill: true,
+                        borderWidth: 1,
+                        pointRadius: 1,
                         tension: 0.1
                     },{
                         label: 'Idle',
