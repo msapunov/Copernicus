@@ -676,23 +676,8 @@ def get_server_load(server):
         raise ValueError("Wrong format of mpstat command")
 
     time = info[0].strip()
-    user = float(info[2].strip().replace(",", "."))
-    nice = float(info[3].strip().replace(",", "."))
-    sys = float(info[4].strip().replace(",", "."))
-    io = float(info[5].strip().replace(",", "."))
-    irq = float(info[6].strip().replace(",", "."))
-    soft = float(info[7].strip().replace(",", "."))
-    steal = float(info[8].strip().replace(",", "."))
-    guest = float(info[9].strip().replace(",", "."))
-    gnice = float(info[10].strip().replace(",", "."))
-    idle = float(info[11].strip().replace(",", "."))
-
-    user += nice
-    virt = steal + guest + gnice
-    system = sys + irq + soft
-
-    return {"time": time, "user": user, "io": io, "system": system,
-            "virt": virt, "idle": idle}
+    idle = float(info[-1].strip().replace(",", "."))
+    return {"time": time, "idle": idle}
 
 
 def get_server_info(server):
