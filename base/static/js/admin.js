@@ -139,7 +139,6 @@
                         },
                         y: {
                             beginAtZero: true,
-                            stacked: true
                         }
                     }
                 }
