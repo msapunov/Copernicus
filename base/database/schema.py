@@ -890,7 +890,7 @@ class Tasks(db.Model):
 
 
     def brief(self):
-        act, entity, login, project, task = self.action.split("|")
+        act, entity, login, project, task = self.decompose()
         if act in ["create", "add", "assign", "delete", "remove", "activate"]:
             if entity == "user":
                 act += " a user "
@@ -908,7 +908,7 @@ class Tasks(db.Model):
         return act
 
     def short(self):
-        act, entity, login, project, task = self.action.split("|")
+        act, entity, login, project, task = self.decompose()
         if entity == "project":
             return self.brief()
         if login:
@@ -935,11 +935,7 @@ class Tasks(db.Model):
         return act
 
     def description(self):
-        try:
-            act, entity, login, project, task = self.action.split("|")
-        except ValueError:
-            error("Task incompressible %s: %s" % (self.id, self.action))
-            pass
+        act, entity, login, project, task = self.decompose()
         if act in ["create", "activate"]:
             if "new project" in task:
                 return task
@@ -970,7 +966,7 @@ class Tasks(db.Model):
             return ""
 
     def api(self):
-        act, entity, login, project, task = self.action.split("|")
+        act, entity, login, project, task = self.decompose()
         return {
             "id": self.id,
             "notify": self.notify(),
