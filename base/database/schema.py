@@ -885,7 +885,7 @@ class Tasks(db.Model):
             act, entity, login, project, task = self.action.split("|")
         except ValueError:
             error("Failed process record %s: %s" % (self.id, self.action))
-            act, entity, login, project, task = None
+            act, entity, login, project, task = None, None, None, None, None
         return act, entity, login, project, task
 
 
