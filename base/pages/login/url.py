@@ -122,7 +122,8 @@ def login():
     if not check:
         flash("Invalid password")
         return redirect(url_for("login.login"))
-    login_user(user, True)
+    status = login_user(user, True)
+    debug("Logged-in? %s" % status)
     g.name = username
     if user.first_login:
         return redirect(url_for("login.reset"))
