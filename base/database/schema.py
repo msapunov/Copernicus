@@ -462,7 +462,7 @@ class User(UserMixin, db.Model):
     modified = db.Column(db.DateTime(True))
     created = db.Column(db.DateTime(True))
     uid = db.Column(db.Integer)
-    hash = db.Column(db.String(128))
+    hash = db.Column(db.String(162))
     first_login = db.Column(db.Boolean, default=True)
     seen = db.Column(db.DateTime(True))
 
