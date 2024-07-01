@@ -888,7 +888,6 @@ class Tasks(db.Model):
             act, entity, login, project, task = None, None, None, None, None
         return act, entity, login, project, task
 
-
     def brief(self):
         act, entity, login, project, task = self.decompose()
         if act in ["create", "add", "assign", "delete", "remove", "activate"]:
