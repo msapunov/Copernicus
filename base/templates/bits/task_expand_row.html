@@ -33,6 +33,12 @@
                         {% endif%}
                     </td>
                 </tr>
+                {% if task.comment %}
+                <tr>
+                    <td class="uk-width-1-10 uk-text-right">Comment:</td>
+                    <td class="uk-width-9-10 uk-text-left">{{task.comment}}</td>
+                </tr>
+                {% endif %}
                 <tr>
                     <td class="uk-width-1-10 uk-text-right">Processed:</td>
                     <td class="uk-width-9-10 uk-text-left">{{task.processed}}</td>

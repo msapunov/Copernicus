@@ -110,6 +110,9 @@ def login():
     if not user:
         flash("User '%s' does not exists" % username)
         return redirect(url_for("login.login"))
+    if not user.active:
+        flash("User '%s' is deactivated" % username)
+        return redirect(url_for("login.login"))
     if user.hash:
         debug("Using password verification")
         check = user.check_password(password)
@@ -119,7 +122,8 @@ def login():
     if not check:
         flash("Invalid password")
         return redirect(url_for("login.login"))
-    login_user(user, True)
+    status = login_user(user, True)
+    debug("Logged-in? %s" % status)
     g.name = username
     if user.first_login:
         return redirect(url_for("login.reset"))

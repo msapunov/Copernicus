@@ -880,8 +880,17 @@ class Tasks(db.Model):
         db.session.commit()
         return self
 
+    def decompose(self):
+        try:
+            act, entity, login, project, task = self.action.split("|")
+        except ValueError:
+            error("Failed process record %s: %s" % (self.id, self.action))
+            act, entity, login, project, task = None, None, None, None, None
+        return act, entity, login, project, task
+
+
     def brief(self):
-        act, entity, login, project, task = self.action.split("|")
+        act, entity, login, project, task = self.decompose()
         if act in ["create", "add", "assign", "delete", "remove", "activate"]:
             if entity == "user":
                 act += " a user "
@@ -891,6 +900,8 @@ class Tasks(db.Model):
             act = "upload SSH key "
         elif act in ["update"]:
             act += " user's info "
+        else:
+            return act
         act = act[0].upper() + act[1:].lower()
         if self.author:
             act += "by %s" % self.author.full_name()
@@ -899,7 +910,7 @@ class Tasks(db.Model):
         return act
 
     def short(self):
-        act, entity, login, project, task = self.action.split("|")
+        act, entity, login, project, task = self.decompose()
         if entity == "project":
             return self.brief()
         if login:
@@ -926,11 +937,7 @@ class Tasks(db.Model):
         return act
 
     def description(self):
-        try:
-            act, entity, login, project, task = self.action.split("|")
-        except ValueError:
-            error("Task incompressible %s: %s" % (self.id, self.action))
-            pass
+        act, entity, login, project, task = self.decompose()
         if act in ["create", "activate"]:
             if "new project" in task:
                 return task
@@ -942,6 +949,8 @@ class Tasks(db.Model):
         elif act in ["ssh"]:
             short = "%s ... %s" % (task[:20], task[-20:])
             act = "upload SSH public key: %s" % short
+        else:
+            return act
         act = act[0].upper() + act[1:]
         if self.comment:
             act = act + " " + self.comment
@@ -961,7 +970,7 @@ class Tasks(db.Model):
             return ""
 
     def api(self):
-        act, entity, login, project, task = self.action.split("|")
+        act, entity, login, project, task = self.decompose()
         return {
             "id": self.id,
             "notify": self.notify(),

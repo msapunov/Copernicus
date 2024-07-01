@@ -245,6 +245,10 @@ accounting = function (canvas_id, data, vert) {
         canvas.height = vert;
     }
     const ctx = canvas.getContext('2d');
+    const exist = Chart.getChart(ctx);
+    if (exist) {
+        exist.destroy(); // Destroy existing chart
+    }
     if (dates.length === 0) {
         ctx.font = '12px Arial bold';
         ctx.fillStyle = 'black';
