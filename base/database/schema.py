@@ -503,7 +503,10 @@ class User(UserMixin, db.Model):
         return password
 
     def check_password(self, password):
-        return check_password_hash(self.hash, password)
+        result = check_password_hash(self.hash, password)
+        if result and "pbkdf2:sha256" in self.hash:
+            self.set_password(password)
+        return result
 
     def full(self):
         return "%s <%s> [%s]" % (self.full_name(), self.email, self.login)
