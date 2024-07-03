@@ -462,7 +462,7 @@ class User(UserMixin, db.Model):
     modified = db.Column(db.DateTime(True))
     created = db.Column(db.DateTime(True))
     uid = db.Column(db.Integer)
-    hash = db.Column(db.String(128))
+    hash = db.Column(db.String(162))
     first_login = db.Column(db.Boolean, default=True)
     seen = db.Column(db.DateTime(True))
 
@@ -503,7 +503,10 @@ class User(UserMixin, db.Model):
         return password
 
     def check_password(self, password):
-        return check_password_hash(self.hash, password)
+        result = check_password_hash(self.hash, password)
+        if result and "pbkdf2:sha256" in self.hash:
+            self.set_password(password)
+        return result
 
     def full(self):
         return "%s <%s> [%s]" % (self.full_name(), self.email, self.login)
@@ -887,7 +890,6 @@ class Tasks(db.Model):
             error("Failed process record %s: %s" % (self.id, self.action))
             act, entity, login, project, task = None, None, None, None, None
         return act, entity, login, project, task
-
 
     def brief(self):
         act, entity, login, project, task = self.decompose()
