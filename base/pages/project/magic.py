@@ -94,9 +94,24 @@ def consumption_check(projects):
     pass
 
 
+def active_users_check(projects):
+    """
+    Check whether the users of ongoing projects are active as well.
+    @param projects: List. List of projects
+    @return: None
+    """
+    for project in projects:
+        if not project.active:
+            continue
+        for user in project.users:
+            if not user.active:
+                error(f"User {user.login} of {project.name} should be active")
+
+
 def sanity_check():
     cfg = g.project_config
     projects = db.session.query(Project).all()
+    active_users_check(projects)
     suspend_expired_projects(projects, cfg)
     warn_expired_projects(projects, cfg)
     suspend_overconsumed_projects(projects)
