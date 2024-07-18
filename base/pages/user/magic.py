@@ -1,3 +1,4 @@
+from flask import request
 from flask_login import current_user
 from base.utils import form_error_string
 from base.functions import bytes2human, ssh_wrapper, ssh_public
@@ -11,6 +12,19 @@ from logging import debug, error
 
 __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
+
+
+def active_check():
+    users = User.query.all()
+    raw_data = request.get_data()
+    if not raw_data:
+        return "No data received"
+    logins = raw_data.split("\n")
+    for user in users:
+        if user.login in logins and not user.active:
+            #user.active = True
+            error("User %s should be activated" % user.login)
+    return "User active check done"
 
 
 def sanitize_key(key):
