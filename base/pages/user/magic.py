@@ -19,7 +19,7 @@ def active_check():
     raw_data = request.get_data()
     if not raw_data:
         return "No data received"
-    logins = raw_data.split("\n")
+    logins = raw_data.decode("utf-8", errors="replace").split("\n")
     for user in users:
         if user.login in logins and not user.active:
             #user.active = True
