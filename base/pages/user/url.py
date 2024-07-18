@@ -1,8 +1,9 @@
 from flask import render_template, request, jsonify, flash
 from flask_login import login_required, current_user
 from base.database.schema import User
+from base.pages import grant_access
 from base.pages.user import bp
-from base.pages.user.magic import get_user_record, get_jobs
+from base.pages.user.magic import get_user_record, get_jobs, active_check
 from base.pages.user.magic import get_scratch, user_edit, ssh_key
 from base.pages.user.form import edit_info, InfoForm, KeyForm
 from base.utils import form_error_string
@@ -13,6 +14,13 @@ import logging as log
 
 __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
+
+
+@bp.route("/user/check/active", methods=["POST"])
+@login_required
+@grant_access("admin", "tech")
+def user_check_active():
+    return jsonify(data=active_check())
 
 
 @bp.route("/user/list/all", methods=["GET"])
