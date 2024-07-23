@@ -22,8 +22,11 @@ def active_check():
     logins = raw_data.decode("utf-8", errors="replace").split("\n")
     for user in users:
         if user.login in logins and not user.active and user.project:
-            #user.active = True
-            error("User %s should be activated" % user.login)
+            for project in user.project:
+                if project.resources.ttl >= dt.now():
+                    #user.active = True
+                    error("User %s should be activated" % user.login)
+                    break
     return "User active check done"
 
 
