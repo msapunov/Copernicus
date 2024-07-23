@@ -17,7 +17,7 @@ __copyright__ = "Aix Marseille University"
 
 
 def active_check():
-    users = db.session.query(User).all()
+    users = User.query.all()
     raw_data = request.get_data()
     if not raw_data:
         return "No data received"
