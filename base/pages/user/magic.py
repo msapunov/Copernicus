@@ -1,5 +1,6 @@
 from flask import request
 from flask_login import current_user
+from base import db
 from base.utils import form_error_string
 from base.functions import bytes2human, ssh_wrapper, ssh_public
 from base.pages import TaskQueue
