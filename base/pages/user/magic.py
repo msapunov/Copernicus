@@ -27,9 +27,13 @@ def active_check():
         if user.login in logins and not user.active and user.project:
             for project in user.project:
                 if project.resources.ttl >= now:
-                    #user.active = True
+                    user.active = True
                     error("User %s should be activated" % user.login)
                     break
+    if db.session.dirty:
+        result = ", ".join(list(map(lambda x: str(x.login), db.session.dirty)))
+        db.session.commit()
+        return f"Fixing disabled user(s): {result}. They should be active now"
     return "User active check done"
 
 
