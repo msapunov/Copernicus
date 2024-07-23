@@ -23,17 +23,17 @@ def active_check():
         return "No data received"
     logins = raw_data.decode("utf-8", errors="replace").split("\n")
     now = dt.now().replace(tzinfo=timezone.utc)
+    result = []
     for user in users:
         if user.login in logins and not user.active and user.project:
             for project in user.project:
                 if project.resources.ttl >= now:
                     user.active = True
-                    error("User %s should be activated" % user.login)
+                    db.session.commit()
+                    result.append("User %s is activated" % user.login)
                     break
-    if db.session.dirty:
-        result = ", ".join(list(map(lambda x: str(x.login), db.session.dirty)))
-        db.session.commit()
-        return f"Fixing disabled user(s): {result}. They should be active now"
+    if result:
+        return "\n".join(result)
     return "User active check done"
 
 
