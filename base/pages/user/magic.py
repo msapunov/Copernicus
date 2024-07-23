@@ -21,7 +21,7 @@ def active_check():
         return "No data received"
     logins = raw_data.decode("utf-8", errors="replace").split("\n")
     for user in users:
-        if user.login in logins and not user.active:
+        if user.login in logins and not user.active and not user.project:
             #user.active = True
             error("User %s should be activated" % user.login)
     return "User active check done"
