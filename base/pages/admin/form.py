@@ -27,7 +27,7 @@ class CreateForm(FlaskForm):
     login = RadioField("Login", choices=[])
     exist = StringField()
 
-    def validate(self):
+    def validate(self, extra_validators=None):
         if not self.csrf_token.validate(self):
             return False
         if not self.user.validate(self, [DataRequired()]):
@@ -212,7 +212,7 @@ def edit_responsible(register):
 class NewUserForm(UserForm):
     login = StringField("Login")
 
-    def validate(self):
+    def validate(self, extra_validators=None):
         if not self.csrf_token.validate(self):
             return False
         if not self.prenom.validate(self, [DataRequired()]):
