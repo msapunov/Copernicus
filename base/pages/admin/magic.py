@@ -665,13 +665,13 @@ def get_server_info(server):
     out = {"server": server, "uptime": "", "memory": "", "load": "", "swap": ""}
     cmd = "echo cores:`nproc` && uptime -p && free -b | grep -v total && uptime"
     cmd += "| awk '/average/ {OFS=\":\"; print \"Load\",$(NF-2),$(NF-1),$NF}'"
-    cmd += "&& who | cut -d' ' -f1 | sort -u"
+    cmd += "&& who | cut -d' ' -f1 | sort -u && echo Time: `date +%T`"
     result, err = ssh_wrapper(cmd, host=server)
     if not result:
         error("Error getting information from the remote server: %s" % err)
         return out
 
-    up = memory_data = swap_data = load_data = ""
+    up = memory_data = swap_data = load_data = now = ""
     cores = 1
     users = []
     for i in result:
