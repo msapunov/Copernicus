@@ -683,6 +683,8 @@ def get_server_info(server):
             memory_data = i
         elif "Swap" in i:
             swap_data = i
+        elif "Time" in i:
+            now = i.replace("Time:", "").strip()
         elif "cores" in i:
             cores = i.replace("cores:", "").strip()
         else:
@@ -696,6 +698,7 @@ def get_server_info(server):
     out["swap"] = swap["usage"]
     out["html"] = render_template("bits/system_expand_row.html", users=users,
                                   mem=memory, swap=swap, load=uptime, up=up)
+    out["time"] = now
     return out
 
 
