@@ -195,6 +195,10 @@ class Project(db.Model):
         else:
             responsible = ""
             responsible_login = ""
+        if self.ref:
+            ref = self.ref.project_id()
+        else:
+            ref = ""
         usage = self.resources.usage()  # with percents
         use = float(usage.replace("%", "")) if usage else 0
         result = {
