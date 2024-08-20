@@ -677,7 +677,6 @@ def get_server_cpu(server):
 
 
 def get_server_info(server):
-    out = {"server": server, "uptime": "", "memory": "", "load": "", "swap": ""}
     out = {"server": server, "uptime": "", "memory": "", "load": "", "swap": "",
            "users": []}
     cmd = "echo cores:`nproc` && uptime -p && free -b | grep -v total && uptime"
