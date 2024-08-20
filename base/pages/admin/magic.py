@@ -661,6 +661,21 @@ class TaskManager:
         return list(map(lambda x: x.to_dict(), tasks)) if tasks else []
 
 
+def get_server_cpu(server):
+    cmd = "S_COLORS=never mpstat | grep all"
+    result, err = ssh_wrapper(cmd, host=server)
+    error(f"{server} {result}")
+    if err:
+        raise ValueError("Error retrieving:" % err)
+    info = str(result[0]).strip("\n").split()
+    if len(info) > 12:
+        raise ValueError("Wrong format of mpstat command")
+
+    time = info[0].strip()
+    idle = float(info[-1].strip().replace(",", "."))
+    return {"time": time, "idle": idle}
+
+
 def get_server_info(server):
     out = {"server": server, "uptime": "", "memory": "", "load": "", "swap": ""}
     cmd = "echo cores:`nproc` && uptime -p && free -b | grep -v total && uptime"
