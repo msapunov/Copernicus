@@ -64,7 +64,7 @@
                         '<button class="uk-button task_show uk-button-danger" data-act="reject">' +
                         '<span class="uk-icon-thumbs-down uk-margin-small-right"></span>Reject</button>' +
                         '</div>';
-                },
+                }
             }, {
                 data: "created", visible: false
             }]
