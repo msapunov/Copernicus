@@ -713,14 +713,14 @@ def get_server_info(server):
     return out
 
 
-def parse_uptime(result):
+def parse_uptime(result, cores=1):
     try:
         load_1, load_5, load_15 = result.split(":")
     except ValueError as e:
         return {"load_1": 0, "load_5": 0, "load_15": 0}
-    load_1 = load_1.strip(",")
-    load_5 = load_5.strip(",")
-    load_15 = load_15.strip(",")
+    load_1 = "{0:.1%}".format(float( load_1.strip(",") ) / float(cores))
+    load_5 = "{0:.1%}".format(float( load_5.strip(",") ) / float(cores))
+    load_15 = "{0:.1%}".format(float( load_15.strip(",") ) / float(cores))
     return {"load_1": load_1, "load_5": load_5, "load_15": load_15}
 
 
