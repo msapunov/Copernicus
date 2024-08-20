@@ -678,6 +678,8 @@ def get_server_cpu(server):
 
 def get_server_info(server):
     out = {"server": server, "uptime": "", "memory": "", "load": "", "swap": ""}
+    out = {"server": server, "uptime": "", "memory": "", "load": "", "swap": "",
+           "users": []}
     cmd = "echo cores:`nproc` && uptime -p && free -b | grep -v total && uptime"
     cmd += "| awk '/average/ {OFS=\":\"; print \"Load\",$(NF-2),$(NF-1),$NF}'"
     cmd += "&& who | cut -d' ' -f1 | sort -u && echo Time: `date +%T`"
@@ -688,7 +690,6 @@ def get_server_info(server):
 
     up = memory_data = swap_data = load_data = now = ""
     cores = 1
-    users = []
     for i in result:
         if "Load" in i:
             load_data = i.replace("Load:", "").strip()
@@ -703,7 +704,7 @@ def get_server_info(server):
         elif "cores" in i:
             cores = i.replace("cores:", "").strip()
         else:
-            users.append(i.strip())
+            out["users"].append(i.strip())
 
     uptime = parse_uptime(load_data)
     swap = parse_swap(swap_data)
