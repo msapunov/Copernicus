@@ -168,8 +168,38 @@
             },{
                 data: "load"
             }],
-            rowCallback: function(row_html, data) {
-                if("html" in data){
+            rowCallback: function(row_html, data, idx) {
+                let ff = $(row_html).next().find('canvas').length;
+                if ( ! $(row_html).hasClass('dt-hasChild') ){
+                    let html = '<div class="uk-grid">' +
+                    '<div class="uk-width-1-1 uk-margin-bottom">' +
+                    '<canvas id=' + data.server + ' height="50"></canvas>' +
+                    '</div>' +
+                    '<div class="uk-width-1-1 uk-text-nowrap uk-text-left">' + data.uptime + '</div>' +
+                    '<div class="uk-width-medium-1-2">' +
+                    '<table class="uk-table uk-width-medium-1-2"><tbody>' +
+                    '<tr><td class="uk-text-right uk-text-nowrap"><span class="uk-text-bold">Load</span> last minute:</td>' +
+                    '<td>' + data.load.load_1 + '</td></tr>' +
+                    '<tr><td class="uk-text-right uk-text-nowrap">last 5 minutes:</td>' +
+                    '<td>' + data.load.load_5 + '</td></tr>' +
+                    '<tr><td class="uk-text-right uk-text-nowrap">last 15 minutes:</td>' +
+                    '<td>' + data.load.load_15 + '</td></tr>' +
+                    '<tr><td class="uk-text-right uk-text-nowrap"><span class="uk-text-bold">Memory</span> total:</td>' +
+                    '<td>' + data.memory.total + '</td></tr>' +
+                    '<tr><td class="uk-text-right uk-text-nowrap">available:</td>' +
+                    '<td>' + data.memory.available + '</td></tr>' +
+                    '<tr><td class="uk-text-right uk-text-nowrap">used:</td>' +
+                    '<td>' + data.memory.used + '</td></tr>' +
+                    '<tr><td class="uk-text-right uk-text-nowrap"><span class="uk-text-bold">Swap</span> total:</td>' +
+                    '<td>' + data.swap.total + '</td></tr>' +
+                    '<tr><td class="uk-text-right uk-text-nowrap">available:</td>' +
+                    '<td>' + data.swap.available + '</td></tr>' +
+                    '<tr><td class="uk-text-right uk-text-nowrap">used:</td>' +
+                    '<td>' + data.swap.used + '</td></tr>' +
+                    '</tbody></table>' +
+                    '</div><div class="uk-width-medium-1-2">' +
+                    //'<ol>' + users + '</ol>' +
+                    '</div>';
                     let row = $("#system").DataTable().row(row_html);
                     row.child(data.html).show();
                 }
