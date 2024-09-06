@@ -666,7 +666,13 @@
             }
         }, 60000);
         setInterval(function(){
-            $("#system").DataTable().ajax.reload(null, false);
+            $.ajax({
+                timeout: 60000,
+                type: "POST",
+                url: window.admin.url.system
+            }).done(function(reply){
+                window.admin.system_update(reply.data);
+            });
         }, 60000);
         setInterval(function(){
             $.ajax({
