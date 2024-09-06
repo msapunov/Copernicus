@@ -103,21 +103,49 @@
         </table>
     </div>
 
-    <div class="uk-width-small-1-1 uk-width-medium-1-2 uk-margin-top">
-        <table id="system" class="compact" data-order='[[ 0, "asc" ]]'>
-            <thead>
-                <tr>
-                    <th>Server</th>
-                    <th>Memory</th>
-                    <th>Swap</th>
-                    <th>Load</th>
-                </tr>
-            </thead>
-        </table>
-        <div class="uk-grid uk-margin-bottom">
-            <div class="uk-width-1-2 uk-text-left" id="system_info"></div>
-            <div class="uk-width-1-2 uk-text-right" id="system_updated"></div>
-        </div>
+    <div class="uk-panel uk-width-small-1-1 uk-width-medium-1-2 uk-panel-space uk-margin-bottom uk-grid uk-hidden" id="system_info">
+        {% for name in data.servers %}
+            <p class="uk-h2 uk-text-nowrap uk-width-medium-1-1" id="{{ name }}_title"></p>
+            <canvas class="uk-width-medium-1-1" id="{{ name }}_graph"></canvas>
+            <div class="uk-width-medium-1-2">
+                <table class="uk-table uk-width-medium-1-2">
+                    <tbody>
+                        <tr>
+                            <td class="uk-text-right uk-text-nowrap"><span class="uk-text-bold">Load</span> last minute:</td>
+                            <td id="{{ name }}_load_1"></td>
+                        </tr><tr>
+                            <td class="uk-text-right uk-text-nowrap">last 5 minutes:</td>
+                            <td id="{{ name }}_load_5"></td>
+                        </tr><tr>
+                            <td class="uk-text-right uk-text-nowrap">last 15 minutes:</td>
+                            <td id="{{ name }}_load_15"></td>
+                        </tr><tr>
+                            <td class="uk-text-right uk-text-nowrap"><span class="uk-text-bold">Memory</span> total:</td>
+                            <td id="{{ name }}_mem_total"></td>
+                        </tr><tr>
+                            <td class="uk-text-right uk-text-nowrap">available:</td>
+                            <td id="{{ name }}_mem_avail"></td>
+                        </tr><tr>
+                            <td class="uk-text-right uk-text-nowrap">used:</td>
+                            <td id="{{ name }}_mem_used"></td>
+                        </tr><tr>
+                            <td class="uk-text-right uk-text-nowrap"><span class="uk-text-bold">Swap</span> total:</td>
+                            <td id="{{ name }}_swap_total"></td>
+                        </tr><tr>
+                            <td class="uk-text-right uk-text-nowrap">available:</td>
+                            <td id="{{ name }}_swap_avail"></td>
+                        </tr><tr>
+                            <td class="uk-text-right uk-text-nowrap">used:</td>
+                            <td id="{{ name }}_swap_used"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="uk-width-medium-1-2">
+                <ol id="{{ name }}_users">
+                </ol>
+            </div>
+        {% endfor %}
     </div>
 
 {% endif %}
