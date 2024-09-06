@@ -329,6 +329,30 @@
                      */
                 }, 10);
     }
+    window.admin.system_update = function (data){
+        if (!Array.isArray(data)) {
+            return;
+        }
+        const keys = ["load_1", "load_15", "load_5", "mem_available", "mem_total",
+            "mem_usage", "mem_used", "server", "swap_available", "swap_total",
+            "swap_usage", "swap_used", "time", "uptime"];
+        for (let i = 0; i < data.length; i++) {
+            const item = data[i];
+            let server = item?.server || '';
+            if (server === null || server === undefined || server.trim() === '') {
+                break;
+            }
+            keys.forEach(key => {
+                const id = `${server}_${key}`;
+                const value = item[key] || "No data available";
+                const element = document.getElementById(id);
+                if (element) {
+                    element.textContent = value;
+                }
+            });
+            // "users"
+        }
+    }
     $(document).on("ready", function(){
         $.ajax({
             type: "POST",
