@@ -140,6 +140,195 @@
                 window.admin.expand_processing(tr, tdi, true);
             });
     };
+    window.admin.tr = function (){
+
+                let users = data.users.reduce(function(result, value) {
+                    return result + '<li>' + value + '</li>';
+                }, '');
+                const id = Math.floor(Math.random()*1000);
+                let html = '<div class="uk-grid">' +
+                    '<div class="uk-width-1-1 uk-margin-bottom">' +
+                    '<canvas id=' + id + ' height="50"></canvas>' +
+                    '</div>' +
+                    '<div class="uk-width-1-1 uk-text-nowrap uk-text-left">' + data.uptime + '</div>' +
+                    '<div class="uk-width-medium-1-2">' +
+                    '<table class="uk-table uk-width-medium-1-2"><tbody>' +
+                    '<tr><td class="uk-text-right uk-text-nowrap"><span class="uk-text-bold">Load</span> last minute:</td>' +
+                    '<td>' + data.load.load_1 + '</td></tr>' +
+                    '<tr><td class="uk-text-right uk-text-nowrap">last 5 minutes:</td>' +
+                    '<td>' + data.load.load_5 + '</td></tr>' +
+                    '<tr><td class="uk-text-right uk-text-nowrap">last 15 minutes:</td>' +
+                    '<td>' + data.load.load_15 + '</td></tr>' +
+                    '<tr><td class="uk-text-right uk-text-nowrap"><span class="uk-text-bold">Memory</span> total:</td>' +
+                    '<td>' + data.memory.total + '</td></tr>' +
+                    '<tr><td class="uk-text-right uk-text-nowrap">available:</td>' +
+                    '<td>' + data.memory.available + '</td></tr>' +
+                    '<tr><td class="uk-text-right uk-text-nowrap">used:</td>' +
+                    '<td>' + data.memory.used + '</td></tr>' +
+                    '<tr><td class="uk-text-right uk-text-nowrap"><span class="uk-text-bold">Swap</span> total:</td>' +
+                    '<td>' + data.swap.total + '</td></tr>' +
+                    '<tr><td class="uk-text-right uk-text-nowrap">available:</td>' +
+                    '<td>' + data.swap.available + '</td></tr>' +
+                    '<tr><td class="uk-text-right uk-text-nowrap">used:</td>' +
+                    '<td>' + data.swap.used + '</td></tr>' +
+                    '</tbody></table>' +
+                    '</div><div class="uk-width-medium-1-2">' +
+                    '<ol>' + users + '</ol>' +
+                    '</div>';
+                let row = $("#system").DataTable().row(row_html);
+                row.child(html).show();
+                let server = "load_data_" + data.server;
+                if( window.admin.hasOwnProperty(server)){
+                    if (window.admin[server].length >= 480) {
+                        window.admin[server].shift();
+                    }
+                }else{
+                    window.admin[server] = [];
+                }
+                window.admin[server].push(parseFloat(data.load.load_1.replace('%', '')));
+                setTimeout(function() {
+                    const DATA_COUNT = 12;
+                    const labels = [];
+                    for (let i = 0; i < DATA_COUNT; ++i) {
+                        labels.push(i.toString());
+                    }
+                    const datapoints = [0, 20, 20, 60, 60, 120, NaN, 180, 120, 125, 105, 110, 170];
+                    const data = {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Cubic interpolation (monotone)',
+                            data: datapoints,
+                            fill: false,
+                            cubicInterpolationMode: 'monotone',
+                            tension: 0.4
+                        }, {
+                            label: 'Cubic interpolation',
+                            data: datapoints,
+                            fill: false,
+                            tension: 0.4
+                        }, {
+                            label: 'Linear interpolation (default)',
+                            data: datapoints,
+                            fill: false
+                        }]
+                    };
+                    let ctx = document.getElementById(id).getContext('2d');
+                    let chart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: [], // Empty labels array to remove x-axis labels
+        datasets: [{
+            labels: ['A', 'B', 'C'],
+            data: [30, 50, 70], // Use the converted numeric data
+            borderColor: 'rgba(75, 192, 192, 1)',
+            borderWidth: 2,
+            pointRadius: 4,  // Size of the points
+            pointBackgroundColor: 'rgba(255, 99, 132, 1)', // Color of the points
+            fill: false, // Disable the area fill under the line
+            tension: 0.4 // Line tension; remove or set to 0 for straight lines
+        }]
+    },
+    options: {
+        scales: {
+            x: {
+                display: false // Completely hide the x-axis, including grid, ticks, and labels
+            },
+            y: {
+                display: false, // Completely hide the y-axis, including grid, ticks, and labels
+                min: 0, // Minimum value for y-axis
+                max: 100, // Maximum value for y-axis
+                ticks: {
+                    callback: function(value) {
+                        return value + '%'; // Append '%' to each tick value (if y-axis is shown)
+                    }
+                }
+            }
+        },
+        plugins: {
+            legend: {
+                display: false // Ensure the legend is hidden
+            },
+            tooltip: {
+                enabled: false // Disables tooltips
+            }
+        },
+        elements: {
+            line: {
+                borderWidth: 2, // Line thickness
+            },
+            point: {
+                radius: 4, // Point size
+                hoverRadius: 6, // Point size on hover
+                backgroundColor: 'rgba(255, 99, 132, 1)', // Point color
+            }
+        },
+        responsive: true,
+        maintainAspectRatio: false // Adjust to container size without keeping aspect ratio
+    }
+});
+                    /*
+                    let chart = new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: [],
+                            datasets: [{
+                                label: '',
+                                //data: window.admin[server],
+                                data: [30, 50, 70],
+                                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                                //borderColor: 'rgba(75, 192, 192, 1)',
+                                //borderWidth: 1
+                                borderColor: 'rgba(75, 192, 192, 1)',
+                                borderWidth: 2,
+                                pointRadius: 4,  // Size of the points
+                                pointBackgroundColor: 'rgba(255, 99, 132, 1)', // Color of the points
+                                fill: false, // Disable the area fill under the line
+                                tension: 0.4 // Line tension; remove or set to 0 for straight lines
+                            }]
+                        },
+
+                        options: {
+                            scales: {
+                                x: {
+                                    //display: false // Hides the x-axis (ticks, grid, labels)
+                                },
+                                y: {
+                                    //display: false, // Hides the y-axis (ticks, grid, labels)
+                                    min: 0, // Minimum value for y-axis
+                                    max: 200, // Maximum value for y-axis
+                                    ticks: {
+                                        callback: function(value) {
+                                            return value + '%'; // Append '%' to each tick value (if y-axis is shown)
+                                        }
+                                    }
+                                }
+                            }
+                        },
+
+                        plugins: {
+                            legend: {
+                                display: false // Hides the legend
+                            },
+                            tooltip: {
+                                enabled: false // Disables tooltips
+                            }
+                        },
+                        elements: {
+                            line: {
+                                tension: 0.4 // Adjusts the line tension; can be removed for straight lines
+                            },
+                            point: {
+                                radius: 4, // Controls the size of the points
+                                hoverRadius: 6, // Size of the points on hover
+                                backgroundColor: 'rgba(255, 99, 132, 1)', // Color of the points
+                            }
+                        },
+                        responsive: true,
+                        maintainAspectRatio: false
+                    });
+                     */
+                }, 10);
+    }
     $(document).on("ready", function(){
         $.ajax({
             type: "POST",
@@ -149,10 +338,37 @@
         });
         $("#system").DataTable({
             ajax: {type: "POST", url: window.admin.url.system},
-            dom: 'tiB',
-            buttons: {
-                className: 'copyButton',
-                buttons: [ 'refresh' ]
+            dom: 't',
+            footerCallback: function( tfoot, data, start, end, display ) {
+                let api = this.api();
+                let ts = api.column( 5, { page: 'current'} ).data().reduce( function ( a, b ) {
+                    if( a > b){
+                        return a;
+                    }else{
+                        return b;
+                    }
+                }, 0 );
+                let date = new Date(ts * 1000);
+                let options = { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric'};
+                let dt = new Intl.DateTimeFormat('fr-FR', options).format(date);
+                $("#system_updated").text("Last updated: " + dt);
+                let users = api.column( 4, { page: 'current'} ).data().reduce( function ( a, b ) {
+                    b.forEach(function (value) {
+                        if (!a.includes(value)) {
+                            a.push(value);
+                        }
+                    });
+                    return a;
+                }, [] );
+                if(users.length < 1){
+                    var txt = "No users connected!";
+                }else{
+                    var txt = "Total " + users.length + " unique users connected";
+                }
+                $("#system_info").text(txt);
+            },
+            drawCallback: function( settings ) {
+                let api = this.api();
             },
             paging: false,
             searching: false,
@@ -162,15 +378,27 @@
                     return '<div title="' + data + '" style="white-space: nowrap;">' + data + '</div>';
                 }
             },{
-                data: "memory"
+                data: "memory.usage"
             },{
-                data: "swap"
+                data: "swap.usage"
             },{
-                data: "load"
+                data: "load.load_1"
+            },{
+                data: "users",
+                visible: false
+            },{
+                data: "time",
+                visible: false
             }],
             rowCallback: function(row_html, data, idx) {
-                let ff = $(row_html).next().find('canvas').length;
-                if ( ! $(row_html).hasClass('dt-hasChild') ){
+                let status = $(row_html).data('status');
+                if(!$(row_html).data('status')){
+                    $(row_html).attr('data-status', true);
+                }else{
+                    var i = i + 1;
+                }
+                let ff = $(row_html).hasClass('initialized');
+                if ( ! $(row_html).hasClass('initialized') ){
                     let html = '<div class="uk-grid">' +
                     '<div class="uk-width-1-1 uk-margin-bottom">' +
                     '<canvas id=' + data.server + ' height="50"></canvas>' +
@@ -201,7 +429,12 @@
                     //'<ol>' + users + '</ol>' +
                     '</div>';
                     let row = $("#system").DataTable().row(row_html);
-                    row.child(data.html).show();
+                    row.child(html).show();
+                    $(row_html).addClass('initialized');
+                    //initializeChart(data.id, $('#chart-' + data.id));
+                } else {
+                    var i = i + 1;
+                    //updateChart(data.id, $('#chart-' + data.id));
                 }
             }
         });
@@ -225,7 +458,7 @@
         });
         $("#sinfo").DataTable({
             ajax: {"type": "POST", "url": window.admin.url.sinfo},
-            dom: 'tiB',
+            dom: 't',
             buttons: {
                 className: 'copyButton',
                 buttons: [ 'refresh' ]
@@ -235,7 +468,6 @@
             columns: [{
                 data: "node"
             },{
-                className: "dt-body-nowrap",
                 data: "reason"
             },{
                 data: "date",
@@ -408,6 +640,9 @@
                     accounting("accounting", data, 100);
                 });
             }
+        }, 60000);
+        setInterval(function(){
+            $("#system").DataTable().ajax.reload(null, false);
         }, 60000);
         setInterval(function(){
             $.ajax({
