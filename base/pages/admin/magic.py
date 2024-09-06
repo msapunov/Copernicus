@@ -677,8 +677,7 @@ def get_server_cpu(server):
 
 
 def get_server_info(server):
-    out = {"server": server, "uptime": "", "memory": "", "load": "", "swap": "",
-           "users": []}
+    out = {"server": server, "uptime": "", "users": []}
     cmd = "echo cores:`nproc` && uptime -p && free -b | grep -v total && uptime"
     cmd += "| awk '/average/ {OFS=\":\"; print \"Load\",$(NF-2),$(NF-1),$NF}'"
     cmd += "&& who | cut -d' ' -f1 | sort -u && echo Time: `date +%s`"
@@ -705,9 +704,12 @@ def get_server_info(server):
         else:
             out["users"].append(i.strip())
 
-    out["load"] = parse_uptime(load_data, cores)
-    out["memory"] = parse_memory(memory_data)
-    out["swap"] = parse_swap(swap_data)
+    for key, value in parse_uptime(load_data, cores).items():
+        out[key] = value
+    for key, value in parse_memory(memory_data).items():
+        out[key] = value
+    for key, value in parse_swap(swap_data).items():
+        out[key] = value
     out["uptime"] = up
     out["time"] = now
     return out
@@ -735,10 +737,10 @@ def parse_swap(result):
             swap_used = swap_total - swap_available
             swap_usage = "{0:.1%}".format(float(swap_used) /
                                           float(swap_total))
-            tmp["total"] = bytes2human(swap_total)
-            tmp["available"] = bytes2human(swap_available)
-            tmp["used"] = bytes2human(swap_used)
-            tmp["usage"] = swap_usage
+            tmp["swap_total"] = bytes2human(swap_total)
+            tmp["swap_available"] = bytes2human(swap_available)
+            tmp["swap_used"] = bytes2human(swap_used)
+            tmp["swap_usage"] = swap_usage
     return tmp
 
 
@@ -752,10 +754,10 @@ def parse_memory(result):
             mem_available = int(memory[6].strip())
             mem_used = mem_total - mem_available
             mem_usage = "{0:.1%}".format(float(mem_used) / float(mem_total))
-            tmp["total"] = bytes2human(mem_total)
-            tmp["available"] = bytes2human(mem_available)
-            tmp["used"] = bytes2human(mem_used)
-            tmp["usage"] = mem_usage
+            tmp["mem_total"] = bytes2human(mem_total)
+            tmp["mem_available"] = bytes2human(mem_available)
+            tmp["mem_used"] = bytes2human(mem_used)
+            tmp["mem_usage"] = mem_usage
     return tmp
 
 
