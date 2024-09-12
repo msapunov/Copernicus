@@ -103,7 +103,8 @@
         </table>
     </div>
 
-    <div class="uk-panel uk-width-small-1-1 uk-width-medium-1-2 uk-panel-space uk-margin-bottom uk-grid uk-hidden" id="system_info">
+    <!--<div class="uk-panel uk-width-small-1-1 uk-width-medium-1-2 uk-panel-space uk-margin-bottom uk-grid uk-hidden" id="system_info">-->
+    <div class="uk-panel uk-width-small-1-1 uk-width-medium-1-2 uk-panel-space uk-margin-bottom uk-grid" id="system_info">
         {% for name in data.servers %}
             <p class="uk-h2 uk-text-nowrap uk-width-medium-1-1" id="{{ name }}_title"></p>
             <canvas class="uk-width-medium-1-1" id="{{ name }}_graph"></canvas>
