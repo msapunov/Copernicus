@@ -711,7 +711,7 @@ def get_server_info(server):
     for key, value in parse_swap(swap_data).items():
         out[key] = value
     out["uptime"] = up
-    out["time"] = now
+    out["time"] = parse_timestamp(now)
     return out
 
 
@@ -724,6 +724,7 @@ def parse_timestamp(unix_ts):
     return dt_object.strftime('%Y-%m-%d %H:%M')
 
 
+def parse_load(result, cores=1):
     try:
         load_1, load_5, load_15 = result.split(":")
     except ValueError as e:
