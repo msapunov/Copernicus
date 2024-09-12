@@ -715,7 +715,15 @@ def get_server_info(server):
     return out
 
 
-def parse_uptime(result, cores=1):
+def parse_timestamp(unix_ts):
+    try:
+        ts = int(unix_ts)
+    except ValueError as e:
+        return unix_ts
+    dt_object = dt.fromtimestamp(ts)
+    return dt_object.strftime('%Y-%m-%d %H:%M')
+
+
     try:
         load_1, load_5, load_15 = result.split(":")
     except ValueError as e:
