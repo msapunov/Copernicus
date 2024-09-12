@@ -704,7 +704,7 @@ def get_server_info(server):
         else:
             out["users"].append(i.strip())
 
-    for key, value in parse_uptime(load_data, cores).items():
+    for key, value in parse_load(load_data, cores).items():
         out[key] = value
     for key, value in parse_memory(memory_data).items():
         out[key] = value
