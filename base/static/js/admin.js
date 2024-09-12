@@ -350,7 +350,34 @@
                     element.textContent = value;
                 }
             });
-            // "users"
+            const list = document.getElementById(`${server}_users`);
+            list.replaceChildren();
+            const users = item?.users || '';
+            if( users.length > 0){
+                const full = window.location.pathname;
+                const base = full.substring(0, full.lastIndexOf('/') + 1);
+                const url = window.location.origin + base + 'users/';
+                users.sort().forEach(user => {
+                    const element = document.createElement('li');
+                    if( user === 'root' ){
+                       element.textContent = user;
+                    }else {
+                        const anchor = document.createElement('a');
+                        anchor.href = url + user.toLowerCase();
+                        anchor.textContent = user;
+                        element.appendChild(anchor);
+                    }
+                    list.appendChild(element);
+                });
+            }
+            if (!window.admin.hasOwnProperty(server)) {
+                window.admin[server] = {data: []};
+            }
+            window.admin[server].data[item.time] = item.load_1;
+            if(window.admin[server].data.length > 480){
+                window.admin[server].data.shift();
+            }
+            accounting(`${server}_graph`, window.admin[server], 50);
         }
     }
     $(document).on("ready", function(){
