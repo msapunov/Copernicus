@@ -106,7 +106,9 @@
     <!--<div class="uk-panel uk-width-small-1-1 uk-width-medium-1-2 uk-panel-space uk-margin-bottom uk-grid uk-hidden" id="system_info">-->
     <div class="uk-panel uk-width-small-1-1 uk-width-medium-1-2 uk-panel-space uk-margin-bottom uk-grid" id="system_info">
         {% for name in data.servers %}
-            <p class="uk-h2 uk-text-nowrap uk-width-medium-1-1" id="{{ name }}_title"></p>
+            <div class="uk-width-medium-1-1">
+                <span class="uk-text-bold uk-text-nowrap" id="{{ name }}_server"></span>: <span id="{{ name }}_uptime"></span>
+            </div>
             <canvas class="uk-width-medium-1-1" id="{{ name }}_graph"></canvas>
             <div class="uk-width-medium-1-2">
                 <table class="uk-table uk-width-medium-1-2">
