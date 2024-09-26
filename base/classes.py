@@ -7,6 +7,7 @@ from base.email import Mail, UserMailingList, ResponsibleMailingList
 from base.database.schema import (LogDB, User, ACLDB, Extend, Register, Project,
                                   Resources, ArticleDB, Tasks)
 from logging import debug
+from logging import debug, warning
 from operator import attrgetter
 from datetime import datetime as dt
 from pathlib import Path
@@ -990,8 +991,8 @@ class Task:
         old = project.responsible
         user = self.task.user
         if old == user:
-            raise ValueError("User %s already assigned as %s responsible" %
-                             (user.full(), project.get_name()))
+            warning("User %s already assigned as %s responsible" %
+                    (user.full(), project.get_name()))
         if not user.acl.is_responsible:
             user.acl.is_responsible = True
         project.responsible = user
