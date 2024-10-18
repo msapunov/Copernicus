@@ -945,7 +945,7 @@ class Task:
             user.active = True
             UserMailingList().add(user.email, user.full_name())
             if user.acl.is_responsible:
-                ResponsibleMailingList.add(user.email, user.full_name())
+                ResponsibleMailingList().add(user.email, user.full_name())
         return ProjectLog(project).user_activated(self.task)
 
     def user_assign(self):
