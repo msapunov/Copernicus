@@ -8,7 +8,6 @@ from base.database.schema import User
 from base.classes import UserLog, Task
 from tempfile import mkstemp
 from os import path, remove
-from datetime import datetime as dt, timezone
 from logging import debug, error
 
 
@@ -22,7 +21,6 @@ def active_check():
     if not raw_data:
         return "No data received"
     logins = raw_data.decode("utf-8", errors="replace").split("\n")
-    now = dt.now().replace(tzinfo=timezone.utc)
     result = []
     for user in users:
         if user.login in logins and not user.active and user.project:
