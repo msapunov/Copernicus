@@ -59,7 +59,7 @@ def active_check():
 #            db.session.bulk_save_objects(olds)
 #        db.session.commit()
         return "User(s) has been saved: %s" % ", ".join(
-            olds.login for old in olds
+            old.login for old in olds
         )
 
     except Exception as e:
