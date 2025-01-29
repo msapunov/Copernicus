@@ -4,11 +4,12 @@ from base import db
 from base.utils import form_error_string
 from base.functions import bytes2human, ssh_wrapper, ssh_public
 from base.pages import TaskQueue
-from base.database.schema import User
+from base.database.schema import User, Heaven
 from base.classes import UserLog, Task
 from tempfile import mkstemp
 from os import path, remove
 from logging import debug, error
+from datetime import datetime as dt, timezone
 
 
 __author__ = "Matvey Sapunov"
@@ -16,23 +17,54 @@ __copyright__ = "Aix Marseille University"
 
 
 def active_check():
-    users = User.query.all()
     raw_data = request.get_data()
     if not raw_data:
         return "No data received"
     logins = raw_data.decode("utf-8", errors="replace").split("\n")
-    result = []
-    for user in users:
-        if user.login in logins and not user.active and user.project:
-            for project in user.project:
-                if project.resources.ttl >= now:
-                    user.active = True
-                    db.session.commit()
-                    result.append("User %s is activated" % user.login)
-                    break
-    if result:
-        return "\n".join(result)
-    return "User active check done"
+    users = (
+        User.query.filter(User.login.not_in(logins))
+        .filter(User.active == False)
+        .with_for_update()
+        .all()
+    )
+    if not users:
+        return "User cleanup done"
+    try:
+        olds = []
+        now = dt.now().replace(tzinfo=timezone.utc)
+        for user in users:
+            latest = user.project_names()
+            if not latest:
+                msg = "No latest projects"
+            else:
+                msg = (
+                    f"Latest project{'' if len(latest) == 1 else 's'}: "
+                    f"{', '.join(latest)}"
+                )
+            olds.append(Heaven(
+                name=user.name,
+                surname = user.surname,
+                email = user.email,
+                phone = user.phone,
+                lab = user.lab,
+                position = user.position,
+                login = user.login,
+                comment = msg,
+                created = user.created,
+                deleted = now,
+                uid = user.uid,
+                seen = user.seen))
+#            db.session.delete(user)
+#        if olds:
+#            db.session.bulk_save_objects(olds)
+#        db.session.commit()
+        return "User(s) has been saved: %s" % ", ".join(
+            olds.login for old in olds
+        )
+
+    except Exception as e:
+        db.session.rollback()
+        raise ValueError(f"Error during user cleanup: {e}")
 
 
 def sanitize_key(key):
