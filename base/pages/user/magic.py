@@ -49,7 +49,7 @@ def active_check():
     logins = raw_data.decode("utf-8", errors="replace").split("\n")
     users = (
         User.query.filter(User.login.not_in(logins))
-        .filter(User.active == False)
+        .filter(User.active == True)
         .with_for_update()
         .all()
     )
