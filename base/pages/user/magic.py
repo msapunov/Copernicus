@@ -16,6 +16,32 @@ __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
 
 
+def archive():
+    raw_data = request.get_data()
+    if not raw_data:
+        return "No data received"
+    logins = raw_data.decode("utf-8", errors="replace").split("\n")
+    users = (
+        User.query.filter(User.login.not_in(logins))
+        .with_for_update()
+        .all()
+    )
+    if not users:
+        return "Active user check done"
+    now = dt.now().replace(tzinfo=timezone.utc)
+    try:
+        for user in users:
+            user.archived = now
+        if db.session.new or db.session.dirty or db.session.deleted:
+            db.session.commit()
+        return "User(s) has been archived: %s" % ", ".join(
+            user.login for user in users
+        )
+    except Exception as e:
+        db.session.rollback()
+        raise ValueError(f"Error during user archive: {e}")
+
+
 def active_check():
     raw_data = request.get_data()
     if not raw_data:
