@@ -25,6 +25,70 @@ __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
 
 
+def archive_user(user):
+    now = dt.now().replace(tzinfo=timezone.utc)
+    latest = user.project_names()
+    if not latest:
+        msg = "No latest projects"
+    else:
+        msg = (
+            f"Latest project{'' if len(latest) == 1 else 's'}: "
+            f"{', '.join(latest)}"
+        )
+    ex = Heaven(
+        name=user.name,
+        surname=user.surname,
+        email=user.email,
+        phone=user.phone,
+        lab=user.lab,
+        position=user.position,
+        login=user.login,
+        comment=msg,
+        created=user.created,
+        deleted=now,
+        uid=user.uid,
+        seen=user.seen)
+    db.session.add(ex)
+    db.session.flush()
+    Tasks.query.filter_by(author_id=user.id).update(
+        {"author_id": ex.id}, synchronize_session=False
+    )
+    Tasks.query.filter_by(approve_id=user.id).update(
+        {"approve_id": ex.id}, synchronize_session=False
+    )
+    Tasks.query.filter_by(uid=user.id).update(
+        {"uid": ex.id}, synchronize_session=False
+    )
+    LogDB.query.filter_by(author_id=user.id).update(
+        {"author_id": ex.id}, synchronize_session=False
+    )
+    LogDB.query.filter_by(user_id=user.id).update(
+        {"user_id": ex.id}, synchronize_session=False
+    )
+    Resources.query.filter_by(approve_id=user.id).update(
+        {"approve_id": ex.id}, synchronize_session=False
+    )
+    File.query.filter_by(user_id=user.id).update(
+        {"user_id": ex.id}, synchronize_session=False
+    )
+    ArticleDB.query.filter_by(user_id=user.id).update(
+        {"user_id": ex.id}, synchronize_session=False
+    )
+    Accounting.query.filter_by(user_id=user.id).update(
+        {"user_id": ex.id}, synchronize_session=False
+    )
+    Extend.query.filter_by(approve_id=user.id).update(
+        {"approve_id": ex.id}, synchronize_session=False
+    )
+    Project.query.filter_by(responsible_id=user.id).update(
+        {"responsible_id": ex.id}, synchronize_session=False
+    )
+    Project.query.filter_by(approve_id=user.id).update(
+        {"approve_id": ex.id}, synchronize_session=False
+    )
+    db.session.delete(user)
+    return ex
+
 def active_check():
     raw_data = request.get_data()
     if not raw_data:
