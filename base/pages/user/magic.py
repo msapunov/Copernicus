@@ -54,10 +54,11 @@ def active_check():
                 deleted = now,
                 uid = user.uid,
                 seen = user.seen))
-#            db.session.delete(user)
-#        if olds:
-#            db.session.bulk_save_objects(olds)
-#        db.session.commit()
+            db.session.delete(user)
+        if olds:
+            db.session.bulk_save_objects(olds)
+        if db.session.new or db.session.dirty or db.session.deleted:
+            db.session.commit()
         return "User(s) has been saved: %s" % ", ".join(
             old.login for old in olds
         )
