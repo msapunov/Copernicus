@@ -54,19 +54,18 @@ def active_check():
         .all()
     )
     if not users:
-        return "User cleanup done"
-    now = dt.now().replace(tzinfo=timezone.utc)
+        return "Active user check done"
     try:
         for user in users:
             user.archived = now
         if db.session.new or db.session.dirty or db.session.deleted:
             db.session.commit()
-        return "User(s) has been archived: %s" % ", ".join(
+        return "User(s) has been deactivated: %s" % ", ".join(
             user.login for user in users
         )
     except Exception as e:
         db.session.rollback()
-        raise ValueError(f"Error during user cleanup: {e}")
+        raise ValueError(f"Error during user deactivation: {e}")
 
 
 def sanitize_key(key):
