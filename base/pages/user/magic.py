@@ -4,7 +4,16 @@ from base import db
 from base.utils import form_error_string
 from base.functions import bytes2human, ssh_wrapper, ssh_public
 from base.pages import TaskQueue
-from base.database.schema import User, Heaven
+from base.database.schema import (User,
+                                  Heaven,
+                                  Tasks,
+                                  LogDB,
+                                  Resources,
+                                  File,
+                                  ArticleDB,
+                                  Accounting,
+                                  Extend,
+                                  Project)
 from base.classes import UserLog, Task
 from tempfile import mkstemp
 from os import path, remove
