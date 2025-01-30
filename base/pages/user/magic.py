@@ -30,7 +30,6 @@ def active_check():
     if not users:
         return "User cleanup done"
     try:
-        olds = []
         for user in users:
             olds.append(archive_user(user))
         if db.session.new or db.session.dirty or db.session.deleted:
@@ -38,7 +37,6 @@ def active_check():
         return "User(s) has been saved: %s" % ", ".join(
             old.login for old in olds
         )
-
     except Exception as e:
         db.session.rollback()
         raise ValueError(f"Error during user cleanup: {e}")
