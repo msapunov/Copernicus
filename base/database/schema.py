@@ -450,7 +450,7 @@ class User(UserMixin, db.Model):
     project = db.relationship("Project", secondary="user_project",
                               back_populates="users")
     active = db.Column(db.Boolean, default=False)
-    archived = db.Column(db.Boolean, default=False)
+    archived = db.Column(db.DateTime(True), default=None, nullable=True)
     comment = db.Column(db.Text)
     modified = db.Column(db.DateTime(True))
     created = db.Column(db.DateTime(True))
