@@ -51,42 +51,30 @@ def archive_user(user):
     db.session.add(ex)
     db.session.flush()
     debug(f"Archiving user {user.login} with id {user.uid} to {ex.id}")
-    Tasks.query.filter(Tasks.author_id==user.id).update(
-        {"author_id": ex.id}, synchronize_session=False
-    )
-    Tasks.query.filter(Tasks.approve_id==user.id).update(
-        {"approve_id": ex.id}, synchronize_session=False
-    )
-    Tasks.query.filter(Tasks.uid==user.id).update(
-        {"uid": ex.id}, synchronize_session=False
-    )
-    LogDB.query.filter(LogDB.author_id==user.id).update(
-        {"author_id": ex.id}, synchronize_session=False
-    )
-    LogDB.query.filter(LogDB.user_id==user.id).update(
-        {"user_id": ex.id}, synchronize_session=False
-    )
-    Resources.query.filter(Resources.approve_id==user.id).update(
-        {"approve_id": ex.id}, synchronize_session=False
-    )
-    File.query.filter(File.user_id==user.id).update(
-        {"user_id": ex.id}, synchronize_session=False
-    )
-    ArticleDB.query.filter(ArticleDB.user_id==user.id).update(
-        {"user_id": ex.id}, synchronize_session=False
-    )
-    Accounting.query.filter(Accounting.user_id==user.id).update(
-        {"user_id": ex.id}, synchronize_session=False
-    )
-    Extend.query.filter(Extend.approve_id==user.id).update(
-        {"approve_id": ex.id}, synchronize_session=False
-    )
-    Project.query.filter(Project.responsible_id==user.id).update(
-        {"responsible_id": ex.id}, synchronize_session=False
-    )
-    Project.query.filter(Project.approve_id==user.id).update(
-        {"approve_id": ex.id}, synchronize_session=False
-    )
+    task_1 = Tasks.query.filter(Tasks.author_id==user.id).first()
+    task_1.author_id = ex.id
+    task_2 = Tasks.query.filter(Tasks.approve_id == user.id).first()
+    task_2.approve_id = ex.id
+    task_3 = Tasks.query.filter(Tasks.uid == user.id).first()
+    task_3.uid = ex.id
+    log_1 = LogDB.query.filter(LogDB.author_id==user.id).first()
+    log_1.author_id = ex.id
+    log_2 = LogDB.query.filter(LogDB.user_id == user.id).first()
+    log_2.user_id = ex.id
+    resource = Resources.query.filter(Resources.approve_id==user.id).first()
+    resource.approve_id = ex.id
+    file = File.query.filter(File.user_id==user.id).first()
+    file.user_id = ex.id
+    article = ArticleDB.query.filter(ArticleDB.user_id==user.id).first()
+    article.user_id = ex.id
+    acc = Accounting.query.filter(Accounting.user_id==user.id).first()
+    acc.user_id = ex.id
+    ext = Extend.query.filter(Extend.approve_id==user.id).first()
+    ext.approve_id = ex.id
+    project_1 = Project.query.filter(Project.responsible_id == user.id).first()
+    project_1.responsible_id = ex.id
+    project_2 = Project.query.filter(Project.approve_id==user.id).first()
+    project_2.approve_id = ex.id
     db.session.delete(user)
     return ex
 
