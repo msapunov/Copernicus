@@ -51,40 +51,40 @@ def archive_user(user):
     db.session.add(ex)
     db.session.flush()
     debug(f"Archiving user {user.login} with id {user.uid} to {ex.id}")
-    Tasks.query.filter_by(author_id=user.id).update(
+    Tasks.query.filter(Tasks.author_id==user.id).update(
         {"author_id": ex.id}, synchronize_session=False
     )
-    Tasks.query.filter_by(approve_id=user.id).update(
+    Tasks.query.filter(Tasks.approve_id==user.id).update(
         {"approve_id": ex.id}, synchronize_session=False
     )
-    Tasks.query.filter_by(uid=user.id).update(
+    Tasks.query.filter(Tasks.uid==user.id).update(
         {"uid": ex.id}, synchronize_session=False
     )
-    LogDB.query.filter_by(author_id=user.id).update(
+    LogDB.query.filter(LogDB.author_id==user.id).update(
         {"author_id": ex.id}, synchronize_session=False
     )
-    LogDB.query.filter_by(user_id=user.id).update(
+    LogDB.query.filter(LogDB.user_id==user.id).update(
         {"user_id": ex.id}, synchronize_session=False
     )
-    Resources.query.filter_by(approve_id=user.id).update(
+    Resources.query.filter(Resources.approve_id==user.id).update(
         {"approve_id": ex.id}, synchronize_session=False
     )
-    File.query.filter_by(user_id=user.id).update(
+    File.query.filter(File.user_id==user.id).update(
         {"user_id": ex.id}, synchronize_session=False
     )
-    ArticleDB.query.filter_by(user_id=user.id).update(
+    ArticleDB.query.filter(ArticleDB.user_id==user.id).update(
         {"user_id": ex.id}, synchronize_session=False
     )
-    Accounting.query.filter_by(user_id=user.id).update(
+    Accounting.query.filter(Accounting.user_id==user.id).update(
         {"user_id": ex.id}, synchronize_session=False
     )
-    Extend.query.filter_by(approve_id=user.id).update(
+    Extend.query.filter(Extend.approve_id==user.id).update(
         {"approve_id": ex.id}, synchronize_session=False
     )
-    Project.query.filter_by(responsible_id=user.id).update(
+    Project.query.filter(Project.responsible_id==user.id).update(
         {"responsible_id": ex.id}, synchronize_session=False
     )
-    Project.query.filter_by(approve_id=user.id).update(
+    Project.query.filter(Project.approve_id==user.id).update(
         {"approve_id": ex.id}, synchronize_session=False
     )
     db.session.delete(user)
