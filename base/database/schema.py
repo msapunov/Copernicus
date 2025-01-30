@@ -444,7 +444,7 @@ class User(UserMixin, db.Model):
     phone = db.Column(db.String(10))
     lab = db.Column(db.String(128))
     position = db.Column(db.String(128))
-    login = db.Column(db.String(128), unique=True)
+    login = db.Column(db.String(128))
     acl_id = db.Column(db.Integer, db.ForeignKey("acl.id"))
     acl = db.relationship("ACLDB", uselist=False, backref="users")
     project = db.relationship("Project", secondary="user_project",
