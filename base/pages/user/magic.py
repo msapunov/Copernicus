@@ -4,16 +4,7 @@ from base import db
 from base.utils import form_error_string
 from base.functions import bytes2human, ssh_wrapper, ssh_public
 from base.pages import TaskQueue
-from base.database.schema import (User,
-                                  Heaven,
-                                  Tasks,
-                                  LogDB,
-                                  Resources,
-                                  File,
-                                  ArticleDB,
-                                  Accounting,
-                                  Extend,
-                                  Project)
+from base.database.schema import User
 from base.classes import UserLog, Task
 from tempfile import mkstemp
 from os import path, remove
@@ -24,59 +15,6 @@ from datetime import datetime as dt, timezone
 __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
 
-
-def archive_user(user):
-    now = dt.now().replace(tzinfo=timezone.utc)
-    latest = user.project_names()
-    if not latest:
-        msg = "No latest projects"
-    else:
-        msg = (
-            f"Latest project{'' if len(latest) == 1 else 's'}: "
-            f"{', '.join(latest)}"
-        )
-    ex = Heaven(
-        name=user.name,
-        surname=user.surname,
-        email=user.email,
-        phone=user.phone,
-        lab=user.lab,
-        position=user.position,
-        login=user.login,
-        comment=msg,
-        created=user.created,
-        deleted=now,
-        uid=user.uid,
-        seen=user.seen)
-    db.session.add(ex)
-    db.session.flush()
-    debug(f"Archiving user {user.login} with id {user.uid} to {ex.id}")
-    task_1 = Tasks.query.filter(Tasks.author_id==user.id).first()
-    task_1.author_id = ex.id
-    task_2 = Tasks.query.filter(Tasks.approve_id == user.id).first()
-    task_2.approve_id = ex.id
-    task_3 = Tasks.query.filter(Tasks.uid == user.id).first()
-    task_3.uid = ex.id
-    log_1 = LogDB.query.filter(LogDB.author_id==user.id).first()
-    log_1.author_id = ex.id
-    log_2 = LogDB.query.filter(LogDB.user_id == user.id).first()
-    log_2.user_id = ex.id
-    resource = Resources.query.filter(Resources.approve_id==user.id).first()
-    resource.approve_id = ex.id
-    file = File.query.filter(File.user_id==user.id).first()
-    file.user_id = ex.id
-    article = ArticleDB.query.filter(ArticleDB.user_id==user.id).first()
-    article.user_id = ex.id
-    acc = Accounting.query.filter(Accounting.user_id==user.id).first()
-    acc.user_id = ex.id
-    ext = Extend.query.filter(Extend.approve_id==user.id).first()
-    ext.approve_id = ex.id
-    project_1 = Project.query.filter(Project.responsible_id == user.id).first()
-    project_1.responsible_id = ex.id
-    project_2 = Project.query.filter(Project.approve_id==user.id).first()
-    project_2.approve_id = ex.id
-    db.session.delete(user)
-    return ex
 
 def active_check():
     raw_data = request.get_data()
