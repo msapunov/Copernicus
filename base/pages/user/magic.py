@@ -63,10 +63,10 @@ def active_check():
                 user.active = False
                 result.append(f"User {user.login} deactivated")
             else:
-                result.append(f"User {user.login} attached to a project!")
+                result.append(f"User {user.login} attached to a project")
         if db.session.new or db.session.dirty or db.session.deleted:
             db.session.commit()
-        return "; ".join(result)
+        return ", ".join(result)
     except Exception as e:
         db.session.rollback()
         raise ValueError(f"Error during user deactivation: {e}")
