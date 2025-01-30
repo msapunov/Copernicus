@@ -105,30 +105,7 @@ def active_check():
     try:
         olds = []
         for user in users:
-            latest = user.project_names()
-            if not latest:
-                msg = "No latest projects"
-            else:
-                msg = (
-                    f"Latest project{'' if len(latest) == 1 else 's'}: "
-                    f"{', '.join(latest)}"
-                )
-            olds.append(Heaven(
-                name=user.name,
-                surname = user.surname,
-                email = user.email,
-                phone = user.phone,
-                lab = user.lab,
-                position = user.position,
-                login = user.login,
-                comment = msg,
-                created = user.created,
-                deleted = now,
-                uid = user.uid,
-                seen = user.seen))
-            db.session.delete(user)
-        if olds:
-            db.session.bulk_save_objects(olds)
+            olds.append(archive_user(user))
         if db.session.new or db.session.dirty or db.session.deleted:
             db.session.commit()
         return "User(s) has been saved: %s" % ", ".join(
