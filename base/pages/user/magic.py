@@ -60,6 +60,7 @@ def active_check():
         result = []
         for user in users:
             if not user.project:
+                # TODO: add log entry
                 user.active = False
                 result.append(f"User {user.login} deactivated")
             else:
