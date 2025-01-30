@@ -50,6 +50,7 @@ def archive_user(user):
         seen=user.seen)
     db.session.add(ex)
     db.session.flush()
+    debug(f"Archiving user {user.login} with id {user.uid} to {ex.id}")
     Tasks.query.filter_by(author_id=user.id).update(
         {"author_id": ex.id}, synchronize_session=False
     )
