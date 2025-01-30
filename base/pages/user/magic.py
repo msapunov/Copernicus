@@ -50,6 +50,7 @@ def active_check():
     users = (
         User.query.filter(User.login.not_in(logins))
         .filter(User.active == True)
+        .filter(User.archived is None)
         .with_for_update()
         .all()
     )
