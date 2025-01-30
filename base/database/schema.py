@@ -434,24 +434,6 @@ class Resources(db.Model):
             return "0%"
 
 
-class Heaven(UserMixin, db.Model):
-    __tablename__ = "cemetery"
-
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(128))
-    surname = db.Column(db.String(128))
-    email = db.Column(db.String(128))
-    phone = db.Column(db.String(10))
-    lab = db.Column(db.String(128))
-    position = db.Column(db.String(128))
-    login = db.Column(db.String(128))
-    comment = db.Column(db.Text)
-    created = db.Column(db.DateTime(True))
-    deleted = db.Column(db.DateTime(True))
-    uid = db.Column(db.Integer)
-    seen = db.Column(db.DateTime(True))
-
-
 class User(UserMixin, db.Model):
     __tablename__ = "users"
 
