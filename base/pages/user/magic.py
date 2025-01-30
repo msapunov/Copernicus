@@ -34,8 +34,8 @@ def active_check():
             olds.append(archive_user(user))
         if db.session.new or db.session.dirty or db.session.deleted:
             db.session.commit()
-        return "User(s) has been saved: %s" % ", ".join(
-            old.login for old in olds
+        return "User(s) has been archived: %s" % ", ".join(
+            user.login for user in users
         )
     except Exception as e:
         db.session.rollback()
