@@ -29,9 +29,10 @@ def active_check():
     )
     if not users:
         return "User cleanup done"
+    now = dt.now().replace(tzinfo=timezone.utc)
     try:
         for user in users:
-            olds.append(archive_user(user))
+            user.archived = now
         if db.session.new or db.session.dirty or db.session.deleted:
             db.session.commit()
         return "User(s) has been archived: %s" % ", ".join(
