@@ -104,7 +104,6 @@ def active_check():
         return "User cleanup done"
     try:
         olds = []
-        now = dt.now().replace(tzinfo=timezone.utc)
         for user in users:
             latest = user.project_names()
             if not latest:
