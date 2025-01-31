@@ -130,7 +130,7 @@
                     <p>Directeur du CCIAM</p>
                     <figure class="text_centre">
                         <img src="data:image/jpeg;base64,{{ data.signature | safe }}" width="50%">
-                        <figcaption>Nicolas Ferré</figcaption>
+                        <figcaption>Yannick Carissan</figcaption>
                     </figure>
                 </td>
             </tr>
