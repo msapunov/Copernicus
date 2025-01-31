@@ -8,33 +8,69 @@ from base.database.schema import User
 from base.classes import UserLog, Task
 from tempfile import mkstemp
 from os import path, remove
-from datetime import datetime as dt, timezone
 from logging import debug, error
+from datetime import datetime as dt, timezone
 
 
 __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
 
 
-def active_check():
-    users = User.query.all()
+def archive():
     raw_data = request.get_data()
     if not raw_data:
         return "No data received"
     logins = raw_data.decode("utf-8", errors="replace").split("\n")
+    users = (
+        User.query.filter(User.login.not_in(logins))
+        .with_for_update()
+        .all()
+    )
+    if not users:
+        return "Active user check done"
     now = dt.now().replace(tzinfo=timezone.utc)
-    result = []
-    for user in users:
-        if user.login in logins and not user.active and user.project:
-            for project in user.project:
-                if project.resources.ttl >= now:
-                    user.active = True
-                    db.session.commit()
-                    result.append("User %s is activated" % user.login)
-                    break
-    if result:
-        return "\n".join(result)
-    return "User active check done"
+    try:
+        for user in users:
+            user.archived = now
+        if db.session.new or db.session.dirty or db.session.deleted:
+            db.session.commit()
+        return "User(s) has been archived: %s" % ", ".join(
+            user.login for user in users
+        )
+    except Exception as e:
+        db.session.rollback()
+        raise ValueError(f"Error during user archive: {e}")
+
+
+def active_check():
+    raw_data = request.get_data()
+    if not raw_data:
+        return "No data received"
+    logins = raw_data.decode("utf-8", errors="replace").split("\n")
+    users = (
+        User.query.filter(User.login.not_in(logins))
+        .filter(User.active == True)
+        .filter(User.archived is None)
+        .with_for_update()
+        .all()
+    )
+    if not users:
+        return "Active user check done"
+    try:
+        result = []
+        for user in users:
+            if not user.project:
+                # TODO: add log entry
+                user.active = False
+                result.append(f"User {user.login} deactivated")
+            else:
+                result.append(f"User {user.login} attached to a project")
+        if db.session.new or db.session.dirty or db.session.deleted:
+            db.session.commit()
+        return ", ".join(result)
+    except Exception as e:
+        db.session.rollback()
+        raise ValueError(f"Error during user deactivation: {e}")
 
 
 def sanitize_key(key):
