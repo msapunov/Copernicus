@@ -23,6 +23,7 @@ def archive_check():
     logins = raw_data.decode("utf-8", errors="replace").split("\n")
     users = (
         User.query.filter(User.login.not_in(logins))
+        .filter(User.archived.isnot(None))
         .with_for_update()
         .all()
     )
