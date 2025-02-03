@@ -33,7 +33,7 @@ def archive_check():
         debug(f"Number of users to archive: {len(users)}")
         for user in users:
             user.archived = now
-            UserLog(current_user).archived()
+            UserLog(user).archived()
             debug(f"User {user.login} archived")
         if db.session.new or db.session.dirty or db.session.deleted:
             db.session.commit()
@@ -65,7 +65,7 @@ def active_check():
         for user in users:
             if not user.project:
                 user.active = False
-                UserLog(current_user).deactivated()
+                UserLog(user).deactivated()
                 result.append(f"User {user.login} deactivated")
                 debug(f"User {user.login} deactivated")
             else:
