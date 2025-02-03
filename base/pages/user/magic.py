@@ -32,6 +32,7 @@ def archive():
     try:
         for user in users:
             user.archived = now
+            UserLog(current_user).archived()
         if db.session.new or db.session.dirty or db.session.deleted:
             db.session.commit()
         return "User(s) has been archived: %s" % ", ".join(
@@ -60,8 +61,8 @@ def active_check():
         result = []
         for user in users:
             if not user.project:
-                # TODO: add log entry
                 user.active = False
+                UserLog(current_user).deactivated()
                 result.append(f"User {user.login} deactivated")
             else:
                 result.append(f"User {user.login} attached to a project")
