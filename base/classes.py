@@ -314,6 +314,10 @@ class UserLog(Log):
         self.log.event = "User archived %s" % self.user
         return self.commit()
 
+    def deactivated(self):
+        self.log.event = "User deactivated %s" % self.user
+        return self.commit()
+
     def goodbye(self):
         self.log.event = "Sending goodbye notification"
         return self.commit(Mail().user_goodbye(self.user))
