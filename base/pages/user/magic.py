@@ -16,7 +16,7 @@ __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
 
 
-def archive():
+def archive_check():
     raw_data = request.get_data()
     if not raw_data:
         return "No data received"

@@ -4,7 +4,7 @@ from base.database.schema import User
 from base.pages import grant_access
 from base.pages.user import bp
 from base.pages.user.magic import (get_user_record, get_jobs, active_check,
-                                   archive)
+                                   archive_check)
 from base.pages.user.magic import get_scratch, user_edit, ssh_key
 from base.pages.user.form import edit_info, InfoForm, KeyForm
 from base.utils import form_error_string
@@ -22,7 +22,7 @@ __copyright__ = "Aix Marseille University"
 @grant_access("admin", "tech")
 def user_check_active():
     active = active_check()
-    archive = archive()
+    archive = archive_check()
     return jsonify(data="; ".join([active, archive]))
 
 
