@@ -310,6 +310,10 @@ class UserLog(Log):
         super().__init__(user=user)
         self.user = user
 
+    def archived(self):
+        self.log.event = "User archived %s" % self.user
+        return self.commit()
+
     def goodbye(self):
         self.log.event = "Sending goodbye notification"
         return self.commit(Mail().user_goodbye(self.user))
