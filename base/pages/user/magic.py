@@ -30,9 +30,11 @@ def archive_check():
         return "Active user check done"
     now = dt.now().replace(tzinfo=timezone.utc)
     try:
+        debug(f"Number of users to archive: {len(users)}")
         for user in users:
             user.archived = now
             UserLog(current_user).archived()
+            debug(f"User {user.login} archived")
         if db.session.new or db.session.dirty or db.session.deleted:
             db.session.commit()
         return "User(s) has been archived: %s" % ", ".join(
@@ -59,11 +61,13 @@ def active_check():
         return "Active user check done"
     try:
         result = []
+        debug(f"Number of users to deactivate: {len(users)}")
         for user in users:
             if not user.project:
                 user.active = False
                 UserLog(current_user).deactivated()
                 result.append(f"User {user.login} deactivated")
+                debug(f"User {user.login} deactivated")
             else:
                 result.append(f"User {user.login} attached to a project")
         if db.session.new or db.session.dirty or db.session.deleted:
