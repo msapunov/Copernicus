@@ -311,11 +311,11 @@ class UserLog(Log):
         self.user = user
 
     def archived(self):
-        self.log.event = "User archived %s" % self.user
+        self.log.event = "User %s archived" % self.user.full()
         return self.commit()
 
     def deactivated(self):
-        self.log.event = "User deactivated %s" % self.user
+        self.log.event = "User %s deactivated" % self.user.full()
         return self.commit()
 
     def goodbye(self):
