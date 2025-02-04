@@ -17,6 +17,12 @@ __copyright__ = "Aix Marseille University"
 
 
 def archive_check():
+    """
+    Archives users who are not in the provided login list and archived
+    field is empty in the database.
+    Returns:
+    str: Summary of the archived users.
+    """
     raw_data = request.get_data()
     if not raw_data:
         return "No data received"
@@ -47,6 +53,12 @@ def archive_check():
 
 
 def active_check():
+    """
+    Deactivates users who are not in the provided login list if they are active,
+    not archived, and not linked to a project.
+    Returns:
+    str: Summary of the deactivated users.
+    """
     raw_data = request.get_data()
     if not raw_data:
         return "No data received"
