@@ -44,7 +44,7 @@ def archive_check():
             debug(f"User {user.login} archived")
         if db.session.new or db.session.dirty or db.session.deleted:
             db.session.commit()
-        return "User(s) has been archived: %s" % ", ".join(
+        return "The user(s) should be archived: %s" % ", ".join(
             user.login for user in users
         )
     except Exception as e:
