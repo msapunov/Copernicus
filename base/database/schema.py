@@ -542,6 +542,10 @@ class User(UserMixin, db.Model):
             mod = self.acl.modified.strftime("%Y-%m-%d %X %Z")
         else:
             mod = ""
+        if self.archived:
+            archived = self.archived.strftime("%Y-%m-%d %X %Z")
+        else:
+            archived = ""
         return {
             "id": self.id,
             "login": self.login,
@@ -553,6 +557,7 @@ class User(UserMixin, db.Model):
             "lab": self.lab,
             "position": self.position,
             "active": self.active,
+            "archived": archived,
             "comment": self.comment,
             "seen": self.seen.strftime("%Y-%m-%d %X %Z") if self.seen else "",
             "modified": self.modified,
