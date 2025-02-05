@@ -88,6 +88,7 @@
                 width:"15px"
             },{
                 data: "active",
+                className: 'uk-text-center',
                 render: function ( date, type, row ) {
                     return row.status === "active" ? '<span class="btn uk-icon-check"></span>' : '';
                 }
@@ -117,6 +118,7 @@
                     return type === "display" || type === "filter" ? '<div title="' + full + '">' + dateSplit[0] : date;
                 }
             },{
+                className: 'uk-text-center',
                 data: "user",
                 render: function ( date, type, row ) {
                     return row.user === "True" ? '<span class="btn uk-icon-check"></span>' : '';
@@ -125,6 +127,7 @@
                 data: "user",
                 visible: false
             },{
+                className: 'uk-text-center',
                 data: "responsible",
                 render: function ( date, type, row ) {
                     return row.responsible === "True" ? '<span class="btn uk-icon-check"></span>' : '';
@@ -133,6 +136,7 @@
                 data: "responsible",
                 visible: false
             },{
+                className: 'uk-text-center',
                 data: "manager",
                 render: function ( date, type, row ) {
                     return row.manager === "True" ? '<span class="btn uk-icon-check"></span>' : '';
@@ -141,6 +145,7 @@
                 data: "manager",
                 visible: false
             },{
+                className: 'uk-text-center',
                 data: "tech",
                 render: function ( date, type, row ) {
                     return row.tech === "True" ? '<span class="btn uk-icon-check"></span>' : '';
@@ -149,6 +154,7 @@
                 data: "tech",
                 visible: false
             },{
+                className: 'uk-text-center',
                 data: "committee",
                 render: function ( date, type, row ) {
                     return row.committee === "True" ? '<span class="btn uk-icon-check"></span>' : '';
@@ -157,6 +163,7 @@
                 data: "committee",
                 visible: false
             },{
+                className: 'uk-text-center',
                 data: "admin",
                 render: function ( date, type, row ) {
                     return row.admin === "True" ? '<span class="btn uk-icon-check"></span>' : '';
