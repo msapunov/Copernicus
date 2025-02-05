@@ -77,6 +77,15 @@
         var table = $("#registry").DataTable({
             dom: "tip",
             pageLength: 100,
+            rowCallback: function (row, data) {
+                if (data.status === "archived") {
+                    $('td', row).each(function(index) {
+                        if(index > 0){
+                            $(this).addClass("uk-text-muted");
+                        }
+                    });
+                }
+            },
             columns: [{
                 className: 'details-control',
                 orderable: false,
