@@ -87,13 +87,13 @@
                 },
                 width:"15px"
             },{
-                data: "active",
                 className: 'uk-text-center',
+                data: "status",
                 render: function ( date, type, row ) {
                     return row.status === "active" ? '<span class="btn uk-icon-check"></span>' : '';
                 }
             },{
-                data: "active",
+                data: "status",
                 visible: false
             },{
                 data: "login"
