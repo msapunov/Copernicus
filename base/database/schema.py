@@ -579,8 +579,16 @@ class User(UserMixin, db.Model):
         }
 
     def info_acl(self):
+        if self.archived:
+            status = "archived"
+        elif self.active:
+            status = "active"
+        elif not self.active:
+            status = "deactivated"
+        else:
+            status = ""
         return {
-            "active": self.active,
+            "status": status,
             "user": self.acl.is_user,
             "responsible": self.acl.is_responsible,
             "manager": self.acl.is_manager,
