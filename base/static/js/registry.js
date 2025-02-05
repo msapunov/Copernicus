@@ -39,7 +39,7 @@
         }
         const status = $.trim( $(btn).data("status") );
         table.column(2).search(status).draw();
-        if(status == ""){
+        if(status === ""){
             table.column(1).visible(true);
         }else{
             table.column(1).visible(false);
@@ -89,7 +89,7 @@
             },{
                 data: "active",
                 render: function ( date, type, row ) {
-                    return row.active == "True" ? '<span class="btn uk-icon-check"></span>' : '';
+                    return row.status === "active" ? '<span class="btn uk-icon-check"></span>' : '';
                 }
             },{
                 data: "active",
@@ -119,7 +119,7 @@
             },{
                 data: "user",
                 render: function ( date, type, row ) {
-                    return row.user == "True" ? '<span class="btn uk-icon-check"></span>' : '';
+                    return row.user === "True" ? '<span class="btn uk-icon-check"></span>' : '';
                 }
             },{
                 data: "user",
@@ -127,7 +127,7 @@
             },{
                 data: "responsible",
                 render: function ( date, type, row ) {
-                    return row.responsible == "True" ? '<span class="btn uk-icon-check"></span>' : '';
+                    return row.responsible === "True" ? '<span class="btn uk-icon-check"></span>' : '';
                 }
             },{
                 data: "responsible",
@@ -135,7 +135,7 @@
             },{
                 data: "manager",
                 render: function ( date, type, row ) {
-                    return row.manager == "True" ? '<span class="btn uk-icon-check"></span>' : '';
+                    return row.manager === "True" ? '<span class="btn uk-icon-check"></span>' : '';
                 }
             },{
                 data: "manager",
@@ -143,7 +143,7 @@
             },{
                 data: "tech",
                 render: function ( date, type, row ) {
-                    return row.tech == "True" ? '<span class="btn uk-icon-check"></span>' : '';
+                    return row.tech === "True" ? '<span class="btn uk-icon-check"></span>' : '';
                 }
             },{
                 data: "tech",
@@ -151,7 +151,7 @@
             },{
                 data: "committee",
                 render: function ( date, type, row ) {
-                    return row.committee == "True" ? '<span class="btn uk-icon-check"></span>' : '';
+                    return row.committee === "True" ? '<span class="btn uk-icon-check"></span>' : '';
                 }
             },{
                 data: "committee",
@@ -159,7 +159,7 @@
             },{
                 data: "admin",
                 render: function ( date, type, row ) {
-                    return row.admin == "True" ? '<span class="btn uk-icon-check"></span>' : '';
+                    return row.admin === "True" ? '<span class="btn uk-icon-check"></span>' : '';
                 }
             },{
                 data: "admin",
