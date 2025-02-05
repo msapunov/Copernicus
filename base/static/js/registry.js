@@ -37,7 +37,7 @@
         if(!$(btn).hasClass("uk-active")){
             return;
         }
-        var status = $.trim( $(btn).data("status") );
+        const status = $.trim( $(btn).data("status") );
         table.column(2).search(status).draw();
         if(status == ""){
             table.column(1).visible(true);
