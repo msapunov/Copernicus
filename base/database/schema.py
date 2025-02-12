@@ -17,7 +17,7 @@ __copyright__ = "Aix Marseille University"
 
 class Accounting(db.Model):
     __tablename__ = "accounting"
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     resources_id = db.Column(db.Integer, db.ForeignKey("project_resources.id"))
     resources = db.relationship("Resources", foreign_keys=resources_id)
     project_id = db.Column(db.Integer, db.ForeignKey("projects.id"))
@@ -34,7 +34,7 @@ class Accounting(db.Model):
 class ACLDB(db.Model):
     __tablename__ = "acl"
 
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     is_user = db.Column(db.Boolean, default=True)
     is_responsible = db.Column(db.Boolean, default=False)
     is_manager = db.Column(db.Boolean, default=False)
@@ -63,7 +63,7 @@ class ACLDB(db.Model):
 class MethodDB(db.Model):
     __tablename__ = "methods"
 
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     endpoint = db.Column(db.String(512), unique=True)
     acl_id = db.Column(db.Integer, db.ForeignKey("acl.id"))
     acl = db.relationship("ACLDB", uselist=False, backref="methods")
@@ -84,7 +84,7 @@ class UserProjectLink(db.Model):
 class Project(db.Model):
     __tablename__ = "projects"
 
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     title = db.Column(db.String(256))
     description = db.Column(db.String)
     scientific_fields = db.Column(db.String(256))
@@ -240,7 +240,7 @@ class Project(db.Model):
 class Extend(db.Model):
     __tablename__ = "project_extension"
 
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     extend = db.Column(db.Boolean)
     exception = db.Column(db.Boolean)
     reason = db.Column(db.Text)
@@ -334,7 +334,7 @@ class Extend(db.Model):
 class ArticleDB(db.Model):
     __tablename__ = "project_articles"
 
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     info = db.Column(db.Text)
     created = db.Column(db.DateTime(True), default=dt.utcnow())
 
@@ -348,7 +348,7 @@ class ArticleDB(db.Model):
 class File(db.Model):
     __tablename__ = "project_files"
 
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     path = db.Column(db.Text)
     size = db.Column(db.Integer)
     comment = db.Column(db.Text)
@@ -367,7 +367,7 @@ class File(db.Model):
 class Resources(db.Model):
     __tablename__ = "project_resources"
 
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     approve_id = db.Column(db.Integer, db.ForeignKey("users.id"))
     approve = db.relationship("User", foreign_keys=approve_id)
 
@@ -437,7 +437,7 @@ class Resources(db.Model):
 class User(UserMixin, db.Model):
     __tablename__ = "users"
 
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(128))
     surname = db.Column(db.String(128))
     email = db.Column(db.String(128))
@@ -625,7 +625,7 @@ class User(UserMixin, db.Model):
 class Register(db.Model):
     __tablename__ = "register"
 
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     ts = db.Column(db.DateTime(True))
     title = db.Column(db.String(256))
     responsible_first_name = db.Column(db.String(128))
@@ -767,7 +767,7 @@ class Register(db.Model):
 class LogDB(db.Model):
     __tablename__ = "logs"
 
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
 
     created = db.Column(db.DateTime(True), default=dt.utcnow())
     event = db.Column(db.Text, nullable=False)
@@ -847,7 +847,7 @@ class LogDB(db.Model):
 class Tasks(db.Model):
     __tablename__ = "tasks"
 
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     action = db.Column(db.Text, nullable=False)
 
     author_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
