@@ -395,7 +395,11 @@ def clean_activity(name):
 
 def renew_project(pid, ext, date):
     ext.project.resources.valid = False
-    ext.project.resources = create_resource(ext.project, ext.hours)
+    if ext.hours == 0:
+        new_hours = ext.project.resources.cpu
+    else:
+        new_hours = ext.hours
+    ext.project.resources = create_resource(ext.project, new_hours)
     msg = "Created based on renewal request ID %s on %s" % (pid, date)
     ext.project.resources.comment = msg
     return ProjectLog(ext.project).renewed(ext)
