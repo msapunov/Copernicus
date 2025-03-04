@@ -63,6 +63,23 @@ def active_check():
     if not raw_data:
         return "No data received"
     logins = raw_data.decode("utf-8", errors="replace").split("\n")
+    active_users = User.query.filter(User.active.in_(logins))
+    try:
+        for active_user in active_users:
+            if not active_user.active:
+                active_user.active = True
+                UserLog(active_user).activated()
+                debug(f"Deactivated user {active_user.login} is activated")
+            if active_user.archived:
+                active_user.archived = None
+                UserLog(active_user).restored()
+                debug(f"Archived user {active_user.login} is restored")
+        if db.session.new or db.session.dirty or db.session.deleted:
+            db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        raise ValueError(f"Error during user activation: {e}")
+
     users = (
         User.query.filter(User.login.not_in(logins))
         .filter(User.active == True)
