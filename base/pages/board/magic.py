@@ -11,6 +11,8 @@ __copyright__ = "Aix Marseille University"
 
 
 def create_resource(project, cpu):
+    if cpu < 1:
+        raise Exception("CPU hours must be greater than 0")
     return Resources(
         approve=current_user,
         valid=True,

@@ -5,7 +5,7 @@ from base.functions import (generate_password,
                             full_name as fn)
 from datetime import datetime as dt
 from textwrap import shorten
-from logging import error
+from logging import error, debug
 from pathlib import PurePath
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy import func
@@ -423,6 +423,7 @@ class Resources(db.Model):
         ).with_entities(func.sum(Accounting.cpu)).scalar()
 
     def usage(self):
+        debug("Calculating usage for project %s" % self.project)
         conso = self.consumption()
         total = self.cpu
         if not conso:
