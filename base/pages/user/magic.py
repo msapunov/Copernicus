@@ -94,19 +94,16 @@ def inactive_users_check(logins):
     if not users:
         return "Inactive user check done"
     try:
-        result = []
+        result = ["Deactivated users:"]
         debug(f"Number of users to deactivate: {len(users)}")
         for user in users:
-            if not user.project:
-                user.active = False
-                UserLog(user).deactivated()
-                result.append(f"User {user.login} deactivated")
-                debug(f"User {user.login} deactivated")
-            else:
-                result.append(f"User {user.login} attached to a project")
+            user.active = False
+            UserLog(user).deactivated()
+            result.append({user.login})
+            debug(f"{user.login} deactivated")
         if db.session.new or db.session.dirty or db.session.deleted:
             db.session.commit()
-        return ", ".join(result)
+        return "\n".join(result)
     except Exception as e:
         db.session.rollback()
         raise ValueError(f"Error during user deactivation: {e}")
