@@ -50,8 +50,8 @@ def archived_users_check(logins):
 
 def working_users_check(logins):
     """
-    Deactivates users who are not in the provided login list if they are active,
-    not archived, and not linked to a project.
+    Activates and restore users who are in the provided login list if they are
+    inactive or archived.
     Returns:
     str: Summary of the deactivated users.
     """
@@ -88,7 +88,7 @@ def inactive_users_check(logins):
         .all()
     )
     if not users:
-        return "Active user check done"
+        return "Inactive user check done"
     try:
         result = []
         debug(f"Number of users to deactivate: {len(users)}")
