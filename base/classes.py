@@ -310,8 +310,16 @@ class UserLog(Log):
         super().__init__(user=user)
         self.user = user
 
+    def restored(self):
+        self.log.event = "User %s restored" % self.user.full()
+        return self.commit()
+
     def archived(self):
         self.log.event = "User %s archived" % self.user.full()
+        return self.commit()
+
+    def activated(self):
+        self.log.event = "User %s activated" % self.user.full()
         return self.commit()
 
     def deactivated(self):
