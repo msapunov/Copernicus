@@ -55,7 +55,7 @@ def working_users_check(logins):
     Returns:
     str: Summary of the deactivated users.
     """
-    active_users = User.query.filter(User.active.in_(logins))
+    active_users = User.query.filter(User.login.in_(logins))
     try:
         result = []
         for active_user in active_users:
