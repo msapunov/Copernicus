@@ -33,16 +33,16 @@ def archived_users_check(logins):
         return "Archived user check done"
     now = dt.now().replace(tzinfo=timezone.utc)
     try:
+        result = ["Archived users:"]
         debug(f"Number of users to archive: {len(users)}")
         for user in users:
             user.archived = now
             UserLog(user).archived()
+            result.append({user.login})
             debug(f"{user.login} archived")
         if db.session.new or db.session.dirty or db.session.deleted:
             db.session.commit()
-        return "The user(s) should be archived: %s" % ", ".join(
-            user.login for user in users
-        )
+        return "\n".join(result)
     except Exception as e:
         db.session.rollback()
         raise ValueError(f"Error during user archive: {e}")
