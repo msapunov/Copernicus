@@ -23,9 +23,14 @@ __copyright__ = "Aix Marseille University"
 @login_required
 @grant_access("admin", "tech")
 def user_check_active():
-    active = active_check()
-    archive = archive_check()
-    return jsonify(data="; ".join([active, archive]))
+    raw_data = request.get_data()
+    if not raw_data:
+        return "No data received"
+    logins = raw_data.decode("utf-8", errors="replace").split("\n")
+    archive = archived_users_check(logins)
+    inactive = inactive_users_check(logins)
+    working = working_users_check(logins)
+    return jsonify(data="\n".join([working, inactive, archive]))
 
 
 @bp.route("/user/list/all", methods=["GET"])
