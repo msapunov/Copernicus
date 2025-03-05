@@ -33,7 +33,7 @@ def archived_users_check(logins):
         return "Archived user check done"
     now = dt.now().replace(tzinfo=timezone.utc)
     try:
-        result = ["Archived users:"]
+        result = []
         debug(f"Number of users to archive: {len(users)}")
         for user in users:
             user.archived = now
@@ -42,7 +42,7 @@ def archived_users_check(logins):
             debug(f"{user.login} archived")
         if db.session.new or db.session.dirty or db.session.deleted:
             db.session.commit()
-        return "\n".join(result)
+        return result
     except Exception as e:
         db.session.rollback()
         raise ValueError(f"Error during user archive: {e}")
@@ -71,7 +71,7 @@ def working_users_check(logins):
                 debug(f"Archived user {active_user.login} is restored")
         if db.session.new or db.session.dirty or db.session.deleted:
             db.session.commit()
-        return "\n".join(result)
+        return result
     except Exception as e:
         db.session.rollback()
         raise ValueError(f"Error during commiting changes: {e}")
@@ -93,7 +93,7 @@ def inactive_users_check(logins):
     if not users:
         return "Inactive user check done"
     try:
-        result = ["Deactivated users:"]
+        result = []
         debug(f"Number of users to deactivate: {len(users)}")
         for user in users:
             user.active = False
@@ -102,7 +102,7 @@ def inactive_users_check(logins):
             debug(f"{user.login} deactivated")
         if db.session.new or db.session.dirty or db.session.deleted:
             db.session.commit()
-        return "\n".join(result)
+        return result
     except Exception as e:
         db.session.rollback()
         raise ValueError(f"Error during user deactivation: {e}")
