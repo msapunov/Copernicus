@@ -75,7 +75,7 @@ def working_users_check(logins):
         return "Working users check done"
     except Exception as e:
         db.session.rollback()
-        raise ValueError(f"Error during user activation: {e}")
+        raise ValueError(f"Error during commiting changes: {e}")
 
 
 def inactive_users_check(logins):
