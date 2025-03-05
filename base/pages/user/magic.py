@@ -38,7 +38,7 @@ def archived_users_check(logins):
         for user in users:
             user.archived = now
             UserLog(user).archived()
-            result.append({user.login})
+            result.append(f"{user.login}")
             debug(f"{user.login} archived")
         if db.session.new or db.session.dirty or db.session.deleted:
             db.session.commit()
@@ -99,7 +99,7 @@ def inactive_users_check(logins):
         for user in users:
             user.active = False
             UserLog(user).deactivated()
-            result.append({user.login})
+            result.append(f"{user.login}")
             debug(f"{user.login} deactivated")
         if db.session.new or db.session.dirty or db.session.deleted:
             db.session.commit()
