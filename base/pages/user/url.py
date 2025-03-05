@@ -27,10 +27,17 @@ def user_check_active():
     if not raw_data:
         return "No data received"
     logins = raw_data.decode("utf-8", errors="replace").split("\n")
+    result = ""
     archive = archived_users_check(logins)
+    if archive:
+        result += "Archived user(s):\n%s" % "\n".join(archive)
     inactive = inactive_users_check(logins)
+    if inactive:
+        result += "Deactivated user(s):\n%s" % "\n".join(inactive)
     working = working_users_check(logins)
-    return jsonify(data="\n".join([working, inactive, archive]))
+    if working:
+        result += "Current user(s):\n%s" % "\n".join(working)
+    return jsonify(data=result)
 
 
 @bp.route("/user/list/all", methods=["GET"])
