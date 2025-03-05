@@ -71,8 +71,7 @@ def working_users_check(logins):
                 debug(f"Archived user {active_user.login} is restored")
         if db.session.new or db.session.dirty or db.session.deleted:
             db.session.commit()
-            return "\n".join(result)
-        return "Working users check done"
+        return "\n".join(result)
     except Exception as e:
         db.session.rollback()
         raise ValueError(f"Error during commiting changes: {e}")
