@@ -16,7 +16,7 @@ __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
 
 
-def archive_check():
+def archived_users_check(logins):
     """
     Archives users who are not in the provided login list and archived
     field is empty in the database.
@@ -52,7 +52,7 @@ def archive_check():
         raise ValueError(f"Error during user archive: {e}")
 
 
-def active_check():
+def working_users_check(logins):
     """
     Deactivates users who are not in the provided login list if they are active,
     not archived, and not linked to a project.
@@ -80,6 +80,7 @@ def active_check():
         db.session.rollback()
         raise ValueError(f"Error during user activation: {e}")
 
+def inactive_users_check(logins):
     users = (
         User.query.filter(User.login.not_in(logins))
         .filter(User.active == True)
