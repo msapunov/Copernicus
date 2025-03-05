@@ -3,8 +3,10 @@ from flask_login import login_required, current_user
 from base.database.schema import User
 from base.pages import grant_access
 from base.pages.user import bp
-from base.pages.user.magic import (get_user_record, get_jobs, active_check,
-                                   archive_check)
+from base.pages.user.magic import (get_user_record, get_jobs,
+                                   working_users_check,
+                                   archived_users_check,
+                                   inactive_users_check)
 from base.pages.user.magic import get_scratch, user_edit, ssh_key
 from base.pages.user.form import edit_info, InfoForm, KeyForm
 from base.utils import form_error_string
