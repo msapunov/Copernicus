@@ -23,10 +23,6 @@ def archived_users_check(logins):
     Returns:
     str: Summary of the archived users.
     """
-    raw_data = request.get_data()
-    if not raw_data:
-        return "No data received"
-    logins = raw_data.decode("utf-8", errors="replace").split("\n")
     users = (
         User.query.filter(User.login.not_in(logins))
         .filter(User.archived.is_(None))
@@ -59,10 +55,6 @@ def working_users_check(logins):
     Returns:
     str: Summary of the deactivated users.
     """
-    raw_data = request.get_data()
-    if not raw_data:
-        return "No data received"
-    logins = raw_data.decode("utf-8", errors="replace").split("\n")
     active_users = User.query.filter(User.active.in_(logins))
     try:
         for active_user in active_users:
@@ -80,7 +72,14 @@ def working_users_check(logins):
         db.session.rollback()
         raise ValueError(f"Error during user activation: {e}")
 
+
 def inactive_users_check(logins):
+    """
+    Deactivates users who are not in the provided login list if they are active,
+     and not linked to a project.
+    Returns:
+    str: Summary of the deactivated users.
+    """
     users = (
         User.query.filter(User.login.not_in(logins))
         .filter(User.active == True)
