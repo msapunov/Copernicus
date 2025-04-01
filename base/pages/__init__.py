@@ -63,7 +63,7 @@ def user_by_details(name, surname, email, login=None):
 
 
 def generate_login(name, surname):
-    users = User.query.all()
+    users = User.query.filter_by(archived=None).all()
     logins = list(map(lambda x: x.login, users))
 
     name = normalize_word(name)

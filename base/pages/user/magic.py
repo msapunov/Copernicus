@@ -59,6 +59,8 @@ def working_users_check(logins):
     try:
         result = []
         for active_user in active_users:
+            if not active_user.project:
+                continue
             if not active_user.active:
                 active_user.active = True
                 UserLog(active_user).activated()
@@ -87,6 +89,7 @@ def inactive_users_check(logins):
     users = (
         User.query.filter(User.login.not_in(logins))
         .filter(User.active == True)
+        .filter(User.project == None)
         .with_for_update()
         .all()
     )
