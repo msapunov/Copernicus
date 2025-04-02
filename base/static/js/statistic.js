@@ -120,6 +120,15 @@
             },
             paging: false,
             searching: true,
+            rowCallback: function (row, data) {
+                if (data.active === "false") {
+                    $('td', row).each(function(index) {
+                        if(index > 0){
+                            $(this).addClass("uk-text-muted");
+                        }
+                    });
+                }
+            },
             columns: [{
                 className: 'details-control',
                 orderable: false,
