@@ -432,6 +432,7 @@ class Mail(Thread):
         return self
 
     def project_expired(self, project):
+        """
         self.populate("PROJECT EXPIRED")
         self.destination = project.responsible.email
         emails = list(map(lambda x: x.email, project.users))
@@ -442,6 +443,7 @@ class Mail(Thread):
             raise ValueError("Project %s has no resources attached" % name)
         end = str(project.resources.ttl.isoformat())
         self.__populate_values({"%FULLNAME": full, "%NAME": name, "%END": end})
+        """
         return self
 
     def project_expiring(self, record):
