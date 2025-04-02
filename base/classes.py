@@ -216,9 +216,8 @@ class ProjectLog(Log):
         return self.commit(mail)
 
     def expired(self):
-        self.log.event = "Project is expired and deactivated. Notification sent"
-        return self.commit(Mail().project_expired(self.project))
         self.log.event = "The project has expired and been deactivated"
+        return self.commit(Mail().project_expired(self.project))
 
     def expire_warning(self):
         self.log.event = "Expiring message sent"
