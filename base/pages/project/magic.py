@@ -4,8 +4,8 @@ from pathlib import Path, PurePath
 
 from flask import current_app, render_template, g, request
 from flask_login import current_user
-from owncloud import Client as OwnClient
 from pdfkit import from_string
+from webdav3.client import Client
 
 from base import db
 from base.classes import TmpUser, ProjectLog, Task
