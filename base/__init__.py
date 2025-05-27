@@ -12,7 +12,6 @@ from base.pages.statistic import bp as blueprint_stat
 
 from base.database.schema import User, Project
 
-from base.utils import get_tmpdir_prefix
 from base.functions import project_config
 
 from datetime import datetime as dt
