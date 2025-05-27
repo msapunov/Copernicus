@@ -115,7 +115,8 @@ class Project(db.Model):
     approve = db.relationship("User", foreign_keys=approve_id)
 
     resources_id = db.Column(db.Integer, db.ForeignKey("project_resources.id"))
-    resources = db.relationship("Resources", foreign_keys=resources_id)
+    resources = db.relationship("Resources", foreign_keys=resources_id,
+                                post_update=True)
 
     ref_id = db.Column(db.Integer, db.ForeignKey("register.id"))
     ref = db.relationship("Register", foreign_keys=ref_id)
