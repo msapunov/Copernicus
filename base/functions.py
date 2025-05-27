@@ -10,8 +10,7 @@ from webdav3.client import Client
 #from recurrent.event_parser import RecurringEvent
 from configparser import ConfigParser
 from logging import error, debug, warning, critical
-from pdfkit import from_string
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 from string import ascii_letters, digits
 from struct import unpack
 from subprocess import check_output, STDOUT, CalledProcessError
