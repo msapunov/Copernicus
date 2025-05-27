@@ -206,23 +206,23 @@ def generate_password(pass_len=16):
     return ''.join(password)
 
 
-def generate_pdf(html, base):
+def write_pdf(html, name):
     """
     Convert html document to PDF and return file path where the document is
     saved
     :param html: String. HTML document to convert
-    :param base: String. Base template for name generation
+    :param name: String. Name of the resulting PDF document
     :return: String. Path to a PDF file
     """
-    ts = str(dt.now().isoformat(sep="-")).replace(":", "-")
-    name = "%s_%s.pdf" % (base, ts)
-    name = name.replace("\\", "-").replace("/", "-")
-    path = str(Path(get_tmpdir(app), name))
+    if not name.endswith(".pdf"):
+        name = name + ".pdf"
+    path = Path(app.get_tmpdir(), name)
     debug("The resulting PDF will be saved to: %s" % path)
-    pdf = from_string(html, path)
-    debug("If PDF converted successfully: %s" % pdf)
-    if not pdf:
-        raise ValueError("Failed to convert a file to pdf")
+    try:
+        HTML(string=html, base_url=path.parent.as_posix()).write_pdf(path)
+    except Exception as e:
+        raise ValueError(f"Error during PDF generation: {e}")
+    debug("PDF converted and saved successfully")
     return path
 
 
