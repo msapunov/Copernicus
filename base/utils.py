@@ -1,7 +1,4 @@
-from werkzeug.utils import secure_filename
 from unicodedata import normalize
-from os.path import join as join_dir
-from logging import debug
 
 
 def form_error_string(err_dict):
