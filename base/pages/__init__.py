@@ -1,6 +1,5 @@
 from flask import current_app, request, flash, redirect, url_for, g
 from flask_login import current_user, logout_user
-from pathlib import Path
 from logging import debug, error
 from functools import wraps
 from base import db
@@ -9,12 +8,6 @@ from base.database.schema import User, Tasks
 from base.utils import normalize_word
 from base.functions import generate_password, full_name
 from string import ascii_letters
-
-import smtplib
-from email.mime.multipart import MIMEMultipart
-from email.mime.application import MIMEApplication
-from email.mime.text import MIMEText
-from email.utils import formatdate
 
 
 def grant_access(*roles):
