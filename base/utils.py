@@ -1,9 +1,6 @@
-from flask import current_app
+from werkzeug.utils import secure_filename
 from unicodedata import normalize
-from tempfile import gettempdir, mkdtemp
-from os import walk
-from os.path import join as join_dir, exists
-from base64 import b64encode
+from os.path import join as join_dir
 from logging import debug
 
 
@@ -16,44 +13,6 @@ def form_error_string(err_dict):
         for err in value:
             result.append("%s: %s" % (key, err))
     return "\n".join(result)
-
-
-def image_string(name):
-    img_path = join_dir(current_app.instance_path, name)
-    if not exists(img_path):
-        raise ValueError("Image %s doesn't exists" % img_path)
-    with open(img_path, "rb") as img_file:
-        return b64encode(img_file.read()).decode("ascii")
-
-
-def get_tmpdir(app):
-    """
-    Check if application specific directory has been already created and create
-    said directory if it doesn't exists. If directory started with prefix is
-    already there the function returns first element from the directory list
-    :param app: Current flask application
-    :return: String. Name of the temporary application specific directory.
-    """
-    prefix = get_tmpdir_prefix(app)
-    dirs = [x[0] for x in walk(gettempdir())]
-    is_exists = list(filter(lambda x: True if prefix in x else False, dirs))
-    if is_exists:
-        dir_name = is_exists[0]
-        debug("Found existing directory: %s" % dir_name)
-    else:
-        dir_name = mkdtemp(prefix=prefix)
-        debug("Temporary directory created: %s" % dir_name)
-    return dir_name
-
-
-def get_tmpdir_prefix(app):
-    """
-    Construct the prefix for the temporary directory based on SECRET_KEY
-    parameter from configuration file
-    :param app: Current application
-    :return: String
-    """
-    return "%s_copernicus_" % app.config.get("SECRET_KEY", "XXX")[0:3]
 
 
 def save_file(req, directory, file_name=False):
