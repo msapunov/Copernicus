@@ -551,7 +551,7 @@ def is_activity_report(project):
     }
     client = Client(options)
     remote_dir = current_app.config.get("ACTIVITY_DIR", "/")
-    if remote_dir[-1] != "/":
+    if not remote_dir.endswith("/"):
         remote_dir += "/"
     remote = remote_dir + name
     debug("Checking is file %s exists" % remote)
