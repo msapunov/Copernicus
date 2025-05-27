@@ -35,7 +35,7 @@ def create_app(config_filename):
     register_blueprints(app)
     register_decor(app)
     configure_logger(app)
-    cleanup(app)
+    attach_custom_methods(app)
     return app
 
 
