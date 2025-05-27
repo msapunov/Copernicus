@@ -292,9 +292,9 @@ def save_report(project):
         if current_app.config.get("ACTIVITY_UPLOAD_IMG", False):
             for i in ["image_1", "image_2", "image_3"]:
                 tmp = getattr(project, i, None)
-    report = File(path=path,
                 upload_to_cloud(remote_directory, tmp) if tmp else False
         upload_to_cloud(remote_directory, path)
+    report = File(path=str(path),
                   size=Path(path).stat().st_size,
                   comment="Activity report",
                   user=current_user,
