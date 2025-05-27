@@ -264,11 +264,21 @@ def save_activity(req):
     files = get_activity_files(project)
     if len(files) >= limit:
         raise ValueError("You have already uploaded %s or more files" % limit)
-    ts = str(dt.now().replace(microsecond=0).isoformat("_")).replace(":", "-")
-    image_name = "%s_activity_report_%s" % (project, ts)
-    name = save_file(req, get_tmpdir(current_app), image_name)
-    debug("Returning result: %s" % name)
-    return name
+    if "file" not in req.files:
+        raise ValueError("Missing 'file' in uploaded data.")
+    file = req.files["file"]
+    if not file.filename:
+        raise ValueError("Uploaded file has no name.")
+    original = secure_filename(file.filename)
+    stamp = dt.now().strftime("%Y-%m-%d")
+    new_name = f"{project}-{stamp}.{original}"
+    debug(f"New name for the file: {new_name}")
+    path = Path(current_app.get_tmpdir())
+    path.mkdir(parents=True, exist_ok=True)
+    save_path = path / new_name
+    debug(f"Saving file to: {save_path}")
+    file.save(save_path)
+    return {"saved_name": new_name, "incoming_name": file.filename}
 
 
 def save_report(project):
