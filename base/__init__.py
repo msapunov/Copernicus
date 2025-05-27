@@ -56,22 +56,19 @@ def register_blueprints(app):
     return None
 
 
-def cleanup(app):
-    pattern = "%s*" % get_tmpdir_prefix(app)
+def cleanup():
+    pattern = "_copernicus_"
     logging.debug("Temporary directory pattern: %s" % pattern)
-    tmpdir = gettempdir()
-    leftovers = list(Path(tmpdir).glob(pattern))
-    logging.debug("Found matches: %s" % len(leftovers))
-    if not leftovers:
-        logging.debug("Nothing to cleanup")
-        return True
-    for leftover in leftovers:
-        path = Path(tmpdir) / leftover
-        if not path.exists():
-            continue
-        real_path = str(path.resolve())
-        logging.debug("Cleanup from previous session: %s" % real_path)
-        rmtree(real_path, ignore_errors=True)
+    tmp_root = Path(gettempdir())
+    logging.debug(f"Scanning {tmp_root} for temp dirs with prefix '{pattern}'")
+    for entry in tmp_root.iterdir():
+        if entry.is_dir() and pattern in entry.name:
+            logging.debug(f"Cleanup from previous session: {entry}")
+            try:
+                rmtree(entry, ignore_errors=True)
+            except Exception as e:
+                logging.debug(f"Failed to remove {entry}: {e}")
+    logging.info("Cleanup from previous session done")
     return True
 
 
