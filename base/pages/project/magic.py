@@ -284,15 +284,8 @@ def save_activity(req):
 def save_report(project):
     project_name = project.get_name()
     html = render_template("report.html", data=project)
-    ts = str(dt.now().replace(microsecond=0).isoformat("_")).replace(":", "-")
-    name = "%s_activity_report_%s.pdf" % (project_name, ts)
-    path = str(Path(get_tmpdir(current_app), name))
-    debug("The resulting PDF will be saved to: %s" % path)
-    pdf = from_string(html, path)
-    debug("If PDF converted successfully: %s" % pdf)
-    if not pdf:
-        raise ValueError("")
-
+    stamp = int(dt.now().timestamp())
+    path = write_pdf(html, f"{project_name}-activity-report-{stamp}.pdf")
     if current_app.config.get("ACTIVITY_UPLOAD", False):
         debug("Uploading report to a cloud storage")
         if current_app.config.get("ACTIVITY_UPLOAD_IMG", False):
