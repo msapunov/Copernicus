@@ -4,8 +4,9 @@ from pathlib import Path, PurePath
 
 from flask import current_app, render_template, g, request
 from flask_login import current_user
-from pdfkit import from_string
+from werkzeug.utils import secure_filename
 from webdav3.client import Client
+from weasyprint import HTML
 
 from base import db
 from base.classes import TmpUser, ProjectLog, Task
