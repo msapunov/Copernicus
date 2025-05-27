@@ -288,13 +288,13 @@ def save_report(project):
     path = write_pdf(html, f"{project_name}-activity-report-{stamp}.pdf")
     if current_app.config.get("ACTIVITY_UPLOAD", False):
         debug("Uploading report to a cloud storage")
+        remote_directory = current_app.config.get("ACTIVITY_DIR", "/")
         if current_app.config.get("ACTIVITY_UPLOAD_IMG", False):
             for i in ["image_1", "image_2", "image_3"]:
                 tmp = getattr(project, i, None)
-                upload_file_cloud(tmp) if tmp else False
-        upload_file_cloud(path)
-
     report = File(path=path,
+                upload_to_cloud(remote_directory, tmp) if tmp else False
+        upload_to_cloud(remote_directory, path)
                   size=Path(path).stat().st_size,
                   comment="Activity report",
                   user=current_user,
