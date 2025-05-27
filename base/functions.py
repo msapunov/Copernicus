@@ -257,9 +257,11 @@ def create_visa(record):
     except locale.Error:
         locale.setlocale(locale.LC_ALL, "C")
     path = []
+    project_id = record.project_id()
+    date = dt.now().strftime("%Y-%m-%d")
     for i in config[project_type].get("visa", []):
         html = render_template("%s" % i, data=record)
-        path.append(generate_pdf(html, "%s_%s" % (record.project_id(), i)))
+        path.append(write_pdf(html, f"{project_id}-{i}-{date}.pdf"))
     return path
 
 
