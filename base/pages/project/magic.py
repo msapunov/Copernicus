@@ -6,7 +6,6 @@ from flask import current_app, render_template, g, request
 from flask_login import current_user
 from werkzeug.utils import secure_filename
 from webdav3.client import Client
-from weasyprint import HTML
 
 from base import db
 from base.classes import TmpUser, ProjectLog, Task
@@ -15,8 +14,6 @@ from base.database.schema import Extend, File, Project, Tasks, User
 from base.pages import generate_login, TaskQueue
 from base.pages.user.magic import user_by_id
 from base.pages.board.magic import create_resource
-from base.utils import save_file, get_tmpdir, form_error_string
-from base.email import Mail
 
 __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
