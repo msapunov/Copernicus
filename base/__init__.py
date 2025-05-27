@@ -27,6 +27,7 @@ import logging.config
 
 
 def create_app(config_filename):
+    cleanup()
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_pyfile(config_filename)
     register_extensions(app)
