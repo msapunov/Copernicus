@@ -24,6 +24,35 @@ __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
 
 
+def upload_to_cloud(remote_dir, path):
+    """
+    Function which uploads a file to OwnCloud instance
+    :param remote_dir: String. Name of the remote directory to store files in.
+    :param path: String. Path to file to upload.
+    :return: None. Does not return anything — its return value should be None
+    """
+    local = Path(path)
+    if not local.exists() or not local.is_file():
+        raise ValueError(f"'{path}' doesn't exists or not a file")
+    url = app.config.get("OWN_CLOUD_URL", None)
+    login = app.config.get("OWN_CLOUD_LOGIN", None)
+    password = app.config.get("OWN_CLOUD_PASSWORD", None)
+    if not all([url, login, password]):
+        raise ValueError("Missing WebDAV configuration: URL, login, or password.")
+    options = {
+        "webdav_hostname": url,
+        "webdav_login": login,
+        "webdav_password": password
+    }
+    client = Client(options)
+    remote_dir = "/" + remote_dir.strip("/")
+    if not client.check(remote_dir):
+        raise ValueError(f"Remote directory '{remote_dir}' does not exists")
+    remote = str(PurePosixPath(remote_dir) / local.name)
+    debug(f"Uploading file '{path}' to '{remote}'")
+    client.upload_sync(remote_path=remote, local_path=local.as_posix())
+
+
 def process_register_user(user_as_string):
     name, surname, email, login = None, None, None, None
     parts = user_as_string.split(";")
