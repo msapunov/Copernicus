@@ -542,15 +542,14 @@ def is_activity_report(project):
     if not current_app.config.get("ACTIVITY_UPLOAD", False):
         return True
     url = current_app.config.get("OWN_CLOUD_URL", None)
-    if not url:
-        raise ValueError("Failed to find own cloud url. Please try later")
-    oc = OwnClient(url)
     login = current_app.config.get("OWN_CLOUD_LOGIN", None)
     password = current_app.config.get("OWN_CLOUD_PASSWORD", None)
-    try:
-        oc.login(login, password)
-    except Exception as err:
-        raise ValueError("Failed to connect to the cloud: %s" % err)
+    options = {
+        'webdav_hostname': url,
+        'webdav_login': login,
+        'webdav_password': password
+    }
+    client = Client(options)
     remote_dir = current_app.config.get("ACTIVITY_DIR", "/")
     if remote_dir[-1] != "/":
         remote_dir += "/"
