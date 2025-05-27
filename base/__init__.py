@@ -16,9 +16,10 @@ from base.functions import project_config
 
 from datetime import datetime as dt
 from werkzeug.exceptions import HTTPException
+from os import walk
 from os.path import join as path_join, exists
 from traceback import format_exc
-from tempfile import gettempdir
+from tempfile import gettempdir, mkdtemp
 from pathlib import Path
 from shutil import rmtree
 
