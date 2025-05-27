@@ -193,40 +193,6 @@ def project_create_user(name, form):
     return ProjectLog(project).user_create(task)
 
 
-def upload_file_cloud(path, remote=None):
-    """
-    Function which uploads a file to OwnCloud instance
-    :param path: String. Path to file to upload.
-    :param remote: String. Name of the remote directory to store files in.
-    :return: Boolean. Return result of put_file() function call for OwnCloud
-             instance. Result of this function call is boolean
-    """
-    url = current_app.config.get("OWN_CLOUD_URL", None)
-    if not url:
-        error("No url to the cloud given")
-        return False
-    oc = OwnClient(url)
-    login = current_app.config.get("OWN_CLOUD_LOGIN", None)
-    password = current_app.config.get("OWN_CLOUD_PASSWORD", None)
-    try:
-        oc.login(login, password)
-    except Exception as err:
-        error("Failed to connect to the cloud: %s" % err)
-        return False
-    po = Path(path)
-    if not po.exists() or not po.is_file():
-        error("Can't upload a file to a cloud. '%s' doesn't exists or not "
-              "a file" % path)
-        return False
-    if not remote:
-        remote_dir = current_app.config.get("ACTIVITY_DIR", "/")
-        if remote_dir[-1] != "/":
-            remote_dir += "/"
-        remote = remote_dir + po.name
-    debug("Uploading file %s to %s" % (path, remote))
-    return oc.put_file(remote, path)
-
-
 def check_responsible(name):
     """
     Check if current user is responsible for a project given in argument
