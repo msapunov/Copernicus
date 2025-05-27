@@ -239,7 +239,7 @@ def assign_responsible(name, form):
 
 
 def get_activity_files(name):
-    temp_dir = get_tmpdir(current_app)
+    temp_dir = current_app.get_tmpdir()
     debug("Using temporary directory to store files: %s" % temp_dir)
     pattern = "*%s*" % name
     debug("Pattern %s to get associated files for %s" % (pattern, name))
@@ -314,7 +314,7 @@ def report_activity(name, form):
     project.training = form.training.data
     project.hiring = form.hiring.data
     project.generated = dt.strftime(dt.now(timezone.utc), "%c")
-    tmp = get_tmpdir(current_app)
+    tmp = current_app.get_tmpdir()
     for i in ["image_1", "image_2", "image_3"]:
         path = Path(tmp, form[i].data)
         if path.exists() and path.is_file():
@@ -327,7 +327,7 @@ def report_activity(name, form):
 
 def remove_activity(name, file_name):
     check_responsible(name)
-    temp_dir = get_tmpdir(current_app)
+    temp_dir = current_app.get_tmpdir()
     path = Path(temp_dir) / file_name
     if not path.exists():
         debug("Path doesn't exists: %s" % str(path))
