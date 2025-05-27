@@ -132,6 +132,26 @@ def register_decor(app):
     return None
 
 
+def attach_custom_methods(app):
+    def get_tmpdir():
+        date_str = dt.now().strftime("%Y%m%d")
+        prefix = f"{date_str}_copernicus_"
+        temp_root = gettempdir()
+
+        for root, dirs, _ in walk(temp_root):
+            for d in dirs:
+                if prefix in d:
+                    dir_path = path_join(root, d)
+                    logging.debug(f"Found directory: {dir_path}")
+                    return dir_path
+            break
+
+        dir_path = mkdtemp(prefix=prefix)
+        logging.debug(f"Directory created: {dir_path}")
+        return dir_path
+    setattr(app, "get_tmpdir", get_tmpdir)
+
+
 def configure_logger(app):
     cfg_file = app.config.get("LOG_CONFIG", "logging.cfg")
     cfg_path = path_join(app.instance_path, cfg_file)
