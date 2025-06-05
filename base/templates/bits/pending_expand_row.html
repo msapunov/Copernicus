@@ -134,6 +134,9 @@
                                 REJECTED
                             {% elif "ignored" in event %}
                                 IGNORED
+                            {% elif "create" in event %}
+                                CREATED!
+                            {% else %}
                             {% elif "created" in event %}
                                 CREATED!
                             {% else %}
