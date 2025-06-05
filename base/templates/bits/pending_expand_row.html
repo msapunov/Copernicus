@@ -157,56 +157,56 @@
             {% set status = pending.status|upper %}
         {% endif %}
 
-        {% if status == "NONE" %}
-            <button class="uk-button uk-width-1-1 uk-margin-small-bottom pending_approve" data-modal="{{pending.id}}_approve"><span class="uk-icon-wrench uk-margin-small-right"></span>Approve</button>
-            {% if "admin" not in g.permissions %}
-                <button class="uk-button uk-width-1-1 uk-margin-small-bottom pending_ignore uk-margin-top" data-modal="{{pending.id}}_ignore"><span class="uk-icon-thumbs-o-down uk-margin-small-right"></span>Ignore</button>
+        {% if status in ["NONE", "APPROVED", "SENT", "RESENT", "RECEIVED", "SKIPPED"] %}
+            {% if status == "NONE" %}
+                <button class="uk-button uk-width-1-1 uk-margin-small-bottom pending_approve" data-modal="{{pending.id}}_approve"><span class="uk-icon-wrench uk-margin-small-right"></span>Approve</button>
+                {% if "admin" not in g.permissions %}
+                    <button class="uk-button uk-width-1-1 uk-margin-small-bottom pending_ignore uk-margin-top" data-modal="{{pending.id}}_ignore"><span class="uk-icon-thumbs-o-down uk-margin-small-right"></span>Ignore</button>
+                    <button class="uk-button uk-width-1-1 uk-margin-small-bottom pending_reject uk-button-danger" data-modal="{{pending.id}}_reject"><span class="uk-icon-thumbs-down uk-margin-small-right"></span>Reject</button>
+                {% endif %}
+            {% elif status == "APPROVED" %}
+                {% if "admin" in g.permissions %}
+                    <button class="uk-button uk-width-1-1 uk-margin-small-bottom pending_visa" data-modal="{{pending.id}}_visa"><span class="uk-icon-edit uk-margin-small-right"></span>Send Visa</button>
+                {% else %}
+                    <div class="uk-form-row uk-alert uk-text-center">
+                        <p>Please, wait for arrival of a signed visa!</p>
+                    </div>
+                {% endif %}
+            {% elif status == "SENT" or status == "RESENT" %}
+                <button class="uk-button uk-width-1-1 uk-margin-small-bottom pending_received uk-button-primary" data-modal="{{pending.id}}_received"><span class="uk-icon-check uk-margin-small-right"></span>Visa received</button>
+                <button class="uk-button uk-width-1-1 uk-margin-small-bottom pending_visa" data-modal="{{pending.id}}_visa"><span class="uk-icon-edit uk-margin-small-right"></span>Re-send Visa</button>
+            {% elif status == "RECEIVED" or status == "SKIPPED" %}
+                <button class="uk-button uk-width-1-1 uk-margin-small-bottom pending_create uk-button-primary" data-modal="{{pending.id}}_create"><span class="uk-icon-cogs uk-margin-small-right"></span>Create Project!</button>
+            {% else %}
+                <button class="uk-button uk-width-1-1 uk-margin-small-bottom uk-button-link" disabled>Unknown status {{ status }}</button>
+            {% endif %}
+            <!--
+            Empty: approve button
+            APPROVED: visa send button
+            SENT: visa received, visa re-send
+            RECEIVED: project create
+            -->
+            {% if status != "SENT" and status != "RECEIVED" %}
+            <div class="uk-width-1-1 uk-panel uk-panel-box uk-margin-top">
+                <button class="uk-button uk-width-1-1 uk-margin-small-bottom edit_info" data-modal="{{pending.meso_id}}_edit_pending"><span class="uk-icon-info-circle uk-margin-small-right"></span>Edit information</button>
+                <button class="uk-button uk-width-1-1 uk-margin-small-bottom edit_responsible" data-modal="{{pending.meso_id}}_edit_responsible"><span class="uk-icon-user uk-margin-small-right"></span>Edit responsible</button>
+                <button class="uk-button uk-width-1-1 uk-margin-small-bottom edit_users" data-modal="{{pending.meso_id}}_edit_users"><span class="uk-icon-users uk-margin-small-right"></span>Edit users</button>
+                <button class="uk-button uk-width-1-1 uk-margin-small-bottom edit_new" data-modal="{{pending.meso_id}}_attach"><span class="uk-icon-user-plus uk-margin-small-right"></span>Add user</button>
+            </div>
+            {% endif %}
+            {% if "admin" in g.permissions %}
+                <button class="uk-button uk-width-1-1 uk-margin-top uk-margin-bottom pending_message uk-button-primary" data-modal="{{pending.id}}_message"><span class="uk-icon-commenting uk-margin-small-right"></span>Contact</button>
+            {% endif %}
+
+            {% if "admin" in g.permissions %}
+                {% if status != "NONE" %}
+                    <button class="uk-button uk-text- uk-width-1-1 uk-margin-small-bottom pending_reset" data-modal="{{pending.id}}_reset"><span class="uk-icon-fast-backward uk-margin-small-right"></span>Reset</button>
+                {% endif %}
+                {% if status != "RECEIVED" and status != "SENT" and status != "RESENT"%}
+                    <button class="uk-button uk-width-1-1 uk-margin-small-bottom pending_ignore" data-modal="{{pending.id}}_ignore"><span class="uk-icon-thumbs-o-down uk-margin-small-right"></span>Ignore</button>
+                {% endif %}
                 <button class="uk-button uk-width-1-1 uk-margin-small-bottom pending_reject uk-button-danger" data-modal="{{pending.id}}_reject"><span class="uk-icon-thumbs-down uk-margin-small-right"></span>Reject</button>
             {% endif %}
-        {% elif status == "APPROVED" %}
-            {% if "admin" in g.permissions %}
-                <button class="uk-button uk-width-1-1 uk-margin-small-bottom pending_visa" data-modal="{{pending.id}}_visa"><span class="uk-icon-edit uk-margin-small-right"></span>Send Visa</button>
-            {% else %}
-                <div class="uk-form-row uk-alert uk-text-center">
-                    <p>Please, wait for arrival of a signed visa!</p>
-                </div>
-            {% endif %}
-        {% elif status == "SENT" or status == "RESENT" %}
-            <button class="uk-button uk-width-1-1 uk-margin-small-bottom pending_received uk-button-primary" data-modal="{{pending.id}}_received"><span class="uk-icon-check uk-margin-small-right"></span>Visa received</button>
-            <button class="uk-button uk-width-1-1 uk-margin-small-bottom pending_visa" data-modal="{{pending.id}}_visa"><span class="uk-icon-edit uk-margin-small-right"></span>Re-send Visa</button>
-        {% elif status == "RECEIVED" or status == "SKIPPED" %}
-            <button class="uk-button uk-width-1-1 uk-margin-small-bottom pending_create uk-button-primary" data-modal="{{pending.id}}_create"><span class="uk-icon-cogs uk-margin-small-right"></span>Create Project!</button>
-        {% else %}
-            <button class="uk-button uk-width-1-1 uk-margin-small-bottom uk-button-link" disabled>Unknown status {{ status }}</button>
         {% endif %}
-        <!--
-        Empty: approve button
-        APPROVED: visa send button
-        SENT: visa received, visa re-send
-        RECEIVED: project create
-        -->
-        {% if status != "SENT" and status != "RECEIVED" %}
-        <div class="uk-width-1-1 uk-panel uk-panel-box uk-margin-top">
-            <button class="uk-button uk-width-1-1 uk-margin-small-bottom edit_info" data-modal="{{pending.meso_id}}_edit_pending"><span class="uk-icon-info-circle uk-margin-small-right"></span>Edit information</button>
-            <button class="uk-button uk-width-1-1 uk-margin-small-bottom edit_responsible" data-modal="{{pending.meso_id}}_edit_responsible"><span class="uk-icon-user uk-margin-small-right"></span>Edit responsible</button>
-            <button class="uk-button uk-width-1-1 uk-margin-small-bottom edit_users" data-modal="{{pending.meso_id}}_edit_users"><span class="uk-icon-users uk-margin-small-right"></span>Edit users</button>
-            <button class="uk-button uk-width-1-1 uk-margin-small-bottom edit_new" data-modal="{{pending.meso_id}}_attach"><span class="uk-icon-user-plus uk-margin-small-right"></span>Add user</button>
-        </div>
-        {% endif %}
-        {% if "admin" in g.permissions %}
-            <button class="uk-button uk-width-1-1 uk-margin-top uk-margin-bottom pending_message uk-button-primary" data-modal="{{pending.id}}_message"><span class="uk-icon-commenting uk-margin-small-right"></span>Contact</button>
-        {% endif %}
-
-        {% if "admin" in g.permissions %}
-
-            {% if status != "NONE" %}
-                <button class="uk-button uk-text- uk-width-1-1 uk-margin-small-bottom pending_reset" data-modal="{{pending.id}}_reset"><span class="uk-icon-fast-backward uk-margin-small-right"></span>Reset</button>
-            {% endif %}
-            {% if status != "RECEIVED" and status != "SENT" and status != "RESENT"%}
-                <button class="uk-button uk-width-1-1 uk-margin-small-bottom pending_ignore" data-modal="{{pending.id}}_ignore"><span class="uk-icon-thumbs-o-down uk-margin-small-right"></span>Ignore</button>
-            {% endif %}
-            <button class="uk-button uk-width-1-1 uk-margin-small-bottom pending_reject uk-button-danger" data-modal="{{pending.id}}_reject"><span class="uk-icon-thumbs-down uk-margin-small-right"></span>Reject</button>
-        {% endif %}
-
     </div>
 </div>
