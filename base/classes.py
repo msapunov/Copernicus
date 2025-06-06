@@ -972,6 +972,9 @@ class Task:
         """
         project = self.task.project
         user = self.task.user
+        user.archived = None
+        user.active = True
+        UserMailingList().add(user.email, user.full_name())
         if user not in project.users:
             project.users.append(user)
         if not self.task.author_id:
