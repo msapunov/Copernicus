@@ -1012,6 +1012,8 @@ class Task:
         if old == user:
             warning("User %s already assigned as %s responsible" %
                     (user.full(), project.get_name()))
+        user.archived = None
+        user.active = True
         if not user.acl.is_responsible:
             user.acl.is_responsible = True
         project.responsible = user
