@@ -958,11 +958,11 @@ class Task:
         user = self.task.user
         if user not in project.users:
             project.users.append(user)
-        if not user.active:
-            user.active = True
-            UserMailingList().add(user.email, user.full_name())
-            if user.acl.is_responsible:
-                ResponsibleMailingList().add(user.email, user.full_name())
+        user.archived = None
+        user.active = True
+        UserMailingList().add(user.email, user.full_name())
+        if user.acl.is_responsible:
+            ResponsibleMailingList().add(user.email, user.full_name())
         return ProjectLog(project).user_activated(self.task)
 
     def user_assign(self):
@@ -972,6 +972,9 @@ class Task:
         """
         project = self.task.project
         user = self.task.user
+        user.archived = None
+        user.active = True
+        UserMailingList().add(user.email, user.full_name())
         if user not in project.users:
             project.users.append(user)
         if not self.task.author_id:
@@ -1009,6 +1012,8 @@ class Task:
         if old == user:
             warning("User %s already assigned as %s responsible" %
                     (user.full(), project.get_name()))
+        user.archived = None
+        user.active = True
         if not user.acl.is_responsible:
             user.acl.is_responsible = True
         project.responsible = user
