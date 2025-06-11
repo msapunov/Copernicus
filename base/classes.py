@@ -598,7 +598,7 @@ class Pending:
         name = "%s%s" % (record.type, total + 1)
         responsible = list(filter(lambda x: x.resp, users))[0]
         titles = [getattr(record, f"article_{i}") for i in range(1, 6) if
-                  getattr(record, f"article_{i}", "") is not ""]
+                  getattr(record, f"article_{i}", "") != ""]
         articles = map(lambda x: ArticleDB(info=x, user=responsible), titles)
         proj = Project(
             title=record.title,
