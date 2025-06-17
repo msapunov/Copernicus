@@ -271,9 +271,10 @@ def create_visa(record):
     return path
 
 
-def project_parse_cfg_options(cfg, section):
+def project_config_options(cfg, section):
     """
-    Parse project configuration. Use of recurrent lib to parse fuzzy time values
+    Parse project configuration from config object.
+    Use of parsedatetime lib to parse fuzzy time values
     :param cfg: Configuration object
     :param section: Section in the configuration object, i.e. project type
     :return: Dictionary. Keys are: "duration_text", "duration_dt", "extendable",
@@ -282,75 +283,59 @@ def project_parse_cfg_options(cfg, section):
             "evaluation_dt", "evaluation_notice_text", "evaluation_notice_dt",
             "finish_report"
     """
-    r = RecurringEvent()
-    cpu = cfg.getint(section, "cpu", fallback=None)
-    description = cfg.get(section, "description", fallback=None)
-    duration = cfg.get(section, "duration", fallback=None)
-    if duration:
-        duration_dt = r.parse(duration).replace(tzinfo=timezone.utc)
-    else:
-        duration_dt = None
-    end = cfg.get(section, "finish_date", fallback=None)
-    if end:
-        end_dt = r.parse(end).replace(tzinfo=timezone.utc)
-    else:
-        end_dt = None
-    end_notice = cfg.get(section, "finish_notice", fallback=None)
-    if end_notice and end_dt:
-        tmp = RecurringEvent(end_dt).parse(end_notice)
-        end_notice_dt = tmp.replace(tzinfo=timezone.utc)
-    else:
-        end_notice_dt = None
-    end_report = cfg.get(section, "finish_report", fallback=None)
-    if end_report and end_dt:
-        tmp = RecurringEvent(end_dt).parse(end_report)
-        end_report_dt = tmp.replace(tzinfo=timezone.utc)
-    else:
-        end_report_dt = None
-    trans = cfg.get(section, "transform", fallback=None)
-    if trans:
-        transform = list(map(lambda x: x.strip(), trans.split(",")))
-    else:
-        transform = []
-    acl = cfg.get(section, "acl", fallback=[])
-    if acl:
-        acl = list(map(lambda x: x.strip(), acl.split(",")))
-    acl.append("admin")
+    cal = Calendar()
 
-    eva = cfg.get(section, "evaluation_date", fallback=None)
-    if eva:
-        evaluation = list(map(lambda x: x.strip(), eva.split(",")))
-    else:
-        evaluation = []
-    if evaluation:
-        tmp = list(map(lambda x: r.parse(x), evaluation))
-        eva_dt = list(map(lambda x: x.replace(tzinfo=timezone.utc), tmp))
-    else:
-        eva_dt = None
+    def parse_list(text):
+        return [x.strip() for x in text.split(",")] if text else []
 
-    eva_notice = cfg.get(section, "evaluation_notice", fallback=None)
-    if eva_notice and eva_dt:
-        tmp = list(map(lambda x: RecurringEvent(x).parse(eva_notice), eva_dt))
-        eva_text_dt = list(map(lambda x: x.replace(tzinfo=timezone.utc), tmp))
-    else:
-        eva_text_dt = None
-    extendable = cfg.getboolean(section, "extendable", fallback=False)
-    suspend = cfg.getboolean(section, "suspend", fallback=True)
-    visa_names = cfg.get(section, "visa", fallback=None)
-    if visa_names:
-        visa = list(map(lambda x: x.strip(), visa_names.split(",")))
-    else:
-        visa = []
-    return {"duration_text": duration, "duration_dt": duration_dt, "acl": acl,
-            "finish_text": end, "finish_dt": end_dt, "cpu": cpu, "visa": visa,
-            "finish_notice_text": end_notice, "extendable": extendable,
-            "suspend": suspend,
-            "finish_notice_dt": end_notice_dt,
-            "finish_report_dt": end_report_dt,
-            "transform": transform, "description": description,
-            "evaluation_text": evaluation, "evaluation_dt": eva_dt,
-            "evaluation_notice_text": eva_notice,
-            "evaluation_notice_dt": eva_text_dt}
+    def parse_datetime(text):
+        if not text:
+            return None
+        if "," in text:
+            parts = [x.strip() for x in text.split(",")]
+            return [parse_datetime(x) for x in parts]
+        date, status = cal.parse(text)
+        if status == 0:
+            return None
+        return dt.fromtimestamp(mktime(date))
+
+    visa = {}
+    for key, val in cfg.items(section):
+        if "visa" in key:
+            if "." in key:
+                prefix, lang = key.split('.', 1)
+            else:
+                lang = "en_US"  # fallback locale
+            visa[lang] = val
+
+    return {
+        "description": cfg.get(section, "description", fallback=None),
+        "cpu": cfg.getint(section, "cpu", fallback=None),
+        "transform": parse_list(cfg.get(section, "transform", fallback="")),
+        "acl": parse_list(cfg.get(section, "acl", fallback="")) + ["admin"],
+        "extendable": cfg.getboolean(section, "extendable", fallback=False),
+        "suspend": cfg.getboolean(section, "suspend", fallback=True),
+
+        "duration_text": cfg.get(section, "duration", fallback=None),
+        "duration_dt": parse_datetime(cfg.get(section, "duration", fallback=None)),
+
+        "finish_text": cfg.get(section, "finish", fallback=None),
+        "finish_dt": parse_datetime(cfg.get(section, "finish", fallback=None)),
+
+        "finish_notice_text": cfg.get(section, "finish_notice", fallback=None),
+        "finish_notice_dt": parse_datetime(cfg.get(section, "finish_notice", fallback=None)),
+
+        "finish_report_text": cfg.get(section, "finish_report", fallback=None),
+        "finish_report_dt": parse_datetime(cfg.get(section, "finish_report", fallback=None)),
+
+        "evaluation_text": parse_list(cfg.get(section, "evaluation_date", fallback="")),
+        "evaluation_dt": parse_datetime(cfg.get(section, "evaluation_date", fallback="")),
+
+        "evaluation_notice_text": cfg.get(section, "evaluation_notice", fallback=None),
+        "evaluation_notice_dt": parse_datetime(cfg.get(section, "evaluation_notice", fallback=None)),
+
+        "visa": visa
+    }
 
 
 def project_config():
