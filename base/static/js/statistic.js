@@ -145,7 +145,7 @@
                 }
             },
             columns: [{
-                className: 'details-control',
+                className: 'details-control noExport',
                 orderable: false,
                 data: null,
                 defaultContent: '',
