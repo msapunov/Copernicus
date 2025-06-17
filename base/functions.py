@@ -235,12 +235,14 @@ def create_visa(record):
     :param record: Object. Instance of project register class
     :return: List. List of resulting files
     """
-    config = project_config()
+    cfg = project_config()
     project_type = record.type.lower()
-    if not project_type in config:
+    if project_type not in cfg:
         raise ValueError("Project type '%s' not in config" % project_type)
-    end = config[project_type].get("finish_dt", None)
-    duration = config[project_type].get("duration_dt", None)
+    else:
+        config = cfg[project_type]
+    end = config.get("finish_dt", None)
+    duration = config.get("duration_dt", None)
     if end and duration:
         ttl = end if end > duration else duration
     elif duration:
@@ -248,22 +250,22 @@ def create_visa(record):
     elif end:
         ttl = end
     else:
-        ttl = None
-    record.dt = dt.now().strftime("%d/%m/%Y")
-    record.ttl = ttl.strftime("%d %B %Y")
+        raise ValueError("Failed to calculate project duration")
     record.signature = file_as_string("signature.png")
     record.base_url = request.url_root
-    loc = app.config.get("LOCALE", "C.UTF-8")
-    try:
-        locale.setlocale(locale.LC_ALL, loc)
-    except locale.Error:
-        locale.setlocale(locale.LC_ALL, "C")
     path = []
     project_id = record.project_id()
-    date = dt.now().strftime("%Y-%m-%d")
-    for i in config[project_type].get("visa", []):
-        html = render_template("%s" % i, data=record)
-        path.append(write_pdf(html, f"{project_id}-{i}-{date}.pdf"))
+    date = dt.now().strftime("%Y-%m-%d-%H-%M-%S")
+    for loc, name in config.get("visa", {}).items():
+        try:
+            record.dt = format_date(dt.now(), format='short', locale=loc)
+            record.ttl = format_date(ttl, format='long', locale=loc)
+            lang = Locale.parse(loc).get_language_name().lower()
+        except Exception as e:
+            error(f"Invalid locale '{loc}': {e}. Skipping formatting.")
+            continue
+        html = render_template("%s" % name, data=record)
+        path.append(write_pdf(html, f"{project_id}-{lang}-{date}.pdf"))
     return path
 
 
