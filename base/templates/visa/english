@@ -32,13 +32,13 @@
       margin: 0;
     }
 
-    img {
-      max-width: 100%;
+    .logo {
+      width: 150px;
       height: auto;
     }
 
-    .logo img {
-      width: 30vw; /* 30% of viewport width (approx. page width in PDF) */
+    img {
+      max-width: 100%;
       height: auto;
     }
 
@@ -58,15 +58,9 @@
     }
 
     .info-cell {
-      vertical-align: top;
-      max-width: 50%;
-      min-width: 30%;
-      word-wrap: break-word;
+      width: 50%;
       white-space: normal;
-    }
-
-    .logo-cell {
-      width: 30%;
+      word-wrap: break-word;
     }
 
     .body {
@@ -130,9 +124,9 @@
     {% endfor %}
     </ul>
     <p>For new user accounts, connection details will be communicated directly. Only SSH-based connections will be allowed.</p>
-    <p>A project management interface is available at https://mesocentre.univ-amu.fr/copernicus/. It allows in particular to request for addition, attachment or deletion of a user account.</p>
-    <p>As project coordinator, the signing of this document commits you, as well as the other users attached to the project, to respect the Terms of Use of the Mésocentre available at https://mesocentre.univ-amu.fr/en/chart/.</p>
-    <p>Even if you haven't requested it, a user account will be created for you and you will be subscribed to the project managers mailing list {{ data.resp_list }} and to the general mailing list {{ data.user_list }}.</p>
+    <p>A project management interface is available at <a href="https://mesocentre.univ-amu.fr/copernicus/">https://mesocentre.univ-amu.fr/copernicus/</a>. It allows in particular to request for addition, attachment or deletion of a user account.</p>
+    <p>As project coordinator, the signing of this document commits you, as well as the other users attached to the project, to respect the Terms of Use of the Mésocentre available at <a href="https://mesocentre.univ-amu.fr/en/chart/">https://mesocentre.univ-amu.fr/en/chart/</a>.</p>
+    <p>Even if you haven't requested it, a user account will be created for you and you will be subscribed to the project managers mailing list <strong>{{ data.resp_list }}</strong> and to the general mailing list <strong>{{ data.user_list }}</strong>.</p>
     {% if data.type == "b" %}
         <p>The granted allocation can be used until {{data.ttl}}, it can be increased or decreased depending on its consumption. In particular, at the time of the first complementary session (May), the projects whose consumption is less than 15% may see their allocation reduced after discussion with the coordinators concerned. The same procedure applies during the second complementary session (October) for projects with less than 50% consumption.</p>
     {% elif data.type == "h" %}
@@ -140,28 +134,28 @@
     {% elif data.type == "a" %}
         <p>The granted allocation can be used within 6 months of the date of this notice.</p>
     {% endif %}
-    <p>A set of tutorials on how to use the Mésocentre's resources is available on its website https://mesocentre.univ-amu.fr/les-tutoriaux/.</p>
+    <p>A set of tutorials on how to use the Mésocentre's resources is available on its website <a href="https://mesocentre.univ-amu.fr/les-tutoriaux/">https://mesocentre.univ-amu.fr/les-tutoriaux/</a>.</p>
     <p>The signing of this document also covers any modification of the project (allocations, user accounts, disk space, etc.) which could occur at your request or that of the Mésocentre, and this throughout the duration of the associated scientific project.</p>
   </div>
 
   <!-- Footer / Signature -->
   <div class="page-break-avoid">
-  <table class="footer-table">
-    <tr>
-      <td><strong>Project leader signature</strong></td>
-      <td><strong>Director of CCIAM</strong></td>
-    </tr>
-    <tr>
-      <td class="sign-space"></td>
-      <td class="sign-space">
-        <img src="data:image/jpeg;base64,{{ data.signature | safe }}">
-      </td>
-    </tr>
-    <tr>
-      <td><strong>Date:</strong></td>
-      <td><strong>Yannick Carissan</strong></td>
-    </tr>
-  </table>
+    <table class="footer-table">
+      <tr>
+        <td><strong>Project leader signature</strong></td>
+        <td><strong>Director of CCIAM</strong></td>
+      </tr>
+      <tr>
+        <td class="sign-space"></td>
+        <td class="sign-space">
+          <img src="data:image/jpeg;base64,{{ data.signature | safe }}">
+        </td>
+      </tr>
+      <tr>
+        <td><strong>Date:</strong></td>
+        <td><strong>Yannick Carissan</strong></td>
+      </tr>
+    </table>
   </div>
 
 </body>
