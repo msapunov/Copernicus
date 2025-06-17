@@ -352,12 +352,12 @@ def project_config():
         warning("Projects configuration file doesn't exists. Using defaults")
         return result
     cfg = ConfigParser()
+    cfg.optionxform = str
     cfg.read(cfg_path)
     projects = cfg.sections()
     for project in projects:
         name = project.lower()
-        result[name] = project_parse_cfg_options(cfg, project)
-    #debug("Project configuration: %s" % result)
+        result[name] = project_config_options(cfg, project)
     return result
 
 
