@@ -4,7 +4,6 @@ from base.pages import grant_access
 from base.pages.user import bp
 from base.pages.statistic.magic import (
     render_project,
-    dump_projects_database,
     project_types)
 from base.pages.project.magic import set_state
 from base.database.schema import Project, Accounting
@@ -30,27 +29,6 @@ def project_info(name=None):
         } for i in projects
     }
     return jsonify(data=data)
-
-
-@bp.route("/projects.csv", methods=["GET"])
-@login_required
-@grant_access("admin")
-def web_projects_csv():
-    return dump_projects_database("csv", request)
-
-
-@bp.route("/projects.ods", methods=["GET"])
-@login_required
-@grant_access("admin")
-def web_projects_ods():
-    return dump_projects_database("ods", request)
-
-
-@bp.route("/projects.xls", methods=["GET"])
-@login_required
-@grant_access("admin")
-def web_projects_xls():
-    return dump_projects_database("xls", request)
 
 
 @bp.route("/statistic/activate/<int:pid>", methods=["POST"])
