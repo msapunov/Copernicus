@@ -96,7 +96,7 @@
                     extend: 'excelHtml5',
                     title: 'DataExport',
                     exportOptions: {
-                        columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+                        columns: ':not(.noExport)'
                     },
                     className: 'dump_xls'
             }],
