@@ -85,6 +85,21 @@
         var table = $("#statistics").DataTable({
             ajax: {type: "POST", url: window.stat.url.list},
             dom: 't',
+            buttons: [{
+                    extend: 'csvHtml5',
+                    title: 'DataExport',
+                    exportOptions: {
+                        columns: ':not(.noExport)'
+                    },
+                    className: 'dump_csv'
+                },{
+                    extend: 'excelHtml5',
+                    title: 'DataExport',
+                    exportOptions: {
+                        columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+                    },
+                    className: 'dump_xls'
+            }],
             footerCallback: function( tfoot, data, start, end, display ) {
                 var api = this.api();
                 var conso = api.column( 5, { page: 'current'} ).data().reduce( function ( a, b ) {
