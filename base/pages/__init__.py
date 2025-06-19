@@ -68,6 +68,7 @@ def generate_login(name, surname):
     guess = None
     while i < len(name):
         guess = name[0:i] + surname
+        debug("%s is among %s" % (guess, ", ".join(logins)))
         if guess not in logins:
             return guess
         i += 1
