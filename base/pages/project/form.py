@@ -86,14 +86,20 @@ def extend(project):
     end = config[project_type].get("finish_dt", None)
     if end:
         form.end_date = end
-    evaluation_date = config[project_type].get("evaluation_dt", None)
-    if evaluation_date:
-        evaluation_date.sort()
-        form.eval_date = evaluation_date[0]
-    evaluation_notice = config[project_type].get("evaluation_notice_dt", None)
-    if evaluation_notice:
-        evaluation_notice.sort()
-        form.eval_note = evaluation_notice[0]
+    evaluation = config[project_type].get("evaluation_dt", None)
+    if evaluation is None:
+        form.eval_date = None
+    elif isinstance(evaluation, list):
+        form.eval_date = sorted(evaluation)[0] if evaluation else None
+    else:
+        form.eval_date = evaluation
+    notice = config[project_type].get("evaluation_notice_dt", None)
+    if notice is None:
+        form.eval_note = None
+    elif isinstance(notice, list):
+        form.eval_note = sorted(notice)[0] if notice else None
+    else:
+        form.eval_note = notice
     return form
 
 
