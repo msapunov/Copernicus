@@ -297,7 +297,7 @@ def project_config_options(cfg, section):
         date, status = cal.parse(text)
         if status == 0:
             return None
-        return dt.fromtimestamp(mktime(date))
+        return dt.fromtimestamp(mktime(date), timezone.utc)
 
     visa = {}
     for key, val in cfg.items(section):
