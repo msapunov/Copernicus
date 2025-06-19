@@ -663,8 +663,8 @@ class Pending:
         mail = Mail()
         u_list = mail.cfg.get("DEFAULT", "USER_LIST", fallback=None)
         r_list = mail.cfg.get("DEFAULT", "RESPONSIBLE_LIST", fallback=None)
-        record.user_list = "(%s)" % u_list if u_list else ""
-        record.resp_list = "(%s)" % r_list if r_list else ""
+        record.user_list = "%s" % u_list if u_list else ""
+        record.resp_list = "%s" % r_list if r_list else ""
         path = create_visa(record)
         if not path:
             raise ValueError("Failed to generate visa document")
