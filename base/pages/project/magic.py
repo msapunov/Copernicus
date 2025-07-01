@@ -111,8 +111,8 @@ def sanity_check():
     cfg = g.project_config
     projects = db.session.query(Project).all()
     active_users_check(projects)
-    warn_expired_projects(projects, cfg)
     suspend_expired_projects(projects)
+#    warn_expired_projects(projects, cfg)
     suspend_overconsumed_projects(projects)
     warn_overconsumed_projects(projects)
     consumption_check(projects)
