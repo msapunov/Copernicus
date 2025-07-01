@@ -39,6 +39,7 @@ def user_check_active():
     if working:
         result += "Activated user(s):\n%s" % "\n".join(working)
     absent = absent_users_check(logins)
+    log.debug(f"Absent users: {len(absent)}")
     if absent:
         result += "Absent user(s):\n%s" % "\n".join(absent)
     return jsonify(data=result)
