@@ -25,7 +25,7 @@ def absent_users_check(logins):
     """
     users = (
         User.query
-        .filter(User.archived.is_(False))
+        .filter(User.archived.is_(None))
         .filter(User.project.any(Project.active.is_(True)))  # UID = related model class
         .all()
     )
