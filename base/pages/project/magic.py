@@ -103,7 +103,12 @@ def active_users_check(projects):
 
 def sanity_check():
     cfg = g.project_config
-    projects = db.session.query(Project).all()
+    projects = (
+        Project.query
+        .filter(Project.active.is_(True))
+        .with_for_update()
+        .all()
+    )
     users = active_users_check(projects)
     suspend_expired_projects(projects)
 #    warn_expired_projects(projects, cfg)
