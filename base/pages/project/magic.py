@@ -32,11 +32,12 @@ def suspend_expired_projects(projects):
         if not project.active:
             continue
         finish = project.resources.ttl
-        if now > finish:
-            project.active = False
-            debug("%s: suspended due to resource expiration %s" %
-                  (project.name, finish.isoformat()))
-            ProjectLog(project).expired()
+        if finish > now:
+            continue
+        project.active = False
+        debug("%s: suspended due to resource expiration %s" %
+              (project.name, finish.isoformat()))
+        ProjectLog(project).expired()
     if db.session.new or db.session.dirty or db.session.deleted:
         db.session.commit()
     return
