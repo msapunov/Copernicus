@@ -4,6 +4,7 @@ from base.database.schema import User
 from base.pages import grant_access
 from base.pages.user import bp
 from base.pages.user.magic import (get_user_record, get_jobs,
+                                   absent_users_check,
                                    working_users_check,
                                    archived_users_check,
                                    inactive_users_check)
@@ -36,7 +37,10 @@ def user_check_active():
         result += "Deactivated user(s):\n%s" % "\n".join(inactive)
     working = working_users_check(logins)
     if working:
-        result += "Current user(s):\n%s" % "\n".join(working)
+        result += "Activated user(s):\n%s" % "\n".join(working)
+    absent = absent_users_check(logins)
+    if absent:
+        result += f"Absent user(s):\n{"\n".join(absent)}"
     return jsonify(data=result)
 
 
