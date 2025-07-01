@@ -40,7 +40,7 @@ def user_check_active():
         result += "Activated user(s):\n%s" % "\n".join(working)
     absent = absent_users_check(logins)
     if absent:
-        result += f"Absent user(s):\n{"\n".join(absent)}"
+        result += f"Absent user(s):\n{'\n'.join(absent)}"
     return jsonify(data=result)
 
 
