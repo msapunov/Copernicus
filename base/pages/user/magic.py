@@ -23,6 +23,8 @@ def archived_users_check(logins):
     Returns:
     str: Summary of the archived users.
     """
+    # Get all users who are not in the logins list and are not archived.
+    # Lock the selected rows to prevent concurrent updates.
     users = (
         User.query.filter(User.login.not_in(logins))
         .filter(User.archived.is_(None))
