@@ -20,7 +20,7 @@ __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
 
 
-def suspend_expired_projects(projects, config):
+def suspend_expired_projects(projects):
     """
     Check end of life of resources for all the projects and if the EOL is less
     the now() the project's active property set to False, project_suspend action
@@ -32,11 +32,12 @@ def suspend_expired_projects(projects, config):
         if not project.active:
             continue
         finish = project.resources.ttl
-        if now > finish:
-            project.active = False
-            debug("%s: suspended due to resource expiration %s" %
-                  (project.name, finish.isoformat()))
-            ProjectLog(project).expired()
+        if finish > now:
+            continue
+        project.active = False
+        debug("%s: suspended due to resource expiration %s" %
+              (project.name, finish.isoformat()))
+        ProjectLog(project).expired()
     if db.session.new or db.session.dirty or db.session.deleted:
         db.session.commit()
     return
@@ -94,23 +95,29 @@ def active_users_check(projects):
     @param projects: List. List of projects
     @return: None
     """
+    result = {}
     for project in projects:
         if not project.active:
             continue
         for user in project.users:
             if not user.active:
-                error(f"User {user.login} of {project.name} should be active")
+                if project not in result.keys():
+                    result[project] = []
+                result[project].append(user.login)
+    return result
 
 
 def sanity_check():
     cfg = g.project_config
     projects = db.session.query(Project).all()
-    active_users_check(projects)
-    suspend_expired_projects(projects, cfg)
-    warn_expired_projects(projects, cfg)
+    users = active_users_check(projects)
+    suspend_expired_projects(projects)
+#    warn_expired_projects(projects, cfg)
     suspend_overconsumed_projects(projects)
     warn_overconsumed_projects(projects)
     consumption_check(projects)
+    if users:
+        return ", ".join(f"{k}: {' '.join(map(str, v))}" for k, v in users.items())
     return "Sanity check done"
 
 

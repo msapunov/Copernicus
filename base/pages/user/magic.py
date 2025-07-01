@@ -23,6 +23,8 @@ def archived_users_check(logins):
     Returns:
     str: Summary of the archived users.
     """
+    # Get all users who are not in the logins list and are not archived.
+    # Lock the selected rows to prevent concurrent updates.
     users = (
         User.query.filter(User.login.not_in(logins))
         .filter(User.archived.is_(None))
@@ -32,20 +34,19 @@ def archived_users_check(logins):
     if not users:
         return "Archived user check done"
     now = dt.now().replace(tzinfo=timezone.utc)
+    result = []
+    debug(f"Number of users to archive: {len(users)}")
+    for user in users:
+        user.archived = now
+        UserLog(user).archived()
+        result.append(user.login)
+        debug(f"{user.login} archived")
     try:
-        result = []
-        debug(f"Number of users to archive: {len(users)}")
-        for user in users:
-            user.archived = now
-            UserLog(user).archived()
-            result.append(f"{user.login}")
-            debug(f"{user.login} archived")
-        if db.session.new or db.session.dirty or db.session.deleted:
-            db.session.commit()
-        return result
+        db.session.commit()
     except Exception as e:
         db.session.rollback()
         raise ValueError(f"Error during user archive: {e}")
+    return result
 
 
 def working_users_check(logins):
@@ -56,27 +57,26 @@ def working_users_check(logins):
     str: Summary of the deactivated users.
     """
     active_users = User.query.filter(User.login.in_(logins))
+    result = []
+    for active_user in active_users:
+        if not active_user.project:
+            continue
+        if not active_user.active:
+            active_user.active = True
+            UserLog(active_user).activated()
+            result.append(f"{active_user.login} is activated")
+            debug(f"Deactivated user {active_user.login} is activated")
+        if active_user.archived:
+            active_user.archived = None
+            UserLog(active_user).restored()
+            result.append(f"{active_user.login} is restored")
+            debug(f"Archived user {active_user.login} is restored")
     try:
-        result = []
-        for active_user in active_users:
-            if not active_user.project:
-                continue
-            if not active_user.active:
-                active_user.active = True
-                UserLog(active_user).activated()
-                result.append(f"{active_user.login} is activated")
-                debug(f"Deactivated user {active_user.login} is activated")
-            if active_user.archived:
-                active_user.archived = None
-                UserLog(active_user).restored()
-                result.append(f"{active_user.login} is restored")
-                debug(f"Archived user {active_user.login} is restored")
-        if db.session.new or db.session.dirty or db.session.deleted:
-            db.session.commit()
-        return result
+        db.session.commit()
     except Exception as e:
         db.session.rollback()
         raise ValueError(f"Error during commiting changes: {e}")
+    return result
 
 
 def inactive_users_check(logins):
@@ -88,27 +88,26 @@ def inactive_users_check(logins):
     """
     users = (
         User.query.filter(User.login.not_in(logins))
-        .filter(User.active == True)
-        .filter(User.project == None)
+        .filter(User.active.is_(True))
+        .filter(User.project.is_(None))
         .with_for_update()
         .all()
     )
     if not users:
         return "Inactive user check done"
+    result = []
+    debug(f"Number of users to deactivate: {len(users)}")
+    for user in users:
+        user.active = False
+        UserLog(user).deactivated()
+        result.append(user.login)
+        debug(f"{user.login} deactivated")
     try:
-        result = []
-        debug(f"Number of users to deactivate: {len(users)}")
-        for user in users:
-            user.active = False
-            UserLog(user).deactivated()
-            result.append(f"{user.login}")
-            debug(f"{user.login} deactivated")
-        if db.session.new or db.session.dirty or db.session.deleted:
-            db.session.commit()
-        return result
+        db.session.commit()
     except Exception as e:
         db.session.rollback()
         raise ValueError(f"Error during user deactivation: {e}")
+    return result
 
 
 def sanitize_key(key):
