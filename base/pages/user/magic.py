@@ -95,20 +95,19 @@ def inactive_users_check(logins):
     )
     if not users:
         return "Inactive user check done"
+    result = []
+    debug(f"Number of users to deactivate: {len(users)}")
+    for user in users:
+        user.active = False
+        UserLog(user).deactivated()
+        result.append(user.login)
+        debug(f"{user.login} deactivated")
     try:
-        result = []
-        debug(f"Number of users to deactivate: {len(users)}")
-        for user in users:
-            user.active = False
-            UserLog(user).deactivated()
-            result.append(f"{user.login}")
-            debug(f"{user.login} deactivated")
-        if db.session.new or db.session.dirty or db.session.deleted:
-            db.session.commit()
-        return result
+        db.session.commit()
     except Exception as e:
         db.session.rollback()
         raise ValueError(f"Error during user deactivation: {e}")
+    return result
 
 
 def sanitize_key(key):
