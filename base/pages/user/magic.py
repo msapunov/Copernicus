@@ -88,8 +88,8 @@ def inactive_users_check(logins):
     """
     users = (
         User.query.filter(User.login.not_in(logins))
-        .filter(User.active == True)
-        .filter(User.project == None)
+        .filter(User.active.is_(True))
+        .filter(User.project.is_(None))
         .with_for_update()
         .all()
     )
