@@ -116,6 +116,8 @@ def sanity_check():
     suspend_overconsumed_projects(projects)
     warn_overconsumed_projects(projects)
     consumption_check(projects)
+    if users:
+        return ", ".join(f"{k}: {' '.join(map(str, v))}" for k, v in users.items())
     return "Sanity check done"
 
 
