@@ -29,8 +29,6 @@ def suspend_expired_projects(projects):
     """
     now = dt.now().replace(tzinfo=timezone.utc)
     for project in projects:
-        if not project.active:
-            continue
         finish = project.resources.ttl
         if finish > now:
             continue
@@ -52,8 +50,6 @@ def warn_expired_projects(projects, config):
     """
     now = dt.now().replace(tzinfo=timezone.utc)
     for project in projects:
-        if not project.active:
-            continue
         finish = project.resources.ttl
         ptype = project.type
         if ptype not in config:
@@ -97,8 +93,6 @@ def active_users_check(projects):
     """
     result = {}
     for project in projects:
-        if not project.active:
-            continue
         for user in project.users:
             if not user.active:
                 if project not in result.keys():
