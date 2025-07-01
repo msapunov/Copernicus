@@ -26,9 +26,11 @@ def absent_users_check(logins):
     users = (
         User.query
         .filter(User.archived.is_(None))
-        .filter(User.project.any(Project.active.is_(True)))  # UID = related model class
+        .filter(User.project.any(Project.active.is_(True)))
         .all()
     )
+    debug(f"remote users: {len(logins)}")
+    debug(f"users: {len(users)}")
     registered = {u.login for u in users}
     return list(registered - set(logins))
 
