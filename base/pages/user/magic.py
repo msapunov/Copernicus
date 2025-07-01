@@ -16,6 +16,24 @@ __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
 
 
+def absent_users_check(logins):
+    """
+
+    :param logins: List of users on remote server
+    :return: List. List of users which is registered in the system but absent
+    on remote server
+    """
+    users = (
+        User.query
+        .filter(User.archived.is_(False))
+        .filter(User.project.any(Project.active.is_(True)))  # UID = related model class
+        .all()
+    )
+    registered = {u.login for u in users}
+    return list(registered - set(logins))
+
+
+
 def archived_users_check(logins):
     """
     Archives users who are not in the provided login list and archived
