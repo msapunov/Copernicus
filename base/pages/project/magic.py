@@ -95,12 +95,16 @@ def active_users_check(projects):
     @param projects: List. List of projects
     @return: None
     """
+    result = {}
     for project in projects:
         if not project.active:
             continue
         for user in project.users:
             if not user.active:
-                error(f"User {user.login} of {project.name} should be active")
+                if project not in result.keys():
+                    result[project] = []
+                result[project].append(user.login)
+    return result
 
 
 def sanity_check():
