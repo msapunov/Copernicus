@@ -24,8 +24,9 @@ __copyright__ = "Aix Marseille University"
 @grant_access("admin", "tech")
 def user_check_active():
     raw_data = request.get_data()
+    log.debug(raw_data)
     if not raw_data:
-        return "No data received"
+        return jsonify(data="No data received")
     logins = raw_data.decode("utf-8", errors="replace").split("\n")
     result = ""
     archive = archived_users_check(logins)
