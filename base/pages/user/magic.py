@@ -45,6 +45,7 @@ def archived_users_check(logins):
     """
     # Get all users who are not in the logins list and are not archived.
     # Lock the selected rows to prevent concurrent updates.
+    result = []
     users = (
         User.query.filter(User.login.not_in(logins))
         .filter(User.archived.is_(None))
@@ -52,9 +53,8 @@ def archived_users_check(logins):
         .all()
     )
     if not users:
-        return "Archived user check done"
+        return result
     now = dt.now().replace(tzinfo=timezone.utc)
-    result = []
     debug(f"Number of users to archive: {len(users)}")
     for user in users:
         user.archived = now
@@ -106,6 +106,7 @@ def inactive_users_check(logins):
     Returns:
     str: Summary of the deactivated users.
     """
+    result = []
     users = (
         User.query.filter(User.login.not_in(logins))
         .filter(User.active.is_(True))
@@ -114,8 +115,7 @@ def inactive_users_check(logins):
         .all()
     )
     if not users:
-        return "Inactive user check done"
-    result = []
+        return result
     debug(f"Number of users to deactivate: {len(users)}")
     for user in users:
         user.active = False
