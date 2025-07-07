@@ -900,6 +900,36 @@ class Task:
             ResponsibleMailingList().add(self.task.user.email, self.task.user.full_name())
         return ProjectLog(project).user_new(self.task)
 
+    def student_create(self):
+        """
+        Execute user_new method but send warning to project's responsible.
+        :return: String. The log event associated with this action
+        """
+        if not self.task.author_id:
+            raise ValueError("Task author_id is not set. Aborting")
+        project = self.task.project
+        tmp_user = TmpUser().from_task(self)
+        user = User.query.filter_by(login=tmp_user.login).first()
+        if not user:
+            user = User(login=tmp_user.login,
+                        name=tmp_user.name,
+                        surname=tmp_user.surname,
+                        email=tmp_user.email,
+                        active=True,
+                        project=[project],
+                        created=dt.now(),
+                        acl=ACLDB(is_user=True,
+                                  is_responsible=False,
+                                  is_tech=False,
+                                  is_manager=False,
+                                  is_committee=False,
+                                  is_admin=False))
+            db.session.add(user)
+        if user not in project.users:
+            project.users.append(user)
+        Mail().student_new(user).start()
+        return ProjectLog(project).student_created(self.task)
+
     def user_create(self):
         """
         Execute user_new method but send warning to project's responsible.
