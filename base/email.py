@@ -316,7 +316,13 @@ class Mail(Thread):
         return self.acc_create(user, "USER CREATE")
 
     def user_created(self, user):
-        return self.user_create(user, done=True)
+        return self.acc_create(user, "USER CREATED")
+
+    def student_create(self, user):
+        return self.acc_create(user, "STUDENT CREATE")
+
+    def student_created(self, user):
+        return self.acc_create(user, "STUDENT CREATED")
 
     def user_activate(self, task, done=False):
         if done:
