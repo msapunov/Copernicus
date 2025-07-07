@@ -26,6 +26,7 @@ from base.pages.project.magic import (
     is_project_renewable,
     is_project_extendable,
     project_create_user,
+    project_upload_ssh,
     project_attach_user,
     project_transform,
     is_activity_report,
@@ -109,6 +110,8 @@ def web_project_add_user(project_name):
         raise ValueError(form.errors)
     if form.create_user:
         return jsonify(message=project_create_user(project_name, form))
+    elif form.ssh_upload:
+        return jsonify(message=project_upload_ssh(project_name, form))
     else:
         return jsonify(message=project_attach_user(project_name, form))
 
