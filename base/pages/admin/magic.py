@@ -604,6 +604,8 @@ def process_task(tid, result):
 
     if act == "create" and ent == "user":
         task.user_create()
+    elif act == "create" and ent == "stdy":
+        task.student_create()
     elif act == "create" and ent == "resp":
         task.user_create()
     elif act == "create" and ent == "proj":
