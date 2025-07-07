@@ -303,6 +303,9 @@ class Mail(Thread):
                                 "%NAME": task.project.get_name()})
         return self
 
+    def user_create(self, user):
+        return self.acc_create(user, "USER CREATE")
+
     def user_created(self, user):
         return self.user_create(user, done=True)
 
