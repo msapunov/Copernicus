@@ -293,12 +293,9 @@ class Mail(Thread):
                                 "%FULLNAME": user.full_name()})
         return self
 
-    def user_create(self, user, done=False):
+    def acc_create(self, user, section):
         task = user.task
-        if done:
-            self.populate("USER CREATED")
-        else:
-            self.populate("USER CREATE")
+        self.populate(section)
         self.destination = task.author.email
         self.cc = user.email + "," + self.cc
         self.__populate_values({"%FULLNAME": task.author.full_name(),
