@@ -286,6 +286,15 @@ class Mail(Thread):
                                 "%NAME": task.project.get_name()})
         return self
 
+    def student_new(self, user):
+        task = user.task
+        self.populate("STUDENT NEW")
+        self.destination = user.email
+        self.cc = task.author.email + "," + self.cc
+        self.__populate_values({"%LOGIN": user.login, "%PASS": user.passwd,
+                                "%FULLNAME": user.full_name()})
+        return self
+
     def user_new(self, user):
         self.populate("USER NEW")
         self.destination = user.email
