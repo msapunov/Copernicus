@@ -17,6 +17,19 @@
             {{ form.surname(id=form.name+"_surname_attach", placeholder="Family name (Nom de famille)", class_="uk-width-1-1 user_surname") }}
           </div>
         </div>
+        {% if project.type == "f" %}
+          <div class="uk-form-row">
+            <div class="uk-form-controls">
+              {{ form.ssh(id=form.name+"_ssh_upload", placeholder="Content of SSH public key like ssh-rsa AAAAB3NzaC1yc2...+6W5hijLDZ4zVw== name", class_="uk-width-1-1 ssh_key") }}
+            </div>
+            <div class="uk-form-row uk-alert">
+              <div>
+                <p>Upload the content of SSH public key. Public key usually saved in a file like ~/.ssh/id_rsa.pub or ~/.ssh/id_ed25519.pub</p>
+                <p>In POSIX systems (Linux, MacOS) it's enough to do 'cat ~/.ssh/name_public_key.pub' and paste output into text area above</p>
+              </div>
+            </div>
+          </div>
+        {% else %}
         <div class="uk-form-row">
           <div class="uk-form-controls">
             {{ form.email(id=form.name+"_email_attach", placeholder="E-mail", class_="uk-width-1-1 user_email") }}
