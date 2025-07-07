@@ -172,6 +172,36 @@ def project_attach_user(name, form):
     return ProjectLog(project).user_activate(task)
 
 
+def project_upload_ssh(name, form):
+    """
+    Function which creates a temporary user based on provide info and add a
+    user creation task in the task queue
+    :param name: String. Name of the project where a use should be created
+    :param form: Instance of WTForm
+    :return: Instance of a project to which a new user has to be attached and an
+    instance of TmpUser class
+    """
+    project = check_responsible(name)
+    prenom = form.prenom.data.strip().lower()
+    surname = form.surname.data.strip().lower()
+    key = form.ssh.data.strip()
+    if not ssh_check(key):
+        raise ValueError("Provided public key failed to pass ssh-keygen check. "
+                         "Please make sure that you've inserted the content of "
+                         "the public key file which should looks like this key "
+                         "for example: \n521 SHA256:dm7RcwGfa66ZFQ3LSD70BSPOyX1"
+                         "UWZk key_name (ECDSA)")
+    user = TmpUser()
+    user.login = "student_" + generate_login(prenom, surname)
+    user.name = prenom
+    user.surname = surname
+    user.password = key
+    task = TaskQueue().project(project).student_create(user).task
+    if current_user.login and "admin" in current_user.permissions():
+        Task(task).accept()
+    return ProjectLog(project).student_create(task)  #!!!
+
+
 def project_create_user(name, form):
     """
     Function which creates a temporary user based on provide info and add a
