@@ -135,6 +135,7 @@ class UserForm(FlaskForm):
     email = EmailField("E-mail")
     login = SelectField("Login", choices=[], coerce=int, default=0)
     create_user = False
+    ssh_upload = False
 
     def validate(self, extra_validators=None):
         """
