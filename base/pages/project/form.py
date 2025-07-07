@@ -148,6 +148,12 @@ class UserForm(FlaskForm):
         if self.login.data:
             self.login.validate(self, [DataRequired()])
             return True
+        if self.prenom.data and self.surname.data and self.ssh.data:
+            self.prenom.validate(self, [DataRequired()])
+            self.surname.validate(self, [DataRequired()])
+            self.ssh.validate(self, [DataRequired()])
+            self.ssh_upload = True
+            return True
         if self.prenom.data and self.surname.data and self.email.data:
             self.prenom.validate(self, [DataRequired()])
             self.surname.validate(self, [DataRequired()])
