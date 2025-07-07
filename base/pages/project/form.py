@@ -131,6 +131,7 @@ def new_responsible(project, is_admin):
 class UserForm(FlaskForm):
     prenom = StringField("Name")  # Can't use "name" cause it causes conflict
     surname = StringField("Surname")
+    ssh = StringField("SSH public key")
     email = EmailField("E-mail")
     login = SelectField("Login", choices=[], coerce=int, default=0)
     create_user = False
