@@ -196,7 +196,7 @@ class TaskQueue:
         self.task.processed = True
         return self.commit()
 
-    def user_create(self, user): #!!!
+    def user_create(self, user, item="user"): #!!!
         if not self.p_name:
             raise ValueError("Can't add a user to none existent project")
         description = user.task_description()
