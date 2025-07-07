@@ -203,6 +203,9 @@ class TaskQueue:
         self.task.action = f"create|{item}|{user.login}|{self.p_name}|{info}"
         return self.commit()
 
+    def student_create(self, user):
+        return self.user_create(user, "stdy")
+
     def responsible_create(self, user):
         if not self.p_name:
             raise ValueError("Can't add a user to none existent project")
