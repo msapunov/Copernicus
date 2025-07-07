@@ -212,7 +212,7 @@ def web_modal_responsible(pid):
 def web_modal_user(pid):
     project = get_project_record(pid)
     form = new_user(project)
-    return jsonify(render_template("modals/project_add_user.html", form=form))
+    return jsonify(render_template("modals/project_add_user.html", project=project, form=form))
 
 
 @bp.route("/project/modal/transform/<int:pid>", methods=["POST"])
