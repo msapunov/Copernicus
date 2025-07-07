@@ -100,6 +100,19 @@ class ProjectLog(Log):
         self.log.event = "User %s has been created" % user.full()
         return self.commit(Mail().user_new(user))
 
+    def student_create(self, task):
+        user = TmpUser().from_task(Task(task))
+        user.task = task
+        self.log.event = ("Made a request to create a student account for %s"
+                          % user.full())
+        return self.commit(Mail().user_create(user))
+
+    def student_created(self, task):
+        user = TmpUser().from_task(Task(task))
+        user.task = task
+        self.log.event = "Student account for %s has been created" % user.full()
+        return self.commit(Mail().user_created(user))
+
     def user_create(self, task):
         user = TmpUser().from_task(Task(task))
         user.task = task
