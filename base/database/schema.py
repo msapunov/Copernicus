@@ -897,6 +897,8 @@ class Tasks(db.Model):
                 act += " a user "
             elif entity == "resp":
                 act += " a responsible "
+            elif entity == "elev":
+                act += " a student "
             else:
                 act += " a project "
         elif act in ["ssh"]:
