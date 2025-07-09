@@ -946,7 +946,10 @@ class Tasks(db.Model):
         if act in ["create", "activate"]:
             if "new project" in task:
                 return task
-            act += " a user with %s for the project %s" % (task, project)
+            if entity == "elev":
+                act += f" a student with {task} for the project {project}"
+            else:
+                act += f" a user with {task} for the project {project}"
         if act in ["assign", "remove"]:
             return task
         elif act in ["update"]:
