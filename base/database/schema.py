@@ -950,10 +950,10 @@ class Tasks(db.Model):
         if act in ["assign", "remove"]:
             return task
         elif act in ["update"]:
-            act += " user info for %s with following data: %s" % (login, task)
+            act += f" user info for {login} with following data: {task}"
         elif act in ["ssh"]:
             short = "%s ... %s" % (task[:20], task[-20:])
-            act = "upload SSH public key: %s" % short
+            act = f"upload SSH public key: {short}"
         else:
             return act
         act = act[0].upper() + act[1:]
