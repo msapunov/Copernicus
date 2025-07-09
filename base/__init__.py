@@ -13,6 +13,7 @@ from base.pages.statistic import bp as blueprint_stat
 from base.database.schema import User, Project
 
 from base.functions import project_config
+from base.pages.login.form import LoginForm
 
 from datetime import datetime as dt
 from werkzeug.exceptions import HTTPException
