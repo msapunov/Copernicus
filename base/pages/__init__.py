@@ -204,7 +204,7 @@ class TaskQueue:
         return self.commit()
 
     def student_create(self, user):
-        return self.user_create(user, "stdy")
+        return self.user_create(user, "elev")
 
     def responsible_create(self, user):
         return self.user_create(user, "resp")
