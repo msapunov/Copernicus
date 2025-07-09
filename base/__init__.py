@@ -37,6 +37,11 @@ def create_app(config_filename):
     register_decor(app)
     configure_logger(app)
     attach_custom_methods(app)
+    @app.context_processor
+    def inject_login_form():
+        if not current_user.is_authenticated:
+            return {"login_form": LoginForm()}
+        return {}
     return app
 
 
