@@ -670,7 +670,7 @@ class Pending:
             raise ValueError("Failed to generate visa document")
         mail.registration(record).visa_attach(path).start()
         map(lambda x: Path(x).unlink(), path)
-        debug(f"Temporary file(s) was deleted: {",".join(map(str, path))}")
+        debug("Temporary file(s) was deleted")
         if resend:
             record.status = "resent"
             self.result = RequestLog(record).visa_resent()
