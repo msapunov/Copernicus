@@ -224,6 +224,13 @@ def write_pdf(html, name):
     debug("The resulting PDF will be saved to: %s" % path)
     try:
         HTML(string=html, base_url=path.parent.as_posix()).write_pdf(path)
+    except TypeError:
+        try:
+            pdf = HTML(string=html, base_url=path.parent.as_posix()).write_pdf()
+            with open(path, "wb") as f:
+                f.write(pdf)
+        except Exception as e:
+            raise ValueError(f"Error during PDF generation: {e}")
     except Exception as e:
         raise ValueError(f"Error during PDF generation: {e}")
     debug("PDF converted and saved successfully")
