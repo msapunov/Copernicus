@@ -37,6 +37,11 @@
       height: auto;
     }
 
+    .signature {
+      width: 200px;
+      height: auto;
+    }
+
     img {
       max-width: 100%;
       height: auto;
@@ -148,7 +153,7 @@
       <tr>
         <td class="sign-space"></td>
         <td class="sign-space">
-          <img src="data:image/jpeg;base64,{{ data.signature | safe }}">
+          <img class="signature" src="data:image/jpeg;base64,{{ data.signature | safe }}">
         </td>
       </tr>
       <tr>
