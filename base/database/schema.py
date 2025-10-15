@@ -3,7 +3,7 @@ from base import db
 from base.functions import (generate_password,
                             process_register_user,
                             full_name as fn)
-from datetime import datetime as dt
+from datetime import datetime as dt, timezone
 from textwrap import shorten
 from logging import error, debug
 from pathlib import PurePath
@@ -337,7 +337,7 @@ class ArticleDB(db.Model):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     info = db.Column(db.Text)
-    created = db.Column(db.DateTime(True), default=dt.utcnow())
+    created = db.Column(db.DateTime(True), default=dt.now(timezone.utc))
 
     project_id = db.Column(db.Integer, db.ForeignKey("projects.id"))
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
@@ -353,7 +353,7 @@ class File(db.Model):
     path = db.Column(db.Text)
     size = db.Column(db.Integer)
     comment = db.Column(db.Text)
-    created = db.Column(db.DateTime(True), default=dt.utcnow())
+    created = db.Column(db.DateTime(True), default=dt.now(timezone.utc))
 
     project_id = db.Column(db.Integer, db.ForeignKey("projects.id"))
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
@@ -380,7 +380,7 @@ class Resources(db.Model):
     type = db.Column(db.String(1))
     comment = db.Column(db.Text)
     modified = db.Column(db.DateTime(True))
-    created = db.Column(db.DateTime(True), default=dt.utcnow())
+    created = db.Column(db.DateTime(True), default=dt.now(timezone.utc))
     ttl = db.Column(db.DateTime(True))
     project = db.Column(db.String)
     treated = db.Column(db.Boolean, default=False)
@@ -771,7 +771,7 @@ class LogDB(db.Model):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
 
-    created = db.Column(db.DateTime(True), default=dt.utcnow())
+    created = db.Column(db.DateTime(True), default=dt.now(timezone.utc))
     event = db.Column(db.Text, nullable=False)
 
     author_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
@@ -867,7 +867,7 @@ class Tasks(db.Model):
     result = db.Column(db.Text, default=None)
     comment = db.Column(db.String, default=None)
 
-    created = db.Column(db.DateTime(True), default=dt.utcnow())
+    created = db.Column(db.DateTime(True), default=dt.now(timezone.utc))
     modified = db.Column(db.DateTime(True))
 
     uid = db.Column(db.Integer, db.ForeignKey("users.id"))
