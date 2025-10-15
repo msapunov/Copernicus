@@ -867,7 +867,7 @@ class Tasks(db.Model):
     result = db.Column(db.Text, default=None)
     comment = db.Column(db.String, default=None)
 
-    created = db.Column(db.DateTime(True), default=dt.now(timezone.utc))
+    created = db.Column(db.DateTime(True), server_default=func.now())
     modified = db.Column(db.DateTime(True))
 
     uid = db.Column(db.Integer, db.ForeignKey("users.id"))
