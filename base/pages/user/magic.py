@@ -4,7 +4,7 @@ from base import db
 from base.utils import form_error_string
 from base.functions import bytes2human, ssh_wrapper, ssh_public
 from base.pages import TaskQueue
-from base.database.schema import User, Project
+from base.database.schema import User, Project, Register
 from base.classes import UserLog, Task
 from tempfile import mkstemp
 from os import path, remove
@@ -15,6 +15,9 @@ from datetime import datetime as dt, timezone
 __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
 
+
+def get_pending_projects():
+    return False
 
 def absent_users_check(logins):
     """
