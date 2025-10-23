@@ -7,6 +7,7 @@ from base.pages.user.magic import (get_user_record, get_jobs,
                                    absent_users_check,
                                    working_users_check,
                                    archived_users_check,
+                                   get_pending_projects,
                                    inactive_users_check)
 from base.pages.user.magic import get_scratch, user_edit, ssh_key
 from base.pages.user.form import edit_info, InfoForm, KeyForm
