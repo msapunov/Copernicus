@@ -117,6 +117,13 @@ def web_user_edit(login):
 @bp.route("/user.html", methods=["GET"])
 @login_required
 def user_index():
+    if current_user.acl.is_manager:
+        pending = get_pending_projects()
+        if not pending:
+            flash("Looks like there are no new project requests at the moment")
+        return render_template("user.html", data={"user": current_user,
+                                                  "external": True,
+                                                  "pending": pending})
     if not current_user.project:
         current_user.project = []
         flash("No projects found for user '%s'" % current_user.full())
