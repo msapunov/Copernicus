@@ -551,7 +551,7 @@ class Pending:
     haven't been processed yet
     """
 
-    def __init__(self, rid=None):
+    def __init__(self, rid=None, types=None):
         """
         self.pending is always a list.
         If rid is provided set self.pending to the unprocessed record with
