@@ -334,6 +334,7 @@ def project_config_options(cfg, section):
         "evaluation_notice_text": cfg.get(section, "evaluation_notice", fallback=None),
         "evaluation_notice_dt": parse_datetime(cfg.get(section, "evaluation_notice", fallback=None)),
 
+        "external_manager": parse_list(cfg.get(section, "external_manager", fallback=[])),
         "visa": visa
     }
 
