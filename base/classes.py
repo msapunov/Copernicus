@@ -11,6 +11,7 @@ from logging import debug, warning
 from operator import attrgetter
 from datetime import datetime as dt
 from pathlib import Path
+from sqlalchemy import func
 
 
 __author__ = "Matvey Sapunov"
