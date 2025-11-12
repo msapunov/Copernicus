@@ -555,8 +555,9 @@ class Pending:
         """
         self.pending is always a list.
         If rid is provided set self.pending to the unprocessed record with
-        provided id. Otherwise it returns all unprocessed records.
+        provided id. Otherwise, it returns all unprocessed records.
         :param rid: String. ID of registration record. Optional
+        :param types: String or List. Type of pending projects
         """
         self.pending = Register.query.filter_by(id=rid).first()
         self.action = None
