@@ -120,6 +120,22 @@ def web_user_edit(login):
 @bp.route("/user.html", methods=["GET"])
 @login_required
 def user_index():
+    if not current_user.acl.is_user and current_user.acl.is_manager:
+        config = project_config()
+        projects = []
+        for k, v in config.items():
+            external = v.get("external_manager")
+            if external is None:
+                continue
+            if current_user.login in external:
+                projects.append(k)
+        if not projects:
+            flash("No pending projects found. All good")
+            pending = []
+        else:
+            pending = Pending(types=projects).pending
+        return render_template("external.html", data={"user": current_user,
+                                                      "pending": pending})
     if not current_user.project:
         current_user.project = []
         flash("No projects found for user '%s'" % current_user.full())
