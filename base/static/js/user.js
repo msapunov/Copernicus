@@ -6,6 +6,7 @@
 
     $(document).on("ready", function(){
         let login = $.trim( $("#user_login").data("login") );
+        if(login === '') return;
         modal("{0}/{1}".f(url, login), "edit");
         modal(ssh, "ssh");
     });
