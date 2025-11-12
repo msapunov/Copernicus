@@ -559,7 +559,18 @@ class Pending:
         :param rid: String. ID of registration record. Optional
         :param types: String or List. Type of pending projects
         """
-        self.pending = Register.query.filter_by(id=rid).first()
+        if rid is not None:
+            self.pending = Register.query.filter_by(id=rid).first()
+            if self.pending.processed:
+                raise ValueError("Pending project record already processed!")
+        else:
+            query = Register.query.filter_by(processed=False)
+            if types:
+                if not isinstance(types, (list, tuple)):
+                    types = [types]
+                types = [t.lower() for t in types]
+                query = query.filter(func.lower(Register.type).in_(types))
+            self.pending = query.all()
         self.action = None
         self.result = None
 
