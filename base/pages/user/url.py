@@ -49,12 +49,14 @@ def user_check_active():
 
 @bp.route("/user/list/all", methods=["GET"])
 @login_required
+@grant_access("admin", "tech")
 def user_all():
     return user_list(active=False)
 
 
 @bp.route("/user/list", methods=["GET"])
 @login_required
+@grant_access("admin", "tech")
 def user_list(active=True):
     term = request.args.get("term")
     if active:
