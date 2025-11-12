@@ -3,7 +3,7 @@
         <script src="{{ url_for('static', filename='js/user.js') }}"></script>
     {% endblock %}
     {% block main %}
-        {% if data and data.user %}
+        {% if data and data.user and not data.external %}
             <meta id="user_login" data-login="{{ data.user.login }}">
             <div class="w-100 p-3 text-center my-5">
                 <h4>{{data.user.full()}}</h4>
