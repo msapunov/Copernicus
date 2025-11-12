@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block head %}
+    <script src="{{ url_for('static', filename='js/lib/Inmodal.js') }}"></script>
+{% endblock %}
+{% block main %}
+    {% if data and data.pending %}
+        <meta id="user_login" data-login="{{ data.user.login }}">
+        <div class="mb-4"></div>
+        <div class="table-container">
+            <div class="table-responsive">
+                <table class="table table-bordered align-middle table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th style="width: 5%"></th>
+                            <th>Type</th>
+                            <th>Title</th>
+                            <th>Name</th>
+                            <th>CPU</th>
+                            <th>Created</th>
+                            <th style="width: 5%"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for row in data.pending|sort(attribute='id', reverse=True) %}
+                        <tr class="parent-row" data-row-id="{{ loop.index }}">
+                            <td class="text-center toggle-btn">➕</td>
+                            <td>{{ row.type }}</td>
+                            <td>{{ row.title }}</td>
+                            <td>{{ row.name }}</td>
+                            <td>{{ row.cpu }}</td>
+                            <td>{{ row.ts }}</td>
+                            <td class="text-center">
+                            {% if row.status == 'ok' %}
+                                <span class="text-success status-icon">●</span>
+                            {% elif row.status == 'warn' %}
+                                <span class="text-warning status-icon">●</span>
+                            {% else %}
+                                <span class="text-danger status-icon">●</span>
+                            {% endif %}
+                            </td>
+                        </tr>
+                        <tr class="details-row" id="details-{{ loop.index }}">
+                            <td colspan="7" class="p-3">
+                                {{ row.details }}
+                                <button class="btn btn-sm btn-primary" id="editUser">Edit User</button>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+                </table>
+            </div>
+        </div>
+    {% endif %}
+<script>
+document.getElementById('editUser').addEventListener('click', () => {
+  ModalFactory.createModal({
+    title: "Edit User Info",
+    submitUrl: "/api/user/update",
+    fields: [
+      { type: 'text', name: 'username', label: 'Username', value: 'john_doe' },
+      { type: 'textarea', name: 'bio', label: 'Biography' },
+      { type: 'radio', name: 'status', label: 'Status', options: [
+          { label: 'Active', value: 'active' },
+          { label: 'Inactive', value: 'inactive' }
+        ] },
+      { type: 'select', name: 'role', label: 'Role', options: [
+          { label: 'User', value: 'user' },
+          { label: 'Admin', value: 'admin' }
+        ] }
+    ],
+    onSuccess: (res) => alert("Saved successfully!")
+  });
+});
+</script>
+{% endblock %}
