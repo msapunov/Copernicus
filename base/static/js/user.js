@@ -1,26 +1,45 @@
-(function(window, document, $, undefined){
-    "use strict";
-    let url = "user/modal/edit";
-    let ssh = "user/modal/ssh";
-    let pass = "reset.html"
+document.addEventListener("DOMContentLoaded", () => {
+    const loginEl = document.getElementById("user_login");
+    const login = (loginEl?.dataset.login || "").trim();
+    if (!login) return;
+    const URL = {
+        edit: "user/modal/edit",
+        upload: "user/modal/ssh",
+        reset: "reset.html"
+    };
+    const Control = {
+        onClick(e) {
+            const btn = e.target.closest('button');
+            if (!btn) return;
+            if (btn.classList.contains('info')) {
+                this.viewUser();
+            } else if (btn.classList.contains('accept')) {
+                this.editUser();
+            } else if (btn.classList.contains('reset')) {
+                this.resetPassword();
+            }
+        },
+        viewUser() {
+            window.ModalFactory.createModal({
+                title: 'User Info',
+                content: `<p>Showing details for user #${login}</p>`,
+                confirmText: 'Close',
+                cancelText: ''
+            });
+        },
 
-    $(document).on("ready", function(){
-        let login = $.trim( $("#user_login").data("login") );
-        if(login === '') return;
-        modal("{0}/{1}".f(url, login), "edit");
-        modal(ssh, "ssh");
-    });
+        editUser(id) {
+            window.ModalFactory.createModal({
+                title: 'Accept User',
+                content: `<p>Are you sure you want to accept user #${login}?</p>`,
+                confirmText: 'Yes, Accept',
+                onConfirm: () => console.log(`Accept user ${login}`)
+            });
+        },
 
-    function reset() {
-        window.location.href = pass;
-    }
-
-    $(document).on("click", ".window_hide", trigger_modal);
-    $(document).on("click", ".edit", trigger_modal);
-    $(document).on("click", ".ssh", trigger_modal);
-    $(document).on("click", ".pass", reset);
-    $(document).on("click", ".edit_submit", submit);
-    $(document).on("click", ".ssh_submit", submit);
-    $(document).on("hide.uk.modal", form_reset);
-
-})(window, document, jQuery);
+        resetPassword() {
+            window.location.href = URL.reset;
+        }
+    };
+    document.addEventListener("click", Control.onClick);
+});
