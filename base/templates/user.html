@@ -1,6 +1,7 @@
 {% extends "base.html" %}
     {% block head %}
-        <script src="{{ url_for('static', filename='js/user.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/lib/windows.js') }}" defer></script>
+        <script src="{{ url_for('static', filename='js/user.js') }}" defer></script>
     {% endblock %}
     {% block main %}
         {% if data and data.user and not data.external %}
