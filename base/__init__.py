@@ -15,6 +15,7 @@ from base.database.schema import User, Project
 from base.functions import project_config
 
 from datetime import datetime as dt
+from werkzeug.middleware.proxy_fix import ProxyFix
 from werkzeug.exceptions import HTTPException
 from os import walk
 from os.path import join as path_join, exists
@@ -36,7 +37,19 @@ def create_app(config_filename):
     register_decor(app)
     configure_logger(app)
     attach_custom_methods(app)
+    if app.config.get("USE_GUNICORN", False):
+        apply_proxy_fix(app)
     return app
+
+
+def apply_proxy_fix(app):
+    app.wsgi_app = ProxyFix(
+        app.wsgi_app,
+        x_for=1,
+        x_proto=1,
+        x_host=1,
+        x_prefix=0  # 0 is for subpath deployments
+    )
 
 
 def register_extensions(app):
