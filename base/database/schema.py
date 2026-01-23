@@ -1017,7 +1017,7 @@ class Tasks(db.Model):
             "approve": self.approve.full_name() if self.approve else "",
             "decision": self.decision,
             "processed": self.processed,
-            "created": self.created.strftime("%Y-%m-%d %X %Z"),
+            "created": self.created.strftime("%Y-%m-%d %X %Z") if self.created else "",
             "status": status,
             "result": result,
             "comment": self.comment,
