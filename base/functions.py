@@ -1,5 +1,6 @@
-from paramiko import SSHClient, AutoAddPolicy, AuthenticationException, RSAKey
-from paramiko import BadHostKeyException
+from paramiko import SSHClient, AutoAddPolicy, AuthenticationException
+from paramiko import RSAKey, ECDSAKey, Ed25519Key
+from paramiko import SSHException, BadHostKeyException
 from flask import current_app as app, flash, request, render_template
 from time import mktime
 from datetime import datetime as dt, timezone
@@ -92,7 +93,14 @@ def ssh_wrapper(cmd, host=None):
         host = app.config["SSH_SERVER"]
     login = app.config["SSH_USERNAME"]
     key_file = app.config["SSH_KEY"]
-    key = RSAKey.from_private_key_file(key_file)
+    for key_type in (RSAKey, ECDSAKey, Ed25519Key):
+        try:
+            key = key_type.from_private_key_file(key_file)
+            break
+        except SSHException:
+            continue
+    else:
+        raise ValueError("Unsupported or invalid private key")
     timeout = app.config.get("SSH_TIMEOUT", 60)
     port = app.config.get("SSH_PORT", 22)
     debug("Connecting to %s:%s with username %s and key %s" %
