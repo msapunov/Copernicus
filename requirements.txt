@@ -1,13 +1,14 @@
 Babel==2.17.0
-Flask==3.1.1
+email-validator==2.3.0
+Flask==3.1.2
 Flask_Caching==2.3.1
 Flask_Login==0.6.3
 flask_mail==0.10.0
 flask_sqlalchemy==3.1.1
 flask_wtf==1.2.2
-paramiko==3.5.1
+paramiko==4.0.0
 parsedatetime==2.6
-SQLAlchemy==2.0.41
+SQLAlchemy==2.0.46
 weasyprint==68.0
 webdavclient3==3.14.6
 Werkzeug==3.1.5
