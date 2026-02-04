@@ -37,12 +37,12 @@ class CreateForm(FlaskForm):
 
 def create_pending(register):
     result = []
-    users = register.users.split("\n")
+    raw = register.users.split("\n")
     if register.responsible_email not in register.users:
         name = register.responsible_first_name.lower()
         sname = register.responsible_last_name.lower()
         email = register.responsible_email
-        users.append("First Name: %s; Last Name: %s; E-mail: %s; Login:" % (
+        raw.append("First Name: %s; Last Name: %s; E-mail: %s; Login:" % (
             name, sname, email))
     for num, user in enumerate(users):
         form = CreateForm(prefix=str(num))
