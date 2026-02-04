@@ -49,6 +49,12 @@ def create_pending(register):
     for num, user in enumerate(users):
         form = CreateForm(prefix=str(num))
         name, surname, email, login = process_register_user(user)
+        if None in (name, surname, email, login):
+            error(
+                f"Function process_register_user({user}) returned:"
+                f"name: {name}, surname: {surname}, email: {email}, "
+                f"login: {login}. Skipping processing of this record")
+            continue
         form.uid = "".join(filter(lambda x: x in ascii, email)).lower()
         form.user.data = "%s <%s>" % (full_name(name, surname), email)
         form.prenom.data = name
