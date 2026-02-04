@@ -12,6 +12,7 @@ from base.pages.login.form import MessageForm
 from base.pages.project.form import UserForm
 from base.functions import process_register_user, full_name
 from base.pages import process_new_user, generate_login, user_by_details
+from logging import error
 
 
 __author__ = "Matvey Sapunov"
