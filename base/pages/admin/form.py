@@ -44,6 +44,7 @@ def create_pending(register):
         email = register.responsible_email
         raw.append("First Name: %s; Last Name: %s; E-mail: %s; Login:" % (
             name, sname, email))
+    users = [x for x in raw if x]
     for num, user in enumerate(users):
         form = CreateForm(prefix=str(num))
         name, surname, email, login = process_register_user(user)
