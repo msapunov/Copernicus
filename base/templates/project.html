@@ -196,7 +196,12 @@
             </div>
             <div class="uk-panel uk-width-medium-1-1 uk-width-small-1-1 {% if project.active != True %}uk-text-muted{% endif %}">
                 <ul class="uk-subnav uk-subnav-pill" data-uk-switcher="{connect:'#{{project.name}}-additional-info'}">
-                    <li class="uk-active"><a href="">Description</a></li>
+                    {% if project.reservation %}
+                        <li class="uk-active"><a href="">Reservation</a></li>
+                        <li><a href="">Description</a></li>
+                    {% else %}
+                        <li class="uk-active"><a href="">Description</a></li>
+                    {% endif %}
                     <li><a href="">Scientific fields</a></li>
                     <li><a href="">Genci</a></li>
                     <li><a href="">Methods</a></li>
@@ -205,6 +210,9 @@
                     <li><a href="">Motivation</a></li>
                 </ul>
                 <ul id="{{project.name}}-additional-info" class="uk-switcher">
+                    {% if project.reservation %}
+                        <li><article></article></li>
+                    {% endif %}
                     <li><article>{{project.description}}</article></li>
                     <li><article>{{project.scientific_fields}}</article></li>
                     <li><article>{{project.genci_committee}}</article></li>
