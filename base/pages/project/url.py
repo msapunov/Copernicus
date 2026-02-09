@@ -36,6 +36,7 @@ from base.pages.project.magic import (
     get_project_record,
     project_extend,
     project_renew,
+    get_reservation_options,
     get_future_users)
 from logging import debug
 
