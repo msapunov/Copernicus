@@ -285,6 +285,7 @@ def web_project_index():
     list(map(lambda x: is_project_transformable(x), projects))
     list(map(lambda x: is_project_extendable(x), projects))
     list(map(lambda x: is_project_renewable(x), projects))
+    list(map(lambda x: get_reservation_options(x), projects))
     list(map(lambda x: set_users_len(x), projects))
     get_future_users(projects)
     return render_template("project.html", data={"projects": projects})
