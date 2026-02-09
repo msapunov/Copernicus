@@ -12,7 +12,7 @@ from base.pages.statistic import bp as blueprint_stat
 
 from base.database.schema import User, Project
 
-from base.functions import project_config
+from base.functions import project_config, load_config
 
 from datetime import datetime as dt
 from werkzeug.middleware.proxy_fix import ProxyFix
@@ -108,7 +108,8 @@ def register_decor(app):
 
         config = cache.get("project_config")
         if not config:
-            config = project_config()
+            config_old = project_config()
+            config = load_config()
             cache.set("project_config", config, 600)
         g.project_config = config
 
