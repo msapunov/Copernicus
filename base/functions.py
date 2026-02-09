@@ -286,6 +286,56 @@ def create_visa(record, signature="signature.png"):
     return path
 
 
+def parse_value(key, value, cal):
+    value = value.strip()
+    lower = value.lower()
+    extra = {}
+
+    bool_true = {"true", "yes", "1", "on"}
+    bool_false = {"false", "no", "0", "off"}
+    always_string = {"description"}
+    if key in always_string:
+        return value, extra
+    if lower in bool_true:
+        return True, extra
+    if lower in bool_false:
+        return False, extra
+
+    try:
+        return int(value), extra
+    except ValueError:
+        pass
+    try:
+        return float(value), extra
+    except ValueError:
+        pass
+
+    if "," in value:
+        items = []
+        for v in value.split(","):
+            parsed_item, item_extra = parse_value(key, v.strip(), cal)
+            items.append(parsed_item)
+            if item_extra:
+                extra.update(item_extra)
+        return items, extra
+
+    tm, status =cal.parse(value)
+    if status > 0:
+        parsed_dt = dt(
+            tm.tm_year,
+            tm.tm_mon,
+            tm.tm_mday,
+            tm.tm_hour,
+            tm.tm_min,
+            tm.tm_sec,
+            tzinfo=timezone.utc,
+        )
+        extra[f"{key}_text"] = value
+        return parsed_dt, extra
+
+    return value, extra
+
+
 def project_config_options(cfg, section):
     """
     Parse project configuration from config object.
@@ -351,6 +401,28 @@ def project_config_options(cfg, section):
 
         "visa": visa
     }
+
+
+def load_config():
+    config = {}
+    cfg_file = app.config.get("PROJECT_CONFIG", "project.cfg")
+    cfg_path = join_dir(app.instance_path, cfg_file)
+    if not exists(cfg_path):
+        warning("Projects configuration file doesn't exists. Using defaults")
+        return config
+    cfg = ConfigParser()
+    cfg.optionxform = str
+    cfg.read(cfg_path)
+    cal = Calendar()
+    for section in cfg.sections():
+        section_data = {}
+        for key, raw_value in cfg.items(section):
+            value, extra = parse_value(key, raw_value, cal)
+            section_data[key] = value
+            if extra:
+                section_data.update(extra)
+        config[section.strip().lower()] = section_data
+    return config
 
 
 def project_config():
