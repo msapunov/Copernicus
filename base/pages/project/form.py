@@ -134,6 +134,8 @@ class UserForm(FlaskForm):
     email = EmailField("E-mail")
     login = SelectField("Login", choices=[], coerce=int, default=0)
     create_user = False
+    ssh = False
+    key = StringField("Key")
 
     def validate(self, extra_validators=None):
         """
