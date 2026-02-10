@@ -638,6 +638,24 @@ def is_project_renewable(project):
     return project
 
 
+def get_ssh_options(project):
+    """
+    Checking if ssh_upload options is True.
+    :param project: String. Type of the project (i.e. subsection in project
+                         configuration file.
+    :return: List. List of tuples, first item in tuple is type to which this
+             project type can be transformed, second item is type's
+             description
+    """
+    cfg = g.project_config
+    ptype = project.type
+    if ptype in cfg:
+        project.ssh_upload = cfg[ptype].get("ssh_upload", False)
+    else:
+        project.ssh_upload = False
+    return project
+
+
 def get_reservation_options(project):
     """
     Checking if reservation options is True.
