@@ -2,7 +2,11 @@
   <div class="uk-modal-dialog">
     <button type="button" class="uk-modal-close uk-close"></button>
     <div class="uk-modal-header">
-      <h3>Add a new user to the project {{form.name}}?</h3>
+      {% if form.ssh %}
+        <h3>Add a new student to the project {{form.name}}?</h3>
+      {% else %}
+        <h3>Add a new user to the project {{form.name}}?</h3>
+      {% endif %}
     </div>
     <div class="uk-overflow-container">
       <form action="test" method="post" class="uk-panel uk-form attach_form" id="{{form.name}}_attach_form">
@@ -23,12 +27,24 @@
           </div>
         </div>
         <div class="uk-form-row uk-alert">
+          {% if form.ssh %}
+            <div>
+              <div class="uk-form-row">
+                <div class="uk-form-controls">
+                  {{ form.key(class_="uk-width-1-1", placeholder="ssh-rsa AAAAB3NzaC1yc2...+6W5hijLDZ4zVw== username@computer") }}
+                </div>
+              </div>
+              <p>Upload the content of SSH public key. Public key usually saved in a file like ~/.ssh/id_rsa.pub or ~/.ssh/id_ed25519.pub</p>
+              <p>In POSIX systems (Linux, MacOS) it's enough to do 'cat ~/.ssh/name_public_key.pub' and paste output into text area above</p>
+            </div>
+          {% else %}
             <div>
                 If user has (or has had) an account in Mesocentre, please select this user using dropdown select list below:
                 <div class="uk-form-controls select2_hack">
                     {{ form.login(id=form.name+"_login_attach", placeholder="Login", class_="uk-width-1-1 select2_users") }}
                 </div>
             </div>
+          {% endif %}
         </div>
       </form>
     </div>
