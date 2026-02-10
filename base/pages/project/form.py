@@ -143,18 +143,28 @@ class UserForm(FlaskForm):
         select2 field
         :return: Boolean
         """
-        if not self.csrf_token.validate(self):
+        if not super().validate(extra_validators):
             return False
         if self.login.data:
-            self.login.validate(self, [DataRequired()])
             return True
-        if self.prenom.data and self.surname.data and self.email.data:
-            self.prenom.validate(self, [DataRequired()])
-            self.surname.validate(self, [DataRequired()])
-            self.email.validate(self, [DataRequired(), Email()])
+        required = (self.prenom, self.surname, self.email)
+        if any(f.data for f in required):
+            missing = [f.label.text for f in required if not f.data]
+            if self.key.data is not None and not self.key.data:
+                missing.append(self.key.label.text)
+            if missing:
+                self.login.errors.append(
+                    f"Please fill the following field(s): {', '.join(missing)}"
+                )
+                return False
             self.create_user = True
             return True
-        return ValidationError("Assign an existing user or add a new one")
+
+        self.login.errors.append(
+            "You have to either assign an existing user or add a new one "
+            "by providing values for fields Name, Surname, and Email."
+        )
+        return False
 
 
 def new_user(project):
