@@ -37,6 +37,7 @@ from base.pages.project.magic import (
     project_extend,
     project_renew,
     get_reservation_options,
+    get_ssh_options,
     get_future_users)
 from logging import debug
 
@@ -209,7 +210,7 @@ def web_modal_responsible(pid):
 @grant_access("admin", "responsible")
 def web_modal_user(pid):
     project = get_project_record(pid)
-    form = new_user(project)
+    form = new_user(get_ssh_options(project))
     return jsonify(render_template("modals/project_add_user.html", form=form))
 
 
@@ -286,6 +287,7 @@ def web_project_index():
     list(map(lambda x: is_project_extendable(x), projects))
     list(map(lambda x: is_project_renewable(x), projects))
     list(map(lambda x: get_reservation_options(x), projects))
+    list(map(lambda x: get_ssh_options(x), projects))
     list(map(lambda x: set_users_len(x), projects))
     get_future_users(projects)
     return render_template("project.html", data={"projects": projects})
