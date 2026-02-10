@@ -170,6 +170,7 @@ class UserForm(FlaskForm):
 def new_user(project):
     form = UserForm()
     form.name = project.name
+    form.ssh = getattr(project, "ssh_upload", False)
     return form
 
 
