@@ -4,6 +4,7 @@ from wtforms import HiddenField, IntegerField, BooleanField
 from wtforms import TextAreaField, SelectField, StringField
 from wtforms.fields import EmailField
 from wtforms.validators import DataRequired, NumberRange, ValidationError, Email
+from base.classes import BaseForm
 from base.pages.project.magic import (
     get_transformation_options,
     get_users)
