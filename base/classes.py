@@ -1046,7 +1046,7 @@ class Task:
         return ProjectLog(project).created()
 
 class BaseForm(FlaskForm):
-    def errors_as_line(self):
+    def error_message(self):
         """
         Convert form.errors dictionary into a single human-readable string.
         """
