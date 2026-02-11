@@ -137,7 +137,6 @@ class UserForm(BaseForm):
     login = SelectField("Login", choices=[], coerce=int, default=0,
                         validate_choice=False)
     create_user = False
-    ssh = False
     key = StringField("Key", validators=[Optional()])
 
     def validate(self, extra_validators=None):
@@ -164,7 +163,6 @@ class UserForm(BaseForm):
         if self.key.data:
             if not self.key.validate(self):
                 return False
-            self.ssh = True
         self.create_user = True
         return True
 
