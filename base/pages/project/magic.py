@@ -183,9 +183,17 @@ def project_create_user(name, form):
     instance of TmpUser class
     """
     project = check_responsible(name)
-    prenom = form.prenom.data.strip().lower()
-    surname = form.surname.data.strip().lower()
-    email = form.email.data.strip().lower()
+    project = get_ssh_options(project)
+    project = get_add_users_options(project)
+    prenom = get_field_value(form, "prenom").lower()
+    surname = get_field_value(form, "surname").lower()
+    email = get_field_value(form, "email").lower()
+    if not all((prenom, surname, email)):
+        raise ValueError("Name, Surname and Email are required")
+    key = get_field_value(form, "key")
+    if getattr(project, "ssh_upload", False) and key:
+        if not ssh_check(key):
+            raise ValueError("Public key failed to pass ssh-keygen check")
     if User.query.filter(User.email == email).first():
         raise ValueError("User with e-mail %s has been registered already"
                          % email)
@@ -197,6 +205,14 @@ def project_create_user(name, form):
     task = TaskQueue().project(project).user_create(user).task
     if current_user.login and "admin" in current_user.permissions():
         Task(task).accept()
+    elif getattr(project, "add_users", False):
+        Task(task).accept()
+    if getattr(project, "ssh_upload", False) and key:
+        tq = TaskQueue()
+        tq.u_name = user.login
+        task_key = tq.key_upload(key).task
+        Task(task_key).accept()
+        UserLog(current_user).key_upload(key)
     return ProjectLog(project).user_create(task)
 
 
