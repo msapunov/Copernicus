@@ -1054,13 +1054,6 @@ class BaseForm(FlaskForm):
 
         for field_name, errs in self.errors.items():
             if field_name == "csrf_token":
-                label = "CSRF token"
-            else:
-                field = getattr(self, field_name, None)
-                label_obj = getattr(field, "label", None)
-                label = getattr(label_obj, "text", field_name) if label_obj else field_name
-
-            # Join multiple errors for a field with comma
                 return "Your session has expired, please reload the page."
             field = getattr(self, field_name, None)
             label_obj = getattr(field, "label", None)
