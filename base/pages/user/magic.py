@@ -38,7 +38,6 @@ def absent_users_check(logins):
     return list(registered - set(logins))
 
 
-
 def archived_users_check(logins):
     """
     Archives users who are not in the provided login list and archived
