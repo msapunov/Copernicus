@@ -25,6 +25,10 @@ import locale
 __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
 
+def get_field_value(form, name):
+    field = form._fields.get(name)
+    return field.data.strip() if field else None
+
 
 def upload_to_cloud(remote_dir, path):
     """
