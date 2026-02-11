@@ -1061,6 +1061,7 @@ class BaseForm(FlaskForm):
                 label = getattr(label_obj, "text", field_name) if label_obj else field_name
 
             # Join multiple errors for a field with comma
+                return "Your session has expired, please reload the page."
             field_msg = ", ".join(errs)
             messages.append(f"{label}: {field_msg}")
 
