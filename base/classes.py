@@ -1060,6 +1060,4 @@ class BaseForm(FlaskForm):
             label = getattr(label_obj, "text", field_name) if label_obj else field_name
             field_msg = ", ".join(errs)
             messages.append(f"{label}: {field_msg}")
-
-        # Join all field messages with semicolon
-        return "; ".join(messages)
+        return "\n".join(messages)
