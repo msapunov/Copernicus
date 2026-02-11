@@ -130,14 +130,15 @@ def new_responsible(project, is_admin):
     return form
 
 
-class UserForm(FlaskForm):
-    prenom = StringField("Name")  # Can't use "name" cause it causes conflict
-    surname = StringField("Surname")
-    email = EmailField("E-mail")
-    login = SelectField("Login", choices=[], coerce=int, default=0)
+class UserForm(BaseForm):
+    prenom = StringField("Name", validators=[DataRequired()])  # Can't use "name" cause it causes conflict
+    surname = StringField("Surname", validators=[DataRequired()])
+    email = EmailField("E-mail", validators=[DataRequired(), Email()])
+    login = SelectField("Login", choices=[], coerce=int, default=0,
+                        validate_choice=False)
     create_user = False
     ssh = False
-    key = StringField("Key")
+    key = StringField("Key", validators=[Optional()])
 
     def validate(self, extra_validators=None):
         """
@@ -145,28 +146,27 @@ class UserForm(FlaskForm):
         select2 field
         :return: Boolean
         """
-        if not super().validate(extra_validators):
-            return False
-        if self.login.data:
-            return True
         required = (self.prenom, self.surname, self.email)
-        if any(f.data for f in required):
-            missing = [f.label.text for f in required if not f.data]
-            if self.key.data is not None and not self.key.data:
-                missing.append(self.key.label.text)
-            if missing:
-                self.login.errors.append(
-                    f"Please fill the following field(s): {', '.join(missing)}"
-                )
-                return False
-            self.create_user = True
-            return True
+        select_old = bool(self.login.data)
+        create_new = any(field.data for field in required)
+        msg = "existing user or fill name, surname and email to create new user"
+        if select_old and create_new:
+            raise ValidationError(f"Choose either {msg}")
+        if not select_old and not create_new:
+            raise ValidationError(f"You must select {msg}")
 
-        self.login.errors.append(
-            "You have to either assign an existing user or add a new one "
-            "by providing values for fields Name, Surname, and Email."
-        )
-        return False
+        if select_old:
+            return self.login.validate(self)
+
+        for field in required:
+            if not field.validate(self):
+                return False
+        if self.key.data:
+            if not self.key.validate(self):
+                return False
+            self.ssh = True
+        self.create_user = True
+        return True
 
 
 def new_user(project):
