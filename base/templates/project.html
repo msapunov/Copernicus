@@ -211,7 +211,11 @@
                 </ul>
                 <ul id="{{project.name}}-additional-info" class="uk-switcher">
                     {% if project.reservation %}
-                        <li><article></article></li>
+                        <li><article>
+                            {% for reservation in project.reservation %}
+                                <div class="uk-panel">{{ reservation }}</div>
+                            {% endfor %}
+                        </article></li>
                     {% endif %}
                     <li><article>{{project.description}}</article></li>
                     <li><article>{{project.scientific_fields}}</article></li>
