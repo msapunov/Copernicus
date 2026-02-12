@@ -751,3 +751,21 @@ def is_project_transformable(project):
     else:
         project.is_transformable = False
     return project
+
+
+def get_reservation(name):
+    cmd = f"scontrol show reservation -o | grep Accounts={name}"
+    result, err = ssh_wrapper(cmd)
+    if not result:
+        return ["No reservations found"]
+    if err:
+        return [err]
+    output = []
+    for line in result:
+        el = line.split(" ")
+        reservation = [s for s in el if "ReservationName=" in s]
+        start = [s for s in el if "StartTime=" in s]
+        end = [s for s in el if "EndTime=" in s]
+        duration = [s for s in el if "Duration=" in s]
+        output.append(" ".join(chain(reservation, start, end, duration)))
+    return output
