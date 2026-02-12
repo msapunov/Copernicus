@@ -700,10 +700,10 @@ def get_reservation_options(project):
     """
     cfg = g.project_config
     ptype = project.type
-    if ptype in cfg:
-        project.reservation = cfg[ptype].get("reservation", None)
+    if cfg.get(ptype, {}).get("reservation"):
+        project.reservation = get_reservation(project.name)
     else:
-        project.reservation = None
+        project.reservation = False
     return project
 
 
