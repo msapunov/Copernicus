@@ -692,12 +692,11 @@ def get_ssh_options(project):
 
 def get_reservation_options(project):
     """
-    Checking if reservation options is True.
+    Checking if reservation options is True. If it's True return available
+    reservations, otherwise set reservation option to False
     :param project: String. Type of the project (i.e. subsection in project
                          configuration file.
-    :return: List. List of tuples, first item in tuple is type to which this
-             project type can be transformed, second item is type's
-             description
+    :return: List. List of string, each item represent a reservation in SLURM
     """
     cfg = g.project_config
     ptype = project.type
