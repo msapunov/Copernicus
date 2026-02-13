@@ -754,6 +754,10 @@ def is_project_transformable(project):
 
 
 def get_reservation(name):
+    def parse(text, prop):
+        element = "".join([s for s in text if prop in s])
+        return element.replace(prop, "")
+
     cmd = f"scontrol show reservation -o | grep Accounts={name}"
     result, err = ssh_wrapper(cmd)
     if not result:
@@ -763,9 +767,12 @@ def get_reservation(name):
     output = []
     for line in result:
         el = line.split(" ")
-        reservation = [s for s in el if "ReservationName=" in s]
-        start = [s for s in el if "StartTime=" in s]
-        end = [s for s in el if "EndTime=" in s]
-        duration = [s for s in el if "Duration=" in s]
-        output.append(" ".join(chain(reservation, start, end, duration)))
+        output.append({
+            "name": parse(el, "ReservationName="),
+            "start": parse(el, "StartTime=").replace("T", " "),
+            "end": parse(el, "EndTime=").replace("T", " "),
+            "duration": parse(el, "Duration="),
+            "nodes": parse(el, "NodeCnt="),
+            "cores": parse(el, "CoreCnt=")
+        })
     return output

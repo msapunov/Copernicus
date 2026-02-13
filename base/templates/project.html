@@ -211,11 +211,23 @@
                 </ul>
                 <ul id="{{project.name}}-additional-info" class="uk-switcher">
                     {% if project.reservation %}
-                        <li><article>
+                        <li><div class="uk-grid uk-grid-small uk-padding">
                             {% for reservation in project.reservation %}
-                                <div class="uk-panel uk-panel-box uk-panel-box-primary uk-margin">{{ reservation }}</div>
+                                <div class="uk-width-1-3">
+                                    <div class="uk-panel uk-panel-hover">
+                                    <ul class="uk-list">
+                                        <li>Name: {{ reservation.name }}</li>
+                                        <li>When: {{ reservation.start }}</li>
+                                        <li>Duration: {{ reservation.duration }}</li>
+                                        <li>End: {{ reservation.end }}</li>
+                                        <li>Nodes: {{ reservation.nodes }}</li>
+                                        <li>Total cores: {{ reservation.cores }}</li>
+                                        <li>Example: <span class="uk-text-nowrap">sbatch -A {{project.name}} --reservation={{ reservation.name }} job.sh</span></li>
+                                    </ul>
+                                    </div>
+                                </div>
                             {% endfor %}
-                        </article></li>
+                        </div></li>
                     {% endif %}
                     <li><article>{{project.description}}</article></li>
                     <li><article>{{project.scientific_fields}}</article></li>
