@@ -506,6 +506,34 @@ class TmpUser(User):
     def __repr__(self):
         return '<TmpUser {}>'.format(self.login)
 
+    def description(self, full=False):
+        """
+        Creates task's description out of instance of TmpUser
+        :return: String. Task's description
+        """
+        account = getattr(self, "login", False)
+        nom = getattr(self, "name", False)
+        surname = getattr(self, "surname", False)
+        email = getattr(self, "email", False)
+        user = getattr(self, "is_user", False)
+        resp = getattr(self, "is_responsible", False)
+        mngr = getattr(self, "is_manager", False)
+        tech = getattr(self, "is_tech", False)
+        comm = getattr(self, "is_committee", False)
+        admin = getattr(self, "is_admin", False)
+        if not all([account, nom, surname, email]):
+            raise ValueError("Login and name and surname are required")
+        result = (f"login: {account} and name: {nom} and surname: {surname} "
+                  f"and email: {email}")
+        if full:
+            result += (f" WITH ACL user: {user}, responsible: {resp}, "
+                       f"manager: {mngr}, tech: {tech}, committee: {comm}, "
+                       f"admin: {admin}")
+        if self.comment:
+            result += f" COMMENT {self.comment}"
+        return result
+
+
     def from_task(self, task):
         """
         Takes a task's action string and fill up the properties of TmpUser
