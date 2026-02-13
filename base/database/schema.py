@@ -464,26 +464,6 @@ class User(UserMixin, db.Model):
     def __repr__(self):
         return '<User {}>'.format(self.login)
 
-    def task_description(self):
-        """
-        Creates task's description out of instance of TmpUser
-        :return: String. Task's description
-        """
-        u_part = "login: %s and name: %s and surname: %s and email: %s" % (
-            self.login, self.name, self.surname, self.email)
-        if getattr(self, "acl", False):
-            self = self.acl
-        is_user = getattr(self, "is_user", False)
-        is_resp = getattr(self, "is_responsible", False)
-        is_mngr = getattr(self, "is_manager", False)
-        is_tech = getattr(self, "is_tech", False)
-        is_comm = getattr(self, "is_committee", False)
-        is_admin = getattr(self, "is_admin", False)
-        a_part = "user: %s, responsible: %s, manager: %s, tech: %s, " \
-                 "committee: %s, admin: %s" % (is_user, is_resp, is_mngr,
-                                               is_tech, is_comm, is_admin)
-        return "%s WITH ACL %s" % (u_part, a_part)
-
     def reset_password(self):
         password = generate_password()
         self.hash = generate_password_hash(password)
