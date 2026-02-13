@@ -3,7 +3,7 @@ from flask_login import current_user
 from flask_wtf import FlaskForm
 from base import db
 from base.pages import TaskQueue
-from base.functions import create_visa, calculate_ttl
+from base.functions import create_visa, calculate_ttl, full_name
 from base.email import Mail, UserMailingList, ResponsibleMailingList
 from base.database.schema import (LogDB, User, ACLDB, Extend, Register, Project,
                                   Resources, ArticleDB, Tasks)
