@@ -494,7 +494,6 @@ class TmpUser(User):
         self.name = None
         self.surname = None
         self.email = None
-        self.active = True
         self.is_user = True
         self.is_responsible = False
         self.is_manager = False
