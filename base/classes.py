@@ -570,6 +570,10 @@ class TmpUser(User):
         self.active = True if active_part.strip() == "True" else False
         return self
 
+    def full(self):
+        nom = full_name(self.name, self.surname)
+        return f"{nom} <{self.email}> [{self.login}]"
+
 
 class Pending:
     """
