@@ -500,7 +500,7 @@ class TmpUser(User):
         self.is_tech = False
         self.is_committee = False
         self.is_admin = False
-        self.password = None
+        self.comment = ""
 
     def __repr__(self):
         return '<TmpUser {}>'.format(self.login)
