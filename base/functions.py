@@ -207,16 +207,28 @@ def calculate_ttl(project):
 
 
 def full_name(name, surname):
-    result = []
-    for name in [name, surname]:
-        if not name:
-            continue
-        name_parts = re_split("[\/.,\'\s-]", name)
-        for part in name_parts:
-            cap = part.capitalize()
-            name = name.replace(part, cap)
-        result.append(name)
-    return " ".join(result)
+    """
+    Build a properly capitalized full name from name and surname,
+    preserving separators like dash, apostrophe, space, slash, comma, or dot.
+
+    Each part of the name separated by common punctuation is capitalized,
+    and the separators are preserved in the final result.
+
+    :param name: First name (can be None/False)
+    :param surname: Surname (can be None/False)
+    :return: Full name string with proper capitalization
+    """
+    name_parts = compile(r"([/.,'\s-])")
+
+    def capital(value):
+        if not value:
+            return ""
+        parts = name_parts.split(str(value))
+        return "".join(p.capitalize() if not name_parts.match(p) else p
+                       for p in parts)
+
+    normalized_parts = [capital(n) for n in (name, surname) if n]
+    return " ".join(normalized_parts)
 
 
 def generate_password(pass_len=16):
