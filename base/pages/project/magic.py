@@ -215,6 +215,7 @@ def project_create_user(project, form):
         task_key = tq.key_upload(key).task
         Task(task_key).accept()
         task.accept()
+    elif add_users:
         task.accept()
         UserLog(current_user).key_upload(key)
     return ProjectLog(project).user_create(task)
