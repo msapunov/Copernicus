@@ -16,7 +16,7 @@ from string import ascii_letters, digits
 from struct import unpack
 from subprocess import check_output, STDOUT, CalledProcessError
 from os import urandom
-from re import split as re_split
+from re import compile
 from babel import Locale
 from babel.dates import format_date
 import locale
