@@ -599,7 +599,7 @@ def user_reset_pass(uid):
 def user_create(task):
     if not task.project:
         raise ValueError("Project reference is empty, can't create user")
-    tmp_user = TmpUser().from_task(task.action)
+    tmp_user = TmpUser().from_description(task.action)
     if "REMOTE ONLY" in tmp_user.comment:
         return ProjectLog(task.project).user_created(task)  # Ugly!!
     user = User.query.filter_by(login=tmp_user.login).first()
