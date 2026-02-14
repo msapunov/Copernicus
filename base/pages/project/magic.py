@@ -147,15 +147,14 @@ def active_check():
     return "Project status check done"
 
 
-def project_attach_user(name, form):
+def project_attach_user(project, form):
     """
     Function which attach an existing user to a given project
-    :param name: String. Name of the project to which user should be attached
+    :param project: Object. Project object to which user should be attached
     :param form: Instance of WTForm
     :return: Instance of a project to which a new user has to be attached and an
     instance of User class
     """
-    project = check_responsible(name)
     uid = form.login.data
     user = User.query.filter(User.id == uid).first()
     if not user:
