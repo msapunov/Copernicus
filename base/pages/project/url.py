@@ -109,10 +109,11 @@ def web_project_add_user(project_name):
     form = UserForm()
     if not form.validate_on_submit():
         raise ValueError(form.error_message())
+    project = check_responsible(project_name)
     if form.create_user:
-        return jsonify(message=project_create_user(project_name, form))
+        return jsonify(message=project_create_user(project, form))
     else:
-        return jsonify(message=project_attach_user(project_name, form))
+        return jsonify(message=project_attach_user(project, form))
 
 
 @bp.route("/project/<string:project_name>/assign/responsible", methods=["POST"])
