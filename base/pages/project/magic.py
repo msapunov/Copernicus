@@ -182,9 +182,9 @@ def project_create_user(project, form):
     :return: Instance of a project to which a new user has to be attached and an
     instance of TmpUser class
     """
-    project = check_responsible(name)
-    project = get_ssh_options(project)
-    project = get_add_users_options(project)
+    ssh_upload = get_project_option(project, "ssh_upload")
+    add_users = get_project_option(project, "add_users")
+    tmp_users = get_project_option(project, "tmp_users")
     prenom = get_field_value(form, "prenom").lower()
     surname = get_field_value(form, "surname").lower()
     email = get_field_value(form, "email").lower()
