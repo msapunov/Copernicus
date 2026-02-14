@@ -596,6 +596,41 @@ def user_reset_pass(uid):
     return "Password for user %s has been changed" % user.login
 
 
+def user_create(task):
+    if not task.project:
+        raise ValueError("Project reference is empty, can't create user")
+    tmp_user = TmpUser().from_task(task.action)
+    if "REMOTE ONLY" in tmp_user.comment:
+        return ProjectLog(task.project).user_created(task)  # Ugly!!
+    user = User.query.filter_by(login=tmp_user.login).first()
+    if not user:
+        user = User()
+        user.login=tmp_user.login
+        user.name=tmp_user.name
+        user.surname=tmp_user.surname
+        user.email=tmp_user.email
+        user.active=tmp_user.active
+        user.project=[task.project]
+        user.created=dt.now()
+        user.acl=ACLDB(is_user=tmp_user.is_user,
+                       is_responsible=tmp_user.is_responsible,
+                       is_tech=tmp_user.is_tech,
+                       is_manager=tmp_user.is_manager,
+                       is_committee=tmp_user.is_committee,
+                       is_admin=tmp_user.is_admin)
+        db.session.add(user)
+    if user not in task.project.users:
+        task.project.users.append(user)
+    if not getattr(user, "passwd", None):
+        user.passwd = user.reset_password()
+    Mail().user_new(user).start()
+    UserMailingList().add(user.email, user.full_name())
+    if user.acl.is_responsible:
+        task.project.responsible = user
+        ResponsibleMailingList().add(user.email, user.full_name())
+    return ProjectLog(task.project).user_created(task)  # Ugly!
+
+
 def process_task(tid, result):
     task = Task(Tasks().query.filter_by(id=tid).first())
     if task.task.done:
