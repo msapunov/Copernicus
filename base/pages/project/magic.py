@@ -206,17 +206,15 @@ def project_create_user(project, form):
         user.comment = "REMOTE ONLY"
     task = TaskQueue().project(project).user_create(user).task
     if current_user.login and "admin" in current_user.permissions():
-        Task(task).accept()
-    elif getattr(project, "add_users", False):
-        Task(task).accept()
-    if getattr(project, "ssh_upload", False) and key:
-        tq = TaskQueue()
-        tq.u_name = user.login
-        task_key = tq.key_upload(key).task
-        Task(task_key).accept()
         task.accept()
     elif add_users:
         task.accept()
+    if ssh_upload and key:
+        ssh_task = TaskQueue()
+        ssh_task.u_name = user.login
+        ssh_task.key_upload(key)
+        ssh_task.task.user = current_user
+        ssh_task.task.accept()
         UserLog(current_user).key_upload(key)
     return ProjectLog(project).user_create(task)
 
