@@ -609,7 +609,7 @@ def user_create(task):
         user.name=tmp_user.name
         user.surname=tmp_user.surname
         user.email=tmp_user.email
-        user.active=tmp_user.active
+        user.active=True
         user.project=[task.project]
         user.created=dt.now()
         user.acl=ACLDB(is_user=tmp_user.is_user,
