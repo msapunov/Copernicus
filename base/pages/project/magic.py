@@ -775,3 +775,18 @@ def get_reservation(name):
             "cores": parse(el, "CoreCnt=")
         })
     return output
+
+
+def get_project_option(project, option_name):
+    """
+    Retrieve an option from configuration based on project type
+    and assign it as an attribute on the project object.
+
+    Missing values default to False.
+
+    :param project: Object with 'type' attribute.
+    :param option_name: str
+    :return: Option value or False by default
+    """
+    cfg = g.project_config
+    return cfg.get(project.type, {}).get(option_name, False)
