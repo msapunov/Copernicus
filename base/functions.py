@@ -28,7 +28,18 @@ __copyright__ = "Aix Marseille University"
 
 def get_field_value(form, name):
     field = form._fields.get(name)
-    return field.data.strip() if field else None
+    if not field:
+        return None
+    value = field.data
+    if isinstance(value, str):
+        value = value.strip()
+        if not value:  # empty after stripping
+            return None
+        if len(value) > 1028:
+            return None
+        if any(ord(c) < 32 and c not in ("\n", "\r", "\t") for c in value):
+            return None
+    return value
 
 
 def upload_to_cloud(remote_dir, path):
