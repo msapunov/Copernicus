@@ -533,7 +533,7 @@ class TmpUser:
         return result
 
 
-    def from_task(self, task):
+    def from_description(self, action):
         """
         Takes a task's action string and fill up the properties of TmpUser
         object
