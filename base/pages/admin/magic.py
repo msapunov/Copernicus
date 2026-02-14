@@ -46,12 +46,13 @@ def process_user_form(form):
         user = User.query.filter_by(login=username).one()
         user.action = "assign"
     else:
-        user = User(login=login,
-                    name=prenom,
-                    surname=surname,
-                    email=email,
-                    created=dt.now(),
-                    acl=ACLDB())
+        user = User()
+        user.login=login
+        user.name=prenom
+        user.surname=surname
+        user.email=email
+        user.created=dt.now()
+        user.acl=ACLDB()
         db.session.add(user)
         user.action = "create"
     if "True" == form.responsible.data:
