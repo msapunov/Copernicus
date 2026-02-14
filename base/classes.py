@@ -480,7 +480,7 @@ class Extensions:
         return self._process(self.rec)
 
 
-class TmpUser(User):
+class TmpUser:
     """
     Class representing a user which has to be added to the system and doesn't
     exist yet
