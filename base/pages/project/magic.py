@@ -202,6 +202,8 @@ def project_create_user(project, form):
     user.name = prenom
     user.surname = surname
     user.email = email
+    if tmp_users:
+        user.comment = "REMOTE ONLY"
     task = TaskQueue().project(project).user_create(user).task
     if current_user.login and "admin" in current_user.permissions():
         Task(task).accept()
