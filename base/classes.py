@@ -505,7 +505,7 @@ class TmpUser(User):
     def __repr__(self):
         return '<TmpUser {}>'.format(self.login)
 
-    def description(self, full=False):
+    def description(self):
         """
         Creates task's description out of instance of TmpUser
         :return: String. Task's description
