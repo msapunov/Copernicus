@@ -173,11 +173,11 @@ def project_attach_user(project, form):
     return ProjectLog(project).user_activate(task)
 
 
-def project_create_user(name, form):
+def project_create_user(project, form):
     """
     Function which creates a temporary user based on provide info and add a
     user creation task in the task queue
-    :param name: String. Name of the project where a use should be created
+    :param project: Object. Project object where a use should be created
     :param form: Instance of WTForm
     :return: Instance of a project to which a new user has to be attached and an
     instance of TmpUser class
