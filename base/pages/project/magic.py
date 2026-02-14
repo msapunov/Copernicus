@@ -468,7 +468,7 @@ def get_future_users(projects):
         if not recs:
             continue
         tasks = list(filter(lambda x: "create|user" in x.action, recs))
-        f_users = [TmpUser().from_task(Task(task)) for task in tasks]
+        f_users = [TmpUser().from_description(Task(task)) for task in tasks]
         for user in project.users:
             f_users = [x for x in f_users if x.login != user.login]
 
