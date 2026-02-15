@@ -519,8 +519,8 @@ class TmpUser:
                        f"manager: {mngr}, tech: {tech}, committee: {comm}, "
                        f"admin: {admin}")
         if self.comment:
-            result += f" COMMENT {self.comment}"
-        return result
+            return f"{user} WITH ACL {acl} COMMENT: {self.comment}"
+        return f"{user} WITH ACL {acl}"
 
 
     def from_description(self, action):
