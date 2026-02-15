@@ -215,11 +215,8 @@ class TaskQueue:
     def user_activate(self, user):
         if not self.project:
             raise ValueError("Can't activate user for none existent project")
-        if not hasattr(user, "password"):
-            user.password = generate_password()
-        description = "login: %s and name: %s and surname: %s and email: %s" \
-                      " AND PASSWORD %s" % (user.login, user.name, user.surname,
-                                            user.email, user.password)
+        description = ("login: %s and name: %s and surname: %s and email: %s" %
+                       (user.login, user.name, user.surname, user.email))
         self.task.action = "activate|user|%s|%s|%s" % (user.login, self.p_name,
                                                        description)
         self.task.user = user
