@@ -642,11 +642,11 @@ def user_publickey(self):
 
 
 def process_task(tid, result):
-    task = Tasks().query.filter_by(id=tid).first()
-    if task.done:
+    record = Tasks().query.filter_by(id=tid).first()
+    if record.done:
         raise ValueError(f"Task {tid} has been processed already")
-    act = task.action.split("|")[0]
-    ent = task.action.split("|")[1]
+    act = record.action.split("|")[0]
+    ent = record.action.split("|")[1]
     req = ["activate", "create", "assign", "update", "remove", "change", "ssh"]
     if act not in req:
         raise ValueError("The action '%s' is not supported" % act)
