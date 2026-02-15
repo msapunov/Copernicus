@@ -918,7 +918,7 @@ class Task:
                         name=tmp_user.name,
                         surname=tmp_user.surname,
                         email=tmp_user.email,
-                        active=tmp_user.active,
+                        active=True,
                         project=[project],
                         created=dt.now(),
                         acl=ACLDB(is_user=tmp_user.is_user,
