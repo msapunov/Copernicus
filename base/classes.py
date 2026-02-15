@@ -937,6 +937,8 @@ class Task:
         """
         if not self.task.author_id:
             return self.user_new()
+        if not self.task.project:
+            raise ValueError("Project reference is empty, can't create user")
         project = self.task.project
         tmp_user = TmpUser().from_description(self.task.action)
         user = User.query.filter_by(login=tmp_user.login).first()
