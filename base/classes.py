@@ -911,7 +911,7 @@ class Task:
         if not self.task.author_id:
             return self.user_new()
         project = self.task.project
-        tmp_user = TmpUser().from_task(self)
+        tmp_user = TmpUser().from_description(self.task.action)
         user = User.query.filter_by(login=tmp_user.login).first()
         if not user:
             user = User(login=tmp_user.login,
