@@ -631,6 +631,16 @@ def user_create(task):
     return ProjectLog(task.project).user_created(task)  # Ugly!
 
 
+def user_publickey(self):
+    """
+    Send message after public key has been uploaded on the server
+    Return: Object. Mail object
+    """
+    user = self.task.user
+    key = self.get_description()
+    return UserLog(user).key_uploaded(key)
+
+
 def process_task(tid, result):
     task = Tasks().query.filter_by(id=tid).first()
     if task.done:
