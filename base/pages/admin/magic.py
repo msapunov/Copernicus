@@ -632,6 +632,40 @@ def user_create(task):
 
 
 def process_task(tid, result):
+    task = Tasks().query.filter_by(id=tid).first()
+    if task.done:
+        raise ValueError(f"Task {tid} has been processed already")
+    act = task.action.split("|")[0]
+    ent = task.action.split("|")[1]
+    req = ["activate", "create", "assign", "update", "remove", "change", "ssh"]
+    if act not in req:
+        raise ValueError("The action '%s' is not supported" % act)
+
+    if act == "create" and ent == "user":
+        user_create(task)
+    elif act == "create" and ent == "resp":
+        user_create(task)
+    elif act == "create" and ent == "proj":
+        Task(task).project_create()
+    elif act == "update" and ent == "user":
+        Task(task).user_update()
+    elif act == "update" and ent == "proj":
+        pass
+    elif act == "activate" and ent == "user":
+        Task(task).user_activate()
+    elif act == "assign" and ent == "user":
+        Task(task).user_assign()
+    elif act == "assign" and ent == "resp":
+        Task(task).responsible_assign()
+    elif act == "remove" and ent == "user":
+        Task(task).user_delete()
+    elif act == "ssh" and ent == "user":
+        key = task.action.split("|")[0]
+        UserLog(task.user).key_uploaded(key)
+    task.result = result
+    task.done = True
+    return task.commit()
+
     task = Task(Tasks().query.filter_by(id=tid).first())
     if task.task.done:
         raise ValueError("Task %s has been processed already" % task.id)
