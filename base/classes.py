@@ -510,17 +510,7 @@ class TmpUser:
         Creates task's description out of instance of TmpUser
         :return: String. Task's description
         """
-        account = getattr(self, "login", False)
-        nom = getattr(self, "name", False)
-        surname = getattr(self, "surname", False)
-        email = getattr(self, "email", False)
-        user = getattr(self, "is_user", False)
-        resp = getattr(self, "is_responsible", False)
-        mngr = getattr(self, "is_manager", False)
-        tech = getattr(self, "is_tech", False)
-        comm = getattr(self, "is_committee", False)
-        admin = getattr(self, "is_admin", False)
-        if not all([account, nom, surname, email]):
+        if not all([self.login, self.name, self.surname, self.email]):
             raise ValueError("Login and name and surname are required")
         result = (f"login: {account} and name: {nom} and surname: {surname} "
                   f"and email: {email}")
