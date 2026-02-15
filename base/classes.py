@@ -552,8 +552,6 @@ class TmpUser:
                 condition = "%s: True" % role
                 tmp = True if condition in acl.strip() else False
                 self.__setattr__("is_%s" % role, tmp)
-
-        self.active = True if active_part.strip() == "True" else False
         return self
 
     def full(self):
