@@ -526,7 +526,7 @@ class TmpUser:
         """
         Takes a task's action string and fill up the properties of TmpUser
         object
-        :param task: Object. Instance of Task object
+        :param action: String. Representation of TmpUser object
         :return: Object. Instance of TmpUser class
         """
         description = task.get_description()
