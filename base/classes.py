@@ -529,13 +529,8 @@ class TmpUser:
         :param action: String. Representation of TmpUser object
         :return: Object. Instance of TmpUser class
         """
-        description = task.get_description()
-        if "WITH ACL" not in description:
-            description += " WITH ACL user: True"
-        if " WITH STATUS " not in description:
-            description += " WITH STATUS True"
-
-        user_part, service_part = description.split(" WITH ACL ")
+        description = action.split("|")[-1]
+        user_part, sep, service_part = description.partition(" WITH ACL ")
         for i in user_part.split(" and "):
             if "login" in i:
                 self.login = i.replace("login: ", "").strip()
