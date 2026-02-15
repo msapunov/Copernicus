@@ -773,6 +773,26 @@ class Pending:
         return self
 
 
+class TaskRepository:
+    """
+    Repository for Task ORM operations
+    """
+    def __init__(self, session):
+        self.session = session
+
+    def get(self, task_id):
+        """
+        Get a task by id, or None if not found
+        """
+        return self.session.get(Tasks, task_id)
+
+    def exists(self, task_id: int) -> bool:
+        """Check if task exists."""
+        return self.session.query(
+            self.session.query(Tasks).filter(Tasks.id == task_id).exists()
+        ).scalar()
+
+
 # noinspection PyArgumentList
 class Task:
     """
