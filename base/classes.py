@@ -541,7 +541,9 @@ class TmpUser:
             elif "email" in i:
                 self.email = i.replace("email: ", "").strip()
 
-        acl_part, active_part = service_part.split(" WITH STATUS ")
+        acl_part, sep, comment_part = service_part.partition(" COMMENT: ")
+        if comment_part:
+            self.comment = comment_part.strip()
         roles = ["user", "responsible", "manager", "tech", "committee", "admin"]
         for acl in acl_part.split(", "):
             for role in roles:
