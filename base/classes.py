@@ -932,8 +932,9 @@ class Task:
             project.users.append(user)
         if not getattr(user, "passwd", None):
             user.passwd = user.reset_password()
-        Mail().user_new(user).start()
-        UserMailingList().add(user.email, user.full_name())
+        if not "TEMPORARY USER" in tmp_user.comment:
+            Mail().user_new(user).start()
+            UserMailingList().add(user.email, user.full_name())
         if user.acl.is_responsible:
             project.responsible = user
             ResponsibleMailingList().add(user.email, user.full_name())
