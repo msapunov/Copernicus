@@ -670,39 +670,8 @@ def process_task(tid, result):
     elif act == "remove" and ent == "user":
         task.user_delete()
     elif act == "ssh" and ent == "user":
-        key = task.action.split("|")[0]
-        UserLog(task.user).key_uploaded(key)
-    task.result = result
-    task.done = True
-    return task.commit()
-
-    task = Task(Tasks().query.filter_by(id=tid).first())
-    if task.task.done:
-        raise ValueError("Task %s has been processed already" % task.id)
-    act = task.get_action()
-    ent = task.get_entity()
-
-    if act == "create" and ent == "user":
-        task.user_create()
-    elif act == "create" and ent == "resp":
-        task.user_create()
-    elif act == "create" and ent == "proj":
-        task.project_create()
-    elif act == "update" and ent == "user":
-        task.user_update()
-    elif act == "update" and ent == "proj":
-        pass
-    elif act == "activate" and ent == "user":
-        task.user_activate()
-    elif act == "assign" and ent == "user":
-        task.user_assign()
-    elif act == "assign" and ent == "resp":
-        task.responsible_assign()
-    elif act == "remove" and ent == "user":
-        task.user_delete()
-    elif act == "ssh" and ent == "user":
         task.user_publickey()
-    return task.done(result)  # TODO: result of task should be an argument for done methode
+    return task.done(result)
 
 
 def task_history(reverse=True):
