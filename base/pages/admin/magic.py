@@ -650,25 +650,25 @@ def process_task(tid, result):
     req = ["activate", "create", "assign", "update", "remove", "change", "ssh"]
     if act not in req:
         raise ValueError("The action '%s' is not supported" % act)
-
+    task = Task(record)
     if act == "create" and ent == "user":
-        user_create(task)
+        task.user_create()
     elif act == "create" and ent == "resp":
-        user_create(task)
+        task.user_create()
     elif act == "create" and ent == "proj":
-        Task(task).project_create()
+        task.project_create()
     elif act == "update" and ent == "user":
-        Task(task).user_update()
+        task.user_update()
     elif act == "update" and ent == "proj":
         pass
     elif act == "activate" and ent == "user":
-        Task(task).user_activate()
+        task.user_activate()
     elif act == "assign" and ent == "user":
-        Task(task).user_assign()
+        task.user_assign()
     elif act == "assign" and ent == "resp":
-        Task(task).responsible_assign()
+        task.responsible_assign()
     elif act == "remove" and ent == "user":
-        Task(task).user_delete()
+        task.user_delete()
     elif act == "ssh" and ent == "user":
         key = task.action.split("|")[0]
         UserLog(task.user).key_uploaded(key)
