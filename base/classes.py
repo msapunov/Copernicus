@@ -512,12 +512,11 @@ class TmpUser:
         """
         if not all([self.login, self.name, self.surname, self.email]):
             raise ValueError("Login and name and surname are required")
-        result = (f"login: {account} and name: {nom} and surname: {surname} "
-                  f"and email: {email}")
-        if full:
-            result += (f" WITH ACL user: {user}, responsible: {resp}, "
-                       f"manager: {mngr}, tech: {tech}, committee: {comm}, "
-                       f"admin: {admin}")
+        user = (f"login: {self.login} and name: {self.name} and "
+                f"surname: {self.surname} and email: {self.email}")
+        acl = (f"user: {self.is_user}, responsible: {self.is_responsible}, "
+               f"manager: {self.is_manager}, tech: {self.is_tech}, "
+               f"committee: {self.is_committee}, admin: {self.is_admin}")
         if self.comment:
             return f"{user} WITH ACL {acl} COMMENT: {self.comment}"
         return f"{user} WITH ACL {acl}"
