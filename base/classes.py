@@ -648,14 +648,21 @@ class Pending:
         )
         TaskQueue().project(proj).project_create().task.accept()
         for user in users:
+            u = TmpUser()
+            u.login = user.login
+            u.name = user.name
+            u.surname = user.surname
+            u.email = user.email
+            u.is_user = True
             if user.action == "assign" and user.resp:
                 TaskQueue().project(proj).responsible_assign(user).task.accept()
             elif user.action == "assign" and not user.resp:
                 TaskQueue().project(proj).user_assign(user).task.accept()
             elif user.action == "create" and user.resp:
-                TaskQueue().project(proj).responsible_create(user).task.accept()
+                u.is_responsible = True
+                TaskQueue().project(proj).responsible_create(u).task.accept()
             elif user.action == "create" and not user.resp:
-                TaskQueue().project(proj).user_create(user).task.accept()
+                TaskQueue().project(proj).user_create(u).task.accept()
         db.session.add(proj)
         self.result = RequestLog(record).create(proj)
         record.status = "created"
