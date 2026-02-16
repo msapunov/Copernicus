@@ -636,22 +636,19 @@ def is_project_renewable(project):
     :param project: Object. Project object
     :return: Object. Project object
     """
-    cfg = g.project_config
-    ptype = project.type
-    finish = cfg[ptype].get("finish_dt", None) if ptype in cfg else None
-    pre_end = cfg[ptype].get("finish_notice_dt", None) if ptype in cfg else None
-    resource_end = project.resources.ttl
-    debug("For %s; finish: %s; resource_end: %s, pre_end: %s"
-          % (project.get_name(), finish, resource_end, pre_end))
-    if finish and (resource_end > finish):
-        finish = resource_end
-    if finish and pre_end:
-        now = dt.now(timezone.utc)
-        if pre_end < now < finish:
-            project.is_renewable = True
-        else:
-            project.is_renewable = False
-    elif finish and not pre_end:
+    if not get_project_option(project, "renewable"):
+        debug(f"{project.name} - Not renewable from config file")
+        project.is_renewable = False
+        return project
+    notice = get_project_option(project, "notice")
+    finish = get_project_option(project, "finish")
+    if not any((finish, notice)):
+        debug(f"{project.name} - Either finish/notice absent in config file")
+        project.is_renewable = False
+        return project
+    debug(f"{project.name} - renew timeframe: {notice} to {finish}")
+    now = dt.now(timezone.utc)
+    if notice < now < finish:
         project.is_renewable = True
     else:
         project.is_renewable = False
