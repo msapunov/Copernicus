@@ -626,7 +626,7 @@ class Pending:
             project_management=record.project_management,
             project_motivation=record.project_motivation,
             active=False,
-            comment="Project created using Copernicus",
+            comment=record.comment,
             ref=record,
             priority=0,
             type=record.type,
