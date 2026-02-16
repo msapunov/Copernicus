@@ -950,6 +950,7 @@ class Task:
                         active=True,
                         project=[project],
                         created=dt.now(),
+                        comment=tmp_user.comment,
                         acl=ACLDB(is_user=tmp_user.is_user,
                                   is_responsible=tmp_user.is_responsible,
                                   is_tech=tmp_user.is_tech,
