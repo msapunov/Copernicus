@@ -139,8 +139,9 @@
                         data-project='{{project.name}}' disabled>
                         </button>
                     {% endif %}
-                        <span class="uk-margin-small-left" title="{{user.login}} &lt;{{user.email}}&gt;">
-                        {{user.full_name()}}{% if user.login in conso_list  %} : {{user_conso[user.login]}} hours {% endif %}
+
+                        <span class="uk-margin-small-left {% if user.comment and 'TEMPORARY USER' in user.comment %}uk-text-success{% endif %}" title="{{user.login}} &lt;{{user.email}}&gt;">
+                        {{user.full_name()}} {% if user.comment and "TEMPORARY USER" in user.comment %}[{{user.login}}]{% endif %} {% if user.login in conso_list  %} : {{user_conso[user.login]}} hours {% endif %}
                         </span>
                     </div>
                 {% endfor %}
