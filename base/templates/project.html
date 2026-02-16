@@ -213,8 +213,8 @@
                 <ul id="{{project.name}}-additional-info" class="uk-switcher">
                     {% if project.reservation %}
                         <li><div class="uk-grid uk-grid-small uk-padding">
-                            {% for reservation in project.reservation %}
                                 <div class="uk-width-1-3">
+                            {% for reservation in project.reservation|sort(attribute='start') %}
                                     <div class="uk-panel uk-panel-hover">
                                     <ul class="uk-list">
                                         <li>Name: {{ reservation.name }}</li>
