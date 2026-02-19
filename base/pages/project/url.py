@@ -1,4 +1,4 @@
-from flask import render_template, request, jsonify, flash, url_for
+from flask import render_template, request, jsonify, flash, url_for, g
 from flask_login import login_required, current_user
 from base.classes import ProjectLog
 from base.database.schema import LogDB, Project
