@@ -7,6 +7,7 @@ from base.pages import (
     grant_access)
 from base.pages.project import bp
 from base.pages.user.magic import get_user_record
+from base.pages.user.form import KeyForm
 from base.pages.project.form import (
     new_responsible, ResponsibleForm,
     transform, TransForm,
