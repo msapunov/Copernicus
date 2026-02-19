@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, EmailField
+from wtforms import StringField, EmailField, HiddenField
 
 
 class InfoForm(FlaskForm):
@@ -10,6 +10,7 @@ class InfoForm(FlaskForm):
 
 class KeyForm(FlaskForm):
     key = StringField("Key")
+    login = HiddenField()
 
 
 def edit_info(user):
