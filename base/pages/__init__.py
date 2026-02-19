@@ -68,12 +68,11 @@ def generate_login(name, surname):
     guess = None
     while i < len(name):
         guess = name[0:i] + surname
-        debug("%s is among %s" % (guess, ", ".join(logins)))
+        debug(f"{guess} is among {", ".join(logins)}. Next guess")
         if guess not in logins:
             return guess
         i += 1
-    raise ValueError("Seems that user with login '%s' has been already"
-                     " registered in our database" % guess)
+    raise ValueError(f"Failed to generate unique login for {name} {surname}")
 
 
 def process_new_user(rec):
