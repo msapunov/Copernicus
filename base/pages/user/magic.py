@@ -168,7 +168,10 @@ def ssh_check(key_text):
 
 def ssh_key(form):
     key = form.key.data
-    debug("Provided key: '%s'" % key)
+    debug(f"Provided key: '{key}'")
+    login = form.login.data
+    debug(f"Login: '{login}'")
+    user = get_user_record(login)
     clean = key.strip()
     sane = sanitize_key(key)
     for k in [key, sane, clean]:
