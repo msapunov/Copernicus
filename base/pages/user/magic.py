@@ -177,8 +177,10 @@ def ssh_key(form):
     for k in [key, sane, clean]:
         if not ssh_check(k):
             continue
-        task = TaskQueue().user(current_user).key_upload(k).task
-        Task(task).accept()
+        if user != current_user and upload_ssh_allowed(current_user, user):
+            TaskQueue().user(user).key_upload(k).task.accept()
+        else:
+            TaskQueue().user(current_user).key_upload(k).task.accept()
         UserLog(current_user).key_upload(k)
         return "You will be notified when your public key is installed"
     raise ValueError("Provided public key failed to pass ssh-keygen check. " 
