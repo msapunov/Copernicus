@@ -65,8 +65,7 @@ def generate_login(name, surname):
     surname = "".join(filter(lambda x: x in ascii_letters, surname)).lower()
 
     i = 1
-    guess = None
-    while i < len(name):
+    while i <= len(name):
         guess = name[0:i] + surname
         debug(f"{guess} is among {", ".join(logins)}. Next guess")
         if guess not in logins:
