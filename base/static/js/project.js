@@ -4,6 +4,7 @@
     window.proj = {};
     window.proj.url = {
         user_list: "user/list/all",
+        ssh: "project/modal/ssh",
         delete: "project/delete/user",
         history: "project/history",
         activity_upload: "project/activity/upload",
