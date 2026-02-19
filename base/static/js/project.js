@@ -26,6 +26,26 @@
         $(this).val().length < 1 ? $(this).addClass("uk-form-danger") : $(this).removeClass("uk-form-danger");
     };
 
+    window.render.get_id = function(data){
+        var temp = $("<div>").html(data);
+        var firstDiv = temp.find("div").first();
+        var modalId = firstDiv.attr("id");
+        if (modalId) {
+            let modal = UIkit.modal("#" + $.trim(modalId));
+            if ( modal.isActive() ) {
+                modal.hide();
+            } else {
+                modal.show();
+            }
+        }
+    };
+
+    window.render.ssh = function(e){
+        var login = $(this).data("login");
+        let url = window.proj.url["ssh"] + "/" + login;
+        modal(url, "ssh", window.render.get_id);
+    };
+
     window.render.remove_user = function(e){
         var id = $(this).data("pid");
         var full = $(this).data("name");
