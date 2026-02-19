@@ -352,6 +352,8 @@
     $(document).on("click", ".activity_submit", submit);
     $(document).on("click", ".window_hide", trigger_modal);
     $(document).on("click", ".remove", window.render.remove_user); //the buttons could be created on the fly
+    $(document).on("click", ".ssh", window.render.ssh);
+    $(document).on("click", ".ssh_submit", submit);
 
     $(document).on("blur", "input,textarea", window.render.input_empty);
     $(document).on("focus blur keyup open close", ".attach_form", window.render.shadow);
