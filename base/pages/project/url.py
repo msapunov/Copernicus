@@ -273,6 +273,18 @@ def web_modal_activity(pid):
     return jsonify(render_template("modals/project_upload_activity.html", form=form))
 
 
+@bp.route("/project/modal/ssh/<string:login>", methods=["POST"])
+@login_required
+@grant_access("admin", "responsible")
+def web_modal_ssh(login):
+    if login not in g.user_list:
+        raise ValueError(f"User with login '{login}' not found")
+    form = KeyForm(login = login)
+    form.username = login
+    form.email = current_user.email
+    return jsonify(render_template("modals/user_load_ssh.html", form=form))
+
+
 @bp.route("/project.html", methods=["GET"])
 @login_required
 @grant_access("admin", "responsible")
