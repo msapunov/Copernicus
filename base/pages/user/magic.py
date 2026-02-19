@@ -16,6 +16,16 @@ __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
 
 
+def upload_ssh_allowed(leader, user):
+    if "TEMPORARY USER" not in user.comment:
+        return False  # SSH key upload allowed for temporary users only
+    leaders = []
+    for project in user.project:
+        leaders.append(project.responsible)
+    if leader not in leaders:
+        return False
+    return True
+
 def get_pending_projects():
     return False
 
