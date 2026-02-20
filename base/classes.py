@@ -969,6 +969,7 @@ class Task:
             user.archived = None
             user.acl.is_user = True
             user.comment = tmp_user.comment,
+        g.user_list.append(tmp_user.login)
         if user not in project.users:
             project.users.append(user)
         if not getattr(user, "passwd", None):
