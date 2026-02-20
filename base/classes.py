@@ -959,6 +959,12 @@ class Task:
                                   is_admin=tmp_user.is_admin))
             db.session.add(user)
         else:
+            if user.name != tmp_user.name:
+                user.name = tmp_user.name
+            if user.surname != tmp_user.surname:
+                user.surname = tmp_user.surname
+            if user.email != tmp_user.email:
+                user.email = tmp_user.email
             user.active = True
             user.archived = None
             user.acl.is_user = True
