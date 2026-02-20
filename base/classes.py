@@ -958,6 +958,11 @@ class Task:
                                   is_committee=tmp_user.is_committee,
                                   is_admin=tmp_user.is_admin))
             db.session.add(user)
+        else:
+            user.active = True
+            user.archived = None
+            user.acl.is_user = True
+            user.comment = tmp_user.comment,
         if user not in project.users:
             project.users.append(user)
         if not getattr(user, "passwd", None):
