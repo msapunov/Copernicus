@@ -318,9 +318,9 @@ def parse_moment(value, cal=Calendar()):
         error(f"Failed to parse value: {value}")
         return None
     return dt(
-        tm.tm_year,
-        tm.tm_mon,
-        tm.tm_mday,
+        tm.year,
+        tm.month,
+        tm.day,
         0, 0, 0,  # force midnight
         tzinfo=timezone.utc
     )
