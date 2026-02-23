@@ -394,21 +394,6 @@ def parse_value(key, value, cal):
             if item_extra:
                 extra.update(item_extra)
         return items, extra
-
-    tm, status =cal.parse(value)
-    if status > 0:
-        parsed_dt = dt(
-            tm.tm_year,
-            tm.tm_mon,
-            tm.tm_mday,
-            tm.tm_hour,
-            tm.tm_min,
-            tm.tm_sec,
-            tzinfo=timezone.utc,
-        )
-        extra[f"{key}_text"] = value
-        return parsed_dt, extra
-
     return value, extra
 
 
