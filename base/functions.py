@@ -185,25 +185,21 @@ def calculate_ttl(project):
     :param project: Object. Copy of the Project object
     :return: Datetime.
     """
+    candidates = []
     now = dt.now().replace(tzinfo=timezone.utc)
-    config = project_config()
-    project_type = project.type.lower()
-    end = config[project_type].get("finish_dt", None)
-    duration = config[project_type].get("duration_dt", None)
-    debug("Options values for Finish: %s and for Duration %s" % (end, duration))
-    if end and duration:
-        ttl = end if end > duration else duration
-    elif duration:
-        ttl = duration
-    elif end:
-        ttl = end
+    duration = get_duration(project)
+    if duration:
+        candidates.append(duration)
+    finish = get_finish(project)
+    if finish:
+        candidates.append(finish)
+    if not candidates:
+        raise ValueError(f"No duration or finish date found for {project}!")
     else:
-        error("Failed to calculate TTL no options found. Fallback to now()")
-        ttl = now
+        ttl = max(candidates)
     if now > ttl:
-        critical("Calculated time value is in the past!")
-        raise ValueError("Calculated time is in the past")
-    debug("Calculated time value for %s: %s" % (project, ttl))
+        raise ValueError(f"Calculated finish time {ttl} is in the past!")
+    debug(f"Calculated TTL for project {project}: {ttl}")
     return ttl
 
 
