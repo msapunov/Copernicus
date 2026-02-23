@@ -311,6 +311,57 @@ def create_visa(record, signature="signature.png"):
     return path
 
 
+def parse_moment(value, cal=Calendar()):
+    debug(f"Parsing value '{value}' with parsedatetime lib")
+    tm, status = cal.parseDT(value)
+    if status == 0:
+        error(f"Failed to parse value: {value}")
+        return None
+    return dt(
+        tm.tm_year,
+        tm.tm_mon,
+        tm.tm_mday,
+        0, 0, 0,  # force midnight
+        tzinfo=timezone.utc
+    )
+
+
+def get_finish(project, cal=Calendar()):
+    now = dt.now(timezone.utc)
+    cfg = g.project_config.get(project.type, {})
+    finish_raw = cfg.get("finish", None)
+    if not finish_raw:
+        return None
+    finish = parse_moment(finish_raw, cal)
+    if not finish:
+        return None
+    update_raw = cfg.get(project.type, {}).get("renewal", None)
+    if not update_raw:
+        return finish
+    update = parse_moment(update_raw, cal)
+    if not update:
+        return finish
+    finish_this_year = finish.replace(year=now.year)
+    renewal_this_year = update.replace(year=now.year)
+    if renewal_this_year <= finish_this_year:
+        in_window = renewal_this_year <= now <= finish_this_year
+    else:
+        in_window = now >= renewal_this_year or now <= finish_this_year
+    if in_window:
+        return finish_this_year + relativedelta(years=1)
+    return finish_this_year
+
+
+def get_duration(project, cal=Calendar()):
+    cfg = g.project_config
+    duration = cfg.get(project.type, {}).get("duration", None)
+    debug(f"Got value '{duration}' for duration from config for {project}")
+    if not duration:
+        return None
+    debug(f"Parsing duration value '{duration}' with parsedatetime")
+    return parse_moment(duration, cal)
+
+
 def parse_value(key, value, cal):
     value = value.strip()
     lower = value.lower()
