@@ -335,7 +335,7 @@ def get_finish(project, cal=Calendar()):
     finish = parse_moment(finish_raw, cal)
     if not finish:
         return None
-    update_raw = cfg.get(project.type, {}).get("renewal", None)
+    update_raw = cfg.get("renewal", None)
     if not update_raw:
         return finish
     update = parse_moment(update_raw, cal)
