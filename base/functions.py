@@ -323,6 +323,7 @@ def parse_moment(value, cal=Calendar()):
     if status == 0:
         error(f"Failed to parse value: {value}")
         return None
+    debug(f"Parsed value '{value}' as {tm.isoformat()}")
     return dt(
         tm.year,
         tm.month,
