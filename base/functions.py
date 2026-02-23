@@ -358,7 +358,6 @@ def get_duration(project, cal=Calendar()):
     debug(f"Got value '{duration}' for duration from config for {project}")
     if not duration:
         return None
-    debug(f"Parsing duration value '{duration}' with parsedatetime")
     return parse_moment(duration, cal)
 
 
