@@ -327,6 +327,17 @@ def parse_moment(value, cal=Calendar()):
 
 
 def get_finish(project, cal=Calendar()):
+    """
+    Calculates the project's allocation finish datetime considering:
+      - finish value
+      - renewal as extension windows
+      - year-wrap scenarios
+    Returns a datetime object representing the actual finish date.
+
+    :param project: document instance with `type` attribute
+    :param cal: parsedatetime.Calendar instance
+    :return: datetime at midnight UTC
+    """
     now = dt.now(timezone.utc)
     cfg = g.project_config.get(project.type, {})
     finish_raw = cfg.get("finish", None)
