@@ -1,7 +1,7 @@
 from paramiko import SSHClient, AutoAddPolicy, AuthenticationException
 from paramiko import RSAKey, ECDSAKey, Ed25519Key
 from paramiko import SSHException, BadHostKeyException
-from flask import current_app as app, flash, request, render_template
+from flask import current_app as app, flash, request, render_template, g
 from time import mktime
 from datetime import datetime as dt, timezone
 from parsedatetime import Calendar
