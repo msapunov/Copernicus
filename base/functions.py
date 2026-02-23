@@ -312,7 +312,13 @@ def create_visa(record, signature="signature.png"):
 
 
 def parse_moment(value, cal=Calendar()):
-    debug(f"Parsing value '{value}' with parsedatetime lib")
+    """
+    Parses a human-readable date string and returns a datetime object at midnight UTC.
+
+    :param value: str, human-readable date (e.g., "1st Feb", "15 November")
+    :param cal: parsedatetime.Calendar instance
+    :return: datetime at midnight UTC, or None if parsing fails
+    """
     tm, status = cal.parseDT(value)
     if status == 0:
         error(f"Failed to parse value: {value}")
