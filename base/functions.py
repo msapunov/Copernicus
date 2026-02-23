@@ -348,12 +348,14 @@ def get_finish(project, cal=Calendar()):
     now = dt.now(timezone.utc)
     cfg = g.project_config.get(project.type, {})
     finish_raw = cfg.get("finish", None)
+    debug(f"Got configuration value for finish option: {finish_raw}")
     if not finish_raw:
         return None
     finish = parse_moment(finish_raw, cal)
     if not finish:
         return None
     update_raw = cfg.get("renewal", None)
+    debug(f"Got configuration value for renewal option: {update_raw}")
     if not update_raw:
         return finish
     update = parse_moment(update_raw, cal)
@@ -361,12 +363,17 @@ def get_finish(project, cal=Calendar()):
         return finish
     finish_this_year = finish.replace(year=now.year)
     renewal_this_year = update.replace(year=now.year)
+    debug(f"finish_this_year: {finish_this_year.isoformat()}")
+    debug(f"renewal_this_year: {renewal_this_year.isoformat()}")
     if renewal_this_year <= finish_this_year:
         in_window = renewal_this_year <= now <= finish_this_year
     else:
         in_window = now >= renewal_this_year or now <= finish_this_year
+    debug(f"Project in renewal window: {in_window}")
     if in_window:
+        debug("Calculated TTL finishing next year")
         return finish_this_year + relativedelta(years=1)
+    debug("Calculated TTL finishing this year")
     return finish_this_year
 
 
