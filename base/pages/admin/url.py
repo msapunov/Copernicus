@@ -66,6 +66,49 @@ def web_test():
     return render_template("test.html", data=Project.query.all())
 
 
+@bp.route("/admin/info/projects", methods=["POST"])
+@login_required
+@grant_access("admin", "tech")
+def admin_info_projects():
+    """
+    Fetches all projects with the corresponding user's login and resources details.
+    Returns:
+        List[Dict[str, str]]: A list of dictionaries, each containing:
+            - "id": Project's ID
+            - "type": Project's type
+            - "name": Project's name
+            - "cpu": Number of hours attributed to a project
+            - "created": Resource creation date,
+            - "end": Resource expiring date,
+            - "login": Login of the project's responsible
+    """
+    debug("Starting query for Project, User, Resources join")
+    projects = (Project.query
+                .join(User, Project.responsible_id==User.id)
+                .join(Resources, Project.resources_id == Resources.id)
+                .with_entities(Project.id,
+                               Project.type,
+                               Project.name,
+                               Resources.cpu,
+                               Resources.created,
+                               Resources.ttl,
+                               User.login
+                               ).all()
+                )
+    debug(f"Query returned {len(projects)} rows")
+    result = [{"id": pid,
+               "type": ptype,
+               "name": name,
+               "cpu": cpu,
+               "created": created.strftime("%Y-%m-%d %H:%M"),
+               "end": ttl.strftime("%Y-%m-%d %H:%M"),
+               "login": login
+               } for pid, ptype, name, cpu, created, ttl, login in projects]
+    if result:
+        debug(f"Preview of first record: {result[0]}")
+    return jsonify(data=result)
+
+
 @bp.route("/admin/switch_user", methods=["POST"])
 @login_required
 @grant_access("admin")
