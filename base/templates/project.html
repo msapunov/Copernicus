@@ -165,8 +165,7 @@
                 {% endfor %}
                 <div class="uk-hidden">{{ user_real }}</div>
                 {% for login in conso_list|sort() %}
-                    {% if login in user_real %}
-                    {% else %}
+                    {% if login not in user_real %}
                     <div class="uk-panel" id="{{project.name}}_{{login}}">
                         <button class="uk-button uk-button-mini uk-button-link uk-text-warning uk-icon-justify" type="button" disabled></button>
                         <span class="uk-text-muted uk-margin-small-left">
