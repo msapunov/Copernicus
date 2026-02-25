@@ -11,7 +11,7 @@ from webdav3.client import Client
 from base import db
 from base.classes import TmpUser, ProjectLog, Task, UserLog
 from base.functions import upload_to_cloud, calculate_ttl, write_pdf
-from base.functions import get_field_value, ssh_wrapper
+from base.functions import get_field_value, ssh_wrapper, parse_moment
 from base.database.schema import Extend, File, Project, Tasks, User
 from base.pages import generate_login, TaskQueue
 from base.pages.user.magic import user_by_id, ssh_check
@@ -648,9 +648,13 @@ def is_project_renewable(project):
               f"in configuration file")
         project.is_renewable = False
         return project
-    debug(f"{project.name} - renew timeframe: {start} to {close}")
+    debug(f"{project.name} - configured renew timeframe: {start} to {close}")
+    debug(f"{project.name} - converting renew_start: {start} to datetime")
+    begin = parse_moment(start)
+    debug(f"{project.name} - converting renew_close: {close} to datetime")
+    end = parse_moment(close)
     now = dt.now(timezone.utc)
-    if start < now < close:
+    if begin < now < end:
         project.is_renewable = True
     else:
         project.is_renewable = False
