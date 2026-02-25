@@ -636,6 +636,7 @@ def is_project_renewable(project):
     :param project: Object. Project object
     :return: Object. Project object
     """
+    now = dt.now(timezone.utc)
     if not get_project_option(project, "renewable"):
         debug(f"{project.name} - No renewable option found in config file"
               f"for type {project.type} projects")
@@ -653,7 +654,6 @@ def is_project_renewable(project):
     begin = parse_moment(start)
     debug(f"{project.name} - converting {close} to datetime")
     end = parse_moment(close)
-    now = dt.now(timezone.utc)
     if begin < now <= end:
         project.is_renewable = True
     else:
