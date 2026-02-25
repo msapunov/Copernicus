@@ -348,14 +348,14 @@ def get_finish(project):
     debug(f"Got configuration value for finish option: {finish_raw}")
     if not finish_raw:
         return None
-    finish = parse_moment(finish_raw, cal)
+    finish = parse_moment(finish_raw)
     if not finish:
         return None
     update_raw = cfg.get("renewal", None)
     debug(f"Got configuration value for renewal option: {update_raw}")
     if not update_raw:
         return finish
-    update = parse_moment(update_raw, cal)
+    update = parse_moment(update_raw)
     if not update:
         return finish
     finish_this_year = finish.replace(year=now.year)
