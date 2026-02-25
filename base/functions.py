@@ -382,7 +382,16 @@ def get_duration(project):
     debug(f"Got value '{duration}' for duration from config for {project}")
     if not duration:
         return None
-    return parse_moment(duration, cal)
+    m = match(r"(\\d+)\\s*(day|week|month|year)s?", duration)
+    if not m:
+        return None
+    n, unit = int(m.group(1)), m.group(2)
+    return {
+        "day": relativedelta(days=n),
+        "week": relativedelta(weeks=n),
+        "month": relativedelta(months=n),
+        "year": relativedelta(years=n)
+    }[unit]
 
 
 def parse_value(key, value, cal):
