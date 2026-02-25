@@ -654,7 +654,7 @@ def is_project_renewable(project):
     debug(f"{project.name} - converting {close} to datetime")
     end = parse_moment(close)
     now = dt.now(timezone.utc)
-    if begin < now < end:
+    if begin < now <= end:
         project.is_renewable = True
     else:
         project.is_renewable = False
