@@ -637,18 +637,19 @@ def is_project_renewable(project):
     :return: Object. Project object
     """
     if not get_project_option(project, "renewable"):
-        debug(f"{project.name} - Not renewable from config file")
+        debug(f"{project.name} - No renewable option found in config file")
         project.is_renewable = False
         return project
-    notice = get_project_option(project, "notice")
-    finish = get_project_option(project, "finish")
-    if not any((finish, notice)):
-        debug(f"{project.name} - Either finish/notice absent in config file")
+    start = get_project_option(project, "renew_start")
+    close = get_project_option(project, "renew_close")
+    if not any((close, start)):
+        debug(f"{project.name} - Either renew_start or renew_close is absent"
+              f"in configuration file")
         project.is_renewable = False
         return project
-    debug(f"{project.name} - renew timeframe: {notice} to {finish}")
+    debug(f"{project.name} - renew timeframe: {start} to {close}")
     now = dt.now(timezone.utc)
-    if notice < now < finish:
+    if start < now < close:
         project.is_renewable = True
     else:
         project.is_renewable = False
