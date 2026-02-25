@@ -658,6 +658,7 @@ def is_project_renewable(project):
         project.is_renewable = True
     else:
         project.is_renewable = False
+    debug(f"{project.name} - is project renewable: {project.is_renewable}")
     return project
 
 
