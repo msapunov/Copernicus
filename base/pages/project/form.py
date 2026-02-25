@@ -8,6 +8,7 @@ from wtforms.validators import Optional
 from base.classes import BaseForm
 from base.pages.project.magic import (
     get_transformation_options,
+    get_project_option,
     get_users)
 from logging import error
 
