@@ -312,12 +312,11 @@ def create_visa(record, signature="signature.png"):
     return path
 
 
-def parse_moment(value, cal=Calendar()):
+def parse_moment(value):
     """
     Parses a human-readable date string and returns a datetime object at midnight UTC.
 
     :param value: str, human-readable date (e.g., "1st Feb", "15 November")
-    :param cal: parsedatetime.Calendar instance
     :return: datetime at midnight UTC, or None if parsing fails
     """
     tm, status = cal.parseDT(value)
@@ -334,7 +333,7 @@ def parse_moment(value, cal=Calendar()):
     )
 
 
-def get_finish(project, cal=Calendar()):
+def get_finish(project):
     """
     Calculates the project's allocation finish datetime considering:
       - finish value
@@ -343,7 +342,6 @@ def get_finish(project, cal=Calendar()):
     Returns a datetime object representing the actual finish date.
 
     :param project: document instance with `type` attribute
-    :param cal: parsedatetime.Calendar instance
     :return: datetime at midnight UTC
     """
     now = dt.now(timezone.utc)
@@ -378,7 +376,7 @@ def get_finish(project, cal=Calendar()):
     return finish_this_year
 
 
-def get_duration(project, cal=Calendar()):
+def get_duration(project):
     cfg = g.project_config
     duration = cfg.get(project.type, {}).get("duration", None)
     debug(f"Got value '{duration}' for duration from config for {project}")
