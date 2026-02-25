@@ -637,7 +637,8 @@ def is_project_renewable(project):
     :return: Object. Project object
     """
     if not get_project_option(project, "renewable"):
-        debug(f"{project.name} - No renewable option found in config file")
+        debug(f"{project.name} - No renewable option found in config file"
+              f"for type {project.type} projects")
         project.is_renewable = False
         return project
     start = get_project_option(project, "renew_start")
