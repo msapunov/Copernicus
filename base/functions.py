@@ -358,20 +358,16 @@ def get_finish(project):
     update = parse_moment(update_raw)
     if not update:
         return finish
-    finish_this_year = finish.replace(year=now.year)
-    renewal_this_year = update.replace(year=now.year)
-    debug(f"finish_this_year: {finish_this_year.isoformat()}")
-    debug(f"renewal_this_year: {renewal_this_year.isoformat()}")
-    if renewal_this_year <= finish_this_year:
-        in_window = renewal_this_year <= now <= finish_this_year
-    else:
-        in_window = now >= renewal_this_year or now <= finish_this_year
+    debug("Renewal applies to the same cycle as finish")
+    if update > finish:
+        update = update - relativedelta(years=1)
+    in_window = update <= now <= finish
     debug(f"Project in renewal window: {in_window}")
     if in_window:
         debug("Calculated TTL finishing next year")
-        return finish_this_year + relativedelta(years=1)
+        return finish + relativedelta(years=1)
     debug("Calculated TTL finishing this year")
-    return finish_this_year
+    return finish
 
 
 def get_duration(project):
