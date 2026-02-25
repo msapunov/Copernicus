@@ -319,8 +319,12 @@ def parse_moment(value):
     :param value: str, human-readable date (e.g., "1st Feb", "15 November")
     :return: datetime at midnight UTC, or None if parsing fails
     """
-    tm, status = cal.parseDT(value)
-    if status == 0:
+    # noinspection PyTypeChecker
+    moment = dt_parse(value, settings={"TIMEZONE": "UTC",
+                                       "PREFER_DATES_FROM": "current_period",
+                                       "NORMALIZE": True,
+                                       "RETURN_AS_TIMEZONE_AWARE": True})
+    if not moment:
         error(f"Failed to parse value: {value}")
         return None
     debug(f"Parsed value '{value}' as {tm.isoformat()}")
