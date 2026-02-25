@@ -190,7 +190,7 @@ def calculate_ttl(project):
     now = dt.now().replace(tzinfo=timezone.utc)
     duration = get_duration(project)
     if duration:
-        candidates.append(duration)
+        candidates.append(now + duration)
     finish = get_finish(project)
     if finish:
         candidates.append(finish)
