@@ -558,6 +558,9 @@ class TmpUser:
         nom = full_name(self.name, self.surname)
         return f"{nom} <{self.email}> [{self.login}]"
 
+    def full_name(self):
+        return full_name(self.name, self.surname)
+
 
 class Pending:
     """
