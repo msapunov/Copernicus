@@ -327,14 +327,8 @@ def parse_moment(value):
     if not moment:
         error(f"Failed to parse value: {value}")
         return None
-    debug(f"Parsed value '{value}' as {tm.isoformat()}")
-    return dt(
-        tm.year,
-        tm.month,
-        tm.day,
-        0, 0, 0,  # force midnight
-        tzinfo=timezone.utc
-    )
+    debug(f"Parsed value '{value}' as {moment.isoformat()}")
+    return moment.replace(hour=0, minute=0, second=0, microsecond=0)
 
 
 def get_finish(project):
