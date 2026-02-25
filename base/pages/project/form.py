@@ -56,7 +56,7 @@ def renew(project):
     config = g.project_config
     project_type = project.type.lower()
     if project_type not in config.keys():
-        error("Type %s is not found in config" % project_type)
+        error(f"Type {project_type} is not found in config")
         return None
     if not get_project_option(project, "renewable"):
         error(f"Project of type {project_type} is not renewable")
