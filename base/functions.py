@@ -351,8 +351,8 @@ def get_finish(project):
     finish = parse_moment(finish_raw)
     if not finish:
         return None
-    update_raw = cfg.get("renewal", None)
     debug(f"Got configuration value for renewal option: {update_raw}")
+    update_raw = cfg.get("renew_start", None)
     if not update_raw:
         return finish
     update = parse_moment(update_raw)
