@@ -63,10 +63,6 @@ def renew(project):
         return None
     form = RenewForm()
     form.name = project.name
-    end = config[project_type].get("finish_dt", None)
-    if not end:
-        error("Type %s has no end option and not renewable" % project_type)
-        return None
     return form
 
 
