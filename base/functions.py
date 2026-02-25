@@ -353,6 +353,7 @@ def get_finish(project):
         return None
     debug(f"Got configuration value for renewal option: {update_raw}")
     update_raw = cfg.get("renew_start", None)
+    debug(f"Got configuration value for renew_start option: {update_raw}")
     if not update_raw:
         return finish
     update = parse_moment(update_raw)
