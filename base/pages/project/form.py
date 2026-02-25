@@ -58,6 +58,9 @@ def renew(project):
     if project_type not in config.keys():
         error("Type %s is not found in config" % project_type)
         return None
+    if not get_project_option(project, "renewable"):
+        error(f"Project of type {project_type} is not renewable")
+        return None
     form = RenewForm()
     form.name = project.name
     end = config[project_type].get("finish_dt", None)
