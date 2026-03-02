@@ -390,6 +390,7 @@ def renew_project(pid, ext, date):
     ext.project.resources = create_resource(ext.project, new_hours)
     msg = "Created based on renewal request ID %s on %s" % (pid, date)
     ext.project.resources.comment = msg
+    ext.project.active = True
     return ProjectLog(ext.project).renewed(ext)
 
 
@@ -403,6 +404,7 @@ def extend_project(pid, ext, date):
     comment = old_comment.split("\n") if old_comment else []
     comment.append(msg)
     ext.project.resources.comment = "\n".join(comment)
+    ext.project.active = True
     return ProjectLog(ext.project).extended(ext)
 
 
@@ -413,6 +415,7 @@ def transform_project(ext, date):
     ext.project.resources = create_resource(ext.project, ext.hours)
     msg = "Created based on transformation request ID %s on %s" % (ext.id, date)
     ext.project.resources.comment = msg
+    ext.project.active = True
     return ProjectLog(ext.project).transformed(ext)
 
 
