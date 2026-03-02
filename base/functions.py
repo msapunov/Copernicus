@@ -199,7 +199,8 @@ def calculate_ttl(project):
     else:
         ttl = max(candidates)
     if now > ttl:
-        raise ValueError(f"Calculated finish time {ttl} is in the past!")
+        error(f"Calculated finish time {ttl} is in the past! Add 1 year")
+        ttl = ttl + relativedelta(years=1)
     debug(f"Calculated TTL for project {project}: {ttl}")
     return ttl
 
