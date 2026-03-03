@@ -383,6 +383,8 @@ class Resources(db.Model):
     created = db.Column(db.DateTime(True), default=dt.now(timezone.utc))
     ttl = db.Column(db.DateTime(True))
     project = db.Column(db.String)
+    priority = db.Column(db.Integer, db.CheckConstraint("priority>=0"))
+    max_jobs = db.Column(db.Integer, db.CheckConstraint("max_jobs>=0"))
     treated = db.Column(db.Boolean, default=False)
 
     def to_dict(self):
