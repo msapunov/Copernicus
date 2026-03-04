@@ -250,7 +250,7 @@ def edit_user(users):
         form.surname.data = surname
         form.email.data = email
         form.login.data = login
-        form.full = name+surname
+        form.full = f"{name} {surname}"
         result.append(form)
     return result
 
