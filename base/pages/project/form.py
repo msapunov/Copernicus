@@ -148,11 +148,11 @@ class UserForm(BaseForm):
         required = (self.prenom, self.surname, self.email)
         select_old = bool(self.login.data)
         create_new = any(field.data for field in required)
-        msg = "existing user or fill name, surname and email to create new user"
+        msg = "an existing user or enter name, surname, and email"
         if select_old and create_new:
-            raise ValidationError(f"Choose either {msg}")
+            raise ValidationError(f"Choose either {msg} — not both")
         if not select_old and not create_new:
-            raise ValidationError(f"You must select {msg}")
+            raise ValidationError(f"Select {msg} to create a new user.")
 
         if select_old:
             return self.login.validate(self)
