@@ -374,6 +374,7 @@ def get_finish(project):
 def get_duration(project):
     cfg = g.project_config
     duration = cfg.get(project.type, {}).get("duration", None)
+    duration = duration.strip("'")
     debug(f"Got value '{duration}' for duration from config for {project}")
     if not duration:
         return None
