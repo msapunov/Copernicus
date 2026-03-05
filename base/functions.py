@@ -378,7 +378,7 @@ def get_duration(project):
     debug(f"Got value '{duration}' for duration from config for {project}")
     if not duration:
         return None
-    m = match(r"(\\d+)\\s*(day|week|month|year)s?", duration)
+    m = match(r"(\d+)\s*(day|week|month|year)s?", duration)
     if not m:
         return None
     n, unit = int(m.group(1)), m.group(2)
