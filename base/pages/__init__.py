@@ -272,7 +272,9 @@ class TaskQueue:
         ref = self.task.project.ref
         description = ("Create new project " + self.p_name +
                        " based on request " + ref.project_id() +
-                       " with CPU " + str(self.task.project.resources.cpu))
+                       " with CPU " + str(self.task.project.resources.cpu) +
+                       " valid until " + str(ttl.strftime("%Y-%m-%d")) +
+                       " for committee " + ref.genci_committee)
         self.task.action = "create|proj||%s|%s" % (self.p_name, description)
         return self.commit()
 
