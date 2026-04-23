@@ -268,6 +268,7 @@ class TaskQueue:
     def project_create(self):
         if not self.p_name:
             raise ValueError("Can't create undefined project")
+        ttl = self.task.project.resources.ttl
         ref = self.task.project.ref
         description = ("Create new project " + self.p_name +
                        " based on request " + ref.project_id() +
