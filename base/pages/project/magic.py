@@ -622,11 +622,14 @@ def is_project_extendable(project):
     cfg = g.project_config
     ptype = project.type
     eva = cfg[ptype].get("evaluation_dt", None) if ptype in cfg else None
+    debug(f"{project.name} - 'evaluation_dt' option for type '{ptype}': {eva}")
     ext = cfg[ptype].get("extendable", False) if ptype in cfg else None
+    debug(f"{project.name} - 'extendable' option for type '{ptype}': {ext}")
     if eva or ext:
         project.is_extendable = True
     else:
         project.is_extendable = False
+    debug(f"{project.name} - is project extendable: {project.is_extendable}")
     return project
 
 
