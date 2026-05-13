@@ -42,7 +42,7 @@
 {% else %}
 <div class="uk-width-1-1">
     <div class="uk-grid uk-margin-bottom">
-        <div data-uk-button-radio class="uk-button-group uk-width-1-4">
+        <div data-uk-button-radio class="uk-button-group uk-width-1-6">
             <button class="uk-button uk-active user-status" data-status="">All</button>
             <button class="uk-button user-status" data-status="active">Active</button>
             <button class="uk-button user-status" data-status="deactivated">Deactivated</button>
@@ -56,15 +56,9 @@
             </button>
         </div>
         -->
-        <div data-uk-button-radio class="uk-button-group uk-width-1-4">
-            <!--
-            <button class="uk-button uk-active user-status" data-status="">All</button>
-            <button class="uk-button user-status" data-status="active">Active</button>
-            <button class="uk-button user-status" data-status="deactivated">Deactivated</button>
-            <button class="uk-button user-status" data-status="archived">Archived</button>
-            -->
+        <div data-uk-button-radio class="uk-button-group uk-width-1-6">
         </div>
-        <div data-uk-button-radio class="uk-button-group uk-width-1-4">
+        <div data-uk-button-radio class="uk-button-group uk-width-1-6">
             <button class="uk-button acl-type uk-active" data-type="">All</button>
             <button class="uk-button acl-type" data-type=9 title="Users">U</button>
             <button class="uk-button acl-type uk-button-primary" data-type=11 title="Project Responsables">R</button>
@@ -73,7 +67,11 @@
             <button class="uk-button acl-type uk-text-bold uk-text-danger" data-type=17 title="Scientific Committee">C</button>
             <button class="uk-button acl-type uk-button-danger" data-type=19 title="Administrators">A</button>
         </div>
-        <div class=" uk-form uk-width-1-4">
+        <div data-uk-button-radio class="uk-button-group uk-width-1-6">
+        </div>
+        <div data-uk-button-radio class="uk-width-1-6">
+        </div>
+        <div class=" uk-form uk-width-1-6">
             <input type="text" class="uk-width-1-1" id="table_search">
         </div>
     </div>
