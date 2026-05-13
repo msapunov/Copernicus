@@ -73,9 +73,47 @@
         }
         $(id).text(text);
     };
+    window.registry.dump = function dump(type, e){
+        if(!type in ["csv", "ods", "xls"]){
+            e.preventDefault();
+            alert("Extension " + type + " is not supported");
+            return;
+        }
+        let data = $("#statistics").DataTable().rows({search:'applied'}).data().toArray();
+        if(data.length < 1){
+            e.preventDefault();
+            alert("No records to save, table is empty!");
+            return;
+        }
+        let pid=[];
+        data.forEach(function(row) {
+            pid.push(row.name);
+        });
+
+        let url = "projects." + type + "?projects=" + pid.join(",");
+        let id = ".dump_" + type;
+        let anchor = $(id);
+        anchor.attr("href", url);
+    };
     $(document).on("ready", function(){
-        var table = $("#registry").DataTable({
-            dom: "tip",
+        let table = $("#registry").DataTable({
+            //dom: "tip",
+            dom: 'tip',
+            buttons: [{
+                    extend: 'csvHtml5',
+                    title: 'DataExport',
+                    exportOptions: {
+                        columns: ':not(.noExport)'
+                    },
+                    className: 'dump_csv'
+                },{
+                    extend: 'excelHtml5',
+                    title: 'DataExport',
+                    exportOptions: {
+                        columns: ':not(.noExport)'
+                    },
+                    className: 'dump_xls'
+            }],
             pageLength: 100,
             rowCallback: function (row, data) {
                 if (data.status === "archived") {
@@ -210,6 +248,8 @@
         $(document).on("click", ".set_submit", submit);
         $(document).on("click", ".reset_submit", submit);
         $(document).on("click", ".welcome_submit", submit);
+        $(document).on("click", ".dump_csv", function(e){e.preventDefault(); table.button('.dump_csv').trigger(); });
+        $(document).on("click", ".dump_xls", function(e){e.preventDefault(); table.button('.dump_xls').trigger(); });
         $(document).on("change", ".project_select", function(){ window.registry.update_projects(this) });
         $(document).on("click", ".user-status", function(){ window.registry.user_status(this, table) });
         $(document).on("click", ".acl-type", function(){ window.registry.acl_type(this, table) });
