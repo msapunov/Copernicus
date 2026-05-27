@@ -232,6 +232,7 @@ def get_jobs(start, end, last=10):
            "--format=JobID,State,Start,Account,JobName,CPUTime,Partition",
            "--start=%s" % start, "--end=%s" % end, "-u", current_user.login,
            "|", "sort", "-n", "-r", "|", "head", "-%s" % last]
+    #  cmd = [ "slurm_jobs" ] - wrapper command
     run = " ".join(cmd)
 
     result, err = ssh_wrapper(run)
