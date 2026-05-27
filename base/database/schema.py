@@ -341,7 +341,7 @@ class ArticleDB(db.Model):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     info = db.Column(db.Text)
-    created = db.Column(db.DateTime(True), default=dt.now(timezone.utc))
+    created = db.Column(db.DateTime(True), default=dt.now(utc))
 
     project_id = db.Column(db.Integer, db.ForeignKey("projects.id"))
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
@@ -357,7 +357,7 @@ class File(db.Model):
     path = db.Column(db.Text)
     size = db.Column(db.Integer)
     comment = db.Column(db.Text)
-    created = db.Column(db.DateTime(True), default=dt.now(timezone.utc))
+    created = db.Column(db.DateTime(True), default=dt.now(utc))
 
     project_id = db.Column(db.Integer, db.ForeignKey("projects.id"))
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
@@ -384,7 +384,7 @@ class Resources(db.Model):
     type = db.Column(db.String(1))
     comment = db.Column(db.Text)
     modified = db.Column(db.DateTime(True))
-    created = db.Column(db.DateTime(True), default=dt.now(timezone.utc))
+    created = db.Column(db.DateTime(True), default=dt.now(utc))
     ttl = db.Column(db.DateTime(True))
     project = db.Column(db.String)
     treated = db.Column(db.Boolean, default=False)
@@ -755,7 +755,7 @@ class LogDB(db.Model):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
 
-    created = db.Column(db.DateTime(True), default=dt.now(timezone.utc))
+    created = db.Column(db.DateTime(True), default=dt.now(utc))
     event = db.Column(db.Text, nullable=False)
 
     author_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
@@ -851,7 +851,7 @@ class Tasks(db.Model):
     result = db.Column(db.Text, default=None)
     comment = db.Column(db.String, default=None)
 
-    created = db.Column(db.DateTime(True), default=lambda: dt.now(timezone.utc), nullable=False)
+    created = db.Column(db.DateTime(True), default=lambda: dt.now(utc), nullable=False)
     modified = db.Column(db.DateTime(True))
 
     uid = db.Column(db.Integer, db.ForeignKey("users.id"))
