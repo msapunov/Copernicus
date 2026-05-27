@@ -4,6 +4,7 @@ from base.functions import (generate_password,
                             process_register_user,
                             full_name as fn)
 from datetime import datetime as dt, timezone
+from calendar import timegm
 from textwrap import shorten
 from logging import error, debug
 from pathlib import PurePath
