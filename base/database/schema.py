@@ -292,8 +292,8 @@ class Extend(db.Model):
     def api(self):
         return {
             "cpu": self.hours,
-            "finish": self.project.resources.ttl.strftime("%Y-%m-%d %X"),
-            "start": self.project.resources.created.strftime("%Y-%m-%d %X"),
+            "finish": timegm(self.project.resources.ttl.utctimetuple()),  # TODO: check if needed
+            "start": timegm(self.project.resources.created.utctimetuple()),
             "notify": self.project.responsible.email,
             "name": self.project.responsible.full_name(),
             "id": self.id,
