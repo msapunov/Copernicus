@@ -15,6 +15,9 @@ __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
 
 
+utc= timezone.utc
+
+
 class Accounting(db.Model):
     __tablename__ = "accounting"
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
