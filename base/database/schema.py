@@ -85,6 +85,18 @@ class UserProjectLink(db.Model):
                            primary_key=True)
 
 
+class Thematic(db.Model):
+    __tablename__ = "project_thematic"
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    name = db.Column(db.String(256))
+    description = db.Column(db.String(256))
+    keywords = db.Column(db.String(256))
+
+    def __repr__(self):
+        return "Thematic: {}".format(self.name)
+
+
 class Project(db.Model):
     __tablename__ = "projects"
 
