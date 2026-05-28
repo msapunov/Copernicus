@@ -104,7 +104,6 @@ class Project(db.Model):
     title = db.Column(db.String(256))
     description = db.Column(db.String)
     scientific_fields = db.Column(db.String(256))
-    genci_committee = db.Column(db.String(256))
     numerical_methods = db.Column(db.String)
     computing_resources = db.Column(db.String)
     project_management = db.Column(db.String)
@@ -117,6 +116,9 @@ class Project(db.Model):
     priority = db.Column(db.Integer, default=False)
     name = db.Column(db.String(128))
     type = db.Column(db.String(1))
+
+    thematic_id = db.Column(db.Integer, db.ForeignKey("project_thematic.id"))
+    thematic = db.relationship("Thematic", foreign_keys=thematic_id, post_update=True)
 
     responsible_id = db.Column(db.Integer, db.ForeignKey("users.id"))
     responsible = db.relationship("User", backref="responsible",
