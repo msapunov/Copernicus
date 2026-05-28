@@ -198,7 +198,7 @@
                     }
                 }
             },{
-                data: "genci_committee",
+                data: "thematic",
                 visible: false
             },{
                 data: "users",
