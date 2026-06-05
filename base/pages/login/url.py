@@ -105,7 +105,7 @@ def login():
     if not username.isalnum():
         flash("Username is not real")
         return redirect(url_for("login.login"))
-    user = User.query.filter_by(login=username).first()
+    user = User.query.filter_by(login=username, active=True).first()
     debug(user)
     if not user:
         flash("User '%s' does not exists" % username)
