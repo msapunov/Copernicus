@@ -106,10 +106,10 @@ def login():
         flash("Username is not real")
         return redirect(url_for("login.login"))
     user = User.query.filter_by(login=username, active=True).first()
-    debug(user)
     if not user:
         flash("User '%s' does not exists" % username)
         return redirect(url_for("login.login"))
+    debug(user)
     if not user.active:
         flash("User '%s' is deactivated" % username)
         return redirect(url_for("login.login"))
