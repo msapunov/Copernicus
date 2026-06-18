@@ -22,8 +22,9 @@
                 </div>
                 <div class="uk-form-row uk-alert">
                     <div>
-                        <p>Upload the content of SSH public key. Public key usually saved in a file like ~/.ssh/id_rsa.pub or ~/.ssh/id_ed25519.pub</p>
-                        <p>In POSIX systems (Linux, MacOS) it's enough to do 'cat ~/.ssh/name_public_key.pub' and paste output into text area above</p>
+                        <p>If you do not already have an SSH key pair, you can generate one using the following command <code>ssh-keygen -t ed25519</code> This command should be available on GNU/Linux, macOS, and the Windows Subsystem for Linux (WSL).</p>
+                        <p>Public keys are typically stored in files such as ~/.ssh/id_ed25519.pub or ~/.ssh/id_rsa.pub</p>
+                        <p>On POSIX-compliant systems (Linux and macOS), you can display the contents of your public key with command <code>cat ~/.ssh/public_key_file.pub</code> Copy the output and paste it into the text area above.</p>
                     </div>
                 </div>
                 <div class="uk-form-row uk-alert">
