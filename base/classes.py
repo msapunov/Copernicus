@@ -55,8 +55,9 @@ class Log:
         try:
             if mail and self.send:
                 mail.start()
-        finally:
-            return self.log.event
+        except Exception:
+            pass
+        return self.log.event
 
 
 class ProjectLog(Log):
