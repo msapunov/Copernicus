@@ -275,7 +275,7 @@
         } );
 
         $(document).on("click", ".project-state", function(){ window.stat.project_state(this, table) });
-        $(document).on("click", ".project-type", function(){ window.stat.project_type(this, table) });
+        $(document).on("mousedown", ".project-type", function(){ window.stat.project_type(this, table) });
         $(document).on("click", ".dump_csv", function(e){e.preventDefault(); table.button('.dump_csv').trigger(); });
         $(document).on("click", ".dump_ods", function(e){ window.stat.dump("ods", e) });
         $(document).on("click", ".dump_xls", function(e){e.preventDefault(); table.button('.dump_xls').trigger(); });
