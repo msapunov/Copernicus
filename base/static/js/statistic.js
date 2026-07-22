@@ -32,13 +32,13 @@
         table.columns(11).search(status).draw();
     };
     window.stat.project_type = function project_type(btn, table){
-        if(!$(btn).hasClass("uk-active")){
+        if($(btn).hasClass("uk-active")){
             return;
         }
-        $(".conso").removeClass("uk-active");
-        $(".conso_all").addClass("uk-active");
-        let extype = $.trim( $(btn).data("type") );
-        table.columns(13).search(extype).draw();
+        $(".type").removeClass("uk-active");
+        $(btn).addClass("uk-active");
+        let project = $.trim( $(btn).data("type") );
+        table.columns(17).search(project).draw();
     };
     window.stat.submit = function (e) {
         let x = submit.call(this);
