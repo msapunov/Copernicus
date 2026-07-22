@@ -251,6 +251,9 @@
             },{
                 data: "numerical_methods",
                 visible: false
+            },{
+                data: "type",
+                visible: false
             }]
         });
         $('#statistics tbody').on('click', 'td.details-control', function () {
