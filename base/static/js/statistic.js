@@ -12,6 +12,25 @@
         }
         return ((percent * 100) / total).toFixed(2);
     };
+    window.stat.project_state = function project_state(btn, table){
+        if($(btn).hasClass("all")){
+            $(".all").addClass("uk-active");
+            $(".active").removeClass("uk-active");
+            $(".suspend").removeClass("uk-active");
+            var status = '';
+        }else if($(btn).hasClass("active")){
+            $(".all").removeClass("uk-active");
+            $(".active").addClass("uk-active");
+            $(".suspend").removeClass("uk-active");
+            var status = true;
+        }else if($(btn).hasClass("suspend")){
+            $(".all").removeClass("uk-active");
+            $(".active").removeClass("uk-active");
+            $(".suspend").addClass("uk-active");
+            var status = false;
+        }
+        table.columns(11).search(status).draw();
+    };
     window.stat.project_type = function project_type(btn, table){
         if(!$(btn).hasClass("uk-active")){
             return;
