@@ -1,6 +1,8 @@
 from paramiko import SSHClient, AutoAddPolicy, AuthenticationException
 from paramiko import RSAKey, ECDSAKey, Ed25519Key
 from paramiko import SSHException, BadHostKeyException
+from cryptography.hazmat.primitives.serialization import load_ssh_public_key
+from cryptography.hazmat.primitives.asymmetric import rsa
 from flask import current_app as app, flash, request, render_template, g
 from time import mktime
 from datetime import datetime as dt, timezone
@@ -16,12 +18,10 @@ from logging import error, debug, warning, critical
 from pathlib import Path, PurePosixPath
 from string import ascii_letters, digits
 from struct import unpack
-from subprocess import check_output, STDOUT, CalledProcessError
 from os import urandom
 from re import compile, match
 from babel import Locale
 from babel.dates import format_date
-import locale
 
 
 __author__ = "Matvey Sapunov"
@@ -90,19 +90,32 @@ def process_register_user(user_as_string):
     return name, surname, email, login
 
 
-def ssh_public(key_file):
-    argz = ["ssh-keygen", "-l", "-f", key_file]
-    cmd = " ".join(argz)
-    debug("Executing command: %s" % cmd)
-    result = False
-    err = False
+def ssh_check(pubkey):
+    """
+    Check provided SSH public key
+    """
+    debug(f"SSH key: {pubkey}")
+    allowed = app.config["SSH_ALGO_ALLOWED"]
+    parts = pubkey.strip().split()
+    if len(parts) < 2:
+        raise ValueError("Provided public key structure is incorrect. "
+                         "Expected to have at least 2 parts")
+    if parts[0] not in allowed:
+        allowed = ", ".join(allowed)
+        raise ValueError(f"Provided public key algorythm is too weak. "
+                         f"List of accepted algorithms: {allowed}")
     try:
-        result = check_output(argz, stderr=STDOUT, universal_newlines=True)
-    except CalledProcessError as e:
-        err = "Error while executing the command '%s': %s" % (cmd, e.output)
+        key = load_ssh_public_key(pubkey.encode())
     except Exception as e:
-        err = "Exception while executing command '%s': %s" % (cmd, e)
-    return result, err
+        raise ValueError(f"Error while loading SSH public key: {e} Please make "
+                         f"sure that you've inserted the content of the public "
+                         f"key file which should looks like this key for "
+                         f"example: \n521 SHA256:dm7lPKaRcwGfa66ZFQ3LSD70BSPOyX"
+                         f"1UWZk key_name (ECDSA)")
+    if isinstance(key, rsa.RSAPublicKey):
+        if key.key_size < 3072:
+            raise ValueError("RSA key is too short")
+    return True
 
 
 def ssh_wrapper(cmd, host=None):
