@@ -142,30 +142,6 @@ def inactive_users_check(logins):
     return result
 
 
-def sanitize_key(key):
-    try:
-        parts = key.split(" ")
-    except:
-        return key
-    algo = parts[0]
-    host = parts[-1]
-    key = "".join(parts[1:-1]).replace(" ", "")
-    return "%s %s %s" % (algo, key, host)
-
-
-def ssh_check(key_text):
-    fd, key_path = mkstemp(text=True)
-    with open(key_path, "w") as writer:
-        writer.write(key_text)
-    stdout, stderr = ssh_public(key_path)
-    if path.exists(key_path):
-        remove(key_path)
-    debug(stdout)
-    if stderr:
-        return False
-    return True
-
-
 def ssh_key(form):
     key = form.key.data
     login = form.login.data
