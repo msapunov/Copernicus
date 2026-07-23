@@ -143,26 +143,17 @@ def inactive_users_check(logins):
 
 
 def ssh_key(form):
-    key = form.key.data
+    pub = form.key.data
     login = form.login.data
-    debug(f"Provided login '{login}' and public key: {key}")
+    debug(f"Provided login '{login}' and public key: {pub}")
     user = get_user_record(login)
-    clean = key.strip()
-    sane = sanitize_key(key)
-    for k in [key, sane, clean]:
-        if not ssh_check(k):
-            continue
-        if user != current_user and upload_ssh_allowed(current_user, user):
-            TaskQueue().user(user).key_upload(k).task.accept()
-        else:
-            TaskQueue().user(current_user).key_upload(k).task.accept()
-        UserLog(current_user).key_upload(k)
-        return "You will be notified when your public key is installed"
-    raise ValueError("Provided public key failed to pass ssh-keygen check. " 
-                     "Please make sure that you've inserted the content of "
-                     "the public key file which should looks like this key "
-                     "for example: \n521 SHA256:dm7lPKaRcwGfa66ZFQ3LSD70BSPOyX1"
-                     "UWZk key_name (ECDSA)")
+    ssh_check(pub)
+    if user != current_user and upload_ssh_allowed(current_user, user):
+        TaskQueue().user(user).key_upload(pub).task.accept()
+    else:
+        TaskQueue().user(current_user).key_upload(pub).task.accept()
+    UserLog(current_user).key_upload(pub)
+    return "You will be notified when your public key is installed"
 
 
 def user_by_id(uid):
