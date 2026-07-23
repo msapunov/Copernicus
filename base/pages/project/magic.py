@@ -192,8 +192,7 @@ def project_create_user(project, form):
         raise ValueError("Name, Surname and Email are required")
     key = get_field_value(form, "key")
     if ssh_upload and key:
-        if not ssh_check(key):
-            raise ValueError("Public key failed to pass ssh-keygen check")
+        ssh_check(key)
     if User.query.filter(User.email == email).first():
         raise ValueError("User with e-mail %s has been registered already"
                          % email)
