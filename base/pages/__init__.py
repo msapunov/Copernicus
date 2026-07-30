@@ -288,6 +288,15 @@ class TaskQueue:
         self.task.action = "transform|proj||%s|%s" % (self.p_name, description)
         return self.commit()
 
+    def project_activate(self, ext):
+        if not self.p_name:
+            raise ValueError("Can't activate undefined project")
+        description = ("Activate project " + self.p_name +
+                       " with CPU " + str(ext.hours) +
+                       " valid until " + str(ext.ttl.strftime("%Y-%m-%d")) )
+        self.task.action = "activate|proj||%s|%s" % (self.p_name, description)
+        return self.commit()
+
     def project_suspend(self):
         if not self.p_name:
             raise ValueError("Can't suspend undefined project")
