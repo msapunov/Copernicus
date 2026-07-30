@@ -8,9 +8,10 @@
             <form action="board/accept/{{rec.id}}" method="post" class="uk-panel uk-form" id="{{rec.id}}_accept_form">
                 {{ form.csrf_token(id=rec.id|string+"_csrf_renew") }}
                 <p>Accept  request for {{ rec.action }} of {{ rec.name }} with {{ rec.hours }} CPU hours?</p>
-                <div class="uk-form-row">
-                    {{ form.cpu(id=rec.name+"_cpu_accept", value=rec.hours, class_="uk-width-1-1") }}
-                </div>
+                <ul class="uk-form-row uk-grid uk-grid-width-1-2 uk-grid-small">
+                    <li><div>{{ form.cpu(id=rec.name+"_cpu_accept", placeholder="CPU hours", value=rec.hours, class_="uk-width-1-1") }}</div></li>
+                    <li><div>{{ form.ttl(id=rec.name+"_ttl_accept", type="text", placeholder="Valid until", data_uk_datepicker="{format:'YYYY-MM-DD'}", class_="uk-width-1-1") }}</div></li>
+                </ul>
                 <div class="uk-form-row">
                     <!-- Workaround of WTForm incapability of setting dynamic value in constructor -->
                     <textarea class="uk-width-1-1" id={{ rec.name+"_note_accept" }} name="note" required="" rows="4">{{ rec.action|capitalize + " accepted by CCIAM" }}</textarea>
