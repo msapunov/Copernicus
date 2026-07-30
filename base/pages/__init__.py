@@ -297,6 +297,24 @@ class TaskQueue:
         self.task.action = "activate|proj||%s|%s" % (self.p_name, description)
         return self.commit()
 
+    def project_extend(self, ext):
+        if not self.p_name:
+            raise ValueError("Can't extend undefined project")
+        description = ("Extend project " + self.p_name +
+                       " with CPU " + str(ext.hours) +
+                       " valid until " + str(ext.ttl.strftime("%Y-%m-%d")) )
+        self.task.action = "extend|proj||%s|%s" % (self.p_name, description)
+        return self.commit()
+
+    def project_renew(self, ext):
+        if not self.p_name:
+            raise ValueError("Can't renew undefined project")
+        description = ("Renew project " + self.p_name +
+                       " with CPU " + str(ext.hours) +
+                       " valid until " + str(ext.ttl.strftime("%Y-%m-%d")) )
+        self.task.action = "renew|proj||%s|%s" % (self.p_name, description)
+        return self.commit()
+
     def project_suspend(self):
         if not self.p_name:
             raise ValueError("Can't suspend undefined project")
