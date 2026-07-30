@@ -593,7 +593,6 @@ def user_reset_pass(uid):
     user = user_by_id(uid)
     passwd = user.reset_password()
     UserLog(user).password_reset(passwd)
-    return "Password for user %s has been changed" % user.login
 
 
 def user_create(task):
@@ -639,6 +638,7 @@ def user_publickey(self):
     user = self.task.user
     key = self.get_description()
     return UserLog(user).key_uploaded(key)
+    return "New password has been sent to %s" % user.full()
 
 
 def process_task(tid, result):
