@@ -19,7 +19,7 @@ def create_resource(project, cpu):
         cpu=cpu,
         type=project.type,
         project=project.get_name(),
-        ttl=calculate_ttl(project),
+        ttl=calculate_ttl(project.type),
         treated=False
     )
 

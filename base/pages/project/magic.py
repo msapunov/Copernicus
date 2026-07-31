@@ -394,7 +394,7 @@ def renew_project(pid, ext, date):
 
 
 def extend_project(pid, ext, date):
-    ext.project.resources.ttl = calculate_ttl(ext.project)
+    ext.project.resources.ttl = calculate_ttl(ext.project.type)
     ext.project.resources.cpu += ext.hours
     ext.project.resources.valid = True
     msg = "CPU value has been extended to %s hours on %s based upon "\
