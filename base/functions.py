@@ -345,7 +345,7 @@ def parse_moment(value):
     return moment.replace(hour=0, minute=0, second=0, microsecond=0)
 
 
-def get_finish(project):
+def get_finish(type):
     """
     Calculates the project's allocation finish datetime considering:
       - finish value
@@ -357,7 +357,7 @@ def get_finish(project):
     :return: datetime at midnight UTC
     """
     now = dt.now(timezone.utc)
-    cfg = g.project_config.get(project.type, {})
+    cfg = g.project_config.get(type, {})
     finish_raw = cfg.get("finish", None)
     debug(f"Got configuration value for finish option: {finish_raw}")
     if not finish_raw:
@@ -384,10 +384,10 @@ def get_finish(project):
     return finish
 
 
-def get_duration(project):
+def get_duration(type):
     cfg = g.project_config
-    duration = cfg.get(project.type, {}).get("duration", None)
-    debug(f"Got value '{duration}' for duration from config for {project}")
+    duration = cfg.get(type, {}).get("duration", None)
+    debug(f"Got value '{duration}' for duration from config for type {type}")
     if not duration:
         return None
     duration = duration.strip("'")
