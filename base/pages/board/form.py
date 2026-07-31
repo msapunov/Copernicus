@@ -41,6 +41,10 @@ def acceptance(record):
             form.ext_check = "checked = checked"
         else:
             form.new_check = "checked = checked"
+    if record.transform != " ":
+        form.ttl.data = calculate_ttl(record.transform)
+    else:
+        form.ttl.data = record.project.resources.ttl
     return form
 
 
