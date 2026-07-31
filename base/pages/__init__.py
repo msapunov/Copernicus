@@ -285,7 +285,7 @@ class TaskQueue:
                        " to type " + ext.transform +
                        " with CPU " + str(ext.hours) +
                        " valid until " + str(ext.ttl.strftime("%Y-%m-%d")) +
-                       " based on extension id: " + ext.id )
+                       " based on extension id: " + str(ext.id) )
         self.task.action = "transform|proj||%s|%s" % (self.p_name, description)
         return self.commit()
 
@@ -295,7 +295,7 @@ class TaskQueue:
         description = ("Activate project " + self.p_name +
                        " with CPU " + str(ext.hours) +
                        " valid until " + str(ext.ttl.strftime("%Y-%m-%d")) +
-                       " based on extension id: " + ext.id )
+                       " based on extension id: " + str(ext.id) )
         self.task.action = "activate|proj||%s|%s" % (self.p_name, description)
         return self.commit()
 
@@ -305,7 +305,7 @@ class TaskQueue:
         description = ("Extend project " + self.p_name +
                        " with CPU " + str(ext.hours) +
                        " valid until " + str(ext.ttl.strftime("%Y-%m-%d")) +
-                       " based on extension id: " + ext.id )
+                       " based on extension id: " + str(ext.id) )
         self.task.action = "extend|proj||%s|%s" % (self.p_name, description)
         return self.commit()
 
@@ -315,7 +315,7 @@ class TaskQueue:
         description = ("Renew project " + self.p_name +
                        " with CPU " + str(ext.hours) +
                        " valid until " + str(ext.ttl.strftime("%Y-%m-%d")) +
-                       " based on extension id: " + ext.id )
+                       " based on extension id: " + str(ext.id) )
         self.task.action = "renew|proj||%s|%s" % (self.p_name, description)
         return self.commit()
 
