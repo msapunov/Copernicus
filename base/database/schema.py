@@ -954,6 +954,8 @@ class Tasks(db.Model):
             if "new project" in task:
                 return task
             act += " a user with %s for the project %s" % (task, project)
+        if act in ["transform", "extend", "renew"]:
+            return task
         if act in ["assign", "remove"]:
             return task
         elif act in ["update"]:
