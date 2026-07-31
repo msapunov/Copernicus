@@ -899,7 +899,9 @@ class Tasks(db.Model):
 
     def brief(self):
         act, entity, login, project, task = self.decompose()
-        if act in ["create", "add", "assign", "delete", "remove", "activate"]:
+        verbs = ["create", "add", "assign", "delete", "remove", "activate",
+                 "transform", "extend", "renew"]
+        if act in verbs:
             if entity == "user":
                 act += " a user "
             elif entity == "resp":
