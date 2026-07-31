@@ -61,8 +61,17 @@ def web_board_accept(eid):
     record = Extensions(eid).accept(form.note.data)
     record.hours = form.cpu.data
     record.extend = form.extend.data
-    return jsonify(message=ProjectLog(record.rec.project).accept(record.rec),
     record.ttl = form.ttl.data
+    if record.transform.strip():
+        act = TaskQueue().project(record.project).project_transform(record)
+    elif record.activate:
+        act = TaskQueue().project(record.project).project_activate(record)
+    elif record.extend:
+        act = TaskQueue().project(record.project).project_extend(record)
+    else:
+        act = TaskQueue().project(record.project).project_renew(record)
+    act.task.accept()
+    return jsonify(message=ProjectLog(record.project).accept(record),
                    data={"id": record.id})
 
 
