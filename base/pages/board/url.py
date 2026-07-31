@@ -1,7 +1,7 @@
 from flask import render_template, jsonify, url_for
 from flask_login import login_required
 from base.classes import ProjectLog, Extensions
-from base.pages import grant_access
+from base.pages import grant_access, TaskQueue
 from base.pages.board import bp
 from base.pages.board.form import (rejection,
                                    acceptance,
