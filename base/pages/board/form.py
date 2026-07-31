@@ -24,6 +24,8 @@ class AcceptForm(FlaskForm):
         min=0, message="CPU value must be 0 or any other positive number")])
     note = TextAreaField("Note", validators=[DataRequired(
         message="Acceptance note field is empty")])
+    ttl = DateField("Until", format="%Y-%m-%d", validators=[DataRequired(
+        message="Resource validity field is empty")])
     extend = BooleanField()
 
 
