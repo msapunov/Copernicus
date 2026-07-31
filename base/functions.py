@@ -192,29 +192,29 @@ def show_configuration():
     return cfg
 
 
-def calculate_ttl(project):
+def calculate_ttl(type):
     """
     Calculates time based on finish and duration options from project config.
     Primary usage is to set a date until which resources will be available
-    :param project: Object. Copy of the Project object
+    :param type: String.
     :return: Datetime.
     """
     candidates = []
     now = dt.now().replace(tzinfo=timezone.utc)
-    duration = get_duration(project)
+    duration = get_duration(type)
     if duration:
         candidates.append(now + duration)
-    finish = get_finish(project)
+    finish = get_finish(type)
     if finish:
         candidates.append(finish)
     if not candidates:
-        raise ValueError(f"No duration or finish date found for {project}!")
+        raise ValueError(f"No duration or finish date found for type {type} project!")
     else:
         ttl = max(candidates)
     if now > ttl:
         error(f"Calculated finish time {ttl} is in the past! Add 1 year")
         ttl = ttl + relativedelta(years=1)
-    debug(f"Calculated TTL for project {project}: {ttl}")
+    debug(f"Calculated TTL for type {type} project: {ttl}")
     return ttl
 
 
