@@ -58,11 +58,11 @@ def web_board_accept(eid):
     form = AcceptForm()
     if not form.validate_on_submit():
         raise ValueError(form.errors)
-    record = Extensions(eid)
-    record.cpu = form.cpu.data
+    record = Extensions(eid).accept(form.note.data)
+    record.hours = form.cpu.data
     record.extend = form.extend.data
-    record.accept(form.note.data)
     return jsonify(message=ProjectLog(record.rec.project).accept(record.rec),
+    record.ttl = form.ttl.data
                    data={"id": record.id})
 
 
