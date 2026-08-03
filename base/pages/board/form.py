@@ -32,7 +32,7 @@ class AcceptForm(FlaskForm):
 
 def acceptance(record):
     form = AcceptForm(active=True)
-    if record.transform != " ":
+    if record.transform.strip():
         form.ext_check = "checked = checked"
     elif record.activate:
         form.new_check = "checked = checked"
@@ -41,7 +41,7 @@ def acceptance(record):
             form.ext_check = "checked = checked"
         else:
             form.new_check = "checked = checked"
-    if record.transform != " ":
+    if record.transform.strip():
         form.ttl.data = calculate_ttl(record.transform)
     else:
         form.ttl.data = record.project.resources.ttl
