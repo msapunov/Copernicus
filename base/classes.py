@@ -645,7 +645,7 @@ class Pending:
                 cpu=record.cpu,
                 type=record.type,
                 project=name,
-                ttl=calculate_ttl(record),
+                ttl=calculate_ttl(record.type),
                 treated=False
             )
         )
