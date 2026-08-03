@@ -3,9 +3,8 @@ from flask_login import current_user
 from base import db
 from base.utils import form_error_string
 from base.functions import bytes2human, ssh_wrapper, ssh_check
-from base.pages import TaskQueue
 from base.database.schema import User, Project, Register
-from base.classes import UserLog, Task
+from base.classes import UserLog, Task, TaskQueue
 from tempfile import mkstemp
 from os import path, remove
 from logging import debug, error

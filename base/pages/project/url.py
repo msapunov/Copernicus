@@ -1,10 +1,8 @@
 from flask import render_template, request, jsonify, flash, url_for, g
 from flask_login import login_required, current_user
-from base.classes import ProjectLog
+from base.classes import ProjectLog, TaskQueue
 from base.database.schema import LogDB, Project
-from base.pages import (
-    TaskQueue,
-    grant_access)
+from base.pages import grant_access
 from base.pages.project import bp
 from base.pages.user.magic import get_user_record
 from base.pages.user.form import KeyForm
