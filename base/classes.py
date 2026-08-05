@@ -50,7 +50,6 @@ class Log:
     def commit(self, mail=None):
         db.session.add(self.log)
         db.session.commit()
-        #Mail().log(self.log).start()
         try:
             if mail and self.send:
                 mail.start()
