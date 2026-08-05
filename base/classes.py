@@ -1268,6 +1268,8 @@ class TaskQueue:
     def project_transform(self, ext):
         if not self.p_name:
             raise ValueError("Can't transform undefined project")
+        if ext.extend:
+            ext.hours += ext.present_total
         description = ("Transform project " + self.p_name +
                        " to type " + ext.transform +
                        " with CPU " + str(ext.hours) +
