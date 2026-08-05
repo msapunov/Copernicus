@@ -1109,6 +1109,36 @@ class Task:
         project.active = True
         return ProjectLog(project).created()
 
+    def project_transform(self):
+        """
+        Modify project based on transformation request
+        Return: Object. Mail object
+        """
+        project = self.task.project
+        # Below is a temporary code
+        desc = self.get_description()
+        date, eid = desc.split(" based on extension id: ")
+        eid = int(eid.strip())
+        ext = Extend.query.filter_by(id=eid).first()
+        skip, ttl = date.split(" valid until ")
+        ttl = dt.strptime(ttl, "%Y-%m-%d")
+#        ext = self.task.extension
+        project.type = ext.transform
+        project.name = "%s%s" % (ext.transform, str(ext.project.id).zfill(3))
+        project.resources.valid = False
+        project.resources = Resources(
+            approve=current_user,
+            valid=True,
+            cpu=ext.hours,
+            type=project.type,
+            comment=f"Created based on transformation request ID {ext.id}",
+            project=project.name,
+            ttl=ttl,
+            treated=False
+        )
+        project.active = True
+        return ProjectLog(project).transformed(ext)
+
 class BaseForm(FlaskForm):
     def error_message(self):
         """
