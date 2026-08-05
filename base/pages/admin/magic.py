@@ -648,7 +648,8 @@ def process_task(tid, result):
         raise ValueError(f"Task {tid} has been processed already")
     act = record.action.split("|")[0]
     ent = record.action.split("|")[1]
-    req = ["activate", "create", "assign", "update", "remove", "change", "ssh"]
+    req = ["activate", "create", "assign", "update", "remove", "change", "ssh",
+           "transform", "extend", "renew"]
     if act not in req:
         raise ValueError("The action '%s' is not supported" % act)
     task = Task(record)
@@ -658,6 +659,12 @@ def process_task(tid, result):
         task.user_create()
     elif act == "create" and ent == "proj":
         task.project_create()
+    elif act == "transform" and ent == "proj":
+        task.project_transform()
+    elif act == "extend" and ent == "proj":
+        task.project_extend()
+    elif act == "renew" and ent == "proj":
+        task.project_renew()
     elif act == "update" and ent == "user":
         task.user_update()
     elif act == "update" and ent == "proj":
