@@ -1290,6 +1290,7 @@ class TaskQueue:
                        " with CPU " + str(ext.hours) +
                        " valid until " + str(ext.ttl.strftime("%Y-%m-%d")) +
                        " based on extension id: " + str(ext.id) )
+        self.task.extension = ext
         self.task.action = "extend|proj||%s|%s" % (self.p_name, description)
         return self.commit()
 
@@ -1300,6 +1301,7 @@ class TaskQueue:
                        " with CPU " + str(ext.hours) +
                        " valid until " + str(ext.ttl.strftime("%Y-%m-%d")) +
                        " based on extension id: " + str(ext.id) )
+        self.task.extension = ext
         self.task.action = "renew|proj||%s|%s" % (self.p_name, description)
         return self.commit()
 
