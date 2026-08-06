@@ -874,6 +874,9 @@ class Tasks(db.Model):
     pid = db.Column(db.Integer, db.ForeignKey("projects.id"))
     project = db.relationship("Project", foreign_keys=pid)
 
+    eid = db.Column(db.Integer, db.ForeignKey("project_extension.id"))
+    extension = db.relationship("Extend", foreign_keys=eid)
+
     def __repr__(self):
         return "<Task queue record {}>".format(self.id)
 
