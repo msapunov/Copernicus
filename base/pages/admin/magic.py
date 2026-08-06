@@ -680,7 +680,7 @@ def process_task(tid, result):
         task.user_delete()
     elif act == "ssh" and ent == "user":
         task.user_publickey()
-    return task.done(result)
+    return record
 
 
 def task_history(reverse=True):
