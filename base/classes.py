@@ -1127,7 +1127,7 @@ class Task:
             type=project.type,
             comment=f"Created based on transformation request ID {ext.id}",
             project=project.name,
-            ttl=ttl,
+            ttl=ext.ttl,
             treated=False
         )
         project.active = True
