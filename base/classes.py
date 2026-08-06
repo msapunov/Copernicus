@@ -1286,6 +1286,7 @@ class TaskQueue:
     def project_extend(self, ext):
         if not self.p_name:
             raise ValueError("Can't extend undefined project")
+        ext.hours += ext.present_total
         description = ("Extend project " + self.p_name +
                        " with CPU " + str(ext.hours) +
                        " valid until " + str(ext.ttl.strftime("%Y-%m-%d")) +
