@@ -1115,14 +1115,8 @@ class Task:
         Return: Object. Mail object
         """
         project = self.task.project
-        # Below is a temporary code
-        desc = self.get_description()
-        date, eid = desc.split(" based on extension id: ")
-        eid = int(eid.strip())
-        ext = Extend.query.filter_by(id=eid).first()
-        skip, ttl = date.split(" valid until ")
-        ttl = dt.strptime(ttl, "%Y-%m-%d")
-#        ext = self.task.extension
+        ext = self.task.extension
+        ext.done = True
         project.type = ext.transform
         project.name = "%s%s" % (ext.transform, str(ext.project.id).zfill(3))
         project.resources.valid = False
