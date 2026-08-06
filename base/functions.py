@@ -208,7 +208,7 @@ def calculate_ttl(type):
     if finish:
         candidates.append(finish)
     if not candidates:
-        raise ValueError(f"No duration or finish date found for type {type} project!")
+        ttl = now + relativedelta(months=1)
     else:
         ttl = max(candidates)
     if now > ttl:
