@@ -653,6 +653,7 @@ def process_task(tid, result):
     if act not in req:
         raise ValueError("The action '%s' is not supported" % act)
     task = Task(record)
+    task.done(result)
     if act == "create" and ent == "user":
         task.user_create()
     elif act == "create" and ent == "resp":
