@@ -66,7 +66,9 @@
                             {% for line in task.result.output %}
                                 {% set line = line.replace('\x1b', '')%}
                                 {% set line = line.replace('[60G[[1;32m', '')%}
+                                {% set line = line.replace('[0;39m[ [1;32m', '')%}
                                 {% set line = line.replace('[0;39m]', '')%}
+                                {% set line = line.replace('[0;39m ]', '')%}
                                 {% set text = line.strip() %}
                                 {% if text.strip().endswith('OK') %}
                                     <tr>
