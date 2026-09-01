@@ -1011,10 +1011,17 @@ class Tasks(db.Model):
         mod = self.modified.strftime("%Y-%m-%d %X %Z") if self.modified else ""
         result = {}
         if self.result:
-            result = self.result.strip().strip("{\"").strip("\"}").strip()
-            result = result.replace("\n", "<br>")
-        else:
-            result = None
+            for line in self.result.split("\n\t"):
+                line = line.strip()
+                if line.startswith("Cmd:"):
+                    result["command"] = (line.removeprefix("Cmd:")
+                                         .replace("\\", "").strip())
+                elif line.startswith("StdOut:"):
+                    result["output"] = (line.removeprefix("StdOut:")
+                                        .strip().split("\n"))
+                elif line.startswith("StdErr:"):
+                    result["errors"] = (line.removeprefix("StdErr:")
+                                        .strip().split("\n"))
         return {
             "id": self.id,
             "description": self.description(),
