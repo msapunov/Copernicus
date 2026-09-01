@@ -7,7 +7,7 @@
                 </tr>
                 <tr>
                     <td class="uk-width-1-10 uk-text-right">Description:</td>
-                    <td class="uk-width-9-10 uk-text-left">{{task.description()}}</td>
+                    <td class="uk-width-9-10 uk-text-left">{{task.description}}</td>
                 </tr>
                 <tr>
                     <td class="uk-width-1-10 uk-text-right">Created:</td>
@@ -21,7 +21,7 @@
                     <td class="uk-width-1-10 uk-text-right">Author:</td>
                     <td class="uk-width-9-10 uk-text-left">
                         {% if task.author %}
-                            {{task.author.full()}}
+                            {{task.author}}
                         {% endif %}
                     </td>
                 </tr>
@@ -29,7 +29,7 @@
                     <td class="uk-width-1-10 uk-text-right">Approve:</td>
                     <td class="uk-width-9-10 uk-text-left">
                         {% if task.approve %}
-                            {{task.approve.full()}}
+                            {{task.approve}}
                         {% endif%}
                     </td>
                 </tr>
