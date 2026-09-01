@@ -79,6 +79,15 @@
                                             <span class="uk-text-success">OK</span>
                                         </td>
                                     </tr>
+                                {% elif text.endswith('PASSED') %}
+                                    <tr>
+                                        <td>
+                                            {{ text[:-6] }}
+                                        </td>
+                                        <td>
+                                            <span class="uk-text-warning">PASSED</span>
+                                        </td>
+                                    </tr>
                                 {% elif text.endswith('FAILED') %}
                                     <tr>
                                         <td>
