@@ -1009,6 +1009,7 @@ class Tasks(db.Model):
         else:
             status = ""
         mod = self.modified.strftime("%Y-%m-%d %X %Z") if self.modified else ""
+        result = {}
         if self.result:
             result = self.result.strip().strip("{\"").strip("\"}").strip()
             result = result.replace("\n", "<br>")
