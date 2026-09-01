@@ -52,11 +52,59 @@
                     <td class="uk-width-9-10 uk-text-left">{{task.done}}</td>
                 </tr>
                 {% if task.result %}
+                    {% if task.result.command %}
+                    <tr>
+                        <td class="uk-width-1-10 uk-text-right">Command:</td>
+                        <td class="uk-width-9-10 uk-text-left">{{ task.result.command }}</td>
+                    </tr>
+                    {% endif %}
+                    {% if task.result.output %}
                     <tr>
                         <td class="uk-width-1-10 uk-text-right">Result:</td>
-                        <!--<td class="uk-width-9-10 uk-text-left"><pre class="uk-width-1-1">{{task.result}}</pre></td>-->
-                        <td class="uk-width-9-10 uk-text-left"><div class="uk-block">{{task.result|safe}}</div></td>
+                        <td class="uk-width-9-10 uk-text-left uk-padding-remove">
+                            <table class="uk-table uk-table-condensed">
+                            {% for line in task.result.output %}
+                                {% set line = line.replace('\x1b', '')%}
+                                {% set line = line.replace('[60G[[1;32m', '')%}
+                                {% set line = line.replace('[0;39m]', '')%}
+                                {% set text = line.strip() %}
+                                {% if text.strip().endswith('OK') %}
+                                    <tr>
+                                        <td>
+                                            {{ text[:-3] }}
+                                        </td>
+                                        <td>
+                                            <span class="uk-text-success">OK</span>
+                                        </td>
+                                    </tr>
+                                {% elif text.endswith('FAILED') %}
+                                    <tr>
+                                        <td>
+                                            {{ text[:-6] }}
+                                        </td>
+                                        <td>
+                                            <span class="uk-text-danger">FAILED</span>
+                                        </td>
+                                    </tr>
+                                {% else %}
+                                    <tr>
+                                        <td colspan="2" class="uk-overflow-container">
+                                            {{ text }}
+                                        </td>
+                                    </tr>
+                                {% endif %}
+
+                            {% endfor %}
+                            </table>
+                        </td>
                     </tr>
+                    {% endif %}
+                    {% if task.result.error %}
+                    <tr>
+                        <td class="uk-width-1-10 uk-text-right">Error:</td>
+                        <td class="uk-width-9-10 uk-text-left">{{ task.result.error }}</td>
+                    </tr>
+                    {% endif %}
                 {% endif %}
             </tbody>
         </table>
