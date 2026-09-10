@@ -10,7 +10,7 @@ flask_wtf==1.2.2
 paramiko==4.0.0
 parsedatetime==2.6
 SQLAlchemy==2.0.47
-weasyprint==68.1
+weasyprint==70.0
 webdavclient3==3.14.7
 Werkzeug==3.1.6
 WTForms==3.2.1
