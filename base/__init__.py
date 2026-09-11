@@ -18,14 +18,10 @@ def create_app(config_filename: str) -> Flask:
     Performs cleanup, registers extensions, blueprints, decorators, and
     logging, then attaches custom methods to the app object.
 
-import logging
-import logging.config
     Args:
         config_filename: Name of the configuration file located in the
             instance directory.
 
-
-def create_app(config_filename):
     Returns:
         Configured Flask application instance.
     """
