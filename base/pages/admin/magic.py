@@ -32,6 +32,34 @@ __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
 
 
+def process_user_form2(form):
+    prenom = form.prenom.data.lower()
+    surname = form.surname.data.lower()
+    email = form.email.data.lower()
+    login = form.login.data.lower()
+    if login == "none":
+        return None
+    if login == "select":
+        username = form.exist.data
+        if username not in g.user_list:
+            raise ValueError("Failed to find '%s' among registered users"
+                             % username)
+        user = User.query.filter_by(login=username).one()
+        user.action = "assign"
+        if "True" == form.responsible.data:
+            user.acl.is_responsible = True
+    else:
+        user = TmpUser()
+        user.login=login
+        user.name=prenom
+        user.surname=surname
+        user.email=email
+        user.is_user=True
+        if "True" == form.responsible.data:
+            user.is_responsible = True
+    return user
+
+
 def process_user_form(form):
     prenom = form.prenom.data.lower()
     surname = form.surname.data.lower()
@@ -594,51 +622,6 @@ def user_reset_pass(uid):
     user = user_by_id(uid)
     passwd = user.reset_password()
     UserLog(user).password_reset(passwd)
-
-
-def user_create(task):
-    if not task.project:
-        raise ValueError("Project reference is empty, can't create user")
-    tmp_user = TmpUser().from_description(task.action)
-    if "TEMPORARY USER" in tmp_user.comment:
-        return ProjectLog(task.project).user_created(task)  # Ugly!!
-    user = User.query.filter_by(login=tmp_user.login).first()
-    if not user:
-        user = User()
-        user.login=tmp_user.login
-        user.name=tmp_user.name
-        user.surname=tmp_user.surname
-        user.email=tmp_user.email
-        user.active=True
-        user.project=[task.project]
-        user.created=dt.now()
-        user.acl=ACLDB(is_user=tmp_user.is_user,
-                       is_responsible=tmp_user.is_responsible,
-                       is_tech=tmp_user.is_tech,
-                       is_manager=tmp_user.is_manager,
-                       is_committee=tmp_user.is_committee,
-                       is_admin=tmp_user.is_admin)
-        db.session.add(user)
-    if user not in task.project.users:
-        task.project.users.append(user)
-    if not getattr(user, "passwd", None):
-        user.passwd = user.reset_password()
-    Mail().user_new(user).start()
-    UserMailingList().add(user.email, user.full_name())
-    if user.acl.is_responsible:
-        task.project.responsible = user
-        ResponsibleMailingList().add(user.email, user.full_name())
-    return ProjectLog(task.project).user_created(task)  # Ugly!
-
-
-def user_publickey(self):
-    """
-    Send message after public key has been uploaded on the server
-    Return: Object. Mail object
-    """
-    user = self.task.user
-    key = self.get_description()
-    return UserLog(user).key_uploaded(key)
     return "New password has been sent to %s" % user.full()
 
 

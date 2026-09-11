@@ -603,6 +603,71 @@ class Pending:
                              (self.pending.project_id(), self.pending.status))
         return self.pending
 
+    def create2(self, users):
+        """
+        Check if all requirements are satisfied and creates a project in the DB
+        and corresponding task for remote execution.
+        :return: Object. Pending object
+        """
+        record = self.verify()
+        if record.status not in ["received", "skipped"]:
+            raise ValueError("Visa haven't been received yet!")
+        total = Project.query.count()
+        name = "%s%s" % (record.type, total + 1)
+        titles = [getattr(record, f"article_{i}") for i in range(1, 6) if
+                  getattr(record, f"article_{i}", "") != ""]
+        articles = map(lambda x: ArticleDB(info=x), titles)
+        project = Project(
+            title=record.title,
+            description=record.description,
+            scientific_fields=record.scientific_fields,
+            genci_committee=record.genci_committee,
+            numerical_methods=record.numerical_methods,
+            computing_resources=record.computing_resources,
+            project_management=record.project_management,
+            project_motivation=record.project_motivation,
+            active=False,
+            comment="Project created using Copernicus",
+            ref=record,
+            priority=0,
+            type=record.type,
+            created=dt.now(),
+            approve=current_user,
+            name=name,
+            users=[],
+            articles=list(articles),
+            resources=Resources(
+                approve=current_user,
+                valid=True,
+                cpu=record.cpu,
+                type=record.type,
+                project=name,
+                ttl=calculate_ttl(record.type),
+                treated=False
+            )
+        )
+        db.session.add(project)
+        TaskQueue().project(project).project_create().task.accept()
+        for user in users:
+            task = TaskQueue()
+            if isinstance(user, User):
+                if user.acl.is_responsible:
+                    task.project(project).responsible_assign(user).task.accept()
+                else:
+                    task.project(project).user_assign(user).task.accept()
+            elif isinstance(user, TmpUser):
+                if user.is_responsible:
+                    task.project(project).responsible_create(user).task.accept()
+                else:
+                    task.project(project).user_create(user).task.accept()
+            else:
+                debug("User %s is not an instance nor User nor TmpUser")
+        self.result = RequestLog(record).create(project)
+        record.status = "created"
+        record.processed = True
+        record.processed_ts = dt.now()
+        return self.commit()
+
     def create(self, users):
         """
         Check if all requirements are satisfied and creates a project in the DB
@@ -867,6 +932,7 @@ class Task:
         self.process()
         return self.done()
 
+    @property
     def get_action(self):
         """
         Split the action field of task record using "|" as delimiter and return
