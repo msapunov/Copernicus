@@ -1,3 +1,4 @@
+from unicodedata import normalize
 from paramiko import SSHClient, AutoAddPolicy, AuthenticationException
 from paramiko import RSAKey, ECDSAKey, Ed25519Key
 from paramiko import SSHException, BadHostKeyException
@@ -724,3 +725,20 @@ def bytes2human(n, layout='%(value).1f %(symbol)s', symbols='customary'):
             value = float(n) / prefix[symbol]
             return layout % locals()
     return layout % dict(symbol=symbols[0], value=n)
+
+
+def form_error_string(err_dict):
+    result = []
+    for key, value in err_dict.items():
+        if key == "csrf_token" and value == ["The CSRF token has expired."]:
+            result.append("Your session has expired! Please, reload the page")
+            continue
+        for err in value:
+            result.append("%s: %s" % (key, err))
+    return "\n".join(result)
+
+
+def normalize_word(word):
+    word = word.replace("'", "")
+    word = normalize("NFKD", word).encode("ascii", "ignore").decode("ascii")
+    return word
