@@ -14,17 +14,7 @@ from base.database.schema import User, Project
 
 def create_app(config_filename: str) -> Flask:
     """Create and configure the Flask application instance.
-from base.functions import project_config, load_config
-
-from datetime import datetime as dt
-from werkzeug.middleware.proxy_fix import ProxyFix
-from werkzeug.exceptions import HTTPException
-from os import walk
-from os.path import join as path_join, exists
-from traceback import format_exc
-from tempfile import gettempdir, mkdtemp
-from pathlib import Path
-from shutil import rmtree
+    from base.functions import project_config, load_config
     Performs cleanup, registers extensions, blueprints, decorators, and
     logging, then attaches custom methods to the app object.
 
