@@ -1114,8 +1114,8 @@ class TmpUser:
         self.comment = ""
 
     def __repr__(self):
-        return '<TmpUser {}>'.format(self.login)
         """Return a string representation of the TmpUser."""
+        return f"<TmpUser {self.login}>"
 
     def description(self):
         """Create a task description string from the TmpUser attributes.
@@ -1195,28 +1195,35 @@ class TmpUser:
 
 
 class Pending:
-    """
-    Representation of RegisterDB record
-    Performs operations on pending projects, i.e. registration records which
-    haven't been processed yet
+    """Manages pending project registration requests.
+
+    Provides workflow methods for approval, visa creation/sending,
+    and project creation from registration records.
     """
 
     def __init__(self, rid=None):
-        """
-        self.pending is always a list.
-        If rid is provided set self.pending to the unprocessed record with
-        provided id. Otherwise it returns all unprocessed records.
-        :param rid: String. ID of registration record. Optional
+        """Initialize the Pending manager.
+
+        Args:
+            rid: Optional registration ID. If provided, loads the
+                corresponding Register record.
         """
         self.pending = Register.query.filter_by(id=rid).first()
         self.action = None
         self.result = None
 
     def verify(self):
-        """
-        Verify if record exists and user or user's role has proper access
-        rights.
-        :return: Object. Register record
+        """Verify that the pending record exists and the user has access.
+
+        Checks that the current user has admin permission or is in the
+        ACL for the project type.
+
+        Returns:
+            The Register record.
+
+        Raises:
+            ValueError: If the record is not set, access is denied, or
+                the request is in a final state (created/ignored/rejected).
         """
         if not self.pending:
             raise ValueError("Register project record is not set!")
@@ -1237,10 +1244,17 @@ class Pending:
         return self.pending
 
     def create(self, users):
-        """
-        Check if all requirements are satisfied and creates a project in the DB
-        and corresponding task for remote execution.
-        :return: Object. Pending object
+        """Create a project from a registration request.
+
+        Validates requirements, creates the Project record with resources,
+        and queues tasks for user assignment/creation.
+
+        Args:
+            users: List of processed user form results (User objects or
+                None for skipped users).
+
+        Returns:
+            The Pending instance after committing changes.
         """
         record = self.verify()
         if record.status not in ["received", "skipped"]:
@@ -1306,11 +1320,16 @@ class Pending:
         return self.commit()
 
     def visa_create(self, resend=False):
-        """
-        Creates visa files and attaches them to a mail for responsible person.
-        Afterwards delete files from disk and set proper status for register
-        record.
-        :return: Object. Pending object
+        """Create visa documents and send them to the responsible person.
+
+        Generates PDF visa files, attaches them to an email, and updates
+        the registration status.
+
+        Args:
+            resend: Whether this is a resend of an already-sent visa.
+
+        Returns:
+            The Pending instance after committing changes.
         """
         record = self.verify()
         name = record.project_id()
@@ -1338,9 +1357,10 @@ class Pending:
         return self.commit()
 
     def visa_skip(self):
-        """
-        Set correct value to status field in case if visa is not required.
-        :return: Object. Pending object
+        """Skip the visa step when a visa is not required.
+
+        Returns:
+            The Pending instance after committing changes.
         """
         record = self.verify()
         if record.status != "approved":
@@ -1350,9 +1370,10 @@ class Pending:
         return self.commit()
 
     def visa_received(self):
-        """
-        Set correct value to status field if visa has been received.
-        :return: Object. Pending object
+        """Mark the visa as received.
+
+        Returns:
+            The Pending instance after committing changes.
         """
         record = self.verify()
         if record.status not in ["sent", "resent"]:
@@ -1362,9 +1383,10 @@ class Pending:
         return self.commit()
 
     def approve(self):
-        """
-        Set approved value to status field. First step to project creation.
-        :return: Object. Pending object
+        """Approve the project registration (first step to project creation).
+
+        Returns:
+            The Pending instance after committing changes.
         """
         record = self.verify()
         if record.status and len(record.status) > 0:
@@ -1375,10 +1397,12 @@ class Pending:
         return self.commit()
 
     def reset(self):
-        """
-        Set status field of register record to empty string and processed field
-        to False thus resetting project creation process
-        :return: Object. Pending object
+        """Reset the project creation process.
+
+        Clears the status and sets processed to False.
+
+        Returns:
+            The Pending instance after committing changes.
         """
         record = self.verify()
         record.status = ""
@@ -1386,9 +1410,10 @@ class Pending:
         return self.commit()
 
     def ignore(self):
-        """
-        Set self.action to ignore and process the records
-        :return: Result of self.process_records() method
+        """Ignore the project creation request.
+
+        Returns:
+            The Pending instance after committing changes.
         """
         record = self.verify()
         record.status = "ignored"
@@ -1396,9 +1421,13 @@ class Pending:
         return self.commit()
 
     def reject(self, message):
-        """
-        Set self.action to reject and process the records
-        :return: Result of self.process_records() method
+        """Reject the project creation request.
+
+        Args:
+            message: Rejection reason.
+
+        Returns:
+            The Pending instance after committing changes.
         """
         record = self.verify()
         record.status = "rejected"
@@ -1407,9 +1436,10 @@ class Pending:
         return self.commit()
 
     def commit(self):
-        """
-        Commit changes to the database
-        :return: Object. Pending object
+        """Commit all pending changes to the database.
+
+        Returns:
+            The Pending instance.
         """
         db.session.commit()
         return self
