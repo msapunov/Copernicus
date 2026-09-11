@@ -176,8 +176,6 @@ class ProjectLog(Log):
         return self
 
     def responsible_assign(self, task):
-        self.log.event = "Made a request to assign new responsible %s" \
-                         % task.user.full()
         """Log a request to assign a new responsible person.
 
         Args:
@@ -186,11 +184,12 @@ class ProjectLog(Log):
         Returns:
             The event string.
         """
+        self.log.event = (
+            f"Made a request to assign a new responsible {task.user.full()}"
+        )
         return self.user(task.user).commit(Mail().responsible_assign(task))
 
     def responsible_assigned(self, task):
-        self.log.event = "Assigned a new project responsible %s" \
-                         % task.user.full()
         """Log that a new responsible person was assigned.
 
         Args:
@@ -199,6 +198,9 @@ class ProjectLog(Log):
         Returns:
             The event string.
         """
+        self.log.event = (
+            f"Assigned a new project responsible {task.user.full()}"
+        )
         return self.user(task.user).commit(Mail().responsible_assigned(task))
 
     def responsible_attached(self, task):
@@ -354,8 +356,6 @@ class ProjectLog(Log):
         return self.commit(Mail().project_renew(extension))
 
     def renewed(self, extension):
-        self.log.event = "Renewal request for %s hour(s) has been processed" \
-                         % extension.hours
         """Log that a renewal request was processed.
 
         Args:
@@ -364,6 +364,9 @@ class ProjectLog(Log):
         Returns:
             The event string.
         """
+        self.log.event = (
+            f"Renewal request for {extension.hours} hour(s) has been processed"
+        )
         self.log.extension = extension
         return self.commit(Mail().project_renewed(extension))
 
@@ -377,14 +380,14 @@ class ProjectLog(Log):
             The event string.
         """
         article = "an exceptional" if extension.exception else "a"
-        self.log.event = "Made %s request to extend project for %s hour(s)" \
-                         % (article, extension.hours)
+        self.log.event = (
+            f"Made {article} request to extend project for {extension.hours} "
+            f"hour(s)"
+        )
         self.log.extension = extension
         return self.commit(Mail().project_extend(extension))
 
     def extended(self, extension):
-        self.log.event = "Extension request for %s hour(s) has been processed" \
-                         % extension.hours
         """Log that an extension request was processed.
 
         Args:
@@ -393,6 +396,9 @@ class ProjectLog(Log):
         Returns:
             The event string.
         """
+        self.log.event = (
+            f"Extension request for {extension.hours} hour(s) has been processed"
+        )
         self.log.extension = extension
         return self.commit(Mail().project_extended(extension))
 
@@ -410,8 +416,6 @@ class ProjectLog(Log):
         return self.commit(Mail().project_transform(extension))
 
     def transformed(self, extension):
-        self.log.event = "Transformation to type %s finished successfully" \
-                         % extension.transform
         """Log that a transformation request was processed.
 
         Args:
@@ -420,6 +424,10 @@ class ProjectLog(Log):
         Returns:
             The event string.
         """
+        self.log.event = (
+            f"Transformation to type {extension.transform} finished "
+            f"successfully"
+        )
         self.log.extension = extension
         return self.commit(Mail().project_transformed(extension))
 
