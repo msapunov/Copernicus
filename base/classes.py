@@ -1292,8 +1292,8 @@ class Pending:
                 type=record.type,
                 project=name,
                 ttl=calculate_ttl(record.type),
-                treated=False
-            )
+                treated=False,
+            ),
         )
         TaskQueue().project(proj).project_create().task.accept()
         for user in users:
