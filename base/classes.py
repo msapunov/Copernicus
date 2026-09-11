@@ -1838,9 +1838,14 @@ class Task:
         return ProjectLog(project).transformed(ext)
 
 class BaseForm(FlaskForm):
+    """Base form with a human-readable error message helper."""
+
     def error_message(self):
-        """
-        Convert form.errors dictionary into a single human-readable string.
+        """Convert form errors into a single human-readable string.
+
+        Returns:
+            A string with each field error on a new line, or a session
+            expiration message if the CSRF token has expired.
         """
         messages = []
 
