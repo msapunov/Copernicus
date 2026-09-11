@@ -178,6 +178,7 @@ def register_decor(app: Flask) -> None:
             url_list = ["%s" % rule for rule in app.url_map.iter_rules()]
             cache.set("url_list", url_list, 600)
         g.url_list = url_list
+        return None
 
     @app.errorhandler(Exception)
     def handle_error(e: Exception) -> tuple[str, int]:
