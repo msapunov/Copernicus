@@ -33,8 +33,22 @@ __copyright__ = "Aix Marseille University"
 
 
 class Log:
+    """Base class for audit logging of system events.
+
+    Provides methods for filtering log entries by date, project, register,
+    or user, and committing new log entries with optional email notification.
+    """
 
     def __init__(self, project=None, register=None, user=None):
+        """Initialize a new Log instance.
+
+        Creates a new LogDB entry and initializes the query filter.
+
+        Args:
+            project: Project model instance to associate with the log.
+            register: Register model instance to associate with the log.
+            user: User model instance to associate with the log.
+        """
         self.log = LogDB(
             event="",
             author=current_user,
@@ -45,14 +59,37 @@ class Log:
         self.send = True
 
     def before(self, date):
+        """Return log entries before a given date.
+
+        Args:
+            date: Datetime threshold.
+
+        Returns:
+            List of LogDB entries created before the given date.
+        """
         self.query = self.query.filter(LogDB.created < date)
         return self.list()
 
     def after(self, date):
+        """Return log entries after a given date.
+
+        Args:
+            date: Datetime threshold.
+
+        Returns:
+            List of LogDB entries created on or after the given date.
+        """
         self.query = self.query.filter(LogDB.created >= date)
         return self.list()
 
     def list(self):
+        """Execute the current query and return matching log entries.
+
+        Applies filters for project, register, and user if set.
+
+        Returns:
+            List of LogDB entries matching the current filters.
+        """
         query = self.query
         if self.log.project:
             query = query.filter_by(project=self.log.project)
@@ -63,6 +100,15 @@ class Log:
         return query.all()
 
     def commit(self, mail=None):
+        """Save the log entry to the database and optionally send email.
+
+        Args:
+            mail: Optional Mail instance to send. If provided and
+                ``self.send`` is True, the mail is started asynchronously.
+
+        Returns:
+            The event string of the logged entry.
+        """
         db.session.add(self.log)
         db.session.commit()
         try:
