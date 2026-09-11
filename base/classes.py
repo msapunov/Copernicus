@@ -569,28 +569,62 @@ class ProjectLog(Log):
 
 
 class RequestLog(Log):
+    """Logger for registration/pending project request events."""
 
     def __init__(self, project):
+        """Initialize the RequestLog for a pending registration.
+
+        Args:
+            project: Register record instance.
+        """
         super().__init__(register=project)
         self.pending = project
 
     def visa_received(self):
+        """Log that a signed visa was received.
+
+        Returns:
+            The event string.
+        """
         self.log.event = "Visa received"
         return self.commit(Mail().visa_received(self.pending))
 
     def visa_resent(self):
+        """Log that a visa was resent.
+
+        Returns:
+            The event string.
+        """
         self.log.event = "Visa re-sent to %s" % self.pending.responsible_email
         return self.commit(Mail().visa_resent(self))
 
     def visa_sent(self):
+        """Log that a visa was sent.
+
+        Returns:
+            The event string.
+        """
         self.log.event = "Visa sent to %s" % self.pending.responsible_email
         return self.commit(Mail().visa_sent(self))
 
     def visa_skip(self):
+        """Log that the visa sending step was skipped.
+
+        Returns:
+            The event string.
+        """
         self.log.event = "Visa sending step has been skipped"
         return self.commit(Mail().visa_skip(self))
 
     def create(self, project=None):
+        """Log that a project was created from the registration request.
+
+        Args:
+            project: Optional Project instance.
+
+        Returns:
+            The event string.
+        """
         meso = self.pending.project_id()
         if project:
             name = project.get_name()
@@ -601,34 +635,89 @@ class RequestLog(Log):
         return self.commit()
 
     def user_del(self, user):
+        """Log that a user was removed from the registration.
+
+        Args:
+            user: User identifier string.
+
+        Returns:
+            The event string.
+        """
         self.log.event = "Remove user %s" % user
         return self.commit()
 
     def user_add(self, user):
+        """Log that a user was added to the registration.
+
+        Args:
+            user: User identifier string.
+
+        Returns:
+            The event string.
+        """
         self.log.event = "Add user %s" % user
         return self.commit()
 
     def user_change(self, info):
+        """Log that user information was changed in the registration.
+
+        Args:
+            info: Description of changes.
+
+        Returns:
+            The event string.
+        """
         self.log.event = "Change user info: %s" % info
         return self.commit()
 
     def request_change(self, info):
+        """Log that the registration request information was changed.
+
+        Args:
+            info: Description of changes.
+
+        Returns:
+            The event string.
+        """
         self.log.event = "Change request info: %s" % info
         return self.commit()
 
     def approve(self):
+        """Log that the project registration was approved.
+
+        Returns:
+            The event string.
+        """
         self.log.event = "Project software requirements approved"
         return self.commit(Mail().pending_approve(self))
 
     def reset(self):
+        """Log that the project creation process was reset.
+
+        Returns:
+            The event string.
+        """
         self.log.event = "Project creation process has been reset"
         return self.commit(Mail().pending_reset(self))
 
     def reject(self, message):
+        """Log that the project creation request was rejected.
+
+        Args:
+            message: Rejection reason.
+
+        Returns:
+            The event string.
+        """
         self.log.event = "Project creation request rejected"
         return self.commit(Mail().pending_reject(self, message))
 
     def ignore(self):
+        """Log that the project creation request was ignored.
+
+        Returns:
+            The event string.
+        """
         self.log.event = "Project creation request ignored"
         return self.commit(Mail().pending_ignore(self))
 
