@@ -1481,32 +1481,39 @@ class TaskRepository:
         ).scalar()
 
 
-# noinspection PyArgumentList
 class Task:
-    """
-    Methods of this class is used for processing task status and to perform
-    actions associated with a task
+    """Processes task status updates and performs actions associated with
+    a task queue entry.
+
+    Each task represents an operation to be performed on the remote
+    infrastructure (create user, assign responsible, etc.).
     """
 
     def __init__(self, task):
-        """
-        Init takes one argument which is task record
-        :param task: Object. Task record.
+        """Wrap a Tasks record with processing methods.
+
+        Args:
+            task: Tasks record to process.
         """
         self.task = task
         self.id = task.id
 
     def is_processed(self):
-        """
-        Return processed field value from the task record
-        :return: Boolean
+        """Check whether the task has been processed.
+
+        Returns:
+            The ``processed`` field value from the task record.
         """
         return self.task.processed
 
     def done(self, result=None):
-        """
-        Set field done of the task record to True and commit changes
-        :return: Object. Result of self.commit method  - task object
+        """Mark the task as done and optionally store a result string.
+
+        Args:
+            result: Optional result string from task execution.
+
+        Returns:
+            The updated Tasks record.
         """
         self.task.done = True
         if result:
@@ -1514,32 +1521,30 @@ class Task:
         return self.commit()
 
     def accept(self):
-        """
-        Marking the task for execution in case of positive decision.
-        Sending mail with technical details to tech stuff by default
-        :return: Object. Task record
+        """Accept the task for execution and notify tech staff.
+
+        Returns:
+            The updated Tasks record.
         """
         self.task.decision = "accept"
         Mail().task_accepted(self.task).send()
         return self.process()
 
     def ignore(self):
-        """
-        Marking the task as ignored in case of negative decision.
-        Sending mail with technical details to tech stuff by default
-        Task is marked as done and shouldn't be in the task queue for execution
-        :return: Object. Task record
+        """Ignore the task (negative decision, no execution needed).
+
+        Returns:
+            The updated Tasks record.
         """
         self.task.decision = "ignore"
         self.process()
         return self.done()
 
     def reject(self):
-        """
-        Marking the task as rejected in case of negative decision.
-        Sending mail with technical details to tech stuff by default
-        Task is marked as done and shouldn't be in the task queue for execution
-        :return: Object. Task record
+        """Reject the task and notify tech staff.
+
+        Returns:
+            The updated Tasks record.
         """
         self.task.decision = "reject"
         Mail().task_rejected(self.task).send()
@@ -1547,12 +1552,15 @@ class Task:
         return self.done()
 
     def get_action(self):
-        """
-        Split the action field of task record using "|" as delimiter and return
-        the first part of it which represent a task action which should be done
-        on task target
-        :return: String. Should be one of the following: "create", "assign",
-                 "update", "remove" and "change"
+        """Extract the action verb from the task's action string.
+
+        Returns:
+            One of: ``activate``, ``create``, ``assign``, ``update``,
+            ``remove``, ``change``, ``ssh``, ``transformation``,
+            ``extension``, ``activation``, ``renewal``.
+
+        Raises:
+            ValueError: If the action is not recognized.
         """
         act = self.task.action.split("|")[0]
         choices = ["activate", "create", "assign", "update", "remove", "change",
@@ -1563,47 +1571,48 @@ class Task:
         return act
 
     def get_entity(self):
-        """
-        Split the action field of task record using "|" as delimiter and return
-        the second part of it which represent a task target
-        :return: String. Could be user or resp
+        """Extract the target entity from the task's action string.
+
+        Returns:
+            Entity string (e.g. ``"user"``, ``"resp"``, ``"proj"``).
         """
         return self.task.action.split("|")[1]
 
     def get_description(self):
+        """Extract the description from the last segment of the action string.
+
+        Returns:
+            Description string.
         """
-        Split the action field of task record and return the last part of it
-        which should be a task description, for example:
-        "Remove user LOGIN from project PROJECT"
-        :return: String
-        """
-        return self.task.action.split("|")[-1]  # Or index is 4 not -1
+        return self.task.action.split("|")[-1]
 
     def process(self):
-        """
-        Set processed field of the task record to True, so the task will be
-        moved to the task ready to be executed.
-        Set approve field to current user and commit changes via self.commit()
-        :return: Object. Task record
+        """Mark the task as processed by the current user.
+
+        Sets ``processed`` to True, records the approving user, and
+        commits.
+
+        Returns:
+            The updated Tasks record.
         """
         self.task.processed = True
         self.task.approve = current_user
         return self.commit()
 
     def commit(self):
-        """
-        Commit changes to the database
-        :return: Object. Task record
+        """Commit changes to the database.
+
+        Returns:
+            The updated Tasks record.
         """
         db.session.commit()
         return self.task
 
     def user_new(self):
-        """
-        Re-create TmpUser object user out of task description, create DB entry
-        for User record and ACL record and append ne user to project associated
-        with the task.
-        :return: String. The log event associated with this action
+        """Create a new user, set password, add to mailing lists, and log.
+
+        Returns:
+            The event string from the project log.
         """
         project = self.task.project
         self.task.user.passwd = self.task.user.reset_password()
@@ -1615,9 +1624,16 @@ class Task:
         return ProjectLog(project).user_new(self.task)
 
     def user_create(self):
-        """
-        Execute user_new method but send warning to project's responsible.
-        :return: String. The log event associated with this action
+        """Create a new user from a task or update existing user.
+
+        Handles both new user creation and attaching existing users to
+        a project. Sends welcome email and manages mailing lists.
+
+        Returns:
+            The event string from the project log.
+
+        Raises:
+            ValueError: If the project reference is empty.
         """
         if not self.task.author_id:
             return self.user_new()
@@ -1668,9 +1684,12 @@ class Task:
         return ProjectLog(project).user_created(self.task)
 
     def user_update(self):
-        """
+        """Update user information (name, surname, email) from a task.
 
-        :return: String. The log event associated with this action
+        Manages mailing list subscriptions for email changes.
+
+        Returns:
+            The event string from the user log.
         """
         description = self.get_description()
         user = self.task.user
@@ -1693,10 +1712,10 @@ class Task:
         return UserLog(user).user_updated(self.task)
 
     def user_activate(self):
-        """
-        Appending task associated user to task associated project and set active
-        property to True
-        :return: String. The log event associated with this action
+        """Activate a user and add them to the task's project.
+
+        Returns:
+            The event string from the project log.
         """
         project = self.task.project
         user = self.task.user
@@ -1710,9 +1729,10 @@ class Task:
         return ProjectLog(project).user_activated(self.task)
 
     def user_assign(self):
-        """
-        Appending task associated user to a task associated project
-        :return: String. The log event associated with this action
+        """Assign a user to the task's project.
+
+        Returns:
+            The event string from the project log.
         """
         project = self.task.project
         user = self.task.user
@@ -1726,10 +1746,12 @@ class Task:
         return ProjectLog(project).user_assigned(self.task)
 
     def user_delete(self):
-        """
-        Remove task associated user from task associated project and if there
-        is no project associate with the user, the user set as inactive
-        :return: String. The log event associated with this action
+        """Remove a user from the task's project.
+
+        If the user has no remaining projects, they are deactivated.
+
+        Returns:
+            The event string from the project log.
         """
         project = self.task.project
         user = self.task.user
@@ -1737,18 +1759,16 @@ class Task:
             project.users.remove(user)
         if not user.project:
             user.active = False
-            # UserLog(user).goodbye()
         return ProjectLog(project).user_deleted(self.task)
 
     def responsible_assign(self):
-        """
-        Assign new responsible to a task associated project. Set ACL property
-        is_responsible to True, save old_responsible, assign the task associated
-        user to project responsible and assign it to the mailing list. Check if
-        old_responsible has other projects as responsible and if not, remove
-        responsible property from his ACL and unsubscribe from responsible
-        mailing list.
-        :return: String. The log event associated with this action
+        """Assign a new responsible person to the task's project.
+
+        Updates ACL, mailing lists, and potentially unassigns the old
+        responsible if they have no other responsibilities.
+
+        Returns:
+            The event string from the project log.
         """
         project = self.task.project
         old = project.responsible
@@ -1771,27 +1791,32 @@ class Task:
         return ProjectLog(project).responsible_assigned(self.task)
 
     def user_publickey(self):
-        """
-        Send message after public key has been uploaded on the server
-        Return: Object. Mail object
+        """Log that a public SSH key was uploaded for the task user.
+
+        Returns:
+            The event string from the user log.
         """
         user = self.task.user
         key = self.get_description()
         return UserLog(user).key_uploaded(key)
 
     def project_create(self):
-        """
-        Send message when project has been created on the server
-        Return: Object. Mail object
+        """Activate the project after creation on the remote server.
+
+        Returns:
+            The event string from the project log.
         """
         project = self.task.project
         project.active = True
         return ProjectLog(project).created()
 
     def project_transform(self):
-        """
-        Modify project based on transformation request
-        Return: Object. Mail object
+        """Apply a project transformation based on the extension request.
+
+        Updates the project type, name, and creates new resources.
+
+        Returns:
+            The event string from the project log.
         """
         project = self.task.project
         ext = self.task.extension
