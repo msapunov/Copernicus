@@ -954,13 +954,17 @@ class Extensions:
         return self.queue.filter_by(processed=False).all()
 
     def pending(self):
-        recs = self.queue.filter_by(processed=True).filter_by(accepted=True) \
-            .filter_by(done=False).all()
         """Return accepted but not-yet-executed extension requests.
 
         Returns:
             List of API-style dictionaries for pending extensions.
         """
+        recs = (
+            self.queue.filter_by(processed=True)
+            .filter_by(accepted=True)
+            .filter_by(done=False)
+            .all()
+        )
         return list(map(lambda x: x.api(), recs))
 
     def records(self):
@@ -1092,15 +1096,11 @@ class Extensions:
 
 
 class TmpUser:
-    """
-    Class representing a user which has to be added to the system and doesn't
-    exist yet
-    """
+    """Represents a user that has to be added to the system and does not yet
+    exist in the database."""
 
     def __init__(self):
-        """
-        Init takes no argument
-        """
+        """Initialize a temporary user with default values."""
         self.login = None
         self.name = None
         self.surname = None
@@ -1115,11 +1115,19 @@ class TmpUser:
 
     def __repr__(self):
         return '<TmpUser {}>'.format(self.login)
+        """Return a string representation of the TmpUser."""
 
     def description(self):
-        """
-        Creates task's description out of instance of TmpUser
-        :return: String. Task's description
+        """Create a task description string from the TmpUser attributes.
+
+        The description encodes login, name, surname, email, ACL roles,
+        and optional comment in a pipe-delimited format.
+
+        Returns:
+            Task description string.
+
+        Raises:
+            ValueError: If login, name, surname, or email are not set.
         """
         if not all([self.login, self.name, self.surname, self.email]):
             raise ValueError("Login and name and surname are required")
@@ -1132,13 +1140,14 @@ class TmpUser:
             return f"{user} WITH ACL {acl} COMMENT: {self.comment}"
         return f"{user} WITH ACL {acl}"
 
-
     def from_description(self, action):
-        """
-        Takes a task's action string and fill up the properties of TmpUser
-        object
-        :param action: String. Representation of TmpUser object
-        :return: Object. Instance of TmpUser class
+        """Populate TmpUser properties from a task action string.
+
+        Args:
+            action: Task action string containing user description.
+
+        Returns:
+            The TmpUser instance with populated fields.
         """
         description = action.split("|")[-1]
         user_part, sep, service_part = description.partition(" WITH ACL ")
@@ -1166,10 +1175,22 @@ class TmpUser:
         return self
 
     def full(self):
+        """Return a full human-readable identifier for the temporary user.
+
+        Format: ``Full Name <email> [login]``
+
+        Returns:
+            Formatted user string.
+        """
         nom = full_name(self.name, self.surname)
         return f"{nom} <{self.email}> [{self.login}]"
 
     def full_name(self):
+        """Return the user's capitalized full name.
+
+        Returns:
+            Properly capitalized full name.
+        """
         return full_name(self.name, self.surname)
 
 
