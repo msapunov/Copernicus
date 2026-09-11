@@ -1837,6 +1837,7 @@ class Task:
         project.active = True
         return ProjectLog(project).transformed(ext)
 
+
 class BaseForm(FlaskForm):
     """Base form with a human-readable error message helper."""
 
@@ -1861,30 +1862,74 @@ class BaseForm(FlaskForm):
 
 
 class TaskQueue:
+    """Creates task queue entries for user and project operations.
+
+    Builds properly formatted action strings and creates Tasks records
+    for remote execution.
+    """
 
     def __init__(self):
+        """Initialize a new TaskQueue entry."""
         self.task = Tasks(author=current_user, processed=False, done=False)
         self.u_name = None  # User login name. String
         self.p_name = None  # Project name. String
 
     def user(self, user_obj):
+        """Set the user for the task.
+
+        Args:
+            user_obj: User model instance.
+
+        Returns:
+            The TaskQueue instance for method chaining.
+        """
         self.u_name = user_obj.login
         self.task.user = user_obj
         return self
 
     def project(self, project_obj):
+        """Set the project for the task.
+
+        Args:
+            project_obj: Project model instance.
+
+        Returns:
+            The TaskQueue instance for method chaining.
+        """
         self.p_name = project_obj.get_name()
         self.task.project = project_obj
         return self
 
     def key_upload(self, key):
+        """Queue an SSH key upload task.
+
+        Args:
+            key: SSH public key string.
+
+        Returns:
+            The TaskQueue instance after committing.
+
+        Raises:
+            ValueError: If no user has been set.
+        """
         if not self.u_name:
             raise ValueError("User is  not set. Can't upload SSH key")
         self.task.action = "ssh|user|%s||%s" % (self.u_name, key)
         self.task.processed = True
         return self.commit()
 
-    def user_create(self, user): #!!!
+    def user_create(self, user):
+        """Queue a user creation task.
+
+        Args:
+            user: TmpUser instance.
+
+        Returns:
+            The TaskQueue instance after committing.
+
+        Raises:
+            ValueError: If no project has been set.
+        """
         if not self.p_name:
             raise ValueError("Can't add a user to none existent project")
         description = user.description()
@@ -1893,6 +1938,17 @@ class TaskQueue:
         return self.commit()
 
     def responsible_create(self, user):
+        """Queue a responsible creation task.
+
+        Args:
+            user: TmpUser instance.
+
+        Returns:
+            The TaskQueue instance after committing.
+
+        Raises:
+            ValueError: If no project has been set.
+        """
         if not self.p_name:
             raise ValueError("Can't add a user to none existent project")
         description = user.description()
@@ -1901,6 +1957,17 @@ class TaskQueue:
         return self.commit()
 
     def user_activate(self, user):
+        """Queue a user activation task.
+
+        Args:
+            user: User or TmpUser instance.
+
+        Returns:
+            The TaskQueue instance after committing.
+
+        Raises:
+            ValueError: If no project has been set.
+        """
         if not self.project:
             raise ValueError("Can't activate user for none existent project")
         description = ("login: %s and name: %s and surname: %s and email: %s" %
@@ -1911,6 +1978,17 @@ class TaskQueue:
         return self.commit()
 
     def user_assign(self, user):
+        """Queue a user assignment task.
+
+        Args:
+            user: User instance.
+
+        Returns:
+            The TaskQueue instance after committing.
+
+        Raises:
+            ValueError: If no project has been set.
+        """
         if not self.project:
             raise ValueError("Can't assign a user to none existent project")
         login = user.login
@@ -1921,6 +1999,17 @@ class TaskQueue:
         return self.commit()
 
     def responsible_assign(self, user):
+        """Queue a responsible assignment task.
+
+        Args:
+            user: User instance.
+
+        Returns:
+            The TaskQueue instance after committing.
+
+        Raises:
+            ValueError: If no project has been set.
+        """
         if not self.project:
             raise ValueError("Can't assign a new responsible to none existent"
                              " project")
@@ -1933,6 +2022,17 @@ class TaskQueue:
         return self.commit()
 
     def user_update(self, data):
+        """Queue a user information update task.
+
+        Args:
+            data: Dictionary of fields to update with new values.
+
+        Returns:
+            The TaskQueue instance after committing.
+
+        Raises:
+            ValueError: If no user has been set.
+        """
         if not self.task.user:
             raise ValueError("Can't update information of unset user")
         tmp_user = self.task.user
@@ -1946,6 +2046,17 @@ class TaskQueue:
         return self.commit()
 
     def user_remove(self, user):
+        """Queue a user removal task.
+
+        Args:
+            user: User instance.
+
+        Returns:
+            The TaskQueue instance after committing.
+
+        Raises:
+            ValueError: If no project has been set.
+        """
         if not self.project:
             raise ValueError("Can't delete a user from none existent project")
         login = user.login
@@ -1956,6 +2067,14 @@ class TaskQueue:
         return self.commit()
 
     def project_create(self):
+        """Queue a project creation task.
+
+        Returns:
+            The TaskQueue instance after committing.
+
+        Raises:
+            ValueError: If no project name has been set.
+        """
         if not self.p_name:
             raise ValueError("Can't create undefined project")
         ttl = self.task.project.resources.ttl
@@ -1969,6 +2088,17 @@ class TaskQueue:
         return self.commit()
 
     def project_transform(self, ext):
+        """Queue a project transformation task.
+
+        Args:
+            ext: Extend record.
+
+        Returns:
+            The TaskQueue instance after committing.
+
+        Raises:
+            ValueError: If no project name has been set.
+        """
         if not self.p_name:
             raise ValueError("Can't transform undefined project")
         if ext.extend:
@@ -1983,6 +2113,17 @@ class TaskQueue:
         return self.commit()
 
     def project_activate(self, ext):
+        """Queue a project activation task.
+
+        Args:
+            ext: Extend record.
+
+        Returns:
+            The TaskQueue instance after committing.
+
+        Raises:
+            ValueError: If no project name has been set.
+        """
         if not self.p_name:
             raise ValueError("Can't activate undefined project")
         description = ("Activate project " + self.p_name +
@@ -1993,6 +2134,17 @@ class TaskQueue:
         return self.commit()
 
     def project_extend(self, ext):
+        """Queue a project extension task.
+
+        Args:
+            ext: Extend record.
+
+        Returns:
+            The TaskQueue instance after committing.
+
+        Raises:
+            ValueError: If no project name has been set.
+        """
         if not self.p_name:
             raise ValueError("Can't extend undefined project")
         ext.hours += ext.present_total
@@ -2005,6 +2157,17 @@ class TaskQueue:
         return self.commit()
 
     def project_renew(self, ext):
+        """Queue a project renewal task.
+
+        Args:
+            ext: Extend record.
+
+        Returns:
+            The TaskQueue instance after committing.
+
+        Raises:
+            ValueError: If no project name has been set.
+        """
         if not self.p_name:
             raise ValueError("Can't renew undefined project")
         description = ("Renew project " + self.p_name +
@@ -2016,6 +2179,14 @@ class TaskQueue:
         return self.commit()
 
     def project_suspend(self):
+        """Queue a project suspension task.
+
+        Returns:
+            The TaskQueue instance after committing.
+
+        Raises:
+            ValueError: If no project name has been set.
+        """
         if not self.p_name:
             raise ValueError("Can't suspend undefined project")
         description = "Suspending project %s" % self.p_name
@@ -2026,6 +2197,16 @@ class TaskQueue:
         double = Tasks().query.filter_by(
             action=self.task.action, done=False
         ).first()
+        """Save the task to the database, preventing duplicate active tasks.
+
+        If the current user is an admin, the task is auto-processed.
+
+        Returns:
+            The TaskQueue instance.
+
+        Raises:
+            ValueError: If a duplicate unprocessed task already exists.
+        """
         if double:
             raise ValueError("Same previous task found ID: %s" % double.id)
         if "admin" in current_user.permissions():
