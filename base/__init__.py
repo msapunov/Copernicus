@@ -65,7 +65,7 @@ def apply_proxy_fix(app: Flask) -> None:
         x_for=1,
         x_proto=1,
         x_host=1,
-        x_prefix=0  # 0 is for subpath deployments
+        x_prefix=0,  # 0 is for subpath deployments
     )
 
 
