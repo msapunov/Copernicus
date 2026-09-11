@@ -1,3 +1,9 @@
+"""Core domain classes for the Copernicus application.
+
+Provides loggers, project management helpers, user management, task queuing,
+and form base classes used throughout the page modules.
+"""
+
 from flask import g
 from flask_login import current_user
 from flask_wtf import FlaskForm
