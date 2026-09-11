@@ -1832,7 +1832,7 @@ class Task:
             comment=f"Created based on transformation request ID {ext.id}",
             project=project.name,
             ttl=ext.ttl,
-            treated=False
+            treated=False,
         )
         project.active = True
         return ProjectLog(project).transformed(ext)
