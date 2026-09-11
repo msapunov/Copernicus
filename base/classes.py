@@ -911,7 +911,18 @@ class UserLog(Log):
 
 
 class Extensions:
+    """Manager for project extension/renewal/transformation requests.
+
+    Provides methods for querying, processing (accept, reject, ignore),
+    and transforming allocation requests.
+    """
+
     def __init__(self, eid=None):
+        """Initialize the Extensions manager.
+
+        Args:
+            eid: Optional extension ID to work with a specific record.
+        """
         if eid:
             self.id = eid
         else:
@@ -923,35 +934,82 @@ class Extensions:
         self.ext = Extend
 
     def history(self, reverse=True):
+        """Return all extension records sorted by creation date.
+
+        Args:
+            reverse: Sort descending (most recent first) if True.
+
+        Returns:
+            List of Extend records.
+        """
         records = self.records()
         return sorted(records, key=attrgetter("created"), reverse=reverse)
 
     def unprocessed(self):
+        """Return extension requests that have not been processed yet.
+
+        Returns:
+            List of Extend records with ``processed=False``.
+        """
         return self.queue.filter_by(processed=False).all()
 
     def pending(self):
         recs = self.queue.filter_by(processed=True).filter_by(accepted=True) \
             .filter_by(done=False).all()
+        """Return accepted but not-yet-executed extension requests.
+
+        Returns:
+            List of API-style dictionaries for pending extensions.
+        """
         return list(map(lambda x: x.api(), recs))
 
     def records(self):
+        """Return all extension records, or a single one if an ID is set.
+
+        Returns:
+            List or single Extend record.
+        """
         if self.id:
             return self.record()
         return self.queue.all()
 
     def record(self):
+        """Return the specific extension record identified by ``self.id``.
+
+        Returns:
+            Single Extend record.
+
+        Raises:
+            ``sqlalchemy.orm.exc.NoResultFound`` if the ID is not found.
+        """
         if not self.id:
             return self.records()
         return self.queue.filter_by(id=self.id).one()
 
     @staticmethod
     def _process(record):
+        """Mark an extension record as processed by the current user.
+
+        Args:
+            record: Extend record.
+
+        Returns:
+            The updated Extend record.
+        """
         record.processed = True
         record.approve = current_user
         db.session.commit()
         return record
 
     def ignore(self):
+        """Ignore an extension request.
+
+        Returns:
+            The updated Extend record.
+
+        Raises:
+            ValueError: If the request has already been processed.
+        """
         record = self.record()
         if record.processed:
             raise ValueError("This request has been already processed")
@@ -960,6 +1018,17 @@ class Extensions:
         return self._process(record)
 
     def reject(self, note):
+        """Reject an extension request with a note.
+
+        Args:
+            note: Rejection reason.
+
+        Returns:
+            The updated Extend record.
+
+        Raises:
+            ValueError: If the request has already been processed.
+        """
         record = self.record()
         if record.processed:
             raise ValueError("This request has been already processed")
@@ -968,6 +1037,18 @@ class Extensions:
         return self._process(record)
 
     def transform(self, note):
+        """Process a transformation request.
+
+        Args:
+            note: Decision note.
+
+        Returns:
+            The updated Extend record.
+
+        Raises:
+            ValueError: If the request has already been processed or is
+                not a transformation request.
+        """
         self.rec = self.record()
         if self.rec.processed:
             raise ValueError("This request has been already processed")
@@ -978,6 +1059,20 @@ class Extensions:
         return self._process(self.rec)
 
     def accept(self, note):
+        """Accept an extension request with optional adjustments.
+
+        Allows manual override of the extension type (extend/renew) and
+        CPU hour value.
+
+        Args:
+            note: Decision note.
+
+        Returns:
+            The updated Extend record.
+
+        Raises:
+            ValueError: If the request has already been processed.
+        """
         self.rec = self.record()
         if self.rec.processed:
             raise ValueError("This request has been already processed")
