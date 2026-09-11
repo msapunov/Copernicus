@@ -205,7 +205,16 @@ def register_decor(app: Flask) -> None:
             logging.critical(str(e))
         return str(e), code
 
-    return None
+
+def attach_custom_methods(app: Flask) -> None:
+    """Attach a ``get_tmpdir`` method to the Flask application.
+
+    ``get_tmpdir`` returns a temporary directory for the current date,
+    creating it if it does not yet exist.
+
+    Args:
+        app: Flask application instance.
+    """
 
     def get_tmpdir() -> str:
         """Get or create a temporary directory for the current date.
