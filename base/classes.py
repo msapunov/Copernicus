@@ -2194,9 +2194,6 @@ class TaskQueue:
         return self.commit()
 
     def commit(self):
-        double = Tasks().query.filter_by(
-            action=self.task.action, done=False
-        ).first()
         """Save the task to the database, preventing duplicate active tasks.
 
         If the current user is an admin, the task is auto-processed.
@@ -2207,6 +2204,9 @@ class TaskQueue:
         Raises:
             ValueError: If a duplicate unprocessed task already exists.
         """
+        double = Tasks().query.filter_by(
+            action=self.task.action, done=False
+        ).first()
         if double:
             raise ValueError("Same previous task found ID: %s" % double.id)
         if "admin" in current_user.permissions():
