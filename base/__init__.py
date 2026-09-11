@@ -12,6 +12,8 @@ from base.pages.statistic import bp as blueprint_stat
 
 from base.database.schema import User, Project
 
+def create_app(config_filename: str) -> Flask:
+    """Create and configure the Flask application instance.
 from base.functions import project_config, load_config
 
 from datetime import datetime as dt
@@ -23,12 +25,20 @@ from traceback import format_exc
 from tempfile import gettempdir, mkdtemp
 from pathlib import Path
 from shutil import rmtree
+    Performs cleanup, registers extensions, blueprints, decorators, and
+    logging, then attaches custom methods to the app object.
 
 import logging
 import logging.config
+    Args:
+        config_filename: Name of the configuration file located in the
+            instance directory.
 
 
 def create_app(config_filename):
+    Returns:
+        Configured Flask application instance.
+    """
     cleanup()
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_pyfile(config_filename)
@@ -42,7 +52,15 @@ def create_app(config_filename):
     return app
 
 
-def apply_proxy_fix(app):
+def apply_proxy_fix(app: Flask) -> None:
+    """Apply ProxyFix middleware for running behind a reverse proxy.
+
+    Configures the Werkzeug ProxyFix to trust one proxy for the X-Forwarded-For,
+    X-Forwarded-Proto, and X-Forwarded-Host headers.
+
+    Args:
+        app: Flask application instance.
+    """
     app.wsgi_app = ProxyFix(
         app.wsgi_app,
         x_for=1,
@@ -52,15 +70,28 @@ def apply_proxy_fix(app):
     )
 
 
-def register_extensions(app):
+def register_extensions(app: Flask) -> None:
+    """Initialize Flask extensions on the application instance.
+
+    Registers Flask-Mail, Flask-Caching, Flask-SQLAlchemy, and Flask-Login.
+
+    Args:
+        app: Flask application instance.
+    """
     mail.init_app(app)
     cache.init_app(app)
     db.init_app(app)
     login_manager.init_app(app)
     return None
 
+def register_blueprints(app: Flask) -> None:
+    """Register all page blueprints on the application instance.
 
-def register_blueprints(app):
+    Registers login, project, user, board, admin, and statistic blueprints.
+
+    Args:
+        app: Flask application instance.
+    """
     app.register_blueprint(blueprint_login)
     app.register_blueprint(blueprint_project)
     app.register_blueprint(blueprint_user)
@@ -69,8 +100,15 @@ def register_blueprints(app):
     app.register_blueprint(blueprint_stat)
     return None
 
+def cleanup() -> bool:
+    """Remove temporary directories from previous sessions.
 
-def cleanup():
+    Scans the system temporary directory for directories whose names
+    contain ``_copernicus_`` and removes them.
+
+    Returns:
+        True after cleanup is complete.
+    """
     pattern = "_copernicus_"
     logging.debug("Temporary directory pattern: %s" % pattern)
     tmp_root = Path(gettempdir())
@@ -86,18 +124,40 @@ def cleanup():
     return True
 
 
-def register_decor(app):
+def register_decor(app: Flask) -> None:
+    """Register template filters, before-request handlers, and error handlers.
+
+    Args:
+        app: Flask application instance.
+    """
 
     @app.template_filter("menu_item")
-    def menu_item(obj):
+    def menu_item(obj: object) -> str:
+        """Extract a menu-item name from a template reference.
+
+        Args:
+            obj: Template reference object.
+
+        Returns:
+            Cleaned template name without the enclosing HTML tags.
+        """
         line = str(obj)
         line = line.replace("<TemplateReference '", "")
         line = line.replace(".html'>", "")
         return line
 
     @app.before_request
-    def first_request():
-        logging.debug("-"*80)
+    def first_request() -> tuple | None:
+        """Populate per-request globals: user list, config, permissions, URLs.
+
+        Caches data for 10 minutes to reduce database and parsing overhead.
+        Also blocks requests for JavaScript source maps.
+
+        Returns:
+            A 404 response for ``.js.map`` requests, or None to continue
+            processing the request.
+        """
+        logging.debug("-" * 80)
         if request.path.endswith(".js.map"):
             return "", 404
         user_list = cache.get("user_list")
@@ -130,7 +190,15 @@ def register_decor(app):
         g.url_list = url_list
 
     @app.errorhandler(Exception)
-    def handle_error(e):
+    def handle_error(e: Exception) -> tuple[str, int]:
+        """Log unhandled exceptions and return an error response.
+
+        Args:
+            e: The caught exception.
+
+        Returns:
+            A tuple of (error message string, HTTP status code).
+        """
         if current_user.is_authenticated:
             user = current_user.full()
         else:
@@ -148,9 +216,15 @@ def register_decor(app):
 
     return None
 
+    def get_tmpdir() -> str:
+        """Get or create a temporary directory for the current date.
 
-def attach_custom_methods(app):
-    def get_tmpdir():
+        The directory name includes today's date and the ``_copernicus_``
+        prefix so it can be cleaned up on application restart.
+
+        Returns:
+            Absolute path to the temporary directory.
+        """
         date_str = dt.now().strftime("%Y%m%d")
         prefix = f"{date_str}_copernicus_"
         temp_root = gettempdir()
@@ -169,7 +243,16 @@ def attach_custom_methods(app):
     setattr(app, "get_tmpdir", get_tmpdir)
 
 
-def configure_logger(app):
+def configure_logger(app: Flask) -> None:
+    """Configure logging from a logging configuration file.
+
+    Looks for the file specified by the ``LOG_CONFIG`` app config key
+    inside the instance directory. Falls back to basic logging if the
+    file is not found.
+
+    Args:
+        app: Flask application instance.
+    """
     cfg_file = app.config.get("LOG_CONFIG", "logging.cfg")
     cfg_path = path_join(app.instance_path, cfg_file)
     if exists(cfg_path):
