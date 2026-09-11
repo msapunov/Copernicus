@@ -4,20 +4,29 @@ Provides loggers, project management helpers, user management, task queuing,
 and form base classes used throughout the page modules.
 """
 
+from datetime import datetime as dt
+from logging import debug, warning
+from operator import attrgetter
+from pathlib import Path
+
 from flask import g
 from flask_login import current_user
 from flask_wtf import FlaskForm
-from base import db
-from base.functions import create_visa, calculate_ttl, full_name
-from base.email import Mail, UserMailingList, ResponsibleMailingList
-from base.database.schema import (LogDB, User, ACLDB, Extend, Register, Project,
-                                  Resources, ArticleDB, Tasks)
-from logging import debug
-from logging import debug, warning
-from operator import attrgetter
-from datetime import datetime as dt
-from pathlib import Path
 
+from base import db
+from base.database.schema import (
+    ACLDB,
+    ArticleDB,
+    Extend,
+    LogDB,
+    Project,
+    Register,
+    Resources,
+    Tasks,
+    User,
+)
+from base.email import Mail, ResponsibleMailingList, UserMailingList
+from base.functions import calculate_ttl, create_visa, full_name
 
 __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
