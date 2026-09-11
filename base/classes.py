@@ -120,13 +120,33 @@ class Log:
 
 
 class ProjectLog(Log):
+    """Logger for project-related events.
+
+    Provides convenience methods for logging common project lifecycle
+    events such as creation, user management, renewals, extensions,
+    and transformations. Each method commits the log entry and sends
+    appropriate email notifications.
+    """
 
     def __init__(self, project):
+        """Initialize the ProjectLog for a specific project.
+
+        Args:
+            project: Project model instance.
+        """
         super().__init__(project=project)
         self.project = project
         self.send = True
 
     def send_message(self, send=True):
+        """Enable or disable email sending for the next log event.
+
+        Args:
+            send: True to enable email, False to suppress it.
+
+        Returns:
+            The ProjectLog instance for method chaining.
+        """
         if send:
             self.send = True
         else:
@@ -134,74 +154,199 @@ class ProjectLog(Log):
         return self
 
     def created(self):
+        """Log that the project was created.
+
+        Returns:
+            The event string.
+        """
         rid = self.project.ref.project_id()
         self.log.event = "Project created out of request %s" % rid
         return self.commit(Mail().project_new(self.project))
 
     def user(self, user):
+        """Set the user associated with the next log event.
+
+        Args:
+            user: User model instance.
+
+        Returns:
+            The ProjectLog instance for method chaining.
+        """
         self.log.user = user
         return self
 
     def responsible_assign(self, task):
         self.log.event = "Made a request to assign new responsible %s" \
                          % task.user.full()
+        """Log a request to assign a new responsible person.
+
+        Args:
+            task: Tasks record.
+
+        Returns:
+            The event string.
+        """
         return self.user(task.user).commit(Mail().responsible_assign(task))
 
     def responsible_assigned(self, task):
         self.log.event = "Assigned a new project responsible %s" \
                          % task.user.full()
+        """Log that a new responsible person was assigned.
+
+        Args:
+            task: Tasks record.
+
+        Returns:
+            The event string.
+        """
         return self.user(task.user).commit(Mail().responsible_assigned(task))
 
     def responsible_attached(self, task):
+        """Log that a responsible was attached (no notification).
+
+        Args:
+            task: Tasks record.
+
+        Returns:
+            The event string.
+        """
         self.log.event = "Attached responsible %s" % task.user.full()
         return self.user(task.user).commit(Mail().responsible_attached(task))
 
     def user_new(self, task):
+        """Log that a new user was created.
+
+        Args:
+            task: Tasks record.
+
+        Returns:
+            The event string.
+        """
         user = task.user
         self.log.event = "User %s has been created" % user.full()
         return self.commit(Mail().user_new(user))
 
     def user_create(self, task):
+        """Log a request to create a new user.
+
+        Args:
+            task: Tasks record.
+
+        Returns:
+            The event string.
+        """
         user = TmpUser().from_description(task.action)
         user.task = task
         self.log.event = "Made a request to create a user %s" % user.full()
         return self.commit(Mail().user_create(user))
 
     def user_created(self, task):
+        """Log that a user creation request was executed.
+
+        Args:
+            task: Tasks record.
+
+        Returns:
+            The event string.
+        """
         user = TmpUser().from_description(task.action)
         user.task = task
         self.log.event = "User %s has been created" % user.full()
         return self.commit(Mail().user_created(user))
 
     def user_activate(self, task):
+        """Log a request to activate a user.
+
+        Args:
+            task: Tasks record.
+
+        Returns:
+            The event string.
+        """
         self.log.event = "Made a request to activate a user %s" % task.user.full()
         return self.user(task.user).commit(Mail().user_activate(task))
 
     def user_activated(self, task):
+        """Log that a user was activated.
+
+        Args:
+            task: Tasks record.
+
+        Returns:
+            The event string.
+        """
         self.log.event = "User %s has been activated" % task.user.full()
         return self.user(task.user).commit(Mail().user_activated(task))
 
     def user_assign(self, task):
+        """Log a request to assign a user to a project.
+
+        Args:
+            task: Tasks record.
+
+        Returns:
+            The event string.
+        """
         self.log.event = "Made a request to assign a user %s" % task.user.full()
         return self.user(task.user).commit(Mail().user_assign(task))
 
     def user_assigned(self, task):
+        """Log that a user was assigned to a project.
+
+        Args:
+            task: Tasks record.
+
+        Returns:
+            The event string.
+        """
         self.log.event = "User %s has been assigned" % task.user.full()
         return self.user(task.user).commit(Mail().user_assigned(task))
 
     def user_attached(self, task):
+        """Log that a user was attached (auto-processed).
+
+        Args:
+            task: Tasks record.
+
+        Returns:
+            The event string.
+        """
         self.log.event = "User %s has been assigned" % task.user.full()
         return self.user(task.user).commit(Mail().user_attached(task))
 
     def user_delete(self, task):
+        """Log a request to delete a user from a project.
+
+        Args:
+            task: Tasks record.
+
+        Returns:
+            The event string.
+        """
         self.log.event = "Made a request to delete user %s" % task.user.full()
         return self.user(task.user).commit(Mail().user_delete(task))
 
     def user_deleted(self, task):
+        """Log that a user was deleted from a project.
+
+        Args:
+            task: Tasks record.
+
+        Returns:
+            The event string.
+        """
         self.log.event = "User %s has been deleted" % task.user.full()
         return self.user(task.user).commit(Mail().user_deleted(task))
 
     def renew(self, extension):
+        """Log a request to renew a project's allocation.
+
+        Args:
+            extension: Extend record.
+
+        Returns:
+            The event string.
+        """
         article = "an exceptional" if extension.exception else "a"
         self.log.event = "Made %s request to renew project for %s hour(s)" \
                          % (article, extension.hours)
@@ -211,10 +356,26 @@ class ProjectLog(Log):
     def renewed(self, extension):
         self.log.event = "Renewal request for %s hour(s) has been processed" \
                          % extension.hours
+        """Log that a renewal request was processed.
+
+        Args:
+            extension: Extend record.
+
+        Returns:
+            The event string.
+        """
         self.log.extension = extension
         return self.commit(Mail().project_renewed(extension))
 
     def extend(self, extension):
+        """Log a request to extend a project's allocation.
+
+        Args:
+            extension: Extend record.
+
+        Returns:
+            The event string.
+        """
         article = "an exceptional" if extension.exception else "a"
         self.log.event = "Made %s request to extend project for %s hour(s)" \
                          % (article, extension.hours)
@@ -224,10 +385,26 @@ class ProjectLog(Log):
     def extended(self, extension):
         self.log.event = "Extension request for %s hour(s) has been processed" \
                          % extension.hours
+        """Log that an extension request was processed.
+
+        Args:
+            extension: Extend record.
+
+        Returns:
+            The event string.
+        """
         self.log.extension = extension
         return self.commit(Mail().project_extended(extension))
 
     def transform(self, extension):
+        """Log a request to transform a project's type.
+
+        Args:
+            extension: Extend record.
+
+        Returns:
+            The event string.
+        """
         self.log.event = "Transformation request has been registered"
         self.log.extension = extension
         return self.commit(Mail().project_transform(extension))
@@ -235,20 +412,52 @@ class ProjectLog(Log):
     def transformed(self, extension):
         self.log.event = "Transformation to type %s finished successfully" \
                          % extension.transform
+        """Log that a transformation request was processed.
+
+        Args:
+            extension: Extend record.
+
+        Returns:
+            The event string.
+        """
         self.log.extension = extension
         return self.commit(Mail().project_transformed(extension))
 
     def activate(self, extension):
+        """Log a request to activate a suspended project.
+
+        Args:
+            extension: Extend record.
+
+        Returns:
+            The event string.
+        """
         self.log.event = "Activation request has been registered"
         self.log.extension = extension
         return self.commit(Mail().project_activate(extension))
 
     def activated(self, extension):
+        """Log that an activation request was processed.
+
+        Args:
+            extension: Extend record.
+
+        Returns:
+            The event string.
+        """
         self.log.event = "Activation request has been processed"
         self.log.extension = extension
         return self.commit(Mail().project_activated(extension))
 
     def accept(self, extension):
+        """Log that an allocation request was accepted.
+
+        Args:
+            extension: Extend record.
+
+        Returns:
+            The event string.
+        """
         prefix = self._prefix(extension)
         self.log.event = "%s request for %s hours is accepted" \
                          % (prefix, extension.hours)
@@ -256,6 +465,14 @@ class ProjectLog(Log):
         return self.commit(Mail().allocation_accepted(extension, prefix))
 
     def ignore(self, extension):
+        """Log that an allocation request was ignored.
+
+        Args:
+            extension: Extend record.
+
+        Returns:
+            The event string.
+        """
         prefix = self._prefix(extension)
         self.log.event = "%s request for %s hours is ignored" \
                          % (prefix, extension.hours)
@@ -263,6 +480,14 @@ class ProjectLog(Log):
         return self.commit(Mail().allocation_ignored(extension, prefix))
 
     def reject(self, extension):
+        """Log that an allocation request was rejected.
+
+        Args:
+            extension: Extend record.
+
+        Returns:
+            The event string.
+        """
         prefix = self._prefix(extension)
         self.log.event = "%s request for %s hours is rejected" \
                          % (prefix, extension.hours)
@@ -270,6 +495,14 @@ class ProjectLog(Log):
         return self.commit(Mail().allocation_rejected(extension, prefix))
 
     def activity_report(self, file_rec):
+        """Log that an activity report was saved.
+
+        Args:
+            file_rec: File record for the saved report.
+
+        Returns:
+            The event string.
+        """
         file_name = file_rec.path
         self.log.event = "Activity report saved on the server in the file %s" \
                          % file_name
@@ -277,18 +510,45 @@ class ProjectLog(Log):
         return self.commit(mail)
 
     def expired(self):
+        """Log that the project has expired and been deactivated.
+
+        Returns:
+            The event string.
+        """
         self.log.event = "The project has expired and been deactivated"
         return self.commit(Mail().project_expired(self.project))
 
     def expire_warning(self):
+        """Log that an expiration warning was sent.
+
+        Returns:
+            The event string.
+        """
         self.log.event = "Expiring message sent"
         return self.commit(Mail().project_expiring(self.project))
 
     def event(self, message):
+        """Log an arbitrary event message.
+
+        Args:
+            message: Event description.
+
+        Returns:
+            The event string.
+        """
         self.log.event = message.lower()
         return self.commit()
 
     def _prefix(self, rec):
+        """Determine the human-readable prefix for an allocation record.
+
+        Args:
+            rec: Extend record.
+
+        Returns:
+            ``"transformation"``, ``"extension"``, ``"activation"``, or
+            ``"renewal"``.
+        """
         if rec.extend:
             if rec.transform.strip():
                 return "transformation"
