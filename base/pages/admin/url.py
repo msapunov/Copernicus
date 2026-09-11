@@ -34,7 +34,8 @@ from base.pages.admin.magic import (
     registration_record_edit,
     space_info,
     task_history)
-from base.functions import slurm_nodes_status, show_configuration, ssh_wrapper
+from base.functions import (slurm_nodes_status, show_configuration,
+                            ssh_wrapper, form_error_string)
 from base.pages.admin.form import (
     CreateForm,
     PendingActionForm,
@@ -48,7 +49,6 @@ from base.pages.admin.form import (
     TaskEditForm,
     NewUserEditForm)
 from base.pages.project.magic import process_extension
-from base.utils import form_error_string
 from base.database.schema import Project, User, Resources
 from datetime import datetime as dt, timezone as tz
 from logging import debug

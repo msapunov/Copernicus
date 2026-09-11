@@ -10,13 +10,13 @@ from webdav3.client import Client
 
 from base import db
 from base.classes import TmpUser, ProjectLog, Task, UserLog, TaskQueue
-from base.functions import upload_to_cloud, calculate_ttl, write_pdf, ssh_check
+from base.functions import (upload_to_cloud, calculate_ttl, write_pdf,
+                            ssh_check, form_error_string)
 from base.functions import get_field_value, ssh_wrapper, parse_moment
 from base.database.schema import Extend, File, Project, Tasks, User
 from base.pages import generate_login  # TODO: move to functions
 from base.pages.user.magic import user_by_id
 from base.pages.board.magic import create_resource
-from base.utils import form_error_string
 
 __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
