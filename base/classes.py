@@ -1697,11 +1697,11 @@ class Task:
 
         for i in description.split(" and "):
             if "surname" in i and hasattr(user, "surname"):
-                setattr(user, "surname", i.replace("surname: ", "").strip())
+                user.surname = i.replace("surname: ", "").strip()
             elif "name" in i and hasattr(user, "name"):
-                setattr(user, "name", i.replace("name: ", "").strip())
+                user.name = i.replace("name: ", "").strip()
             elif "email" in i and hasattr(user, "email"):
-                setattr(user, "email", i.replace("email: ", "").strip())
+                user.email = i.replace("email: ", "").strip()
 
         if old_email:
             UserMailingList().unsubscribe(old_email)
