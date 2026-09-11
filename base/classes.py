@@ -1446,20 +1446,36 @@ class Pending:
 
 
 class TaskRepository:
-    """
-    Repository for Task ORM operations
-    """
+    """Repository for Tasks ORM operations."""
+
     def __init__(self, session):
+        """Initialize the repository with a SQLAlchemy session.
+
+        Args:
+            session: SQLAlchemy session instance.
+        """
         self.session = session
 
     def get(self, task_id):
-        """
-        Get a task by id, or None if not found
+        """Get a task by ID, or None if not found.
+
+        Args:
+            task_id: Tasks record ID.
+
+        Returns:
+            Tasks record or None.
         """
         return self.session.get(Tasks, task_id)
 
     def exists(self, task_id: int) -> bool:
-        """Check if task exists."""
+        """Check whether a task exists in the database.
+
+        Args:
+            task_id: Tasks record ID.
+
+        Returns:
+            True if the task exists, False otherwise.
+        """
         return self.session.query(
             self.session.query(Tasks).filter(Tasks.id == task_id).exists()
         ).scalar()
