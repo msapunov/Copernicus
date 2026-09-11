@@ -231,7 +231,8 @@ def register_decor(app: Flask) -> None:
         dir_path = mkdtemp(prefix=prefix)
         logging.debug(f"Directory created: {dir_path}")
         return dir_path
-    setattr(app, "get_tmpdir", get_tmpdir)
+
+    app.get_tmpdir = get_tmpdir
 
 
 def configure_logger(app: Flask) -> None:
