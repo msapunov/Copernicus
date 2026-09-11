@@ -723,32 +723,72 @@ class RequestLog(Log):
 
 
 class UserLog(Log):
+    """Logger for user-related events such as activation, ACL changes, and
+    password management."""
 
     def __init__(self, user):
+        """Initialize the UserLog for a specific user.
+
+        Args:
+            user: User model instance.
+        """
         super().__init__(user=user)
         self.user = user
 
     def restored(self):
+        """Log that the user was restored from archive.
+
+        Returns:
+            The event string.
+        """
         self.log.event = "User %s restored" % self.user.full()
         return self.commit()
 
     def archived(self):
+        """Log that the user was archived.
+
+        Returns:
+            The event string.
+        """
         self.log.event = "User %s archived" % self.user.full()
         return self.commit()
 
     def activated(self):
+        """Log that the user was activated.
+
+        Returns:
+            The event string.
+        """
         self.log.event = "User %s activated" % self.user.full()
         return self.commit()
 
     def deactivated(self):
+        """Log that the user was deactivated.
+
+        Returns:
+            The event string.
+        """
         self.log.event = "User %s deactivated" % self.user.full()
         return self.commit()
 
     def goodbye(self):
+        """Log a goodbye notification.
+
+        Returns:
+            The event string.
+        """
         self.log.event = "Sending goodbye notification"
         return self.commit(Mail().user_goodbye(self.user))
 
     def acl(self, acl):
+        """Log ACL permission changes.
+
+        Args:
+            acl: Dictionary mapping permission names to boolean values.
+
+        Returns:
+            The event string.
+        """
         result = []
         for name, value in acl.items():
             result.append("%s to %s" % (name, value))
@@ -756,22 +796,59 @@ class UserLog(Log):
         return self.commit()
 
     def key_upload(self, key):
+        """Log an SSH key upload request.
+
+        Args:
+            key: SSH public key string.
+
+        Returns:
+            The event string.
+        """
         self.log.event = "Upload SSH key %s" % key
         return self.commit()
 
     def key_uploaded(self, key):
+        """Log that an SSH key was successfully uploaded.
+
+        Args:
+            key: SSH public key string.
+
+        Returns:
+            The event string.
+        """
         self.log.event = "Uploaded SSH key %s" % key
         return self.commit(Mail().user_publickey(self, key))
 
     def password_changed(self):
+        """Log that the password was changed.
+
+        Returns:
+            The event string.
+        """
         self.log.event = "Password has been changed"
         return self.commit()
 
     def password_reset(self, passwd):
+        """Log that the password was reset and send the new password.
+
+        Args:
+            passwd: New plain-text password.
+
+        Returns:
+            The event string.
+        """
         self.log.event = "Password has been reset"
         return self.commit(Mail().user_password(self, passwd))
 
     def user_update(self, info):
+        """Log a request to update user information.
+
+        Args:
+            info: Dictionary of changed fields with new values.
+
+        Returns:
+            The event string.
+        """
         changes = []
         for name, value in info.items():
             old = getattr(self.user, name)
@@ -781,11 +858,33 @@ class UserLog(Log):
         return self.commit(Mail().user_update(self))
 
     def user_updated(self, task):
+        """Log that user modifications were applied.
+
+        Args:
+            task: Tasks record.
+
+        Returns:
+            The event string.
+        """
         full = task.user.full()
         self.log.event = "Modifications for user %s has been applied" % full
         return self.commit(Mail().user_updated(self))
 
     def info_update(self, info=None, acl=None, projects=None, active=None):
+        """Log a comprehensive user information update request.
+
+        Captures changes to info fields, ACL roles, project membership,
+        and active status.
+
+        Args:
+            info: Dictionary of info field changes.
+            acl: Dictionary of ACL role changes.
+            projects: List of projects.
+            active: New active status.
+
+        Returns:
+            The event string.
+        """
         changes = []
         if info is not None:
             for name, value in info.items():
