@@ -72,7 +72,7 @@ def register_extensions(app: Flask) -> None:
     cache.init_app(app)
     db.init_app(app)
     login_manager.init_app(app)
-    return None
+
 
 def register_blueprints(app: Flask) -> None:
     """Register all page blueprints on the application instance.
@@ -88,7 +88,7 @@ def register_blueprints(app: Flask) -> None:
     app.register_blueprint(blueprint_board)
     app.register_blueprint(blueprint_admin)
     app.register_blueprint(blueprint_stat)
-    return None
+
 
 def cleanup() -> bool:
     """Remove temporary directories from previous sessions.
