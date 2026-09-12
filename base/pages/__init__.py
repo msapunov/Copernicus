@@ -158,6 +158,7 @@ def process_new_user(rec):
 
     class Tmp:
         pass
+
     user = Tmp()
     parts = rec.split(";")
     if not parts or len(parts) < 3:
@@ -175,7 +176,7 @@ def process_new_user(rec):
             continue
     user.uid = "".join(filter(lambda x: x in ascii_letters, user.email)).lower()
     user.full = full_name(user.name, user.surname)
-    user.direct= generate_login(user.name, user.surname)
+    user.direct = generate_login(user.name, user.surname)
     user.inverse = generate_login(user.surname, user.name)
     if not user.login:
         is_user = user_by_details(user.name, user.surname, user.email)
