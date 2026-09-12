@@ -725,12 +725,15 @@ def slurm_nodes_status():
             date = None
         node = info[2].strip()
         stat = info[3].strip()
-        result.append({
-            "date": date.strftime("%Y-%m-%d %X %Z") if date else "Unknown",
-            "date_full": date.strftime("%c") if date else "Unknown",
-            "reason": reason,
-            "status": stat,
-            "node": node})
+        result.append(
+            {
+                "date": date.strftime("%Y-%m-%d %X %Z") if date else "Unknown",
+                "date_full": date.strftime("%c") if date else "Unknown",
+                "reason": reason,
+                "status": stat,
+                "node": node,
+            }
+        )
     return result
 
 
