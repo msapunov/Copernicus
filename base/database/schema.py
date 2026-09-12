@@ -941,7 +941,8 @@ class Register(db.Model):
             user += " <%s>" % u["mail"] if u["mail"] else ""
             user += " [%s]" % u["login"] if u["login"] else ""
             users.append(user)
-        return ["",
+        return [
+            "",
             "registration id: %s" % self.id,
             "title: %s" % self.title,
             "type: %s" % self.project_type(),
