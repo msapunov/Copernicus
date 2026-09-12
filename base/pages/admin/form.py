@@ -303,12 +303,14 @@ def edit_pending(register):
 
 
 class EditResponsibleForm(UserForm):
-    position = StringField("Position", validators=[DataRequired(
-        message="Login field is empty")])
-    lab = StringField("Lab", validators=[DataRequired(
-        message="Login field is empty")])
-    phone = StringField("Phone", validators=[DataRequired(
-        message="Login field is empty")])
+
+    position = StringField(
+        "Position", validators=[DataRequired(message="Login field is empty")]
+    )
+    lab = StringField("Lab", validators=[DataRequired(message="Login field is empty")])
+    phone = StringField(
+        "Phone", validators=[DataRequired(message="Login field is empty")]
+    )
 
 
 def edit_responsible(register):
@@ -463,13 +465,23 @@ class ActivateUserForm(FlaskForm):
 
 
 class TaskEditForm(FlaskForm):
-    processed = SelectField("Processed", choices=[
-        ("true", "Processed: True"), ("false", "Processed: False")])
-    done = SelectField("Done", choices=[("true", "Done: True"),
-                                        ("false", "Done: False")])
-    decision = SelectField("Decision", choices=[
-        ("none", "Decision: None"), ("accept", "Decision: Accept"),
-        ("ignore", "Decision: Ignore"), ("reject", "Decision: Reject")])
+
+    processed = SelectField(
+        "Processed",
+        choices=[("true", "Processed: True"), ("false", "Processed: False")],
+    )
+    done = SelectField(
+        "Done", choices=[("true", "Done: True"), ("false", "Done: False")]
+    )
+    decision = SelectField(
+        "Decision",
+        choices=[
+            ("none", "Decision: None"),
+            ("accept", "Decision: Accept"),
+            ("ignore", "Decision: Ignore"),
+            ("reject", "Decision: Reject"),
+        ],
+    )
 
 
 def edit_task(task):
