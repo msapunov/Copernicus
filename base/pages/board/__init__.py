@@ -1,3 +1,5 @@
+"""Board blueprint initialization."""
+
 from flask import Blueprint
 
 bp = Blueprint("board", __name__)
