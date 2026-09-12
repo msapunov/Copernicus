@@ -233,6 +233,7 @@ class SelectMultipleProjects(SelectMultipleField):
 
 
 class RegistrationEditForm(FlaskForm):
+    """Form for editing a registration record."""
 
     cpu = IntegerField(
         "CPU",
@@ -265,6 +266,7 @@ class RegistrationEditForm(FlaskForm):
     article_5 = StringField("Article 5")
 
     def __init__(self, *args, **kwargs):
+        """Initialize and populate type choices from project configuration."""
         super().__init__(*args, **kwargs)
         types = g.project_config.keys()
         self.type.choices = [(project, project.upper()) for project in types]
@@ -303,6 +305,7 @@ def edit_pending(register):
 
 
 class EditResponsibleForm(UserForm):
+    """Form for editing the responsible person's details on a registration."""
 
     position = StringField(
         "Position", validators=[DataRequired(message="Login field is empty")]
@@ -427,6 +430,7 @@ class UserEditForm(FlaskForm):
     is_admin = BooleanField("Admin", default=False)
 
     def __init__(self, *args, **kwargs):
+        """Initialize and populate project choices."""
         super().__init__(*args, **kwargs)
         projects = list_of_projects()
         self.project.choices = [(project, project) for project in projects]
@@ -459,12 +463,14 @@ class ActivateUserForm(FlaskForm):
     projects = SelectMultipleProjects("Project", choices=[])
 
     def __init__(self, *args, **kwargs):
+        """Initialize and populate project choices."""
         super().__init__(*args, **kwargs)
         projects = list_of_projects()
         self.projects.choices = [(project, project) for project in projects]
 
 
 class TaskEditForm(FlaskForm):
+    """Form for editing task processing status, done flag, and decision."""
 
     processed = SelectField(
         "Processed",
