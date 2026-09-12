@@ -36,6 +36,8 @@ __copyright__ = "Aix Marseille University"
 
 
 class CreateForm(FlaskForm):
+    """Form for creating a new project from a registration request."""
+
     user = HiddenField()
     prenom = HiddenField()
     surname = HiddenField()
@@ -45,6 +47,14 @@ class CreateForm(FlaskForm):
     exist = StringField()
 
     def validate(self, extra_validators=None):
+        """Validate that CSRF token and user field are present.
+
+        Args:
+            extra_validators: Not used.
+
+        Returns:
+            True if valid.
+        """
         if not self.csrf_token.validate(self):
             return False
         if not self.user.validate(self, [DataRequired()]):
@@ -53,6 +63,17 @@ class CreateForm(FlaskForm):
 
 
 def create_pending(register):
+    """Build a list of CreateForm instances for users in a registration record.
+
+    Parses the user list from the registration, generates login suggestions,
+    and checks for existing users.
+
+    Args:
+        register: Register record.
+
+    Returns:
+        List of CreateForm instances.
+    """
     result = []
     raw = register.users.split("\n")
     if register.responsible_email not in register.users:
@@ -98,6 +119,14 @@ def create_pending(register):
 
 
 def contact_pending(register):
+    """Create a MessageForm for contacting the responsible about a pending request.
+
+    Args:
+        register: Register record.
+
+    Returns:
+        A MessageForm instance.
+    """
     form = MessageForm()
     form.id = register.id
     form.meso = register.project_id()
@@ -110,6 +139,14 @@ def contact_pending(register):
 
 
 def contact_user(user):
+    """Create a MessageForm for contacting a user.
+
+    Args:
+        user: User instance.
+
+    Returns:
+        A MessageForm instance.
+    """
     form = MessageForm()
     form.id = user.login
     form.message_holder = "Write message to " + user.full()
@@ -118,10 +155,20 @@ def contact_user(user):
 
 
 class VisaPendingForm(FlaskForm):
+    """Form for visa-related actions (skip if exception)."""
+
     exception = BooleanField()
 
 
 def visa_pending(register):
+    """Create a VisaPendingForm for a registration record.
+
+    Args:
+        register: Register record.
+
+    Returns:
+        A VisaPendingForm instance.
+    """
     form = VisaPendingForm()
     form.id = register.id
     form.meso = register.project_id()
@@ -131,11 +178,22 @@ def visa_pending(register):
 
 
 class PendingActionForm(FlaskForm):
-    note = TextAreaField("Note", validators=[DataRequired(
-        message="Note field is empty")])
+    """Form for rejection notes on pending registrations."""
+
+    note = TextAreaField(
+        "Note", validators=[DataRequired(message="Note field is empty")]
+    )
 
 
 def action_pending(register):
+    """Create a PendingActionForm for a registration record.
+
+    Args:
+        register: Register record.
+
+    Returns:
+        A PendingActionForm instance.
+    """
     form = PendingActionForm()
     form.id = register.id
     form.meso = register.project_id()
@@ -144,6 +202,8 @@ def action_pending(register):
 
 
 class AddUserForm(FlaskForm):
+    """Form for adding a new user directly (admin)."""
+
     prenom = StringField("Name", validators=[DataRequired()])
     surname = StringField("Surname", validators=[DataRequired()])
     email = EmailField("E-mail", validators=[DataRequired(), Email()])
@@ -151,7 +211,17 @@ class AddUserForm(FlaskForm):
 
 
 class SelectMultipleProjects(SelectMultipleField):
+    """Multi-select field for project names with validation."""
+
     def pre_validate(self, form):
+        """Validate that all selected projects exist.
+
+        Args:
+            form: The parent form.
+
+        Raises:
+            ValueError: If a selected project does not exist.
+        """
         projects = list_of_projects()
         projects.append("None")
         for i in form.project.data:
@@ -189,6 +259,14 @@ class RegistrationEditForm(FlaskForm):
 
 
 def edit_pending(register):
+    """Create a RegistrationEditForm pre-populated from a Register record.
+
+    Args:
+        register: Register record.
+
+    Returns:
+        A RegistrationEditForm instance.
+    """
     form = RegistrationEditForm()
     form.id = register.id
     form.meso = register.project_id()
@@ -221,6 +299,14 @@ class EditResponsibleForm(UserForm):
 
 
 def edit_responsible(register):
+    """Create an EditResponsibleForm pre-populated from a Register record.
+
+    Args:
+        register: Register record.
+
+    Returns:
+        An EditResponsibleForm instance.
+    """
     form = EditResponsibleForm()
     form.prenom.data = register.responsible_first_name
     form.surname.data = register.responsible_last_name
@@ -234,9 +320,19 @@ def edit_responsible(register):
 
 
 class NewUserForm(UserForm):
+    """Form for adding a new user to a registration (login as free text)."""
+
     login = StringField("Login")
 
     def validate(self, extra_validators=None):
+        """Validate that name, surname, email, and CSRF token are present.
+
+        Args:
+            extra_validators: Not used.
+
+        Returns:
+            True if valid.
+        """
         if not self.csrf_token.validate(self):
             return False
         if not self.prenom.validate(self, [DataRequired()]):
@@ -249,6 +345,14 @@ class NewUserForm(UserForm):
 
 
 def new_user(register):
+    """Create a NewUserForm for adding a user to a registration.
+
+    Args:
+        register: Register record.
+
+    Returns:
+        A NewUserForm instance.
+    """
     form = NewUserForm()
     form.name = register.project_id()
     form.pending_id = register.id
@@ -256,6 +360,14 @@ def new_user(register):
 
 
 def edit_user(users):
+    """Create a list of NewUserForm instances from a registration's user list.
+
+    Args:
+        users: Newline-separated user string from the registration record.
+
+    Returns:
+        List of NewUserForm instances.
+    """
     result = []
     if not users:
         return result
@@ -272,6 +384,8 @@ def edit_user(users):
 
 
 class NewUserEditForm(FlaskForm):
+    """Form for editing a single user in a registration."""
+
     pid = HiddenField()
     uid = HiddenField()
     user_first_name = StringField("Name", validators=[DataRequired()])
@@ -281,6 +395,8 @@ class NewUserEditForm(FlaskForm):
 
 
 class UserEditForm(FlaskForm):
+    """Comprehensive form for editing all user properties."""
+
     uid = HiddenField()
     login = StringField("Login", validators=[DataRequired()])
     name = StringField("Name", validators=[DataRequired()])
@@ -302,6 +418,14 @@ class UserEditForm(FlaskForm):
 
 
 def activate_user(user):
+    """Create an ActivateUserForm for reactivating a user.
+
+    Args:
+        user: User instance.
+
+    Returns:
+        An ActivateUserForm instance.
+    """
     form = ActivateUserForm()
     form.id = user.id
     form.login = user.login
@@ -313,6 +437,8 @@ def activate_user(user):
 
 
 class ActivateUserForm(FlaskForm):
+    """Form for activating a user and selecting project membership."""
+
     exception = BooleanField()
     login = HiddenField()
     projects = SelectMultipleProjects("Project", choices=[])
@@ -334,6 +460,14 @@ class TaskEditForm(FlaskForm):
 
 
 def edit_task(task):
+    """Create a TaskEditForm pre-populated from a Tasks record.
+
+    Args:
+        task: Tasks instance.
+
+    Returns:
+        A TaskEditForm instance.
+    """
     processed = str(task.processed).lower()
     done = str(task.done).lower()
     decision = "none" if not task.decision else str(task.decision).lower()
