@@ -216,7 +216,7 @@ class Project(db.Model):
             "notify": self.responsible.email,
             "name": self.responsible.full_name(),
             "id": self.id,
-            "project": self.get_name()
+            "project": self.get_name(),
         }
 
     def pretty_dict(self) -> dict:
@@ -322,7 +322,7 @@ class Project(db.Model):
             "total": self.resources.cpu if self.resources else 0,
             "consumed": self.account(),
             "consumed_use": use,
-            "consumed_usage": usage
+            "consumed_usage": usage,
         }
         return result
 
@@ -400,7 +400,7 @@ class Extend(db.Model):
             "id": self.id,
             "add_hours": self.extend,
             "project": self.project.get_name(),
-            "transform": self.transform
+            "transform": self.transform,
         }
 
     def to_dict(self) -> dict:
@@ -441,7 +441,7 @@ class Extend(db.Model):
             "approve": approve,
             "responsible": self.project.responsible.full_name(),
             "responsible_login": self.project.responsible.login,
-            "about": self.about()
+            "about": self.about(),
         }
 
 
@@ -528,7 +528,7 @@ class Resources(db.Model):
             "comment": self.comment,
             "created": start,
             "modified": mod,
-            "finish": ttl
+            "finish": ttl,
         }
 
         query = (Accounting.query.join(User, Accounting.user_id == User.id)
@@ -765,7 +765,7 @@ class User(UserMixin, db.Model):
             "brief": self.full(),
             "projects": self.project_names(),
             "password": True if self.hash else False,
-            "first": self.first_login
+            "first": self.first_login,
         }
 
     def info_acl(self) -> dict:
@@ -795,7 +795,7 @@ class User(UserMixin, db.Model):
             "name": self.name,
             "surname": self.surname,
             "seen": self.seen.strftime("%Y-%m-%d %X %Z") if self.seen else "",
-            "email": self.email
+            "email": self.email,
         }
 
     def to_dict(self) -> dict:
@@ -819,7 +819,7 @@ class User(UserMixin, db.Model):
             "seen": self.seen.strftime("%Y-%m-%d %X %Z") if self.seen else "",
             "modified": self.modified,
             "uid": self.uid,
-            "created": self.created
+            "created": self.created,
         }
 
 
@@ -945,7 +945,7 @@ class Register(db.Model):
             "users: %s" % "\n".join(users),
             "description: %s" % self.description,
             "request created: %s" % self.ts,
-            "mesocentre id: %s" % self.project_id()
+            "mesocentre id: %s" % self.project_id(),
         ]
 
     def logs(self, obj: bool = False) -> list:
@@ -1009,7 +1009,7 @@ class Register(db.Model):
             "approve_ts": self.approve_ts,
             "status": self.status,
             "type": self.project_type(),
-            "meso_id": self.project_id()
+            "meso_id": self.project_id(),
         }
 
 
@@ -1090,7 +1090,7 @@ class LogDB(db.Model):
             "category": category,
             "date": self.created.strftime("%Y-%m-%d %X %Z"),
             "date_full": self.created.strftime("%c"),
-            "message": msg
+            "message": msg,
         }
 
     def to_dict(self) -> dict:
@@ -1107,7 +1107,7 @@ class LogDB(db.Model):
             "date": self.created.strftime("%Y-%m-%d %X %Z"),
             "date_full": self.created.strftime("%c"),
             "message": short,
-            "message_full": msg
+            "message_full": msg,
         }
 
 
@@ -1313,7 +1313,7 @@ class Tasks(db.Model):
             "user": login,
             "project": project,
             "entity": entity,
-            "task": task
+            "task": task,
         }
 
     def to_dict(self) -> dict:
@@ -1358,5 +1358,5 @@ class Tasks(db.Model):
             "result": result,
             "comment": self.comment,
             "short": self.short(),
-            "modified": mod
+            "modified": mod,
         }
