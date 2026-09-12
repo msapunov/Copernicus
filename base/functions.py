@@ -321,10 +321,10 @@ def generate_password(pass_len=16):
     """
     symbols = ascii_letters + digits + "!@#$%^&*"
     password = []
-    for x in unpack('%dB' % (pass_len,), urandom(pass_len)):
+    for x in unpack("%dB" % (pass_len,), urandom(pass_len)):
         idx = round(x * len(symbols) / 256) - 1
         password.append(symbols[idx])
-    return ''.join(password)
+    return "".join(password)
 
 
 def write_pdf(html, name):
@@ -400,8 +400,8 @@ def create_visa(record, signature="signature.png"):
     date = dt.now().strftime("%Y-%m-%d-%H-%M-%S")
     for loc, name in config.get("visa", {}).items():
         try:
-            record.dt = format_date(dt.now(), format='short', locale=loc)
-            record.ttl = format_date(ttl, format='long', locale=loc)
+            record.dt = format_date(dt.now(), format="short", locale=loc)
+            record.ttl = format_date(ttl, format="long", locale=loc)
             lang = Locale.parse(loc).get_language_name().lower()
         except Exception as e:
             error(f"Invalid locale '{loc}': {e}. Skipping formatting.")
@@ -602,7 +602,7 @@ def project_config_options(cfg, section):
     for key, val in cfg.items(section):
         if "visa" in key:
             if "." in key:
-                prefix, lang = key.split('.', 1)
+                prefix, lang = key.split(".", 1)
             else:
                 lang = "en_US"  # fallback locale
             visa[lang] = val
