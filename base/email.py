@@ -1,6 +1,11 @@
-from pathlib import Path
-from flask import current_app as app
-from logging import warning, debug
+"""Email and mailing list management for the Copernicus application.
+
+Provides the :class:`Mail` class for sending emails and the :class:`Sympa`
+subclasses (:class:`UserMailingList`, :class:`ResponsibleMailingList`) for
+managing mailing list subscriptions.
+"""
+
+import smtplib
 from configparser import ConfigParser, ExtendedInterpolation
 from os.path import join as path_join, exists
 from datetime import datetime as dt
