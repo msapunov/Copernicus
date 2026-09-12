@@ -1,5 +1,9 @@
 from flask import current_app, request, flash, redirect, url_for, g
 from flask_login import current_user, logout_user
+"""Shared utilities for page blueprints: access control, user lookups,
+and task processing.
+"""
+
 from logging import debug, error
 from functools import wraps
 from base import db
