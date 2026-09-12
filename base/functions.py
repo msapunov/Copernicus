@@ -21,6 +21,19 @@ __copyright__ = "Aix Marseille University"
 
 
 def get_field_value(form, name):
+    """Extract a cleaned value from a WTForms field.
+
+    Strips whitespace, enforces maximum length, and rejects control
+    characters. Returns None when the field is absent, empty, or invalid.
+
+    Args:
+        form: A WTForms form instance.
+        name: The field name to extract.
+
+    Returns:
+        The cleaned string value, or None if the field is missing, empty,
+        too long, or contains control characters.
+    """
     field = form._fields.get(name)
     if not field:
         return None
@@ -37,11 +50,16 @@ def get_field_value(form, name):
 
 
 def upload_to_cloud(remote_dir, path):
-    """
-    Function which uploads a file to OwnCloud instance
-    :param remote_dir: String. Name of the remote directory to store files in.
-    :param path: String. Path to file to upload.
-    :return: None. Does not return anything — its return value should be None
+    """Upload a file to an OwnCloud instance via WebDAV.
+
+    Args:
+        remote_dir: Remote directory name to store files in.
+        path: Local path to the file to upload.
+
+    Raises:
+        ValueError: If the local file does not exist, if WebDAV
+            configuration is missing, or if the remote directory does
+            not exist.
     """
     local = Path(path)
     if not local.exists() or not local.is_file():
@@ -66,6 +84,18 @@ def upload_to_cloud(remote_dir, path):
 
 
 def process_register_user(user_as_string):
+    """Parse a semicolon-delimited user string from a registration form.
+
+    Expected format: ``First Name: <value>; Last Name: <value>;
+    E-mail: <value>; Login: <value>``
+
+    Args:
+        user_as_string: Raw user description string from a registration.
+
+    Returns:
+        Tuple of (name, surname, email, login), each may be None if
+        not found.
+    """
     name, surname, email, login = None, None, None, None
     parts = user_as_string.split(";")
     for i in parts:
@@ -83,8 +113,20 @@ def process_register_user(user_as_string):
 
 
 def ssh_check(pubkey):
-    """
-    Check provided SSH public key
+    """Validate an SSH public key string.
+
+    Checks that the key uses an allowed algorithm and that RSA keys
+    meet the minimum key size (3072 bits).
+
+    Args:
+        pubkey: The SSH public key string.
+
+    Returns:
+        True if the key is valid.
+
+    Raises:
+        ValueError: If the key structure is incorrect, the algorithm is
+            not allowed, or the key cannot be loaded.
     """
     debug(f"SSH key: {pubkey}")
     allowed = app.config["SSH_ALGO_ALLOWED"]
@@ -111,6 +153,20 @@ def ssh_check(pubkey):
 
 
 def ssh_wrapper(cmd, host=None):
+    """Execute a command on a remote host via SSH.
+
+    Uses key-based authentication with automatic key type detection
+    (RSA, ECDSA, Ed25519).
+
+    Args:
+        cmd: Command string to execute.
+        host: Hostname to connect to. Defaults to the ``SSH_SERVER``
+            app config value.
+
+    Returns:
+        Tuple of (stdout_lines, stderr_lines). Each is an empty list on
+        connection failure.
+    """
     debug("ssh_wrapper(%s)" % cmd)
     if not host:
         host = app.config["SSH_SERVER"]
@@ -156,11 +212,13 @@ def ssh_wrapper(cmd, host=None):
 
 
 def show_configuration():
-    """
-    This function get the instance path associated with the current app and
-    creates a dictionary where each cfg file is a key, And the value is the
-    content of that cfg file
-    :return: Dictionary. Content of cfg file(s)
+    """Read all configuration files from the instance directory.
+
+    Parses each file as a ConfigParser INI file and returns the raw text
+    content.
+
+    Returns:
+        Dictionary mapping file names to their raw text content.
     """
     cfg = {}
     path = Path(app.instance_path)
@@ -185,11 +243,17 @@ def show_configuration():
 
 
 def calculate_ttl(type):
-    """
-    Calculates time based on finish and duration options from project config.
-    Primary usage is to set a date until which resources will be available
-    :param type: String.
-    :return: Datetime.
+    """Calculate the time-to-live (allocation end date) for a project type.
+
+    Uses the project configuration's ``finish`` and ``duration`` options.
+    The TTL is the later of the two computed dates, with a minimum of
+    one month from now. If the result is in the past, one year is added.
+
+    Args:
+        type: Project type identifier (single character).
+
+    Returns:
+        Datetime representing the allocation end date.
     """
     candidates = []
     now = dt.now().replace(tzinfo=timezone.utc)
@@ -211,20 +275,30 @@ def calculate_ttl(type):
 
 
 def full_name(name, surname):
-    """
-    Build a properly capitalized full name from name and surname,
-    preserving separators like dash, apostrophe, space, slash, comma, or dot.
+    """Build a properly capitalized full name from name and surname.
 
-    Each part of the name separated by common punctuation is capitalized,
-    and the separators are preserved in the final result.
+    Preserves separators like dash, apostrophe, space, slash, comma,
+    or dot. Each part separated by these punctuation marks is capitalized
+    individually.
 
-    :param name: First name (can be None/False)
-    :param surname: Surname (can be None/False)
-    :return: Full name string with proper capitalization
+    Args:
+        name: First name (may be None or False).
+        surname: Surname (may be None or False).
+
+    Returns:
+        Properly capitalized full name string.
     """
     name_parts = compile(r"([/.,'\s-])")
 
     def capital(value):
+        """Capitalize a single name part, preserving separators.
+
+        Args:
+            value: A name string or None.
+
+        Returns:
+            Capitalized string, or empty string if value is falsy.
+        """
         if not value:
             return ""
         parts = name_parts.split(str(value))
@@ -236,11 +310,14 @@ def full_name(name, surname):
 
 
 def generate_password(pass_len=16):
-    """
-    Create alphanumeric password of given length
-    :param pass_len: Int. Number of symbols password must consist of.
-    Default length is 16 symbols
-    :return: String. Password
+    """Generate a random alphanumeric password with symbols.
+
+    Args:
+        pass_len: Number of characters for the password (default 16).
+
+    Returns:
+        A random password string containing letters, digits, and
+        special characters.
     """
     symbols = ascii_letters + digits + "!@#$%^&*"
     password = []
@@ -251,12 +328,18 @@ def generate_password(pass_len=16):
 
 
 def write_pdf(html, name):
-    """
-    Convert html document to PDF and return file path where the document is
-    saved
-    :param html: String. HTML document to convert
-    :param name: String. Name of the resulting PDF document
-    :return: String. Path to a PDF file
+    """Convert an HTML document to a PDF file.
+
+    Args:
+        html: HTML string to convert.
+        name: Name for the output PDF file (``.pdf`` extension is added
+            automatically if missing).
+
+    Returns:
+        Path object pointing to the created PDF file.
+
+    Raises:
+        ValueError: If PDF generation fails.
     """
     if not name.endswith(".pdf"):
         name = name + ".pdf"
@@ -278,11 +361,21 @@ def write_pdf(html, name):
 
 
 def create_visa(record, signature="signature.png"):
-    """
-    Generates html using as templates values from configuration file and
-    provided record and then convert it to pdf files
-    :param record: Object. Instance of project register class
-    :return: List. List of resulting files
+    """Generate visa documents (PDF) for a project registration.
+
+    Renders HTML templates for each locale configured for the project
+    type and converts them to PDF files.
+
+    Args:
+        record: Register record instance.
+        signature: Signature file name to embed (default ``signature.png``).
+
+    Returns:
+        List of paths to generated PDF files.
+
+    Raises:
+        ValueError: If the project type is not in configuration or if the
+            project duration cannot be calculated.
     """
     cfg = project_config()
     project_type = record.type.lower()
@@ -319,11 +412,14 @@ def create_visa(record, signature="signature.png"):
 
 
 def parse_moment(value):
-    """
-    Parses a human-readable date string and returns a datetime object at midnight UTC.
+    """Parse a human-readable date string into a datetime at midnight UTC.
 
-    :param value: str, human-readable date (e.g., "1st Feb", "15 November")
-    :return: datetime at midnight UTC, or None if parsing fails
+    Args:
+        value: Human-readable date string (e.g. ``"1st Feb"``,
+            ``"15 November"``).
+
+    Returns:
+        Datetime at midnight UTC, or None if parsing fails.
     """
     # noinspection PyTypeChecker
     moment = dt_parse(value, settings={"TIMEZONE": "UTC",
@@ -338,15 +434,17 @@ def parse_moment(value):
 
 
 def get_finish(type):
-    """
-    Calculates the project's allocation finish datetime considering:
-      - finish value
-      - renewal as extension windows
-      - year-wrap scenarios
-    Returns a datetime object representing the actual finish date.
+    """Calculate the project allocation finish date from configuration.
 
-    :param project: document instance with `type` attribute
-    :return: datetime at midnight UTC
+    Considers the ``finish`` value, renewal windows, and year-wrap
+    scenarios.
+
+    Args:
+        type: Project type identifier.
+
+    Returns:
+        Datetime representing the actual finish date, or None if no
+        ``finish`` option is configured.
     """
     now = dt.now(timezone.utc)
     cfg = g.project_config.get(type, {})
@@ -377,6 +475,17 @@ def get_finish(type):
 
 
 def get_duration(type):
+    """Parse the duration option from project configuration.
+
+    Supports day, week, month, and year units.
+
+    Args:
+        type: Project type identifier.
+
+    Returns:
+        A ``relativedelta`` object, or None if duration is not configured
+        or cannot be parsed.
+    """
     cfg = g.project_config
     duration = cfg.get(type, {}).get("duration", None)
     debug(f"Got value '{duration}' for duration from config for type {type}")
@@ -396,6 +505,20 @@ def get_duration(type):
 
 
 def parse_value(key, value, cal):
+    """Parse a raw configuration value into a Python type.
+
+    Handles booleans, integers, floats, comma-separated lists, and strings.
+    A ``description`` key is always treated as a string.
+
+    Args:
+        key: Configuration key name.
+        value: Raw string value.
+        cal: A ``parsedatetime.Calendar`` instance (unused for basic types).
+
+    Returns:
+        Tuple of (parsed_value, extra_dict). The extra dict is used for
+        additional options parsed from the list.
+    """
     value = value.strip()
     lower = value.lower()
     extra = {}
@@ -431,23 +554,40 @@ def parse_value(key, value, cal):
 
 
 def project_config_options(cfg, section):
-    """
-    Parse project configuration from config object.
-    Use of parsedatetime lib to parse fuzzy time values
-    :param cfg: Configuration object
-    :param section: Section in the configuration object, i.e. project type
-    :return: Dictionary. Keys are: "duration_text", "duration_dt", "extendable",
-            "finish_text", "finish_dt", "cpu", "finish_notice_text", "acl",
-            "finish_notice_dt", "transform", "description", "evaluation_text",
-            "evaluation_dt", "evaluation_notice_text", "evaluation_notice_dt",
-            "finish_report"
+    """Parse project configuration options for a given section.
+
+    Uses ``parsedatetime`` to parse fuzzy time values.
+
+    Args:
+        cfg: ConfigParser object.
+        section: Section name (project type).
+
+    Returns:
+        Dictionary with parsed values including duration, finish,
+        notices, evaluation dates, ACL, visa templates, and more.
     """
     cal = Calendar()
 
     def parse_list(text):
+        """Parse a comma-separated string into a list.
+
+        Args:
+            text: A string with comma-separated values, or None/empty.
+
+        Returns:
+            List of stripped strings, or empty list.
+        """
         return [x.strip() for x in text.split(",")] if text else []
 
     def parse_datetime(text):
+        """Parse a human-readable datetime string using ``parsedatetime``.
+
+        Args:
+            text: A human-readable datetime string, or None/empty.
+
+        Returns:
+            A timezone-aware datetime, a list of such datetimes, or None.
+        """
         if not text:
             return None
         if "," in text:
@@ -498,6 +638,15 @@ def project_config_options(cfg, section):
 
 
 def load_config():
+    """Load and parse the project configuration file.
+
+    Uses a generic parsing approach that preserves all option names and
+    values as-is, with basic type inference (bool, int, float, list).
+
+    Returns:
+        Dictionary keyed by project type (section name, lowercased) with
+        parsed options.
+    """
     config = {}
     cfg_file = app.config.get("PROJECT_CONFIG", "project.cfg")
     cfg_path = join_dir(app.instance_path, cfg_file)
@@ -520,11 +669,13 @@ def load_config():
 
 
 def project_config():
-    """
-    Parsing file defined in PROJECT_CONFIG option of main application config.
-    Otherwise, trying to find project.cfg file
-    :return: Dict. Each project type (i.e. subsection in config file) having
-    options returned by project_parse_cfg_options function
+    """Parse project configuration with full options processing.
+
+    Uses :func:`project_config_options` to parse each section, returning
+    structured data including parsed datetimes, ACL, and visa templates.
+
+    Returns:
+        Dictionary keyed by project type with full parsed options.
     """
     result = {}
     cfg_file = app.config.get("PROJECT_CONFIG", "project.cfg")
@@ -543,12 +694,13 @@ def project_config():
 
 
 def slurm_nodes_status():
-    """
-    Function issued a sinfo command to get the reasons for down, drained, fail
-    or failing state of a node.
-    Command is sinfo -R --format='%100E|%19H|%30N|%t'
-    Output to parse: Not responding |2020-07-25T22:39:23|skylake106|down*
-    :return: dictionary where nodes names are the keys
+    """Query SLURM for node status (down, drained, fail, failing).
+
+    Runs ``sinfo -R`` on the remote cluster via SSH and parses the output.
+
+    Returns:
+        List of dictionaries, each with ``date``, ``reason``, ``status``,
+        and ``node`` keys.
     """
     cmd = ["sinfo", "-R", "--format='%100E|%19H|%30N|%t'"]
     run = " ".join(cmd)
@@ -583,6 +735,14 @@ def slurm_nodes_status():
 
 
 def project_check_resources(project):
+    """Verify that a project has resources and CPU hours defined.
+
+    Args:
+        project: Project model instance.
+
+    Returns:
+        True if resources and CPU are present, False otherwise.
+    """
     err = []
     if not project.resources:
         err.append("No resources attached to project %s" % project)
@@ -596,12 +756,14 @@ def project_check_resources(project):
 
 
 def slurm_parse(slurm_raw_output):
-    """
-    Parsing the output of sreport command looking for account and users,
-    consumption.
-    :param slurm_raw_output: list of lines produced by sreport command
-    :return: dictionary of dictionaries, where project name is the key in first
-    dictionary, consumption is the value
+    """Parse the output of the ``sreport`` command for project consumption.
+
+    Args:
+        slurm_raw_output: List of lines produced by ``sreport``.
+
+    Returns:
+        Nested dictionary: project name -> (user login or
+        ``"total consumption"``) -> CPU hours.
     """
     output = {}
     if not slurm_raw_output:
@@ -635,10 +797,16 @@ def slurm_parse(slurm_raw_output):
 
 
 def file_as_string(name):
-    """
-    Encoding a file to Base64 format
-    :param name: Name of a file to encode
-    :return: String. String in Base64 format
+    """Read a file and encode it as a Base64 ASCII string.
+
+    Args:
+        name: File name (relative to the instance directory).
+
+    Returns:
+        Base64-encoded string content of the file.
+
+    Raises:
+        ValueError: If the file does not exist.
     """
     img_path = join_dir(app.instance_path, name)
     if not exists(img_path):
