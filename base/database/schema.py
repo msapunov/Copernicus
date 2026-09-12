@@ -531,8 +531,6 @@ class Resources(db.Model):
             "finish": ttl,
         }
 
-        query = (Accounting.query.join(User, Accounting.user_id == User.id)
-                 .filter(Accounting.resources_id == self.id))
     def consumption_by_user(self, daily: bool | None = None) -> list:
         """Return CPU consumption grouped by user.
 
@@ -542,6 +540,8 @@ class Resources(db.Model):
         Returns:
             List of (user_login, [date,] total_cpu) tuples.
         """
+        query = (Accounting.query.join(User, Accounting.user_id == User.id)
+                 .filter(Accounting.resources_id == self.id))
         if daily:
             return query.group_by(
                 User.login, Accounting.date
@@ -557,12 +557,14 @@ class Resources(db.Model):
     def consumption(self) -> int:
         """Return the total CPU consumption for this resource allocation.
 
-        return Accounting.query.filter_by(
-            resources=self, user=None
-        ).with_entities(func.sum(Accounting.cpu)).scalar()
         Returns:
             Total CPU hours consumed (aggregate across all users).
         """
+        return (
+            Accounting.query.filter_by(resources=self, user=None)
+            .with_entities(func.sum(Accounting.cpu))
+            .scalar()
+        )
 
     def usage(self) -> str:
         """Calculate the usage percentage of the allocated CPU.
@@ -1157,12 +1159,11 @@ class Tasks(db.Model):
     def waiting(self) -> list:
         """Return all tasks that are processed, accepted, but not yet done.
 
-        return self.query.filter_by(processed=True,
-                                    done=False,
-                                    decision="accept").all()
         Returns:
             List of Tasks records ready for execution.
         """
+        return self.query.filter_by(processed=True, done=False,
+                                    decision="accept").all()
 
     def accept(self) -> "Tasks":
         """Mark the task as accepted and processed by the current user.
