@@ -100,9 +100,11 @@ def create_pending(register):
         form.email.data = email
         direct = generate_login(name, surname)
         invert = generate_login(surname, name)
-        form.login.choices = [(direct, "Create a new user: %s" % direct),
-                              (invert, "Create a new user: %s" % invert),
-                              ("select", "")]
+        form.login.choices = [
+            (direct, "Create a new user: %s" % direct),
+            (invert, "Create a new user: %s" % invert),
+            ("select", ""),
+        ]
         already = user_by_details(name, surname, email, login)
         if already:
             form.exist = already[0].login
