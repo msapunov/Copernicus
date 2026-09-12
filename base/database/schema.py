@@ -32,7 +32,7 @@ class Accounting(db.Model):
     cpu = db.Column(db.Integer, db.CheckConstraint("cpu>=0"))
 
     def __repr__(self):
-        return "<Account ID {}>".format(self.id)
+        return f"<Account ID {self.id}>"
 
 
 class ACLDB(db.Model):
