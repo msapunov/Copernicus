@@ -16,7 +16,7 @@ __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
 
 
-utc= timezone.utc
+utc = timezone.utc
 
 
 class Accounting(db.Model):
