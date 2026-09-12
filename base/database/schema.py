@@ -1,16 +1,17 @@
-from flask_login import UserMixin, current_user
-from base import db
-from base.functions import (generate_password,
-                            process_register_user,
-                            full_name as fn)
-from datetime import datetime as dt, timezone
 from calendar import timegm
-from textwrap import shorten
-from logging import error, debug
+from datetime import datetime as dt
+from datetime import timezone
+from logging import debug, error
 from pathlib import PurePath
-from werkzeug.security import generate_password_hash, check_password_hash
-from sqlalchemy import func
+from textwrap import shorten
 
+from flask_login import UserMixin, current_user
+from sqlalchemy import func
+from werkzeug.security import check_password_hash, generate_password_hash
+
+from base import db
+from base.functions import full_name as fn
+from base.functions import generate_password, process_register_user
 
 __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
