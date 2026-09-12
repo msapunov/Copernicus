@@ -907,6 +907,8 @@ class Register(db.Model):
             return fn(self.responsible_first_name, "")
         if self.responsible_last_name:
             return fn(self.responsible_last_name, "")
+        return ""
+
     def get_users(self) -> list:
         """Parse the users field into a list of user dictionaries.
 
