@@ -296,7 +296,7 @@ class Project(db.Model):
             "title": self.title,
             "description": self.description,
             "scientific_fields": self.scientific_fields,
-            "thematic": self.thematic.name if self.thematic else '',
+            "thematic": self.thematic.name if self.thematic else "",
             "numerical_methods": self.numerical_methods,
             "computing_resources": self.computing_resources,
             "project_management": self.project_management,
