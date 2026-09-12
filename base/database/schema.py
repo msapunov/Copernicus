@@ -20,6 +20,8 @@ utc = timezone.utc
 
 
 class Accounting(db.Model):
+    """Records of per-user CPU consumption for a project."""
+
     __tablename__ = "accounting"
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     resources_id = db.Column(db.Integer, db.ForeignKey("project_resources.id"))
@@ -32,10 +34,13 @@ class Accounting(db.Model):
     cpu = db.Column(db.Integer, db.CheckConstraint("cpu>=0"))
 
     def __repr__(self) -> str:
+        """Return a string representation of the Accounting record."""
         return f"<Account ID {self.id}>"
 
 
 class ACLDB(db.Model):
+    """Access control list entries defining user roles."""
+
     __tablename__ = "acl"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -49,6 +54,11 @@ class ACLDB(db.Model):
     created = db.Column(db.DateTime(True))
 
     def to_dict(self) -> dict:
+        """Serialize the ACL record to a dictionary.
+
+        Returns:
+            Dictionary with role booleans and timestamps.
+        """
         start = self.created.strftime("%Y-%m-%d %X %Z") if self.created else ""
         mod = self.modified.strftime("%Y-%m-%d %X %Z") if self.modified else ""
         return {
@@ -65,6 +75,8 @@ class ACLDB(db.Model):
 
 
 class MethodDB(db.Model):
+    """Registered HTTP endpoints with associated ACL requirements."""
+
     __tablename__ = "methods"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -78,6 +90,8 @@ class MethodDB(db.Model):
 
 
 class UserProjectLink(db.Model):
+    """Many-to-many association table between users and projects."""
+
     __tablename__ = "user_project"
 
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), primary_key=True)
@@ -86,6 +100,8 @@ class UserProjectLink(db.Model):
 
 
 class Thematic(db.Model):
+    """Project thematic classification."""
+
     __tablename__ = "project_thematic"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -95,9 +111,12 @@ class Thematic(db.Model):
 
         return "Thematic: {}".format(self.name)
     def __repr__(self) -> str:
+        """Return a string representation of the Thematic."""
 
 
 class Project(db.Model):
+    """A computing project with associated users, resources, and metadata."""
+
     __tablename__ = "projects"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -141,8 +160,16 @@ class Project(db.Model):
 
         return "<Project {}>".format(self.get_name())
     def __repr__(self) -> str:
+        """Return a string representation of the Project."""
     def account_by_user(self, daily: bool | None = None) -> dict:
+        """Return CPU consumption grouped by user.
 
+        Args:
+            daily: If True, group results by day as well.
+
+        Returns:
+            Dictionary mapping user login (and optionally date) to CPU hours.
+        """
         result = self.resources.consumption_by_user(daily)
         if not result:
             return {}
@@ -152,10 +179,22 @@ class Project(db.Model):
             return {key: value for key, value in result}
 
     def account(self) -> int:
+        """Return the total CPU consumption for this project.
+
+        Returns:
+            Total CPU hours consumed, or 0 if no consumption recorded.
+        """
         result = self.resources.consumption()
         return result if result else 0
 
     def get_name(self) -> str:
+        """Return the project name, generating one if not set.
+
+        The generated name is the type followed by the zero-padded ID.
+
+        Returns:
+            Project name string.
+        """
         if self.name:
             return self.name
         pid = self.id
@@ -163,6 +202,12 @@ class Project(db.Model):
         return "%s%s" % (genre, str(pid).zfill(3))
 
     def api_resources(self) -> dict:
+        """Return a compact resource summary for API responses.
+
+        Returns:
+            Dictionary with CPU, finish/start dates, responsible contact,
+            and project identification.
+        """
         return {
             "cpu": self.resources.cpu,
             "finish": self.resources.ttl.strftime("%Y-%m-%d %X"),
@@ -174,6 +219,13 @@ class Project(db.Model):
         }
 
     def pretty_dict(self) -> dict:
+        """Return a human-readable representation of the project.
+
+        Includes responsible name, lab, resource CPU, and user list.
+
+        Returns:
+            Dictionary with augmented project details.
+        """
         rec = self.to_dict()
         rec["approve"] = self.approve.full_name()
         rec["lab"] = self.responsible.lab
@@ -184,13 +236,31 @@ class Project(db.Model):
         return rec
 
     def consumed(self) -> int:
+        """Return the total CPU hours consumed.
+
+        Returns:
+            Total consumption value from resources.
+        """
         return self.resources.usage()
 
     def consumed_use(self) -> float:
+        """Return the consumption percentage as a float.
+
+        Returns:
+            Float between 0 and 100 representing usage percentage.
+        """
         usage = self.resources.usage()  # with percents
         return float(usage.replace("%", "")) if usage else 0.0
 
     def to_dict(self) -> dict:
+        """Serialize the project to a full dictionary.
+
+        Includes metadata, resources, responsible, users, articles, files,
+        consumption, and allocation dates.
+
+        Returns:
+            Dictionary with complete project information.
+        """
         if self.created:
             created = self.created.strftime("%Y-%m-%d %X %Z")
         else:
@@ -257,6 +327,8 @@ class Project(db.Model):
 
 
 class Extend(db.Model):
+    """A request to extend, renew, transform, or activate a project."""
+
     __tablename__ = "project_extension"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -288,8 +360,15 @@ class Extend(db.Model):
 
         return "<Extension for project {}>".format(self.project.get_name())
     def __repr__(self) -> str:
+        """Return a string representation of the Extend record."""
 
     def about(self) -> str:
+        """Return a short description of the request type.
+
+        Returns:
+            String like ``"exceptional transformation"``, ``"extension"``,
+            ``"renewal"``, or ``"activation"``.
+        """
         result = ""
         if self.exception:
             result += "exceptional "
@@ -305,6 +384,12 @@ class Extend(db.Model):
         return result
 
     def api(self) -> dict:
+        """Return a compact API representation of the extension request.
+
+        Returns:
+            Dictionary with CPU, allocation dates, responsible info, and
+            transformation details.
+        """
         return {
             "cpu": self.hours,
             "finish": timegm(self.project.resources.ttl.utctimetuple()),  # TODO: check if needed
@@ -318,6 +403,14 @@ class Extend(db.Model):
         }
 
     def to_dict(self) -> dict:
+        """Serialize the extension request to a full dictionary.
+
+        Includes request metadata, decision, usage information, and project
+        details.
+
+        Returns:
+            Dictionary with complete extension request information.
+        """
         start = self.created.strftime("%Y-%m-%d %X %Z") if self.created else ""
         mod = self.modified.strftime("%Y-%m-%d %X %Z") if self.modified else ""
         approve = self.approve.full_name() if self.approve else ""
@@ -352,6 +445,8 @@ class Extend(db.Model):
 
 
 class ArticleDB(db.Model):
+    """A scientific article associated with a project."""
+
     __tablename__ = "project_articles"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -366,6 +461,8 @@ class ArticleDB(db.Model):
 
 
 class File(db.Model):
+    """A file attached to a project (e.g. activity report)."""
+
     __tablename__ = "project_files"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -381,10 +478,17 @@ class File(db.Model):
     user = db.relationship("User", foreign_keys=user_id)
 
     def name(self) -> str:
+        """Return the file name from the path.
+
+        Returns:
+            The base name of the file.
+        """
         return PurePath(self.path).name
 
 
 class Resources(db.Model):
+    """Allocation resources (CPU hours, validity period) for a project."""
+
     __tablename__ = "project_resources"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -405,6 +509,11 @@ class Resources(db.Model):
     treated = db.Column(db.Boolean, default=False)
 
     def to_dict(self) -> dict:
+        """Serialize the resources record to a dictionary.
+
+        Returns:
+            Dictionary with approval, file, validity, CPU, and dates.
+        """
         start = self.created.strftime("%Y-%m-%d %X %Z") if self.created else ""
         mod = self.modified.strftime("%Y-%m-%d %X %Z") if self.modified else ""
         ttl = self.ttl.strftime("%Y-%m-%d %X %Z") if self.ttl else ""
@@ -424,6 +533,14 @@ class Resources(db.Model):
         query = (Accounting.query.join(User, Accounting.user_id == User.id)
                  .filter(Accounting.resources_id == self.id))
     def consumption_by_user(self, daily: bool | None = None) -> list:
+        """Return CPU consumption grouped by user.
+
+        Args:
+            daily: If True, also group by date.
+
+        Returns:
+            List of (user_login, [date,] total_cpu) tuples.
+        """
         if daily:
             return query.group_by(
                 User.login, Accounting.date
@@ -437,12 +554,22 @@ class Resources(db.Model):
                 User.login, func.sum(Accounting.cpu)
             ).all()
     def consumption(self) -> int:
+        """Return the total CPU consumption for this resource allocation.
 
         return Accounting.query.filter_by(
             resources=self, user=None
         ).with_entities(func.sum(Accounting.cpu)).scalar()
+        Returns:
+            Total CPU hours consumed (aggregate across all users).
+        """
 
     def usage(self) -> str:
+        """Calculate the usage percentage of the allocated CPU.
+
+        Returns:
+            Formatted percentage string (e.g. ``"45.2%"``) or ``"0%"`` if
+            no consumption recorded.
+        """
         debug("Calculating usage for project %s" % self.project)
         conso = self.consumption()
         total = self.cpu
@@ -456,6 +583,8 @@ class Resources(db.Model):
 
 
 class User(UserMixin, db.Model):
+    """A user of the system, with authentication, ACL, and project membership."""
+
     __tablename__ = "users"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -482,8 +611,14 @@ class User(UserMixin, db.Model):
 
         return '<User {}>'.format(self.login)
     def __repr__(self) -> str:
+        """Return a string representation of the User."""
 
     def reset_password(self) -> str:
+        """Generate a random password, hash it, and save to the database.
+
+        Returns:
+            The plain-text password (to be communicated to the user).
+        """
         password = generate_password()
         self.hash = generate_password_hash(password)
         self.first_login = True
@@ -491,24 +626,61 @@ class User(UserMixin, db.Model):
         return password
 
     def set_password(self, password: str) -> str:
+        """Hash and store a new password, marking first_login as False.
+
+        Args:
+            password: The new plain-text password.
+
+        Returns:
+            The plain-text password for confirmation.
+        """
         self.hash = generate_password_hash(password)
         self.first_login = False
         db.session.commit()
         return password
 
     def check_password(self, password: str) -> bool:
+        """Verify a password against the stored hash.
+
+        If the stored hash uses the PBKDF2-SHA256 algorithm and verification
+        succeeds, the hash is re-upgraded in place.
+
+        Args:
+            password: The plain-text password to check.
+
+        Returns:
+            True if the password matches, False otherwise.
+        """
         result = check_password_hash(self.hash, password)
         if result and "pbkdf2:sha256" in self.hash:
             self.set_password(password)
         return result
 
     def full(self) -> str:
+        """Return a full human-readable identifier for the user.
+
+        Format: ``Full Name <email> [login]``
+
+        Returns:
+            Formatted user string.
+        """
         return "%s <%s> [%s]" % (self.full_name(), self.email, self.login)
 
     def full_name(self) -> str:
+        """Return the user's capitalized full name.
+
+        Returns:
+            Properly capitalized full name.
+        """
         return fn(self.name, self.surname)
 
     def permissions(self) -> list:
+        """Return a list of permission strings based on the user's ACL.
+
+        Returns:
+            List containing any of: ``user``, ``responsible``, ``manager``,
+            ``tech``, ``committee``, ``admin``.
+        """
         perm = []
         if self.acl.is_user:
             perm.append("user")
@@ -525,16 +697,32 @@ class User(UserMixin, db.Model):
         return perm
 
     def project_names(self) -> list:
+        """Return a list of project names this user belongs to.
+
+        Returns:
+            List of project name strings.
+        """
         projects = list(self.project)
         names = map(lambda x: x.get_name(), projects)
         return list(names)
 
     def project_ids(self) -> list:
+        """Return a list of project IDs this user belongs to.
+
+        Returns:
+            List of project integer IDs.
+        """
         projects = list(self.project)
         ids = map(lambda x: x.id, projects)
         return list(ids)
 
     def details(self) -> dict:
+        """Return detailed user information including ACL, projects, and status.
+
+        Returns:
+            Dictionary with all user fields, ACL roles, project names, and
+            password status.
+        """
         if self.acl.created:
             start = self.acl.created.strftime("%Y-%m-%d %X %Z")
         else:
@@ -580,6 +768,12 @@ class User(UserMixin, db.Model):
         }
 
     def info_acl(self) -> dict:
+        """Return a summary of the user's status and ACL roles.
+
+        Returns:
+            Dictionary with status (active/archived/deactivated), roles,
+            login, name, surname, last seen, and email.
+        """
         if self.archived:
             status = "archived"
         elif self.active:
@@ -604,6 +798,11 @@ class User(UserMixin, db.Model):
         }
 
     def to_dict(self) -> dict:
+        """Serialize the user to a compact dictionary.
+
+        Returns:
+            Dictionary with basic user fields.
+        """
         return {
             "id": self.id,
             "login": self.login,
@@ -668,15 +867,34 @@ class Register(db.Model):
 
         return "<Registration request {}>".format(self.id)
     def __repr__(self) -> str:
+        """Return a string representation of the Register record."""
 
     def project_type(self) -> str:
+        """Return the project type in upper case.
+
+        Returns:
+            Upper-case single-letter type identifier.
+        """
         return self.type.upper()
 
     def project_id(self) -> str:
+        """Generate a unique project identifier for the registration request.
+
+        Format: ``meso-<year>-<id>-<type>``
+
+        Returns:
+            Formatted project identifier string.
+        """
         year = dt.now().year
         return "meso-%s-%s-%s" % (year, self.id, self.project_type())
 
     def responsible_full_name(self) -> str:
+        """Return the responsible person's full name.
+
+        Returns:
+            Capitalized full name, or an empty string if no name is
+            available.
+        """
         if self.responsible_first_name and self.responsible_last_name:
             return fn(self.responsible_first_name, self.responsible_last_name)
         if self.responsible_first_name:
@@ -684,7 +902,15 @@ class Register(db.Model):
         if self.responsible_last_name:
             return fn(self.responsible_last_name, "")
     def get_users(self) -> list:
+        """Parse the users field into a list of user dictionaries.
 
+        The users field contains newline-separated entries with semicolon-
+        delimited name, surname, email, and login.
+
+        Returns:
+            List of dictionaries with keys ``name``, ``last``, ``mail``,
+            ``login``.
+        """
         users = self.users.split("\n")
         return [{"name": name if name else "",
                  "last": surname if surname else "",
@@ -693,7 +919,14 @@ class Register(db.Model):
                 for x in users
                 for name, surname, email, login in [process_register_user(x)]]
     def cloud(self) -> list:
+        """Return a formatted list of strings describing a cloud project.
 
+        Includes registration ID, title, type, cloud configuration, and
+        user information.
+
+        Returns:
+            List of formatted description strings.
+        """
         users = []
         for u in self.get_users():
             user = fn(u["name"], u["last"])
@@ -715,12 +948,26 @@ class Register(db.Model):
         ]
 
     def logs(self, obj: bool = False) -> list:
+        """Return log entries associated with this registration request.
+
+        Args:
+            obj: If True, return the raw LogDB objects instead of dictionaries.
+
+        Returns:
+            List of log entry dictionaries (or LogDB objects).
+        """
         logs = LogDB.query.filter_by(register=self).all()
         if obj:
             return logs
         return list(map(lambda x: x.to_dict(), logs))
 
     def to_dict(self) -> dict:
+        """Serialize the registration request to a full dictionary.
+
+        Returns:
+            Dictionary with all request fields, parsed users, and computed
+            identifiers.
+        """
         return {
             "id": self.id,
             "ts": self.ts.strftime("%Y-%m-%d %X %Z"),
@@ -799,13 +1046,26 @@ class LogDB(db.Model):
 
         return "<Log event for project {}>".format(self.project.get_name())
     def __repr__(self) -> str:
+        """Return a string representation of the LogDB record."""
 
     def brief(self) -> dict:
+        """Return a brief summary of the log entry.
+
+        Returns:
+            Dictionary with ``created`` timestamp and ``event`` string.
+        """
         event = self.event.capitalize()
         creator = self.author.full_name() if self.author else "Unknown author"
         return {"created": self.created, "event": "%s by %s" % (event, creator)}
 
     def to_web(self) -> dict:
+        """Serialize the log entry for web display.
+
+        Truncates SSH key events to 50 characters on each side.
+
+        Returns:
+            Dictionary with project, item, category, date, and message.
+        """
         event = self.event.capitalize()
         if "ssh" in event:
             event = event[:50] + "..." + event[-50:]
@@ -833,6 +1093,11 @@ class LogDB(db.Model):
         }
 
     def to_dict(self) -> dict:
+        """Serialize the log entry to a compact dictionary.
+
+        Returns:
+            Dictionary with date, message, and a shortened message.
+        """
         event = self.event[0].upper() + self.event[1:]
         creator = self.author.full_name() if self.author else "Unknown author"
         msg = "%s by %s" % (event, creator)
@@ -846,6 +1111,8 @@ class LogDB(db.Model):
 
 
 class Tasks(db.Model):
+    """A task queued for execution on the remote infrastructure."""
+
     __tablename__ = "tasks"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -880,13 +1147,23 @@ class Tasks(db.Model):
 
         return "<Task queue record {}>".format(self.id)
     def __repr__(self) -> str:
+        """Return a string representation of the Tasks record."""
     def waiting(self) -> list:
+        """Return all tasks that are processed, accepted, but not yet done.
 
         return self.query.filter_by(processed=True,
                                     done=False,
                                     decision="accept").all()
+        Returns:
+            List of Tasks records ready for execution.
+        """
 
     def accept(self) -> "Tasks":
+        """Mark the task as accepted and processed by the current user.
+
+        Returns:
+            The updated Tasks record.
+        """
         self.decision = "accept"
         self.processed = True
         self.approve = current_user
@@ -894,6 +1171,14 @@ class Tasks(db.Model):
         return self
 
     def decompose(self) -> tuple:
+        """Split the action field into its constituent parts.
+
+        The action field uses ``|`` as a delimiter with five parts:
+        action, entity, login, project, description.
+
+        Returns:
+            Tuple of (act, entity, login, project, task).
+        """
         try:
             act, entity, login, project, task = self.action.split("|")
         except ValueError:
@@ -902,6 +1187,11 @@ class Tasks(db.Model):
         return act, entity, login, project, task
 
     def brief(self) -> str:
+        """Return a human-readable summary of the task action.
+
+        Returns:
+            String describing the task in plain English.
+        """
         act, entity, login, project, task = self.decompose()
         verbs = ["create", "add", "assign", "delete", "remove", "activate",
                  "transform", "extend", "renew"]
@@ -926,6 +1216,13 @@ class Tasks(db.Model):
         return act
 
     def short(self) -> str:
+        """Return a short human-readable description of the task.
+
+        Includes user and project details where applicable.
+
+        Returns:
+            Short description string.
+        """
         act, entity, login, project, task = self.decompose()
         if entity == "project":
             return self.brief()
@@ -953,6 +1250,11 @@ class Tasks(db.Model):
         return act
 
     def description(self) -> str:
+        """Return a full description of the task action.
+
+        Returns:
+            Description string suitable for display.
+        """
         act, entity, login, project, task = self.decompose()
         if act in ["create", "activate"]:
             if "new project" in task:
@@ -975,6 +1277,11 @@ class Tasks(db.Model):
         return act
 
     def notify(self) -> str:
+        """Return the email address to notify about this task.
+
+        Returns:
+            Email address string, or empty string if no recipient found.
+        """
         if "update" in self.action and self.project:
             return self.author.email
         elif ("change" in self.action) and ("password" in self.action):
@@ -988,6 +1295,12 @@ class Tasks(db.Model):
             return ""
 
     def api(self) -> dict:
+        """Return a compact API representation of the task.
+
+        Returns:
+            Dictionary with id, notify, pid, uid, action, user, project,
+            entity, and task fields.
+        """
         act, entity, login, project, task = self.decompose()
         return {
             "id": self.id,
@@ -1002,6 +1315,13 @@ class Tasks(db.Model):
         }
 
     def to_dict(self) -> dict:
+        """Serialize the task to a full dictionary.
+
+        Includes description, action, decision, status, and result fields.
+
+        Returns:
+            Dictionary with complete task information.
+        """
         if self.done:
             status = "done"
         elif self.processed:
