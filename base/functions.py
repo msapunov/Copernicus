@@ -72,7 +72,7 @@ def upload_to_cloud(remote_dir, path):
     options = {
         "webdav_hostname": url,
         "webdav_login": login,
-        "webdav_password": password
+        "webdav_password": password,
     }
     client = Client(options)
     remote_dir = "/" + remote_dir.strip("/")
@@ -500,7 +500,7 @@ def get_duration(type):
         "day": relativedelta(days=n),
         "week": relativedelta(weeks=n),
         "month": relativedelta(months=n),
-        "year": relativedelta(years=n)
+        "year": relativedelta(years=n),
     }[unit]
 
 
