@@ -1,3 +1,7 @@
+"""WTForms for the admin blueprint: registration, user management,
+pending requests, and task editing.
+"""
+
 from logging import error
 from string import ascii_letters as ascii
 
