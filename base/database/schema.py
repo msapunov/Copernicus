@@ -824,6 +824,8 @@ class User(UserMixin, db.Model):
 
 
 class Register(db.Model):
+    """A new project registration request submitted through the web form."""
+
     __tablename__ = "register"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -1014,6 +1016,8 @@ class Register(db.Model):
 
 
 class LogDB(db.Model):
+    """An audit log entry recording an event in the system."""
+
     __tablename__ = "logs"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
