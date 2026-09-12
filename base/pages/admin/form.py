@@ -265,7 +265,7 @@ class RegistrationEditForm(FlaskForm):
     article_5 = StringField("Article 5")
 
     def __init__(self, *args, **kwargs):
-        super(RegistrationEditForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         types = g.project_config.keys()
         self.type.choices = [(project, project.upper()) for project in types]
         self.type.uk_length = len(self.type.choices)
@@ -425,7 +425,7 @@ class UserEditForm(FlaskForm):
     is_admin = BooleanField("Admin", default=False)
 
     def __init__(self, *args, **kwargs):
-        super(UserEditForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         projects = list_of_projects()
         self.project.choices = [(project, project) for project in projects]
 
@@ -457,7 +457,7 @@ class ActivateUserForm(FlaskForm):
     projects = SelectMultipleProjects("Project", choices=[])
 
     def __init__(self, *args, **kwargs):
-        super(ActivateUserForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         projects = list_of_projects()
         self.projects.choices = [(project, project) for project in projects]
 
