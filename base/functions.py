@@ -727,7 +727,17 @@ def bytes2human(n, layout='%(value).1f %(symbol)s', symbols='customary'):
     return layout % dict(symbol=symbols[0], value=n)
 
 
-def form_error_string(err_dict):
+def form_error_string(err_dict: dict) -> str:
+    """Convert a Flask-WTF form errors dictionary into a human-readable string.
+
+    Args:
+        err_dict: Dictionary where keys are field names and values are lists
+            of error messages (e.g. ``{"email": ["Invalid email address."]}``).
+
+    Returns:
+        A single string with each error on a new line. A special message is
+        returned for CSRF token expiration.
+    """
     result = []
     for key, value in err_dict.items():
         if key == "csrf_token" and value == ["The CSRF token has expired."]:
@@ -738,7 +748,17 @@ def form_error_string(err_dict):
     return "\n".join(result)
 
 
-def normalize_word(word):
+def normalize_word(word: str) -> str:
+    """Normalize a word by removing apostrophes and normalizing Unicode characters.
+
+    Uses NFKD normalization and ASCII encoding to strip diacritics.
+
+    Args:
+        word: The input word to normalize.
+
+    Returns:
+        The normalized word containing only ASCII characters.
+    """
     word = word.replace("'", "")
     word = normalize("NFKD", word).encode("ascii", "ignore").decode("ascii")
     return word
