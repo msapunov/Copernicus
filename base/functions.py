@@ -619,18 +619,22 @@ def project_config_options(cfg, section):
         "finish_text": cfg.get(section, "finish", fallback=None),
         "finish_dt": parse_datetime(cfg.get(section, "finish", fallback=None)),
         "finish_notice_text": cfg.get(section, "finish_notice", fallback=None),
-        "finish_notice_dt": parse_datetime(cfg.get(section, "finish_notice", fallback=None)),
-
+        "finish_notice_dt": parse_datetime(
+            cfg.get(section, "finish_notice", fallback=None)
+        ),
         "finish_report_text": cfg.get(section, "finish_report", fallback=None),
-        "finish_report_dt": parse_datetime(cfg.get(section, "finish_report", fallback=None)),
-
+        "finish_report_dt": parse_datetime(
+            cfg.get(section, "finish_report", fallback=None)
+        ),
         "evaluation_text": parse_list(cfg.get(section, "evaluation_date", fallback="")),
-        "evaluation_dt": parse_datetime(cfg.get(section, "evaluation_date", fallback="")),
-
+        "evaluation_dt": parse_datetime(
+            cfg.get(section, "evaluation_date", fallback="")
+        ),
         "evaluation_notice_text": cfg.get(section, "evaluation_notice", fallback=None),
-        "evaluation_notice_dt": parse_datetime(cfg.get(section, "evaluation_notice", fallback=None)),
-
-        "visa": visa
+        "evaluation_notice_dt": parse_datetime(
+            cfg.get(section, "evaluation_notice", fallback=None)
+        ),
+        "visa": visa,
     }
 
 
