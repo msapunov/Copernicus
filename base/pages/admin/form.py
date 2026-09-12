@@ -90,7 +90,8 @@ def create_pending(register):
             error(
                 f"Function process_register_user({user}) returned:"
                 f"name: {name}, surname: {surname}, email: {email}, "
-                f"login: {login}. Skipping processing of this record")
+                f"login: {login}. Skipping processing of this record"
+            )
             continue
         form.uid = "".join(filter(lambda x: x in ascii, email)).lower()
         form.user.data = "%s <%s>" % (full_name(name, surname), email)
