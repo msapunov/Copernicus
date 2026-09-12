@@ -7,14 +7,17 @@ managing mailing list subscriptions.
 
 import smtplib
 from configparser import ConfigParser, ExtendedInterpolation
-from os.path import join as path_join, exists
-from datetime import datetime as dt
-from threading import Thread
 from email.mime.application import MIMEApplication
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.utils import formatdate, make_msgid
-import smtplib
+from logging import debug, warning
+from os.path import exists
+from os.path import join as path_join
+from pathlib import Path
+from threading import Thread
+
+from flask import current_app as app
 
 
 class Mail(Thread):
