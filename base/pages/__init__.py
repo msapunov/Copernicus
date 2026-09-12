@@ -17,9 +17,29 @@ from base.functions import normalize_word
 
 
 def grant_access(*roles):
+    """Decorator that restricts route access to users with one of the given roles.
+
+    Args:
+        *roles: Role strings (e.g. ``"admin"``, ``"tech"``).
+
+    Returns:
+        Decorated view function. If the user lacks the required role,
+        returns a 403 response for JSON requests or redirects to login.
+    """
+
     def log_required(f):
+        """Decorator that checks user permissions before allowing access.
+
+        Args:
+            f: The view function to protect.
+
+        Returns:
+            The decorated function.
+        """
+
         @wraps(f)
         def decorated_function(*args, **kwargs):
+            """Check permissions and call the view function or deny access."""
             url = request.full_path
             for role in roles:
                 if role in g.permissions:
@@ -30,11 +50,24 @@ def grant_access(*roles):
             flash("Permissions denied to access URL: %s" % url)
             logout_user()
             return redirect(url_for("login.login"))
+
         return decorated_function
+
     return log_required
 
 
 def check_str(raw_note):
+    """Validate that a string is non-empty.
+
+    Args:
+        raw_note: Input value to check.
+
+    Returns:
+        The string value if valid.
+
+    Raises:
+        ValueError: If the string is empty.
+    """
     note = str(raw_note)
     if (not note) or (len(note) < 1):
         raise ValueError("Provided string can't be empty")
@@ -42,6 +75,19 @@ def check_str(raw_note):
 
 
 def user_by_details(name, surname, email, login=None):
+    """Search for existing users matching the given details.
+
+    Performs multiple lookups by login, email, and name combinations.
+
+    Args:
+        name: First name.
+        surname: Last name.
+        email: Email address.
+        login: Optional login to include in the search.
+
+    Returns:
+        Deduplicated list of matching User records.
+    """
     name = normalize_word(name)
     name = "".join(filter(lambda x: x in ascii_letters, name)).lower()
     surname = normalize_word(surname)
@@ -62,6 +108,21 @@ def user_by_details(name, surname, email, login=None):
 
 
 def generate_login(name, surname):
+    """Generate a unique login name from name and surname.
+
+    Iteratively tries prefixes of the name combined with the surname
+    until a unique login is found.
+
+    Args:
+        name: First name.
+        surname: Last name.
+
+    Returns:
+        A unique login string.
+
+    Raises:
+        ValueError: If no unique login can be generated.
+    """
     users = User.query.filter_by(archived=None).all()
     logins = list(map(lambda x: x.login, users))
 
@@ -81,6 +142,18 @@ def generate_login(name, surname):
 
 
 def process_new_user(rec):
+    """Parse a semicolon-delimited user string and prepare a user object.
+
+    Handles the registration form's user data format. Attempts to find
+    existing users or generates login candidates.
+
+    Args:
+        rec: Raw user string from the registration form.
+
+    Returns:
+        A temporary object with parsed user attributes.
+    """
+
     class Tmp:
         pass
     user = Tmp()
@@ -114,6 +187,14 @@ def process_new_user(rec):
 
 
 def check_json():  # TODO: remove - replace
+    """Validate that the request contains JSON data.
+
+    Returns:
+        Parsed JSON data as a dictionary.
+
+    Raises:
+        ValueError: If the request is not JSON or the body is empty.
+    """
     if not request.is_json:
         raise ValueError("Expecting application/json requests")
     data = request.get_json()
