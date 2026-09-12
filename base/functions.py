@@ -614,13 +614,10 @@ def project_config_options(cfg, section):
         "acl": parse_list(cfg.get(section, "acl", fallback="")) + ["admin"],
         "extendable": cfg.getboolean(section, "extendable", fallback=False),
         "suspend": cfg.getboolean(section, "suspend", fallback=True),
-
         "duration_text": cfg.get(section, "duration", fallback=None),
         "duration_dt": parse_datetime(cfg.get(section, "duration", fallback=None)),
-
         "finish_text": cfg.get(section, "finish", fallback=None),
         "finish_dt": parse_datetime(cfg.get(section, "finish", fallback=None)),
-
         "finish_notice_text": cfg.get(section, "finish_notice", fallback=None),
         "finish_notice_dt": parse_datetime(cfg.get(section, "finish_notice", fallback=None)),
 
