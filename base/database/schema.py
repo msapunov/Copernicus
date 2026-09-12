@@ -109,9 +109,9 @@ class Thematic(db.Model):
     description = db.Column(db.String(256))
     keywords = db.Column(db.String(256))
 
-        return "Thematic: {}".format(self.name)
     def __repr__(self) -> str:
         """Return a string representation of the Thematic."""
+        return f"Thematic: {self.name}"
 
 
 class Project(db.Model):
@@ -158,9 +158,10 @@ class Project(db.Model):
     ref_id = db.Column(db.Integer, db.ForeignKey("register.id"))
     ref = db.relationship("Register", foreign_keys=ref_id)
 
-        return "<Project {}>".format(self.get_name())
     def __repr__(self) -> str:
         """Return a string representation of the Project."""
+        return f"<Project {self.get_name()}>"
+
     def account_by_user(self, daily: bool | None = None) -> dict:
         """Return CPU consumption grouped by user.
 
@@ -358,9 +359,9 @@ class Extend(db.Model):
     approve_id = db.Column(db.Integer, db.ForeignKey("users.id"))
     approve = db.relationship("User", foreign_keys=approve_id)
 
-        return "<Extension for project {}>".format(self.project.get_name())
     def __repr__(self) -> str:
         """Return a string representation of the Extend record."""
+        return f"<Extension for project {self.project.get_name()}>"
 
     def about(self) -> str:
         """Return a short description of the request type.
@@ -576,7 +577,7 @@ class Resources(db.Model):
         if not conso:
             return "0%"
         try:
-            return "{0:.1%}".format(float(conso) / float(total))
+            return f"{float(conso) / float(total):.1%}"
         except TypeError as err:
             error("Failed to calculate project usage: %s" % err)
             return "0%"
@@ -609,9 +610,9 @@ class User(UserMixin, db.Model):
     first_login = db.Column(db.Boolean, default=True)
     seen = db.Column(db.DateTime(True))
 
-        return '<User {}>'.format(self.login)
     def __repr__(self) -> str:
         """Return a string representation of the User."""
+        return f"<User {self.login}>"
 
     def reset_password(self) -> str:
         """Generate a random password, hash it, and save to the database.
@@ -865,9 +866,9 @@ class Register(db.Model):
     cloud_duration = db.Column(db.String)
     status = db.Column(db.String)
 
-        return "<Registration request {}>".format(self.id)
     def __repr__(self) -> str:
         """Return a string representation of the Register record."""
+        return f"<Registration request {self.id}>"
 
     def project_type(self) -> str:
         """Return the project type in upper case.
@@ -1044,9 +1045,9 @@ class LogDB(db.Model):
     register_id = db.Column(db.Integer, db.ForeignKey("register.id"))
     register = db.relationship("Register", foreign_keys=register_id)
 
-        return "<Log event for project {}>".format(self.project.get_name())
     def __repr__(self) -> str:
         """Return a string representation of the LogDB record."""
+        return f"<Log event for project {self.project.get_name()}>"
 
     def brief(self) -> dict:
         """Return a brief summary of the log entry.
@@ -1145,9 +1146,10 @@ class Tasks(db.Model):
     eid = db.Column(db.Integer, db.ForeignKey("project_extension.id"))
     extension = db.relationship("Extend", foreign_keys=eid)
 
-        return "<Task queue record {}>".format(self.id)
     def __repr__(self) -> str:
         """Return a string representation of the Tasks record."""
+        return f"<Task queue record {self.id}>"
+
     def waiting(self) -> list:
         """Return all tasks that are processed, accepted, but not yet done.
 
