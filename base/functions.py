@@ -704,7 +704,7 @@ def slurm_nodes_status():
     """
     cmd = ["sinfo", "-R", "--format='%100E|%19H|%30N|%t'"]
     run = " ".join(cmd)
-    data, err = ssh_wrapper(run)
+    data, err_output = ssh_wrapper(run)
     if not data:
         debug("No data received, returning empty dictionary")
         return {}
@@ -720,8 +720,8 @@ def slurm_nodes_status():
         reason = info[0].strip()
         try:
             date = dt.strptime(info[1].strip(), "%Y-%m-%dT%H:%M:%S")
-        except ValueError as err:
-            error("Error parsing date '%s': %s" % (info[1].strip(), err))
+        except ValueError as e:
+            error("Error parsing date '%s': %s" % (info[1].strip(), e))
             date = None
         node = info[2].strip()
         stat = info[3].strip()
