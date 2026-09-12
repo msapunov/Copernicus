@@ -95,11 +95,13 @@ def user_by_details(name, surname, email, login=None):
     email = email.lower()
     login1 = name[0] + surname
     login2 = surname[0] + name
-    result = [User.query.filter_by(login=login1).all(),
-              User.query.filter_by(login=login2).all(),
-              User.query.filter_by(email=email).all(),
-              User.query.filter_by(name=name, surname=surname).all(),
-              User.query.filter_by(name=surname, surname=name).all()]
+    result = [
+        User.query.filter_by(login=login1).all(),
+        User.query.filter_by(login=login2).all(),
+        User.query.filter_by(email=email).all(),
+        User.query.filter_by(name=name, surname=surname).all(),
+        User.query.filter_by(name=surname, surname=name).all(),
+    ]
     if login:
         result.append(User.query.filter_by(login=login).all())
     not_empty = list(filter(lambda x: x != [], result))
