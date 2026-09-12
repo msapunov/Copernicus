@@ -31,7 +31,7 @@ class Accounting(db.Model):
     date = db.Column(db.DateTime(True))
     cpu = db.Column(db.Integer, db.CheckConstraint("cpu>=0"))
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"<Account ID {self.id}>"
 
 
@@ -48,7 +48,7 @@ class ACLDB(db.Model):
     modified = db.Column(db.DateTime(True))
     created = db.Column(db.DateTime(True))
 
-    def to_dict(self):
+    def to_dict(self) -> dict:
         start = self.created.strftime("%Y-%m-%d %X %Z") if self.created else ""
         mod = self.modified.strftime("%Y-%m-%d %X %Z") if self.modified else ""
         return {
@@ -93,8 +93,8 @@ class Thematic(db.Model):
     description = db.Column(db.String(256))
     keywords = db.Column(db.String(256))
 
-    def __repr__(self):
         return "Thematic: {}".format(self.name)
+    def __repr__(self) -> str:
 
 
 class Project(db.Model):
@@ -139,10 +139,10 @@ class Project(db.Model):
     ref_id = db.Column(db.Integer, db.ForeignKey("register.id"))
     ref = db.relationship("Register", foreign_keys=ref_id)
 
-    def __repr__(self):
         return "<Project {}>".format(self.get_name())
+    def __repr__(self) -> str:
+    def account_by_user(self, daily: bool | None = None) -> dict:
 
-    def account_by_user(self, daily=None):
         result = self.resources.consumption_by_user(daily)
         if not result:
             return {}
@@ -151,18 +151,18 @@ class Project(db.Model):
         else:
             return {key: value for key, value in result}
 
-    def account(self):
+    def account(self) -> int:
         result = self.resources.consumption()
         return result if result else 0
 
-    def get_name(self):
+    def get_name(self) -> str:
         if self.name:
             return self.name
         pid = self.id
         genre = self.type
         return "%s%s" % (genre, str(pid).zfill(3))
 
-    def api_resources(self):
+    def api_resources(self) -> dict:
         return {
             "cpu": self.resources.cpu,
             "finish": self.resources.ttl.strftime("%Y-%m-%d %X"),
@@ -173,7 +173,7 @@ class Project(db.Model):
             "project": self.get_name()
         }
 
-    def pretty_dict(self):
+    def pretty_dict(self) -> dict:
         rec = self.to_dict()
         rec["approve"] = self.approve.full_name()
         rec["lab"] = self.responsible.lab
@@ -183,14 +183,14 @@ class Project(db.Model):
         rec["users"] = tmp
         return rec
 
-    def consumed(self):
+    def consumed(self) -> int:
         return self.resources.usage()
 
-    def consumed_use(self):
+    def consumed_use(self) -> float:
         usage = self.resources.usage()  # with percents
         return float(usage.replace("%", "")) if usage else 0.0
 
-    def to_dict(self):
+    def to_dict(self) -> dict:
         if self.created:
             created = self.created.strftime("%Y-%m-%d %X %Z")
         else:
@@ -286,10 +286,10 @@ class Extend(db.Model):
     approve_id = db.Column(db.Integer, db.ForeignKey("users.id"))
     approve = db.relationship("User", foreign_keys=approve_id)
 
-    def __repr__(self):
         return "<Extension for project {}>".format(self.project.get_name())
+    def __repr__(self) -> str:
 
-    def about(self):
+    def about(self) -> str:
         result = ""
         if self.exception:
             result += "exceptional "
@@ -304,7 +304,7 @@ class Extend(db.Model):
                 result += "renewal"
         return result
 
-    def api(self):
+    def api(self) -> dict:
         return {
             "cpu": self.hours,
             "finish": timegm(self.project.resources.ttl.utctimetuple()),  # TODO: check if needed
@@ -317,7 +317,7 @@ class Extend(db.Model):
             "transform": self.transform
         }
 
-    def to_dict(self):
+    def to_dict(self) -> dict:
         start = self.created.strftime("%Y-%m-%d %X %Z") if self.created else ""
         mod = self.modified.strftime("%Y-%m-%d %X %Z") if self.modified else ""
         approve = self.approve.full_name() if self.approve else ""
@@ -380,7 +380,7 @@ class File(db.Model):
     project = db.relationship("Project", back_populates="files")
     user = db.relationship("User", foreign_keys=user_id)
 
-    def name(self):
+    def name(self) -> str:
         return PurePath(self.path).name
 
 
@@ -404,7 +404,7 @@ class Resources(db.Model):
     project = db.Column(db.String)
     treated = db.Column(db.Boolean, default=False)
 
-    def to_dict(self):
+    def to_dict(self) -> dict:
         start = self.created.strftime("%Y-%m-%d %X %Z") if self.created else ""
         mod = self.modified.strftime("%Y-%m-%d %X %Z") if self.modified else ""
         ttl = self.ttl.strftime("%Y-%m-%d %X %Z") if self.ttl else ""
@@ -421,9 +421,9 @@ class Resources(db.Model):
             "finish": ttl
         }
 
-    def consumption_by_user(self, daily=None):
         query = (Accounting.query.join(User, Accounting.user_id == User.id)
                  .filter(Accounting.resources_id == self.id))
+    def consumption_by_user(self, daily: bool | None = None) -> list:
         if daily:
             return query.group_by(
                 User.login, Accounting.date
@@ -436,13 +436,13 @@ class Resources(db.Model):
             ).with_entities(
                 User.login, func.sum(Accounting.cpu)
             ).all()
+    def consumption(self) -> int:
 
-    def consumption(self):
         return Accounting.query.filter_by(
             resources=self, user=None
         ).with_entities(func.sum(Accounting.cpu)).scalar()
 
-    def usage(self):
+    def usage(self) -> str:
         debug("Calculating usage for project %s" % self.project)
         conso = self.consumption()
         total = self.cpu
@@ -480,35 +480,35 @@ class User(UserMixin, db.Model):
     first_login = db.Column(db.Boolean, default=True)
     seen = db.Column(db.DateTime(True))
 
-    def __repr__(self):
         return '<User {}>'.format(self.login)
+    def __repr__(self) -> str:
 
-    def reset_password(self):
+    def reset_password(self) -> str:
         password = generate_password()
         self.hash = generate_password_hash(password)
         self.first_login = True
         db.session.commit()
         return password
 
-    def set_password(self, password):
+    def set_password(self, password: str) -> str:
         self.hash = generate_password_hash(password)
         self.first_login = False
         db.session.commit()
         return password
 
-    def check_password(self, password):
+    def check_password(self, password: str) -> bool:
         result = check_password_hash(self.hash, password)
         if result and "pbkdf2:sha256" in self.hash:
             self.set_password(password)
         return result
 
-    def full(self):
+    def full(self) -> str:
         return "%s <%s> [%s]" % (self.full_name(), self.email, self.login)
 
-    def full_name(self):
+    def full_name(self) -> str:
         return fn(self.name, self.surname)
 
-    def permissions(self):
+    def permissions(self) -> list:
         perm = []
         if self.acl.is_user:
             perm.append("user")
@@ -524,17 +524,17 @@ class User(UserMixin, db.Model):
             perm.append("admin")
         return perm
 
-    def project_names(self):
+    def project_names(self) -> list:
         projects = list(self.project)
         names = map(lambda x: x.get_name(), projects)
         return list(names)
 
-    def project_ids(self):
+    def project_ids(self) -> list:
         projects = list(self.project)
         ids = map(lambda x: x.id, projects)
         return list(ids)
 
-    def details(self):
+    def details(self) -> dict:
         if self.acl.created:
             start = self.acl.created.strftime("%Y-%m-%d %X %Z")
         else:
@@ -579,7 +579,7 @@ class User(UserMixin, db.Model):
             "first": self.first_login
         }
 
-    def info_acl(self):
+    def info_acl(self) -> dict:
         if self.archived:
             status = "archived"
         elif self.active:
@@ -603,7 +603,7 @@ class User(UserMixin, db.Model):
             "email": self.email
         }
 
-    def to_dict(self):
+    def to_dict(self) -> dict:
         return {
             "id": self.id,
             "login": self.login,
@@ -666,25 +666,25 @@ class Register(db.Model):
     cloud_duration = db.Column(db.String)
     status = db.Column(db.String)
 
-    def __repr__(self):
         return "<Registration request {}>".format(self.id)
+    def __repr__(self) -> str:
 
-    def project_type(self):
+    def project_type(self) -> str:
         return self.type.upper()
 
-    def project_id(self):
+    def project_id(self) -> str:
         year = dt.now().year
         return "meso-%s-%s-%s" % (year, self.id, self.project_type())
 
-    def responsible_full_name(self):
+    def responsible_full_name(self) -> str:
         if self.responsible_first_name and self.responsible_last_name:
             return fn(self.responsible_first_name, self.responsible_last_name)
         if self.responsible_first_name:
             return fn(self.responsible_first_name, "")
         if self.responsible_last_name:
             return fn(self.responsible_last_name, "")
+    def get_users(self) -> list:
 
-    def get_users(self):
         users = self.users.split("\n")
         return [{"name": name if name else "",
                  "last": surname if surname else "",
@@ -692,8 +692,8 @@ class Register(db.Model):
                  "login": login if login else ""}
                 for x in users
                 for name, surname, email, login in [process_register_user(x)]]
+    def cloud(self) -> list:
 
-    def cloud(self):
         users = []
         for u in self.get_users():
             user = fn(u["name"], u["last"])
@@ -714,13 +714,13 @@ class Register(db.Model):
             "mesocentre id: %s" % self.project_id()
         ]
 
-    def logs(self, obj=False):
+    def logs(self, obj: bool = False) -> list:
         logs = LogDB.query.filter_by(register=self).all()
         if obj:
             return logs
         return list(map(lambda x: x.to_dict(), logs))
 
-    def to_dict(self):
+    def to_dict(self) -> dict:
         return {
             "id": self.id,
             "ts": self.ts.strftime("%Y-%m-%d %X %Z"),
@@ -797,15 +797,15 @@ class LogDB(db.Model):
     register_id = db.Column(db.Integer, db.ForeignKey("register.id"))
     register = db.relationship("Register", foreign_keys=register_id)
 
-    def __repr__(self):
         return "<Log event for project {}>".format(self.project.get_name())
+    def __repr__(self) -> str:
 
-    def brief(self):
+    def brief(self) -> dict:
         event = self.event.capitalize()
         creator = self.author.full_name() if self.author else "Unknown author"
         return {"created": self.created, "event": "%s by %s" % (event, creator)}
 
-    def to_web(self):
+    def to_web(self) -> dict:
         event = self.event.capitalize()
         if "ssh" in event:
             event = event[:50] + "..." + event[-50:]
@@ -832,7 +832,7 @@ class LogDB(db.Model):
             "message": msg
         }
 
-    def to_dict(self):
+    def to_dict(self) -> dict:
         event = self.event[0].upper() + self.event[1:]
         creator = self.author.full_name() if self.author else "Unknown author"
         msg = "%s by %s" % (event, creator)
@@ -878,22 +878,22 @@ class Tasks(db.Model):
     eid = db.Column(db.Integer, db.ForeignKey("project_extension.id"))
     extension = db.relationship("Extend", foreign_keys=eid)
 
-    def __repr__(self):
         return "<Task queue record {}>".format(self.id)
+    def __repr__(self) -> str:
+    def waiting(self) -> list:
 
-    def waiting(self):
         return self.query.filter_by(processed=True,
                                     done=False,
                                     decision="accept").all()
 
-    def accept(self):
+    def accept(self) -> "Tasks":
         self.decision = "accept"
         self.processed = True
         self.approve = current_user
         db.session.commit()
         return self
 
-    def decompose(self):
+    def decompose(self) -> tuple:
         try:
             act, entity, login, project, task = self.action.split("|")
         except ValueError:
@@ -901,7 +901,7 @@ class Tasks(db.Model):
             act, entity, login, project, task = None, None, None, None, None
         return act, entity, login, project, task
 
-    def brief(self):
+    def brief(self) -> str:
         act, entity, login, project, task = self.decompose()
         verbs = ["create", "add", "assign", "delete", "remove", "activate",
                  "transform", "extend", "renew"]
@@ -925,7 +925,7 @@ class Tasks(db.Model):
             act += "by Automatic Service"
         return act
 
-    def short(self):
+    def short(self) -> str:
         act, entity, login, project, task = self.decompose()
         if entity == "project":
             return self.brief()
@@ -952,7 +952,7 @@ class Tasks(db.Model):
             act = "Updating: %s" % task
         return act
 
-    def description(self):
+    def description(self) -> str:
         act, entity, login, project, task = self.decompose()
         if act in ["create", "activate"]:
             if "new project" in task:
@@ -974,7 +974,7 @@ class Tasks(db.Model):
             act = act + " " + self.comment
         return act
 
-    def notify(self):
+    def notify(self) -> str:
         if "update" in self.action and self.project:
             return self.author.email
         elif ("change" in self.action) and ("password" in self.action):
@@ -987,7 +987,7 @@ class Tasks(db.Model):
         else:
             return ""
 
-    def api(self):
+    def api(self) -> dict:
         act, entity, login, project, task = self.decompose()
         return {
             "id": self.id,
@@ -1001,7 +1001,7 @@ class Tasks(db.Model):
             "task": task
         }
 
-    def to_dict(self):
+    def to_dict(self) -> dict:
         if self.done:
             status = "done"
         elif self.processed:
