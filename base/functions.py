@@ -386,7 +386,7 @@ def create_visa(record, signature="signature.png"):
     end = config.get("finish_dt", None)
     duration = config.get("duration_dt", None)
     if end and duration:
-        ttl = end if end > duration else duration
+        ttl = max(duration, end)
     elif duration:
         ttl = duration
     elif end:
