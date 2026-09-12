@@ -600,8 +600,9 @@ class User(UserMixin, db.Model):
     login = db.Column(db.String(128))
     acl_id = db.Column(db.Integer, db.ForeignKey("acl.id"))
     acl = db.relationship("ACLDB", uselist=False, backref="users")
-    project = db.relationship("Project", secondary="user_project",
-                              back_populates="users")
+    project = db.relationship(
+        "Project", secondary="user_project", back_populates="users"
+    )
     active = db.Column(db.Boolean, default=False)
     archived = db.Column(db.DateTime(True), default=None, nullable=True)
     comment = db.Column(db.Text)
