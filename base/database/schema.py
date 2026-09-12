@@ -1209,8 +1209,17 @@ class Tasks(db.Model):
             String describing the task in plain English.
         """
         act, entity, login, project, task = self.decompose()
-        verbs = ["create", "add", "assign", "delete", "remove", "activate",
-                 "transform", "extend", "renew"]
+        verbs = [
+            "create",
+            "add",
+            "assign",
+            "delete",
+            "remove",
+            "activate",
+            "transform",
+            "extend",
+            "renew",
+        ]
         if act in verbs:
             if entity == "user":
                 act += " a user "
