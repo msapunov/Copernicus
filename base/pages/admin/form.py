@@ -233,17 +233,27 @@ class SelectMultipleProjects(SelectMultipleField):
 
 
 class RegistrationEditForm(FlaskForm):
-    cpu = IntegerField("CPU", validators=[NumberRange(
-        min=0, message="CPU value must be 0 or any other positive number")])
+
+    cpu = IntegerField(
+        "CPU",
+        validators=[
+            NumberRange(
+                min=0, message="CPU value must be 0 or any other positive number"
+            )
+        ],
+    )
     ttl = StringField(render_kw={"data-uk-datepicker": "{format:'DD/MM/YYYY'}"})
-    title = StringField("Title", validators=[DataRequired(
-        message="Project title is empty")])
-    type = RadioField(choices=[], validators=[DataRequired(
-        message="Project type is empty")])
+    title = StringField(
+        "Title", validators=[DataRequired(message="Project title is empty")]
+    )
+    type = RadioField(
+        choices=[], validators=[DataRequired(message="Project type is empty")]
+    )
     description = TextAreaField("Description")
     scientific_fields = StringField("Scientific fields")
-    genci_committee = Field("Genci", validators=[DataRequired(
-        message="Genci field is empty")])
+    genci_committee = Field(
+        "Genci", validators=[DataRequired(message="Genci field is empty")]
+    )
     numerical_methods = TextAreaField("Methods")
     computing_resources = TextAreaField("Resources")
     project_management = TextAreaField("Management")
