@@ -920,12 +920,17 @@ class Register(db.Model):
             ``login``.
         """
         users = self.users.split("\n")
-        return [{"name": name if name else "",
-                 "last": surname if surname else "",
-                 "mail": email if email else "",
-                 "login": login if login else ""}
-                for x in users
-                for name, surname, email, login in [process_register_user(x)]]
+        return [
+            {
+                "name": name if name else "",
+                "last": surname if surname else "",
+                "mail": email if email else "",
+                "login": login if login else "",
+            }
+            for x in users
+            for name, surname, email, login in [process_register_user(x)]
+        ]
+
     def cloud(self) -> list:
         """Return a formatted list of strings describing a cloud project.
 
