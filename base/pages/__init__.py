@@ -1,16 +1,19 @@
-from flask import current_app, request, flash, redirect, url_for, g
-from flask_login import current_user, logout_user
 """Shared utilities for page blueprints: access control, user lookups,
 and task processing.
 """
 
-from logging import debug, error
 from functools import wraps
-from base import db
-from base.email import Mail
-from base.database.schema import User, Tasks
-from base.functions import generate_password, full_name, normalize_word
+from logging import debug, error
 from string import ascii_letters
+
+from flask import flash, g, redirect, request, url_for
+from flask_login import current_user, logout_user
+
+from base import db
+from base.database.schema import Tasks, User
+from base.email import Mail
+from base.functions import full_name
+from base.functions import normalize_word
 
 
 def grant_access(*roles):
