@@ -136,7 +136,7 @@ def generate_login(name, surname):
     i = 1
     while i <= len(name):
         guess = name[0:i] + surname
-        debug(f"{guess} is among {", ".join(logins)}. Next guess")
+        debug(f"{guess} is among {', '.join(logins)}. Next guess")
         if guess not in logins:
             return guess
         i += 1
