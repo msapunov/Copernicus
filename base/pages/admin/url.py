@@ -103,18 +103,20 @@ def admin_info_projects():
             - "login": Login of the project's responsible
     """
     debug("Starting query for Project, User, Resources join")
-    projects = (Project.query
-                .join(User, Project.responsible_id==User.id)
-                .join(Resources, Project.resources_id == Resources.id)
-                .with_entities(Project.id,
-                               Project.type,
-                               Project.name,
-                               Resources.cpu,
-                               Resources.created,
-                               Resources.ttl,
-                               User.login
-                               ).all()
-                )
+    projects = (
+        Project.query.join(User, Project.responsible_id == User.id)
+        .join(Resources, Project.resources_id == Resources.id)
+        .with_entities(
+            Project.id,
+            Project.type,
+            Project.name,
+            Resources.cpu,
+            Resources.created,
+            Resources.ttl,
+            User.login,
+        )
+        .all()
+    )
     debug(f"Query returned {len(projects)} rows")
     result = [{"id": pid,
                "type": ptype,
