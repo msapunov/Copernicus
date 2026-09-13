@@ -217,8 +217,9 @@ def user_index():
             project.private = every[current_user.login]
         else:
             project.private = 0
-        project.private_use = "{0:.1%}".format(
-            float(project.private) / float(project.resources.cpu))
+        project.private_use = (
+            f"{float(project.private) / float(project.resources.cpu):.1%}"
+        )
 
     return render_template(
         "user.html",
