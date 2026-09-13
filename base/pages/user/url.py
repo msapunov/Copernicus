@@ -197,8 +197,7 @@ def user_index():
         flash("No projects found for user '%s'" % current_user.full())
     start = dt.now(timezone.utc)
     for project in current_user.project:
-        if project.resources.created < start:
-            start = project.resources.created
+        start = min(start, project.resources.created)
     begin = start.strftime("%m/%d/%y-%H:%M")
     finish = dt.now().strftime("%m/%d/%y-%H:%M")
     try:
