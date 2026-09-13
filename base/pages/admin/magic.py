@@ -2,35 +2,45 @@
 processing, server monitoring, SLURM info, and task management.
 """
 
+from datetime import datetime as dt
+from datetime import timedelta
 from hashlib import md5
+from logging import error
+from operator import attrgetter
+
 from flask import g, render_template, url_for
 from flask_login import current_user
+
 from base import db
+from base.classes import ProjectLog, RequestLog, Task, TaskQueue, TmpUser, UserLog
+from base.database.schema import (
+    ACLDB,
+    Accounting,
+    LogDB,
+    Project,
+    Register,
+    Tasks,
+    User,
+)
+from base.email import Mail, ResponsibleMailingList, UserMailingList
+from base.functions import bytes2human, ssh_wrapper
 from base.pages import check_str
+from base.pages.admin.form import (
+    action_pending,
+    activate_user,
+    contact_pending,
+    contact_user,
+    create_pending,
+    edit_pending,
+    edit_responsible,
+    edit_task,
+    edit_user,
+    new_user,
+    visa_pending,
+)
 from base.pages.project.magic import get_project_by_name
-from base.pages.admin.form import (action_pending,
-                                   edit_pending,
-                                   visa_pending,
-                                   create_pending,
-                                   contact_pending,
-                                   edit_responsible,
-                                   edit_user,
-                                   new_user,
-                                   edit_task,
-                                   contact_user)
-from base.pages.admin.form import activate_user
+from base.pages.user.form import PassForm, edit_info, set_password
 from base.pages.user.magic import user_by_id
-from base.pages.user.form import edit_info, set_password, PassForm
-from base.database.schema import (User, LogDB, Project, Tasks, ACLDB, Register,
-                                  Accounting)
-from base.email import Mail, UserMailingList, ResponsibleMailingList
-from base.classes import (UserLog, RequestLog, TmpUser, ProjectLog, Task,
-                          TaskQueue)
-from base.functions import bytes2human
-from logging import error, debug
-from operator import attrgetter
-from datetime import timedelta, datetime as dt
-from base.functions import ssh_wrapper
 
 __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
