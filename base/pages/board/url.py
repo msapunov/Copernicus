@@ -18,6 +18,11 @@ __copyright__ = "Aix Marseille University"
 @login_required
 @grant_access("admin")
 def web_board():
+    """Render the board (admin approval page) for extension/renewal requests.
+
+    Returns:
+        Rendered board.html template.
+    """
     return render_template("board.html")
 
 
@@ -25,6 +30,11 @@ def web_board():
 @login_required
 @grant_access("admin")
 def web_board_history():
+    """Return the full history of extension requests.
+
+    Returns:
+        JSON with list of extension dictionaries.
+    """
     extensions_list = Extensions().history()
     if not extensions_list:
         return jsonify(message="No records found for project extension")
@@ -36,6 +46,14 @@ def web_board_history():
 @login_required
 @grant_access("admin")
 def web_board_activate(eid):
+    """Process an activation request.
+
+    Args:
+        eid: Extension ID.
+
+    Returns:
+        JSON with log message and record ID.
+    """
     record = Extensions(eid).activate("Activation accepted")
     return jsonify(message=ProjectLog(record.project).accept(record),
                    data={"id": record.id})
@@ -45,6 +63,11 @@ def web_board_activate(eid):
 @login_required
 @grant_access("admin")
 def web_board_transform():
+    """Process a transformation request from JSON input.
+
+    Returns:
+        JSON with record ID and log message.
+    """
     pid, message = transform()
     return jsonify(data={"id": pid}, message=message)
 
@@ -53,6 +76,14 @@ def web_board_transform():
 @login_required
 @grant_access("admin")
 def web_board_accept(eid):
+    """Accept an extension/renewal/transformation request.
+
+    Args:
+        eid: Extension ID.
+
+    Returns:
+        JSON with log message and record ID.
+    """
     form = AcceptForm()
     if not form.validate_on_submit():
         raise ValueError(form.errors)
@@ -77,6 +108,14 @@ def web_board_accept(eid):
 @login_required
 @grant_access("admin")
 def web_board_reject(eid):
+    """Reject an extension request.
+
+    Args:
+        eid: Extension ID.
+
+    Returns:
+        JSON with log message and record ID.
+    """
     form = RejectForm()
     if not form.validate_on_submit():
         raise ValueError(form.errors)
@@ -89,6 +128,14 @@ def web_board_reject(eid):
 @login_required
 @grant_access("admin")
 def web_board_ignore(eid):
+    """Ignore an extension request.
+
+    Args:
+        eid: Extension ID.
+
+    Returns:
+        JSON with log message and record ID.
+    """
     record = Extensions(eid).ignore()
     return jsonify(message=ProjectLog(record.project).ignore(record),
                    data={"id": record.id})
@@ -98,6 +145,11 @@ def web_board_ignore(eid):
 @login_required
 @grant_access("admin")
 def web_board_list():
+    """List unprocessed extension requests.
+
+    Returns:
+        JSON with list of extension dictionaries.
+    """
     extensions_list = Extensions().unprocessed()
     if not extensions_list:
         err = "No new project related requests found! Nothing to do"
@@ -109,6 +161,14 @@ def web_board_list():
 @login_required
 @grant_access("admin")
 def web_board_expand(eid):
+    """Render the expanded view of an extension record with all actions.
+
+    Args:
+        eid: Extension ID.
+
+    Returns:
+        Concatenated HTML from all action templates.
+    """
     record = Extensions(eid).record()
     record.action = record.about()
     record.name = record.project.get_name()

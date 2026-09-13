@@ -25,11 +25,30 @@ login_manager.session_protection = "strong"
 
 @login_manager.user_loader
 def load_user(uid):
+    """Load a user from the database by ID (Flask-Login callback).
+
+    Args:
+        uid: User ID as stored in the session.
+
+    Returns:
+        User instance or None.
+    """
     return User.query.filter_by(id=uid).first()
 
 
 @bp.route("/api/<path:urlpath>", methods=["POST"])
 def load_user_from_request(urlpath):
+    """Authenticate a user via HTTP Basic Auth and redirect to the requested path.
+
+    Expects an ``Authorization`` header with a Base64-encoded
+    ``username:password`` pair.
+
+    Args:
+        urlpath: The path to redirect to after authentication.
+
+    Returns:
+        Redirect to the target path or to the login page.
+    """
     api_key = request.headers.get("Authorization")
     if api_key:
         api_key = api_key.replace("Basic ", "", 1)
@@ -62,6 +81,14 @@ def load_user_from_request(urlpath):
 @bp.route("/reset.html", methods=["GET", "POST"])
 @login_required
 def reset():
+    """Handle password reset requests.
+
+    Validates the old password, checks new password strength and
+    confirmation match, then updates the password.
+
+    Returns:
+        Rendered reset page or redirect.
+    """
     form = ResetForm(request.form)
     if request.method == "GET":
         return render_template("reset.html", form=form)
@@ -90,6 +117,14 @@ def reset():
 @bp.route("/login", methods=["GET", "POST"])
 @bp.route("/login.html", methods=["GET", "POST"])
 def login():
+    """Handle user login via password or SSH authentication.
+
+    Supports both database-hashed passwords and SSH key authentication
+    against remote login servers.
+
+    Returns:
+        Rendered login page or redirect.
+    """
     if current_user.is_authenticated:
         return redirect(url_for("user.user_index"))
     form = LoginForm(request.form)
@@ -139,6 +174,7 @@ def login():
 @bp.route("/logout")
 @login_required
 def logout():
+    """Log out the current user and redirect to the login page."""
     logout_user()
     return redirect(url_for("login.login"))
 
@@ -146,6 +182,13 @@ def logout():
 @bp.route("/message", methods=["POST"])
 @login_required
 def message():
+    """Send a simple message via email.
+
+    Expects JSON with ``destination``, ``title``, and ``body`` fields.
+
+    Returns:
+        JSON response confirming the message was sent.
+    """
     form = MessageForm()
     if not form.validate_on_submit():
         raise ValueError(form.errors)

@@ -20,6 +20,14 @@ __copyright__ = "Aix Marseille University"
 @login_required
 @grant_access("admin", "responsible", "tech")
 def project_info(name=None):
+    """Return accounting data for one or all projects.
+
+    Args:
+        name: Optional project name to filter by.
+
+    Returns:
+        JSON with consumption data per project.
+    """
     if name:
         projects = Project.query.filter_by(name=name).all()
     else:
@@ -37,6 +45,14 @@ def project_info(name=None):
 @login_required
 @grant_access("admin")
 def web_admin_project_activate(pid):
+    """Activate a project.
+
+    Args:
+        pid: Project ID.
+
+    Returns:
+        JSON with updated project dictionary.
+    """
     return jsonify(data=set_state(pid, True))
 
 
@@ -44,6 +60,14 @@ def web_admin_project_activate(pid):
 @login_required
 @grant_access("admin")
 def web_admin_project_suspend(pid):
+    """Suspend a project.
+
+    Args:
+        pid: Project ID.
+
+    Returns:
+        JSON with updated project dictionary.
+    """
     return jsonify(data=set_state(pid, False))
 
 
@@ -51,6 +75,11 @@ def web_admin_project_suspend(pid):
 @login_required
 @grant_access("admin", "tech")
 def web_statistic_all():
+    """Return consumption data for all projects and the latest accounting date.
+
+    Returns:
+        JSON with project consumption and last accounting date.
+    """
     data = {i.name: i.account() for i in Project.query.all()}
     last = (Accounting.query.distinct(Accounting.date)
             .order_by(Accounting.date.desc()).first()).date
@@ -61,6 +90,11 @@ def web_statistic_all():
 @login_required
 @grant_access("admin")
 def web_statistic_list():
+    """Return a list of all projects with full details.
+
+    Returns:
+        JSON with list of project dictionaries.
+    """
     return jsonify(data=list(map(lambda x: x.to_dict(), Project.query.all())))
 
 
@@ -68,6 +102,14 @@ def web_statistic_list():
 @login_required
 @grant_access("admin", "manager")
 def web_admin_bits_user_info(name):
+    """Render the expanded view for a project in the statistic page.
+
+    Args:
+        name: Project name.
+
+    Returns:
+        Rendered HTML.
+    """
     return render_project(name)
 
 
@@ -75,6 +117,14 @@ def web_admin_bits_user_info(name):
 @login_required
 @grant_access("admin")
 def web_statistic_name(name):
+    """Render the statistic page for a single project.
+
+    Args:
+        name: Project name.
+
+    Returns:
+        Rendered statistic.html template.
+    """
     info = render_project(name)
     return render_template("statistic.html", project=info)
 
@@ -84,5 +134,10 @@ def web_statistic_name(name):
 @login_required
 @grant_access("admin")
 def web_statistic_index():
+    """Render the main statistic page.
+
+    Returns:
+        Rendered statistic.html template with project types.
+    """
     types = project_types()
     return render_template("statistic.html", project_types=types)
