@@ -12,8 +12,9 @@ __copyright__ = "Aix Marseille University"
 
 
 class RejectForm(FlaskForm):
-    note = TextAreaField(validators=[DataRequired(
-        message="Please indicate a reason for rejection")])
+    note = TextAreaField(
+        validators=[DataRequired(message="Please indicate a reason for rejection")]
+    )
 
 
 def rejection(project):
@@ -31,12 +32,22 @@ def rejection(project):
 
 
 class AcceptForm(FlaskForm):
-    cpu = IntegerField("CPU", validators=[NumberRange(
-        min=0, message="CPU value must be 0 or any other positive number")])
-    note = TextAreaField("Note", validators=[DataRequired(
-        message="Acceptance note field is empty")])
-    ttl = DateField("Until", format="%Y-%m-%d", validators=[DataRequired(
-        message="Resource validity field is empty")])
+    cpu = IntegerField(
+        "CPU",
+        validators=[
+            NumberRange(
+                min=0, message="CPU value must be 0 or any other positive number"
+            )
+        ],
+    )
+    note = TextAreaField(
+        "Note", validators=[DataRequired(message="Acceptance note field is empty")]
+    )
+    ttl = DateField(
+        "Until",
+        format="%Y-%m-%d",
+        validators=[DataRequired(message="Resource validity field is empty")],
+    )
     extend = BooleanField()
 
 
@@ -78,7 +89,10 @@ def contact(ext):
     form = MessageForm()
     form.id = ext.id
     form.title_value = "%s %s request created %s" % (
-        ext.project.get_name(), ext.about(), ext.created.strftime("%Y-%m-%d %X"))
+        ext.project.get_name(),
+        ext.about(),
+        ext.created.strftime("%Y-%m-%d %X"),
+    )
     form.message_holder = "Write message to " + ext.project.responsible.full()
     form.destination.value = ext.project.responsible.email
     return form
