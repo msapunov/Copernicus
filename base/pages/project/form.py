@@ -241,6 +241,12 @@ def new_responsible(project, is_admin):
 
 
 class UserForm(BaseForm):
+    """Form for adding a new user to a project.
+
+    Supports selecting an existing user or entering name/surname/email
+    to create a new one.
+    """
+
     prenom = StringField(
         "Name", validators=[DataRequired()]
     )  # Can't use "name" cause it causes conflict
@@ -299,6 +305,8 @@ def new_user(project):
 
 
 class ActivityForm(FlaskForm):
+    """Form for submitting an activity report."""
+
     report = TextAreaField(
         "report", validators=[DataRequired(message="Report field is empty")]
     )
