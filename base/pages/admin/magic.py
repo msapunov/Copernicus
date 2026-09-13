@@ -994,8 +994,13 @@ class TaskManager:
         self.tasks = Tasks
 
     def todo(self):
-        # Returns a list of tasks which has been processed by admins but haven't
-        # been performed by a script
+        """Return tasks that have been accepted but not yet executed.
+
+        Filters for processed, accepted, not-done tasks.
+
+        Returns:
+            List of API-style task dictionaries.
+        """
         self.query = (
             self.query.filter(self.tasks.processed == True)
             .filter(self.tasks.decision == "accept")
