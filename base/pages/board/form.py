@@ -1,11 +1,11 @@
 """WTForms for the board (admin extension/renewal approval)."""
 
 from flask_wtf import FlaskForm
-from wtforms import TextAreaField, BooleanField, IntegerField, DateField
-from wtforms.validators import DataRequired, NumberRange, ValidationError, Email
+from wtforms import BooleanField, DateField, IntegerField, TextAreaField
+from wtforms.validators import DataRequired, NumberRange
+
 from base.functions import calculate_ttl
 from base.pages.login.form import MessageForm
-
 
 __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"

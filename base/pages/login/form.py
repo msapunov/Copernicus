@@ -1,9 +1,8 @@
 """WTForms for login, password reset, and simple messaging."""
 
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, TextAreaField, HiddenField
+from wtforms import HiddenField, PasswordField, StringField, TextAreaField
 from wtforms.validators import DataRequired
-
 
 __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"

@@ -1,7 +1,7 @@
 """WTForms for user information editing and SSH key upload."""
 
 from flask_wtf import FlaskForm
-from wtforms import StringField, EmailField, HiddenField
+from wtforms import EmailField, HiddenField, StringField
 
 
 class InfoForm(FlaskForm):

@@ -2,19 +2,33 @@
 extension, user management, and activity reporting.
 """
 
+from logging import error
+
 from flask import g
 from flask_wtf import FlaskForm
-from wtforms import HiddenField, IntegerField, BooleanField
-from wtforms import TextAreaField, SelectField, StringField
+from wtforms import (
+    BooleanField,
+    HiddenField,
+    IntegerField,
+    SelectField,
+    StringField,
+    TextAreaField,
+)
 from wtforms.fields import EmailField
-from wtforms.validators import DataRequired, NumberRange, ValidationError, Email
-from wtforms.validators import Optional
+from wtforms.validators import (
+    DataRequired,
+    Email,
+    NumberRange,
+    Optional,
+    ValidationError,
+)
+
 from base.classes import BaseForm
 from base.pages.project.magic import (
-    get_transformation_options,
     get_project_option,
-    get_users)
-from logging import error
+    get_transformation_options,
+    get_users,
+)
 
 __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
