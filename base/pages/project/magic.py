@@ -116,7 +116,7 @@ def active_users_check(projects):
     for project in projects:
         for user in project.users:
             if not user.active:
-                if project not in result.keys():
+                if project not in result:
                     result[project] = []
                 result[project].append(user.login)
     return result
