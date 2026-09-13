@@ -812,9 +812,9 @@ def is_activity_report(project):
     login = current_app.config.get("OWN_CLOUD_LOGIN", None)
     password = current_app.config.get("OWN_CLOUD_PASSWORD", None)
     options = {
-        'webdav_hostname': url,
-        'webdav_login': login,
-        'webdav_password': password
+        "webdav_hostname": url,
+        "webdav_login": login,
+        "webdav_password": password,
     }
     client = Client(options)
     remote_dir = current_app.config.get("ACTIVITY_DIR", "/")
