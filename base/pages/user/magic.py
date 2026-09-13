@@ -1,3 +1,7 @@
+"""Business logic for user management: active checks, SSH keys, jobs,
+scratch space, and user editing.
+"""
+
 from datetime import datetime as dt
 from datetime import timezone
 from logging import debug

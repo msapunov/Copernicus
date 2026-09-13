@@ -1,3 +1,7 @@
+"""Login-related utilities: password strength checking and SSH-based
+authentication against remote login servers.
+"""
+
 from logging import debug, error, warning
 from re import search
 

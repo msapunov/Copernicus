@@ -1,3 +1,6 @@
+"""Business logic for project management: suspension, expiry, user management,
+activity reports, renewals, extensions, and transformations.
+"""
 
 from datetime import datetime as dt
 from datetime import timezone
