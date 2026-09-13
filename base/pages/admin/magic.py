@@ -648,10 +648,13 @@ def registration_responsible_edit(rid, form):
 
 
 def user_info_update_new(form):
-    """
+    """Process a user info update form and return updated details.
 
-    :param form:
-    :return:
+    Args:
+        form: UserEditForm instance.
+
+    Returns:
+        Tuple of (user_details_dict, message_string).
     """
     uid = form.uid.data
     user = user_by_id(uid)
@@ -985,8 +988,14 @@ def task_history(reverse=True):
 
 
 class TaskManager:
+    """Manager for querying the task queue.
+
+    Provides methods for getting pending tasks (todo) and unprocessed
+    tasks (list).
+    """
 
     def __init__(self):
+        """Initialize with the Tasks query."""
         self.query = Tasks().query
         self.tasks = Tasks
 
@@ -1013,6 +1022,16 @@ class TaskManager:
 
 
 def get_server_cpu(server):
+    """Get CPU idle percentage from a remote server.
+
+    Runs ``mpstat`` via SSH.
+
+    Args:
+        server: Hostname of the remote server.
+
+    Returns:
+        Dictionary with ``time`` and ``idle`` keys.
+    """
     cmd = "S_COLORS=never mpstat | grep all"
     result, err = ssh_wrapper(cmd, host=server)
     error(f"{server} {result}")
@@ -1028,6 +1047,16 @@ def get_server_cpu(server):
 
 
 def get_server_info(server):
+    """Get comprehensive information from a remote server.
+
+    Runs multiple commands (nproc, uptime, free, uptime, who) via SSH.
+
+    Args:
+        server: Hostname of the remote server.
+
+    Returns:
+        Dictionary with server stats (load, memory, swap, users, etc.).
+    """
     out = {"server": server, "uptime": "", "users": []}
     cmd = "echo cores:`nproc` && uptime -p && free -b | grep -v total && uptime"
     cmd += "| awk '/average/ {OFS=\":\"; print \"Load\",$(NF-2),$(NF-1),$NF}'"
@@ -1067,6 +1096,14 @@ def get_server_info(server):
 
 
 def parse_timestamp(unix_ts):
+    """Parse a Unix timestamp string into a formatted date.
+
+    Args:
+        unix_ts: Unix timestamp as a string.
+
+    Returns:
+        Formatted date string, or the original string if parsing fails.
+    """
     try:
         ts = int(unix_ts)
     except ValueError as e:
@@ -1076,6 +1113,15 @@ def parse_timestamp(unix_ts):
 
 
 def parse_load(result, cores=1):
+    """Parse load average data into percentage strings.
+
+    Args:
+        result: Load average string (e.g. ``"0.5:0.3:0.1"``).
+        cores: Number of CPU cores.
+
+    Returns:
+        Dictionary with ``load_1``, ``load_5``, ``load_15`` as percentages.
+    """
     try:
         load_1, load_5, load_15 = result.split(":")
     except ValueError as e:
@@ -1087,6 +1133,14 @@ def parse_load(result, cores=1):
 
 
 def parse_swap(result):
+    """Parse free command swap output.
+
+    Args:
+        result: Free command line containing swap info.
+
+    Returns:
+        Dictionary with swap total, available, used, and usage percentage.
+    """
     tmp = {}
     output = result.split(",")
     for i in output:
@@ -1105,6 +1159,14 @@ def parse_swap(result):
 
 
 def parse_memory(result):
+    """Parse free command memory output.
+
+    Args:
+        result: Free command line containing memory info.
+
+    Returns:
+        Dictionary with mem total, available, used, and usage percentage.
+    """
     tmp = {}
     output = result.split(",")
     for i in output:
@@ -1122,16 +1184,12 @@ def parse_memory(result):
 
 
 def space_info():
-    """
-    Run df -h command on a remote server and return parsed information as a list
-    of dictionaries. Dictionary format is:
-    {"filesystem": ...,
-        "size": ...,
-        "used": ...,
-        "available": ...,
-        "use": ...,
-        "mountpoint": ...}
-    :return: List of dict
+    """Get disk space information from the remote server.
+
+    Runs ``df -h`` via SSH and filters for relevant mount points.
+
+    Returns:
+        List of dictionaries with filesystem info.
     """
     result, err = ssh_wrapper("df -h")
     if not result:
@@ -1156,6 +1214,13 @@ def space_info():
 
 
 def slurm_partition_info():
+    """Get SLURM partition information.
+
+    Runs ``sinfo -s`` via SSH.
+
+    Returns:
+        List of dictionaries with partition stats.
+    """
     result, err = ssh_wrapper("sinfo -s")
     if not result:
         raise ValueError("Error getting partition information: %s" % err)
