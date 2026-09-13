@@ -1,20 +1,28 @@
-from flask import render_template, request, jsonify, flash
-from flask_login import login_required, current_user
+import logging as log
+from datetime import datetime as dt
+from datetime import timezone
+from operator import attrgetter
+
+from flask import flash, jsonify, render_template, request
+from flask_login import current_user, login_required
+
 from base.database.schema import User
+from base.functions import form_error_string
 from base.pages import grant_access
 from base.pages.user import bp
-from base.pages.user.magic import (get_user_record, get_jobs,
-                                   absent_users_check,
-                                   working_users_check,
-                                   archived_users_check,
-                                   get_pending_projects,
-                                   inactive_users_check)
-from base.pages.user.magic import get_scratch, user_edit, ssh_key
-from base.pages.user.form import edit_info, InfoForm, KeyForm
-from base.functions import form_error_string
-from datetime import datetime as dt, timezone
-from operator import attrgetter
-import logging as log
+from base.pages.user.form import InfoForm, KeyForm, edit_info
+from base.pages.user.magic import (
+    absent_users_check,
+    archived_users_check,
+    get_jobs,
+    get_pending_projects,
+    get_scratch,
+    get_user_record,
+    inactive_users_check,
+    ssh_key,
+    user_edit,
+    working_users_check,
+)
 
 
 __author__ = "Matvey Sapunov"
