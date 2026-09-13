@@ -39,6 +39,8 @@ class ActivateForm(FlaskForm):
         min=0, message="CPU value must be 0 or any other positive number")])
     note = TextAreaField("Motivation", validators=[DataRequired(
         message="Motivation field is empty")])
+    """Form for activating a suspended project."""
+
 
 
 def activate(project):
