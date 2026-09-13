@@ -12,6 +12,8 @@ __copyright__ = "Aix Marseille University"
 
 
 class RejectForm(FlaskForm):
+    """Form for providing a rejection reason."""
+
     note = TextAreaField(
         validators=[DataRequired(message="Please indicate a reason for rejection")]
     )
@@ -32,6 +34,8 @@ def rejection(project):
 
 
 class AcceptForm(FlaskForm):
+    """Form for accepting an extension/renewal request with optional overrides."""
+
     cpu = IntegerField(
         "CPU",
         validators=[
