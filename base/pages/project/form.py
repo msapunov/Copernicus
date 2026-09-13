@@ -144,10 +144,17 @@ class ExtendForm(FlaskForm):
     eval_note = None
 
     exception = BooleanField()
-    cpu = IntegerField("CPU", validators=[NumberRange(
-        min=0, message="CPU value must be 0 or any other positive number")])
-    note = TextAreaField("Motivation", validators=[DataRequired(
-        message="Motivation field is empty")])
+    cpu = IntegerField(
+        "CPU",
+        validators=[
+            NumberRange(
+                min=0, message="CPU value must be 0 or any other positive number"
+            )
+        ],
+    )
+    note = TextAreaField(
+        "Motivation", validators=[DataRequired(message="Motivation field is empty")]
+    )
 
 
 def extend(project):
