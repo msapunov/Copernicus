@@ -47,6 +47,16 @@ __copyright__ = "Aix Marseille University"
 
 
 def process_user_form(form):
+    """Process a CreateForm submission and return a User or TmpUser instance.
+
+    Handles both selection of existing users and creation of new ones.
+
+    Args:
+        form: CreateForm instance.
+
+    Returns:
+        User instance (existing or new) or None to skip.
+    """
     prenom = form.prenom.data.lower()
     surname = form.surname.data.lower()
     email = form.email.data.lower()
@@ -79,6 +89,16 @@ def process_user_form(form):
 
 
 def account_days(days=30, project=None, user=None):
+    """Return daily accounting data for a project and user over N days.
+
+    Args:
+        days: Number of days to look back.
+        project: Optional Project instance.
+        user: Optional User instance.
+
+    Returns:
+        List of dictionaries mapping date strings to CPU values.
+    """
     today = dt.today().replace(hour=0, minute=0, second=0, microsecond=0)
     dates = [today - timedelta(days=i) for i in range(days)]
     every = Accounting.query.filter(
@@ -101,10 +121,10 @@ def account_days(days=30, project=None, user=None):
 
 
 def last_user(data):
-    """
-    Process data returned by last command and updates seen field in User record
-    :param data: String. Output of last command in linux
-    :return: None
+    """Update user last-seen timestamps from ``last`` command output.
+
+    Args:
+        data: String output of the ``last`` command.
     """
     lines = data.split("\n")
     for line in lines:
@@ -128,6 +148,14 @@ def last_user(data):
 
 
 def unprocessed_dict():
+    """Return all unprocessed registrations as serialized dictionaries.
+
+    Marks records as having an expired visa if created more than 3 months
+    ago and in ``sent`` or ``resent`` status.
+
+    Returns:
+        List of registration dictionaries.
+    """
     result = []
     for p in unprocessed():
         res = p.to_dict()
@@ -141,20 +169,13 @@ def unprocessed_dict():
 
 
 def unprocessed():
-    """
-        Retrieves unprocessed Register objects from the database.
+    """Get unprocessed Register records that the current user can approve.
 
-        Returns a list of Register objects that have their 'processed' attribute
-        set to False. If the user is an admin (as indicated by 'admin' being
-        present in the 'g.permissions' list), all unprocessed Register objects
-        are returned. Otherwise, only Register objects that have a 'type' value
-        that is included in the 'approve' list are returned. The 'approve' list
-        is generated based on the user's login and the ACL (Access Control List)
-        defined in the project configuration.
+    Admin users see all unprocessed records. Other users see only records
+    whose type is in their ACL.
 
-        Returns:
-            list: A list of Register objects that are unprocessed and approved
-            based on the user's permissions and ACL.
+    Returns:
+        List of Register objects.
     """
     status = ["created", "ignored", "rejected"]
     query = Register.query.filter(Register.status.is_(None)
@@ -173,6 +194,14 @@ def unprocessed():
 
 
 def render_registry(user):
+    """Render the expanded user registry row with all associated modals.
+
+    Args:
+        user: User instance.
+
+    Returns:
+        Concatenated HTML string.
+    """
     tasks = Tasks.query.filter_by(user=user).all()
     details = user.details()
     if tasks:
@@ -196,6 +225,14 @@ def render_registry(user):
 
 
 def render_task(task):
+    """Render the expanded task row with action modals.
+
+    Args:
+        task: Tasks record.
+
+    Returns:
+        Concatenated HTML string.
+    """
     row = render_template("bits/task_expand_row.html", task=task.to_dict())
     row += render_template("modals/tasks_accept_task.html", task=task.to_dict())
     row += render_template("modals/tasks_ignore_task.html", task=task.to_dict())
@@ -206,6 +243,14 @@ def render_task(task):
 
 
 def render_pending(rec):
+    """Render the expanded pending registration row with all action modals.
+
+    Args:
+        rec: Register record.
+
+    Returns:
+        Concatenated HTML string.
+    """
     rec.meso = rec.project_id()
     rec.name = "'%s' (%s)" % (rec.title, rec.meso)
     status = rec.status.upper() if rec.status else "NONE"
@@ -252,11 +297,12 @@ def render_pending(rec):
 
 
 def all_users():
-    """
-    Query all the users, check if there is a task associated with a user and
-    set a todo property to True for such user and then apply info_acl method
-    to all the users in a list.
-    :return: List. List of users info dicts
+    """Return a list of all users with ACL and todo status.
+
+    Checks for pending tasks associated with each user.
+
+    Returns:
+        List of user info dictionaries.
     """
     dirty = list(filter(lambda x: x.user, Tasks().waiting()))
     users = User.query.all()
@@ -268,10 +314,26 @@ def all_users():
 
 
 def event_log():
+    """Return all log entries formatted for web display.
+
+    Returns:
+        List of log entry dictionaries.
+    """
     return list(map(lambda x: x.to_web(), LogDB.query.all()))
 
 
 def get_registration_record(pid):
+    """Find a registration record by ID.
+
+    Args:
+        pid: Registration ID.
+
+    Returns:
+        Register instance.
+
+    Raises:
+        ValueError: If not found.
+    """
     register = Register.query.filter_by(id=pid).first()
     if not register:
         raise ValueError("Project registration request id %s not found" % pid)
@@ -279,6 +341,14 @@ def get_registration_record(pid):
 
 
 def get_ltm(data):
+    """Extract and validate users, title, and message from input data.
+
+    Args:
+        data: Dictionary with ``user``, ``title``, and ``message`` keys.
+
+    Returns:
+        Tuple of (users_list, title, message).
+    """
     user_tmp = data["user"]
     users = map(lambda x: check_str(x), user_tmp)
     title = check_str(data["title"])
@@ -287,6 +357,14 @@ def get_ltm(data):
 
 
 def user_create_by_admin(form):
+    """Create a new user by an admin with full field control.
+
+    Args:
+        form: UserEditForm instance.
+
+    Returns:
+        Status message string.
+    """
     email = form.email.data.strip().lower()
     if User.query.filter_by(email=email).first():
         raise ValueError("User with e-mail %s has been registered already"
@@ -323,11 +401,17 @@ def user_create_by_admin(form):
 
 
 def user_changed_prop(obj, frm):
-    """
+    """Detect changes between a user object and form data.
 
-    :param obj:
-    :param frm:
-    :return:
+    Compares login, name, surname, email, ACL roles, active status,
+    and project membership.
+
+    Args:
+        obj: User instance.
+        frm: UserEditForm instance.
+
+    Returns:
+        Tuple of (info_dict, acl_dict, projects_list, active_bool_or_None).
     """
     info, acl, act = {}, {}, None
     for name in ["login", "name", "surname", "email", "test"]:
@@ -352,6 +436,15 @@ def user_changed_prop(obj, frm):
 
 
 def user_acl_update(user, acl):
+    """Update a user's ACL attributes and log the change.
+
+    Args:
+        user: User instance.
+        acl: Dictionary of ACL changes.
+
+    Returns:
+        Status message string.
+    """
     for name, value in acl.items():
         setattr(user, name, value)
     db.session.commit()
@@ -360,6 +453,17 @@ def user_acl_update(user, acl):
 
 
 def user_project_update(user, projects):
+    """Update a user's project membership based on a project list.
+
+    Creates task queue entries for adds and removals.
+
+    Args:
+        user: User instance.
+        projects: List of project names.
+
+    Returns:
+        Status message string.
+    """
     old = user.project_names()
     idz = []
     for name in projects:
@@ -376,6 +480,15 @@ def user_project_update(user, projects):
 
 
 def registration_user_del(pid, uid):
+    """Remove a user from a registration record.
+
+    Args:
+        pid: Registration ID.
+        uid: MD5 hash of the user description string.
+
+    Returns:
+        Updated registration dictionary.
+    """
     rec = get_registration_record(pid)
     users = rec.users.split("\n")
     for user in users:
@@ -390,6 +503,15 @@ def registration_user_del(pid, uid):
 
 
 def registration_record_edit(rid, form):
+    """Edit fields of a registration record.
+
+    Args:
+        rid: Registration ID.
+        form: RegistrationEditForm.
+
+    Returns:
+        Rendered pending HTML, or raises ValueError if no changes.
+    """
     rec = get_registration_record(rid)
     not_str = ["cpu"]
     props = ["title", "type", "description", "scientific_fields", "cpu",
@@ -416,6 +538,15 @@ def registration_record_edit(rid, form):
 
 
 def registration_user_add(rid, form):
+    """Add a new user to a registration record.
+
+    Args:
+        rid: Registration ID.
+        form: NewUserForm.
+
+    Returns:
+        Rendered pending HTML.
+    """
     rec = get_registration_record(rid)
     name = form.prenom.data.strip()
     surname = form.surname.data.strip()
@@ -435,6 +566,15 @@ def registration_user_add(rid, form):
 
 
 def registration_user_update(rid, forms):
+    """Update user information in a registration record.
+
+    Args:
+        rid: Registration ID.
+        forms: List of NewUserForm instances.
+
+    Returns:
+        Rendered pending HTML.
+    """
     rec = get_registration_record(rid)
     users = []
     if len(forms) > 0:
@@ -455,6 +595,15 @@ def registration_user_update(rid, forms):
 
 
 def registration_responsible_edit(rid, form):
+    """Edit responsible person details in a registration record.
+
+    Args:
+        rid: Registration ID.
+        form: EditResponsibleForm.
+
+    Returns:
+        Rendered pending HTML, or raises ValueError if no changes.
+    """
     rec = get_registration_record(rid)
     props = {"responsible_first_name": "prenom",
              "responsible_last_name": "surname",
@@ -501,6 +650,15 @@ def user_info_update_new(form):
 
 
 def update_user_acl(user, form):
+    """Update a user's ACL attributes from form data.
+
+    Args:
+        user: User instance.
+        form: UserEditForm.
+
+    Returns:
+        Status message, or None if no changes.
+    """
     acl = {}
     for i in ["user", "responsible", "manager", "tech", "committee", "admin"]:
         name = "is_%s" % i
@@ -519,6 +677,17 @@ def update_user_acl(user, form):
 
 
 def update_user_project(user, form):
+    """Update a user's project membership from form data.
+
+    Creates task queue entries for adds and removals.
+
+    Args:
+        user: User instance.
+        form: UserEditForm.
+
+    Returns:
+        Status message, or None if no changes.
+    """
     names = filter(lambda x: True if x != "None" else False, form.project.data)
     new = list(set(user.project_names()) ^ set(list(names)))
     old = user.project_names()
@@ -542,6 +711,15 @@ def update_user_project(user, form):
 
 
 def update_user_details(user, form):
+    """Update a user's login, name, surname, email, or activate status.
+
+    Args:
+        user: User instance.
+        form: UserEditForm.
+
+    Returns:
+        Status message, or None if no changes.
+    """
     info = {}
     for name in ["login", "name", "surname", "email", "activate"]:
         if name not in form:
@@ -563,6 +741,14 @@ def update_user_details(user, form):
 
 
 def user_info_update(form):
+    """Process a full user info update (ACL, projects, details).
+
+    Args:
+        form: UserEditForm instance.
+
+    Returns:
+        Tuple of (user_details_dict, message_string).
+    """
     uid = form.uid.data
     user = user_by_id(uid)
     msg = []
@@ -576,6 +762,14 @@ def user_info_update(form):
 
 
 def user_delete(uid):
+    """Permanently delete a user from the database.
+
+    Args:
+        uid: User ID.
+
+    Returns:
+        Status message string.
+    """
     user = user_by_id(uid)
     login = user.login
     projects = user.project
@@ -588,6 +782,14 @@ def user_delete(uid):
 
 
 def user_send_welcome(uid):
+    """Send a welcome email to a user with login details.
+
+    Args:
+        uid: User ID.
+
+    Returns:
+        Status message string.
+    """
     user = user_by_id(uid)
     user.passwd = user.reset_password()
     Mail().user_new(user).start()
@@ -595,6 +797,14 @@ def user_send_welcome(uid):
 
 
 def user_set_pass(uid):
+    """Set a user's password to a specific value.
+
+    Args:
+        uid: User ID.
+
+    Returns:
+        Status message string.
+    """
     form = PassForm()
     if not form.validate_on_submit():
         raise ValueError(form.errors)
@@ -605,12 +815,27 @@ def user_set_pass(uid):
 
 
 def user_reset_pass(uid):
+    """Reset a user's password to a random value.
+
+    Args:
+        uid: User ID.
+    """
     user = user_by_id(uid)
     passwd = user.reset_password()
     UserLog(user).password_reset(passwd)
 
 
 def user_create(task):
+    """Create a user from a task record.
+
+    Handles both normal and temporary users.
+
+    Args:
+        task: Tasks record.
+
+    Returns:
+        Event string from the project log.
+    """
     if not task.project:
         raise ValueError("Project reference is empty, can't create user")
     tmp_user = TmpUser().from_description(task.action)
@@ -646,17 +871,30 @@ def user_create(task):
 
 
 def user_publickey(self):
-    """
-    Send message after public key has been uploaded on the server
-    Return: Object. Mail object
+    """Send a notification after a public key has been uploaded.
+
+    Returns:
+        Event string from the user log.
     """
     user = self.task.user
     key = self.get_description()
     return UserLog(user).key_uploaded(key)
-    return "New password has been sent to %s" % user.full()
 
 
 def process_task(tid, result):
+    """Process a completed task: mark as done and execute the action.
+
+    Args:
+        tid: Task ID.
+        result: Result string from the remote execution.
+
+    Returns:
+        The updated Tasks record.
+
+    Raises:
+        ValueError: If the task was already processed or the action is
+            not supported.
+    """
     record = Tasks().query.filter_by(id=tid).first()
     if record.done:
         raise ValueError(f"Task {tid} has been processed already")
@@ -698,8 +936,14 @@ def process_task(tid, result):
 
 
 def task_history(reverse=True):
-    # Returns a list of all tasks registered in the system. by default
-    # the records are sorted by date in descending order
+    """Return all tasks sorted by creation date.
+
+    Args:
+        reverse: Sort in descending order if True.
+
+    Returns:
+        List of task dictionaries.
+    """
     tasks = sorted(Tasks.query.all(), key=attrgetter("created"),
                    reverse=reverse)
     return list(map(lambda x: x.to_dict(), tasks)) if tasks else []
