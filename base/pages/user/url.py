@@ -1,3 +1,7 @@
+"""URL routes for the user blueprint: user lists, SSH key management,
+user info editing, and the user home page.
+"""
+
 import logging as log
 from datetime import datetime as dt
 from datetime import timezone
