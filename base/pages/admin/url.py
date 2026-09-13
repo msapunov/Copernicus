@@ -83,6 +83,7 @@ def web_test():
     Returns:
         Rendered test.html template.
     """
+    return render_template("test.html", data="test")
 
 
 @bp.route("/admin/info/projects", methods=["POST"])
