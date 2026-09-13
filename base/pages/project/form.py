@@ -65,12 +65,13 @@ def activate(project):
 
 
 class TransForm(FlaskForm):
-    new = SelectField("New type", validators=[DataRequired(
-        message="New type is missing")])
     cpu = IntegerField("CPU", validators=[NumberRange(
         min=0, message="CPU value must be 0 or any other positive number")])
     note = TextAreaField("Motivation", validators=[DataRequired(
         message="Motivation field is empty")])
+    new = SelectField(
+        "New type", validators=[DataRequired(message="New type is missing")]
+    )
 
 
 def transform(project):
