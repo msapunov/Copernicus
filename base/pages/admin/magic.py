@@ -1146,8 +1146,7 @@ def parse_swap(result):
             swap_total = int(swap[1].strip())
             swap_available = int(swap[3].strip())
             swap_used = swap_total - swap_available
-            swap_usage = "{0:.1%}".format(float(swap_used) /
-                                          float(swap_total))
+            swap_usage = "{0:.1%}".format(float(swap_used) / float(swap_total))
             tmp["swap_total"] = bytes2human(swap_total)
             tmp["swap_available"] = bytes2human(swap_available)
             tmp["swap_used"] = bytes2human(swap_used)
