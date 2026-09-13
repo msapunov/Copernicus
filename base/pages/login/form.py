@@ -13,8 +13,9 @@ class MessageForm(FlaskForm):
 
     destination = HiddenField(validators=[DataRequired()])
     title = StringField("Title", validators=[DataRequired()])
-    message = TextAreaField("Message", validators=[DataRequired(
-        message="Message field is empty")])
+    message = TextAreaField(
+        "Message", validators=[DataRequired(message="Message field is empty")]
+    )
 
 
 class ResetForm(FlaskForm):
