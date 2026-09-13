@@ -751,7 +751,7 @@ def update_user_details(user, form):
     if not info:
         return
     db.session.commit()
-    if "activate" in info.keys():
+    if "activate" in info:
         task = TaskQueue().user(user).user_activate(info)
     else:
         task = TaskQueue().user(user).user_update(info)
