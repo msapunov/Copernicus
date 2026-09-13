@@ -264,7 +264,7 @@ def get_scratch():
     if not info:
         raise ValueError("Error parsing scratch space info")
     name, uid, used, total, files, hard = info[0].split(",")
-    usage = "{0:.1%}".format(float(used) / float(total))
+    usage = f"{float(used) / float(total):.1%}"
     free = float(total) - float(used)
     return {"usage": usage, "total": total, "used": used, "free": free,
             "used_label": bytes2human(used), "free_label": bytes2human(free)}
