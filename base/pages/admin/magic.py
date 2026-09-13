@@ -1206,12 +1206,16 @@ def space_info():
         filesystem, size, used, avail, use, mountpoint = record.split()
         if mountpoint.strip() not in keywords:
             continue
-        space.append({"filesystem": filesystem.strip(),
-                      "size": size.strip(),
-                      "used": used.strip(),
-                      "available": avail.strip(),
-                      "use": use.strip(),
-                      "mountpoint": mountpoint.strip()})
+        space.append(
+            {
+                "filesystem": filesystem.strip(),
+                "size": size.strip(),
+                "used": used.strip(),
+                "available": avail.strip(),
+                "use": use.strip(),
+                "mountpoint": mountpoint.strip(),
+            }
+        )
     return space
 
 
