@@ -395,12 +395,14 @@ def save_report(project):
                 tmp = getattr(project, i, None)
                 upload_to_cloud(remote_directory, tmp) if tmp else False
         upload_to_cloud(remote_directory, path)
-    report = File(path=str(path),
-                  size=Path(path).stat().st_size,
-                  comment="Activity report",
-                  user=current_user,
-                  project=project,
-                  created=dt.now(timezone.utc))
+    report = File(
+        path=str(path),
+        size=Path(path).stat().st_size,
+        comment="Activity report",
+        user=current_user,
+        project=project,
+        created=dt.now(timezone.utc),
+    )
     db.session.add(report)
     project.resources.file = report
     db.session.commit()
@@ -627,7 +629,7 @@ def get_future_users(projects):
         projects: List of Project instances.
     """
     for project in projects:
-        recs = Tasks.query.filter_by(processed = False, project = project).all()
+        recs = Tasks.query.filter_by(processed=False, project=project).all()
         if not recs:
             continue
         tasks = list(filter(lambda x: "create|user" in x.action, recs))
@@ -698,11 +700,17 @@ def project_transform(name, form):
     possible_types = list(map(lambda x: x[0], possible_types))
     if new not in possible_types and "admin" not in g.permissions:
         raise ValueError("Configuration forbids transformation to %s" % new)
-    record = Extend(project=project, hours=cpu, reason=note, extend=True,
-                    present_use=project.account(), transform=new,
-                    usage_percent=project.consumed_use(),
-                    present_total=project.resources.cpu,
-                    exception=False)
+    record = Extend(
+        project=project,
+        hours=cpu,
+        reason=note,
+        extend=True,
+        present_use=project.account(),
+        transform=new,
+        usage_percent=project.consumed_use(),
+        present_total=project.resources.cpu,
+        exception=False,
+    )
     db.session.add(record)
     db.session.commit()
     return record
@@ -728,11 +736,16 @@ def project_renew(project, form, active=False):
     project = is_project_renewable(project)
     if not active and not project.is_renewable and "admin" not in g.permissions:
         raise ValueError("Project %s is not renewable" % project.get_name())
-    record = Extend(project=project, hours=cpu, reason=note, extend=False,
-                    present_use=project.account(),
-                    usage_percent=project.consumed_use(),
-                    present_total=project.resources.cpu,
-                    exception=False)
+    record = Extend(
+        project=project,
+        hours=cpu,
+        reason=note,
+        extend=False,
+        present_use=project.account(),
+        usage_percent=project.consumed_use(),
+        present_total=project.resources.cpu,
+        exception=False,
+    )
     db.session.add(record)
     db.session.commit()
     return record
@@ -757,11 +770,16 @@ def project_extend(name, form):
     project = is_project_extendable(project)
     if not project.is_extendable and "admin" not in g.permissions:
         raise ValueError("Project %s is not extendable" % name)
-    record = Extend(project=project, hours=cpu, reason=note, extend=True,
-                    present_use=project.account(),
-                    usage_percent=project.consumed_use(),
-                    present_total=project.resources.cpu,
-                    exception=exception)
+    record = Extend(
+        project=project,
+        hours=cpu,
+        reason=note,
+        extend=True,
+        present_use=project.account(),
+        usage_percent=project.consumed_use(),
+        present_total=project.resources.cpu,
+        exception=exception,
+    )
     db.session.add(record)
     db.session.commit()
     return record
@@ -883,15 +901,19 @@ def is_project_renewable(project):
     """
     now = dt.now(timezone.utc)
     if not get_project_option(project, "renewable"):
-        debug(f"{project.name} - No renewable option found in config file"
-              f"for type {project.type} projects")
+        debug(
+            f"{project.name} - No renewable option found in config file"
+            f"for type {project.type} projects"
+        )
         project.is_renewable = False
         return project
     start = get_project_option(project, "renew_start")
     close = get_project_option(project, "renew_close")
     if not any((close, start)):
-        debug(f"{project.name} - Either renew_start or renew_close is absent"
-              f"in configuration file")
+        debug(
+            f"{project.name} - Either renew_start or renew_close is absent"
+            f"in configuration file"
+        )
         project.is_renewable = False
         return project
     debug(f"{project.name} - configured renew timeframe: {start} to {close}")
@@ -1041,14 +1063,16 @@ def get_reservation(name):
     output = []
     for line in result:
         el = line.split(" ")
-        output.append({
-            "name": parse(el, "ReservationName="),
-            "start": parse(el, "StartTime=").replace("T", " "),
-            "end": parse(el, "EndTime=").replace("T", " "),
-            "duration": parse(el, "Duration="),
-            "nodes": parse(el, "NodeCnt="),
-            "cores": parse(el, "CoreCnt=")
-        })
+        output.append(
+            {
+                "name": parse(el, "ReservationName="),
+                "start": parse(el, "StartTime=").replace("T", " "),
+                "end": parse(el, "EndTime=").replace("T", " "),
+                "duration": parse(el, "Duration="),
+                "nodes": parse(el, "NodeCnt="),
+                "cores": parse(el, "CoreCnt="),
+            }
+        )
     return output
 
 

@@ -74,8 +74,14 @@ def ssh_login(login, password):
         client = SSHClient()
         try:
             client.set_missing_host_key_policy(AutoAddPolicy())
-            client.connect(host, username=login, password=password, port=port,
-                           allow_agent=False, look_for_keys=False)
+            client.connect(
+                host,
+                username=login,
+                password=password,
+                port=port,
+                allow_agent=False,
+                look_for_keys=False,
+            )
             if client.get_transport().is_authenticated():
                 auth = True
         except AuthenticationException:
