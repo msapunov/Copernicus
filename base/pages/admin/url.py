@@ -621,9 +621,12 @@ def web_admin_tasks_ignore(tid):
     task = Task(tid).ignore()
     tasks = TaskManager().list()
     if "admin.html" in request.referrer:
-        return jsonify(data=tasks, info="Task '%s' is ignored" % task.short(),
-                       task=True, html=render_template(
-            "modals/admin_show_task.html", data={"tasks": tasks}))
+        return jsonify(
+            data=tasks,
+            info="Task '%s' is ignored" % task.short(),
+            task=True,
+            html=render_template("modals/admin_show_task.html", data={"tasks": tasks}),
+        )
     return jsonify(data=tasks, task=True)
 
 
