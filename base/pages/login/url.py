@@ -68,7 +68,7 @@ def load_user_from_request(urlpath):
         if not user.check_password(password):
             return abort(401)
         login_user(user, True)
-        if ("SCRIPT_NAME" in request.environ) and request.environ["SCRIPT_NAME"]:
+        if request.environ.get("SCRIPT_NAME"):
             urlpath = "%s/%s" % (request.environ["SCRIPT_NAME"], urlpath)
         else:
             urlpath = "/%s" % urlpath
