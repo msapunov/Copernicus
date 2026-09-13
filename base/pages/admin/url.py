@@ -1,3 +1,7 @@
+"""URL routes for the admin blueprint: registration processing, user
+management, task queue, server monitoring, and configuration views.
+"""
+
 from datetime import datetime as dt
 from datetime import timezone as tz
 from logging import debug
