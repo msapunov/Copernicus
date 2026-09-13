@@ -90,17 +90,10 @@ def web_test():
 @login_required
 @grant_access("admin", "tech")
 def admin_info_projects():
-    """
-    Fetches all projects with the corresponding user's login and resources details.
+    """Return project info with user login and resource details.
+
     Returns:
-        List[Dict[str, str]]: A list of dictionaries, each containing:
-            - "id": Project's ID
-            - "type": Project's type
-            - "name": Project's name
-            - "cpu": Number of hours attributed to a project
-            - "created": Resource creation date,
-            - "end": Resource expiring date,
-            - "login": Login of the project's responsible
+        JSON list of project info dictionaries.
     """
     debug("Starting query for Project, User, Resources join")
     projects = (
@@ -135,6 +128,11 @@ def admin_info_projects():
 @login_required
 @grant_access("admin")
 def web_switch_user():
+    """Switch to a different user account (admin impersonation).
+
+    Returns:
+        Redirect to the user's home page.
+    """
     username = request.form.get("switch_user")
     if username not in g.user_list:
         flash("Invalid username: '%s'" % username)
@@ -152,6 +150,14 @@ def web_switch_user():
 @login_required
 @grant_access("admin")
 def admin_user_password_welcome(uid):
+    """Send a welcome message to a user.
+
+    Args:
+        uid: User ID.
+
+    Returns:
+        JSON with status message.
+    """
     return jsonify(message=user_send_welcome(uid))
 
 
@@ -159,6 +165,14 @@ def admin_user_password_welcome(uid):
 @login_required
 @grant_access("admin")
 def admin_user_set_password(uid):
+    """Set a user's password.
+
+    Args:
+        uid: User ID.
+
+    Returns:
+        JSON with status message.
+    """
     return jsonify(message=user_set_pass(uid))
 
 
@@ -166,6 +180,14 @@ def admin_user_set_password(uid):
 @login_required
 @grant_access("admin")
 def admin_user_reset_password(uid):
+    """Reset a user's password.
+
+    Args:
+        uid: User ID.
+
+    Returns:
+        JSON with status message.
+    """
     return jsonify(message=user_reset_pass(uid))
 
 
@@ -173,6 +195,14 @@ def admin_user_reset_password(uid):
 @login_required
 @grant_access("admin")
 def admin_user_purge(uid):
+    """Purge a user (not implemented).
+
+    Args:
+        uid: User ID.
+
+    Raises:
+        ValueError: Always, as this function is not tested.
+    """
     raise ValueError("This sensitive code is not tested yet! Sorry!!!")
 
 
@@ -180,6 +210,14 @@ def admin_user_purge(uid):
 @login_required
 @grant_access("admin")
 def admin_user_delete(uid):
+    """Delete a user.
+
+    Args:
+        uid: User ID.
+
+    Returns:
+        JSON with status message.
+    """
     return jsonify(message=user_delete(uid), data=True)
 
 
@@ -187,6 +225,14 @@ def admin_user_delete(uid):
 @login_required
 @grant_access("admin")
 def admin_user_activate(uid):
+    """Activate a user (not fully implemented).
+
+    Args:
+        uid: User ID.
+
+    Returns:
+        JSON with data and message.
+    """
     form = ActivateUserForm()
     if not form.validate_on_submit():
         raise ValueError(form.errors)
@@ -198,6 +244,14 @@ def admin_user_activate(uid):
 @login_required
 @grant_access("admin")
 def admin_user_new_del(pid):
+    """Remove a user from a registration record.
+
+    Args:
+        pid: Registration ID.
+
+    Returns:
+        JSON with updated registration data.
+    """
     data = request.get_json()
     if not data:
         raise ValueError("Expecting application/json requests")
@@ -210,6 +264,11 @@ def admin_user_new_del(pid):
 @login_required
 @grant_access("admin")
 def admin_user_new_update():
+    """Update a user in a registration record.
+
+    Returns:
+        JSON with updated registration data.
+    """
     form = NewUserEditForm()
     if not form.validate_on_submit():
         raise ValueError(form.errors)
@@ -235,6 +294,11 @@ def admin_user_update():
 @login_required
 @grant_access("admin")
 def admin_user_create():
+    """Create a new user by an admin.
+
+    Returns:
+        JSON with status message.
+    """
     form = UserEditForm()
     if form.validate_on_submit():
         return jsonify(message=user_create_by_admin(form))
@@ -245,6 +309,14 @@ def admin_user_create():
 @login_required
 @grant_access("admin")
 def admin_user_details(uid):
+    """Get user details.
+
+    Args:
+        uid: User ID.
+
+    Returns:
+        JSON with user details dictionary.
+    """
     user = user_by_id(uid)
     return jsonify(data=user.details())
 
@@ -253,6 +325,11 @@ def admin_user_details(uid):
 @login_required
 @grant_access("admin", "tech")
 def admin_user_lastlog():
+    """Process ``last`` command output to update user last-seen timestamps.
+
+    Returns:
+        200 OK with message string.
+    """
     if request.content_length > 1000000:  # 1000000 - 1 Megabyte
         return abort(413)
     data = request.get_data(cache=False, as_text=True)
@@ -264,6 +341,14 @@ def admin_user_lastlog():
 @login_required
 @grant_access("admin")
 def admin_registration_add_user(rid):
+    """Add a user to a registration record.
+
+    Args:
+        rid: Registration ID.
+
+    Returns:
+        Rendered pending HTML.
+    """
     form = NewUserForm()
     if not form.validate_on_submit():
         raise ValueError(form.errors)
@@ -274,6 +359,14 @@ def admin_registration_add_user(rid):
 @login_required
 @grant_access("admin")
 def admin_registration_edit_responsible(rid):
+    """Edit the responsible person on a registration record.
+
+    Args:
+        rid: Registration ID.
+
+    Returns:
+        Rendered pending HTML.
+    """
     form = EditResponsibleForm()
     if not form.validate_on_submit():
         raise ValueError(form.errors)
@@ -284,6 +377,14 @@ def admin_registration_edit_responsible(rid):
 @login_required
 @grant_access("admin")
 def admin_registration_edit_user(rid):
+    """Edit users on a registration record.
+
+    Args:
+        rid: Registration ID.
+
+    Returns:
+        Rendered pending HTML.
+    """
     data = request.form.to_dict()
     indexes = list(set([int(key.split("-")[0]) for key in data.keys()]))
     forms = []
@@ -299,6 +400,14 @@ def admin_registration_edit_user(rid):
 @login_required
 @grant_access("admin")
 def admin_registration_edit_record(rid):
+    """Edit fields of a registration record.
+
+    Args:
+        rid: Registration ID.
+
+    Returns:
+        Rendered pending HTML.
+    """
     form = RegistrationEditForm()
     if not form.validate_on_submit():
         raise ValueError(form.errors)
@@ -309,10 +418,13 @@ def admin_registration_edit_record(rid):
 @login_required
 @grant_access("admin", "tech", "manager")
 def admin_registration_approve(pid):
-    """
-    Approve technical requirements for the new project
-    :param pid: Int. ID of register record
-    :return: String. Message to display
+    """Approve technical requirements for a new project.
+
+    Args:
+        pid: Register record ID.
+
+    Returns:
+        JSON with approval result message.
     """
     return jsonify(message=Pending(pid).approve().result)
 
@@ -321,10 +433,13 @@ def admin_registration_approve(pid):
 @login_required
 @grant_access("admin")
 def admin_registration_reset(pid):
-    """
-    Reset new project creation process. No mail will be send
-    :param pid: Int. ID of register record
-    :return: String. Message to display
+    """Reset a new project creation process.
+
+    Args:
+        pid: Register record ID.
+
+    Returns:
+        JSON with reset result message.
     """
     return jsonify(data=Pending(pid).reset().result)
 
@@ -333,10 +448,13 @@ def admin_registration_reset(pid):
 @login_required
 @grant_access("admin", "manager")
 def admin_registration_reject(pid):
-    """
-    Reject new project request because request is malformed or not correct.
-    :param pid: Int. ID of register record
-    :return: String. Message to display
+    """Reject a new project request.
+
+    Args:
+        pid: Register record ID.
+
+    Returns:
+        JSON with rejection result message.
     """
     form = PendingActionForm()
     if not form.validate_on_submit():
@@ -348,10 +466,13 @@ def admin_registration_reject(pid):
 @login_required
 @grant_access("admin")
 def admin_registration_ignore(pid):
-    """
-    Ignoring request for new project. No mail will be send
-    :param pid: Int. ID of register record
-    :return: String. Message to display
+    """Ignore a new project request.
+
+    Args:
+        pid: Register record ID.
+
+    Returns:
+        JSON with result message.
     """
     return jsonify(data=Pending(pid).ignore().result)
 
@@ -360,6 +481,14 @@ def admin_registration_ignore(pid):
 @login_required
 @grant_access("admin", "manager")
 def admin_registration_create(pid):
+    """Create a project from a registration request.
+
+    Args:
+        pid: Register record ID.
+
+    Returns:
+        JSON with creation result message.
+    """
     data = request.form.to_dict()
     indexes = list(set([int(key.split("-")[0]) for key in data.keys()]))
     tmp = []
@@ -376,10 +505,13 @@ def admin_registration_create(pid):
 @login_required
 @grant_access("admin", "tech")
 def admin_registration_visa_received(pid):
-    """
-    Set status for new project to "visa received".
-    :param pid: Int. ID of register record
-    :return: String. Message to display.
+    """Mark visa as received for a registration.
+
+    Args:
+        pid: Register record ID.
+
+    Returns:
+        JSON with result message.
     """
     return jsonify(data=Pending(pid).visa_received().result)
 
@@ -388,10 +520,13 @@ def admin_registration_visa_received(pid):
 @login_required
 @grant_access("admin", "tech")
 def admin_registration_visa_resend(pid):
-    """
-    Sometimes visa should be sent once again
-    :param pid: Int. ID of register record
-    :return: String. Message to display. Result of admin_registration_visa()
+    """Resend a visa for a registration.
+
+    Args:
+        pid: Register record ID.
+
+    Returns:
+        JSON with result message.
     """
     return admin_registration_visa(pid, True)
 
@@ -400,11 +535,14 @@ def admin_registration_visa_resend(pid):
 @login_required
 @grant_access("admin", "tech")
 def admin_registration_visa(pid, resend=False):
-    """
-    Sending visa for new project
-    :param pid: Int. ID of register record
-    :param resend: Boolean. Whether or not visa should be resent
-    :return: String. Message to display
+    """Send or skip a visa for a registration.
+
+    Args:
+        pid: Register record ID.
+        resend: Whether to resend the visa.
+
+    Returns:
+        JSON with result message.
     """
     form = VisaPendingForm()
     if not form.validate_on_submit():
@@ -418,6 +556,14 @@ def admin_registration_visa(pid, resend=False):
 @login_required
 @grant_access("admin", "tech")
 def admin_extension_done(pid):
+    """Mark an extension request as processed.
+
+    Args:
+        pid: Extension ID.
+
+    Returns:
+        JSON with result data.
+    """
     return jsonify(data=process_extension(pid))
 
 
@@ -425,6 +571,11 @@ def admin_extension_done(pid):
 @login_required
 @grant_access("admin", "tech")
 def admin_extension_todo():
+    """Return pending extension requests.
+
+    Returns:
+        JSON with list of pending extensions.
+    """
     return jsonify(data=Extensions().pending())
 
 
@@ -432,6 +583,14 @@ def admin_extension_todo():
 @login_required
 @grant_access("admin")
 def web_admin_tasks_edit(tid):
+    """Edit a task's processed/done/decision fields.
+
+    Args:
+        tid: Task ID.
+
+    Returns:
+        JSON with updated task dictionary.
+    """
     form = TaskEditForm()
     if not form.validate_on_submit():
         raise ValueError(form_error_string(form.errors))
@@ -442,6 +601,14 @@ def web_admin_tasks_edit(tid):
 @login_required
 @grant_access("admin")
 def web_admin_tasks_ignore(tid):
+    """Ignore a task.
+
+    Args:
+        tid: Task ID.
+
+    Returns:
+        JSON with updated task list.
+    """
     task = Task(tid).ignore()
     tasks = TaskManager().list()
     if "admin.html" in request.referrer:
@@ -455,6 +622,14 @@ def web_admin_tasks_ignore(tid):
 @login_required
 @grant_access("admin")
 def web_admin_tasks_reject(tid):
+    """Reject a task.
+
+    Args:
+        tid: Task ID.
+
+    Returns:
+        JSON with updated task list.
+    """
     data = request.form.to_dict()
     task = Task(tid).reject(data.get("reason", None))
     tasks = TaskManager().list()
@@ -469,6 +644,14 @@ def web_admin_tasks_reject(tid):
 @login_required
 @grant_access("admin")
 def web_admin_tasks_accept(tid):
+    """Accept a task.
+
+    Args:
+        tid: Task ID.
+
+    Returns:
+        JSON with updated task list.
+    """
     task = Task(tid).accept()
     tasks = TaskManager().list()
     if "admin.html" in request.referrer:
@@ -482,6 +665,14 @@ def web_admin_tasks_accept(tid):
 @login_required
 @grant_access("admin")
 def web_admin_tasks_info(tid):
+    """Render task information.
+
+    Args:
+        tid: Task ID.
+
+    Returns:
+        Rendered HTML.
+    """
     return render_task(Task(tid).task)
 
 
@@ -489,6 +680,11 @@ def web_admin_tasks_info(tid):
 @login_required
 @grant_access("admin")
 def web_admin_tasks_history():
+    """Return task history.
+
+    Returns:
+        JSON with list of task dictionaries.
+    """
     return jsonify(data=task_history(), task=True)
 
 
@@ -496,6 +692,11 @@ def web_admin_tasks_history():
 @login_required
 @grant_access("admin", "tech")
 def web_admin_tasks_todo():
+    """Return tasks ready for execution.
+
+    Returns:
+        JSON with list of API-style task dictionaries.
+    """
     return jsonify(data=TaskManager().todo(), task=True)
 
 
@@ -503,6 +704,11 @@ def web_admin_tasks_todo():
 @login_required
 @grant_access("admin")
 def web_admin_tasks_list():
+    """Return unprocessed tasks.
+
+    Returns:
+        JSON with list of task dictionaries.
+    """
     return jsonify(data=TaskManager().list(), task=True)
 
 
@@ -510,6 +716,14 @@ def web_admin_tasks_list():
 @login_required
 @grant_access("admin", "tech")
 def admin_tasks_done(tid):
+    """Mark a task as done and process its action.
+
+    Args:
+        tid: Task ID.
+
+    Returns:
+        JSON with task brief.
+    """
     result = request.get_json(silent=True)
     if result:
         result = result.get("result", None)
@@ -520,6 +734,11 @@ def admin_tasks_done(tid):
 @login_required
 @grant_access("admin")
 def web_admin_partition_info():
+    """Return SLURM partition information.
+
+    Returns:
+        JSON with partition data.
+    """
     return jsonify(data=slurm_partition_info())
 
 
@@ -527,13 +746,13 @@ def web_admin_partition_info():
 @login_required
 @grant_access("admin")
 def web_admin_user_info():
-    """
-    Executes linux w command on a remote server and parse the result to be
-    returned as JSON
-    :return: List of dictionaries with user information like:
-    {"username": login, "from": host, "process": cmd}
-    """
+    """Return logged-in users on a remote server.
 
+    Expects JSON with ``server`` field.
+
+    Returns:
+        JSON with list of user session dictionaries.
+    """
     data = request.get_json()
     if not data:
         raise ValueError("Expecting application/json requests")
@@ -561,6 +780,14 @@ def web_admin_user_info():
 @login_required
 @grant_access("admin", "manager")
 def web_admin_bits_user_info(login):
+    """Render expanded user info for the registry view.
+
+    Args:
+        login: User login.
+
+    Returns:
+        Rendered HTML.
+    """
     return render_registry(get_user_record(login))
 
 
@@ -568,6 +795,14 @@ def web_admin_bits_user_info(login):
 @login_required
 @grant_access("admin", "manager")
 def web_admin_bits_pending(rid):
+    """Render expanded pending registration view.
+
+    Args:
+        rid: Registration ID.
+
+    Returns:
+        Rendered HTML.
+    """
     return render_pending(Pending(rid).pending)
 
 
@@ -575,6 +810,11 @@ def web_admin_bits_pending(rid):
 @login_required
 @grant_access("admin", "manager")
 def web_admin_pending_list():
+    """Return unprocessed registrations.
+
+    Returns:
+        JSON with list of registration dictionaries.
+    """
     return jsonify(data=unprocessed_dict())
 
 
@@ -582,6 +822,14 @@ def web_admin_pending_list():
 @login_required
 @grant_access("admin", "manager", "responsible", "user")
 def web_admin_accounting_project(name):
+    """Return accounting data for a project.
+
+    Args:
+        name: Project name.
+
+    Returns:
+        JSON with daily accounting data.
+    """
     project = Project.query.filter_by(name=name).one()
     days = (dt.now(tz=tz.utc) - project.resources.created).days
     return jsonify(data=account_days(days, project=project))
@@ -591,6 +839,14 @@ def web_admin_accounting_project(name):
 @login_required
 @grant_access("admin", "manager", "responsible", "user")
 def web_admin_accounting_days(last):
+    """Return accounting data for the last N days.
+
+    Args:
+        last: Number of days.
+
+    Returns:
+        JSON with daily accounting data.
+    """
     return jsonify(data=account_days(last))
 
 
@@ -598,6 +854,11 @@ def web_admin_accounting_days(last):
 @login_required
 @grant_access("admin")
 def web_slurm_node_list():
+    """Return SLURM node status.
+
+    Returns:
+        JSON with node status list.
+    """
     return jsonify(data=slurm_nodes_status())
 
 
@@ -605,6 +866,11 @@ def web_slurm_node_list():
 @login_required
 @grant_access("admin")
 def web_admin_sys_info():
+    """Return system info for all admin servers.
+
+    Returns:
+        JSON with server info list.
+    """
     servers = current_app.config["ADMIN_SERVER"]
     if not isinstance(servers, list):
         servers = servers.split(",")
@@ -618,6 +884,11 @@ def web_admin_sys_info():
 @login_required
 @grant_access("admin")
 def web_admin_space_info():
+    """Return disk space information.
+
+    Returns:
+        JSON with space info list.
+    """
     return jsonify(data=space_info())
 
 
@@ -625,6 +896,14 @@ def web_admin_space_info():
 @login_required
 @grant_access("admin")
 def web_login_registry(login):
+    """Render the registry page for a specific user.
+
+    Args:
+        login: User login.
+
+    Returns:
+        Rendered registry.html template.
+    """
     info = render_registry(get_user_record(login))
     return render_template("registry.html", login=info)
 
@@ -634,6 +913,11 @@ def web_login_registry(login):
 @login_required
 @grant_access("admin")
 def web_registry():
+    """Render the user registry page.
+
+    Returns:
+        Rendered registry.html template.
+    """
     form = AddUserForm()
     return render_template("registry.html", data=all_users(), form=form)
 
@@ -643,6 +927,11 @@ def web_registry():
 @login_required
 @grant_access("admin")
 def web_log():
+    """Render the event log page.
+
+    Returns:
+        Rendered log.html template.
+    """
     return render_template("log.html", data=event_log())
 
 
@@ -653,6 +942,11 @@ def web_log():
 @login_required
 @grant_access("admin")
 def web_cfg():
+    """Render the configuration view page.
+
+    Returns:
+        Rendered config.html template.
+    """
     return render_template("config.html", data=show_configuration())
 
 
@@ -661,6 +955,11 @@ def web_cfg():
 @login_required
 @grant_access("admin", "manager")
 def web_task():
+    """Render the task list page.
+
+    Returns:
+        Rendered task.html template.
+    """
     return render_template("task.html", data=task_history())
 
 
@@ -669,6 +968,11 @@ def web_task():
 @login_required
 @grant_access("admin", "manager")
 def web_admin():
+    """Render the admin dashboard page.
+
+    Returns:
+        Rendered admin.html template.
+    """
     servers = current_app.config["ADMIN_SERVER"]
     if not isinstance(servers, list):
         servers = servers.split(",")
