@@ -17,6 +17,14 @@ class RejectForm(FlaskForm):
 
 
 def rejection(project):
+    """Create a RejectForm for a given project.
+
+    Args:
+        project: Project instance.
+
+    Returns:
+        A RejectForm instance.
+    """
     form = RejectForm()
     form.name = project.name
     return form
@@ -33,6 +41,14 @@ class AcceptForm(FlaskForm):
 
 
 def acceptance(record):
+    """Create an AcceptForm pre-populated from an Extend record.
+
+    Args:
+        record: Extend instance.
+
+    Returns:
+        An AcceptForm instance.
+    """
     form = AcceptForm(active=True)
     if record.transform.strip():
         form.ext_check = "checked = checked"
@@ -51,6 +67,14 @@ def acceptance(record):
 
 
 def contact(ext):
+    """Create a MessageForm for contacting the project responsible.
+
+    Args:
+        ext: Extend instance.
+
+    Returns:
+        A MessageForm instance.
+    """
     form = MessageForm()
     form.id = ext.id
     form.title_value = "%s %s request created %s" % (

@@ -42,6 +42,14 @@ class ActivateForm(FlaskForm):
 
 
 def activate(project):
+    """Create an ActivateForm for a given project.
+
+    Args:
+        project: Project instance.
+
+    Returns:
+        An ActivateForm instance.
+    """
     form = ActivateForm()
     form.name = project.name
     return form
@@ -57,6 +65,14 @@ class TransForm(FlaskForm):
 
 
 def transform(project):
+    """Create a TransForm for a given project.
+
+    Args:
+        project: Project instance.
+
+    Returns:
+        A TransForm instance with available transformation options.
+    """
     form = TransForm()
     form.name = project.name
     form.new.choices = get_transformation_options(project.type)
@@ -71,6 +87,14 @@ class RenewForm(FlaskForm):
 
 
 def renew(project):
+    """Create a RenewForm for a given project.
+
+    Args:
+        project: Project instance.
+
+    Returns:
+        A RenewForm instance, or None if the project type is not renewable.
+    """
     config = g.project_config
     project_type = project.type.lower()
     if project_type not in config.keys():
@@ -85,6 +109,8 @@ def renew(project):
 
 
 class ExtendForm(FlaskForm):
+    """Form for extending a project's allocation."""
+
     end_date = None
     eval_date = None
     eval_note = None
@@ -97,6 +123,17 @@ class ExtendForm(FlaskForm):
 
 
 def extend(project):
+    """Create an ExtendForm for a given project.
+
+    Populates the form with the project's current end date, evaluation
+    date, and evaluation notice date from configuration.
+
+    Args:
+        project: Project instance.
+
+    Returns:
+        An ExtendForm instance.
+    """
     config = g.project_config
     project_type = project.type.lower()
     if project_type not in config.keys():
@@ -124,16 +161,36 @@ def extend(project):
 
 
 class ResponsibleForm(FlaskForm):
+    """Form for selecting a new project responsible."""
+
     login = SelectField("Login", choices=[("", "---")], default=0)
     send = BooleanField(default="checked")
 
     def validate(self, extra_validators=None):
+        """Validate that a login was selected.
+
+        Args:
+            extra_validators: Not used.
+
+        Returns:
+            True if valid.
+        """
         if self.login.data:
             self.login.validate(self, [DataRequired()])
             return True
 
 
 def new_responsible(project, is_admin):
+    """Create a ResponsibleForm with available user choices.
+
+    Args:
+        project: Project instance.
+        is_admin: Whether the current user is an admin (allows selecting
+            any user).
+
+    Returns:
+        A ResponsibleForm instance.
+    """
     form = ResponsibleForm()
     form.name = project.name
     form.responsible = project.responsible.full()
@@ -158,10 +215,13 @@ class UserForm(BaseForm):
     key = StringField("Key", validators=[Optional()])
 
     def validate(self, extra_validators=None):
-        """
-        Method which replaces standard validate method because of usage custom
-        select2 field
-        :return: Boolean
+        """Custom validation: must select existing user OR enter new user details.
+
+        Args:
+            extra_validators: Not used.
+
+        Returns:
+            True if valid, False otherwise.
         """
         required = (self.prenom, self.surname, self.email)
         select_old = bool(self.login.data)
@@ -186,6 +246,14 @@ class UserForm(BaseForm):
 
 
 def new_user(project):
+    """Create a UserForm for a given project.
+
+    Args:
+        project: Project instance.
+
+    Returns:
+        A UserForm instance.
+    """
     form = UserForm()
     form.name = project.name
     form.ssh = getattr(project, "ssh_upload", False)
@@ -204,6 +272,14 @@ class ActivityForm(FlaskForm):
 
 
 def activity(project):
+    """Create an ActivityForm for a given project.
+
+    Args:
+        project: Project instance.
+
+    Returns:
+        An ActivityForm instance.
+    """
     form = ActivityForm()
     form.name = project.name
     return form

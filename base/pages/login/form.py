@@ -9,6 +9,8 @@ __copyright__ = "Aix Marseille University"
 
 
 class MessageForm(FlaskForm):
+    """Form for sending a simple message to a user."""
+
     destination = HiddenField(validators=[DataRequired()])
     title = StringField("Title", validators=[DataRequired()])
     message = TextAreaField("Message", validators=[DataRequired(
@@ -16,11 +18,15 @@ class MessageForm(FlaskForm):
 
 
 class ResetForm(FlaskForm):
+    """Form for changing the current user's password."""
+
     old = PasswordField("OldPassword", validators=[DataRequired()])
     new_passw = PasswordField("NewPassword", validators=[DataRequired()])
     conf_passw = PasswordField("ConfirmPassword", validators=[DataRequired()])
 
 
 class LoginForm(FlaskForm):
+    """Form for user login with username and password."""
+
     login = StringField("Login", validators=[DataRequired()])
     passw = PasswordField("Password", validators=[DataRequired()])
