@@ -115,14 +115,18 @@ def admin_info_projects():
         .all()
     )
     debug(f"Query returned {len(projects)} rows")
-    result = [{"id": pid,
-               "type": ptype,
-               "name": name,
-               "cpu": cpu,
-               "created": created.strftime("%Y-%m-%d %H:%M"),
-               "end": ttl.strftime("%Y-%m-%d %H:%M"),
-               "login": login
-               } for pid, ptype, name, cpu, created, ttl, login in projects]
+    result = [
+        {
+            "id": pid,
+            "type": ptype,
+            "name": name,
+            "cpu": cpu,
+            "created": created.strftime("%Y-%m-%d %H:%M"),
+            "end": ttl.strftime("%Y-%m-%d %H:%M"),
+            "login": login,
+        }
+        for pid, ptype, name, cpu, created, ttl, login in projects
+    ]
     if result:
         debug(f"Preview of first record: {result[0]}")
     return jsonify(data=result)
