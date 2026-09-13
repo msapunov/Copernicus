@@ -1,3 +1,7 @@
+"""URL routes for the project blueprint: sanity checks, activity reports,
+user management, modal dialogs, and project info.
+"""
+
 from flask import flash, g, jsonify, render_template, request, url_for
 from flask_login import current_user, login_required
 

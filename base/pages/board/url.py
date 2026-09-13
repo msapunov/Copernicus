@@ -1,3 +1,4 @@
+"""URL routes for the board blueprint (admin extension/renewal management)."""
 
 from flask import jsonify, render_template, url_for
 from flask_login import login_required

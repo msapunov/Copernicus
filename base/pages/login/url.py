@@ -1,3 +1,7 @@
+"""URL routes for the login blueprint: authentication, password reset,
+and simple messaging.
+"""
+
 from base64 import b64decode
 from logging import debug, error
 
