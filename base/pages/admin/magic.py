@@ -72,12 +72,12 @@ def process_user_form(form):
         user.action = "assign"
     else:
         user = User()
-        user.login=login
-        user.name=prenom
-        user.surname=surname
-        user.email=email
-        user.created=dt.now()
-        user.acl=ACLDB()
+        user.login = login
+        user.name = prenom
+        user.surname = surname
+        user.email = email
+        user.created = dt.now()
+        user.acl = ACLDB()
         db.session.add(user)
         user.action = "create"
     if "True" == form.responsible.data:
@@ -102,8 +102,7 @@ def account_days(days=30, project=None, user=None):
     today = dt.today().replace(hour=0, minute=0, second=0, microsecond=0)
     dates = [today - timedelta(days=i) for i in range(days)]
     every = Accounting.query.filter(
-        Accounting.project == project,
-        Accounting.user == user
+        Accounting.project == project, Accounting.user == user
     )
     if len(dates) > 0:
         every = every.filter(Accounting.date >= dates[-1])
@@ -161,7 +160,7 @@ def unprocessed_dict():
         res = p.to_dict()
         if p.status == "sent" or p.status == "resent":
             created = p.ts.replace(tzinfo=None)
-            three = dt.now() - timedelta(days=3*30)
+            three = dt.now() - timedelta(days=3 * 30)
             if created < three:
                 res["visa_expired"] = True
         result.append(res)
@@ -178,8 +177,9 @@ def unprocessed():
         List of Register objects.
     """
     status = ["created", "ignored", "rejected"]
-    query = Register.query.filter(Register.status.is_(None)
-                                  | ~Register.status.in_(status))
+    query = Register.query.filter(
+        Register.status.is_(None) | ~Register.status.in_(status)
+    )
     if "admin" in g.permissions:
         return query.all()
 
@@ -207,8 +207,9 @@ def render_registry(user):
     if tasks:
         details["todo"] = list(map(lambda x: x.description(), tasks))
     project_url = url_for("user.web_statistic_name", name="")
-    row = render_template("bits/registry_expand_row.html", user=details,
-                          project_url=project_url)
+    row = render_template(
+        "bits/registry_expand_row.html", user=details, project_url=project_url
+    )
     row += render_template("modals/registry_reset_password.html", form=details)
     row += render_template("modals/registry_send_welcome.html", form=details)
     edit_form = edit_info(user)
@@ -279,8 +280,12 @@ def render_pending(rec):
         resp = edit_responsible(rec)
         top += render_template("modals/admin_edit_responsible.html", form=resp)
         user_forms = edit_user(rec.users)
-        top += render_template("modals/admin_edit_user.html", forms=user_forms,
-                               project_id=rec.project_id(), name=rec.id)
+        top += render_template(
+            "modals/admin_edit_user.html",
+            forms=user_forms,
+            project_id=rec.project_id(),
+            name=rec.id,
+        )
         nu = new_user(rec)
         top += render_template("modals/admin_add_user.html", form=nu)
     reset = render_template("modals/admin_reset_pending.html", rec=rec)
@@ -290,9 +295,9 @@ def render_pending(rec):
     form = contact_pending(rec)
     mail = render_template("modals/common_send_message.html", form=form)
     logs = list(map(lambda x: x.brief(), RequestLog(rec).list()))
-    row = render_template("bits/pending_expand_row.html",
-                          pending=rec.to_dict(),
-                          logs=logs)
+    row = render_template(
+        "bits/pending_expand_row.html", pending=rec.to_dict(), logs=logs
+    )
     return row + top + reset + reject + ignore + mail
 
 
@@ -514,10 +519,23 @@ def registration_record_edit(rid, form):
     """
     rec = get_registration_record(rid)
     not_str = ["cpu"]
-    props = ["title", "type", "description", "scientific_fields", "cpu",
-             "genci_committee", "numerical_methods", "computing_resources",
-             "project_management", "project_motivation", "article_1",
-             "article_2", "article_3", "article_4", "article_5"]
+    props = [
+        "title",
+        "type",
+        "description",
+        "scientific_fields",
+        "cpu",
+        "genci_committee",
+        "numerical_methods",
+        "computing_resources",
+        "project_management",
+        "project_motivation",
+        "article_1",
+        "article_2",
+        "article_3",
+        "article_4",
+        "article_5",
+    ]
     msg = ["Updated"]
     for prop in props:
         old = getattr(rec, prop)
@@ -605,12 +623,14 @@ def registration_responsible_edit(rid, form):
         Rendered pending HTML, or raises ValueError if no changes.
     """
     rec = get_registration_record(rid)
-    props = {"responsible_first_name": "prenom",
-             "responsible_last_name": "surname",
-             "responsible_email": "email",
-             "responsible_position": "position",
-             "responsible_lab": "lab",
-             "responsible_phone": "phone"}
+    props = {
+        "responsible_first_name": "prenom",
+        "responsible_last_name": "surname",
+        "responsible_email": "email",
+        "responsible_position": "position",
+        "responsible_lab": "lab",
+        "responsible_phone": "phone",
+    }
     msg = ["Updated"]
     for key, value in props.items():
         old = getattr(rec, key)
@@ -624,7 +644,7 @@ def registration_responsible_edit(rid, form):
         msg = "\n".join(msg)
         RequestLog(rec).request_change(msg)
         return render_pending(rec)
-    raise  ValueError("No modifications has been detected!")
+    raise ValueError("No modifications has been detected!")
 
 
 def user_info_update_new(form):
@@ -752,8 +772,11 @@ def user_info_update(form):
     uid = form.uid.data
     user = user_by_id(uid)
     msg = []
-    for result in [update_user_acl(user, form), update_user_project(user, form),
-                   update_user_details(user, form)]:
+    for result in [
+        update_user_acl(user, form),
+        update_user_project(user, form),
+        update_user_details(user, form),
+    ]:
         if not result:
             continue
         msg.append(result)
@@ -844,19 +867,21 @@ def user_create(task):
     user = User.query.filter_by(login=tmp_user.login).first()
     if not user:
         user = User()
-        user.login=tmp_user.login
-        user.name=tmp_user.name
-        user.surname=tmp_user.surname
-        user.email=tmp_user.email
-        user.active=True
-        user.project=[task.project]
-        user.created=dt.now()
-        user.acl=ACLDB(is_user=tmp_user.is_user,
-                       is_responsible=tmp_user.is_responsible,
-                       is_tech=tmp_user.is_tech,
-                       is_manager=tmp_user.is_manager,
-                       is_committee=tmp_user.is_committee,
-                       is_admin=tmp_user.is_admin)
+        user.login = tmp_user.login
+        user.name = tmp_user.name
+        user.surname = tmp_user.surname
+        user.email = tmp_user.email
+        user.active = True
+        user.project = [task.project]
+        user.created = dt.now()
+        user.acl = ACLDB(
+            is_user=tmp_user.is_user,
+            is_responsible=tmp_user.is_responsible,
+            is_tech=tmp_user.is_tech,
+            is_manager=tmp_user.is_manager,
+            is_committee=tmp_user.is_committee,
+            is_admin=tmp_user.is_admin,
+        )
         db.session.add(user)
     if user not in task.project.users:
         task.project.users.append(user)
@@ -900,8 +925,18 @@ def process_task(tid, result):
         raise ValueError(f"Task {tid} has been processed already")
     act = record.action.split("|")[0]
     ent = record.action.split("|")[1]
-    req = ["activate", "create", "assign", "update", "remove", "change", "ssh",
-           "transform", "extend", "renew"]
+    req = [
+        "activate",
+        "create",
+        "assign",
+        "update",
+        "remove",
+        "change",
+        "ssh",
+        "transform",
+        "extend",
+        "renew",
+    ]
     if act not in req:
         raise ValueError("The action '%s' is not supported" % act)
     task = Task(record)
