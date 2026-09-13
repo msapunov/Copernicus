@@ -186,9 +186,7 @@ def unprocessed():
     approve = []
     for project_type in g.project_config.keys():
         acl = g.project_config[project_type].get("acl", [])
-        if current_user.login in acl:
-            approve.append(project_type)
-        elif set(acl).intersection(set(g.permissions)):
+        if current_user.login in acl or set(acl).intersection(set(g.permissions)):
             approve.append(project_type)
     return query.filter(Register.type.in_(approve)).all()
 
@@ -262,16 +260,14 @@ def render_pending(rec):
         visa = visa_pending(rec)
         top = render_template("modals/admin_visa_received.html", rec=rec)
         top += render_template("modals/admin_visa_pending.html", rec=visa)
-    elif "RECEIVED" in status:
+    elif "RECEIVED" in status or "SKIPPED" in status:
         create = create_pending(rec)
-        top = render_template("modals/admin_create_project.html",
-                              forms=create, project_id=rec.project_id(),
-                              name=rec.id)
-    elif "SKIPPED" in status:
-        create = create_pending(rec)
-        top = render_template("modals/admin_create_project.html",
-                              forms=create, project_id=rec.project_id(),
-                              name=rec.id)
+        top = render_template(
+            "modals/admin_create_project.html",
+            forms=create,
+            project_id=rec.project_id(),
+            name=rec.id,
+        )
     else:
         top = render_template("modals/admin_approve_pending.html", rec=rec)
     if status not in ["SENT", "RECEIVED"]:
@@ -944,9 +940,7 @@ def process_task(tid, result):
         raise ValueError("The action '%s' is not supported" % act)
     task = Task(record)
     task.done(result)
-    if act == "create" and ent == "user":
-        task.user_create()
-    elif act == "create" and ent == "resp":
+    if act == "create" and ent == "user" or act == "create" and ent == "resp":
         task.user_create()
     elif act == "create" and ent == "proj":
         task.project_create()
