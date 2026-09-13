@@ -35,8 +35,9 @@ def project_info(name=None):
     data = {
         i.name: {
             "consumption": i.account(),
-            "total": i.resources.cpu if i.resources else 0
-        } for i in projects
+            "total": i.resources.cpu if i.resources else 0,
+        }
+        for i in projects
     }
     return jsonify(data=data)
 
