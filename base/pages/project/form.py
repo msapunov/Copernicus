@@ -65,6 +65,8 @@ def activate(project):
 
 
 class TransForm(FlaskForm):
+    """Form for transforming a project to a different type."""
+
     new = SelectField(
         "New type", validators=[DataRequired(message="New type is missing")]
     )
