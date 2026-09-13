@@ -54,7 +54,6 @@ def suspend_expired_projects(projects):
         ProjectLog(project).expired()
     if db.session.new or db.session.dirty or db.session.deleted:
         db.session.commit()
-    return
 
 
 def warn_expired_projects(projects, config):
@@ -90,7 +89,6 @@ def warn_expired_projects(projects, config):
                 debug("Sending warning cause no previous warning events found")
                 log.expire_warning()
     db.session.commit()
-    return
 
 
 def suspend_overconsumed_projects(projects):
