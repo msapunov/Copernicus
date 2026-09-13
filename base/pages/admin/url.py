@@ -646,9 +646,12 @@ def web_admin_tasks_reject(tid):
     task = Task(tid).reject(data.get("reason", None))
     tasks = TaskManager().list()
     if "admin.html" in request.referrer:
-        return jsonify(data=tasks, info="Task '%s' is rejected" % task.short(),
-                       task=True, html=render_template(
-            "modals/admin_show_task.html", data={"tasks": tasks}))
+        return jsonify(
+            data=tasks,
+            info="Task '%s' is rejected" % task.short(),
+            task=True,
+            html=render_template("modals/admin_show_task.html", data={"tasks": tasks}),
+        )
     return jsonify(data=tasks, task=True)
 
 
