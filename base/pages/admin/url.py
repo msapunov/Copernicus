@@ -778,8 +778,9 @@ def web_admin_user_info():
     server = str(data["server"]).strip()
     if not server:
         raise ValueError("Server is not defined")
-    result, err = ssh_wrapper("PROCPS_USERLEN=32 PROCPS_FROMLEN=90 w -s -h",
-                              host=server)
+    result, err = ssh_wrapper(
+        "PROCPS_USERLEN=32 PROCPS_FROMLEN=90 w -s -h", host=server
+    )
     if not result:
         raise ValueError("Error getting partition information: %s" % err)
 
