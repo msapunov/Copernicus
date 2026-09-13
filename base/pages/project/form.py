@@ -35,12 +35,19 @@ __copyright__ = "Aix Marseille University"
 
 
 class ActivateForm(FlaskForm):
-    cpu = IntegerField("CPU", validators=[NumberRange(
-        min=0, message="CPU value must be 0 or any other positive number")])
-    note = TextAreaField("Motivation", validators=[DataRequired(
-        message="Motivation field is empty")])
     """Form for activating a suspended project."""
 
+    cpu = IntegerField(
+        "CPU",
+        validators=[
+            NumberRange(
+                min=0, message="CPU value must be 0 or any other positive number"
+            )
+        ],
+    )
+    note = TextAreaField(
+        "Motivation", validators=[DataRequired(message="Motivation field is empty")]
+    )
 
 
 def activate(project):
