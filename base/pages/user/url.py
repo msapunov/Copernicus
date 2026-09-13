@@ -220,7 +220,12 @@ def user_index():
         project.private_use = "{0:.1%}".format(
             float(project.private) / float(project.resources.cpu))
 
-    return render_template("user.html", data={"user": current_user,
-                                              "jobs": jobs,
-                                              "scratch": scratch,
-                                              "projects": current_user.project})
+    return render_template(
+        "user.html",
+        data={
+            "user": current_user,
+            "jobs": jobs,
+            "scratch": scratch,
+            "projects": current_user.project,
+        },
+    )
