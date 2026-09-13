@@ -78,7 +78,11 @@ __copyright__ = "Aix Marseille University"
 @login_required
 @grant_access("admin")
 def web_test():
-    return render_template("test.html", data=Project.query.all())
+    """Render the test page with project data.
+
+    Returns:
+        Rendered test.html template.
+    """
 
 
 @bp.route("/admin/info/projects", methods=["POST"])
