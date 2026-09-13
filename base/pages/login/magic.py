@@ -1,8 +1,8 @@
-from paramiko import SSHClient, AutoAddPolicy, AuthenticationException
-from logging import warning, debug, error
-from flask import current_app
+from logging import debug, error, warning
 from re import search
 
+from flask import current_app
+from paramiko import AuthenticationException, AutoAddPolicy, SSHClient
 
 __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"

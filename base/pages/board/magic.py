@@ -1,12 +1,13 @@
 """Business logic for the board: resource creation and extension processing."""
 
-from flask_login import current_user
-from base.classes import ProjectLog, Extensions
-from base.pages import check_json
-from base.functions import calculate_ttl
-from base.database.schema import Resources
 from logging import debug
 
+from flask_login import current_user
+
+from base.classes import Extensions, ProjectLog
+from base.database.schema import Resources
+from base.functions import calculate_ttl
+from base.pages import check_json
 
 __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"

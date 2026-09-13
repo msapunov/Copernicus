@@ -1,22 +1,31 @@
-from datetime import datetime as dt, timezone
-from logging import error, debug, warning
-from pathlib import Path, PurePath
-from itertools import chain
 
-from flask import current_app, render_template, g, request
+from datetime import datetime as dt
+from datetime import timezone
+from logging import debug, error
+from pathlib import Path
+
+from flask import current_app, g, render_template, request
 from flask_login import current_user
-from werkzeug.utils import secure_filename
 from webdav3.client import Client
+from werkzeug.utils import secure_filename
 
 from base import db
-from base.classes import TmpUser, ProjectLog, Task, UserLog, TaskQueue
-from base.functions import (upload_to_cloud, calculate_ttl, write_pdf,
-                            ssh_check, form_error_string)
-from base.functions import get_field_value, ssh_wrapper, parse_moment
+from base.classes import ProjectLog, Task, TaskQueue, TmpUser, UserLog
 from base.database.schema import Extend, File, Project, Tasks, User
-from base.pages import generate_login  # TODO: move to functions
-from base.pages.user.magic import user_by_id
+from base.functions import (
+    calculate_ttl,
+    form_error_string,
+    get_field_value,
+    parse_moment,
+    ssh_check,
+    ssh_wrapper,
+    upload_to_cloud,
+    write_pdf,
+)
+from base.pages import generate_login
 from base.pages.board.magic import create_resource
+from base.pages.user.magic import user_by_id
+
 
 __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"

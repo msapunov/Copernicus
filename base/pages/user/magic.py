@@ -1,15 +1,13 @@
-from flask import request
-from flask_login import current_user
-from base import db
-from base.functions import (bytes2human, ssh_wrapper, ssh_check,
-                            form_error_string)
-from base.database.schema import User, Project, Register
-from base.classes import UserLog, Task, TaskQueue
-from tempfile import mkstemp
-from os import path, remove
-from logging import debug, error
-from datetime import datetime as dt, timezone
+from datetime import datetime as dt
+from datetime import timezone
+from logging import debug
 
+from flask_login import current_user
+
+from base import db
+from base.classes import Task, TaskQueue, UserLog
+from base.database.schema import Project, User
+from base.functions import bytes2human, ssh_check, ssh_wrapper, form_error_string
 
 __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
