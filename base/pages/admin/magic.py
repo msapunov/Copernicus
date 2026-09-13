@@ -996,12 +996,10 @@ class TaskManager:
     def todo(self):
         # Returns a list of tasks which has been processed by admins but haven't
         # been performed by a script
-        self.query = self.query.filter(
-            self.tasks.processed == True
-        ).filter(
-            self.tasks.decision == "accept"
-        ).filter(
-            self.tasks.done == False
+        self.query = (
+            self.query.filter(self.tasks.processed == True)
+            .filter(self.tasks.decision == "accept")
+            .filter(self.tasks.done == False)
         )
         tasks = self.query.all()
         return list(map(lambda x: x.api(), tasks)) if tasks else []
