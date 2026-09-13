@@ -21,7 +21,12 @@ from flask_login import login_required, login_user
 
 from base.classes import Extensions, Pending
 from base.database.schema import Project, Resources, User
-from base.functions import show_configuration, slurm_nodes_status, ssh_wrapper
+from base.functions import (
+    show_configuration,
+    slurm_nodes_status,
+    ssh_wrapper,
+    form_error_string,
+)
 from base.pages import Task, grant_access
 from base.pages.admin import bp
 from base.pages.admin.form import (
@@ -67,7 +72,6 @@ from base.pages.admin.magic import (
 )
 from base.pages.project.magic import process_extension
 from base.pages.user.magic import get_user_record, user_by_id
-from base.utils import form_error_string
 
 __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
