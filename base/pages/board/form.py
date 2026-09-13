@@ -1,3 +1,5 @@
+"""WTForms for the board (admin extension/renewal approval)."""
+
 from flask_wtf import FlaskForm
 from wtforms import TextAreaField, BooleanField, IntegerField, DateField
 from wtforms.validators import DataRequired, NumberRange, ValidationError, Email

@@ -1,3 +1,7 @@
+"""WTForms for project management: activation, transformation, renewal,
+extension, user management, and activity reporting.
+"""
+
 from flask import g
 from flask_wtf import FlaskForm
 from wtforms import HiddenField, IntegerField, BooleanField
