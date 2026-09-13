@@ -474,7 +474,7 @@ def web_modal_ssh(login):
     """
     if login not in g.user_list:
         raise ValueError(f"User with login '{login}' not found")
-    form = KeyForm(login = login)
+    form = KeyForm(login=login)
     form.username = login
     form.email = current_user.email
     return jsonify(render_template("modals/user_load_ssh.html", form=form))
