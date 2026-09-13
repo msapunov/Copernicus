@@ -287,9 +287,10 @@ def admin_user_new_update():
 @login_required
 @grant_access("admin")
 def admin_user_update():
-    """
-    Update user's information
-    :return: jsonified user_info_update_new and messages
+    """Update a user's details (ACL, projects, info).
+
+    Returns:
+        JSON with user details and status message.
     """
     form = UserEditForm()
     if not form.validate_on_submit():
