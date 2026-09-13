@@ -1,13 +1,11 @@
-from flask import render_template, jsonify, request, abort
+from flask import jsonify, render_template
 from flask_login import login_required
-from base.pages import grant_access
-from base.pages.user import bp
-from base.pages.statistic.magic import (
-    render_project,
-    project_types)
-from base.pages.project.magic import set_state
-from base.database.schema import Project, Accounting
 
+from base.database.schema import Accounting, Project
+from base.pages import grant_access
+from base.pages.project.magic import set_state
+from base.pages.statistic.magic import project_types, render_project
+from base.pages.user import bp
 
 __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
