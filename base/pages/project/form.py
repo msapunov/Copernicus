@@ -241,11 +241,14 @@ def new_responsible(project, is_admin):
 
 
 class UserForm(BaseForm):
-    prenom = StringField("Name", validators=[DataRequired()])  # Can't use "name" cause it causes conflict
+    prenom = StringField(
+        "Name", validators=[DataRequired()]
+    )  # Can't use "name" cause it causes conflict
     surname = StringField("Surname", validators=[DataRequired()])
     email = EmailField("E-mail", validators=[DataRequired(), Email()])
-    login = SelectField("Login", choices=[], coerce=int, default=0,
-                        validate_choice=False)
+    login = SelectField(
+        "Login", choices=[], coerce=int, default=0, validate_choice=False
+    )
     create_user = False
     key = StringField("Key", validators=[Optional()])
 
@@ -296,8 +299,9 @@ def new_user(project):
 
 
 class ActivityForm(FlaskForm):
-    report = TextAreaField("report", validators=[DataRequired(
-        message="Report field is empty")])
+    report = TextAreaField(
+        "report", validators=[DataRequired(message="Report field is empty")]
+    )
     doi = TextAreaField("list_of_publications")
     training = TextAreaField("training_activity")
     hiring = TextAreaField("Hiring")
