@@ -248,9 +248,7 @@ def project_create_user(project, form):
     if tmp_users:
         user.comment = "TEMPORARY USER"
     task = TaskQueue().project(project).user_create(user).task
-    if current_user.login and "admin" in current_user.permissions():
-        task.accept()
-    elif add_users:
+    if current_user.login and "admin" in current_user.permissions() or add_users:
         task.accept()
     if ssh_upload and key:
         ssh_task = TaskQueue()
