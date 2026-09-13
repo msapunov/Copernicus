@@ -35,11 +35,13 @@ __copyright__ = "Aix Marseille University"
 
 
 def suspend_expired_projects(projects):
-    """
-    Check end of life of resources for all the projects and if the EOL is less
-    the now() the project's active property set to False, project_suspend action
-    is created
-    :return: Nothing
+    """Deactivate projects whose resources have expired.
+
+    Compares each project's TTL against the current time and deactivates
+    expired projects.
+
+    Args:
+        projects: List of Project instances to check.
     """
     now = dt.now().replace(tzinfo=timezone.utc)
     for project in projects:
@@ -56,11 +58,15 @@ def suspend_expired_projects(projects):
 
 
 def warn_expired_projects(projects, config):
-    """
-    Check if end of life of a project resources within time interval from
-    configuration option 'finish_notice' and if a warning has been already sent.
-    Sent warning message if it's not done yet.
-    :return: Nothing
+    """Send expiration warnings for projects nearing their end date.
+
+    Checks each project's TTL against the ``finish_notice_dt`` configured
+    for its type and sends a warning if within the notice period and if
+    no warning has been sent yet.
+
+    Args:
+        projects: List of Project instances to check.
+        config: Project configuration dictionary.
     """
     now = dt.now().replace(tzinfo=timezone.utc)
     for project in projects:
@@ -88,22 +94,25 @@ def warn_expired_projects(projects, config):
 
 
 def suspend_overconsumed_projects(projects):
-    pass
+    """Placeholder: suspend projects that have over-consumed resources."""
 
 
 def warn_overconsumed_projects(projects):
-    pass
+    """Placeholder: warn about projects that have over-consumed resources."""
 
 
 def consumption_check(projects):
-    pass
+    """Placeholder: check consumption across all projects."""
 
 
 def active_users_check(projects):
-    """
-    Check whether the users of ongoing projects are active as well.
-    @param projects: List. List of projects
-    @return: None
+    """Find projects with inactive users.
+
+    Args:
+        projects: List of Project instances.
+
+    Returns:
+        Dictionary mapping projects to lists of inactive user logins.
     """
     result = {}
     for project in projects:
@@ -116,6 +125,15 @@ def active_users_check(projects):
 
 
 def sanity_check():
+    """Run a health check across all active projects.
+
+    Checks active user status, suspends expired projects, and checks
+    for overconsumption.
+
+    Returns:
+        Summary string listing any inactive users found, or
+        ``"Sanity check done"``.
+    """
     cfg = g.project_config
     projects = (
         Project.query
@@ -135,6 +153,13 @@ def sanity_check():
 
 
 def active_check():
+    """Compare project active status in the database against SLURM data.
+
+    Expects raw POST data with ``project_name|state`` lines.
+
+    Returns:
+        String describing any inconsistencies found.
+    """
     result = []
     projects = db.session.query(Project).all()
     raw_data = request.get_data()
@@ -160,12 +185,17 @@ def active_check():
 
 
 def project_attach_user(project, form):
-    """
-    Function which attach an existing user to a given project
-    :param project: Object. Project object to which user should be attached
-    :param form: Instance of WTForm
-    :return: Instance of a project to which a new user has to be attached and an
-    instance of User class
+    """Attach an existing user to a project.
+
+    Creates a task queue entry for assigning or activating the user,
+    and auto-processes it if the current user is an admin.
+
+    Args:
+        project: Project instance.
+        form: UserForm with a ``login`` field containing the user ID.
+
+    Returns:
+        The event string from the project log.
     """
     uid = form.login.data
     user = User.query.filter(User.id == uid).first()
@@ -186,13 +216,17 @@ def project_attach_user(project, form):
 
 
 def project_create_user(project, form):
-    """
-    Function which creates a temporary user based on provide info and add a
-    user creation task in the task queue
-    :param project: Object. Project object where a use should be created
-    :param form: Instance of WTForm
-    :return: Instance of a project to which a new user has to be attached and an
-    instance of TmpUser class
+    """Create a new user from form data and queue the creation task.
+
+    Validates input, checks for duplicate emails, generates a login,
+    and optionally uploads an SSH public key.
+
+    Args:
+        project: Project instance.
+        form: UserForm with name/surname/email/key data.
+
+    Returns:
+        The event string from the project log.
     """
     ssh_upload = get_project_option(project, "ssh_upload")
     add_users = get_project_option(project, "add_users")
@@ -231,10 +265,16 @@ def project_create_user(project, form):
 
 
 def check_responsible(name):
-    """
-    Check if current user is responsible for a project given in argument
-    :param name: String. Name of a project
-    :return: Object. Object of a project under given project name
+    """Verify that the current user is the responsible person for a project.
+
+    Args:
+        name: Project name.
+
+    Returns:
+        The Project instance.
+
+    Raises:
+        ValueError: If the current user is not the project responsible.
     """
     project = get_project_by_name(name)
     if current_user != project.responsible:
@@ -244,14 +284,17 @@ def check_responsible(name):
 
 
 def assign_responsible(name, form):
-    """
-    Assigning a responsible to a project. Admins do that without check with any
-    users. For non admins several conditions has to be satisfied:
-    1) New responsible has to be different user.
-    2) New responsible should be one of project's users
-    :param name: String. Name of the project
-    :param form: WTForm. Form with data
-    :return: object. Instance of ProjectLog object
+    """Assign a new responsible person to a project.
+
+    Admins can assign any user; non-admins can only assign existing
+    project users.
+
+    Args:
+        name: Project name.
+        form: ResponsibleForm with the new responsible user ID.
+
+    Returns:
+        The event string from the project log.
     """
     if not form.validate_on_submit():
         raise ValueError(form_error_string(form.errors))
@@ -276,6 +319,14 @@ def assign_responsible(name, form):
 
 
 def get_activity_files(name):
+    """Find activity-related temporary files for a project.
+
+    Args:
+        name: Project name.
+
+    Returns:
+        List of Path objects matching the project name pattern.
+    """
     temp_dir = current_app.get_tmpdir()
     debug("Using temporary directory to store files: %s" % temp_dir)
     pattern = "*%s*" % name
@@ -286,12 +337,15 @@ def get_activity_files(name):
 
 
 def save_activity(req):
-    """
-    Save incoming files on the server to use them later in activity report pdf.
-    Check how many files has been already uploaded and refuse to save more if a
-    limit has been reached.
-    :param req: incoming HTTP request
-    :return: String. Name of saved file
+    """Save an uploaded activity file to the temporary directory.
+
+    Enforces a configurable upload limit per project.
+
+    Args:
+        req: The incoming Flask request.
+
+    Returns:
+        Dictionary with ``saved_name`` and ``incoming_name`` keys.
     """
     limit = current_app.config.get("ACTIVITY_REPORT_LIMIT", 3)
     project = req.form.get("project", None)
@@ -319,6 +373,16 @@ def save_activity(req):
 
 
 def save_report(project):
+    """Generate and save a PDF activity report for a project.
+
+    Optionally uploads the report (and images) to a cloud storage.
+
+    Args:
+        project: Project instance.
+
+    Returns:
+        The File record for the saved report.
+    """
     project_name = project.get_name()
     html = render_template("report.html", data=project)
     stamp = int(dt.now().timestamp())
@@ -345,6 +409,15 @@ def save_report(project):
 
 
 def report_activity(name, form):
+    """Process an activity report submission.
+
+    Args:
+        name: Project name.
+        form: ActivityForm with report data.
+
+    Returns:
+        The File record for the saved report.
+    """
     if not form.validate_on_submit():
         raise ValueError(form_error_string(form.errors))
     project = check_responsible(name)
@@ -365,6 +438,15 @@ def report_activity(name, form):
 
 
 def remove_activity(name, file_name):
+    """Remove an uploaded activity file.
+
+    Args:
+        name: Project name.
+        file_name: Name of the file to remove.
+
+    Returns:
+        True if the file was removed or did not exist.
+    """
     check_responsible(name)
     temp_dir = current_app.get_tmpdir()
     path = Path(temp_dir) / file_name
@@ -381,6 +463,14 @@ def remove_activity(name, file_name):
 
 
 def clean_activity(name):
+    """Remove all uploaded activity files for a project.
+
+    Args:
+        name: Project name.
+
+    Returns:
+        True if cleaned successfully.
+    """
     debug("Cleaning activity files for project %s" % name)
     check_responsible(name)
     files = get_activity_files(name)
@@ -393,6 +483,16 @@ def clean_activity(name):
 
 
 def renew_project(pid, ext, date):
+    """Process a project renewal: create new resources.
+
+    Args:
+        pid: Extension ID (unused, for logging).
+        ext: Extend record.
+        date: Date string for the comment.
+
+    Returns:
+        The event string from the project log.
+    """
     ext.project.resources.valid = False
     if ext.hours == 0:
         new_hours = ext.project.resources.cpu
@@ -406,6 +506,16 @@ def renew_project(pid, ext, date):
 
 
 def extend_project(pid, ext, date):
+    """Process a project extension: add CPU hours and extend TTL.
+
+    Args:
+        pid: Extension ID.
+        ext: Extend record.
+        date: Date string for the comment.
+
+    Returns:
+        The event string from the project log.
+    """
     ext.project.resources.ttl = calculate_ttl(ext.project.type)
     ext.project.resources.cpu += ext.hours
     ext.project.resources.valid = True
@@ -420,6 +530,15 @@ def extend_project(pid, ext, date):
 
 
 def transform_project(ext, date):
+    """Process a project transformation: change type and create new resources.
+
+    Args:
+        ext: Extend record.
+        date: Date string for the comment.
+
+    Returns:
+        The event string from the project log.
+    """
     ext.project.type = ext.transform
     ext.project.name = "%s%s" % (ext.transform, str(ext.project.id).zfill(3))
     ext.project.resources.valid = False
@@ -431,6 +550,16 @@ def transform_project(ext, date):
 
 
 def activate_project(eid, ext, date):
+    """Process a project activation.
+
+    Args:
+        eid: Extension ID.
+        ext: Extend record.
+        date: Date string for the comment.
+
+    Returns:
+        The event string from the project log.
+    """
     ext.project.resources.valid = False
     ext.project.resources = create_resource(ext.project, ext.hours)
     msg = "Created based on activation request ID %s on %s" % (eid, date)
@@ -441,6 +570,16 @@ def activate_project(eid, ext, date):
 
 
 def process_extension(eid):
+    """Process an extension/renewal/transformation request based on its type.
+
+    Examines the Extend record and dispatches to the appropriate handler.
+
+    Args:
+        eid: Extension ID.
+
+    Returns:
+        The event string from the project log.
+    """
     ext = Extend.query.filter_by(id=eid).first()
     if not ext:
         raise ValueError("Failed to find extension record with id '%s'" % eid)
@@ -462,12 +601,14 @@ def process_extension(eid):
 
 
 def get_users(project=None):
-    """
-    This function suppose to return all users belonging to a project if project
-    record is provided as argument. Otherwise it'll return the list of all
-    users registered in the system
-    :param project: Object or None. Record of a project or None
-    :return: List.
+    """Return the list of users belonging to a project, or all users.
+
+    Args:
+        project: Optional Project instance. If provided, returns users
+            of that project including future (queued) users.
+
+    Returns:
+        List of User objects.
     """
     if project:
         get_future_users([project])
@@ -477,6 +618,14 @@ def get_users(project=None):
 
 
 def get_future_users(projects):
+    """Augment project user lists with users pending creation from tasks.
+
+    For each project, finds pending ``create|user`` tasks and adds them
+    as ``trans_users`` attribute on the project.
+
+    Args:
+        projects: List of Project instances.
+    """
     for project in projects:
         recs = Tasks.query.filter_by(processed = False, project = project).all()
         if not recs:
@@ -492,6 +641,17 @@ def get_future_users(projects):
 
 
 def get_project_by_name(name):
+    """Find a project by its name.
+
+    Args:
+        name: Project name.
+
+    Returns:
+        The Project instance.
+
+    Raises:
+        ValueError: If no project with the given name is found.
+    """
     projects = Project.query.all()
     for project in projects:
         if project.get_name() != name:
@@ -501,6 +661,17 @@ def get_project_by_name(name):
 
 
 def get_project_record(pid):
+    """Find a project by its database ID.
+
+    Args:
+        pid: Project ID.
+
+    Returns:
+        The Project instance.
+
+    Raises:
+        ValueError: If no project with the given ID is found.
+    """
     project = Project.query.filter_by(id=pid).first()
     if not project:
         raise ValueError("Failed to find project with id '%s'" % pid)
@@ -508,6 +679,15 @@ def get_project_record(pid):
 
 
 def project_transform(name, form):
+    """Initiate a project transformation request.
+
+    Args:
+        name: Project name.
+        form: TransForm with new type, CPU, and note.
+
+    Returns:
+        The created Extend record.
+    """
     if not form.validate_on_submit():
         raise ValueError(form_error_string(form.errors))
     new = form.new.data
@@ -529,6 +709,16 @@ def project_transform(name, form):
 
 
 def project_renew(project, form, active=False):
+    """Initiate a project renewal request.
+
+    Args:
+        project: Project instance.
+        form: RenewForm with CPU and note.
+        active: If True, skip renewable check for activation.
+
+    Returns:
+        The created Extend record.
+    """
     if not form.validate_on_submit():
         raise ValueError(form_error_string(form.errors))
     cpu = form.cpu.data
@@ -549,6 +739,15 @@ def project_renew(project, form, active=False):
 
 
 def project_extend(name, form):
+    """Initiate a project extension request.
+
+    Args:
+        name: Project name.
+        form: ExtendForm with exception, CPU, and note.
+
+    Returns:
+        The created Extend record.
+    """
     if not form.validate_on_submit():
         raise ValueError(form_error_string(form.errors))
     exception = form.exception.data
@@ -569,6 +768,20 @@ def project_extend(name, form):
 
 
 def is_activity_report(project):
+    """Check whether an activity report has been uploaded and is valid.
+
+    Verifies that the report file exists within the valid time window
+    and optionally checks remote cloud storage.
+
+    Args:
+        project: Project instance.
+
+    Returns:
+        True if a valid activity report exists.
+
+    Raises:
+        ValueError: If the report is outdated.
+    """
     if (not project.resources) or (not project.resources.file):
         return False
     cfg = g.project_config
@@ -603,16 +816,24 @@ def is_activity_report(project):
 
 
 def list_of_projects():
+    """Return a sorted list of all project names.
+
+    Returns:
+        Sorted list of project name strings.
+    """
     projects = map(lambda x: x.get_name(), Project.query.all())
     return sorted(list(projects))
 
 
 def set_state(pid, state):
-    """
-    Set active state for a project
-    :param pid: Integer. ID of a project
-    :param state: Boolean. Set state of a project
-    :return: Project record
+    """Set the active state of a project.
+
+    Args:
+        pid: Project ID.
+        state: Boolean active state.
+
+    Returns:
+        The project's ``to_dict()`` representation.
     """
     project = get_project_record(pid)
     if type(state) != bool:
@@ -623,12 +844,16 @@ def set_state(pid, state):
 
 
 def is_project_extendable(project):
-    """
-    Check if project type has evaluation_dt or extendable option in config file
-    and set is_extendable property True if one of the options is present or
-    False otherwise.
-    :param project: Object. Project object
-    :return: Object. Project object
+    """Check whether a project type allows extension.
+
+    Looks for the ``evaluation_dt`` or ``extendable`` configuration
+    options for the project's type and sets ``is_extendable`` accordingly.
+
+    Args:
+        project: Project instance.
+
+    Returns:
+        The Project instance with ``is_extendable`` set.
     """
     cfg = g.project_config
     ptype = project.type
@@ -645,13 +870,16 @@ def is_project_extendable(project):
 
 
 def is_project_renewable(project):
-    """
-    Check if project type has finish_dt option in config file and set
-    is_renewable property True if finish_dt present or False otherwise. But
-    if finish_notice_dt is in configuration file the code actually check if
-    dt.now() is in between time interval finish_notice_dt - now - finish_dt
-    :param project: Object. Project object
-    :return: Object. Project object
+    """Check whether a project is currently in its renewal window.
+
+    Uses ``renew_start`` and ``renew_close`` configuration options to
+    determine the renewal period.
+
+    Args:
+        project: Project instance.
+
+    Returns:
+        The Project instance with ``is_renewable`` set.
     """
     now = dt.now(timezone.utc)
     if not get_project_option(project, "renewable"):
@@ -680,13 +908,13 @@ def is_project_renewable(project):
 
 
 def get_add_users_options(project):
-    """
-    Checking if add_users options is True.
-    :param project: String. Type of the project (i.e. subsection in project
-                         configuration file.
-    :return: List. List of tuples, first item in tuple is type to which this
-             project type can be transformed, second item is type's
-             description
+    """Check if the ``add_users`` option is enabled for the project type.
+
+    Args:
+        project: Project instance.
+
+    Returns:
+        The Project instance with ``add_users`` set.
     """
     cfg = g.project_config
     ptype = project.type
@@ -696,13 +924,13 @@ def get_add_users_options(project):
 
 
 def get_ssh_options(project):
-    """
-    Checking if ssh_upload options is True.
-    :param project: String. Type of the project (i.e. subsection in project
-                         configuration file.
-    :return: List. List of tuples, first item in tuple is type to which this
-             project type can be transformed, second item is type's
-             description
+    """Check if the ``ssh_upload`` option is enabled for the project type.
+
+    Args:
+        project: Project instance.
+
+    Returns:
+        The Project instance with ``ssh_upload`` set.
     """
     cfg = g.project_config
     ptype = project.type
@@ -714,12 +942,13 @@ def get_ssh_options(project):
 
 
 def get_reservation_options(project):
-    """
-    Checking if reservation options is True. If it's True return available
-    reservations, otherwise set reservation option to False
-    :param project: String. Type of the project (i.e. subsection in project
-                         configuration file.
-    :return: List. List of string, each item represent a reservation in SLURM
+    """Check and populate reservation options for a project.
+
+    Args:
+        project: Project instance.
+
+    Returns:
+        The Project instance with ``reservation`` set.
     """
     cfg = g.project_config
     ptype = project.type
@@ -731,14 +960,13 @@ def get_reservation_options(project):
 
 
 def get_transformation_options(project_type=None):
-    """
-    Checking what transformation options are available in configuration file for
-    giving type of project.
-    :param project_type: String. Type of the project (i.e. subsection in project
-                         configuration file.
-    :return: List. List of tuples, first item in tuple is type to which this
-             project type can be transformed, second item is type's
-             description
+    """Return available transformation targets for a project type.
+
+    Args:
+        project_type: Optional project type to filter options for.
+
+    Returns:
+        List of (type, description) tuples.
     """
     cfg = g.project_config
     options = []
@@ -761,12 +989,13 @@ def get_transformation_options(project_type=None):
 
 
 def is_project_transformable(project):
-    """
-    Check if project type has evaluation_dt or extendable option in config file
-    and set is_extendable property True if one of the options is present or
-    False otherwise.
-    :param project: Object. Project object
-    :return: Object. Project object
+    """Check whether a project can be transformed to another type.
+
+    Args:
+        project: Project instance.
+
+    Returns:
+        The Project instance with ``is_transformable`` set.
     """
     trans = get_transformation_options(project.type)
     if trans:
@@ -777,7 +1006,29 @@ def is_project_transformable(project):
 
 
 def get_reservation(name):
+    """Query SLURM reservations associated with a project.
+
+    Args:
+        name: Project name.
+
+    Returns:
+        List of dictionaries with reservation details, or a single
+        "No reservations found" message.
+    """
+
     def parse(text, prop):
+        """Extract a property value from a SLURM scontrol output line.
+
+        Finds all characters that match the property prefix and removes
+        the prefix to get the value.
+
+        Args:
+            text: A line from scontrol output.
+            prop: The property prefix (e.g. ``ReservationName=``).
+
+        Returns:
+            The extracted value string.
+        """
         element = "".join([s for s in text if prop in s])
         return element.replace(prop, "")
 
@@ -802,15 +1053,16 @@ def get_reservation(name):
 
 
 def get_project_option(project, option_name):
-    """
-    Retrieve an option from configuration based on project type
-    and assign it as an attribute on the project object.
+    """Retrieve an option from project configuration based on project type.
 
     Missing values default to False.
 
-    :param project: Object with 'type' attribute.
-    :param option_name: str
-    :return: Option value or False by default
+    Args:
+        project: Project instance with a ``type`` attribute.
+        option_name: Configuration key name.
+
+    Returns:
+        The option value, or False by default.
     """
     cfg = g.project_config
     return cfg.get(project.type, {}).get(option_name, False)

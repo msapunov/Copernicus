@@ -14,6 +14,18 @@ __copyright__ = "Aix Marseille University"
 
 
 def create_resource(project, cpu):
+    """Create a new Resources record for a project.
+
+    Args:
+        project: Project instance.
+        cpu: Number of CPU hours.
+
+    Returns:
+        New Resources instance.
+
+    Raises:
+        Exception: If cpu is less than 1.
+    """
     if cpu < 1:
         raise Exception("CPU hours must be greater than 0")
     return Resources(
@@ -28,6 +40,13 @@ def create_resource(project, cpu):
 
 
 def transform():
+    """Process a transformation request from JSON input.
+
+    Expects JSON with ``eid``, ``comment``, and optionally ``cpu``.
+
+    Returns:
+        Tuple of (record_id, log_message).
+    """
     eid, note, cpu = get_arguments(True)
     record = Extensions(eid)
     if cpu > 0:
@@ -39,6 +58,14 @@ def transform():
 
 
 def get_arguments(trans=False):
+    """Extract and validate arguments from a JSON request.
+
+    Args:
+        trans: If True, only require eid, comment, cpu (no extension flag).
+
+    Returns:
+        Tuple of (eid, note, cpu[, ext]).
+    """
     data = check_json()
 
     eid = int(data["eid"]) if "eid" in data else None

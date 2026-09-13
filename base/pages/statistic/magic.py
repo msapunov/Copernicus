@@ -9,6 +9,16 @@ from base.database.schema import Project
 
 
 def render_project(name):
+    """Render the expanded HTML for a project in the statistic view.
+
+    Includes accounting URL, user registry URL, and history modal.
+
+    Args:
+        name: Project name.
+
+    Returns:
+        Concatenated HTML string.
+    """
     project = Project.query.filter_by(name=name).first()
     acc_url = url_for("admin.web_admin_accounting_project", name=name)
     user_url = url_for("admin.web_login_registry", login="")
@@ -21,9 +31,10 @@ def render_project(name):
 
 
 def project_types():
-    """
-    Get distinct values of Project.type
-    :return: List. List of distinct types
+    """Get distinct project types from the database.
+
+    Returns:
+        List of type strings.
     """
     types = []
     for t in db.session.query(Project.type).distinct():

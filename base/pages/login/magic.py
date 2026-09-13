@@ -13,17 +13,21 @@ __copyright__ = "Aix Marseille University"
 
 
 def password_errors(password):
-    """
-    Solution based on
-    https://stackoverflow.com/questions/16709638/checking-the-strength-of-a-password-how-to-check-conditions#32542964
-    Verify the strength of 'password'
-    Returns a dict indicating the wrong criteria
-    A password is considered strong if:
-        8 characters length or more
-        1 digit or more
-        1 symbol or more
-        1 uppercase letter or more
-        1 lowercase letter or more
+    """Check the strength of a password and return error messages.
+
+    A password is considered strong if it is:
+    - 8 to 128 characters long
+    - Contains at least one digit, one uppercase letter, one lowercase
+      letter, and one special (non-word) character
+
+    Based on https://stackoverflow.com/questions/16709638/
+
+    Args:
+        password: The password string to check.
+
+    Returns:
+        An error message string if the password is weak, or None if
+        it passes all checks.
     """
     if len(password) < 8:
         return "Password must be 8 or more characters!"
@@ -41,6 +45,18 @@ def password_errors(password):
 
 
 def ssh_login(login, password):
+    """Authenticate a user via SSH against configured login servers.
+
+    Tries each server in the ``LOGIN_SERVER`` configuration list until
+    one returns a successful authentication.
+
+    Args:
+        login: Username to authenticate.
+        password: Password to authenticate with.
+
+    Returns:
+        True if authentication succeeded on any server, False otherwise.
+    """
     auth = False
     login_servers = current_app.config.get("LOGIN_SERVER", None)
     port = current_app.config.get("SSH_PORT", 22)

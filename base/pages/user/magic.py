@@ -18,6 +18,18 @@ __copyright__ = "Aix Marseille University"
 
 
 def upload_ssh_allowed(leader, user):
+    """Check whether a leader can upload an SSH key for a user.
+
+    SSH key upload is only allowed for temporary users, and only by
+    their project responsible.
+
+    Args:
+        leader: The user attempting the upload.
+        user: The target user.
+
+    Returns:
+        True if upload is allowed.
+    """
     if "TEMPORARY USER" not in user.comment:
         return False  # SSH key upload allowed for temporary users only
     leaders = []
@@ -27,15 +39,24 @@ def upload_ssh_allowed(leader, user):
         return False
     return True
 
+
 def get_pending_projects():
+    """Check for pending project registrations.
+
+    Returns:
+        False (placeholder).
+    """
     return False
 
-def absent_users_check(logins):
-    """
 
-    :param logins: List of users on remote server
-    :return: List. List of users which is registered in the system but absent
-    on remote server
+def absent_users_check(logins):
+    """Find users registered in the system but absent on the remote server.
+
+    Args:
+        logins: List of user logins from the remote server.
+
+    Returns:
+        List of user logins absent on the remote server but present in DB.
     """
     users = (
         User.query
@@ -50,11 +71,16 @@ def absent_users_check(logins):
 
 
 def archived_users_check(logins):
-    """
-    Archives users who are not in the provided login list and archived
-    field is empty in the database.
+    """Archive users who are not in the provided login list.
+
+    Users whose login is not among the provided logins and who have not
+    yet been archived are marked with the current timestamp.
+
+    Args:
+        logins: List of active user logins from the remote server.
+
     Returns:
-    str: Summary of the archived users.
+        List of logins that were archived.
     """
     # Get all users who are not in the logins list and are not archived.
     # Lock the selected rows to prevent concurrent updates.
@@ -83,11 +109,15 @@ def archived_users_check(logins):
 
 
 def working_users_check(logins):
-    """
-    Activates and restore users who are in the provided login list if they are
-    inactive or archived.
+    """Activate and restore users who are in the provided login list.
+
+    Users who are inactive or archived are reactivated.
+
+    Args:
+        logins: List of active user logins from the remote server.
+
     Returns:
-    str: Summary of the deactivated users.
+        List of status messages describing changes made.
     """
     active_users = User.query.filter(User.login.in_(logins))
     result = []
@@ -113,11 +143,13 @@ def working_users_check(logins):
 
 
 def inactive_users_check(logins):
-    """
-    Deactivates users who are not in the provided login list if they are active,
-     and not linked to a project.
+    """Deactivate users not in the provided login list if they have no projects.
+
+    Args:
+        logins: List of active user logins from the remote server.
+
     Returns:
-    str: Summary of the deactivated users.
+        List of deactivated user logins.
     """
     result = []
     users = (
@@ -144,6 +176,17 @@ def inactive_users_check(logins):
 
 
 def ssh_key(form):
+    """Process an SSH public key upload.
+
+    Validates the key and creates a task for installing it on the
+    remote server.
+
+    Args:
+        form: KeyForm with ``key`` and ``login`` data.
+
+    Returns:
+        Status message string.
+    """
     pub = form.key.data
     login = form.login.data
     debug(f"Provided login '{login}' and public key: {pub}")
@@ -158,6 +201,17 @@ def ssh_key(form):
 
 
 def user_by_id(uid):
+    """Find a user by their database ID.
+
+    Args:
+        uid: User ID.
+
+    Returns:
+        User instance.
+
+    Raises:
+        ValueError: If no user with the given ID is found.
+    """
     user = User.query.filter_by(id=uid).first()
     if not user:
         raise ValueError("Failed to find user with id '%s'" % uid)
@@ -165,6 +219,17 @@ def user_by_id(uid):
 
 
 def get_user_record(login=None):
+    """Find a user by login, or return the current user.
+
+    Args:
+        login: Optional login string. If None, uses the current user.
+
+    Returns:
+        User instance.
+
+    Raises:
+        ValueError: If the login is invalid or the user is not found.
+    """
     if not login:
         login = current_user.login
     if len(login) < 1:
@@ -180,6 +245,16 @@ def get_user_record(login=None):
 
 
 def get_scratch():
+    """Query the user's scratch space usage on the remote cluster.
+
+    Runs ``beegfs-ctl --getquota`` via SSH.
+
+    Returns:
+        Dictionary with usage, total, used, free, and labels.
+
+    Raises:
+        ValueError: If no scratch info is found or parsing fails.
+    """
     cmd = "beegfs-ctl --getquota --csv --uid %s" % current_user.login
     result, err = ssh_wrapper(cmd)
     if not result:
@@ -196,6 +271,21 @@ def get_scratch():
 
 
 def get_jobs(start, end, last=10):
+    """Query SLURM job history for the current user.
+
+    Runs ``sacct`` via SSH to get recent jobs.
+
+    Args:
+        start: Start date string for the query.
+        end: End date string for the query.
+        last: Maximum number of jobs to return.
+
+    Returns:
+        List of job dictionaries with id, project, state, etc.
+
+    Raises:
+        ValueError: If no jobs are found.
+    """
     cmd = ["sacct", "-nPX",
            "--format=JobID,State,Start,Account,JobName,CPUTime,Partition",
            "--start=%s" % start, "--end=%s" % end, "-u", current_user.login,
@@ -223,6 +313,18 @@ def get_jobs(start, end, last=10):
 
 
 def user_edit(login, form):
+    """Process a user information edit request.
+
+    Compares old and new values and creates a task for updating the
+    user's information.
+
+    Args:
+        login: User login.
+        form: InfoForm with updated data.
+
+    Returns:
+        Status message string.
+    """
     if not form.validate_on_submit():
         raise ValueError(form_error_string(form.errors))
     user = get_user_record(login)
