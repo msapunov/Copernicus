@@ -99,6 +99,8 @@ def transform(project):
 
 
 class RenewForm(FlaskForm):
+    """Form for renewing a project's allocation."""
+
     cpu = IntegerField(
         "CPU",
         validators=[
