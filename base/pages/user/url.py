@@ -25,6 +25,14 @@ __copyright__ = "Aix Marseille University"
 @login_required
 @grant_access("admin", "tech")
 def user_check_active():
+    """Compare users in DB against a list from the remote server.
+
+    Archives missing users, deactivates inactive ones, and activates
+    restored ones.
+
+    Returns:
+        JSON with result summary.
+    """
     raw_data = request.get_data()
     if not raw_data:
         return jsonify(data="No data received")
@@ -49,12 +57,27 @@ def user_check_active():
 @bp.route("/user/list/all", methods=["GET"])
 @login_required
 def user_all():
+    """Return a list of all users (including inactive).
+
+    Returns:
+        JSON with user list.
+    """
     return user_list(active=False)
 
 
 @bp.route("/user/list", methods=["GET"])
 @login_required
 def user_list(active=True):
+    """Return a filtered list of users as JSON for select2.
+
+    Supports search via the ``term`` query parameter.
+
+    Args:
+        active: If True, only return active users.
+
+    Returns:
+        JSON with ``results`` list of user dicts.
+    """
     term = request.args.get("term")
     if active:
         query = User.query.filter_by(active=active)
@@ -78,6 +101,11 @@ def user_list(active=True):
 @bp.route("/user/modal/ssh", methods=["POST"])
 @login_required
 def web_modal_ssh():
+    """Render the SSH key upload modal for the current user.
+
+    Returns:
+        JSON with rendered HTML.
+    """
     log.info("Call to render upload ssh key modal")
     form = KeyForm()
     form.username = current_user.login
@@ -88,6 +116,14 @@ def web_modal_ssh():
 @bp.route("/user/modal/edit/<string:login>", methods=["POST"])
 @login_required
 def web_modal_edit(login):
+    """Render the edit-user-info modal.
+
+    Args:
+        login: User login.
+
+    Returns:
+        JSON with rendered HTML.
+    """
     log.info("Call to render edit user info modal")
     user = get_user_record(login)
     form = edit_info(user)
@@ -97,6 +133,11 @@ def web_modal_edit(login):
 @bp.route("/user/upload/ssh", methods=["POST"])
 @login_required
 def web_user_upload_ssh():
+    """Process an SSH public key upload.
+
+    Returns:
+        JSON with status message.
+    """
     log.info("Call to process new SSH key")
     form = KeyForm()
     if not form.validate_on_submit():
@@ -107,6 +148,14 @@ def web_user_upload_ssh():
 @bp.route("/user/edit/<string:login>", methods=["POST"])
 @login_required
 def web_user_edit(login):
+    """Process a user information edit request.
+
+    Args:
+        login: User login.
+
+    Returns:
+        JSON with status message.
+    """
     log.info("Call to process new user's info")
     form = InfoForm()
     return jsonify(message=user_edit(login, form))
@@ -117,6 +166,13 @@ def web_user_edit(login):
 @bp.route("/user.html", methods=["GET"])
 @login_required
 def user_index():
+    """Render the user home page with projects, jobs, and scratch info.
+
+    For managers, shows pending project requests instead.
+
+    Returns:
+        Rendered user.html template.
+    """
     if current_user.acl.is_manager:
         pending = get_pending_projects()
         if not pending:
