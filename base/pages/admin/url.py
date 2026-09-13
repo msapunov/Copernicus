@@ -1,58 +1,69 @@
-from flask import g, flash, request, redirect, url_for, render_template, jsonify
-from flask import abort
-from flask import current_app
+from datetime import datetime as dt
+from datetime import timezone as tz
+from logging import debug
+
+from flask import (
+    abort,
+    current_app,
+    flash,
+    g,
+    jsonify,
+    redirect,
+    render_template,
+    request,
+    url_for,
+)
 from flask_login import login_required, login_user
+
+from base.classes import Extensions, Pending
+from base.database.schema import Project, Resources, User
+from base.functions import show_configuration, slurm_nodes_status, ssh_wrapper
 from base.pages import Task, grant_access
-from base.classes import Pending, Extensions
-from base.pages.user.magic import get_user_record, user_by_id
 from base.pages.admin import bp
+from base.pages.admin.form import (
+    ActivateUserForm,
+    AddUserForm,
+    CreateForm,
+    EditResponsibleForm,
+    NewUserEditForm,
+    NewUserForm,
+    PendingActionForm,
+    RegistrationEditForm,
+    TaskEditForm,
+    UserEditForm,
+    VisaPendingForm,
+)
 from base.pages.admin.magic import (
-    process_user_form,
+    TaskManager,
     account_days,
-    last_user,
-    render_task,
-    render_pending,
-    render_registry,
     all_users,
     event_log,
     get_server_info,
-    get_ltm,
-    TaskManager,
-    slurm_partition_info,
+    last_user,
     process_task,
-    unprocessed_dict,
-    user_info_update,
-    user_create_by_admin,
-    user_set_pass,
-    user_send_welcome,
-    user_reset_pass,
-    user_delete,
-    registration_user_del,
-    registration_user_add,
-    registration_user_update,
-    registration_responsible_edit,
+    process_user_form,
     registration_record_edit,
+    registration_responsible_edit,
+    registration_user_add,
+    registration_user_del,
+    registration_user_update,
+    render_pending,
+    render_registry,
+    render_task,
+    slurm_partition_info,
     space_info,
-    task_history)
-from base.functions import (slurm_nodes_status, show_configuration,
-                            ssh_wrapper, form_error_string)
-from base.pages.admin.form import (
-    CreateForm,
-    PendingActionForm,
-    VisaPendingForm,
-    AddUserForm,
-    UserEditForm,
-    RegistrationEditForm,
-    ActivateUserForm,
-    EditResponsibleForm,
-    NewUserForm,
-    TaskEditForm,
-    NewUserEditForm)
+    task_history,
+    unprocessed_dict,
+    user_create_by_admin,
+    user_delete,
+    user_info_update,
+    user_reset_pass,
+    user_send_welcome,
+    user_set_pass,
+)
 from base.pages.project.magic import process_extension
-from base.database.schema import Project, User, Resources
-from datetime import datetime as dt, timezone as tz
-from logging import debug
-
+from base.pages.user.magic import get_user_record, user_by_id
+from base.utils import form_error_string
 
 __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
