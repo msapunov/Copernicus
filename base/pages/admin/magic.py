@@ -1103,7 +1103,7 @@ def parse_timestamp(unix_ts):
     """
     try:
         ts = int(unix_ts)
-    except ValueError as e:
+    except ValueError:
         return unix_ts
     dt_object = dt.fromtimestamp(ts)
     return dt_object.strftime("%Y-%m-%d %H:%M")
@@ -1121,7 +1121,7 @@ def parse_load(result, cores=1):
     """
     try:
         load_1, load_5, load_15 = result.split(":")
-    except ValueError as e:
+    except ValueError:
         return {"load_1": 0, "load_5": 0, "load_15": 0}
     load_1 = "{0:.1%}".format(float( load_1.strip(",") ) / float(cores))
     load_5 = "{0:.1%}".format(float( load_5.strip(",") ) / float(cores))
