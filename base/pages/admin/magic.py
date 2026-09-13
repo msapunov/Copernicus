@@ -1239,6 +1239,13 @@ def slurm_partition_info():
         name = name.strip()
         nodes = nodes.strip()
         allocated, idle, other, total = nodes.split("/")
-        partition.append({"name": name, "allocated": allocated, "idle": idle,
-                          "other": other, "total": int(total)})
+        partition.append(
+            {
+                "name": name,
+                "allocated": allocated,
+                "idle": idle,
+                "other": other,
+                "total": int(total),
+            }
+        )
     return partition
