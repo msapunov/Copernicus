@@ -59,8 +59,7 @@ def absent_users_check(logins):
         List of user logins absent on the remote server but present in DB.
     """
     users = (
-        User.query
-        .filter(User.archived.is_(None))
+        User.query.filter(User.archived.is_(None))
         .filter(User.project.any(Project.active.is_(True)))
         .all()
     )
@@ -266,8 +265,14 @@ def get_scratch():
     name, uid, used, total, files, hard = info[0].split(",")
     usage = f"{float(used) / float(total):.1%}"
     free = float(total) - float(used)
-    return {"usage": usage, "total": total, "used": used, "free": free,
-            "used_label": bytes2human(used), "free_label": bytes2human(free)}
+    return {
+        "usage": usage,
+        "total": total,
+        "used": used,
+        "free": free,
+        "used_label": bytes2human(used),
+        "free_label": bytes2human(free),
+    }
 
 
 def get_jobs(start, end, last=10):
@@ -287,10 +292,19 @@ def get_jobs(start, end, last=10):
         ValueError: If no jobs are found.
     """
     cmd = ["sacct", "-nPX",
-           "--format=JobID,State,Start,Account,JobName,CPUTime,Partition",
-           "--start=%s" % start, "--end=%s" % end, "-u", current_user.login,
-           "|", "sort", "-n", "-r", "|", "head", "-%s" % last]
-    #  cmd = [ "slurm_jobs" ] - wrapper command
+        "--format=JobID,State,Start,Account,JobName,CPUTime,Partition",
+        "--start=%s" % start,
+        "--end=%s" % end,
+        "-u",
+        current_user.login,
+        "|",
+        "sort",
+        "-n",
+        "-r",
+        "|",
+        "head",
+        "-%s" % last,
+    ]
     run = " ".join(cmd)
 
     result, err = ssh_wrapper(run)
@@ -328,10 +342,18 @@ def user_edit(login, form):
     if not form.validate_on_submit():
         raise ValueError(form_error_string(form.errors))
     user = get_user_record(login)
-    old = {"name": user.name, "surname": user.surname, "email": user.email,
-           "login": user.login}
-    new = {"name": form.prenom.data, "surname": form.surname.data,
-           "email": form.email.data, "login": login}
+    old = {
+        "name": user.name,
+        "surname": user.surname,
+        "email": user.email,
+        "login": user.login,
+    }
+    new = {
+        "name": form.prenom.data,
+        "surname": form.surname.data,
+        "email": form.email.data,
+        "login": login,
+    }
 
     c_dict = {}
     for key in ["name", "surname", "email", "login"]:
