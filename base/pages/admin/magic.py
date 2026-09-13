@@ -1010,8 +1010,13 @@ class TaskManager:
         return list(map(lambda x: x.api(), tasks)) if tasks else []
 
     def list(self):
-        # Returns a list of unprocessed tasks, i.e. a task has been created by
-        # a user but admins haven't had time yet to check it out
+        """Return unprocessed tasks awaiting admin review.
+
+        Filters for tasks that are neither processed nor done.
+
+        Returns:
+            List of task dictionaries.
+        """
         tasks = (
             Tasks.query.filter(
                 Tasks.processed != True).filter(Tasks.done != True).all()
