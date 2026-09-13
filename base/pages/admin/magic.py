@@ -1171,7 +1171,7 @@ def parse_memory(result):
             mem_total = int(memory[1].strip())
             mem_available = int(memory[6].strip())
             mem_used = mem_total - mem_available
-            mem_usage = "{0:.1%}".format(float(mem_used) / float(mem_total))
+            mem_usage = f"{float(mem_used) / float(mem_total):.1%}"
             tmp["mem_total"] = bytes2human(mem_total)
             tmp["mem_available"] = bytes2human(mem_available)
             tmp["mem_used"] = bytes2human(mem_used)
