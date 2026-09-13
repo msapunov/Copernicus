@@ -1106,7 +1106,7 @@ def parse_timestamp(unix_ts):
     except ValueError as e:
         return unix_ts
     dt_object = dt.fromtimestamp(ts)
-    return dt_object.strftime('%Y-%m-%d %H:%M')
+    return dt_object.strftime("%Y-%m-%d %H:%M")
 
 
 def parse_load(result, cores=1):
