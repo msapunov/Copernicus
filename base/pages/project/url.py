@@ -1,45 +1,53 @@
-from flask import render_template, request, jsonify, flash, url_for, g
-from flask_login import login_required, current_user
+from flask import flash, g, jsonify, render_template, request, url_for
+from flask_login import current_user, login_required
+
 from base.classes import ProjectLog, TaskQueue
 from base.database.schema import LogDB, Project
 from base.pages import grant_access
 from base.pages.project import bp
-from base.pages.user.magic import get_user_record
-from base.pages.user.form import KeyForm
 from base.pages.project.form import (
-    new_responsible, ResponsibleForm,
-    transform, TransForm,
-    activate, ActivateForm,
-    extend, ExtendForm,
-    new_user, UserForm,
-    renew, RenewForm,
-    activity, ActivityForm,
-    get_transformation_options)
+    ActivateForm,
+    ActivityForm,
+    ExtendForm,
+    RenewForm,
+    ResponsibleForm,
+    TransForm,
+    UserForm,
+    activate,
+    activity,
+    extend,
+    get_transformation_options,
+    new_responsible,
+    new_user,
+    renew,
+    transform,
+)
 from base.pages.project.magic import (
-    is_project_transformable,
-    check_responsible,
     active_check,
-    sanity_check,
     assign_responsible,
-    get_project_by_name,
-    is_project_renewable,
-    is_project_extendable,
-    project_create_user,
-    project_attach_user,
-    project_transform,
-    is_activity_report,
-    report_activity,
-    remove_activity,
+    check_responsible,
     clean_activity,
-    save_activity,
+    get_future_users,
+    get_project_by_name,
     get_project_record,
-    project_extend,
-    project_renew,
     get_reservation_options,
     get_ssh_options,
-    get_future_users)
-from logging import debug
-
+    is_activity_report,
+    is_project_extendable,
+    is_project_renewable,
+    is_project_transformable,
+    project_attach_user,
+    project_create_user,
+    project_extend,
+    project_renew,
+    project_transform,
+    remove_activity,
+    report_activity,
+    sanity_check,
+    save_activity,
+)
+from base.pages.user.form import KeyForm
+from base.pages.user.magic import get_user_record
 
 __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"

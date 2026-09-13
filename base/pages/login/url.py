@@ -1,16 +1,15 @@
-from flask import render_template, request, redirect, url_for, g, flash, abort, jsonify
-from flask_login import current_user, login_user, logout_user, login_required
-from base.pages.login.magic import ssh_login, password_errors
-from base.pages.login.form import LoginForm, ResetForm, MessageForm
-from base.pages.login import bp
 from base64 import b64decode
+from logging import debug, error
+
+from flask import abort, flash, g, jsonify, redirect, render_template, request, url_for
+from flask_login import current_user, login_required, login_user, logout_user
+
+from base.classes import Mail
 from base.database.schema import User
 from base.extensions import login_manager
-from base.classes import Mail
-
-
-from logging import error, debug
-
+from base.pages.login import bp
+from base.pages.login.form import LoginForm, MessageForm, ResetForm
+from base.pages.login.magic import password_errors, ssh_login
 
 __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"

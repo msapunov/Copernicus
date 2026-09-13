@@ -1,15 +1,12 @@
-from flask import render_template, jsonify, url_for
+
+from flask import jsonify, render_template, url_for
 from flask_login import login_required
-from base.classes import ProjectLog, Extensions, TaskQueue
+
+from base.classes import Extensions, ProjectLog, TaskQueue
 from base.pages import grant_access
 from base.pages.board import bp
-from base.pages.board.form import (rejection,
-                                   acceptance,
-                                   AcceptForm,
-                                   contact,
-                                   RejectForm)
+from base.pages.board.form import AcceptForm, RejectForm, acceptance, contact, rejection
 from base.pages.board.magic import transform
-
 
 __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"

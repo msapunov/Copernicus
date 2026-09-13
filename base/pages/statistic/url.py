@@ -1,3 +1,7 @@
+"""URL routes for the statistic blueprint: project stats, accounting,
+activation, and suspension.
+"""
+
 from flask import jsonify, render_template
 from flask_login import login_required
 
