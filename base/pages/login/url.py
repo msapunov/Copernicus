@@ -192,9 +192,10 @@ def message():
     form = MessageForm()
     if not form.validate_on_submit():
         raise ValueError(form.errors)
-    msg = {"destination": form.destination.data,
-           "title": form.title.data,
-           "body": form.message.data
-           }
+    msg = {
+        "destination": form.destination.data,
+        "title": form.title.data,
+        "body": form.message.data,
+    }
     Mail().simple_message(msg)
     return jsonify(data="Message sent")
