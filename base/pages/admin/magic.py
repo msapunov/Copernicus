@@ -1012,9 +1012,10 @@ class TaskManager:
     def list(self):
         # Returns a list of unprocessed tasks, i.e. a task has been created by
         # a user but admins haven't had time yet to check it out
-        tasks = Tasks.query.filter(
-            Tasks.processed != True).filter(Tasks.done != True
-        ).all()
+        tasks = (
+            Tasks.query.filter(
+                Tasks.processed != True).filter(Tasks.done != True).all()
+        )
         return list(map(lambda x: x.to_dict(), tasks)) if tasks else []
 
 
