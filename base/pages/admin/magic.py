@@ -1,3 +1,7 @@
+"""Business logic for the admin blueprint: user management, registration
+processing, server monitoring, SLURM info, and task management.
+"""
+
 from hashlib import md5
 from flask import g, render_template, url_for
 from flask_login import current_user
