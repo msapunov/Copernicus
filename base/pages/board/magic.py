@@ -1,3 +1,5 @@
+"""Business logic for the board: resource creation and extension processing."""
+
 from flask_login import current_user
 from base.classes import ProjectLog, Extensions
 from base.pages import check_json

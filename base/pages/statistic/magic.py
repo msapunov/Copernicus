@@ -1,3 +1,5 @@
+"""Business logic for the statistic page: project rendering and type listing."""
+
 from logging import debug
 from flask import current_app, render_template, url_for
 from base import db
