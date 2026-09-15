@@ -419,7 +419,7 @@ class UserEditForm(FlaskForm):
     login = StringField("Login", validators=[DataRequired()])
     name = StringField("Name", validators=[DataRequired()])
     surname = StringField("Surname", validators=[DataRequired()])
-    email = EmailField("Surname", validators=[DataRequired(), Email()])
+    email = EmailField("E-mail", validators=[DataRequired(), Email()])
     project = SelectMultipleProjects("Project", choices=[])
     active = BooleanField("Active", default=True)
     is_user = BooleanField("User", default=True)
