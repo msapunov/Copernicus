@@ -68,10 +68,11 @@ def load_user_from_request(urlpath):
         if not user.check_password(password):
             return abort(401)
         login_user(user, True)
+        safe_path = urlpath.lstrip("/")
         if request.environ.get("SCRIPT_NAME"):
-            urlpath = "%s/%s" % (request.environ["SCRIPT_NAME"], urlpath)
+            urlpath = "%s/%s" % (request.environ["SCRIPT_NAME"], safe_path)
         else:
-            urlpath = "/%s" % urlpath
+            urlpath = "/%s" % safe_path
         return redirect(urlpath, code=307)
     flash("API key is required")
     return redirect(url_for("login.login"))
