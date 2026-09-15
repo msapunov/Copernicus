@@ -55,7 +55,7 @@ class CreateForm(FlaskForm):
         Returns:
             True if valid.
         """
-        if not self.csrf_token.validate(self):
+        if hasattr(self, "csrf_token") and not self.csrf_token.validate(self):
             return False
         if not self.user.validate(self, [DataRequired()]):
             return False
@@ -351,7 +351,7 @@ class NewUserForm(UserForm):
         Returns:
             True if valid.
         """
-        if not self.csrf_token.validate(self):
+        if hasattr(self, "csrf_token") and not self.csrf_token.validate(self):
             return False
         if not self.prenom.validate(self, [DataRequired()]):
             return False
