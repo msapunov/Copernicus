@@ -92,11 +92,10 @@ def contact(ext):
     """
     form = MessageForm()
     form.id = ext.id
-    form.title_value = "%s %s request created %s" % (
-        ext.project.get_name(),
-        ext.about(),
-        ext.created.strftime("%Y-%m-%d %X"),
+    form.title_value = (
+        f"{ext.project.get_name()} {ext.about()}"
+        f" request created {ext.created.strftime('%Y-%m-%d %X')}"
     )
-    form.message_holder = "Write message to " + ext.project.responsible.full()
+    form.message_holder = f"Write message to {ext.project.responsible.full()}"
     form.destination.value = ext.project.responsible.email
     return form
