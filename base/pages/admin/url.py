@@ -143,7 +143,7 @@ def web_switch_user():
     """
     username = request.form.get("switch_user")
     if username not in g.user_list:
-        flash("Invalid username: '%s'" % username)
+        flash(f"Invalid username: '{username}'")
         if request.referrer and (request.referrer in g.url_list):
             return redirect(request.referrer)
         else:
@@ -623,7 +623,7 @@ def web_admin_tasks_ignore(tid):
     if "admin.html" in request.referrer:
         return jsonify(
             data=tasks,
-            info="Task '%s' is ignored" % task.short(),
+            info=f"Task '{task.short()}' is ignored",
             task=True,
             html=render_template("modals/admin_show_task.html", data={"tasks": tasks}),
         )
@@ -648,7 +648,7 @@ def web_admin_tasks_reject(tid):
     if "admin.html" in request.referrer:
         return jsonify(
             data=tasks,
-            info="Task '%s' is rejected" % task.short(),
+            info=f"Task '{task.short()}' is rejected",
             task=True,
             html=render_template("modals/admin_show_task.html", data={"tasks": tasks}),
         )
@@ -672,7 +672,7 @@ def web_admin_tasks_accept(tid):
     if "admin.html" in request.referrer:
         return jsonify(
             data=tasks,
-            info="Task '%s' is accepted" % task.short(),
+            info=f"Task '{task.short()}' is accepted",
             task=True,
             html=render_template("modals/admin_show_task.html", data={"tasks": tasks}),
         )
@@ -785,14 +785,14 @@ def web_admin_user_info():
     allowed_servers = [s.strip().lower() for s in allowed_servers]
     if server.strip().lower() not in allowed_servers:
         raise ValueError(
-            "Server '%s' is not in the ADMIN_SERVER list" % server
+            f"Server '{server}' is not in the ADMIN_SERVER list"
         )
 
     result, err = ssh_wrapper(
         "PROCPS_USERLEN=32 PROCPS_FROMLEN=90 w -s -h", host=server
     )
     if not result:
-        raise ValueError("Error getting partition information: %s" % err)
+        raise ValueError(f"Error getting partition information: {err}")
 
     users = []
     for user in result:
