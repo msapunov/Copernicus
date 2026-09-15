@@ -204,7 +204,7 @@ def render_registry(user):
     details = user.details()
     if tasks:
         details["todo"] = list(map(lambda x: x.description(), tasks))
-    project_url = url_for("user.web_statistic_name", name="")
+    project_url = url_for("statistic.web_statistic_name", name="")
     row = render_template(
         "bits/registry_expand_row.html", user=details, project_url=project_url
     )
