@@ -226,8 +226,10 @@ def web_project_delete_user():
             )
     users = list(map(lambda x: x.login, project.users))
     if login not in users:
-        raise ValueError("User '%s' seems not to be registered in project '%s'"
-                         % (login, project.get_name()))
+        raise ValueError(
+            f"User '{login}' seems not to be registered in "
+            f"project '{project.get_name()}'"
+        )
     user = get_user_record(login)
     task = TaskQueue().project(project).user_remove(user).task
     return jsonify(message=ProjectLog(project).user_delete(task))
@@ -513,7 +515,7 @@ def web_project_index():
 
     projects = Project.query.filter_by(responsible=current_user).all()
     if not projects:
-        flash("No projects associated with %s found" % current_user.full_name())
+        flash(f"No projects associated with {current_user.full_name()} found")
         return render_template("project.html", data={})
     list(map(lambda x: clean_activity(x.get_name()), projects))
     list(map(lambda x: is_project_transformable(x), projects))
