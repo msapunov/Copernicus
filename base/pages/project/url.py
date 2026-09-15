@@ -218,6 +218,12 @@ def web_project_delete_user():
     pid = data["project"]
     login = data["login"].strip().lower()
     project = get_project_record(pid)
+    if "admin" not in current_user.permissions():
+        if current_user != project.responsible:
+            raise ValueError(
+                "User %s is not authorized to modify project '%s'"
+                % (current_user.login, project.get_name())
+            )
     users = list(map(lambda x: x.login, project.users))
     if login not in users:
         raise ValueError("User '%s' seems not to be registered in project '%s'"
