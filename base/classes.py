@@ -350,8 +350,10 @@ class ProjectLog(Log):
             The event string.
         """
         article = "an exceptional" if extension.exception else "a"
-        self.log.event = "Made %s request to renew project for %s hour(s)" \
-                         % (article, extension.hours)
+        self.log.event = (
+            f"Made {article} request to renew project for {extension.hours}"
+            f" hour(s)"
+        )
         self.log.extension = extension
         return self.commit(Mail().project_renew(extension))
 
@@ -467,8 +469,10 @@ class ProjectLog(Log):
             The event string.
         """
         prefix = self._prefix(extension)
-        self.log.event = "%s request for %s hours is accepted" \
-                         % (prefix, extension.hours)
+        self.log.event = (
+            f"{prefix} request for {extension.hours} hours"
+            f" is accepted"
+        )
         self.log.extension = extension
         return self.commit(Mail().allocation_accepted(extension, prefix))
 
@@ -482,8 +486,9 @@ class ProjectLog(Log):
             The event string.
         """
         prefix = self._prefix(extension)
-        self.log.event = "%s request for %s hours is ignored" \
-                         % (prefix, extension.hours)
+        self.log.event = (
+            f"{prefix} request for {extension.hours} hours is ignored"
+        )
         self.log.extension = extension
         return self.commit(Mail().allocation_ignored(extension, prefix))
 
@@ -497,8 +502,9 @@ class ProjectLog(Log):
             The event string.
         """
         prefix = self._prefix(extension)
-        self.log.event = "%s request for %s hours is rejected" \
-                         % (prefix, extension.hours)
+        self.log.event = (
+            f"{prefix} request for {extension.hours} hours is rejected"
+        )
         self.log.extension = extension
         return self.commit(Mail().allocation_rejected(extension, prefix))
 
@@ -1950,8 +1956,9 @@ class TaskQueue:
         if not self.p_name:
             raise ValueError("Can't add a user to none existent project")
         description = user.description()
-        self.task.action = "create|user|%s|%s|%s" % (user.login, self.p_name,
-                                                     description)
+        self.task.action = (
+            f"create|user|{user.login}|{self.p_name}|{description}"
+        )
         return self.commit()
 
     def responsible_create(self, user):
@@ -1969,8 +1976,9 @@ class TaskQueue:
         if not self.p_name:
             raise ValueError("Can't add a user to none existent project")
         description = user.description()
-        self.task.action = "create|resp|%s|%s|%s" % (user.login, self.p_name,
-                                                     description)
+        self.task.action = (
+            f"create|resp|{user.login}|{self.p_name}|{description}"
+        )
         return self.commit()
 
     def user_activate(self, user):
