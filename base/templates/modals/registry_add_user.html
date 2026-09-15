@@ -6,7 +6,7 @@
         </div>
         <div class="uk-overflow-container">
             <form action="test" method="post" class="uk-panel uk-form" id="add_form">
-                {{ form.csrf_token }}
+                {% if "csrf_token" in form%}{{ form.csrf_token }}{% endif %}
                 <div class="uk-form-row">
                     <div class="uk-form-controls">
                         {{ form.prenom(placeholder="Jhon", class_="uk-width-1-1 uk-form-large uk-text-capitalize") }}

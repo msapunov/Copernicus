@@ -6,7 +6,7 @@
     </div>
     <div>
       <form action="test" method="post" class="uk-panel uk-form" id="{{form.name}}_activity_form">
-        {{ form.csrf_token(id=form.name+"_csrf_activity") }}
+        {% if "csrf_token" in form%}{{ form.csrf_token(id=form.name+"_csrf_activity") }}{% endif %}
         <div class="uk-form-row">
         <div class="uk-panel uk-form-controls uk-width-medium-1-1 uk-width-small-1-1">
           <ul class="uk-subnav uk-subnav-pill" data-uk-switcher="{connect:'#{{form.name}}-activity-info'}">

@@ -17,7 +17,7 @@
                     {% else %}
                         {{ form.responsible(value='False') }}
                     {% endif %}
-                    {{ form.csrf_token() }}
+                    {% if "csrf_token" in form%}{{ form.csrf_token() }}{% endif %}
                     {{ form.prenom() }}
                     {{ form.surname() }}
                     {{ form.email() }}

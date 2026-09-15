@@ -6,7 +6,7 @@
     </div>
     <div>
       <form action="test" method="post" class="uk-panel uk-form responsible_form" id="{{form.name}}_responsible_form">
-        {{ form.csrf_token(id=form.name+"_csrf_responsible") }}
+        {% if "csrf_token" in form%}{{ form.csrf_token(id=form.name+"_csrf_responsible") }}{% endif %}
         <div>
           <p>As soon as new responsible will be approved, {{form.responsible}} will be unsubscribed from responsible mailing list and will lose any ability to manage {{form.name}} project.</p>
         </div>

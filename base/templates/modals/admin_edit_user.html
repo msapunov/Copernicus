@@ -10,7 +10,7 @@
                 <div class="uk-form-row uk-panel uk-panel-box" data-uk-alert>
                     <ul class="uk-form-row uk-grid uk-grid-width-1-2 uk-grid-small">
                         <li><div>
-                            {{ form.csrf_token() }}
+                            {% if "csrf_token" in form%}{{ form.csrf_token() }}{% endif %}
                             {{ form.prenom(id=form.full+"_name_edit", placeholder="Name (Prenom)", class_="uk-width-1-1 user_name") }}
                         </div></li>
                         <li><div>

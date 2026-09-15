@@ -6,7 +6,7 @@
         </div>
         <div class="uk-margin uk-modal-content">
             <form action="board/accept/{{rec.id}}" method="post" class="uk-panel uk-form" id="{{rec.id}}_accept_form">
-                {{ form.csrf_token(id=rec.id|string+"_csrf_renew") }}
+                {% if "csrf_token" in form%}{{ form.csrf_token(id=rec.id|string+"_csrf_renew") }}{% endif %}
                 <p>Accept  request for {{ rec.action }} of {{ rec.name }} with {{ rec.hours }} CPU hours?</p>
                 <ul class="uk-form-row uk-grid uk-grid-width-1-2 uk-grid-small">
                     <li><div>{{ form.cpu(id=rec.name+"_cpu_accept", placeholder="CPU hours", value=rec.hours, class_="uk-width-1-1") }}</div></li>

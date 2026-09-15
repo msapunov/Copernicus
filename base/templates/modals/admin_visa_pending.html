@@ -15,7 +15,7 @@
     </div>
     <div class="uk-margin uk-modal-content">
       <form method="post" class="uk-panel uk-form" id="{{rec.id}}_visa_form">
-        {{ rec.csrf_token(id=rec.name+"_csrf_extend") }}
+        {% if "csrf_token" in rec%}{{ rec.csrf_token(id=rec.name+"_csrf_extend") }}{% endif %}
         <div>
           Project: {{rec.name}}
         </div>

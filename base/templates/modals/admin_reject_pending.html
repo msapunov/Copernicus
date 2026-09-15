@@ -6,7 +6,7 @@
     </div>
     <div class="uk-overflow-container">
       <form action="test" method="post" class="uk-panel uk-form" id="{{form.id}}_reject_form">
-        {{ form.csrf_token(id=form.name+"_csrf_renew") }}
+        {% if "csrf_token" in form%}{{ form.csrf_token(id=form.name+"_csrf_reject") }}{% endif %}
         <div class="uk-form-row">
           <div class="uk-form-controls">
             {{ form.note(id=form.name+"_note_renew", placeholder="Enter a reason for rejecting project " + form.name, class_="uk-width-1-1") }}

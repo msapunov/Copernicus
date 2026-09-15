@@ -6,7 +6,7 @@
         </div>
         <div class="uk-margin uk-modal-content uk-overflow-container">
         <form action="xxx/create/{{form.id}}" method="post" class="uk-form" id="{{form.meso}}_edit_pending_form">
-            {{ form.csrf_token(id=form.meso+"_csrf_edit") }}
+            {% if "csrf_token" in form%}{{ form.csrf_token(id=form.meso+"_csrf_edit") }}{% endif %}
             <ul class="uk-subnav uk-subnav-pill uk-container-center" data-uk-switcher="{connect:'#{{form.meso}}-pending-info'}">
                 <li class="uk-active"><a href="">General information</a></li>
                 <li><a href="">Publication</a></li>

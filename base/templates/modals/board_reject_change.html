@@ -6,7 +6,7 @@
     </div>
     <div class="uk-margin uk-modal-content">
       <form action="board/reject/{{rec.id}}" method="post" class="uk-panel uk-form" id="{{rec.id}}_reject_form">
-        {{ form.csrf_token(id=form.name+"_csrf_renew") }}
+        {% if "csrf_token" in form%}{{ form.csrf_token(id=form.name+"_csrf_reject") }}{% endif %}
         <div class="uk-form-row">
           <div class="uk-form-controls">
             {{ form.note(id=form.name+"_note_renew", placeholder="Enter a reason for rejecting " + rec.action + " of " + rec.name + " with additional " + rec.hours|string + " CPU hours?", class_="uk-width-1-1", rows=4) }}
