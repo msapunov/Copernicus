@@ -80,8 +80,9 @@ def create_pending(register):
         name = register.responsible_first_name.lower()
         sname = register.responsible_last_name.lower()
         email = register.responsible_email
-        raw.append("First Name: %s; Last Name: %s; E-mail: %s; Login:" % (
-            name, sname, email))
+        raw.append(
+            f"First Name: {name}; Last Name: {sname}; E-mail: {email}; Login:"
+        )
     users = [x for x in raw if x]
     for num, user in enumerate(users):
         form = CreateForm(prefix=str(num))
@@ -94,15 +95,15 @@ def create_pending(register):
             )
             continue
         form.uid = "".join(filter(lambda x: x in ascii, email)).lower()
-        form.user.data = "%s <%s>" % (full_name(name, surname), email)
+        form.user.data = f"{full_name(name, surname)} <{email}>"
         form.prenom.data = name
         form.surname.data = surname
         form.email.data = email
         direct = generate_login(name, surname)
         invert = generate_login(surname, name)
         form.login.choices = [
-            (direct, "Create a new user: %s" % direct),
-            (invert, "Create a new user: %s" % invert),
+            (direct, f"Create a new user: {direct}"),
+            (invert, f"Create a new user: {invert}"),
             ("select", ""),
         ]
         already = user_by_details(name, surname, email, login)
@@ -133,10 +134,10 @@ def contact_pending(register):
     form = MessageForm()
     form.id = register.id
     form.meso = register.project_id()
-    form.title_value = "[%s] %s" % (form.meso, register.title)
+    form.title_value = f"[{form.meso}] {register.title}"
     form.responsible = register.responsible_full_name()
     form.destination.value = register.responsible_email
-    form.message_holder = "Write a message to %s" % form.responsible
+    form.message_holder = f"Write a message to {form.responsible}"
     form.css_class = "pending_message_submit"
     return form
 
@@ -152,7 +153,7 @@ def contact_user(user):
     """
     form = MessageForm()
     form.id = user.login
-    form.message_holder = "Write message to " + user.full()
+    form.message_holder = f"Write message to {user.full()}"
     form.destination.value = user.email
     return form
 
@@ -175,7 +176,7 @@ def visa_pending(register):
     form = VisaPendingForm()
     form.id = register.id
     form.meso = register.project_id()
-    form.name = "'%s' (%s)" % (register.title, form.meso)
+    form.name = f"'{register.title}' ({form.meso})"
     form.status = register.status
     return form
 
@@ -200,7 +201,7 @@ def action_pending(register):
     form = PendingActionForm()
     form.id = register.id
     form.meso = register.project_id()
-    form.name = "'%s' (%s)" % (register.title, form.meso)
+    form.name = f"'{register.title}' ({form.meso})"
     return form
 
 
@@ -229,7 +230,7 @@ class SelectMultipleProjects(SelectMultipleField):
         projects.append("None")
         for i in form.project.data:
             if i not in projects:
-                raise ValueError("Project %s doesn't register in the DB" % i)
+                raise ValueError(f"Project {i} doesn't register in the DB")
 
 
 class RegistrationEditForm(FlaskForm):
