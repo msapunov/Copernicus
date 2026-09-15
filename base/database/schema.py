@@ -847,7 +847,7 @@ class Register(db.Model):
     numerical_methods = db.Column(db.String)
     computing_resources = db.Column(db.String)
     type = db.Column(db.String(1))
-    cpu = db.Column(db.Integer, db.CheckConstraint("cpu_cluster>=0"))
+    cpu = db.Column(db.Integer, db.CheckConstraint("cpu>=0"))
     article_1 = db.Column(db.String)
     article_2 = db.Column(db.String)
     article_3 = db.Column(db.String)
