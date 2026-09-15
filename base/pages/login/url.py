@@ -61,18 +61,18 @@ def load_user_from_request(urlpath):
             error("Username is longer then 128 letters")
             return abort(401)
         if not username.isalnum():
-            error("Username '%s' consists not only from letters" % username)
+            error(f"Username '{username}' consists not only from letters")
             return abort(401)
         user = User.query.filter_by(login=username).first()
-        debug("API user found %s" % user.login)
+        debug(f"API user found {user.login}")
         if not user.check_password(password):
             return abort(401)
         login_user(user, True)
         safe_path = urlpath.lstrip("/")
         if request.environ.get("SCRIPT_NAME"):
-            urlpath = "%s/%s" % (request.environ["SCRIPT_NAME"], safe_path)
+            urlpath = f"{request.environ['SCRIPT_NAME']}/{safe_path}"
         else:
-            urlpath = "/%s" % safe_path
+            urlpath = f"/{safe_path}"
         return redirect(urlpath, code=307)
     flash("API key is required")
     return redirect(url_for("login.login"))
@@ -146,14 +146,14 @@ def login():
         return redirect(url_for("login.login"))
     user = User.query.filter_by(login=username, active=True).first()
     if not user:
-        flash("User '%s' does not exists" % username)
+        flash(f"User '{username}' does not exists")
         return redirect(url_for("login.login"))
     else:
         debug(user.full())
-        debug("Is user active: %s" % user.active)
-        debug("Is user archived: %s" % user.archived)
+        debug(f"Is user active: {user.active}")
+        debug(f"Is user archived: {user.archived}")
     if not user.active:
-        flash("User '%s' is deactivated" % username)
+        flash(f"User '{username}' is deactivated")
         return redirect(url_for("login.login"))
     if user.hash:
         debug("Using password verification")
@@ -165,7 +165,7 @@ def login():
         flash("Invalid password")
         return redirect(url_for("login.login"))
     status = login_user(user, True)
-    debug("Logged-in? %s" % status)
+    debug(f"Logged-in? {status}")
     g.name = username
     if user.first_login:
         return redirect(url_for("login.reset"))
