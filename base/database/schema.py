@@ -134,7 +134,7 @@ class Project(db.Model):
     created = db.Column(db.DateTime(True))
     comment = db.Column(db.Text)
     gid = db.Column(db.Integer)
-    priority = db.Column(db.Integer, default=False)
+    priority = db.Column(db.Integer, default=0)
     name = db.Column(db.String(128))
     type = db.Column(db.String(1))
 
