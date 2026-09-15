@@ -21,7 +21,7 @@
                 {% endfor %}
 
                 <form action="{{ url_for('login.reset') }}" method="post" class="uk-panel uk-panel-box uk-form">
-                    {{ form.csrf_token }}
+                    {% if "csrf_token" in form%}{{ form.csrf_token }}{% endif %}
                     <div class="uk-form-row uk-form-password">
                         {{ form.old(placeholder="current password", class_="uk-width-1-1 uk-form-large") }}
                         <a href="" class="uk-form-password-toggle" data-uk-form-password>Show</a>
