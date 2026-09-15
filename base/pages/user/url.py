@@ -52,17 +52,17 @@ def user_check_active():
     result = ""
     archive = archived_users_check(logins)
     if archive:
-        result += "Archived user(s):\n%s" % "\n".join(archive)
+        result += "Archived user(s):\n" + "\n".join(archive)
     inactive = inactive_users_check(logins)
     if inactive:
-        result += "Deactivated user(s):\n%s" % "\n".join(inactive)
+        result += "Deactivated user(s):\n" + "\n".join(inactive)
     working = working_users_check(logins)
     if working:
-        result += "Activated user(s):\n%s" % "\n".join(working)
+        result += "Activated user(s):\n" + "\n".join(working)
     absent = absent_users_check(logins)
     log.debug(f"Absent users: {len(absent)}")
     if absent:
-        result += "Absent user(s):\n%s" % "\n".join(absent)
+        result += "Absent user(s):\n" + "\n".join(absent)
     return jsonify(data=result)
 
 
@@ -96,7 +96,7 @@ def user_list(active=True):
     else:
         query = User.query
     if term:
-        term = "%%%s%%" % term.lower()
+        term = f"%{term.lower()}%"
         users_obj = query.filter(User.surname.like(term)
                                  | User.name.like(term)
                                  | User.login.like(term)).all()
@@ -195,7 +195,7 @@ def user_index():
         )
     if not current_user.project:
         current_user.project = []
-        flash("No projects found for user '%s'" % current_user.full())
+        flash(f"No projects found for user '{current_user.full()}'")
     start = dt.now(timezone.utc)
     for project in current_user.project:
         start = min(start, project.resources.created)
