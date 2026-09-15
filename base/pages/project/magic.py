@@ -49,8 +49,10 @@ def suspend_expired_projects(projects):
         if finish > now:
             continue
         project.active = False
-        debug("%s: suspended due to resource expiration %s" %
-              (project.name, finish.isoformat()))
+        debug(
+            f"{project.name}: suspended due to resource expiration"
+            f" {finish.isoformat()}"
+        )
         ProjectLog(project).expired()
     if db.session.new or db.session.dirty or db.session.deleted:
         db.session.commit()
@@ -78,13 +80,13 @@ def warn_expired_projects(projects, config):
             debug("No warning date has been defined, skipping notification")
             continue
         if warn <= now < finish:
-            debug("Expiring %s, %s" % (project.name, finish.isoformat()))
+            debug(f"Expiring {project.name}, {finish.isoformat()}")
             debug("Checking if warning has been send already")
             log = ProjectLog(project)
             logs = log.after(warn).list()
-            debug("List of log events found: %s" % logs)
+            debug(f"List of log events found: {logs}")
             was_sent = list(filter(lambda x: "Expiring" in x.event, logs))
-            debug("Events with word Expiring found: %s" % was_sent)
+            debug(f"Events with word Expiring found: {was_sent}")
             if not was_sent:
                 debug("Sending warning cause no previous warning events found")
                 log.expire_warning()
@@ -146,7 +148,10 @@ def sanity_check():
 #    warn_overconsumed_projects(projects)
     consumption_check(projects)
     if users:
-        return ", ".join(f"{k}: {' '.join(map(str, v))}" for k, v in users.items())
+        parts = []
+        for k, v in users.items():
+            parts.append(f"{k}: {' '.join(map(str, v))}")
+        return ", ".join(parts)
     return "Sanity check done"
 
 
@@ -169,13 +174,13 @@ def active_check():
         name = project.name
         if name not in data:
             if project.active:
-                result.append("Project %s have no QOS but it's active" % name)
+                result.append(f"Project {name} has no QOS but is active")
             continue
         if data[name] == 0 and project.active:
-            result.append("Project %s banned in SLURM but active in DB" % name)
+            result.append(f"Project {name} banned in SLURM but active in DB")
             continue
         if not data[name] and not project.active:
-            result.append("Project %s active in SLURM but banned in DB" % name)
+            result.append(f"Project {name} active in SLURM but banned in DB")
             continue
     if result:
         return "\n".join(result)
@@ -198,10 +203,12 @@ def project_attach_user(project, form):
     uid = form.login.data
     user = User.query.filter(User.id == uid).first()
     if not user:
-        raise ValueError("Failed to find user with ID '%s' in database" % uid)
+        raise ValueError(f"Failed to find user with ID '{uid}' in database")
     if user in project.users:
-        raise ValueError("User %s has been already attached to project %s"
-                         % (user.full(), project.get_name()))
+        raise ValueError(
+            f"User {user.full()} has been already attached to project"
+            f" {project.get_name()}"
+        )
     if user.active:
         task = TaskQueue().project(project).user_assign(user).task
     else:
@@ -238,8 +245,9 @@ def project_create_user(project, form):
     if ssh_upload and key:
         ssh_check(key)
     if User.query.filter(User.email == email).first():
-        raise ValueError("User with e-mail %s has been registered already"
-                         % email)
+        raise ValueError(
+            f"User with e-mail {email} has been registered already"
+        )
     user = TmpUser()
     user.login = generate_login(prenom, surname)
     user.name = prenom
@@ -274,8 +282,10 @@ def check_responsible(name):
     """
     project = get_project_by_name(name)
     if current_user != project.responsible:
-        raise ValueError("User %s is not register as the responsible person "
-                         "for the project %s" % (current_user.login, name))
+        raise ValueError(
+            f"User {current_user.login} is not register as the responsible "
+            f"person for the project {name}"
+        )
     return project
 
 
@@ -302,8 +312,10 @@ def assign_responsible(name, form):
     else:
         project = check_responsible(name)
     if user == project.responsible:
-        raise ValueError("User %s is already responsible for the project %s" %
-                         (user.full_name(), project.get_name()))
+        raise ValueError(
+            f"User {user.full_name()} is already responsible for the "
+            f"project {project.get_name()}"
+        )
     if "admin" in current_user.permissions():
         task = TaskQueue().project(project).responsible_assign(user).task
         Task(task).accept()
@@ -324,11 +336,11 @@ def get_activity_files(name):
         List of Path objects matching the project name pattern.
     """
     temp_dir = current_app.get_tmpdir()
-    debug("Using temporary directory to store files: %s" % temp_dir)
-    pattern = "*%s*" % name
-    debug("Pattern %s to get associated files for %s" % (pattern, name))
+    debug(f"Using temporary directory to store files: {temp_dir}")
+    pattern = f"*{name}*"
+    debug(f"Pattern {pattern} to get associated files for {name}")
     already = list(Path(temp_dir).glob(pattern))
-    debug("List of existing files: %s" % already)
+    debug(f"List of existing files: {already}")
     return already
 
 
@@ -350,7 +362,7 @@ def save_activity(req):
     check_responsible(project)
     files = get_activity_files(project)
     if len(files) >= limit:
-        raise ValueError("You have already uploaded %s or more files" % limit)
+        raise ValueError(f"You have already uploaded {limit} or more files")
     if "file" not in req.files:
         raise ValueError("Missing 'file' in uploaded data.")
     file = req.files["file"]
@@ -402,7 +414,7 @@ def save_report(project):
     db.session.add(report)
     project.resources.file = report
     db.session.commit()
-    debug("Activity report saved to the file %s" % report.path)
+    debug(f"Activity report saved to the file {report.path}")
     return report
 
 
@@ -430,7 +442,7 @@ def report_activity(name, form):
         if path.exists() and path.is_file():
             setattr(project, i, str(path.resolve()))
         else:
-            error("Path for image doesn't exists: %s" % path.resolve())
+            error(f"Path for image doesn't exists: {path.resolve()}")
     debug(project)
     return save_report(project)
 
@@ -449,14 +461,14 @@ def remove_activity(name, file_name):
     temp_dir = current_app.get_tmpdir()
     path = Path(temp_dir) / file_name
     if not path.exists():
-        debug("Path doesn't exists: %s" % str(path))
+        debug(f"Path doesn't exists: {path}")
         return True
     if path.is_file():
         path.unlink()
-        debug("File deleted: %s" % file_name)
+        debug(f"File deleted: {file_name}")
         return True
     if path.is_dir():
-        error("Path %s is a directory and can't be removed" % str(path))
+        error(f"Path {path} is a directory and can't be removed")
         return False
 
 
@@ -469,14 +481,14 @@ def clean_activity(name):
     Returns:
         True if cleaned successfully.
     """
-    debug("Cleaning activity files for project %s" % name)
+    debug(f"Cleaning activity files for project {name}")
     check_responsible(name)
     files = get_activity_files(name)
     if len(files) < 1:
         return True
     for x in files:
         x.unlink()
-        debug("File deleted: %s" % str(x))
+        debug(f"File deleted: {x}")
     return True
 
 
@@ -497,7 +509,7 @@ def renew_project(pid, ext, date):
     else:
         new_hours = ext.hours
     ext.project.resources = create_resource(ext.project, new_hours)
-    msg = "Created based on renewal request ID %s on %s" % (pid, date)
+    msg = f"Created based on renewal request ID {pid} on {date}"
     ext.project.resources.comment = msg
     ext.project.active = True
     return ProjectLog(ext.project).renewed(ext)
@@ -517,8 +529,8 @@ def extend_project(pid, ext, date):
     ext.project.resources.ttl = calculate_ttl(ext.project.type)
     ext.project.resources.cpu += ext.hours
     ext.project.resources.valid = True
-    msg = "CPU value has been extended to %s hours on %s based upon "\
-          "extension request ID %s" % (ext.hours, date, pid)
+    msg = (f"CPU value has been extended to {ext.hours} hours on {date} "
+           f"based upon extension request ID {pid}")
     old_comment = ext.project.resources.comment
     comment = old_comment.split("\n") if old_comment else []
     comment.append(msg)
@@ -538,10 +550,10 @@ def transform_project(ext, date):
         The event string from the project log.
     """
     ext.project.type = ext.transform
-    ext.project.name = "%s%s" % (ext.transform, str(ext.project.id).zfill(3))
+    ext.project.name = f"{ext.transform}{str(ext.project.id).zfill(3)}"
     ext.project.resources.valid = False
     ext.project.resources = create_resource(ext.project, ext.hours)
-    msg = "Created based on transformation request ID %s on %s" % (ext.id, date)
+    msg = f"Created based on transformation request ID {ext.id} on {date}"
     ext.project.resources.comment = msg
     ext.project.active = True
     return ProjectLog(ext.project).transformed(ext)
@@ -560,7 +572,7 @@ def activate_project(eid, ext, date):
     """
     ext.project.resources.valid = False
     ext.project.resources = create_resource(ext.project, ext.hours)
-    msg = "Created based on activation request ID %s on %s" % (eid, date)
+    msg = f"Created based on activation request ID {eid} on {date}"
     ext.project.resources.comment = msg
     ext.project.users = [ext.project.responsible]
     ext.project.active = True
@@ -580,7 +592,7 @@ def process_extension(eid):
     """
     ext = Extend.query.filter_by(id=eid).first()
     if not ext:
-        raise ValueError("Failed to find extension record with id '%s'" % eid)
+        raise ValueError(f"Failed to find extension record with id '{eid}'")
     ext.done = True
     date = dt.now().replace(microsecond=0).isoformat(" ")
     never_extend = current_app.config.get("NO_EXTENSION_TYPE", [])
@@ -655,7 +667,7 @@ def get_project_by_name(name):
         if project.get_name() != name:
             continue
         return project
-    raise ValueError("Failed to find a project with name '%s'" % name)
+    raise ValueError(f"Failed to find a project with name '{name}'")
 
 
 def get_project_record(pid):
@@ -672,7 +684,7 @@ def get_project_record(pid):
     """
     project = Project.query.filter_by(id=pid).first()
     if not project:
-        raise ValueError("Failed to find project with id '%s'" % pid)
+        raise ValueError(f"Failed to find project with id '{pid}'")
     return project
 
 
@@ -695,7 +707,7 @@ def project_transform(name, form):
     possible_types = get_transformation_options(project.type)
     possible_types = list(map(lambda x: x[0], possible_types))
     if new not in possible_types and "admin" not in g.permissions:
-        raise ValueError("Configuration forbids transformation to %s" % new)
+        raise ValueError(f"Configuration forbids transformation to {new}")
     record = Extend(
         project=project,
         hours=cpu,
@@ -728,10 +740,10 @@ def project_renew(project, form, active=False):
     cpu = form.cpu.data
     note = form.note.data
     if active and project.active:
-        raise ValueError("Project %s already active" % project.get_name())
+        raise ValueError(f"Project {project.get_name()} already active")
     project = is_project_renewable(project)
     if not active and not project.is_renewable and "admin" not in g.permissions:
-        raise ValueError("Project %s is not renewable" % project.get_name())
+        raise ValueError(f"Project {project.get_name()} is not renewable")
     record = Extend(
         project=project,
         hours=cpu,
@@ -765,7 +777,7 @@ def project_extend(name, form):
     project = check_responsible(name)
     project = is_project_extendable(project)
     if not project.is_extendable and "admin" not in g.permissions:
-        raise ValueError("Project %s is not extendable" % name)
+        raise ValueError(f"Project {name} is not extendable")
     record = Extend(
         project=project,
         hours=cpu,
@@ -805,7 +817,7 @@ def is_activity_report(project):
     if (report_dt and finish_dt) and not (report_dt < file_dt < finish_dt):
         raise ValueError("Please upload the most recent activity report")
     name = project.resources.file.name()
-    debug("Activity file name is: %s" % name)
+    debug(f"Activity file name is: {name}")
     if not current_app.config.get("ACTIVITY_UPLOAD", False):
         return True
     url = current_app.config.get("OWN_CLOUD_URL", None)
@@ -821,7 +833,7 @@ def is_activity_report(project):
     if not remote_dir.endswith("/"):
         remote_dir += "/"
     remote = remote_dir + name
-    debug("Checking is file %s exists" % remote)
+    debug(f"Checking is file {remote} exists")
     if client.check(remote):
         debug("File exists on remote server")
         return True
@@ -851,7 +863,7 @@ def set_state(pid, state):
     """
     project = get_project_record(pid)
     if type(state) != bool:
-        ValueError("Argument state is not boolean: %s" % state)
+        raise ValueError(f"Argument state is not boolean: {state}")
     project.active = state
     db.session.commit()
     return project.to_dict()
@@ -898,7 +910,7 @@ def is_project_renewable(project):
     now = dt.now(timezone.utc)
     if not get_project_option(project, "renewable"):
         debug(
-            f"{project.name} - No renewable option found in config file"
+            f"{project.name} - No renewable option found in config file "
             f"for type {project.type} projects"
         )
         project.is_renewable = False
@@ -907,7 +919,7 @@ def is_project_renewable(project):
     close = get_project_option(project, "renew_close")
     if not any((close, start)):
         debug(
-            f"{project.name} - Either renew_start or renew_close is absent"
+            f"{project.name} - Either renew_start or renew_close is absent "
             f"in configuration file"
         )
         project.is_renewable = False
