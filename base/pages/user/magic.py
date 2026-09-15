@@ -213,7 +213,7 @@ def user_by_id(uid):
     """
     user = User.query.filter_by(id=uid).first()
     if not user:
-        raise ValueError("Failed to find user with id '%s'" % uid)
+        raise ValueError(f"Failed to find user with id '{uid}'")
     return user
 
 
@@ -232,14 +232,14 @@ def get_user_record(login=None):
     if not login:
         login = current_user.login
     if len(login) < 1:
-        raise ValueError("Username '%s' is too short!" % login)
+        raise ValueError(f"Username '{login}' is too short!")
     if len(login) > 128:
-        raise ValueError("Username '%s' is too long!" % login)
+        raise ValueError(f"Username '{login}' is too long!")
     if not login.isalnum():
-        raise ValueError("Username '%s' consists not only from letters" % login)
+        raise ValueError(f"Username '{login}' consists not only from letters")
     user = User.query.filter_by(login=login).first()
     if not user:
-        raise ValueError("Failed to find user with login '%s'" % login)
+        raise ValueError(f"Failed to find user with login '{login}'")
     return user
 
 
@@ -254,7 +254,7 @@ def get_scratch():
     Raises:
         ValueError: If no scratch info is found or parsing fails.
     """
-    cmd = "beegfs-ctl --getquota --csv --uid %s" % current_user.login
+    cmd = f"beegfs-ctl --getquota --csv --uid {current_user.login}"
     result, err = ssh_wrapper(cmd)
     if not result:
         raise ValueError("No scratch space info found")
@@ -293,8 +293,8 @@ def get_jobs(start, end, last=10):
     """
     cmd = ["sacct", "-nPX",
         "--format=JobID,State,Start,Account,JobName,CPUTime,Partition",
-        "--start=%s" % start,
-        "--end=%s" % end,
+        f"--start={start}",
+        f"--end={end}",
         "-u",
         current_user.login,
         "|",
@@ -303,14 +303,14 @@ def get_jobs(start, end, last=10):
         "-r",
         "|",
         "head",
-        "-%s" % last,
+        f"-{last}",
     ]
     run = " ".join(cmd)
 
     result, err = ssh_wrapper(run)
 
     if not result:
-        raise ValueError("No jobs found from %s to %s" % (start, end))
+        raise ValueError(f"No jobs found from {start} to {end}")
     jobs = []
     for job in result:
         tmp = {}
@@ -371,5 +371,5 @@ def user_edit(login, form):
         user_log = UserLog(user)
         user_log.senf = False
         user_log.user_update(info=c_dict)
-        return "Task ID %s Has been created" % task.id
+        return f"Task ID {task.id} Has been created"
     return UserLog(user).user_update(info=c_dict)
