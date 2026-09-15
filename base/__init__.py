@@ -153,6 +153,15 @@ def register_decor(app: Flask) -> None:
         app: Flask application instance.
     """
 
+    @app.template_test("has_csrf")
+    def has_csrf(form: object) -> bool:
+        """Return True if the form has a ``csrf_token`` attribute.
+
+        Used in templates to conditionally render the CSRF field when
+        CSRF support is enabled for the form.
+        """
+        return hasattr(form, "csrf_token")
+
     @app.template_filter("menu_item")
     def menu_item(obj: object) -> str:
         """Extract a menu-item name from a template reference.
