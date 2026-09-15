@@ -9,7 +9,7 @@
                 {% if "csrf_token" in form%}{{ form.csrf_token }}{% endif %}
                 <div class="uk-form-row">
                     <div class="uk-form-controls">
-                        {{ form.key(class_="uk-width-1-1", placeholder="ssh-rsa AAAAB3NzaC1yc2...+6W5hijLDZ4zVw== username@computer") }}
+                        {{ form.key(class_="uk-width-1-1", placeholder="ssh-ed25519 AAAAC3Nz...+6W5hijLDZ4zVw== username@computer") }}
                         {{ form.login }}
                     </div>
                 </div>
