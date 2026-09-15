@@ -163,11 +163,10 @@ def ssh_check(pubkey):
     try:
         key = load_ssh_public_key(pubkey.encode())
     except Exception as e:
-        raise ValueError(f"Error while loading SSH public key: {e} Please make "
-                         f"sure that you've inserted the content of the public "
-                         f"key file which should looks like this key for "
-                         f"example: \n521 SHA256:dm7lPKaRcwGfa66ZFQ3LSD70BSPOyX"
-                         f"1UWZk key_name (ECDSA)")
+        raise ValueError(f"Error loading SSH public key: {e}. Paste the public"
+                         f" key file content, for example:\n"
+                         f"ssh-ed25519 AAAAC3Nzam7lPKaRcwGfa66ZFQ3LBSPOyX1UWZk"
+                         f" key_name")
     if isinstance(key, rsa.RSAPublicKey):
         if key.key_size < 3072:
             raise ValueError("RSA key is too short")
@@ -189,7 +188,7 @@ def ssh_wrapper(cmd, host=None):
         Tuple of (stdout_lines, stderr_lines). Each is an empty list on
         connection failure.
     """
-    debug("ssh_wrapper(%s)" % cmd)
+    debug(f"ssh_wrapper({cmd})")
     if not host:
         host = app.config["SSH_SERVER"]
     login = app.config["SSH_USERNAME"]
@@ -204,32 +203,31 @@ def ssh_wrapper(cmd, host=None):
         raise ValueError("Unsupported or invalid private key")
     timeout = app.config.get("SSH_TIMEOUT", 60)
     port = app.config.get("SSH_PORT", 22)
-    debug("Connecting to %s:%s with username %s and key %s" %
-          (host, port, login, key_file))
+    debug(f"Connecting to {host}:{port} with username {login} and key"
+          f" {key_file}")
     client = SSHClient()
     client.set_missing_host_key_policy(AutoAddPolicy())
     try:
         client.connect(host, username=login, pkey=key, timeout=timeout,
                        port=port)
     except AuthenticationException:
-        error("Failed to connect to %s" % host)
+        error(f"Failed to connect to {host}")
         client.close()
         return [], []
     except BadHostKeyException:
-        error("Host key given by %s did not match with expected" % host)
+        error(f"Host key given by {host} did not match with expected")
         client.close()
         return [], []
     except Exception as e:
-        error("Failed to establish a connection to %s due following error: %s"
-              % (host, e))
+        error(f"Connection to {host} failed: {e}")
         client.close()
         return [], []
     stdin, stdout, stderr = client.exec_command(cmd)
     output = stdout.readlines()
     errors = stderr.readlines()
     client.close()
-    debug("Out: %s" % output)
-    debug("Err: %s" % errors)
+    debug(f"Out: {output}")
+    debug(f"Err: {errors}")
     return output, errors
 
 
@@ -248,17 +246,17 @@ def show_configuration():
     config = ConfigParser(allow_no_value=True)
     for file in files:
         nom = str(file)
-        print("File name: %s" % nom)
+        print(f"File name: {nom}")
         try:
             with open(nom) as fd:
                 text = fd.read()
         except UnicodeDecodeError as err:
-            error("%s - not a text file: %s" % (nom, err))
+            error(f"{nom} - not a text file: {err}")
             continue
         try:
             config.read_string(text, source=nom)
         except Exception as err:
-            error("%s - not a configuration file: %s" % (nom, err))
+            error(f"{nom} - not a configuration file: {err}")
             continue
         cfg[file.name] = text
     return cfg
@@ -388,7 +386,7 @@ def write_pdf(html, name):
     if not name.endswith(".pdf"):
         name = name + ".pdf"
     path = Path(app.get_tmpdir(), name)
-    debug("The resulting PDF will be saved to: %s" % path)
+    debug(f"The resulting PDF will be saved to: {path}")
     try:
         HTML(string=html, base_url=path.parent.as_posix()).write_pdf(path)
     except TypeError:
@@ -424,7 +422,7 @@ def create_visa(record, signature="signature.png"):
     cfg = project_config()
     project_type = record.type.lower()
     if project_type not in cfg:
-        raise ValueError("Project type '%s' not in config" % project_type)
+        raise ValueError(f"Project type '{project_type}' not in config")
     else:
         config = cfg[project_type]
     end = config.get("finish_dt", None)
@@ -450,7 +448,7 @@ def create_visa(record, signature="signature.png"):
         except Exception as e:
             error(f"Invalid locale '{loc}': {e}. Skipping formatting.")
             continue
-        html = render_template("%s" % name, data=record)
+        html = render_template(f"{name}", data=record)
         path.append(write_pdf(html, f"{project_id}-{lang}-{date}.pdf"))
     return path
 
@@ -756,17 +754,17 @@ def slurm_nodes_status():
     result = []
     for line in data:
         if ("REASON" or "TIMESTAMP" or "NODELIST" or "STATE") in line:
-            debug("Skipping headline: %s" % line)
+            debug(f"Skipping headline: {line}")
             continue
         info = line.split("|")
         if len(info) != 4:
-            error("Wrong format: %s" % line)
+            error(f"Wrong format: {line}")
             continue
         reason = info[0].strip()
         try:
             date = dt.strptime(info[1].strip(), "%Y-%m-%dT%H:%M:%S")
         except ValueError as e:
-            error("Error parsing date '%s': %s" % (info[1].strip(), e))
+            error(f"Error parsing date '{info[1].strip()}': {e}")
             date = None
         node = info[2].strip()
         stat = info[3].strip()
@@ -793,9 +791,9 @@ def project_check_resources(project):
     """
     err = []
     if not project.resources:
-        err.append("No resources attached to project %s" % project)
+        err.append(f"No resources attached to project {project}")
     if not project.resources.cpu:
-        err.append("No CPU set in project resources for %s" % project)
+        err.append(f"No CPU set in project resources for {project}")
     if err:
         error("; ".join(err))
         flash("<br>".join(err))
@@ -818,7 +816,7 @@ def slurm_parse(slurm_raw_output):
         return output
     meaningful = list(filter(lambda x: "|" in x, slurm_raw_output))
     for item in meaningful:
-        debug("Parsing line: %s" % item)
+        debug(f"Parsing line: {item}")
         if "||" not in item:  # user consumption
             items = item.strip().split("|")
         else:
@@ -831,16 +829,16 @@ def slurm_parse(slurm_raw_output):
         try:
             conso = int(items[-1].strip())
         except ValueError as err:
-            error("Exception converting '%s' to int: %s" % (items[-1], err))
+            error(f"Exception converting '{items[-1]}' to int: {err}")
             continue
         if name not in output:
             output[name] = {}
         if login:
             output[name][login] = conso
-            debug("SLURM consumption for %s - %s: %s" % (name, login, conso))
+            debug(f"SLURM consumption for {name} - {login}: {conso}")
         else:
             output[name]["total consumption"] = conso
-            debug("SLURM consumption for %s: %s" % (name, conso))
+            debug(f"SLURM consumption for {name}: {conso}")
     return output
 
 
@@ -858,7 +856,7 @@ def file_as_string(name):
     """
     img_path = join_dir(app.instance_path, name)
     if not exists(img_path):
-        raise ValueError("File %s doesn't exists" % img_path)
+        raise ValueError(f"File {img_path} doesn't exists")
     with open(img_path, "rb") as img_file:
         return b64encode(img_file.read()).decode("ascii")
 
@@ -951,7 +949,7 @@ def form_error_string(err_dict: dict) -> str:
             result.append("Your session has expired! Please, reload the page")
             continue
         for err in value:
-            result.append("%s: %s" % (key, err))
+            result.append(f"{key}: {err}")
     return "\n".join(result)
 
 
