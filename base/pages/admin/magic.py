@@ -543,7 +543,8 @@ def registration_record_edit(rid, form):
             new = raw
         if old != new:
             setattr(rec, prop, new)
-            msg.append("%s: %s -> %s" % (field.label.text, old, new))
+            label = field.label.text if field.label else prop
+            msg.append("%s: %s -> %s" % (label, old, new))
     if db.session.dirty:
         db.session.commit()
         msg = "\n".join(msg)
