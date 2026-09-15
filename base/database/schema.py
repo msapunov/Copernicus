@@ -202,7 +202,7 @@ class Project(db.Model):
             return self.name
         pid = self.id
         genre = self.type
-        return "%s%s" % (genre, str(pid).zfill(3))
+        return f"{genre}{str(pid).zfill(3)}"
 
     def api_resources(self) -> dict:
         """Return a compact resource summary for API responses.
@@ -234,7 +234,7 @@ class Project(db.Model):
         rec["lab"] = self.responsible.lab
         rec["responsible"] = self.responsible.full_name()
         rec["resources"] = self.resources.cpu
-        tmp = ["%s <%s>" % (u.full_name(), u.email) for u in self.users]
+        tmp = [f"{u.full_name()} <{u.email}>" for u in self.users]
         rec["users"] = tmp
         return rec
 
@@ -575,7 +575,7 @@ class Resources(db.Model):
             Formatted percentage string (e.g. ``"45.2%"``) or ``"0%"`` if
             no consumption recorded.
         """
-        debug("Calculating usage for project %s" % self.project)
+        debug(f"Calculating usage for project {self.project}")
         conso = self.consumption()
         total = self.cpu
         if not conso:
@@ -583,7 +583,7 @@ class Resources(db.Model):
         try:
             return f"{float(conso) / float(total):.1%}"
         except TypeError as err:
-            error("Failed to calculate project usage: %s" % err)
+            error(f"Failed to calculate project usage: {err}")
             return "0%"
 
 
@@ -672,7 +672,7 @@ class User(UserMixin, db.Model):
         Returns:
             Formatted user string.
         """
-        return "%s <%s> [%s]" % (self.full_name(), self.email, self.login)
+        return f"{self.full_name()} <{self.email}> [{self.login}]"
 
     def full_name(self) -> str:
         """Return the user's capitalized full name.
@@ -896,7 +896,7 @@ class Register(db.Model):
             Formatted project identifier string.
         """
         year = dt.now().year
-        return "meso-%s-%s-%s" % (year, self.id, self.project_type())
+        return f"meso-{year}-{self.id}-{self.project_type()}"
 
     def responsible_full_name(self) -> str:
         """Return the responsible person's full name.
@@ -947,22 +947,23 @@ class Register(db.Model):
         users = []
         for u in self.get_users():
             user = fn(u["name"], u["last"])
-            user += " <%s>" % u["mail"] if u["mail"] else ""
-            user += " [%s]" % u["login"] if u["login"] else ""
+            user += f" <{u['mail']}>" if u["mail"] else ""
+            user += f" [{u['login']}]" if u["login"] else ""
             users.append(user)
+        users_str = "\n".join(users)
         return [
             "",
-            "registration id: %s" % self.id,
-            "title: %s" % self.title,
-            "type: %s" % self.project_type(),
-            "cloud image: %s" % self.cloud_image,
-            "cloud instance number: %s" % self.cloud_number,
-            "cloud project duration: %s" % self.cloud_duration,
-            "responsible name: %s" % self.responsible_full_name(),
-            "users: %s" % "\n".join(users),
-            "description: %s" % self.description,
-            "request created: %s" % self.ts,
-            "mesocentre id: %s" % self.project_id(),
+            f"registration id: {self.id}",
+            f"title: {self.title}",
+            f"type: {self.project_type()}",
+            f"cloud image: {self.cloud_image}",
+            f"cloud instance number: {self.cloud_number}",
+            f"cloud project duration: {self.cloud_duration}",
+            f"responsible name: {self.responsible_full_name()}",
+            f"users: {users_str}",
+            f"description: {self.description}",
+            f"request created: {self.ts}",
+            f"mesocentre id: {self.project_id()}",
         ]
 
     def logs(self, obj: bool = False) -> list:
@@ -1076,7 +1077,7 @@ class LogDB(db.Model):
         """
         event = self.event.capitalize()
         creator = self.author.full_name() if self.author else "Unknown author"
-        return {"created": self.created, "event": "%s by %s" % (event, creator)}
+        return {"created": self.created, "event": f"{event} by {creator}"}
 
     def to_web(self) -> dict:
         """Serialize the log entry for web display.
@@ -1090,7 +1091,7 @@ class LogDB(db.Model):
         if "ssh" in event:
             event = event[:50] + "..." + event[-50:]
         creator = self.author.full_name() if self.author else "Unknown author"
-        msg = "%s by %s" % (event, creator)
+        msg = f"{event} by {creator}"
         if self.project:
             item = self.project.name
             category = "project"
@@ -1120,7 +1121,7 @@ class LogDB(db.Model):
         """
         event = self.event[0].upper() + self.event[1:]
         creator = self.author.full_name() if self.author else "Unknown author"
-        msg = "%s by %s" % (event, creator)
+        msg = f"{event} by {creator}"
         short = shorten(msg, width=50, placeholder="...")
         return {
             "date": self.created.strftime("%Y-%m-%d %X %Z"),
@@ -1202,7 +1203,7 @@ class Tasks(db.Model):
         try:
             act, entity, login, project, task = self.action.split("|")
         except ValueError:
-            error("Failed process record %s: %s" % (self.id, self.action))
+            error(f"Failed process record {self.id}: {self.action}")
             act, entity, login, project, task = None, None, None, None, None
         return act, entity, login, project, task
 
@@ -1239,7 +1240,7 @@ class Tasks(db.Model):
             return act
         act = act[0].upper() + act[1:].lower()
         if self.author:
-            act += "by %s" % self.author.full_name()
+            act += f"by {self.author.full_name()}"
         else:
             act += "by Automatic Service"
         return act
@@ -1262,20 +1263,20 @@ class Tasks(db.Model):
         if act in ["create", "activate"]:
             task = task.split(" WITH ")[0]
             task = task.split(" AND PASSWORD")[0]
-            act += " a user with %s" % task
+            act += f" a user with {task}"
             if project:
-                act += " for the project %s" % project
+                act += f" for the project {project}"
         elif act in ["add", "assign", "delete", "remove"]:
             if user:
                 act = task.replace(login, user.full())
         elif act == "update":
             if user and "email" in task:
-                task = task.replace("email:", "%s ->" % user.email)
+                task = task.replace("email:", f"{user.email} ->")
             if user and "name" in task:
-                task = task.replace("name:", "%s ->" % user.name)
+                task = task.replace("name:", f"{user.name} ->")
             if user and "surname" in task:
-                task = task.replace("surname:", "%s ->" % user.surname)
-            act = "Updating: %s" % task
+                task = task.replace("surname:", f"{user.surname} ->")
+            act = f"Updating: {task}"
         return act
 
     def description(self) -> str:
@@ -1288,16 +1289,16 @@ class Tasks(db.Model):
         if act in ["create", "activate"]:
             if "new project" in task:
                 return task
-            act += " a user with %s for the project %s" % (task, project)
+            act += f" a user with {task} for the project {project}"
         if act in ["transform", "extend", "renew"]:
             return task
         if act in ["assign", "remove"]:
             return task
         elif act in ["update"]:
-            act += " user info for %s with following data: %s" % (login, task)
+            act += f" user info for {login} with following data: {task}"
         elif act in ["ssh"]:
-            short = "%s ... %s" % (task[:20], task[-20:])
-            act = "upload SSH public key: %s" % short
+            short = f"{task[:20]} ... {task[-20:]}"
+            act = f"upload SSH public key: {short}"
         else:
             return act
         act = act[0].upper() + act[1:]
