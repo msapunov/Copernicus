@@ -778,6 +778,16 @@ def web_admin_user_info():
     server = str(data["server"]).strip()
     if not server:
         raise ValueError("Server is not defined")
+
+    allowed_servers = current_app.config.get("ADMIN_SERVER", [])
+    if not isinstance(allowed_servers, list):
+        allowed_servers = [s.strip() for s in allowed_servers.split(",")]
+    allowed_servers = [s.strip().lower() for s in allowed_servers]
+    if server.strip().lower() not in allowed_servers:
+        raise ValueError(
+            "Server '%s' is not in the ADMIN_SERVER list" % server
+        )
+
     result, err = ssh_wrapper(
         "PROCPS_USERLEN=32 PROCPS_FROMLEN=90 w -s -h", host=server
     )
