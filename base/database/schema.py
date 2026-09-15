@@ -337,7 +337,7 @@ class Extend(db.Model):
     extend = db.Column(db.Boolean)
     exception = db.Column(db.Boolean)
     reason = db.Column(db.Text)
-    hours = db.Column(db.Integer, db.CheckConstraint("cpu>=0"))
+    hours = db.Column(db.Integer, db.CheckConstraint("hours>=0"))
     created = db.Column(db.DateTime(True))
     modified = db.Column(db.DateTime(True))
     accepted = db.Column(db.Boolean)
