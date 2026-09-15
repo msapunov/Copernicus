@@ -649,7 +649,8 @@ class User(UserMixin, db.Model):
         """Verify a password against the stored hash.
 
         If the stored hash uses the PBKDF2-SHA256 algorithm and verification
-        succeeds, the hash is re-upgraded in place.
+        succeeds, the hash is re-upgraded in place without changing any
+        other user attributes (such as ``first_login``).
 
         Args:
             password: The plain-text password to check.
@@ -659,7 +660,8 @@ class User(UserMixin, db.Model):
         """
         result = check_password_hash(self.hash, password)
         if result and "pbkdf2:sha256" in self.hash:
-            self.set_password(password)
+            self.hash = generate_password_hash(password)
+            db.session.commit()
         return result
 
     def full(self) -> str:
