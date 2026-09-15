@@ -9,7 +9,7 @@ from base.database.schema import Accounting, Project
 from base.pages import grant_access
 from base.pages.project.magic import set_state
 from base.pages.statistic.magic import project_types, render_project
-from base.pages.user import bp
+from base.pages.statistic import bp
 
 __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
