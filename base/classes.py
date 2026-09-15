@@ -1870,7 +1870,8 @@ class TaskQueue:
 
     def __init__(self):
         """Initialize a new TaskQueue entry."""
-        self.task = Tasks(author=current_user, processed=False, done=False)
+        self.task = Tasks(author=current_user, approve=current_user,
+                          processed=False, done=False)
         self.u_name = None  # User login name. String
         self.p_name = None  # Project name. String
 
