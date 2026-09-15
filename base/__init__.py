@@ -16,8 +16,8 @@ from werkzeug.exceptions import HTTPException
 from werkzeug.middleware.proxy_fix import ProxyFix
 
 from base.extensions import cache, db, login_manager, mail
-from base.database.schema import User
 from base.functions import load_config, project_config
+from base.database.schema import User
 from base.pages.admin import bp as blueprint_admin
 from base.pages.board import bp as blueprint_board
 from base.pages.login import bp as blueprint_login
