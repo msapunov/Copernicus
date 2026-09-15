@@ -41,6 +41,7 @@ def create_app(config_filename: str) -> Flask:
     cleanup()
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_pyfile(config_filename)
+    validate_secret_key(app)
     register_extensions(app)
     register_blueprints(app)
     register_decor(app)
@@ -49,6 +50,27 @@ def create_app(config_filename: str) -> Flask:
     if app.config.get("USE_GUNICORN", False):
         apply_proxy_fix(app)
     return app
+
+
+def validate_secret_key(app: Flask) -> None:
+    """Validate that the SECRET_KEY is sufficiently strong.
+
+    The key must be at least 32 characters long.
+
+    Args:
+        app: Flask application instance.
+
+    Raises:
+        ValueError: If the SECRET_KEY fails validation.
+    """
+    key = app.config.get("SECRET_KEY", "")
+    if len(key) < 32:
+        raise ValueError(
+            f"SECRET_KEY is too short ({len(key)} characters). A key of at "
+            f"least 32 characters is required for secure session signing and "
+            f"CSRF protection. Generate one with:\n"
+            f"  python3 -c 'import secrets; print(secrets.token_hex(32))'"
+        )
 
 
 def apply_proxy_fix(app: Flask) -> None:
