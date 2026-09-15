@@ -67,10 +67,10 @@ def ssh_login(login, password):
         warning("Option LOGIN_SERVER has to be a list")
         debug("Converting string to list with comma as separator")
         login_servers = login_servers.split(",")
-    debug("Resulting server list: %s" % login_servers)
+    debug(f"Resulting server list: {login_servers}")
     for host in login_servers:
         host = host.strip()
-        debug("Trying the host: %s" % host)
+        debug(f"Trying the host: {host}")
         client = SSHClient()
         try:
             client.set_missing_host_key_policy(AutoAddPolicy())
@@ -85,12 +85,11 @@ def ssh_login(login, password):
             if client.get_transport().is_authenticated():
                 auth = True
         except AuthenticationException:
-            warning("Wrong password to server %s" % host)
+            warning(f"Wrong password to server {host}")
             continue
         except Exception as err:
-            error("Exception connecting to %s: %s" % (host, err))
+            error(f"Exception connecting to {host}: {err}")
             continue
         finally:
             client.close()
-    debug("Authenticated: %s" % auth)
-    return auth
+    debug(f"Authenticated: {auth}")
