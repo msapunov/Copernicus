@@ -87,7 +87,8 @@ class MethodDB(db.Model):
     comment = db.Column(db.Text)
     modified = db.Column(db.DateTime(True))
     created = db.Column(db.DateTime(True))
-    author = db.Column(db.String(64))
+    author_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    author = db.relationship("User", foreign_keys=author_id)
 
 
 class UserProjectLink(db.Model):
