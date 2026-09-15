@@ -147,7 +147,7 @@ def web_switch_user():
         if request.referrer and (request.referrer in g.url_list):
             return redirect(request.referrer)
         else:
-            return redirect(url_for("stat.index"))
+            return redirect(url_for("statistic.web_statistic_index"))
 
     user = get_user_record(username)
     login_user(user, True)
