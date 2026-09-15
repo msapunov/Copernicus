@@ -1911,10 +1911,16 @@ class TaskQueue:
             The TaskQueue instance after committing.
 
         Raises:
-            ValueError: If no user has been set.
+            ValueError: If no user has been set, or if the key contains
+                pipe characters that would break the action-string format.
         """
         if not self.u_name:
             raise ValueError("User is  not set. Can't upload SSH key")
+        if "|" in key:
+            raise ValueError(
+                "SSH public key contains pipe ('|') characters which are "
+                "not allowed"
+            )
         self.task.action = "ssh|user|%s||%s" % (self.u_name, key)
         self.task.processed = True
         return self.commit()
