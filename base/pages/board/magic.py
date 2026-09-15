@@ -69,22 +69,22 @@ def get_arguments(trans=False):
     data = check_json()
 
     eid = int(data["eid"]) if "eid" in data else None
-    debug("Extension's ID: %s" % eid)
+    debug(f"Extension's ID: {eid}")
     if not eid:
         raise ValueError("No extension ID provided")
 
     note = str(data["comment"]) if "comment" in data else None
-    debug("Extension's comment value: %s" % note)
+    debug(f"Extension's comment value: {note}")
     if not note:
         raise ValueError("Provide a comment please!")
 
     cpu = int(data["cpu"]) if "cpu" in data else 0
-    debug("Extension's CPU value: %s" % cpu)
+    debug(f"Extension's CPU value: {cpu}")
     if cpu < 0:
         raise ValueError("CPU can't be a negative value!")
 
     extension = str(data["extension"].lower()) if "extension" in data else None
-    debug("Extension flag value: %s" % extension)
+    debug(f"Extension flag value: {extension}")
     if extension == "true":
         ext = True
     elif extension == "false":
