@@ -47,5 +47,5 @@ def project_types():
         if not tmp:
             continue
         types.append(tmp)
-    debug("Got project types: %s" % types)
+    debug(f"Got project types: {types}")
     return types
