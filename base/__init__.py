@@ -11,6 +11,7 @@ from traceback import format_exc
 
 from flask import Flask, g, request
 from flask_login import current_user
+from markupsafe import escape
 from werkzeug.exceptions import HTTPException
 from werkzeug.middleware.proxy_fix import ProxyFix
 
