@@ -536,10 +536,11 @@ def registration_record_edit(rid, form):
     for prop in props:
         old = getattr(rec, prop)
         field = getattr(form, prop)
+        raw = field.data
         if prop not in not_str:
-            new = field.data.strip()
+            new = raw.strip() if raw and isinstance(raw, str) else raw
         else:
-            new = field.data
+            new = raw
         if old != new:
             setattr(rec, prop, new)
             msg.append("%s: %s -> %s" % (field.label.text, old, new))
