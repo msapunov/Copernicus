@@ -66,16 +66,17 @@ class Mail(Thread):
             raise ValueError("Please, indicate a name of a file to attach")
         attach_file = Path(path)
         if not attach_file.exists():
-            raise ValueError("Failed to attach %s to the mail. "
-                             "File doesn't exists" % path)
+            raise ValueError(f"Failed to attach {path} to the mail. "
+                             "File doesn't exists")
         if not attach_file.is_file():
-            raise ValueError("Failed to attach %s to the mail. It's not a file"
-                             % path)
+            raise ValueError(f"Failed to attach {path} to the mail. "
+                             "It's not a file")
         with open(path, "rb") as fd:
             part = MIMEApplication(fd.read(), Name=str(attach_file.name))
-        part["Content-Disposition"] = "attachment; filename=%s" % str(attach_file.name)
+        part["Content-Disposition"] = (
+            f"attachment; filename={str(attach_file.name)}")
         self.msg.attach(part)
-        debug("File %s attached" % path)
+        debug(f"File {path} attached")
         return self
 
     def attach(self, name=None):
@@ -149,13 +150,13 @@ class Mail(Thread):
         Raises:
             ValueError: If no destination address is set.
         """
-        debug("Sending mail to %s" % self.destination)
+        debug(f"Sending mail to {self.destination}")
         self.msg["Subject"] = self.title
         self.msg["From"] = self.sender
         if self.destination and isinstance(self.destination, str):
             self.msg["To"] = self.destination
         else:
-            raise ValueError("Cannot send message to %s" % self.destination)
+            raise ValueError(f"Cannot send message to {self.destination}")
         self.msg["Date"] = formatdate(localtime=True)
         if self.cc:
             if isinstance(self.cc, list):
@@ -167,11 +168,11 @@ class Mail(Thread):
             if self.signature:
                 self.message = self.message + self.signature
             self.msg.attach(MIMEText(self.message))
-        debug("Value of self.sending switch: %s" % self.sending)
+        debug(f"Value of self.sending switch: {self.sending}")
         if not self.sending:
             debug("No e-mail has been sent")
             return
-        debug("Complete message: %s" % self.msg)
+        debug(f"Complete message: {self.msg}")
         if self.use_ssl:
             smtp = smtplib.SMTP_SSL(self.server, self.port)
         else:
@@ -185,7 +186,7 @@ class Mail(Thread):
         debug("Quit SMTP server")
         smtp.quit()
         for header in self.msg.items():
-            debug("%s: %s" % (header[0], header[1]))
+            debug(f"{header[0]}: {header[1]}")
         debug("Message sent!")
 
     def simple_message(self, msg):
@@ -214,10 +215,11 @@ class Mail(Thread):
         self.destination = cfg.get("TO", fallback=rec.responsible_email)
         self.cc = cfg.get("CC", fallback=[])
         self.sender = cfg.get("FROM", fallback="")
-        self.title = cfg.get("TITLE", fallback="Visa for: %s" % rec.project_id())
-        message = """Dear %s,
-        You have to sign the visa in order to have your project created
-        """ % rec.responsible_full_name()
+        self.title = cfg.get("TITLE",
+                             fallback=f"Visa for: {rec.project_id()}")
+        message = (f"Dear {rec.responsible_full_name()},\n"
+                   "You have to sign the visa in order "
+                   "to have your project created")
         self.message = cfg.get("MESSAGE", fallback=message)
         self.signature = cfg.get("SIGNATURE", fallback="Truly Yours, Robot")
         self.__populate_values({"%FULLNAME": rec.responsible_full_name()})
@@ -273,7 +275,7 @@ class Mail(Thread):
         title = record.pending.title
         first = record.pending.responsible_first_name
         last = record.pending.responsible_last_name
-        full = "%s %s" % (first, last)
+        full = f"{first} {last}"
         self.__populate_values({"%FULLNAME": full, "%MESO": pid,
                                 "%TITLE": title})
         return self
@@ -368,7 +370,7 @@ class Mail(Thread):
             The Mail instance for method chaining.
         """
         self.populate("TECH")
-        title = "[%s] %s" % (log.pending.project_id(), log.log.event)
+        title = f"[{log.pending.project_id()}] {log.log.event}"
         message = log.log.brief()["event"]
         self.__populate_values({"%TITLE": title, "%MESSAGE": message})
         return self
@@ -923,10 +925,10 @@ class Mail(Thread):
             The Mail instance for method chaining.
         """
         self.populate("TECH")
-        title = "Task id '%s' has been accepted" % task.id
-        message = "Task '%s' has been accepted" % task.description()
+        title = f"Task id '{task.id}' has been accepted"
+        message = f"Task '{task.description()}' has been accepted"
         if comment is not None:
-            message += "\nWith following comment: %s" % comment
+            message += f"\nWith following comment: {comment}"
         self.__populate_values({"%TITLE": title, "%MESSAGE": message})
         return self
 
@@ -941,10 +943,10 @@ class Mail(Thread):
             The Mail instance for method chaining.
         """
         self.populate("TECH")
-        title = "Task id '%s' has been rejected" % task.id
-        message = "Task '%s' has been rejected" % task.description()
+        title = f"Task id '{task.id}' has been rejected"
+        message = f"Task '{task.description()}' has been rejected"
         if comment is not None:
-            message += "\nWith following comment: %s" % comment
+            message += f"\nWith following comment: {comment}"
         self.__populate_values({"%TITLE": title, "%MESSAGE": message})
         return self
 
@@ -958,7 +960,7 @@ class Mail(Thread):
             The Mail instance for method chaining.
         """
         self.populate("TECH")
-        title = "Log entry ID: %s" % log.id
+        title = f"Log entry ID: {log.id}"
         self.__populate_values({"%TITLE": title, "%MESSAGE": log.event})
         return self
 
@@ -995,9 +997,9 @@ class Sympa(Mail):
         if not self.sender:
             raise ValueError("Admin email is absent can't add to the list")
         if name:
-            self.title = "QUIET ADD %s %s %s" % (self.list, email, name)
+            self.title = f"QUIET ADD {self.list} {email} {name}"
         else:
-            self.title = "QUIET ADD %s %s" % (self.list, email)
+            self.title = f"QUIET ADD {self.list} {email}"
         return self.start()
 
     def subscribe(self, email, name=None):
@@ -1012,9 +1014,9 @@ class Sympa(Mail):
         """
         self.sender = email
         if name:
-            self.title = "SUBSCRIBE %s %s" % (self.list, name)
+            self.title = f"SUBSCRIBE {self.list} {name}"
         else:
-            self.title = "SUBSCRIBE %s" % self.list
+            self.title = f"SUBSCRIBE {self.list}"
         return self.start()
 
     def unsubscribe(self, email):
@@ -1031,8 +1033,9 @@ class Sympa(Mail):
         """
         self.sender = self.cfg.get("LIST", "ADMIN")
         if not self.sender:
-            raise ValueError("Admin email is absent can't unsubscribe from the list")
-        self.title = "QUIET DELETE %s %s" % (self.list, email)
+            raise ValueError("Admin email is absent "
+                             "can't unsubscribe from the list")
+        self.title = f"QUIET DELETE {self.list} {email}"
         return self.start()
 
 
