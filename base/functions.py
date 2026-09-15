@@ -7,13 +7,12 @@ from configparser import ConfigParser
 from datetime import datetime as dt
 from datetime import timezone
 from logging import debug, error, warning
-from os import urandom
 from os.path import exists
 from os.path import join as join_dir
 from pathlib import Path, PurePosixPath
 from re import compile, match
+from secrets import choice as secret_choice, SystemRandom
 from string import ascii_letters, digits
-from struct import unpack
 from time import mktime
 from unicodedata import normalize
 
@@ -333,21 +332,43 @@ def full_name(name, surname):
 
 
 def generate_password(pass_len=16):
-    """Generate a random alphanumeric password with symbols.
+    """Generate a cryptographically random password containing letters,
+    digits, and special characters.
+
+    Uses :func:`secrets.choice` for unbiased, cryptographically-secure
+    random selection.  The resulting password is guaranteed to contain at
+    least one uppercase letter, one lowercase letter, one digit, and one
+    special character; the remaining characters are drawn uniformly from
+    the full alphabet.
 
     Args:
-        pass_len: Number of characters for the password (default 16).
+        pass_len: Number of characters for the password (default 16,
+            minimum).
 
     Returns:
-        A random password string containing letters, digits, and
-        special characters.
+        A random password string.
+
+    Raises:
+        ValueError: If *pass_len* is less than default minimum.
     """
-    symbols = ascii_letters + digits + "!@#$%^&*"
-    password = []
-    for x in unpack("%dB" % (pass_len,), urandom(pass_len)):
-        idx = round(x * len(symbols) / 256) - 1
-        password.append(symbols[idx])
-    return "".join(password)
+    req = 16
+    if pass_len < req:
+        raise ValueError(f"Password length must be at least {req} characters")
+
+    letters_lower = ascii_letters[:26]
+    letters_upper = ascii_letters[26:]
+    digits_only = digits
+    symbols = letters_lower + letters_upper + digits_only + "!@#$%^&*"
+    mandatory = [
+        secret_choice(letters_lower),
+        secret_choice(letters_upper),
+        secret_choice(digits_only),
+        secret_choice("!@#$%^&*"),
+    ]
+    remaining = [secret_choice(symbols) for _ in range(pass_len - 4)]
+    combined = mandatory + remaining
+    SystemRandom().shuffle(combined)
+    return "".join(combined)
 
 
 def write_pdf(html, name):
