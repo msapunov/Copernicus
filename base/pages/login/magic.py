@@ -93,3 +93,4 @@ def ssh_login(login, password):
         finally:
             client.close()
     debug(f"Authenticated: {auth}")
+    return auth
