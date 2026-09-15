@@ -160,7 +160,7 @@ class ProjectLog(Log):
             The event string.
         """
         rid = self.project.ref.project_id()
-        self.log.event = "Project created out of request %s" % rid
+        self.log.event = f"Project created out of request {rid}"
         return self.commit(Mail().project_new(self.project))
 
     def user(self, user):
@@ -212,7 +212,7 @@ class ProjectLog(Log):
         Returns:
             The event string.
         """
-        self.log.event = "Attached responsible %s" % task.user.full()
+        self.log.event = f"Attached responsible {task.user.full()}"
         return self.user(task.user).commit(Mail().responsible_attached(task))
 
     def user_new(self, task):
@@ -225,7 +225,7 @@ class ProjectLog(Log):
             The event string.
         """
         user = task.user
-        self.log.event = "User %s has been created" % user.full()
+        self.log.event = f"User {user.full()} has been created"
         return self.commit(Mail().user_new(user))
 
     def user_create(self, task):
@@ -239,7 +239,7 @@ class ProjectLog(Log):
         """
         user = TmpUser().from_description(task.action)
         user.task = task
-        self.log.event = "Made a request to create a user %s" % user.full()
+        self.log.event = f"Made a request to create a user {user.full()}"
         return self.commit(Mail().user_create(user))
 
     def user_created(self, task):
@@ -253,7 +253,7 @@ class ProjectLog(Log):
         """
         user = TmpUser().from_description(task.action)
         user.task = task
-        self.log.event = "User %s has been created" % user.full()
+        self.log.event = f"User {user.full()} has been created"
         return self.commit(Mail().user_created(user))
 
     def user_activate(self, task):
@@ -265,7 +265,7 @@ class ProjectLog(Log):
         Returns:
             The event string.
         """
-        self.log.event = "Made a request to activate a user %s" % task.user.full()
+        self.log.event = f"Made a request to activate a user {task.user.full()}"
         return self.user(task.user).commit(Mail().user_activate(task))
 
     def user_activated(self, task):
@@ -277,7 +277,7 @@ class ProjectLog(Log):
         Returns:
             The event string.
         """
-        self.log.event = "User %s has been activated" % task.user.full()
+        self.log.event = f"User {task.user.full()} has been activated"
         return self.user(task.user).commit(Mail().user_activated(task))
 
     def user_assign(self, task):
@@ -289,7 +289,7 @@ class ProjectLog(Log):
         Returns:
             The event string.
         """
-        self.log.event = "Made a request to assign a user %s" % task.user.full()
+        self.log.event = f"Made a request to assign a user {task.user.full()}"
         return self.user(task.user).commit(Mail().user_assign(task))
 
     def user_assigned(self, task):
@@ -301,7 +301,7 @@ class ProjectLog(Log):
         Returns:
             The event string.
         """
-        self.log.event = "User %s has been assigned" % task.user.full()
+        self.log.event = f"User {task.user.full()} has been assigned"
         return self.user(task.user).commit(Mail().user_assigned(task))
 
     def user_attached(self, task):
@@ -313,7 +313,7 @@ class ProjectLog(Log):
         Returns:
             The event string.
         """
-        self.log.event = "User %s has been assigned" % task.user.full()
+        self.log.event = f"User {task.user.full()} has been assigned"
         return self.user(task.user).commit(Mail().user_attached(task))
 
     def user_delete(self, task):
@@ -325,7 +325,7 @@ class ProjectLog(Log):
         Returns:
             The event string.
         """
-        self.log.event = "Made a request to delete user %s" % task.user.full()
+        self.log.event = f"Made a request to delete user {task.user.full()}"
         return self.user(task.user).commit(Mail().user_delete(task))
 
     def user_deleted(self, task):
@@ -337,7 +337,7 @@ class ProjectLog(Log):
         Returns:
             The event string.
         """
-        self.log.event = "User %s has been deleted" % task.user.full()
+        self.log.event = f"User {task.user.full()} has been deleted"
         return self.user(task.user).commit(Mail().user_deleted(task))
 
     def renew(self, extension):
@@ -512,8 +512,9 @@ class ProjectLog(Log):
             The event string.
         """
         file_name = file_rec.path
-        self.log.event = "Activity report saved on the server in the file %s" \
-                         % file_name
+        self.log.event = (
+            f"Activity report saved on the server in the file {file_name}"
+        )
         mail = Mail().report_uploaded(file_rec).attach_file(file_name)
         return self.commit(mail)
 
@@ -595,7 +596,7 @@ class RequestLog(Log):
         Returns:
             The event string.
         """
-        self.log.event = "Visa re-sent to %s" % self.pending.responsible_email
+        self.log.event = f"Visa re-sent to {self.pending.responsible_email}"
         return self.commit(Mail().visa_resent(self))
 
     def visa_sent(self):
@@ -604,7 +605,7 @@ class RequestLog(Log):
         Returns:
             The event string.
         """
-        self.log.event = "Visa sent to %s" % self.pending.responsible_email
+        self.log.event = f"Visa sent to {self.pending.responsible_email}"
         return self.commit(Mail().visa_sent(self))
 
     def visa_skip(self):
@@ -629,9 +630,9 @@ class RequestLog(Log):
         if project:
             name = project.get_name()
             self.log.project = project
-            self.log.event = "Create project %s from request %s" % (name, meso)
+            self.log.event = f"Create project {name} from request {meso}"
         else:
-            self.log.event = "Create project from request %s" % meso
+            self.log.event = f"Create project from request {meso}"
         return self.commit()
 
     def user_del(self, user):
@@ -643,7 +644,7 @@ class RequestLog(Log):
         Returns:
             The event string.
         """
-        self.log.event = "Remove user %s" % user
+        self.log.event = f"Remove user {user}"
         return self.commit()
 
     def user_add(self, user):
@@ -655,7 +656,7 @@ class RequestLog(Log):
         Returns:
             The event string.
         """
-        self.log.event = "Add user %s" % user
+        self.log.event = f"Add user {user}"
         return self.commit()
 
     def user_change(self, info):
@@ -667,7 +668,7 @@ class RequestLog(Log):
         Returns:
             The event string.
         """
-        self.log.event = "Change user info: %s" % info
+        self.log.event = f"Change user info: {info}"
         return self.commit()
 
     def request_change(self, info):
@@ -679,7 +680,7 @@ class RequestLog(Log):
         Returns:
             The event string.
         """
-        self.log.event = "Change request info: %s" % info
+        self.log.event = f"Change request info: {info}"
         return self.commit()
 
     def approve(self):
@@ -741,7 +742,7 @@ class UserLog(Log):
         Returns:
             The event string.
         """
-        self.log.event = "User %s restored" % self.user.full()
+        self.log.event = f"User {self.user.full()} restored"
         return self.commit()
 
     def archived(self):
@@ -750,7 +751,7 @@ class UserLog(Log):
         Returns:
             The event string.
         """
-        self.log.event = "User %s archived" % self.user.full()
+        self.log.event = f"User {self.user.full()} archived"
         return self.commit()
 
     def activated(self):
@@ -759,7 +760,7 @@ class UserLog(Log):
         Returns:
             The event string.
         """
-        self.log.event = "User %s activated" % self.user.full()
+        self.log.event = f"User {self.user.full()} activated"
         return self.commit()
 
     def deactivated(self):
@@ -768,7 +769,7 @@ class UserLog(Log):
         Returns:
             The event string.
         """
-        self.log.event = "User %s deactivated" % self.user.full()
+        self.log.event = f"User {self.user.full()} deactivated"
         return self.commit()
 
     def goodbye(self):
@@ -791,8 +792,8 @@ class UserLog(Log):
         """
         result = []
         for name, value in acl.items():
-            result.append("%s to %s" % (name, value))
-        self.log.event = "Set ACL permissions: %s" % "; ".join(result)
+            result.append(f"{name} to {value}")
+        self.log.event = f"Set ACL permissions: {'; '.join(result)}"
         return self.commit()
 
     def key_upload(self, key):
@@ -804,7 +805,7 @@ class UserLog(Log):
         Returns:
             The event string.
         """
-        self.log.event = "Upload SSH key %s" % key
+        self.log.event = f"Upload SSH key {key}"
         return self.commit()
 
     def key_uploaded(self, key):
@@ -816,7 +817,7 @@ class UserLog(Log):
         Returns:
             The event string.
         """
-        self.log.event = "Uploaded SSH key %s" % key
+        self.log.event = f"Uploaded SSH key {key}"
         return self.commit(Mail().user_publickey(self, key))
 
     def password_changed(self):
@@ -853,7 +854,7 @@ class UserLog(Log):
         for name, value in info.items():
             old = getattr(self.user, name)
             prop = name.capitalize()
-            changes.append("%s change: %s -> %s" % (prop, old, value))
+            changes.append(f"{prop} change: {old} -> {value}")
         self.log.event = "; ".join(changes)
         return self.commit(Mail().user_update(self))
 
@@ -867,7 +868,7 @@ class UserLog(Log):
             The event string.
         """
         full = task.user.full()
-        self.log.event = "Modifications for user %s has been applied" % full
+        self.log.event = f"Modifications for user {full} has been applied"
         return self.commit(Mail().user_updated(self))
 
     def info_update(self, info=None, acl=None, projects=None, active=None):
@@ -890,23 +891,23 @@ class UserLog(Log):
             for name, value in info.items():
                 old = getattr(self.user, name)
                 prop = name.capitalize()
-                changes.append("%s change: %s -> %s" % (prop, old, value))
+                changes.append(f"{prop} change: {old} -> {value}")
         if acl is not None:
             for name, value in acl.items():
                 old = getattr(self.user.acl, name)
-                changes.append("ACL %s change %s -> %s" % (name, old, value))
+                changes.append(f"ACL {name} change {old} -> {value}")
         if active is not None:
             old = self.user.active
-            changes.append("Set active status from %s to '%s'" % (old, active))
+            changes.append(f"Set active status from {old} to '{active}'")
         if projects is not None:
             old = self.user.project_names()
             for name in projects:
                 if name in old:
-                    changes.append("Add to project %s" % name)
+                    changes.append(f"Add to project {name}")
                 else:
-                    changes.append("Remove from project %s" % name)
+                    changes.append(f"Remove from project {name}")
         result = "; ".join(changes)
-        self.log.event = "User information changes requested: %s" % result
+        self.log.event = f"User information changes requested: {result}"
         return self.commit(Mail().user_update(self))
 
 
@@ -1085,11 +1086,12 @@ class Extensions:
         if (self.extend is True or self.extend is False) and \
                 self.rec.extend is not self.extend:
             self.rec.extend = self.extend
-            self.rec.decision += "\nExtension option was manually set to %s" \
-                                 % self.extend
+            self.rec.decision += (
+                f"\nExtension option was manually set to {self.extend}"
+            )
         if self.cpu and (self.rec.hours != self.cpu):
             self.rec.hours = self.cpu
-            self.rec.decision += "\nCPU value was manually set to %s" % self.cpu
+            self.rec.decision += f"\nCPU value was manually set to {self.cpu}"
 
         self.rec.accepted = True
         return self._process(self.rec)
@@ -1169,9 +1171,9 @@ class TmpUser:
             for role in roles:
                 if role not in acl:
                     continue
-                condition = "%s: True" % role
+                condition = f"{role}: True"
                 tmp = True if condition in acl.strip() else False
-                self.__setattr__("is_%s" % role, tmp)
+                self.__setattr__(f"is_{role}", tmp)
         return self
 
     def full(self):
@@ -1230,7 +1232,7 @@ class Pending:
         if "admin" in g.permissions:
             return self.pending
         if self.pending.type not in g.project_config:
-            debug("Type %s absent in project configuration" % self.pending.type)
+            debug(f"Type {self.pending.type} absent in project configuration")
             acl = []
         else:
             acl = g.project_config[self.pending.type].get("acl", [])
@@ -1239,8 +1241,10 @@ class Pending:
         if (not user_allowed) and (not role_allowed):
             raise ValueError("Processing of new project record is not allowed")
         if self.pending.status in ["created", "ignored", "rejected"]:
-            raise ValueError("Request %s is in final state: %s" %
-                             (self.pending.project_id(), self.pending.status))
+            raise ValueError(
+                f"Request {self.pending.project_id()} is in final state:"
+                f" {self.pending.status}"
+            )
         return self.pending
 
     def create(self, users):
@@ -1260,7 +1264,7 @@ class Pending:
         if record.status not in ["received", "skipped"]:
             raise ValueError("Visa haven't been received yet!")
         total = Project.query.count()
-        name = "%s%s" % (record.type, total + 1)
+        name = f"{record.type}{total + 1}"
         responsible = list(filter(lambda x: x.resp, users))[0]
         titles = [getattr(record, f"article_{i}") for i in range(1, 6) if
                   getattr(record, f"article_{i}", "") != ""]
@@ -1334,14 +1338,14 @@ class Pending:
         record = self.verify()
         name = record.project_id()
         if not resend and record.status != "approved":
-            raise ValueError("Project %s has to be approved first!" % name)
+            raise ValueError(f"Project {name} has to be approved first!")
         if resend and record.status not in ["sent", "resent"]:
-            raise ValueError("Wrong status for visa resend: %s" % record.status)
+            raise ValueError(f"Wrong status for visa resend: {record.status}")
         mail = Mail()
         u_list = mail.cfg.get("DEFAULT", "USER_LIST", fallback=None)
         r_list = mail.cfg.get("DEFAULT", "RESPONSIBLE_LIST", fallback=None)
-        record.user_list = "%s" % u_list if u_list else ""
-        record.resp_list = "%s" % r_list if r_list else ""
+        record.user_list = str(u_list) if u_list else ""
+        record.resp_list = str(r_list) if r_list else ""
         path = create_visa(record)
         if not path:
             raise ValueError("Failed to generate visa document")
@@ -1364,7 +1368,9 @@ class Pending:
         """
         record = self.verify()
         if record.status != "approved":
-            raise ValueError("Cant skip not approved record: %s" % record.status)
+            raise ValueError(
+                f"Cant skip not approved record: {record.status}"
+            )
         record.status = "skipped"
         self.result = RequestLog(record).visa_skip()
         return self.commit()
@@ -1377,7 +1383,7 @@ class Pending:
         """
         record = self.verify()
         if record.status not in ["sent", "resent"]:
-            raise ValueError("Record status is not 'sent': %s" % record.status)
+            raise ValueError(f"Record status is not 'sent': {record.status}")
         record.status = "received"
         self.result = RequestLog(record).visa_received()
         return self.commit()
@@ -1390,8 +1396,10 @@ class Pending:
         """
         record = self.verify()
         if record.status and len(record.status) > 0:
-            raise ValueError("Record status is not empty: %s\n"
-                             "Probably you should reset it" % record.status)
+            raise ValueError(
+                f"Record status is not empty: {record.status}\n"
+                "Probably you should reset it"
+            )
         record.status = "approved"
         self.result = RequestLog(record).approve()
         return self.commit()
@@ -1567,7 +1575,7 @@ class Task:
                    "ssh", "transformation", "extension", "activation",
                    "renewal"]
         if act not in choices:
-            raise ValueError("The action '%s' is not supported" % act)
+            raise ValueError(f"The action '{act}' is not supported")
         return act
 
     def get_entity(self):
@@ -1774,8 +1782,10 @@ class Task:
         old = project.responsible
         user = self.task.user
         if old == user:
-            warning("User %s already assigned as %s responsible" %
-                    (user.full(), project.get_name()))
+            warning(
+                f"User {user.full()} already assigned as"
+                f" {project.get_name()} responsible"
+            )
         user.archived = None
         user.active = True
         if not user.acl.is_responsible:
@@ -1822,7 +1832,7 @@ class Task:
         ext = self.task.extension
         ext.done = True
         project.type = ext.transform
-        project.name = "%s%s" % (ext.transform, str(ext.project.id).zfill(3))
+        project.name = f"{ext.transform}{str(ext.project.id).zfill(3)}"
         project.resources.valid = False
         project.resources = Resources(
             approve=current_user,
@@ -1921,7 +1931,7 @@ class TaskQueue:
                 "SSH public key contains pipe ('|') characters which are "
                 "not allowed"
             )
-        self.task.action = "ssh|user|%s||%s" % (self.u_name, key)
+        self.task.action = f"ssh|user|{self.u_name}||{key}"
         self.task.processed = True
         return self.commit()
 
@@ -1977,10 +1987,13 @@ class TaskQueue:
         """
         if not self.project:
             raise ValueError("Can't activate user for none existent project")
-        description = ("login: %s and name: %s and surname: %s and email: %s" %
-                       (user.login, user.name, user.surname, user.email))
-        self.task.action = "activate|user|%s|%s|%s" % (user.login, self.p_name,
-                                                       description)
+        description = (
+            f"login: {user.login} and name: {user.name}"
+            f" and surname: {user.surname} and email: {user.email}"
+        )
+        self.task.action = (
+            f"activate|user|{user.login}|{self.p_name}|{description}"
+        )
         self.task.user = user
         return self.commit()
 
@@ -1999,9 +2012,10 @@ class TaskQueue:
         if not self.project:
             raise ValueError("Can't assign a user to none existent project")
         login = user.login
-        description = "Assign user %s to project %s" % (login, self.p_name)
-        self.task.action = "assign|user|%s|%s|%s" % (login, self.p_name,
-                                                     description)
+        description = f"Assign user {login} to project {self.p_name}"
+        self.task.action = (
+            f"assign|user|{login}|{self.p_name}|{description}"
+        )
         self.task.user = user
         return self.commit()
 
@@ -2021,10 +2035,12 @@ class TaskQueue:
             raise ValueError("Can't assign a new responsible to none existent"
                              " project")
         login = user.login
-        description = "Assign responsible %s to project %s" % (login,
-                                                               self.p_name)
-        self.task.action = "assign|resp|%s|%s|%s" % (login, self.p_name,
-                                                     description)
+        description = (
+            f"Assign responsible {login} to project {self.p_name}"
+        )
+        self.task.action = (
+            f"assign|resp|{login}|{self.p_name}|{description}"
+        )
         self.task.user = user
         return self.commit()
 
@@ -2047,9 +2063,9 @@ class TaskQueue:
         act = []
         for key, value in data.items():
             if hasattr(tmp_user, key):
-                act.append("%s: %s" % (key, value))
+                act.append(f"{key}: {value}")
         act = " and ".join(act)
-        self.task.action = "update|user|%s|%s|%s" % (login, "", act)
+        self.task.action = f"update|user|{login}||{act}"
         return self.commit()
 
     def user_remove(self, user):
@@ -2067,9 +2083,10 @@ class TaskQueue:
         if not self.project:
             raise ValueError("Can't delete a user from none existent project")
         login = user.login
-        description = "Remove user %s from project %s" % (login, self.p_name)
-        self.task.action = "remove|user|%s|%s|%s" % (login, self.p_name,
-                                                     description)
+        description = f"Remove user {login} from project {self.p_name}"
+        self.task.action = (
+            f"remove|user|{login}|{self.p_name}|{description}"
+        )
         self.task.user = user
         return self.commit()
 
@@ -2086,12 +2103,14 @@ class TaskQueue:
             raise ValueError("Can't create undefined project")
         ttl = self.task.project.resources.ttl
         ref = self.task.project.ref
-        description = ("Create new project " + self.p_name +
-                       " based on request " + ref.project_id() +
-                       " with CPU " + str(self.task.project.resources.cpu) +
-                       " valid until " + str(ttl.strftime("%Y-%m-%d")) +
-                       " for committee " + ref.genci_committee)
-        self.task.action = "create|proj||%s|%s" % (self.p_name, description)
+        description = (
+            f"Create new project {self.p_name}"
+            f" based on request {ref.project_id()}"
+            f" with CPU {self.task.project.resources.cpu}"
+            f" valid until {ttl.strftime('%Y-%m-%d')}"
+            f" for committee {ref.genci_committee}"
+        )
+        self.task.action = f"create|proj||{self.p_name}|{description}"
         return self.commit()
 
     def project_transform(self, ext):
@@ -2110,13 +2129,15 @@ class TaskQueue:
             raise ValueError("Can't transform undefined project")
         if ext.extend:
             ext.hours += ext.present_total
-        description = ("Transform project " + self.p_name +
-                       " to type " + ext.transform +
-                       " with CPU " + str(ext.hours) +
-                       " valid until " + str(ext.ttl.strftime("%Y-%m-%d")) +
-                       " based on extension id: " + str(ext.id) )
+        description = (
+            f"Transform project {self.p_name}"
+            f" to type {ext.transform}"
+            f" with CPU {ext.hours}"
+            f" valid until {ext.ttl.strftime('%Y-%m-%d')}"
+            f" based on extension id: {ext.id}"
+        )
         self.task.extension = ext
-        self.task.action = "transform|proj||%s|%s" % (self.p_name, description)
+        self.task.action = f"transform|proj||{self.p_name}|{description}"
         return self.commit()
 
     def project_activate(self, ext):
@@ -2133,11 +2154,13 @@ class TaskQueue:
         """
         if not self.p_name:
             raise ValueError("Can't activate undefined project")
-        description = ("Activate project " + self.p_name +
-                       " with CPU " + str(ext.hours) +
-                       " valid until " + str(ext.ttl.strftime("%Y-%m-%d")) +
-                       " based on extension id: " + str(ext.id) )
-        self.task.action = "activate|proj||%s|%s" % (self.p_name, description)
+        description = (
+            f"Activate project {self.p_name}"
+            f" with CPU {ext.hours}"
+            f" valid until {ext.ttl.strftime('%Y-%m-%d')}"
+            f" based on extension id: {ext.id}"
+        )
+        self.task.action = f"activate|proj||{self.p_name}|{description}"
         return self.commit()
 
     def project_extend(self, ext):
@@ -2155,12 +2178,14 @@ class TaskQueue:
         if not self.p_name:
             raise ValueError("Can't extend undefined project")
         ext.hours += ext.present_total
-        description = ("Extend project " + self.p_name +
-                       " with CPU " + str(ext.hours) +
-                       " valid until " + str(ext.ttl.strftime("%Y-%m-%d")) +
-                       " based on extension id: " + str(ext.id) )
+        description = (
+            f"Extend project {self.p_name}"
+            f" with CPU {ext.hours}"
+            f" valid until {ext.ttl.strftime('%Y-%m-%d')}"
+            f" based on extension id: {ext.id}"
+        )
         self.task.extension = ext
-        self.task.action = "extend|proj||%s|%s" % (self.p_name, description)
+        self.task.action = f"extend|proj||{self.p_name}|{description}"
         return self.commit()
 
     def project_renew(self, ext):
@@ -2177,12 +2202,14 @@ class TaskQueue:
         """
         if not self.p_name:
             raise ValueError("Can't renew undefined project")
-        description = ("Renew project " + self.p_name +
-                       " with CPU " + str(ext.hours) +
-                       " valid until " + str(ext.ttl.strftime("%Y-%m-%d")) +
-                       " based on extension id: " + str(ext.id) )
+        description = (
+            f"Renew project {self.p_name}"
+            f" with CPU {ext.hours}"
+            f" valid until {ext.ttl.strftime('%Y-%m-%d')}"
+            f" based on extension id: {ext.id}"
+        )
         self.task.extension = ext
-        self.task.action = "renew|proj||%s|%s" % (self.p_name, description)
+        self.task.action = f"renew|proj||{self.p_name}|{description}"
         return self.commit()
 
     def project_suspend(self):
@@ -2196,8 +2223,8 @@ class TaskQueue:
         """
         if not self.p_name:
             raise ValueError("Can't suspend undefined project")
-        description = "Suspending project %s" % self.p_name
-        self.task.action = "suspend|proj||%s|%s" % (self.p_name, description)
+        description = f"Suspending project {self.p_name}"
+        self.task.action = f"suspend|proj||{self.p_name}|{description}"
         return self.commit()
 
     def commit(self):
@@ -2215,7 +2242,7 @@ class TaskQueue:
             action=self.task.action, done=False
         ).first()
         if double:
-            raise ValueError("Same previous task found ID: %s" % double.id)
+            raise ValueError(f"Same previous task found ID: {double.id}")
         if "admin" in current_user.permissions():
             self.task.processed = True
         db.session.add(self.task)
