@@ -46,8 +46,8 @@ def grant_access(*roles):
                     return f(*args, **kwargs)
             if request.is_json:
                 return "Permissions denied based on user role", 403
-            error("Available user roles doesn't permit to access URL: %s" % url)
-            flash("Permissions denied to access URL: %s" % url)
+            error(f"Available user roles doesn't permit to access URL: {url}")
+            flash(f"Permissions denied to access URL: {url}")
             logout_user()
             return redirect(url_for("login.login"))
 
@@ -203,7 +203,7 @@ def check_json():  # TODO: remove - replace
     data = request.get_json()
     if not data:
         raise ValueError("Empty JSON request received")
-    debug("Incoming JSON: %s" % data)
+    debug(f"Incoming JSON: {data}")
     return data
 
 
@@ -212,7 +212,7 @@ class Task:
     def __init__(self, tid):
         task = Tasks().query.filter_by(id=tid).first()
         if not task:
-            raise ValueError("No task with id %s found" % tid)
+            raise ValueError(f"No task with id {tid} found")
         self.task = task
         self.id = task.id
 
@@ -255,8 +255,6 @@ class Task:
         if comment:
             self.task.comment = comment
         else:
-            self.task.comment = "Task processed by %s" % current_user.full()
+            self.task.comment = f"Task processed by {current_user.full()}"
         db.session.commit()
         return self.task
-
-
