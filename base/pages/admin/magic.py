@@ -66,8 +66,9 @@ def process_user_form(form):
     if login == "select":
         username = form.exist.data
         if username not in g.user_list:
-            raise ValueError("Failed to find '%s' among registered users"
-                             % username)
+            raise ValueError(
+                f"Failed to find '{username}' among registered users"
+            )
         user = User.query.filter_by(login=username).one()
         user.action = "assign"
     else:
@@ -137,7 +138,7 @@ def last_user(data):
         try:
             date = dt.strptime(raw, "%a %b %d %H:%M:%S %z %Y")
         except Exception as err:
-            error("Failed to convert to datetime: %s" % err)
+            error(f"Failed to convert to datetime: {err}")
             continue
         user = User.query.filter_by(login=login).first()
         if not user:
@@ -251,7 +252,7 @@ def render_pending(rec):
         Concatenated HTML string.
     """
     rec.meso = rec.project_id()
-    rec.name = "'%s' (%s)" % (rec.title, rec.meso)
+    rec.name = f"'{rec.title}' ({rec.meso})"
     status = rec.status.upper() if rec.status else "NONE"
     if "APPROVED" in status:
         visa = visa_pending(rec)
@@ -337,7 +338,7 @@ def get_registration_record(pid):
     """
     register = Register.query.filter_by(id=pid).first()
     if not register:
-        raise ValueError("Project registration request id %s not found" % pid)
+        raise ValueError(f"Project registration request id {pid} not found")
     return register
 
 
@@ -368,14 +369,17 @@ def user_create_by_admin(form):
     """
     email = form.email.data.strip().lower()
     if User.query.filter_by(email=email).first():
-        raise ValueError("User with e-mail %s has been registered already"
-                         % email)
+        raise ValueError(
+            f"User with e-mail {email} has been registered already"
+        )
 
     real = filter(lambda x: True if x != "None" else False, form.project.data)
     names = list(real)
     if not names:
-        raise ValueError("Can't create a user in not existing project: %s" %
-                         ", ".join(form.project.data))
+        raise ValueError(
+            f"Can't create a user in not existing project:"
+            f" {', '.join(form.project.data)}"
+        )
 
     user = TmpUser()
     user.name = form.name.data.strip().lower()
@@ -394,11 +398,15 @@ def user_create_by_admin(form):
         project = get_project_by_name(name)
         tid = TaskQueue().project(project).user_create(user).task.id
         Task(tid).accept()  # TODO: Do some tests!
-        msg = "Add a new user: %s '%s %s <%s>'" % (
-            user.login, user.name, user.surname, user.email)
+        msg = (
+            f"Add a new user: {user.login} '{user.name} {user.surname}"
+            f" <{user.email}>'"
+        )
         ProjectLog(project).event(msg)
-    return "Add creation of the user %s for %s to the execution queue" % (
-        user.login, ", ".join(form.project.data))
+    return (
+        f"Add creation of the user {user.login} for"
+        f" {', '.join(form.project.data)} to the execution queue"
+    )
 
 
 def user_changed_prop(obj, frm):
@@ -422,7 +430,7 @@ def user_changed_prop(obj, frm):
         if getattr(obj, name).lower() != data:
             info[name] = data
     for i in ["user", "responsible", "manager", "tech", "committee", "admin"]:
-        name = "is_%s" % i
+        name = f"is_{i}"
         if name not in frm:
             continue
         data = getattr(frm, name).data
@@ -477,7 +485,7 @@ def user_project_update(user, projects):
             task = TaskQueue().project(project).user_assign(user)
         idz.append(task.task.id)
     s, ids = "s" if len(idz) > 1 else "", ", ".join(map(str, idz))
-    return "Project change task%s with id%s has been created: %s" % (s, s, ids)
+    return f"Project change task{s} with id{s} has been created: {ids}"
 
 
 def registration_user_del(pid, uid):
@@ -544,7 +552,7 @@ def registration_record_edit(rid, form):
         if old != new:
             setattr(rec, prop, new)
             label = field.label.text if field.label else prop
-            msg.append("%s: %s -> %s" % (label, old, new))
+            msg.append(f"{label}: {old} -> {new}")
     if db.session.dirty:
         db.session.commit()
         msg = "\n".join(msg)
@@ -571,8 +579,10 @@ def registration_user_add(rid, form):
         login = form.login.data.strip()
     else:
         login = ""
-    user = "First Name: %s; Last Name: %s; E-mail: %s; Login: %s" % \
-           (name, surname, email, login)
+    user = (
+        f"First Name: {name}; Last Name: {surname}; E-mail: {email};"
+        f" Login: {login}"
+    )
     users = rec.users.split("\n")
     users.append(user)
     rec.users = "\n".join(users)
@@ -599,8 +609,10 @@ def registration_user_update(rid, forms):
             surname = form.surname.data
             email = form.email.data
             login = form.login.data if getattr(form, "login", None) else ""
-            user = "First Name: %s; Last Name: %s; E-mail: %s; Login: %s" % \
-                   (name, surname, email, login)
+            user = (
+                f"First Name: {name}; Last Name: {surname}; E-mail: {email};"
+                f" Login: {login}"
+            )
             users.append(user)
     new = "\n".join(users)
     if rec.users != new:
@@ -636,7 +648,7 @@ def registration_responsible_edit(rid, form):
         new = field.data.strip()
         if old != new:
             setattr(rec, key, new)
-            msg.append("%s: %s -> %s" % (field.label.text, old, new))
+            msg.append(f"{field.label.text}: {old} -> {new}")
     if db.session.dirty:
         db.session.commit()
         msg = "\n".join(msg)
@@ -682,7 +694,7 @@ def update_user_acl(user, form):
     """
     acl = {}
     for i in ["user", "responsible", "manager", "tech", "committee", "admin"]:
-        name = "is_%s" % i
+        name = f"is_{i}"
         if name not in form:
             continue
         new = getattr(form, name).data
@@ -728,7 +740,7 @@ def update_user_project(user, form):
         return
     db.session.commit()
     s, ids = "s" if len(idz) > 1 else "", ", ".join(map(str, idz))
-    return "Project change task%s with id%s %s has been created" % (s, s, ids)
+    return f"Project change task{s} with id{s} {ids} has been created"
 
 
 def update_user_details(user, form):
@@ -758,7 +770,7 @@ def update_user_details(user, form):
     else:
         task = TaskQueue().user(user).user_update(info)
     UserLog(user).info_update(info=info)
-    return "User info update with id '%s' has been created" % task.id
+    return f"User info update with id '{task.id}' has been created"
 
 
 def user_info_update(form):
@@ -800,9 +812,9 @@ def user_delete(uid):
     User.query.filter_by(id=uid).delete()
     db.session.commit()
     for project in projects:
-        msg = "User %s has been removed from the UserDB by admins" % login
+        msg = f"User {login} has been removed from the UserDB by admins"
         ProjectLog(project).event(msg)
-    return "User %s has been removed from the database" % login
+    return f"User {login} has been removed from the database"
 
 
 def user_send_welcome(uid):
@@ -817,7 +829,7 @@ def user_send_welcome(uid):
     user = user_by_id(uid)
     user.passwd = user.reset_password()
     Mail().user_new(user).start()
-    return "Welcome message for user %s has been sent" % user.login
+    return f"Welcome message for user {user.login} has been sent"
 
 
 def user_set_pass(uid):
@@ -835,7 +847,7 @@ def user_set_pass(uid):
     user = user_by_id(uid)
     user.set_password(form.password.data)
     UserLog(user).password_changed()
-    return "Password for user %s has been set successfully" % user.login
+    return f"Password for user {user.login} has been set successfully"
 
 
 def user_reset_pass(uid):
@@ -939,7 +951,7 @@ def process_task(tid, result):
         "renew",
     ]
     if act not in req:
-        raise ValueError("The action '%s' is not supported" % act)
+        raise ValueError(f"The action '{act}' is not supported")
     task = Task(record)
     task.done(result)
     if act == "create" and ent == "user" or act == "create" and ent == "resp":
@@ -1041,7 +1053,7 @@ def get_server_cpu(server):
     result, err = ssh_wrapper(cmd, host=server)
     error(f"{server} {result}")
     if err:
-        raise ValueError("Error retrieving:" % err)
+        raise ValueError(f"Error retrieving: {err}")
     info = str(result[0]).strip("\n").split()
     if len(info) > 12:
         raise ValueError("Wrong format of mpstat command")
@@ -1068,7 +1080,7 @@ def get_server_info(server):
     cmd += "&& who | cut -d' ' -f1 | sort -u && echo Time: `date +%s`"
     result, err = ssh_wrapper(cmd, host=server)
     if not result:
-        error("Error getting information from the remote server: %s" % err)
+        error(f"Error getting information from the remote server: {err}")
         return out
 
     up = memory_data = swap_data = load_data = now = ""
@@ -1131,9 +1143,9 @@ def parse_load(result, cores=1):
         load_1, load_5, load_15 = result.split(":")
     except ValueError:
         return {"load_1": 0, "load_5": 0, "load_15": 0}
-    load_1 = "{0:.1%}".format(float(load_1.strip(",")) / float(cores))
-    load_5 = "{0:.1%}".format(float(load_5.strip(",")) / float(cores))
-    load_15 = "{0:.1%}".format(float(load_15.strip(",")) / float(cores))
+    load_1 = f"{float(load_1.strip(',')) / float(cores):.1%}"
+    load_5 = f"{float(load_5.strip(',')) / float(cores):.1%}"
+    load_15 = f"{float(load_15.strip(',')) / float(cores):.1%}"
     return {"load_1": load_1, "load_5": load_5, "load_15": load_15}
 
 
@@ -1154,7 +1166,7 @@ def parse_swap(result):
             swap_total = int(swap[1].strip())
             swap_available = int(swap[3].strip())
             swap_used = swap_total - swap_available
-            swap_usage = "{0:.1%}".format(float(swap_used) / float(swap_total))
+            swap_usage = f"{float(swap_used) / float(swap_total):.1%}"
             tmp["swap_total"] = bytes2human(swap_total)
             tmp["swap_available"] = bytes2human(swap_available)
             tmp["swap_used"] = bytes2human(swap_used)
@@ -1197,7 +1209,7 @@ def space_info():
     """
     result, err = ssh_wrapper("df -h")
     if not result:
-        raise ValueError("Error getting disk space information: %s" % err)
+        raise ValueError(f"Error getting disk space information: {err}")
 
     space = []
     for record in result:
@@ -1237,7 +1249,7 @@ def slurm_partition_info():
     """
     result, err = ssh_wrapper("sinfo -s")
     if not result:
-        raise ValueError("Error getting partition information: %s" % err)
+        raise ValueError(f"Error getting partition information: {err}")
 
     partition = []
     for record in result:
