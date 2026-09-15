@@ -132,7 +132,7 @@ def cleanup() -> bool:
         True after cleanup is complete.
     """
     pattern = "_copernicus_"
-    logging.debug("Temporary directory pattern: %s" % pattern)
+    logging.debug(f"Temporary directory pattern: {pattern}")
     tmp_root = Path(gettempdir())
     logging.debug(f"Scanning {tmp_root} for temp dirs with prefix '{pattern}'")
     for entry in tmp_root.iterdir():
@@ -211,12 +211,12 @@ def register_decor(app: Flask) -> None:
         else:
             g.permissions = []
 
-        tmp = "%s" % dt.now()
+        tmp = f"{dt.now()}"
         g.timestamp = tmp.split(".")[0]
 
         url_list = cache.get("url_list")
         if not url_list:
-            url_list = ["%s" % rule for rule in app.url_map.iter_rules()]
+            url_list = [f"{rule}" for rule in app.url_map.iter_rules()]
             cache.set("url_list", url_list, 600)
         g.url_list = url_list
         return None
@@ -241,7 +241,7 @@ def register_decor(app: Flask) -> None:
         if isinstance(e, HTTPException):
             code = e.code
         if tb:
-            logging.critical(tb + "User: %s\nRequest URL: %s" % (user, url))
+            logging.critical(f"{tb}\nUser: {user}\nRequest URL: {url}")
         else:
             logging.critical(str(e))
         return escape(str(e)), code
