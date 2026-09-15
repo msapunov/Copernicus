@@ -27,7 +27,7 @@
                 {% endfor %}
 
                 <form action="{{ url_for('login.login') }}" method="post" class="uk-panel uk-panel-box uk-form">
-                    {{ form.csrf_token }}
+                    {% if "csrf_token" in form%}{{ form.csrf_token }}{% endif %}
                     <div class="uk-form-row">
                         {{ form.login(placeholder="username", class_="uk-width-1-1 uk-form-large") }}
                     </div>
