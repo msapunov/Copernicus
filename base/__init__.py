@@ -235,7 +235,7 @@ def register_decor(app: Flask) -> None:
             logging.critical(tb + "User: %s\nRequest URL: %s" % (user, url))
         else:
             logging.critical(str(e))
-        return str(e), code
+        return escape(str(e)), code
 
 
 def attach_custom_methods(app: Flask) -> None:
