@@ -614,6 +614,8 @@ class User(UserMixin, db.Model):
     hash = db.Column(db.String(162))
     first_login = db.Column(db.Boolean, default=True)
     seen = db.Column(db.DateTime(True))
+    failed_login_count = db.Column(db.Integer, default=0, nullable=False)
+    suspended_until = db.Column(db.DateTime(True), nullable=True, default=None)
 
     def __repr__(self) -> str:
         """Return a string representation of the User."""
