@@ -458,8 +458,13 @@ def remove_activity(name, file_name):
         True if the file was removed or did not exist.
     """
     check_responsible(name)
-    temp_dir = current_app.get_tmpdir()
-    path = Path(temp_dir) / file_name
+    temp_dir = Path(current_app.get_tmpdir()).resolve()
+    path = (temp_dir / file_name).resolve()
+    try:
+        path.relative_to(temp_dir)
+    except ValueError:
+        error(f"Unsafe path outside temp dir rejected: {file_name}")
+        return False
     if not path.exists():
         debug(f"Path doesn't exists: {path}")
         return True
