@@ -745,6 +745,13 @@ class User(UserMixin, db.Model):
             archived = self.archived.strftime("%Y-%m-%d %X %Z")
         else:
             archived = ""
+        now = dt.now(utc)
+        suspended = self.suspended_until is not None and self.suspended_until > now
+        suspended_until_str = (
+            self.suspended_until.strftime("%Y-%m-%d %X %Z")
+            if self.suspended_until
+            else ""
+        )
         return {
             "id": self.id,
             "login": self.login,
@@ -757,6 +764,9 @@ class User(UserMixin, db.Model):
             "position": self.position,
             "active": self.active,
             "archived": archived,
+            "suspended": suspended,
+            "suspended_until": suspended_until_str,
+            "failed_login": self.failed_login_count,
             "comment": self.comment,
             "seen": self.seen.strftime("%Y-%m-%d %X %Z") if self.seen else "",
             "modified": self.modified,
