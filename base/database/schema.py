@@ -800,6 +800,8 @@ class User(UserMixin, db.Model):
             status = "active"
         elif not self.active:
             status = "deactivated"
+        elif self.suspended_until and self.suspended_until > dt.now(utc):
+            status = "suspended"
         else:
             status = ""
         return {
