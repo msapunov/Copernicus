@@ -22,3 +22,6 @@ db = SQLAlchemy()
 
 cache = Cache()
 """Flask-Caching extension instance for caching data."""
+
+limiter = Limiter(key_func=get_remote_address)
+"""Flask-Limiter extension instance for rate limiting."""
