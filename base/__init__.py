@@ -15,7 +15,7 @@ from markupsafe import escape
 from werkzeug.exceptions import HTTPException
 from werkzeug.middleware.proxy_fix import ProxyFix
 
-from base.extensions import cache, db, login_manager, mail
+from base.extensions import cache, db, limiter, login_manager, mail
 from base.functions import load_config, project_config
 from base.database.schema import User
 from base.pages.admin import bp as blueprint_admin
