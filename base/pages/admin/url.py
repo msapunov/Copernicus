@@ -18,6 +18,7 @@ from flask import (
     url_for,
 )
 from flask_login import login_required, login_user
+from urllib.parse import urlsplit
 
 from base.classes import Extensions, Pending
 from base.database.schema import Project, Resources, User
