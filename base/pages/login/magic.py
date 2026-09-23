@@ -5,7 +5,7 @@ authentication against remote login servers.
 from logging import debug, error, warning
 from re import search
 
-from flask import current_app
+from flask import current_app as app
 from paramiko import AuthenticationException, RejectPolicy, SSHClient
 
 __author__ = "Matvey Sapunov"
@@ -58,8 +58,8 @@ def ssh_login(login, password):
         True if authentication succeeded on any server, False otherwise.
     """
     auth = False
-    login_servers = current_app.config.get("LOGIN_SERVER", None)
-    port = current_app.config.get("SSH_PORT", 22)
+    login_servers = app.config.get("LOGIN_SERVER", None)
+    port = app.config.get("SSH_PORT", 22)
     if not login_servers:
         error("Configuration has no LOGIN_SERVER option set")
         return False
