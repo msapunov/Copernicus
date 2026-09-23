@@ -26,7 +26,7 @@ from flask import current_app as app
 from flask import flash, g, render_template, request
 from paramiko import (
     AuthenticationException,
-    AutoAddPolicy,
+    RejectPolicy,
     BadHostKeyException,
     ECDSAKey,
     Ed25519Key,
