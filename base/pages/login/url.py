@@ -61,7 +61,7 @@ def load_user_from_request(urlpath):
             error("Username is longer then 128 letters")
             return abort(401)
         if not username.isalnum():
-            error(f"Username '{username}' consists not only from letters")
+            error(f"Username '{username}' contains invalid characters")
             return abort(401)
         user = User.query.filter_by(login=username).first()
         debug(f"API user found {user.login}")
