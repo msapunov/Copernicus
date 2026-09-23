@@ -8,7 +8,7 @@ from logging import debug
 
 from flask import (
     abort,
-    current_app,
+    current_app as app,
     flash,
     g,
     jsonify,
@@ -779,7 +779,7 @@ def web_admin_user_info():
     if not server:
         raise ValueError("Server is not defined")
 
-    allowed_servers = current_app.config.get("ADMIN_SERVER", [])
+    allowed_servers = app.config.get("ADMIN_SERVER", [])
     if not isinstance(allowed_servers, list):
         allowed_servers = [s.strip() for s in allowed_servers.split(",")]
     allowed_servers = [s.strip().lower() for s in allowed_servers]
@@ -900,7 +900,7 @@ def web_admin_sys_info():
     Returns:
         JSON with server info list.
     """
-    servers = current_app.config["ADMIN_SERVER"]
+    servers = app.config["ADMIN_SERVER"]
     if not isinstance(servers, list):
         servers = servers.split(",")
     uptime = []
@@ -1002,7 +1002,7 @@ def web_admin():
     Returns:
         Rendered admin.html template.
     """
-    servers = current_app.config["ADMIN_SERVER"]
+    servers = app.config["ADMIN_SERVER"]
     if not isinstance(servers, list):
         servers = servers.split(",")
     result = {"tasks": TaskManager().list(), "servers": servers}
