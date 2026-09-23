@@ -74,6 +74,8 @@ def ssh_login(login, password):
         client = SSHClient()
         try:
             client.load_system_host_keys()
+            if app.config.get("SSH_HOST_KEYS"):
+                client.load_host_keys(app.config["SSH_HOST_KEYS"])
             client.set_missing_host_key_policy(RejectPolicy())
             client.connect(
                 host,
