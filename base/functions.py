@@ -206,7 +206,10 @@ def ssh_wrapper(cmd, host=None):
     debug(f"Connecting to {host}:{port} with username {login} and key"
           f" {key_file}")
     client = SSHClient()
-    client.set_missing_host_key_policy(AutoAddPolicy())
+    client.load_system_host_keys()
+    if app.config.get("SSH_HOST_KEYS"):
+        client.load_host_keys(app.config["SSH_HOST_KEYS"])
+    client.set_missing_host_key_policy(RejectPolicy())
     try:
         client.connect(host, username=login, pkey=key, timeout=timeout,
                        port=port)
