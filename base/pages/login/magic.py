@@ -6,7 +6,7 @@ from logging import debug, error, warning
 from re import search
 
 from flask import current_app
-from paramiko import AuthenticationException, AutoAddPolicy, SSHClient
+from paramiko import AuthenticationException, RejectPolicy, SSHClient
 
 __author__ = "Matvey Sapunov"
 __copyright__ = "Aix Marseille University"
@@ -73,7 +73,8 @@ def ssh_login(login, password):
         debug(f"Trying the host: {host}")
         client = SSHClient()
         try:
-            client.set_missing_host_key_policy(AutoAddPolicy())
+            client.load_system_host_keys()
+            client.set_missing_host_key_policy(RejectPolicy())
             client.connect(
                 host,
                 username=login,
