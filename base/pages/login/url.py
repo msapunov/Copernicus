@@ -8,6 +8,8 @@ from logging import debug, error
 from flask import abort, flash, g, jsonify, redirect, render_template, request, url_for
 from flask_login import current_user, login_required, login_user, logout_user
 
+from urllib.parse import urlsplit
+
 from base.classes import Mail
 from base.database.schema import User
 from base.extensions import login_manager
@@ -72,7 +74,11 @@ def load_user_from_request(urlpath):
         if request.environ.get("SCRIPT_NAME"):
             urlpath = f"{request.environ['SCRIPT_NAME']}/{safe_path}"
         else:
-            urlpath = f"/{safe_path}"
+            urlpath = urlpath.replace("\\", "/")
+            target = urlsplit(urlpath)
+            if target.scheme or target.netloc or not urlpath.startswith("/"):
+                error(f"Unsafe redirect target rejected: {urlpath}")
+                return abort(400)
         return redirect(urlpath, code=307)
     flash("API key is required")
     return redirect(url_for("login.login"))
