@@ -221,6 +221,10 @@ def user_index():
         project.private_use = (
             f"{float(project.private) / float(project.resources.cpu):.1%}"
         )
+    login = {
+        "port": app.config.get("LOGIN_PORT", None),
+        "host":app.config.get("LOGIN_HOST", None)
+    }
 
     return render_template(
         "user.html",
@@ -230,4 +234,5 @@ def user_index():
             "scratch": scratch,
             "projects": current_user.project,
         },
+        login=login,
     )
