@@ -7,7 +7,7 @@ from datetime import datetime as dt
 from datetime import timezone
 from operator import attrgetter
 
-from flask import flash, jsonify, render_template, request
+from flask import flash, jsonify, render_template, request, current_app as app
 from flask_login import current_user, login_required
 
 from base.database.schema import User
