@@ -23,6 +23,7 @@ from base.database.schema import (
     Register,
     Resources,
     Tasks,
+    Thematic,
     User,
 )
 from base.email import Mail, ResponsibleMailingList, UserMailingList
