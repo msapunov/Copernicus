@@ -1276,11 +1276,14 @@ class Pending:
         titles = [getattr(record, f"article_{i}") for i in range(1, 6) if
                   getattr(record, f"article_{i}", "") != ""]
         articles = map(lambda x: ArticleDB(info=x, user=responsible), titles)
+        thematic = Thematic.query.filter_by(name=record.genci_committee).first()
+        if not thematic:
+            raise ValueError(f"No thematic found '{record.genci_committee}'")
         proj = Project(
             title=record.title,
             description=record.description,
             scientific_fields=record.scientific_fields,
-            thematic=record.genci_committee,
+            thematic=thematic,
             numerical_methods=record.numerical_methods,
             computing_resources=record.computing_resources,
             project_management=record.project_management,
