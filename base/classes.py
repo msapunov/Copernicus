@@ -1279,7 +1279,7 @@ class Pending:
             title=record.title,
             description=record.description,
             scientific_fields=record.scientific_fields,
-            genci_committee=record.genci_committee,
+            thematic=record.genci_committee,
             numerical_methods=record.numerical_methods,
             computing_resources=record.computing_resources,
             project_management=record.project_management,
