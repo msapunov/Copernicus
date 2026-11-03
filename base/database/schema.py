@@ -837,6 +837,134 @@ class User(UserMixin, db.Model):
         }
 
 
+class SSHKey(db.Model):
+    __tablename__ = "user_keys"
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    user_id = db.Column(
+        db.Integer,
+        db.ForeignKey("users.id", ondelete="CASCADE"),
+        nullable=False,
+        index=True,
+    )
+    user = db.relationship("User", back_populates="user_keys")
+    name = db.Column(db.String(128), nullable=False)
+    public_key = db.Column(db.Text, nullable=False)
+    fingerprint = db.Column(db.String(64), nullable=False)
+    created = db.Column(db.DateTime(timezone=True), nullable=False, server_default=func.now())
+    revoked = db.Column(db.DateTime(timezone=True), nullable=True)
+    __table_args__ = (
+        db.UniqueConstraint(
+            "user_id",
+            "fingerprint",
+            name="uq_user_keys_user_fingerprint",
+        ),
+        db.Index("ix_user_keys_user_id", "user_id"),
+        db.Index("ix_user_keys_user_revoked", "user_id", "revoked"),
+    )
+
+    def __repr__(self):
+        return f"<SSHKey {self.name!r}>"
+
+    @staticmethod
+    def parse(public_key: str) -> PKey:
+        """
+        Parse an SSH public key using Paramiko.
+
+        Returns a Paramiko PKey object.
+        """
+        if not isinstance(public_key, str):
+            raise ValueError("Public key must be a string")
+        try:
+            blob = PublicBlob.from_string(public_key.strip())
+            return PKey.from_type_string(blob.key_type, blob.key_blob)
+        except (SSHException, ValueError, TypeError) as exc:
+            raise ValueError("Invalid or unsupported SSH public key") from exc
+
+    @classmethod
+    def add(cls, user: str, name: str, public_key: str, ) -> "SSHKey":
+        name = name.strip()
+        if not name or len(name) > 128:
+            raise ValueError("Invalid SSH key name")
+        public = cls.parse(public_key)
+        finger = public.fingerprint
+        exist = cls.query.filter_by(user = user, fingerprint = finger).all()
+        if exist:
+            raise ValueError("SSH key already registered")
+        canonical = f"{public.get_name()} {public.get_base64()}"
+        key = cls(
+            user=user,
+            name=name,
+            public_key=canonical,
+            fingerprint=finger,
+            revoked=None,
+        )
+        db.session.add(key)
+        db.session.commit()
+        return key
+
+    @classmethod
+    def owned(cls, user: str, include_revoked: bool = False, ) -> list["SSHKey"]:
+        if include_revoked:
+            query = cls.query.filter_by(user=user)
+        else:
+            query = cls.query.filter_by(user=user).filter(cls.revoked.is_(None))
+        return query.order_by(cls.created.desc()).all()
+
+    @classmethod
+    def get(cls, key_id: int) -> "SSHKey | None":
+        """Retrieve a key by its database ID."""
+        return db.session.get(cls, key_id)
+
+    def rename(self, name: str):
+        name = name.strip()
+        if not name or len(name) > 128:
+            raise ValueError("Invalid SSH key name")
+        self.name = name
+        db.session.flush()
+
+    def revoke(self) -> None:
+        """Revoke a key without deleting its audit history."""
+        if self.revoked is None:
+            self.revoked = dt.now(utc)
+            db.session.flush()
+
+    def activate(self) -> None:
+        """Restore a previously revoked key."""
+        if self.revoked is not None:
+            self.revoked = None
+            db.session.flush()
+
+    @classmethod
+    def delete(cls, user: str, key_id: int, ) -> bool:
+        """Permanently delete a key belonging to a particular user."""
+        key = cls.query.filter_by(user=user, id=key_id).all()
+        if key is None:
+            return False
+        db.session.delete(key)
+        db.session.flush()
+        return True
+
+    def to_dict(self) -> dict:
+        return {
+            "id": self.id,
+            "uid": self.user_id,
+            "name": self.name,
+            "public_key": self.public_key,
+            "fingerprint": self.fingerprint,
+            "created": self.created.isoformat(),
+            "revoked": (
+                self.revoked.isoformat()
+                if self.revoked else None
+            ),
+            "is_active": self.is_active,
+        }
+
+    @property
+    def is_active(self) -> bool:
+        return self.revoked is None
+
+
 class Register(db.Model):
     """A new project registration request submitted through the web form."""
 
