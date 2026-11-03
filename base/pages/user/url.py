@@ -226,6 +226,8 @@ def user_index():
         "host":app.config.get("LOGIN_HOST", None)
     }
 
+    keys = SSHKey.owned(current_user)
+
     return render_template(
         "user.html",
         data={
@@ -233,6 +235,7 @@ def user_index():
             "jobs": jobs,
             "scratch": scratch,
             "projects": current_user.project,
+            "public": keys
         },
         login=login,
     )
