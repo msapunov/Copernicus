@@ -618,6 +618,9 @@ class User(UserMixin, db.Model):
     seen = db.Column(db.DateTime(True))
     login_failures = db.Column(db.Integer, default=0, nullable=False)
     suspend_until = db.Column(db.DateTime(True), nullable=True, default=None)
+    user_keys = db.relationship("SSHKey", back_populates="user",
+        cascade="all, delete-orphan", passive_deletes=True,
+    )
 
     def __repr__(self) -> str:
         """Return a string representation of the User."""
