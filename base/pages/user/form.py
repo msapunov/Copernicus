@@ -14,7 +14,7 @@ class InfoForm(FlaskForm):
 
 class KeyForm(FlaskForm):
     """Form for uploading an SSH public key."""
-
+    name = StringField("Name")
     key = StringField("Key")
     login = HiddenField()
 
