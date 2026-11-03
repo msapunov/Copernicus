@@ -2,6 +2,8 @@ from calendar import timegm
 from datetime import datetime as dt
 from datetime import timezone
 from logging import debug, error
+from paramiko import SSHException
+from paramiko.pkey import PKey, PublicBlob
 from pathlib import PurePath
 from textwrap import shorten
 
