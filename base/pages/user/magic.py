@@ -10,7 +10,7 @@ from flask_login import current_user
 
 from base import db
 from base.classes import Task, TaskQueue, UserLog
-from base.database.schema import Project, User
+from base.database.schema import Project, User, SSHKey
 from base.functions import bytes2human, ssh_check, ssh_wrapper, form_error_string
 
 __author__ = "Matvey Sapunov"
