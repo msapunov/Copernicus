@@ -187,10 +187,15 @@ def ssh_key(form):
         Status message string.
     """
     pub = form.key.data
+    name = form.name.data
     login = form.login.data
-    debug(f"Provided login '{login}' and public key: {pub}")
-    user = get_user_record(login)
+    debug(f"Provided login '{login}', name {name} and public key: {pub}")
+    if not login:
+        user = current_user
+    else:
+        user = get_user_record(login)
     ssh_check(pub)
+    SSHKey.add(user, name, pub)
     if user != current_user and upload_ssh_allowed(current_user, user):
         TaskQueue().user(user).key_upload(pub).task.accept()
     else:
