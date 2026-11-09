@@ -36,8 +36,31 @@
                 <button class="uk-button uk-button-small pass uk-button-danger" data-modal="{{data.user.login}}_pass">
                     <span class="uk-icon-eraser uk-margin-small-right"></span>Change password
                 </button>
-                <p class="uk-h4 uk-text-nowrap">SSH keys: None</p>
             </div>
+            {% if data and data.public %}
+                <table class="uk-width-1-1 uk-table uk-table-hover uk-table-striped uk-table-condensed">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Fingerprint</th>
+                            <th>Created</th>
+                            <th>Active</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for key in data.public|sort(attribute='created', reverse=True) %}
+                        <tr>
+                            <td>{{key.name}}</td>
+                            <td>{{key.fingerprint}}</td>
+                            <td>{{key.created}}</td>
+                            <td>{{key.active}}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p class="uk-h4 uk-text-nowrap">SSH keys: None</p>
+            {% endif %}
             {% if login %}
                 <div class="uk-panel uk-panel-box uk-width-1-1">
                     <div class="uk-panel-badge uk-badge uk-badge-success">
