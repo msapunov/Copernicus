@@ -853,6 +853,7 @@ class SSHKey(db.Model):
     fingerprint = db.Column(db.String(64), nullable=False)
     created = db.Column(db.DateTime(timezone=True), nullable=False, server_default=func.now())
     revoked = db.Column(db.DateTime(timezone=True), nullable=True)
+    active = db.Column(db.Boolean, default=False, nullable=False)
     __table_args__ = (
         db.UniqueConstraint(
             "user_id",
