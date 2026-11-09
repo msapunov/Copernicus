@@ -898,7 +898,6 @@ class SSHKey(db.Model):
             name=name,
             public_key=canonical,
             fingerprint=finger,
-            revoked=None,
         )
         db.session.add(key)
         db.session.commit()
