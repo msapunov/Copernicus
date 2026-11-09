@@ -927,12 +927,14 @@ class SSHKey(db.Model):
         """Revoke a key without deleting its audit history."""
         if self.revoked is None:
             self.revoked = dt.now(utc)
+            self.active = False
             db.session.flush()
 
     def activate(self) -> None:
         """Restore a previously revoked key."""
         if self.revoked is not None:
             self.revoked = None
+            self.active = True
             db.session.flush()
 
     @classmethod
@@ -957,7 +959,7 @@ class SSHKey(db.Model):
                 self.revoked.isoformat()
                 if self.revoked else None
             ),
-            "is_active": self.is_active,
+            "is_active": self.active,
         }
 
     @property
