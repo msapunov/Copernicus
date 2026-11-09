@@ -963,6 +963,10 @@ class SSHKey(db.Model):
         }
 
     @property
+    def is_revoked(self) -> bool:
+        return self.revoked is None
+
+    @property
     def is_active(self) -> bool:
         return self.revoked is None
 
