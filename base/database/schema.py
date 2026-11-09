@@ -968,7 +968,7 @@ class SSHKey(db.Model):
 
     @property
     def is_active(self) -> bool:
-        return self.revoked is None
+        return self.active is None
 
 
 class Register(db.Model):
