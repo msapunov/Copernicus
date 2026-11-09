@@ -151,12 +151,12 @@ def ssh_check(pubkey):
             not allowed, or the key cannot be loaded.
     """
     debug(f"SSH key: {pubkey}")
-    allowed = app.config["SSH_ALGO_ALLOWED"]
+    allowed = app.config.get("SSH_ALGO_ALLOWED", [])
     parts = pubkey.strip().split()
     if len(parts) < 2:
         raise ValueError("Provided public key structure is incorrect. "
                          "Expected to have at least 2 parts")
-    if parts[0] not in allowed:
+    if allowed and (parts[0] not in allowed):
         allowed = ", ".join(allowed)
         raise ValueError(f"Provided public key algorythm is too weak. "
                          f"List of accepted algorithms: {allowed}")
