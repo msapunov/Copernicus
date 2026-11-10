@@ -421,6 +421,15 @@ class Mail(Thread):
         return self
 
     def key_removed(self, record, key):
+        """Prepare a notification that a public SSH key was removed.
+
+        Args:
+            record: UserLog instance.
+            key: The SSH public key string.
+
+        Returns:
+            The Mail instance for method chaining.
+        """
         return self.ssh_key("REMOVE KEY", record, key)
 
     def user_publickey(self, record, key):
