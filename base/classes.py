@@ -1968,6 +1968,30 @@ class TaskQueue:
         self.task.processed = True
         return self.commit()
 
+    def key_remove(self, key):
+        """Queue an SSH key remove task.
+
+        Args:
+            key: SSH public key string.
+
+        Returns:
+            The TaskQueue instance after committing.
+
+        Raises:
+            ValueError: If no user has been set, or if the key contains
+                pipe characters that would break the action-string format.
+        """
+        if not self.u_name:
+            raise ValueError("User is  not set. Can't remove SSH key")
+        if "|" in key:
+            raise ValueError(
+                "SSH public key contains pipe ('|') characters which are "
+                "not allowed"
+            )
+        self.task.action = f"ssh|user|{self.u_name}|remove|{key}"
+        self.task.processed = True
+        return self.commit()
+
     def user_create(self, user):
         """Queue a user creation task.
 
