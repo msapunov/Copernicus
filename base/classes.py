@@ -825,7 +825,7 @@ class UserLog(Log):
             The event string.
         """
         self.log.event = f"Uploaded SSH key {key}"
-        return self.commit(Mail().user_publickey(self, key))
+        return self.commit(Mail().key_installed(self, key))
 
     def password_changed(self):
         """Log that the password was changed.
