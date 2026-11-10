@@ -802,6 +802,29 @@ class UserLog(Log):
             result.append(f"{name} to {value}")
         self.log.event = f"Set ACL permissions: {'; '.join(result)}"
         return self.commit()
+    def key_remove(self, key):
+        """Log an SSH key remove request.
+
+        Args:
+            key: SSH public key string.
+
+        Returns:
+            The event string.
+        """
+        self.log.event = f"Remove SSH key {key}"
+        return self.commit()
+
+    def key_removed(self, key):
+        """Log that an SSH key was successfully removed.
+
+        Args:
+            key: SSH public key string.
+
+        Returns:
+            The event string.
+        """
+        self.log.event = f"Removed SSH key {key}"
+        return self.commit(Mail().key_removed(self, key))
 
     def key_upload(self, key):
         """Log an SSH key upload request.
