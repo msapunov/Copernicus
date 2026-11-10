@@ -174,6 +174,42 @@ def inactive_users_check(logins):
     return result
 
 
+def delete_key(kid, login=None):
+    """Process an SSH public key upload.
+
+    Validates the key and creates a task for installing it on the
+    remote server.
+
+    Args:
+        kid: SSHkey record ID.
+        login: Optional login string. If None, uses the current user.
+
+    Returns:
+        Status message string.
+
+    Raises:
+        ValueError: If provided user does not meet criteria like: being admin,
+        being responsible for temporary user, user itself.
+
+        ValueError: If SSHKey delete method returns None, which effectively mean
+        that there is no SSH key corresponding to provided id in the database.
+    """
+    debug(f"Provided login '{login}' and SSH key ID: {kid}")
+    user = current_user if not login else get_user_record(login)
+    if not("admin" in current_user.permissions()
+        or current_user == user
+        or upload_ssh_allowed(current_user, user)
+    ):
+        debug(f"User {user} doesn’t meet the criteria to delete the SSH key")
+        raise ValueError("You don’t meet the criteria to delete the SSH key")
+    key = SSHKey.delete(user, kid)
+    if not key:
+            raise ValueError(f"SSH key id: {kid} not found")
+    TaskQueue().user(current_user).key_remove(key.public_key).task.accept()
+    UserLog(current_user).key_remove(key.public_key)
+    return "You’ll be notified when your public key is removed from the server."
+
+
 def ssh_key(form):
     """Process an SSH public key upload.
 
