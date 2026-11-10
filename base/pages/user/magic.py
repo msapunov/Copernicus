@@ -411,7 +411,7 @@ def user_edit(login, form):
     if "admin" in current_user.permissions():
         Task(task).accept()
         user_log = UserLog(user)
-        user_log.senf = False
+        user_log.send = False
         user_log.user_update(info=c_dict)
         return f"Task ID {task.id} Has been created"
     return UserLog(user).user_update(info=c_dict)
