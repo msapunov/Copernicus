@@ -432,7 +432,7 @@ class Mail(Thread):
         """
         return self.ssh_key("REMOVE KEY", record, key)
 
-    def user_publickey(self, record, key):
+    def key_installed(self, record, key):
         """Prepare a notification that a public SSH key was installed.
 
         Args:
