@@ -175,9 +175,9 @@ def inactive_users_check(logins):
 
 
 def delete_key(kid, login=None):
-    """Process an SSH public key upload.
+    """Process an SSH public key delete.
 
-    Validates the key and creates a task for installing it on the
+    Validates the key and creates a task for removing it on the
     remote server.
 
     Args:
@@ -188,11 +188,12 @@ def delete_key(kid, login=None):
         Status message string.
 
     Raises:
-        ValueError: If provided user does not meet criteria like: being admin,
-        being responsible for temporary user, user itself.
+        ValueError: If the provided user does not meet any of the criteria:
+        being an admin, being responsible for a temporary user,
+        or being the user in question.
 
-        ValueError: If SSHKey delete method returns None, which effectively mean
-        that there is no SSH key corresponding to provided id in the database.
+        ValueError: If SSHKey delete method returns None, it means no SSH key
+        with the provided ID exists in the database
     """
     debug(f"Provided login '{login}' and SSH key ID: {kid}")
     user = current_user if not login else get_user_record(login)
