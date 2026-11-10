@@ -105,6 +105,27 @@ modal = function(url, btn, fn){
     });
 };
 
+new_modal = function(url, button, fn) {
+    const $button = $(button);
+    if ($button.prop("disabled")) return;
+    $button.prop("disabled", true).addClass("uk-button-disabled");
+    $.ajax({
+        url: url,
+        type: "POST",
+        timeout: 60000,
+        dataType: "html"
+    }).done(function (data) {
+        $("body").append(data);
+        if ($.isFunction(fn)) {
+            fn(data);
+        }
+    }).fail(function (request) {
+        show_error(request);
+    }).always(function () {
+        $button.prop("disabled", false).removeClass("uk-button-disabled");
+    });
+}
+
 form_reset = function(e){
     let form = $(e.target).find("form");
     $.each(form, function(key, value){
