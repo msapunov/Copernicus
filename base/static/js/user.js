@@ -2,6 +2,7 @@
     "use strict";
     let url = "user/modal/edit";
     let ssh = "user/modal/ssh";
+    let del = "user/modal/ssh/delete";
     let pass = "reset.html"
 
     $(document).on("ready", function(){
