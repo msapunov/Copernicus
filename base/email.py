@@ -442,12 +442,7 @@ class Mail(Thread):
         Returns:
             The Mail instance for method chaining.
         """
-        self.populate("PUBLIC KEY")
-        self.destination = record.user.email
-        full = record.user.full_name()
-        key = key[:62] + "..." + key[-62:]
-        self.__populate_values({"%FULLNAME": full, "%KEY": key})
-        return self
+        return self.ssh_key("PUBLIC KEY", record, key)
 
     def user_update(self, record):
         """Prepare a notification about a user info change request.
