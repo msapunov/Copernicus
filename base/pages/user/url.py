@@ -127,6 +127,19 @@ def web_modal_ssh():
     return jsonify(render_template("modals/user_load_ssh.html", form=form))
 
 
+@bp.route("/user/modal/ssh/delete/<string:login>/<int:kid>", methods=["POST"])
+@login_required
+def web_modal_delete(login, kid):
+    """Render the SSH key delete modal for the user.
+
+    Returns:
+        JSON with rendered HTML.
+    """
+    log.info("Call to render delete ssh key modal")
+    key = get_key(kid, login)
+    return render_template("modals/user_delete_key.html", rec=key)
+
+
 @bp.route("/user/modal/edit/<string:login>", methods=["POST"])
 @login_required
 def web_modal_edit(login):
