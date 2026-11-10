@@ -2,6 +2,47 @@
     {% block head %}
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='assets/uikit/css/components/progress.gradient.min.css') }}" />
         <script src="{{ url_for('static', filename='js/user.js') }}"></script>
+    <style>
+        .ssh-keys {
+            width: 100%;
+            table-layout: fixed;
+            border-collapse: collapse;
+        }
+
+        /* Column proportions */
+        .ssh-keys th:nth-child(1),
+        .ssh-keys td:nth-child(1) {
+            width: 15%;
+        }
+
+        .ssh-keys th:nth-child(2),
+        .ssh-keys td:nth-child(2) {
+            width: 65%;
+        }
+
+        .ssh-keys th:nth-child(3),
+        .ssh-keys td:nth-child(3) {
+            width: 15%;
+        }
+
+        .ssh-keys th:nth-child(4),
+        .ssh-keys td:nth-child(4) {
+            width: 5%;
+        }
+
+        /* Text truncation */
+        .ssh-keys th,
+        .ssh-keys td {
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+
+        .uk-button:disabled .uk-text-danger,
+        .uk-button:disabled [class*="uk-icon-"] {
+            color: #999 !important;
+        }
+    </style>
     {% endblock %}
     {% block main %}
         {% if data and data.external %}
