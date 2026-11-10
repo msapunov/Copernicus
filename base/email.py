@@ -404,7 +404,7 @@ class Mail(Thread):
         return self
 
     def ssh_key(self, chapter, record, key):
-        """Prepare a notification that a public SSH key was removed.
+        """Prepare a notification for a public SSH key actions.
 
         Args:
             chapter: Section name in the configuration file.
