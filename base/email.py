@@ -403,6 +403,23 @@ class Mail(Thread):
         self.__populate_values({"%FULLNAME": full, "%PASS": passwd})
         return self
 
+    def ssh_key(self, chapter, record, key):
+        """Prepare a notification that a public SSH key was removed.
+
+        Args:
+            chapter: Section name in the configuration file.
+            record: UserLog instance.
+            key: The SSH public key string.
+
+        Returns:
+            The Mail instance for method chaining.
+        """
+        self.populate(chapter)
+        self.destination = record.user.email
+        full = record.user.full_name()
+        self.__populate_values({"%FULLNAME": full, "%KEY": key})
+        return self
+
     def user_publickey(self, record, key):
         """Prepare a notification that a public SSH key was installed.
 
