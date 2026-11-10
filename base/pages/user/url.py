@@ -172,6 +172,18 @@ def web_user_upload_ssh():
     return jsonify(message=ssh_key(form))
 
 
+@bp.route("/user/delete/ssh/<string:login>/<int:kid>", methods=["POST"])
+@login_required
+def web_user_delete_ssh(login, kid):
+    """Process an SSH public key remove action.
+
+    Returns:
+        JSON with status message.
+    """
+    log.info(f"Call to delete an SSH key {login}: {kid}")
+    return jsonify(message=delete_key(kid, login))
+
+
 @bp.route("/user/edit/<string:login>", methods=["POST"])
 @login_required
 def web_user_edit(login):
