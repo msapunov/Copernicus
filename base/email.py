@@ -420,6 +420,9 @@ class Mail(Thread):
         self.__populate_values({"%FULLNAME": full, "%KEY": key})
         return self
 
+    def key_removed(self, record, key):
+        return self.ssh_key("REMOVE KEY", record, key)
+
     def user_publickey(self, record, key):
         """Prepare a notification that a public SSH key was installed.
 
