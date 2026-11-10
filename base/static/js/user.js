@@ -5,6 +5,20 @@
     let del = "user/modal/ssh/delete";
     let pass = "reset.html"
 
+    window.render = function(html){
+        const $modal = $("<div>").html(html).find(".uk-modal").first();
+        if (!$modal.length) return;
+
+        const modalId = $modal.attr("id");
+        if (!modalId) return
+
+        if (!$("#" + modalId).length) {
+            $("body").append($modal);
+        }
+        const modal = UIkit.modal("#" + modalId);
+        modal.isActive() ? modal.hide() : modal.show();
+    };
+
     window.key_delete = function(e){
         let kid = $(this).data("key-id");
         let login = $(this).data("login");
