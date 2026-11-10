@@ -938,14 +938,14 @@ class SSHKey(db.Model):
             db.session.flush()
 
     @classmethod
-    def delete(cls, user: str, key_id: int, ) -> bool:
+    def delete(cls, user: str, key_id: int, ) -> SSHKey | None:
         """Permanently delete a key belonging to a particular user."""
-        key = cls.query.filter_by(user=user, id=key_id).all()
+        key = cls.query.filter_by(user=user, id=key_id).one_or_none()
         if key is None:
-            return False
+            return None
         db.session.delete(key)
         db.session.flush()
-        return True
+        return key
 
     def to_dict(self) -> dict:
         return {
