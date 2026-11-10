@@ -1964,7 +1964,7 @@ class TaskQueue:
                 "SSH public key contains pipe ('|') characters which are "
                 "not allowed"
             )
-        self.task.action = f"ssh|user|{self.u_name}||{key}"
+        self.task.action = f"ssh|user|{self.u_name}|upload|{key}"
         self.task.processed = True
         return self.commit()
 
