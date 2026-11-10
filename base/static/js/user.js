@@ -5,6 +5,13 @@
     let del = "user/modal/ssh/delete";
     let pass = "reset.html"
 
+    window.key_delete = function(e){
+        let kid = $(this).data("key-id");
+        let login = $(this).data("login");
+        let url = del + "/" + login + "/" + kid;
+        new_modal(url, $(this), window.render);
+    };
+
     $(document).on("ready", function(){
         let login = $.trim( $("#user_login").data("login") );
         modal("{0}/{1}".f(url, login), "edit");
