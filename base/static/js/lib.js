@@ -113,11 +113,12 @@ new_modal = function(url, button, fn) {
         url: url,
         type: "POST",
         timeout: 60000,
-        dataType: "html"
-    }).done(function (data) {
-        $("body").append(data);
+    }).done(function (response) {
+        if (typeof response === "string") {
+            $("body").append(response);
+        }
         if ($.isFunction(fn)) {
-            fn(data);
+            fn(response);
         }
     }).fail(function (request) {
         show_error(request);
