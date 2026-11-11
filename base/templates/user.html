@@ -78,50 +78,8 @@
                     <span class="uk-icon-eraser uk-margin-small-right"></span>Change password
                 </button>
             </div>
-            {% if data and data.public %}
-                <table class="ssh-keys uk-table uk-table-hover uk-table-striped uk-table-condensed">
-                    <thead>
-                        <tr>
-                            <th class="uk-width-1-10">Name</th>
-                            <th class="uk-width-3-4">Public key</th>
-                            <th class="uk-width-1-10">Created</th>
-                            <th class="uk-width-1-20"></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    {% for key in data.public|sort(attribute='created', reverse=True) %}
-                        <tr>
-                            {% if key.active is true %}
-                                <td class="uk-text-truncate" title="SSH key is installed on the server">
-                                    {{key.name}}
-                                </td>
-                            {% elif key.active is none %}
-                                <td class="uk-text-truncate" title="SSH key waiting to be installed on the server">
-                                    <span class="uk-icon-clock-o uk-text-warning uk-margin-small-right"></span>{{key.name}}
-                                </td>
-                            {% else %}
-                                <td class="uk-text-truncate" title="SSH key is not active">
-                                    <span class="uk-icon-exclamation-circle uk-text-danger uk-margin-small-right"></span>{{key.name}}
-                                </td>
-                            {% endif %}
-                            <td class="uk-text-truncate">{{key.public_key}}</td>
-                            <td class="uk-text-truncate">{{key.created.strftime('%d/%m/%Y %H:%M')}}</td>
-                            <td>
-                                <button class="uk-button uk-button-mini uk-button-link uk-text-primary key_rename uk-icon-justify"
-                                    type="button" data-key-id='{{key.id}}' data-login='{{data.user.login}}' title="Rename SSH key">
-                                    <span class="uk-icon-edit"></span>
-                                </button>
-                                <button class="uk-button uk-button-mini uk-button-link uk-text-danger key_delete uk-icon-justify"
-                                    type="button" data-key-id='{{key.id}}' data-login='{{data.user.login}}' title="Delete SSH key">
-                                    <span class="uk-icon-close"></span>
-                                </button>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-            {% else %}
-                <p class="uk-h4 uk-text-nowrap">SSH keys: None</p>
+            {% if public_key %}
+                {{ public_key | safe }}
             {% endif %}
             {% if login %}
                 <div class="uk-panel uk-panel-box uk-width-1-1">
