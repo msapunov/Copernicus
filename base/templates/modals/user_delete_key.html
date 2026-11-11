@@ -1,0 +1,20 @@
+<div class="uk-modal" aria-hidden="true" id="{{rec.id}}_public_key">
+  <div class="uk-modal-dialog">
+    <button type="button" class="uk-modal-close uk-close"></button>
+    <div class="uk-modal-header">
+      <h3>Delete SSH public key {{rec.name}}?</h3>
+    </div>
+    <div class="uk-margin uk-modal-content">
+      <div>
+        Are you sure you want to delete the SSH key: {{rec.public_key}}?
+      </div>
+      <div>
+        You’ll be notified when this key is deleted from the server.
+      </div>
+    </div>
+    <div class="uk-modal-footer uk-text-right">
+      <button class="uk-button window_hide" data-modal="{{rec.id}}_public_key">Cancel</button>
+      <button class="uk-button uk-button-primary key_delete_submit" data-modal="{{rec.id}}_public_key" data-url="/user/delete/ssh/{{login}}/{{rec.id}}">Submit</button>
+    </div>
+  </div>
+</div>
