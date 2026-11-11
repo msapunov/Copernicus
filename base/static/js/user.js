@@ -19,6 +19,13 @@
         modal.isActive() ? modal.hide() : modal.show();
     };
 
+    window.key_submit = function (e) {
+        let req = submit.call(this, e);
+        req.done(function(response) {
+            $("#public_key").replaceWith(response.html);
+        });
+    }
+
     window.key_delete = function(e){
         let kid = $(this).data("key-id");
         let login = $(this).data("login");
