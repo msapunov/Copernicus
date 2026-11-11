@@ -137,7 +137,7 @@ def web_modal_delete(login, kid):
     """
     log.info("Call to render delete ssh key modal")
     key = get_key(kid, login)
-    return render_template("modals/user_delete_key.html", rec=key)
+    return render_template("modals/user_delete_key.html", rec=key, login=login)
 
 
 @bp.route("/user/modal/edit/<string:login>", methods=["POST"])
