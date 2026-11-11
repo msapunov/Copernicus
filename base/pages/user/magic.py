@@ -239,7 +239,7 @@ def delete_key(kid, login=None):
         raise ValueError("You don’t meet the criteria to delete the SSH key")
     key = SSHKey.delete(user, kid)
     if not key:
-            raise ValueError(f"SSH key id: {kid} not found")
+        raise ValueError(f"SSH key id: {kid} not found")
     TaskQueue().user(current_user).key_remove(key.public_key).task.accept()
     UserLog(current_user).key_remove(key.public_key)
     return "You’ll be notified when your public key is removed from the server."
