@@ -50,9 +50,9 @@
     $(document).on("click", ".key_delete", window.key_delete);
     $(document).on("click", ".pass", reset);
     $(document).on("click", ".edit_submit", submit);
-    $(document).on("click", ".ssh_submit", submit);
-    $(document).on("click", ".key_rename_submit", submit);
-    $(document).on("click", ".key_delete_submit", submit);
+    $(document).on("click", ".ssh_submit", window.key_submit);
+    $(document).on("click", ".key_rename_submit", window.key_submit);
+    $(document).on("click", ".key_delete_submit", window.key_submit);
     $(document).on("hide.uk.modal", form_reset);
 
 })(window, document, jQuery);
