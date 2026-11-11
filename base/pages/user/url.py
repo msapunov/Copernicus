@@ -262,6 +262,8 @@ def user_index():
     }
 
     keys = SSHKey.owned(current_user)
+    ssh = render_template("bits/public_keys_table.html",
+                          public=keys, login=current_user.login,)
 
     return render_template(
         "user.html",
@@ -270,7 +272,7 @@ def user_index():
             "jobs": jobs,
             "scratch": scratch,
             "projects": current_user.project,
-            "public": keys
         },
+        public_key=ssh,
         login=login,
     )
