@@ -169,7 +169,11 @@ def web_user_upload_ssh():
     form = KeyForm()
     if not form.validate_on_submit():
         raise ValueError(form_error_string(form.errors))
-    return jsonify(message=ssh_key(form))
+    message = ssh_key(form)
+    keys = SSHKey.owned(current_user)
+    ssh = render_template("bits/public_keys_table.html",
+                          public=keys, login=current_user.login,)
+    return jsonify(message=message, html=ssh)
 
 
 @bp.route("/user/delete/ssh/<string:login>/<int:kid>", methods=["POST"])
@@ -181,7 +185,11 @@ def web_user_delete_ssh(login, kid):
         JSON with status message.
     """
     log.info(f"Call to delete an SSH key {login}: {kid}")
-    return jsonify(message=delete_key(kid, login))
+    message = delete_key(kid, login)
+    keys = SSHKey.owned(current_user)
+    ssh = render_template("bits/public_keys_table.html",
+                          public=keys, login=current_user.login,)
+    return jsonify(message=message, html=ssh)
 
 
 @bp.route("/user/edit/<string:login>", methods=["POST"])
