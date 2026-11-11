@@ -242,7 +242,7 @@ def delete_key(kid, login=None):
         raise ValueError(f"SSH key id: {kid} not found")
     TaskQueue().user(current_user).key_remove(key.public_key).task.accept()
     UserLog(current_user).key_remove(key.public_key)
-    return "You’ll be notified when your public key is removed from the server."
+    return "You'll be notified when public key is deleted from the server."
 
 
 def ssh_key(form):
