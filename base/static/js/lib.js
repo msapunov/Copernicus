@@ -135,28 +135,10 @@ form_reset = function(e){
 };
 
 submit = function(e){
-    var modal = $.trim( $(this).data("modal") );
-    var form = $.trim( $(this).data("form") );
-    var url = $.trim( $(this).data("url") );
-    var data = $("#" + form).serialize();
-    return ajax_send(url, data, modal);
-};
-
-ajax = function(url, data){
-    UIkit.modal("#ajax_call", {modal: false}).show();
-    return $.ajax({
-        data: data ? data : undefined,
-        timeout: 60000,
-        type: "POST",
-        url: url
-    }).fail(function(reply){
-        show_error(reply);
-    }).always(function() {
-        UIkit.modal("#ajax_call", {modal: false}).hide();
-    });
-};
-
-ajax_send = function(url, data, show_modal){
+    const modal = $.trim( $(this).data("modal") );
+    const form = $.trim( $(this).data("form") );
+    const url = $.trim( $(this).data("url") );
+    const data = $("#" + form).serialize();
     UIkit.modal("#ajax_call", {modal: false}).show();
     return $.ajax({
         data: data ? data : undefined,
@@ -176,15 +158,28 @@ ajax_send = function(url, data, show_modal){
                 status: "success"
             });
         }
-        if(show_modal){
-            UIkit.modal("#" + show_modal).hide();
+        if(modal){
+            UIkit.modal("#" + modal).hide();
         }
     }).fail(function(reply){
         show_error(reply);
     }).always(function() {
         UIkit.modal("#ajax_call", {modal: false}).hide();
     });
+};
 
+ajax = function(url, data){
+    UIkit.modal("#ajax_call", {modal: false}).show();
+    return $.ajax({
+        data: data ? data : undefined,
+        timeout: 60000,
+        type: "POST",
+        url: url
+    }).fail(function(reply){
+        show_error(reply);
+    }).always(function() {
+        UIkit.modal("#ajax_call", {modal: false}).hide();
+    });
 };
 
 json_send = function(url, data, show_modal){
