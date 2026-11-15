@@ -921,21 +921,21 @@ class SSHKey(db.Model):
         if not name or len(name) > 128:
             raise ValueError("Invalid SSH key name")
         self.name = name
-        db.session.flush()
+        db.session.commit()
 
     def revoke(self) -> None:
         """Revoke a key without deleting its audit history."""
         if self.revoked is None:
             self.revoked = dt.now(utc)
             self.active = False
-            db.session.flush()
+            db.session.commit()
 
     def activate(self) -> None:
         """Restore a previously revoked key."""
         if self.revoked is not None:
             self.revoked = None
             self.active = True
-            db.session.flush()
+            db.session.commit()
 
     @classmethod
     def delete(cls, user: str, key_id: int, ) -> "SSHKey | None":
@@ -944,7 +944,7 @@ class SSHKey(db.Model):
         if key is None:
             return None
         db.session.delete(key)
-        db.session.flush()
+        db.session.commit()
         return key
 
     def to_dict(self) -> dict:
