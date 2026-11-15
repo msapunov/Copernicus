@@ -126,6 +126,19 @@ def web_modal_ssh():
     form.email = current_user.email
     return jsonify(render_template("modals/user_load_ssh.html", form=form))
 
+@bp.route("/user/modal/ssh/rename/<int:kid>", methods=["POST"])
+@login_required
+def web_modal_rename(kid):
+    """Render the SSH key rename modal for the user.
+
+    Returns:
+        Rendered HTML.
+    """
+    log.info("Call to render rename ssh key modal")
+    form = RenameKeyForm()
+    key = get_key(kid)
+    return render_template("modals/user_rename_key.html", rec=key, form=form)
+
 
 @bp.route("/user/modal/ssh/delete/<string:login>/<int:kid>", methods=["POST"])
 @login_required
