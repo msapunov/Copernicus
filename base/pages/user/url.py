@@ -190,6 +190,26 @@ def web_user_upload_ssh():
     return jsonify(message=message, html=ssh)
 
 
+@bp.route("/user/ssh/rename/<int:kid>", methods=["POST"])
+@login_required
+def web_user_ssh_rename(kid):
+    """Process an SSH public key rename action.
+
+    Args:
+        kid: SSH Key ID.
+
+    Returns:
+        JSON with rendered HTML key table.
+    """
+    log.info(f"Call to rename an SSH key: {kid}")
+    form = RenameKeyForm()
+    if not form.validate_on_submit():
+        raise ValueError(form_error_string(form.errors))
+    ssh = render_template("bits/public_keys_table.html",
+                                   public=rename_ssh(form, kid),
+                                   login=current_user.login,)
+    return jsonify(html=ssh)
+
 
 @bp.route("/user/ssh/delete/<string:login>/<int:kid>", methods=["POST"])
 @login_required
