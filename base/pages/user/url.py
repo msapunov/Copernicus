@@ -14,7 +14,7 @@ from base.database.schema import User, SSHKey
 from base.functions import form_error_string
 from base.pages import grant_access
 from base.pages.user import bp
-from base.pages.user.form import InfoForm, KeyForm, edit_info
+from base.pages.user.form import InfoForm, KeyForm, edit_info, RenameKeyForm
 from base.pages.user.magic import (
     absent_users_check,
     archived_users_check,
