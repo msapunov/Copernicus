@@ -245,6 +245,30 @@ def delete_key(kid, login=None):
     return "You'll be notified when public key is deleted from the server."
 
 
+def rename_ssh(form, kid):
+    """Rename SSH key to new name.
+
+    Get an SSH key by id, get all the keys owned by current user, verify if
+    the key one from users key and rename it to a new name.
+
+    Args:
+        form: RenameKeyForm with ``name`` data.
+        kid: SSH Key ID.
+
+    Returns:
+    """
+    name = form.name.data
+    key = SSHKey.get(kid)
+    if not key:
+        raise ValueError(f"SSH key ID {kid} not found")
+    keys = SSHKey.owned(current_user)
+    if key not in keys:
+        raise ValueError(f"SSH key does not belong to '{current_user.login}'")
+    if name != key.name:
+        key.rename(name)
+    return keys
+
+
 def ssh_key(form):
     """Process an SSH public key upload.
 
