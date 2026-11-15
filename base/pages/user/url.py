@@ -189,7 +189,8 @@ def web_user_upload_ssh():
     return jsonify(message=message, html=ssh)
 
 
-@bp.route("/user/ssh/delete/ssh/<string:login>/<int:kid>", methods=["POST"])
+
+@bp.route("/user/ssh/delete/<string:login>/<int:kid>", methods=["POST"])
 @login_required
 def web_user_ssh_delete(login, kid):
     """Process an SSH public key remove action.
