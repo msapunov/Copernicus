@@ -918,8 +918,10 @@ class SSHKey(db.Model):
 
     def rename(self, name: str):
         name = name.strip()
-        if not name or len(name) > 128:
-            raise ValueError("Invalid SSH key name")
+        if not name:
+            raise ValueError("SSH key name can not be empty")
+        if len(name) > 128:
+            raise ValueError("SSH key name must be 128 characters or less")
         self.name = name
         db.session.commit()
 
