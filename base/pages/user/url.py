@@ -25,6 +25,7 @@ from base.pages.user.magic import (
     inactive_users_check,
     ssh_key,
     delete_key,
+    rename_ssh,
     get_key,
     user_edit,
     working_users_check,
