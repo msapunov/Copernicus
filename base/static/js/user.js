@@ -25,10 +25,10 @@
         });
     }
 
-    window.key_delete = function(e){
-        let kid = $(this).data("key-id");
-        let login = $(this).data("login");
-        let url = del + "/" + login + "/" + kid;
+    window.key_modal = function(e){
+        let url = $(this).data("url");
+        let id = $(this).data("modal");
+        $("#" + id).remove();
         new_modal(url, $(this), window.render);
     };
 
