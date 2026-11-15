@@ -12,7 +12,7 @@ class InfoForm(FlaskForm):
     email = EmailField("E-mail")
 
 
-class KeyForm(FlaskForm):
+class KeyForm(RenameKeyForm):
     """Form for uploading an SSH public key."""
     key = StringField("Key")
     login = HiddenField()
