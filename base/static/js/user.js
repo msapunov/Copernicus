@@ -45,8 +45,8 @@
     $(document).on("click", ".window_hide", trigger_modal);
     $(document).on("click", ".edit", trigger_modal);
     $(document).on("click", ".ssh", trigger_modal);
-    $(document).on("click", ".key_rename", trigger_modal);
-    $(document).on("click", ".key_delete", window.key_delete);
+    $(document).on("click", ".key_rename", window.key_modal);
+    $(document).on("click", ".key_delete", window.key_modal);
     $(document).on("click", ".pass", reset);
     $(document).on("click", ".edit_submit", submit);
     $(document).on("click", ".ssh_submit", window.key_submit);
