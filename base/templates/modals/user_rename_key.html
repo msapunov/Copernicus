@@ -1,0 +1,27 @@
+<div class="uk-modal" aria-hidden="true" id="{{rec.id}}_rename">
+    <div class="uk-modal-dialog">
+        <button type="button" class="uk-modal-close uk-close"></button>
+        <div class="uk-modal-header">
+            <h3>Rename SSH public key {{rec.name}}?</h3>
+        </div>
+        <div class="uk-margin uk-modal-content">
+            <form action="test" method="post" class="uk-panel uk-form" id="{{rec.id}}_rename_form">
+                {{ form.csrf_token }}
+                <div class="uk-form-row">
+                    <div class="uk-form-controls">
+                        {{ form.name(class_="uk-width-1-1", placeholder=rec.name) }}
+                    </div>
+                </div>
+                <div class="uk-form-row">
+                    <div>
+                        The key name is intended solely for your convenience and never leaves the application server.
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="uk-modal-footer uk-text-right">
+            <button class="uk-button window_hide" data-modal="{{rec.id}}_rename">Cancel</button>
+            <button class="uk-button uk-button-primary key_modify_submit" data-modal="{{rec.id}}_rename" data-form="{{rec.id}}_rename_form" data-url="/user/ssh/rename/{{rec.id}}">Submit</button>
+        </div>
+    </div>
+</div>
