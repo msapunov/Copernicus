@@ -8,9 +8,9 @@
     <button type="button" class="uk-modal-close uk-close"></button>
     <div class="uk-modal-header">
       {% if status == "SENT" %}
-        <h3>Re-send visa for request {{rec.meso}}?</h3>
+        <h3 class="uk-text-truncate">Re-send visa for request {{rec.meso}}?</h3>
       {% else %}
-        <h3>Send visa for request {{rec.meso}}?</h3>
+        <h3 class="uk-text-truncate">Send visa for request {{rec.meso}}?</h3>
       {% endif %}
     </div>
     <div class="uk-margin uk-modal-content">

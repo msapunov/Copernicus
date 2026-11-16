@@ -3,9 +3,9 @@
     <button type="button" class="uk-modal-close uk-close"></button>
     <div class="uk-modal-header">
       {% if form.ssh %}
-        <h3>Add a new student to the project {{form.name}}?</h3>
+        <h3 class="uk-text-truncate">Add a new student to the project {{form.name}}?</h3>
       {% else %}
-        <h3>Add a new user to the project {{form.name}}?</h3>
+        <h3 class="uk-text-truncate">Add a new user to the project {{form.name}}?</h3>
       {% endif %}
     </div>
     <div class="uk-overflow-container">
