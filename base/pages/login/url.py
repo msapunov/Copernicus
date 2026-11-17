@@ -74,7 +74,7 @@ def load_user_from_request(urlpath):
         if request.environ.get("SCRIPT_NAME"):
             urlpath = f"{request.environ['SCRIPT_NAME']}/{safe_path}"
         else:
-            urlpath = urlpath.replace("\\", "/")
+            urlpath = "/" + urlpath.replace("\\", "/")
             target = urlsplit(urlpath)
             if target.scheme or target.netloc or not urlpath.startswith("/"):
                 error(f"Unsafe redirect target rejected: {urlpath}")
