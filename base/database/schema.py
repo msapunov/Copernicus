@@ -853,7 +853,7 @@ class SSHKey(db.Model):
     fingerprint = db.Column(db.String(64), nullable=False)
     created = db.Column(db.DateTime(timezone=True), nullable=False, server_default=func.now())
     revoked = db.Column(db.DateTime(timezone=True), nullable=True)
-    active = db.Column(db.Boolean, default=False, nullable=False)
+    installed = db.Column(db.Boolean, default=False, nullable=False)
     __table_args__ = (
         db.UniqueConstraint(
             "user_id",
@@ -929,14 +929,12 @@ class SSHKey(db.Model):
         """Revoke a key without deleting its audit history."""
         if self.revoked is None:
             self.revoked = dt.now(utc)
-            self.active = False
             db.session.commit()
 
     def activate(self) -> None:
         """Restore a previously revoked key."""
         if self.revoked is not None:
             self.revoked = None
-            self.active = True
             db.session.commit()
 
     @classmethod
@@ -961,7 +959,7 @@ class SSHKey(db.Model):
                 self.revoked.isoformat()
                 if self.revoked else None
             ),
-            "is_active": self.active,
+            "is_installed": self.installed,
         }
 
     @property
@@ -969,8 +967,8 @@ class SSHKey(db.Model):
         return self.revoked is None
 
     @property
-    def is_active(self) -> bool:
-        return self.active is None
+    def is_installed(self) -> bool:
+        return self.installed is None
 
 
 class Register(db.Model):
