@@ -48,7 +48,7 @@ def create_app(config_filename: str) -> Flask:
     register_decor(app)
     configure_logger(app)
     attach_custom_methods(app)
-    if app.config.get("USE_GUNICORN", False):
+    if app.config.get("BEHIND_PROXY", False):
         apply_proxy_fix(app)
     return app
 
