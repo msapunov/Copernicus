@@ -1842,6 +1842,10 @@ class Task:
         """
         user = self.task.user
         key = self.get_description()
+        key_db = SSHKey.find(key, user=user)
+        if not key_db:
+            raise ValueError(f"SSH key {key} not found")
+        key_db.installed = True
         return UserLog(user).key_uploaded(key)
 
     def project_create(self):
