@@ -49,6 +49,7 @@ def create_app(config_filename: str) -> Flask:
     configure_logger(app)
     attach_custom_methods(app)
     if app.config.get("BEHIND_PROXY", False):
+        logging.debug(f"BEHIND_PROXY configuration option is True")
         apply_proxy_fix(app)
     return app
 
@@ -83,6 +84,7 @@ def apply_proxy_fix(app: Flask) -> None:
     Args:
         app: Flask application instance.
     """
+    logging.debug("Applying proxy fix")
     app.wsgi_app = ProxyFix(
         app.wsgi_app,
         x_for=1,
