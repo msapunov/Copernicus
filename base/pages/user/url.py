@@ -271,16 +271,22 @@ def user_index():
         start = min(start, project.resources.created)
     begin = start.strftime("%m/%d/%y-%H:%M")
     finish = dt.now().strftime("%m/%d/%y-%H:%M")
-    try:
-        jobs = get_jobs(begin, finish)
-    except ValueError as err:
+    if app.config.get("INFO_USER_JOBS", False):
+        try:
+            jobs = get_jobs(begin, finish)
+        except ValueError as err:
+            jobs = None
+            flash(str(err))
+    else:
         jobs = None
-        flash(str(err))
-    try:
-        scratch = get_scratch()
-    except ValueError as err:
+    if app.config.get("INFO_USER_SCRATCH", False):
+        try:
+            scratch = get_scratch()
+        except ValueError as err:
+            scratch = None
+            flash(str(err))
+    else:
         scratch = None
-        flash(str(err))
 
     for project in current_user.project:
         every = project.account_by_user()
