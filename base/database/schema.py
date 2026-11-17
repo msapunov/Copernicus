@@ -916,6 +916,21 @@ class SSHKey(db.Model):
         """Retrieve a key by its database ID."""
         return db.session.get(cls, key_id)
 
+    @classmethod
+    def find(cls, public: str, user:  "User | None" = None) -> "SSHKey | None":
+        """
+        Find an SSH key by its public key material.
+
+        Ignores comments and textual formatting.
+        Optionally restricts the search to a particular user.
+        """
+        key = cls.parse(public)
+        fingerprint = key.fingerprint
+        query = cls.query.filter_by(fingerprint=fingerprint)
+        if user is not None:
+            query = query.filter_by(user=user)
+        return query.one_or_none()
+
     def rename(self, name: str):
         name = name.strip()
         if not name:
