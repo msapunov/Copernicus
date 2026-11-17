@@ -28,11 +28,11 @@
                 <td class="uk-text-truncate">{{key.created.strftime('%d/%m/%Y %H:%M')}}</td>
                 <td>
                     <button class="uk-button uk-button-mini uk-button-link uk-text-primary key_rename uk-icon-justify"
-                        type="button" data-url="/user/modal/ssh/rename/{{key.id}}" data-modal="{{key.id}}_rename" title="Rename SSH key">
+                        type="button" data-url="user/modal/ssh/rename/{{key.id}}" data-modal="{{key.id}}_rename" title="Rename SSH key">
                         <span class="uk-icon-edit"></span>
                     </button>
                     <button class="uk-button uk-button-mini uk-button-link uk-text-danger key_delete uk-icon-justify"
-                        type="button" data-url="/user/modal/ssh/delete/{{login}}/{{key.id}}" data-modal="{{key.id}}_delete" title="Delete SSH key">
+                        type="button" data-url="user/modal/ssh/delete/{{login}}/{{key.id}}" data-modal="{{key.id}}_delete" title="Delete SSH key">
                         <span class="uk-icon-close"></span>
                     </button>
                 </td>
