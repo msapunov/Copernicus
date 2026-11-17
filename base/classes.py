@@ -25,6 +25,7 @@ from base.database.schema import (
     Tasks,
     Thematic,
     User,
+    SSHKey,
 )
 from base.email import Mail, ResponsibleMailingList, UserMailingList
 from base.functions import calculate_ttl, create_visa, full_name
