@@ -883,7 +883,7 @@ class SSHKey(db.Model):
             raise ValueError("Invalid or unsupported SSH public key") from exc
 
     @classmethod
-    def add(cls, user: str, name: str, public_key: str, ) -> "SSHKey":
+    def add(cls, user: "User", name: str, public_key: str, ) -> "SSHKey":
         name = name.strip()
         if not name or len(name) > 128:
             raise ValueError("Invalid SSH key name")
