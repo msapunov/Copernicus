@@ -15,7 +15,7 @@
                     <td class="uk-text-truncate" title="SSH key is not active">
                         <span class="uk-icon-exclamation-circle uk-text-danger uk-margin-small-right"></span>{{key.name}}
                     </td>
-                {% elif key.installed is none %}
+                {% elif key.installed is false %}
                     <td class="uk-text-truncate" title="SSH key waiting to be installed on the server">
                         <span class="uk-icon-clock-o uk-text-warning uk-margin-small-right"></span>{{key.name}}
                     </td>
